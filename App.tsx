@@ -1,45 +1,31 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import React, { useEffect } from 'react';
+import { LogBox, StatusBar } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import AppNavigator from './src/Navigators/AppNavigator';
+import { ThemeProvider } from './src/Theme/ThemeContext';
+import { PremiumProvider } from './src/Context/PremiumContext';
+import { AuthProvider } from './src/Context/AuthContext';
+import Toast from 'react-native-toast-message';
+import { toastConfig } from './src/Common/ToastConfig';
 
 function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+  useEffect(() => {
+    LogBox.ignoreAllLogs(true);
+  }, []);
 
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
-    </SafeAreaProvider>
+    <ThemeProvider>
+      <PremiumProvider>
+        <AuthProvider>
+          <SafeAreaProvider>
+            <StatusBar barStyle="dark-content" />
+            <AppNavigator />
+            <Toast config={toastConfig} />
+          </SafeAreaProvider>
+        </AuthProvider>
+      </PremiumProvider>
+    </ThemeProvider>
   );
 }
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
 
 export default App;
