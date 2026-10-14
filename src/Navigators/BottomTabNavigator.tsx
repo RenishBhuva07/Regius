@@ -22,6 +22,9 @@ import { Colors } from '../Assets/StyleUtilities/Colors';
 import { Typography } from '../Theme/Typographys';
 import { Fonts } from '../Theme/fonts';
 import PlusActionSheet from './PlusActionSheet';
+import { useTaskReminder } from '../Context/TaskReminderContext';
+import AddTaskModal from '../Components/AddTaskModal';
+import AddReminderModal from '../Components/AddReminderModal';
 
 // ─── Dimensions ───────────────────────────────────────────────────────────────
 
@@ -32,13 +35,16 @@ const BAR_W = SW - H_MARGIN * 2;
 const BAR_H = 64;
 const CORNER_R = 34;
 
-const NOTCH_W = 44; // half-width of notch opening
+const NOTCH_W = 40; // half-width of notch opening
 const NOTCH_DEEP = 24; // depth of curve
-const CP = 20; // bezier control-point spread
+const CP = 18; // bezier control-point spread
 
 const BTN_SIZE = 54;
 const BTN_RING = 8; // cream ring around button
 const BTN_FLOAT = 22; // how far center of button floats above bar top
+
+const SIDE_PADDING = 14; // breathing room from rounded pill caps
+const TAB_SLOT_W = (BAR_W - SIDE_PADDING * 2) / 5; // equal width for all 5 slots
 
 // ─── SVG curved card (rounded corners + center notch) ────────────────────────
 
@@ -115,6 +121,8 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
 
   // Height the nav system reserves: bar + button float + safe area
   const totalH = BAR_H + BTN_FLOAT + (BTN_SIZE + BTN_RING) / 2 + safeBot + 4;
+
+  const { openTaskModal, openReminderModal } = useTaskReminder();
 
   const scaleAnims = React.useRef(
     ALL_TABS.map(() => new Animated.Value(1)),
@@ -246,7 +254,10 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
             color={focused ? Colors.PureWhiteText : 'rgba(255, 255, 255, 0.65)'}
             strokeWidth={focused ? 2.4 : 1.7}
           />
-          <Text style={[styles.label, focused && styles.labelActive]}>
+          <Text
+            numberOfLines={1}
+            style={[styles.label, focused && styles.labelActive]}
+          >
             {tab.label}
           </Text>
         </Animated.View>
@@ -290,18 +301,10 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
         ]}
       >
         <View style={styles.row}>
-          {/* Left tabs */}
-          <View style={styles.side}>
-            {LEFT_TABS.map((t, i) => renderTab(t, i))}
-          </View>
-
-          {/* Center spacer — sits under notch */}
-          <View style={{ width: NOTCH_W * 2 }} />
-
-          {/* Right tabs */}
-          <View style={styles.side}>
-            {RIGHT_TABS.map((t, i) => renderTab(t, i + 2))}
-          </View>
+          {LEFT_TABS.map((t, i) => renderTab(t, i))}
+          {/* Center spacer — sits under notch with equal slot width */}
+          <View style={{ width: TAB_SLOT_W }} pointerEvents="none" />
+          {RIGHT_TABS.map((t, i) => renderTab(t, i + 2))}
         </View>
       </View>
 
@@ -311,11 +314,11 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
         onClose={closeSheet}
         onPressNewTask={() => {
           closeSheet();
-          navigation.navigate('Tasks', { openAddModal: Date.now() });
+          openTaskModal();
         }}
         onPressNewReminder={() => {
           closeSheet();
-          navigation.navigate('Reminders', { openAddModal: Date.now() });
+          openReminderModal();
         }}
         bottomOffset={btnBottom + BTN_SIZE + BTN_RING + 14}
         onDismissed={() => setIsWrapperExpanded(false)}
@@ -356,17 +359,48 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
 
 const Tab = createBottomTabNavigator();
 
+const renderTabBar = (props: BottomTabBarProps) => <CustomTabBar {...props} />;
+
 export default function BottomTabNavigator() {
+  const {
+    isTaskModalOpen,
+    closeTaskModal,
+    addTask,
+    isReminderModalOpen,
+    closeReminderModal,
+    addReminder,
+  } = useTaskReminder();
+
   return (
-    <Tab.Navigator
-      tabBar={props => <CustomTabBar {...props} />}
-      screenOptions={{ headerShown: false }}
-    >
-      <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Tasks" component={TasksScreen} />
-      <Tab.Screen name="Reminders" component={RemindersScreen} />
-      <Tab.Screen name="Settings" component={SettingsScreen} />
-    </Tab.Navigator>
+    <>
+      <Tab.Navigator
+        tabBar={renderTabBar}
+        screenOptions={{ headerShown: false }}
+      >
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Tasks" component={TasksScreen} />
+        <Tab.Screen name="Reminders" component={RemindersScreen} />
+        <Tab.Screen name="Settings" component={SettingsScreen} />
+      </Tab.Navigator>
+
+      <AddTaskModal
+        visible={isTaskModalOpen}
+        onClose={closeTaskModal}
+        onCreateTask={taskData => {
+          addTask(taskData);
+          closeTaskModal();
+        }}
+      />
+
+      <AddReminderModal
+        visible={isReminderModalOpen}
+        onClose={closeReminderModal}
+        onCreateReminder={reminderData => {
+          addReminder(reminderData);
+          closeReminderModal();
+        }}
+      />
+    </>
   );
 }
 
@@ -404,25 +438,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: BAR_H,
     alignItems: 'center',
-    paddingBottom: 4,
-  },
-  side: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    height: BAR_H,
+    paddingHorizontal: SIDE_PADDING,
+    paddingBottom: 2,
   },
   tabItem: {
     flex: 1,
+    height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    height: BAR_H,
   },
   tabInner: {
     alignItems: 'center',
     justifyContent: 'center',
     gap: 3,
-    paddingHorizontal: 4,
+    paddingHorizontal: 2,
     position: 'relative',
   },
   label: {

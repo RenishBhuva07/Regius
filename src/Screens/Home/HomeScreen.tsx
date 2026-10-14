@@ -16,6 +16,7 @@ import { Typography } from '../../Theme/Typographys';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import { SVGS } from '../../Assets/Images';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
+import { useTaskReminder } from '../../Context/TaskReminderContext';
 
 // ─── Inline SVGs ─────────────────────────────────────────────────────────────
 
@@ -57,13 +58,6 @@ interface Category {
   accentColor?: string;
 }
 
-interface Task {
-  id: string;
-  label: string;
-  iconType: 'mail' | 'users';
-  done: boolean;
-}
-
 // ─── Data ────────────────────────────────────────────────────────────────────
 
 const CATEGORIES: Category[] = [
@@ -99,44 +93,13 @@ const CATEGORIES: Category[] = [
   },
 ];
 
-const INITIAL_TASKS: Task[] = [
-  { id: '1', label: 'Email Check', iconType: 'mail', done: true },
-  { id: '2', label: 'Weekly Meeting', iconType: 'users', done: false },
-  { id: '3', label: 'Team Discussion', iconType: 'users', done: false },
-];
-
 // ─── Component ───────────────────────────────────────────────────────────────
 
 const HomeScreen: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabKey>('taskList');
   const [selectedCategory, setSelectedCategory] = useState<string>('works');
-  const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
-  const [selectedTasks, setSelectedTasks] = useState<Set<string>>(
-    new Set(['1']),
-  );
-
-  const toggleTask = (id: string) => {
-    setTasks(prev =>
-      prev.map(t => (t.id === id ? { ...t, done: !t.done } : t)),
-    );
-    setSelectedTasks(prev => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-      return next;
-    });
-  };
-
-  const selectAll = () => {
-    if (selectedTasks.size === tasks.length) {
-      setSelectedTasks(new Set());
-    } else {
-      setSelectedTasks(new Set(tasks.map(t => t.id)));
-    }
-  };
+  const { tasks, toggleTask, selectedTasks, selectAllTasks, openTaskModal } =
+    useTaskReminder();
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
@@ -277,7 +240,11 @@ const HomeScreen: React.FC = () => {
         <View style={styles.taskSection}>
           <View style={styles.taskSectionHeader}>
             <Text style={styles.taskSectionTitle}>Task List</Text>
-            <TouchableOpacity activeOpacity={0.85} style={styles.addTaskBtn}>
+            <TouchableOpacity
+              activeOpacity={0.85}
+              style={styles.addTaskBtn}
+              onPress={openTaskModal}
+            >
               <Text style={styles.addTaskBtnText}>Add Task</Text>
             </TouchableOpacity>
           </View>
@@ -323,7 +290,7 @@ const HomeScreen: React.FC = () => {
           {/* ── Select All Task ── */}
           <TouchableOpacity
             activeOpacity={0.85}
-            onPress={selectAll}
+            onPress={selectAllTasks}
             style={styles.selectAllBtn}
           >
             <Text style={styles.selectAllText}>Select All Task</Text>

@@ -5,6 +5,7 @@ import AppNavigator from './src/Navigators/AppNavigator';
 import { ThemeProvider } from './src/Theme/ThemeContext';
 import { PremiumProvider } from './src/Context/PremiumContext';
 import { AuthProvider } from './src/Context/AuthContext';
+import { TaskReminderProvider } from './src/Context/TaskReminderContext';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from './src/Common/ToastConfig';
 
@@ -17,11 +18,13 @@ function App() {
     <ThemeProvider>
       <PremiumProvider>
         <AuthProvider>
-          <SafeAreaProvider>
-            <StatusBar barStyle="dark-content" />
-            <AppNavigator />
-            <Toast config={toastConfig} />
-          </SafeAreaProvider>
+          <TaskReminderProvider>
+            <SafeAreaProvider>
+              <StatusBar barStyle="dark-content" />
+              <AppNavigator />
+              <Toast config={toastConfig} />
+            </SafeAreaProvider>
+          </TaskReminderProvider>
         </AuthProvider>
       </PremiumProvider>
     </ThemeProvider>

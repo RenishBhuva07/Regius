@@ -20,7 +20,7 @@ const Intro: React.FC = () => {
   const navigation = useNavigation<any>();
 
   const handleNextPress = () => {
-    navigation.replace('MainTabs');
+    navigation.replace('Login');
   };
 
   // Scale based on Figma artboard width (375px)
@@ -70,7 +70,7 @@ const Intro: React.FC = () => {
         <Text style={styles.title}>Plan Your Day In Details</Text>
 
         <Text style={styles.subtitle}>
-          There Are Many Variations Of{'\n'}PassagesThere Are Many Variations.
+          There Are Many Variations Of Passages,{'\n'}There Are Many Variations.
         </Text>
       </View>
 

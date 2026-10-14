@@ -13,9 +13,10 @@ import {
 import { CheckSquare, Bell, ChevronRight, Sparkles } from 'lucide-react-native';
 import { Colors } from '../Assets/StyleUtilities/Colors';
 import { Fonts } from '../Theme/fonts';
+import { Badge } from '../Common/Badge';
 
 const { width: SW } = Dimensions.get('window');
-const SHEET_W = Math.min(SW - 40, 332);
+const SHEET_W = Math.min(SW - 32, 332);
 
 export interface PlusActionSheetProps {
   visible: boolean;
@@ -37,6 +38,8 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
   const [mounted, setMounted] = useState(visible);
   const anim = useRef(new Animated.Value(0)).current;
   const backdropAnim = useRef(new Animated.Value(0)).current;
+  const onDismissedRef = useRef(onDismissed);
+  onDismissedRef.current = onDismissed;
 
   useEffect(() => {
     if (visible) {
@@ -72,11 +75,11 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
       ]).start(({ finished }) => {
         if (finished) {
           setMounted(false);
-          onDismissed?.();
+          onDismissedRef.current?.();
         }
       });
     }
-  }, [visible]);
+  }, [visible, mounted, anim, backdropAnim]);
 
   if (!mounted && !visible) {
     return null;
@@ -125,80 +128,107 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
         <View style={styles.card}>
           {/* Header row with badge */}
           <View style={styles.header}>
-            <View style={styles.badge}>
-              <Sparkles size={11} color={Colors.LavenderPurple} />
-              <Text style={styles.badgeText}>QUICK CREATE</Text>
-            </View>
+            <Badge
+              label="QUICK CREATE"
+              variant="purple"
+              size="md"
+              icon={
+                <Sparkles
+                  size={11}
+                  color={Colors.LavenderPurple}
+                  strokeWidth={2.4}
+                />
+              }
+            />
           </View>
 
-          {/* Option 1: Add New Task */}
-          <TouchableOpacity
-            activeOpacity={0.72}
-            style={styles.optionRow}
-            onPress={onPressNewTask}
-          >
-            <View
-              style={[
-                styles.iconWrap,
-                { backgroundColor: 'rgba(131, 131, 214, 0.14)' },
-              ]}
+          {/* Action Cards Container - Horizontal Row */}
+          <View style={styles.optionsRow}>
+            {/* ── Option 1: Add New Task ── */}
+            <TouchableOpacity
+              activeOpacity={0.82}
+              style={[styles.actionCard, styles.taskCard]}
+              onPress={onPressNewTask}
             >
-              <CheckSquare
-                size={22}
-                color={Colors.LavenderPurple}
-                strokeWidth={2.4}
-              />
-            </View>
-            <View style={styles.textWrap}>
-              <Text style={styles.optionTitle}>Add New Task</Text>
-              <Text style={styles.optionSubtitle}>
-                Organize to-dos, priorities & deadlines
-              </Text>
-            </View>
-            <View style={styles.chevronWrap}>
-              <ChevronRight
-                size={17}
-                color={Colors.SteelMist}
-                strokeWidth={2.4}
-              />
-            </View>
-          </TouchableOpacity>
+              {/* Top Row: Icon Bubble */}
+              <View style={styles.cardTopRow}>
+                <View style={[styles.iconWrap, styles.taskIconWrap]}>
+                  <CheckSquare
+                    size={19}
+                    color={Colors.LavenderPurple}
+                    strokeWidth={2.4}
+                  />
+                </View>
+              </View>
 
-          {/* Divider */}
-          <View style={styles.divider} />
+              {/* Title & Subtitle */}
+              <View style={styles.cardContent}>
+                <Text style={styles.optionTitle}>Add Task</Text>
+                <Text style={styles.optionSubtitle} numberOfLines={2}>
+                  To-dos, priorities & deadlines
+                </Text>
+              </View>
 
-          {/* Option 2: Add New Reminder */}
-          <TouchableOpacity
-            activeOpacity={0.72}
-            style={styles.optionRow}
-            onPress={onPressNewReminder}
-          >
-            <View
-              style={[
-                styles.iconWrap,
-                { backgroundColor: 'rgba(130, 110, 234, 0.14)' },
-              ]}
+              {/* Action Footer: Badge + Chevron Button */}
+              <View style={styles.cardFooter}>
+                <Badge label="TO-DO" variant="purple" size="sm" />
+                <View style={[styles.arrowCircle, styles.taskArrowCircle]}>
+                  <ChevronRight
+                    size={13}
+                    color={Colors.LavenderPurple}
+                    strokeWidth={2.4}
+                  />
+                </View>
+              </View>
+
+              {/* Signature category bottom accent bar */}
+              <View style={styles.cardAccentWrap}>
+                <View
+                  style={[
+                    styles.cardAccent,
+                    { backgroundColor: Colors.LavenderPurple },
+                  ]}
+                />
+              </View>
+            </TouchableOpacity>
+
+            {/* ── Option 2: Add New Reminder ── */}
+            <TouchableOpacity
+              activeOpacity={0.82}
+              style={[styles.actionCard, styles.reminderCard]}
+              onPress={onPressNewReminder}
             >
-              <Bell
-                size={22}
-                color={Colors.SecondaryPurple}
-                strokeWidth={2.4}
-              />
-            </View>
-            <View style={styles.textWrap}>
-              <Text style={styles.optionTitle}>Add New Reminder</Text>
-              <Text style={styles.optionSubtitle}>
-                Set timely alerts so you never forget
-              </Text>
-            </View>
-            <View style={styles.chevronWrap}>
-              <ChevronRight
-                size={17}
-                color={Colors.SteelMist}
-                strokeWidth={2.4}
-              />
-            </View>
-          </TouchableOpacity>
+              {/* Top Row: Icon Bubble */}
+              <View style={styles.cardTopRow}>
+                <View style={[styles.iconWrap, styles.reminderIconWrap]}>
+                  <Bell size={19} color="#D97706" strokeWidth={2.4} />
+                </View>
+              </View>
+
+              {/* Title & Subtitle */}
+              <View style={styles.cardContent}>
+                <Text style={styles.optionTitle}>Add Reminder</Text>
+                <Text style={styles.optionSubtitle} numberOfLines={2}>
+                  Timely alerts & schedules
+                </Text>
+              </View>
+
+              {/* Action Footer: Badge + Chevron Button */}
+              <View style={styles.cardFooter}>
+                <Badge label="ALERT" variant="yellow" size="sm" />
+                <View style={[styles.arrowCircle, styles.reminderArrowCircle]}>
+                  <ChevronRight size={13} color="#D97706" strokeWidth={2.4} />
+                </View>
+              </View>
+
+              {/* Signature category bottom accent bar */}
+              <View style={styles.cardAccentWrap}>
+                <View
+                  style={[styles.cardAccent, { backgroundColor: '#FDD835' }]}
+                />
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
       </Animated.View>
     </View>
@@ -234,21 +264,21 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: Colors.DefaultWhite,
-    borderRadius: 22,
+    borderRadius: 26,
     paddingHorizontal: 16,
-    paddingTop: 14,
-    paddingBottom: 14,
+    paddingTop: 13,
+    paddingBottom: 16,
     borderWidth: 1.5,
     borderColor: '#E8E2D5',
     ...Platform.select({
       ios: {
         shadowColor: '#1F2228',
         shadowOffset: { width: 0, height: 10 },
-        shadowOpacity: 0.18,
-        shadowRadius: 22,
+        shadowOpacity: 0.16,
+        shadowRadius: 20,
       },
       android: {
-        elevation: 20,
+        elevation: 18,
       },
     }),
   },
@@ -256,62 +286,164 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 10,
-    paddingHorizontal: 2,
-  },
-  badge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    backgroundColor: 'rgba(131, 131, 214, 0.1)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
-  },
-  badgeText: {
-    fontFamily: Fonts.poppins.bold,
-    fontSize: 9.5,
-    letterSpacing: 0.7,
-    color: Colors.LavenderPurple,
-  },
-  optionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 6,
     paddingHorizontal: 4,
-    borderRadius: 14,
+  },
+  optionsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 4,
+  },
+  actionCard: {
+    width: 132,
+    height: 154,
+    borderRadius: 23,
+    borderTopRightRadius: 63,
+    borderWidth: 1.8,
+    paddingHorizontal: 11,
+    paddingTop: 11,
+    paddingBottom: 12,
+    position: 'relative',
+    justifyContent: 'space-between',
+    ...Platform.select({
+      ios: {
+        shadowOffset: { width: 0, height: 7 },
+        shadowOpacity: 0.32,
+        shadowRadius: 11,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
+  },
+  taskCard: {
+    backgroundColor: '#EFF2FE',
+    borderColor: '#D8DBFF',
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.LavenderPurple,
+      },
+    }),
+  },
+  reminderCard: {
+    backgroundColor: '#FFFCEB',
+    borderColor: '#FFF5B8',
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.AccentYellow,
+      },
+    }),
+  },
+  cardTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
   },
   iconWrap: {
-    width: 44,
-    height: 44,
-    borderRadius: 13,
+    width: 38,
+    height: 38,
+    borderRadius: 12,
+    backgroundColor: Colors.DefaultWhite,
+    borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.16,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
-  textWrap: {
-    flex: 1,
-    marginLeft: 12,
+  taskIconWrap: {
+    borderColor: '#D8DBFF',
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.LavenderPurple,
+      },
+    }),
+  },
+  reminderIconWrap: {
+    borderColor: '#FFF5B8',
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.AccentYellow,
+      },
+    }),
+  },
+  cardContent: {
+    marginBottom: 4,
   },
   optionTitle: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14.5,
+    fontSize: 14,
     color: Colors.MidnightCharcoal,
-    lineHeight: 20,
+    lineHeight: 18,
   },
   optionSubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
+    fontSize: 10,
     color: Colors.MutedSteelText,
-    lineHeight: 15,
-    marginTop: 1,
+    lineHeight: 13.5,
+    marginTop: 2,
   },
-  chevronWrap: {
-    paddingLeft: 6,
+  cardFooter: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 2,
   },
-  divider: {
-    height: 1,
-    backgroundColor: '#F2EFE9',
-    marginVertical: 6,
-    marginHorizontal: 4,
+  arrowCircle: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    backgroundColor: Colors.DefaultWhite,
+    borderWidth: 1.2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowOffset: { width: 0, height: 1.5 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2.5,
+      },
+      android: {
+        elevation: 1.5,
+      },
+    }),
+  },
+  taskArrowCircle: {
+    borderColor: '#D8DBFF',
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.LavenderPurple,
+      },
+    }),
+  },
+  reminderArrowCircle: {
+    borderColor: '#FFF5B8',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#D97706',
+      },
+    }),
+  },
+  cardAccentWrap: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  cardAccent: {
+    height: 4,
+    width: 48,
+    borderTopLeftRadius: 3,
+    borderTopRightRadius: 3,
   },
 });
 
