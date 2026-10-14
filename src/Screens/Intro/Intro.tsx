@@ -8,17 +8,19 @@ import {
   StatusBar,
   Platform,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { Typography } from '../../Theme/Typographys';
-import { ToastHelper } from '../../Common/ToastHelper';
 import { SVGS } from '../../Assets/Images';
 
 const { width } = Dimensions.get('window');
 
 const Intro: React.FC = () => {
+  const navigation = useNavigation<any>();
+
   const handleNextPress = () => {
-    ToastHelper.info('Welcome to Regius! Ready to plan your day.');
+    navigation.replace('MainTabs');
   };
 
   // Scale based on Figma artboard width (375px)

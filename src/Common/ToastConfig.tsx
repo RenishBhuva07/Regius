@@ -1,67 +1,63 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { BaseToastProps } from 'react-native-toast-message';
-import { CheckCircle2, XCircle, AlertCircle, Info } from 'lucide-react-native';
+import Svg, { Circle } from 'react-native-svg';
 import { Colors } from '../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
-import { Typography } from '../Theme/Typographys';
+import { Typography, ShadowStyles } from '../Theme/Typographys';
 
-const BaseToast = ({
-  text1,
-  text2,
-  icon,
-  bgColor,
-  borderColor,
-}: {
-  text1?: string;
-  text2?: string;
-  icon: React.ReactNode;
-  bgColor: string;
-  borderColor: string;
-}) => (
-  <View style={[styles.container, { backgroundColor: bgColor, borderColor: borderColor }]}>
-    <View style={styles.iconContainer}>
-      {icon}
-    </View>
-    <View style={styles.textContainer}>
-      {text1 && <Text style={styles.title}>{text1}</Text>}
-      {text2 && <Text style={styles.message}>{text2}</Text>}
-    </View>
+const BlobRight = () => (
+  <Svg
+    width={60}
+    height={60}
+    viewBox="0 0 60 60"
+    fill="none"
+    style={styles.blobRight}
+  >
+    <Circle cx={50} cy={10} r={28} fill={Colors.AccentGreen} opacity={0.35} />
+    <Circle cx={55} cy={50} r={18} fill={Colors.AccentYellow} opacity={0.25} />
+  </Svg>
+);
+
+const BlobLeft = () => (
+  <Svg
+    width={60}
+    height={60}
+    viewBox="0 0 60 60"
+    fill="none"
+    style={styles.blobLeft}
+  >
+    <Circle cx={10} cy={10} r={28} fill={Colors.AccentGreen} opacity={0.35} />
+    <Circle cx={5} cy={50} r={18} fill={Colors.AccentYellow} opacity={0.25} />
+  </Svg>
+);
+
+const BaseToast = ({ text2, bgColor }: { text2?: string; bgColor: string }) => (
+  <View
+    style={[
+      styles.container,
+      { backgroundColor: bgColor },
+      ShadowStyles.shadow,
+    ]}
+  >
+    <BlobLeft />
+    <BlobRight />
+    <Text style={styles.message}>{text2}</Text>
   </View>
 );
 
 export const toastConfig = {
   success: (props: BaseToastProps) => (
-    <BaseToast
-      {...props}
-      bgColor="#F2FDF5"
-      borderColor={Colors.Success}
-      icon={<CheckCircle2 color={Colors.Success} size={ResponsivePixels.size24} />}
-    />
+    <BaseToast {...props} bgColor={Colors.LavenderPurple} />
   ),
   error: (props: BaseToastProps) => (
-    <BaseToast
-      {...props}
-      bgColor="#FFF5F5"
-      borderColor={Colors.CrimsonPulse}
-      icon={<XCircle color={Colors.CrimsonPulse} size={ResponsivePixels.size24} />}
-    />
+    <BaseToast {...props} bgColor={Colors.LavenderPurple} />
   ),
   info: (props: BaseToastProps) => (
-    <BaseToast
-      {...props}
-      bgColor="#F0F7FF"
-      borderColor={Colors.PrimaryBlue}
-      icon={<Info color={Colors.PrimaryBlue} size={ResponsivePixels.size24} />}
-    />
+    <BaseToast {...props} bgColor={Colors.LavenderPurple} />
   ),
   warning: (props: BaseToastProps) => (
-    <BaseToast
-      {...props}
-      bgColor="#FFFBEB"
-      borderColor="#F59E0B"
-      icon={<AlertCircle color="#F59E0B" size={ResponsivePixels.size24} />}
-    />
+    <BaseToast {...props} bgColor={Colors.LavenderPurple} />
   ),
 };
 
@@ -70,39 +66,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: '90%',
-    backgroundColor: Colors.DefaultWhite,
-    borderRadius: ResponsivePixels.size12,
-    padding: ResponsivePixels.size12,
-    borderLeftWidth: ResponsivePixels.size6,
-    shadowColor: Colors.DefaultBlack,
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
+    borderRadius: ResponsivePixels.size16,
+    paddingVertical: ResponsivePixels.size14,
+    paddingHorizontal: ResponsivePixels.size16,
     marginTop: ResponsivePixels.size10,
+    overflow: 'hidden',
   },
-  iconContainer: {
-    marginRight: ResponsivePixels.size12,
-    justifyContent: 'center',
-    alignItems: 'center',
+  blobRight: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
   },
-  textContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: ResponsivePixels.size16,
-    fontFamily: Typography.bodyLargeRanadeRegular?.fontFamily || 'System',
-    color: Colors.MidnightInkText,
-    marginBottom: ResponsivePixels.size2,
-    fontWeight: '600',
+  blobLeft: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
   },
   message: {
-    fontSize: ResponsivePixels.size14,
-    fontFamily: Typography.bodyMediumRanadeRegular?.fontFamily || 'System',
-    color: Colors.SlateGraphiteText,
+    ...Typography.bodyMediumPoppinsRegular,
+    color: Colors.PureWhiteText,
+    flex: 1,
+    textAlign: 'center',
   },
 });

@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { navigationRef } from './Navigator';
 import Splash from '../Screens/Splash/Splash';
 import Intro from '../Screens/Intro/Intro';
+import BottomTabNavigator from './BottomTabNavigator';
 import { AuthContext } from '../Context/AuthContext';
 
 const Stack = createNativeStackNavigator();
@@ -37,6 +38,7 @@ export default function AppNavigator() {
         screenOptions={{ headerShown: false, animation: 'fade' }}
       >
         <Stack.Screen name="Intro" component={Intro} />
+        <Stack.Screen name="MainTabs" component={BottomTabNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );
