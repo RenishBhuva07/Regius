@@ -120,17 +120,36 @@ export const VoiceAssistantSheet: React.FC<VoiceAssistantSheetProps> = ({
 
           {/* Dialogue Box */}
           <View style={styles.dialogueBox}>
-            <Text style={styles.greetingTitle}>“Good morning, Alex”</Text>
+            <Text style={styles.greetingTitle}>“Listening for Regius...”</Text>
             <Text style={styles.dialogueBody}>
-              I have curated your flow around your peak morning clarity. Your
-              9:00 AM Inbox Zero block is active, followed by team strategy at
-              11:30 AM.
+              Say any command naturally: log a habit, schedule focus blocks, or
+              ask for your daily briefing.
             </Text>
           </View>
 
           {/* Spoken Action Quick Chips */}
-          <Text style={styles.actionsHeader}>Quick Voice Suggestions</Text>
+          <Text style={styles.actionsHeader}>Quick Spoken Commands</Text>
           <View style={styles.chipsContainer}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => onActionSelected?.('log_meditation')}
+              style={styles.actionChip}
+            >
+              <Sparkles size={14} color="#2E7D32" />
+              <Text style={styles.actionChipText}>“Log 20-min meditation”</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => onActionSelected?.('schedule_sprint')}
+              style={styles.actionChip}
+            >
+              <Clock size={14} color="#D97706" />
+              <Text style={styles.actionChipText}>
+                “Schedule sprint review at 3 PM”
+              </Text>
+            </TouchableOpacity>
+
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => onActionSelected?.('play_brief')}
@@ -145,17 +164,8 @@ export const VoiceAssistantSheet: React.FC<VoiceAssistantSheetProps> = ({
               onPress={() => onActionSelected?.('extend_time')}
               style={styles.actionChip}
             >
-              <Clock size={14} color="#1B1C19" />
-              <Text style={styles.actionChipText}>+15 mins to Focus</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => onActionSelected?.('reshuffle')}
-              style={styles.actionChip}
-            >
               <RotateCcw size={14} color="#1B1C19" />
-              <Text style={styles.actionChipText}>Optimize Afternoon</Text>
+              <Text style={styles.actionChipText}>+15 mins to Focus</Text>
             </TouchableOpacity>
           </View>
         </Animated.View>

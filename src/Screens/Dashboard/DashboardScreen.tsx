@@ -24,6 +24,7 @@ import Toast from 'react-native-toast-message';
 import { Fonts } from '../../Theme/fonts';
 import { SVGS } from '../../Assets/Images';
 import { useTaskReminder } from '../../Context/TaskReminderContext';
+import { useVoiceWakeWord } from '../../Context/VoiceWakeWordContext';
 import DailyBriefingCard from './Components/DailyBriefingCard';
 import DailyBalanceGrid from './Components/DailyBalanceGrid';
 import TimelineItemCard, { TimelineItem } from './Components/TimelineItemCard';
@@ -102,11 +103,11 @@ const CURATED_DEFAULT_FLOW: TimelineItem[] = [
 export const DashboardScreen: React.FC = () => {
   const navigation = useNavigation<any>();
   const { tasks, toggleTask, reminders, openTaskModal } = useTaskReminder();
+  const { openAssistant, triggerWakeWord } = useVoiceWakeWord();
 
   const [activeFilter, setActiveFilter] = useState<FlowFilter>('all');
   const [timelineItems, setTimelineItems] =
     useState<TimelineItem[]>(CURATED_DEFAULT_FLOW);
-  const [isVoiceSheetVisible, setIsVoiceSheetVisible] = useState(false);
 
   // Reshuffle rotation animation
   const rotateAnim = useRef(new Animated.Value(0)).current;
@@ -248,13 +249,16 @@ export const DashboardScreen: React.FC = () => {
         <View style={styles.headerRight}>
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={() => {
-              Toast.show({
-                type: 'info',
-                text1: 'Curated Preferences',
-                text2: 'Customizing mindful pace & quiet hours.',
-              });
-            }}
+            onPress={() => triggerWakeWord()}
+            style={styles.voiceHeaderBtn}
+            accessibilityLabel="Hey Regius Voice Assistant"
+          >
+            <Mic size={18} color="#2D5A37" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => navigation.navigate('Settings')}
             style={styles.tuneButton}
             accessibilityLabel="Filter or customize flow"
           >
@@ -301,7 +305,7 @@ export const DashboardScreen: React.FC = () => {
           taskCount={tasks.length}
           habitCount={timelineItems.length}
           reminderCount={reminders.length}
-          onOpenVoiceAssistant={() => setIsVoiceSheetVisible(true)}
+          onOpenVoiceAssistant={() => openAssistant()}
         />
 
         {/* ── Daily Balance & Energy Gauge (Bento Grid) ── */}
@@ -313,7 +317,7 @@ export const DashboardScreen: React.FC = () => {
           nudgesCount={reminders.length > 0 ? reminders.length : 2}
           onPressTasks={() => navigation.navigate('Tasks')}
           onPressHabits={() => setActiveFilter('habits')}
-          onPressNudges={() => setIsVoiceSheetVisible(true)}
+          onPressNudges={() => openAssistant()}
         />
 
         {/* ── Today's Curated Flow Timeline ── */}
@@ -384,7 +388,7 @@ export const DashboardScreen: React.FC = () => {
                 onExtendMinutes={handleExtendMinutes}
                 onPressCard={selected => {
                   if (selected.status === 'spoken_checkin') {
-                    setIsVoiceSheetVisible(true);
+                    openAssistant();
                   } else {
                     handleToggleComplete(selected.id);
                   }
@@ -407,7 +411,7 @@ export const DashboardScreen: React.FC = () => {
 
           <TouchableOpacity
             activeOpacity={0.88}
-            onPress={() => setIsVoiceSheetVisible(true)}
+            onPress={() => openAssistant()}
             style={styles.voiceAssistantBtn}
             accessibilityLabel="Ask Aria Voice Assistant"
           >
@@ -418,26 +422,6 @@ export const DashboardScreen: React.FC = () => {
         {/* Extra bottom padding to avoid overlapping floating tab bar */}
         <View style={{ height: 96 }} />
       </ScrollView>
-
-      {/* Voice Assistant Interaction Modal */}
-      <VoiceAssistantSheet
-        visible={isVoiceSheetVisible}
-        onClose={() => setIsVoiceSheetVisible(false)}
-        onActionSelected={action => {
-          setIsVoiceSheetVisible(false);
-          if (action === 'play_brief') {
-            Toast.show({
-              type: 'info',
-              text1: 'Morning Brief',
-              text2: 'Playing full audio overview...',
-            });
-          } else if (action === 'extend_time') {
-            handleExtendMinutes('current');
-          } else if (action === 'reshuffle') {
-            handleReshuffle();
-          }
-        }}
-      />
     </SafeAreaView>
   );
 };
@@ -469,6 +453,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+  },
+  voiceHeaderBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    backgroundColor: '#CCE6D0',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   tuneButton: {
     width: 38,

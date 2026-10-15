@@ -1,22 +1,39 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { Sparkles } from 'lucide-react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { Sparkles, ChevronLeft } from 'lucide-react-native';
+import { useNavigation } from '@react-navigation/native';
 import { Typography } from '../../../Theme/Typographys';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { useSettingsTheme } from './types';
 
 export const SettingsHeader: React.FC = () => {
   const { isDarkMode, textPrimary, textSecondary } = useSettingsTheme();
+  const navigation = useNavigation<any>();
 
   return (
     <View style={styles.header}>
-      <View>
-        <Text style={[styles.headerTitle, { color: textPrimary }]}>
-          Settings
-        </Text>
-        <Text style={[styles.headerSubtitle, { color: textSecondary }]}>
-          Preferences & AI Assistant Configuration
-        </Text>
+      <View style={styles.leftContainer}>
+        {navigation.canGoBack() && (
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => navigation.goBack()}
+            style={[
+              styles.backButton,
+              { backgroundColor: isDarkMode ? '#2A2E36' : '#EFEAE0' },
+            ]}
+            accessibilityLabel="Go back"
+          >
+            <ChevronLeft size={22} color={textPrimary} />
+          </TouchableOpacity>
+        )}
+        <View>
+          <Text style={[styles.headerTitle, { color: textPrimary }]}>
+            Settings
+          </Text>
+          <Text style={[styles.headerSubtitle, { color: textSecondary }]}>
+            Preferences & AI Assistant Configuration
+          </Text>
+        </View>
       </View>
       <View
         style={[
@@ -45,6 +62,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: ResponsivePixels.size20,
     paddingTop: ResponsivePixels.size8,
+  },
+  leftContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  backButton: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   headerTitle: {
     ...Typography.h1RanadeBold,

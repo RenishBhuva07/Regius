@@ -12,17 +12,18 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
-import { Plus, House, CheckSquare, Bell, Settings } from 'lucide-react-native';
+import { Plus, House, CheckSquare, Bell, Flame } from 'lucide-react-native';
 
 import { DashboardScreen } from '../Screens/Dashboard';
 import TasksScreen from '../Screens/Tasks/TasksScreen';
 import RemindersScreen from '../Screens/Reminders/RemindersScreen';
-import SettingsScreen from '../Screens/Settings/SettingsScreen';
+import { HabitsScreen } from '../Screens/Habits';
 import { Colors } from '../Assets/StyleUtilities/Colors';
 import { Typography } from '../Theme/Typographys';
 import { Fonts } from '../Theme/fonts';
 import PlusActionSheet from './PlusActionSheet';
 import { useTaskReminder } from '../Context/TaskReminderContext';
+import { useVoiceWakeWord } from '../Context/VoiceWakeWordContext';
 import AddTaskModal from '../Components/AddTaskModal';
 import AddReminderModal from '../Components/AddReminderModal';
 
@@ -109,7 +110,7 @@ const LEFT_TABS = [
 ];
 const RIGHT_TABS = [
   { name: 'Reminders', label: 'Reminders', Icon: Bell },
-  { name: 'Settings', label: 'Settings', Icon: Settings },
+  { name: 'Habits', label: 'Habits', Icon: Flame },
 ];
 const ALL_TABS = [...LEFT_TABS, ...RIGHT_TABS];
 
@@ -123,6 +124,7 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
   const totalH = BAR_H + BTN_FLOAT + (BTN_SIZE + BTN_RING) / 2 + safeBot + 4;
 
   const { openTaskModal, openReminderModal } = useTaskReminder();
+  const { triggerWakeWord } = useVoiceWakeWord();
 
   const scaleAnims = React.useRef(
     ALL_TABS.map(() => new Animated.Value(1)),
@@ -342,9 +344,15 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
             <TouchableOpacity
               activeOpacity={0.88}
               onPress={toggleSheet}
+              onLongPress={() => triggerWakeWord()}
+              delayLongPress={320}
               style={styles.btnTouch}
               accessibilityRole="button"
-              accessibilityLabel={isSheetOpen ? 'Close menu' : 'Add new item'}
+              accessibilityLabel={
+                isSheetOpen
+                  ? 'Close menu'
+                  : 'Add new item (Long press for Voice)'
+              }
             >
               <Plus size={26} color={Colors.PureWhiteText} strokeWidth={2.6} />
             </TouchableOpacity>
@@ -380,7 +388,7 @@ export default function BottomTabNavigator() {
         <Tab.Screen name="Dashboard" component={DashboardScreen} />
         <Tab.Screen name="Tasks" component={TasksScreen} />
         <Tab.Screen name="Reminders" component={RemindersScreen} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
+        <Tab.Screen name="Habits" component={HabitsScreen} />
       </Tab.Navigator>
 
       <AddTaskModal
