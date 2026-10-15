@@ -17,6 +17,8 @@ import {
   Check,
   Plus,
   CalendarCheck,
+  Volume2,
+  VolumeX,
 } from 'lucide-react-native';
 import Svg, { Path } from 'react-native-svg';
 import { Typography } from '../../Theme/Typographys';
@@ -25,6 +27,7 @@ import { Colors } from '../../Assets/StyleUtilities/Colors';
 import { SVGS } from '../../Assets/Images';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { useTaskReminder } from '../../Context/TaskReminderContext';
+import { KokoroTTSService } from '../../Services/Kokoro/KokoroTTSService';
 
 // ─── Inline SVG for Office Bag ────────────────────────────────────────────────
 const OfficeBagIcon: React.FC<{ width?: number; height?: number }> = ({
@@ -122,6 +125,23 @@ const RemindersScreen: React.FC<any> = ({ route }) => {
     setSelectedReminders,
     openReminderModal,
   } = useTaskReminder();
+
+  const [speakingReminderId, setSpeakingReminderId] = useState<string | null>(null);
+
+  const handleSpeakReminder = async (rem: any, e: any) => {
+    e.stopPropagation?.();
+    if (speakingReminderId === rem.id) {
+      await KokoroTTSService.stop();
+      setSpeakingReminderId(null);
+    } else {
+      setSpeakingReminderId(rem.id);
+      const textToSpeak = `Reminder: ${rem.title}. Scheduled for ${rem.time}.`;
+      await KokoroTTSService.speak(textToSpeak);
+      setTimeout(() => {
+        setSpeakingReminderId(prev => (prev === rem.id ? null : prev));
+      }, 5000);
+    }
+  };
 
   // Trigger from navigation params (e.g. from PlusActionSheet or other routes)
   useEffect(() => {
@@ -390,17 +410,35 @@ const RemindersScreen: React.FC<any> = ({ route }) => {
                       </View>
                     </View>
 
-                    <View
-                      style={[
-                        styles.reminderCheckbox,
-                        isChecked
-                          ? styles.reminderCheckboxChecked
-                          : styles.reminderCheckboxUnchecked,
-                      ]}
-                    >
-                      {isChecked ? (
-                        <Check size={14} color="#52D22E" strokeWidth={3} />
-                      ) : null}
+                    <View style={styles.cardRightActions}>
+                      <TouchableOpacity
+                        activeOpacity={0.7}
+                        style={[
+                          styles.speakBtn,
+                          speakingReminderId === rem.id && styles.speakBtnActive,
+                        ]}
+                        onPress={e => handleSpeakReminder(rem, e)}
+                        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                      >
+                        {speakingReminderId === rem.id ? (
+                          <VolumeX size={16} color="#8383D6" />
+                        ) : (
+                          <Volume2 size={16} color="#8A9099" />
+                        )}
+                      </TouchableOpacity>
+
+                      <View
+                        style={[
+                          styles.reminderCheckbox,
+                          isChecked
+                            ? styles.reminderCheckboxChecked
+                            : styles.reminderCheckboxUnchecked,
+                        ]}
+                      >
+                        {isChecked ? (
+                          <Check size={14} color="#52D22E" strokeWidth={3} />
+                        ) : null}
+                      </View>
                     </View>
                   </TouchableOpacity>
                 );
@@ -750,6 +788,24 @@ const styles = StyleSheet.create({
     ...Typography.bodySmallPoppinsRegular,
     fontSize: 11,
     color: '#8383D6',
+  },
+
+  // Card Right Actions & Speaker Button
+  cardRightActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: ResponsivePixels.size8,
+  },
+  speakBtn: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#F3F4F6',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  speakBtnActive: {
+    backgroundColor: '#EFF2FE',
   },
 
   // Checkbox

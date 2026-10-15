@@ -190,7 +190,7 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
           </View>
           <Text
             style={[styles.waveformSampleText, { color: textSecondary }]}
-            numberOfLines={1}
+            numberOfLines={2}
           >
             &ldquo;{selectedVoice.sampleText}&rdquo;
           </Text>
@@ -304,7 +304,7 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
                   )}
                 </View>
                 <Text style={[styles.voiceQuickDesc, { color: textSecondary }]}>
-                  {voice.gender} • {voice.accent.split(' ')[0]}
+                  {voice.kokoroVoiceId}
                 </Text>
               </TouchableOpacity>
             );

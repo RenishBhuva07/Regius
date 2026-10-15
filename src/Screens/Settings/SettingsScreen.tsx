@@ -15,6 +15,8 @@ import Toast from 'react-native-toast-message';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { AuthContext } from '../../Context/AuthContext';
 import { resetNavigation } from '../../Navigators/Navigator';
+import { VoiceSettingsService } from '../../Services/VoiceSettingsService';
+import { AudioPlayerService } from '../../Services/AudioPlayerService';
 import type { VoiceOption } from './Components';
 import {
   VOICES,
@@ -46,7 +48,7 @@ const SettingsScreen: React.FC = () => {
   const [profileBio, setProfileBio] = useState('Architect & Product Designer');
   const [profileRole, setProfileRole] = useState('Regius Pro Member');
 
-  const [selectedVoiceId, setSelectedVoiceId] = useState('nova');
+  const [selectedVoiceId, setSelectedVoiceId] = useState('af_bella');
   const [speechSpeed, setSpeechSpeed] = useState<number>(1.0);
   const [autoSpeakReplies, setAutoSpeakReplies] = useState(true);
   const [wakeWordEnabled, setWakeWordEnabled] = useState(true);
@@ -71,6 +73,28 @@ const SettingsScreen: React.FC = () => {
   const waveAnim3 = useRef(new Animated.Value(0.4)).current;
   const waveAnim4 = useRef(new Animated.Value(0.9)).current;
   const waveAnim5 = useRef(new Animated.Value(0.5)).current;
+
+  // Load saved voice settings from AsyncStorage
+  useEffect(() => {
+    VoiceSettingsService.getSettings().then(saved => {
+      if (saved.selectedVoiceId) setSelectedVoiceId(saved.selectedVoiceId);
+      if (saved.speechSpeed) setSpeechSpeed(saved.speechSpeed);
+      if (saved.autoSpeakReplies !== undefined)
+        setAutoSpeakReplies(saved.autoSpeakReplies);
+      if (saved.wakeWordEnabled !== undefined)
+        setWakeWordEnabled(saved.wakeWordEnabled);
+    });
+
+    const unsubFinished = AudioPlayerService.onPlaybackFinished(() => {
+      setIsPlayingPreview(false);
+      setPlayingVoiceId(null);
+    });
+
+    return () => {
+      unsubFinished();
+      AudioPlayerService.stop();
+    };
+  }, []);
 
   useEffect(() => {
     let animLoop: Animated.CompositeAnimation | null = null;
@@ -163,18 +187,21 @@ const SettingsScreen: React.FC = () => {
     };
   }, [isPlayingPreview, waveAnim1, waveAnim2, waveAnim3, waveAnim4, waveAnim5]);
 
-  const handleTogglePreview = (voiceId: string) => {
+  const handleTogglePreview = async (voiceId: string) => {
     if (isPlayingPreview && playingVoiceId === voiceId) {
+      await AudioPlayerService.stop();
       setIsPlayingPreview(false);
       setPlayingVoiceId(null);
     } else {
+      const targetVoice = VOICES.find(v => v.id === voiceId) || VOICES[0];
       setPlayingVoiceId(voiceId);
       setIsPlayingPreview(true);
-      // Auto-stop preview after 4 seconds
-      setTimeout(() => {
-        setIsPlayingPreview(false);
-        setPlayingVoiceId(null);
-      }, 4000);
+      await AudioPlayerService.play({
+        id: targetVoice.id,
+        url: targetVoice.previewUrl,
+        title: targetVoice.name,
+        artist: `Kokoro Neural Voice (${targetVoice.kokoroVoiceId})`,
+      });
     }
   };
 
@@ -182,10 +209,26 @@ const SettingsScreen: React.FC = () => {
 
   const handleSelectVoice = (voice: VoiceOption) => {
     setSelectedVoiceId(voice.id);
+    VoiceSettingsService.setSelectedVoice(voice.id);
     Toast.show({
       type: 'success',
       text2: `Default voice set to ${voice.name} (${voice.tag})`,
     });
+  };
+
+  const handleChangeSpeechSpeed = (speed: number) => {
+    setSpeechSpeed(speed);
+    VoiceSettingsService.setSpeechSpeed(speed);
+  };
+
+  const handleToggleAutoSpeakReplies = (enabled: boolean) => {
+    setAutoSpeakReplies(enabled);
+    VoiceSettingsService.setAutoSpeakReplies(enabled);
+  };
+
+  const handleToggleWakeWord = (enabled: boolean) => {
+    setWakeWordEnabled(enabled);
+    VoiceSettingsService.saveSettings({ wakeWordEnabled: enabled });
   };
 
   const handleSaveProfile = (data: {
@@ -255,11 +298,11 @@ const SettingsScreen: React.FC = () => {
           onTogglePreview={handleTogglePreview}
           waveAnims={[waveAnim1, waveAnim2, waveAnim3, waveAnim4, waveAnim5]}
           speechSpeed={speechSpeed}
-          onChangeSpeechSpeed={setSpeechSpeed}
+          onChangeSpeechSpeed={handleChangeSpeechSpeed}
           autoSpeakReplies={autoSpeakReplies}
-          onToggleAutoSpeakReplies={setAutoSpeakReplies}
+          onToggleAutoSpeakReplies={handleToggleAutoSpeakReplies}
           wakeWordEnabled={wakeWordEnabled}
-          onToggleWakeWord={setWakeWordEnabled}
+          onToggleWakeWord={handleToggleWakeWord}
         />
 
         <AppearanceSection

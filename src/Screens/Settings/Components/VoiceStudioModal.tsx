@@ -123,6 +123,24 @@ export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
                         >
                           {voice.name}
                         </Text>
+                        <View
+                          style={[
+                            styles.kokoroIdBadge,
+                            {
+                              backgroundColor: surfaceAlt,
+                              borderColor: borderLight,
+                            },
+                          ]}
+                        >
+                          <Text
+                            style={[
+                              styles.kokoroIdBadgeText,
+                              { color: voice.accentColor },
+                            ]}
+                          >
+                            {voice.kokoroVoiceId}
+                          </Text>
+                        </View>
                         {isSelected && (
                           <View
                             style={[
@@ -318,6 +336,17 @@ const styles = StyleSheet.create({
   voiceDetailedName: {
     ...Typography.bodyLargePoppinsSemiBold,
     fontSize: 16,
+  },
+  kokoroIdBadge: {
+    paddingHorizontal: 7,
+    paddingVertical: 2,
+    borderRadius: 6,
+    borderWidth: 1,
+  },
+  kokoroIdBadgeText: {
+    fontFamily: Typography.bodySmallRanadeBold.fontFamily,
+    fontSize: 10,
+    fontWeight: '700',
   },
   activeBadgePill: {
     paddingHorizontal: 6,
