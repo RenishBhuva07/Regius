@@ -14,7 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Svg, { Path } from 'react-native-svg';
 import { Plus, House, CheckSquare, Bell, Settings } from 'lucide-react-native';
 
-import HomeScreen from '../Screens/Home/HomeScreen';
+import { DashboardScreen } from '../Screens/Dashboard';
 import TasksScreen from '../Screens/Tasks/TasksScreen';
 import RemindersScreen from '../Screens/Reminders/RemindersScreen';
 import SettingsScreen from '../Screens/Settings/SettingsScreen';
@@ -104,7 +104,7 @@ const CurvedBar: React.FC = () => {
 // ─── Tab definitions ──────────────────────────────────────────────────────────
 
 const LEFT_TABS = [
-  { name: 'Home', label: 'Home', Icon: House },
+  { name: 'Dashboard', label: 'Dashboard', Icon: House },
   { name: 'Tasks', label: 'Tasks', Icon: CheckSquare },
 ];
 const RIGHT_TABS = [
@@ -377,7 +377,7 @@ export default function BottomTabNavigator() {
         tabBar={renderTabBar}
         screenOptions={{ headerShown: false }}
       >
-        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Dashboard" component={DashboardScreen} />
         <Tab.Screen name="Tasks" component={TasksScreen} />
         <Tab.Screen name="Reminders" component={RemindersScreen} />
         <Tab.Screen name="Settings" component={SettingsScreen} />

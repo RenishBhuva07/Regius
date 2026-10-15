@@ -6,6 +6,9 @@ import Splash from '../Screens/Splash/Splash';
 import Intro from '../Screens/Intro/Intro';
 import { LoginScreen } from '../Screens/Login';
 import BottomTabNavigator from './BottomTabNavigator';
+import { AddTaskScreen } from '../Screens/Tasks';
+import { AddReminderScreen } from '../Screens/Reminders';
+import { DashboardScreen } from '../Screens/Dashboard';
 import { AuthContext } from '../Context/AuthContext';
 
 const Stack = createNativeStackNavigator();
@@ -41,6 +44,17 @@ export default function AppNavigator() {
         <Stack.Screen name="Intro" component={Intro} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="MainTabs" component={BottomTabNavigator} />
+        <Stack.Screen
+          name="AddTaskScreen"
+          component={AddTaskScreen}
+          options={{ animation: 'slide_from_bottom' }}
+        />
+        <Stack.Screen
+          name="AddReminderScreen"
+          component={AddReminderScreen}
+          options={{ animation: 'slide_from_bottom' }}
+        />
+        <Stack.Screen name="Dashboard" component={DashboardScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

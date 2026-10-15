@@ -16,6 +16,9 @@ export interface Task {
   note?: string;
   priority?: 'low' | 'medium' | 'high';
   date?: string;
+  time?: string;
+  subtasks?: { id: string; text: string; done: boolean }[];
+  voiceNudge?: boolean;
 }
 
 export interface Reminder {
@@ -28,6 +31,9 @@ export interface Reminder {
   repeat: string;
   done: boolean;
   color?: string;
+  remindBefore?: string;
+  sound?: string;
+  urgentAlarm?: boolean;
 }
 
 export const INITIAL_TASKS: Task[] = [
@@ -121,6 +127,9 @@ interface TaskReminderContextType {
     iconType?: 'mail' | 'users';
     priority?: 'low' | 'medium' | 'high';
     date?: string;
+    time?: string;
+    subtasks?: { id: string; text: string; done: boolean }[];
+    voiceNudge?: boolean;
   }) => void;
   toggleTask: (id: string) => void;
   selectedTasks: Set<string>;
@@ -135,6 +144,9 @@ interface TaskReminderContextType {
     date?: string;
     category?: string;
     repeat?: string;
+    remindBefore?: string;
+    sound?: string;
+    urgentAlarm?: boolean;
   }) => void;
   toggleReminder: (id: string) => void;
   selectedReminders: Set<string>;
@@ -197,6 +209,9 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
     iconType?: 'mail' | 'users';
     priority?: 'low' | 'medium' | 'high';
     date?: string;
+    time?: string;
+    subtasks?: { id: string; text: string; done: boolean }[];
+    voiceNudge?: boolean;
   }) => {
     if (!data.title.trim()) return;
     const newTask: Task = {
@@ -208,6 +223,9 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
       note: data.note,
       priority: data.priority || 'medium',
       date: data.date || 'Today',
+      time: data.time || '10:00 AM',
+      subtasks: data.subtasks,
+      voiceNudge: data.voiceNudge ?? true,
     };
     setTasks(prev => [newTask, ...prev]);
   };
@@ -242,25 +260,31 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
     date?: string;
     category?: string;
     repeat?: string;
+    remindBefore?: string;
+    sound?: string;
+    urgentAlarm?: boolean;
   }) => {
     if (!data.title.trim()) return;
     const newRem: Reminder = {
       id: Date.now().toString(),
       title: data.title.trim(),
       notes: data.notes,
-      time: data.time || '09:00 AM',
-      date: data.date || 'Today',
-      category: data.category || 'daily',
+      time: data.time || '04:30 PM',
+      date: data.date || 'Today, Oct 14',
+      category: data.category || 'works',
       repeat: data.repeat || 'Daily',
       done: false,
       color:
-        data.category === 'health'
+        data.category === 'health' || data.category === 'sport'
           ? '#52D22E'
-          : data.category === 'work'
+          : data.category === 'work' || data.category === 'works'
           ? '#F5C518'
           : data.category === 'events'
           ? '#FF9800'
           : '#8383D6',
+      remindBefore: data.remindBefore || '5 mins before',
+      sound: data.sound || 'Gentle Bell',
+      urgentAlarm: data.urgentAlarm ?? false,
     };
     setReminders(prev => [newRem, ...prev]);
   };

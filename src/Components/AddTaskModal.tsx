@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -10,16 +10,33 @@ import {
   Modal,
   TextInput,
   KeyboardAvoidingView,
+  Animated,
+  Switch,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Mail, Users, Check, X, Calendar } from 'lucide-react-native';
+import {
+  ArrowLeft,
+  Check,
+  X,
+  Calendar,
+  Clock,
+  Sparkles,
+  SlidersHorizontal,
+  Plus,
+  FileText,
+  Volume2,
+  ArrowRight,
+  User,
+} from 'lucide-react-native';
 import Svg, { Path } from 'react-native-svg';
 import { Fonts } from '../Theme/fonts';
 import { Colors } from '../Assets/StyleUtilities/Colors';
 import { SVGS } from '../Assets/Images';
+import { Badge } from '../Common/Badge';
 import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
-// ─── Inline SVGs ─────────────────────────────────────────────────────────────
+// ─── Inline Office Bag SVG ────────────────────────────────────────────────────
 
 const OfficeBagIcon: React.FC<{ width?: number; height?: number }> = ({
   width = 24,
@@ -44,31 +61,87 @@ const OfficeBagIcon: React.FC<{ width?: number; height?: number }> = ({
   </Svg>
 );
 
-const CATEGORIES = [
+// ─── Categories Setup ─────────────────────────────────────────────────────────
+
+interface CategoryItem {
+  id: string;
+  label: string;
+  taskCount: string;
+  bgColor: string;
+  borderColor: string;
+  accentColor: string;
+  shadowColor: string;
+  Icon: React.ComponentType<any>;
+}
+
+const CATEGORIES: CategoryItem[] = [
   {
     id: 'works',
     label: 'Works',
+    taskCount: '+03 task',
     bgColor: '#FFFCEB',
     borderColor: '#FFF5B8',
+    accentColor: '#F5C518',
+    shadowColor: '#F5C518',
     Icon: OfficeBagIcon,
-    accentColor: '#FDD835',
   },
   {
     id: 'sport',
     label: 'Sport',
+    taskCount: '+10 task',
     bgColor: '#EDFDF5',
     borderColor: '#C6FFDD',
-    Icon: SVGS.FloatHeart,
     accentColor: '#52D22E',
+    shadowColor: '#52D22E',
+    Icon: SVGS.FloatHeart,
   },
   {
     id: 'habits',
     label: 'Habits',
+    taskCount: '+04 task',
     bgColor: '#EFF2FE',
     borderColor: '#D8DBFF',
-    Icon: SVGS.FloatPicture,
     accentColor: '#8383D6',
+    shadowColor: '#8383D6',
+    Icon: SVGS.FloatPicture,
   },
+];
+
+// ─── Subtask Item Type ────────────────────────────────────────────────────────
+
+interface SubtaskItem {
+  id: string;
+  text: string;
+  done: boolean;
+}
+
+const INITIAL_SUBTASKS: SubtaskItem[] = [
+  {
+    id: '1',
+    text: 'Draft initial presentation outline',
+    done: false,
+  },
+  {
+    id: '2',
+    text: 'Gather analytics data from Q2',
+    done: false,
+  },
+];
+
+const DATE_OPTIONS = [
+  'Today, Oct 15',
+  'Tomorrow, Oct 16',
+  'This Weekend',
+  'Next Monday',
+];
+
+const TIME_OPTIONS = [
+  '09:00 AM',
+  '10:00 AM',
+  '02:00 PM',
+  '04:30 PM',
+  '06:00 PM',
+  '08:00 PM',
 ];
 
 export interface AddTaskModalProps {
@@ -81,6 +154,9 @@ export interface AddTaskModalProps {
     iconType: 'mail' | 'users';
     priority: 'low' | 'medium' | 'high';
     date: string;
+    time?: string;
+    subtasks?: { id: string; text: string; done: boolean }[];
+    voiceNudge?: boolean;
   }) => void;
 }
 
@@ -90,28 +166,43 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
   onCreateTask,
 }) => {
   const insets = useSafeAreaInsets();
-  const topInset = Math.max(
-    insets.top,
-    Platform.OS === 'ios' ? 47 : StatusBar.currentHeight || 0,
-  );
-  const bottomInset = Math.max(insets.bottom, Platform.OS === 'ios' ? 24 : 16);
 
-  const [newTaskTitle, setNewTaskTitle] = useState('');
-  const [newTaskNote, setNewTaskNote] = useState('');
-  const [newTaskCategory, setNewTaskCategory] = useState('works');
-  const [newTaskIcon, setNewTaskIcon] = useState<'mail' | 'users'>('mail');
-  const [newTaskPriority, setNewTaskPriority] = useState<
+  // Form State
+  const [taskTitle, setTaskTitle] = useState('Prepare Q3 Product Presentation');
+  const [taskNote, setTaskNote] = useState(
+    'Focus on narrative pacing and delightful metrics',
+  );
+  const [selectedCategory, setSelectedCategory] = useState<string>('works');
+  const [selectedPriority, setSelectedPriority] = useState<
     'low' | 'medium' | 'high'
-  >('medium');
-  const [newTaskDate, setNewTaskDate] = useState('Today');
+  >('high');
+  const [selectedDate, setSelectedDate] = useState<string>('Today, Oct 15');
+  const [selectedTime, setSelectedTime] = useState<string>('10:00 AM');
+  const [voiceNudgeEnabled, setVoiceNudgeEnabled] = useState<boolean>(true);
+
+  // Subtasks State
+  const [subtasks, setSubtasks] = useState<SubtaskItem[]>(INITIAL_SUBTASKS);
+  const [newSubtaskInput, setNewSubtaskInput] = useState<string>('');
+
+  // Modals for quick date / time / category customize
+  const [showDateModal, setShowDateModal] = useState<boolean>(false);
+  const [showTimeModal, setShowTimeModal] = useState<boolean>(false);
+  const [showCustomizeModal, setShowCustomizeModal] = useState<boolean>(false);
+
+  // Animations
+  const saveAnim = useRef(new Animated.Value(1)).current;
+  const createAnim = useRef(new Animated.Value(1)).current;
 
   const resetForm = () => {
-    setNewTaskTitle('');
-    setNewTaskNote('');
-    setNewTaskCategory('works');
-    setNewTaskIcon('mail');
-    setNewTaskPriority('medium');
-    setNewTaskDate('Today');
+    setTaskTitle('Prepare Q3 Product Presentation');
+    setTaskNote('Focus on narrative pacing and delightful metrics');
+    setSelectedCategory('works');
+    setSelectedPriority('high');
+    setSelectedDate('Today, Oct 15');
+    setSelectedTime('10:00 AM');
+    setVoiceNudgeEnabled(true);
+    setSubtasks(INITIAL_SUBTASKS);
+    setNewSubtaskInput('');
   };
 
   useEffect(() => {
@@ -120,141 +211,238 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
     }
   }, [visible]);
 
-  const handleCreate = () => {
-    if (!newTaskTitle.trim()) return;
-    onCreateTask({
-      title: newTaskTitle.trim(),
-      note: newTaskNote.trim() || undefined,
-      category: newTaskCategory,
-      iconType: newTaskIcon,
-      priority: newTaskPriority,
-      date: newTaskDate,
-    });
-    resetForm();
+  const handleToggleSubtask = (id: string) => {
+    setSubtasks(prev =>
+      prev.map(item => (item.id === id ? { ...item, done: !item.done } : item)),
+    );
   };
 
-  const handleClose = () => {
-    resetForm();
-    onClose();
+  const handleRemoveSubtask = (id: string) => {
+    setSubtasks(prev => prev.filter(item => item.id !== id));
   };
+
+  const handleAddSubtask = () => {
+    const trimmed = newSubtaskInput.trim();
+    if (!trimmed) return;
+    const newItem: SubtaskItem = {
+      id: Date.now().toString(),
+      text: trimmed,
+      done: false,
+    };
+    setSubtasks(prev => [...prev, newItem]);
+    setNewSubtaskInput('');
+  };
+
+  const handleResetSubtasks = () => {
+    setSubtasks([]);
+  };
+
+  const handleSave = () => {
+    if (!taskTitle.trim()) return;
+
+    Animated.sequence([
+      Animated.timing(createAnim, {
+        toValue: 0.94,
+        duration: 90,
+        useNativeDriver: true,
+      }),
+      Animated.spring(createAnim, {
+        toValue: 1,
+        friction: 4,
+        useNativeDriver: true,
+      }),
+    ]).start();
+
+    onCreateTask({
+      title: taskTitle.trim(),
+      note: taskNote.trim() || undefined,
+      category: selectedCategory,
+      iconType: selectedCategory === 'works' ? 'mail' : 'users',
+      priority: selectedPriority,
+      date: selectedDate,
+      time: selectedTime,
+      subtasks: subtasks.length > 0 ? subtasks : undefined,
+      voiceNudge: voiceNudgeEnabled,
+    });
+  };
+
+  const completedSubtasksCount = subtasks.filter(s => s.done).length;
 
   return (
     <Modal
       visible={visible}
       animationType="slide"
       presentationStyle="fullScreen"
-      onRequestClose={handleClose}
+      onRequestClose={onClose}
     >
-      <StatusBar barStyle="dark-content" />
-      <View style={styles.sheetContainer}>
-        {/* Top Notch / Dynamic Island Spacer with clean white background */}
-        <View style={{ height: topInset, backgroundColor: '#FFFFFF' }} />
+      <View style={styles.canvasContainer}>
+        <StatusBar barStyle="dark-content" />
 
-        {/* Header */}
-        <View style={styles.sheetHeader}>
+        {/* Top Notch / Safe Area Spacer */}
+        <View
+          style={{
+            height: Math.max(
+              insets.top,
+              Platform.OS === 'ios' ? 48 : StatusBar.currentHeight || 12,
+            ),
+            backgroundColor: '#FAF8F5',
+          }}
+        />
+
+        {/* ─── Top Header Bar ────────────────────────────────────────── */}
+        <View style={styles.topHeader}>
           <TouchableOpacity
             activeOpacity={0.7}
-            onPress={handleClose}
-            style={styles.sheetCloseBtn}
-            accessibilityRole="button"
-            accessibilityLabel="Close"
+            onPress={onClose}
+            style={styles.backBtn}
+            accessibilityLabel="Go back"
           >
-            <X size={20} color={Colors.MidnightCharcoal} strokeWidth={2.4} />
+            <ArrowLeft
+              size={20}
+              color={Colors.MidnightCharcoal}
+              strokeWidth={2.4}
+            />
           </TouchableOpacity>
 
-          <View style={styles.sheetHeaderCenter}>
-            <Text style={styles.sheetTitle}>New Task</Text>
-            <Text style={styles.sheetSubtitle}>Personalize your schedule</Text>
-          </View>
+          <Text style={styles.headerTitle}>New Task</Text>
 
-          <View style={{ width: 40 }} />
+          <View style={styles.avatarCircle}>
+            <User size={18} color="#FFFFFF" strokeWidth={2.2} />
+          </View>
         </View>
 
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-          style={styles.sheetKeyboardAvoid}
+          style={{ flex: 1 }}
         >
           <ScrollView
-            style={styles.sheetScroll}
-            contentContainerStyle={styles.sheetScrollContent}
+            style={styles.scrollArea}
+            contentContainerStyle={[
+              styles.scrollContent,
+              { paddingBottom: Math.max(insets.bottom, 24) + 80 },
+            ]}
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
           >
-            {/* Task Title */}
-            <View style={styles.sheetSection}>
-              <Text style={styles.sheetLabel}>Task Title</Text>
-              <View style={styles.inputCard}>
-                <TextInput
-                  style={styles.titleInput}
-                  placeholder="e.g., Client meeting, Review project"
-                  placeholderTextColor="#A3A8B1"
-                  value={newTaskTitle}
-                  onChangeText={setNewTaskTitle}
-                  autoFocus
+            {/* ─── Action Banner: New Entry / Craft Your Task / Save ─── */}
+            <View style={styles.actionBanner}>
+              <View style={styles.actionBannerLeft}>
+                <Text style={styles.newEntryTag}>NEW ENTRY</Text>
+                <Text style={styles.craftTaskHeadline}>Craft Your Task</Text>
+              </View>
+
+              <Animated.View style={{ transform: [{ scale: saveAnim }] }}>
+                <TouchableOpacity
+                  activeOpacity={0.85}
+                  onPress={handleSave}
+                  style={styles.savePillBtn}
+                >
+                  <Text style={styles.savePillText}>Save</Text>
+                  <Check size={16} color="#FFFFFF" strokeWidth={2.6} />
+                </TouchableOpacity>
+              </Animated.View>
+            </View>
+
+            {/* ─── Primary Task Name & Context Card ──────────────────── */}
+            <View style={styles.primaryTaskCard}>
+              <View style={styles.primaryTaskCardHeader}>
+                <Text style={styles.cardSectionLabel}>
+                  TITLE OF YOUR ENDEAVOR
+                </Text>
+                <Badge
+                  variant="green"
+                  size="sm"
+                  label="Mindful Focus"
+                  icon={<Sparkles size={11} color="#1B9A72" />}
                 />
-                {newTaskTitle.length > 0 && (
-                  <TouchableOpacity
-                    onPress={() => setNewTaskTitle('')}
-                    style={styles.clearBtn}
-                  >
-                    <X size={15} color="#9CA3AF" />
-                  </TouchableOpacity>
-                )}
+              </View>
+
+              <TextInput
+                style={styles.titleInput}
+                placeholder="e.g., Weekly Team Sync & Catchup..."
+                placeholderTextColor="#A3A8B1"
+                value={taskTitle}
+                onChangeText={setTaskTitle}
+                multiline={false}
+                returnKeyType="next"
+              />
+
+              <View style={styles.contextRow}>
+                <FileText size={16} color="#7E838F" strokeWidth={2} />
+                <TextInput
+                  style={styles.contextInput}
+                  placeholder="Add gentle context or personal memo..."
+                  placeholderTextColor="#A3A8B1"
+                  value={taskNote}
+                  onChangeText={setTaskNote}
+                />
               </View>
             </View>
 
-            {/* Task Note / Description */}
-            <View style={styles.sheetSection}>
-              <Text style={styles.sheetLabel}>Notes & Details (Optional)</Text>
-              <View style={[styles.inputCard, styles.noteInputCard]}>
-                <TextInput
-                  style={styles.noteInput}
-                  placeholder="Add extra context, checklist, or description..."
-                  placeholderTextColor="#A3A8B1"
-                  value={newTaskNote}
-                  onChangeText={setNewTaskNote}
-                  multiline
-                  textAlignVertical="top"
-                />
+            {/* ─── Category Selector (Regius Signature Asymmetric Shape) ─ */}
+            <View style={styles.sectionBlock}>
+              <View style={styles.sectionHeaderRow}>
+                <Text style={styles.sectionHeading}>Category</Text>
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={() => setShowCustomizeModal(true)}
+                  style={styles.customizeBtn}
+                >
+                  <Text style={styles.customizeText}>Customize</Text>
+                  <SlidersHorizontal
+                    size={13}
+                    color="#7E838F"
+                    strokeWidth={2}
+                  />
+                </TouchableOpacity>
               </View>
-            </View>
 
-            {/* Category Picker */}
-            <View style={styles.sheetSection}>
-              <Text style={styles.sheetLabel}>Category</Text>
-              <View style={styles.categoryCardRow}>
+              <View style={styles.categoryGrid}>
                 {CATEGORIES.map(cat => {
-                  const isSelected = newTaskCategory === cat.id;
+                  const isSelected = selectedCategory === cat.id;
                   const CatIcon = cat.Icon;
                   return (
                     <TouchableOpacity
                       key={cat.id}
-                      activeOpacity={0.8}
-                      onPress={() => setNewTaskCategory(cat.id)}
+                      activeOpacity={0.85}
+                      onPress={() => setSelectedCategory(cat.id)}
                       style={[
-                        styles.catSelectCard,
+                        styles.categoryCard,
                         {
                           backgroundColor: cat.bgColor,
                           borderColor: isSelected
-                            ? cat.accentColor || '#1F2228'
+                            ? Colors.MidnightCharcoal
                             : cat.borderColor,
                         },
-                        isSelected && styles.catSelectCardActive,
+                        isSelected && styles.categoryCardSelected,
                       ]}
                     >
-                      <View style={styles.catIconCircle}>
-                        <CatIcon width={22} height={22} />
+                      <View style={styles.catTopRow}>
+                        <View style={styles.catIconCircle}>
+                          <CatIcon width={22} height={22} />
+                        </View>
+
+                        {isSelected ? (
+                          <View style={styles.catCheckBadge}>
+                            <Check size={12} color="#FFFFFF" strokeWidth={3} />
+                          </View>
+                        ) : (
+                          <View style={styles.catCheckPlaceholder} />
+                        )}
                       </View>
-                      <Text style={styles.catSelectLabel}>{cat.label}</Text>
+
+                      <View style={styles.catBottomInfo}>
+                        <Text style={styles.catLabel}>{cat.label}</Text>
+                        <Text style={styles.catCount}>{cat.taskCount}</Text>
+                      </View>
+
                       {isSelected && (
                         <View
                           style={[
-                            styles.catSelectedBadge,
-                            { backgroundColor: cat.accentColor || '#1F2228' },
+                            styles.catBottomAccentPill,
+                            { backgroundColor: cat.accentColor },
                           ]}
-                        >
-                          <Check size={11} color="#FFFFFF" strokeWidth={3} />
-                        </View>
+                        />
                       )}
                     </TouchableOpacity>
                   );
@@ -262,91 +450,96 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
               </View>
             </View>
 
-            {/* Icon Type Selection */}
-            <View style={styles.sheetSection}>
-              <Text style={styles.sheetLabel}>Icon Type</Text>
-              <View style={styles.chipsRow}>
+            {/* ─── When to do it (Schedule Block) ────────────────────── */}
+            <View style={styles.sectionBlock}>
+              <Text style={styles.sectionHeading}>When to do it</Text>
+
+              <View style={styles.scheduleContainerCard}>
+                {/* Date Trigger */}
                 <TouchableOpacity
                   activeOpacity={0.8}
-                  onPress={() => setNewTaskIcon('mail')}
-                  style={[
-                    styles.sheetPill,
-                    newTaskIcon === 'mail' && styles.sheetPillActive,
-                  ]}
+                  onPress={() => setShowDateModal(true)}
+                  style={styles.scheduleTile}
                 >
-                  <Mail
-                    size={16}
-                    color={newTaskIcon === 'mail' ? '#FFFFFF' : '#454A53'}
-                    strokeWidth={2.2}
-                  />
-                  <Text
-                    style={[
-                      styles.sheetPillText,
-                      newTaskIcon === 'mail' && styles.sheetPillTextActive,
-                    ]}
-                  >
-                    Email / Message
-                  </Text>
+                  <View style={styles.scheduleIconWrap}>
+                    <Calendar
+                      size={18}
+                      color={Colors.MidnightCharcoal}
+                      strokeWidth={2}
+                    />
+                  </View>
+                  <View style={styles.scheduleTileTextGroup}>
+                    <Text style={styles.scheduleTileSmallLabel}>
+                      SCHEDULE DATE
+                    </Text>
+                    <Text style={styles.scheduleTileValue} numberOfLines={1}>
+                      {selectedDate}
+                    </Text>
+                  </View>
                 </TouchableOpacity>
 
+                {/* Time Trigger */}
                 <TouchableOpacity
                   activeOpacity={0.8}
-                  onPress={() => setNewTaskIcon('users')}
-                  style={[
-                    styles.sheetPill,
-                    newTaskIcon === 'users' && styles.sheetPillActive,
-                  ]}
+                  onPress={() => setShowTimeModal(true)}
+                  style={styles.scheduleTile}
                 >
-                  <Users
-                    size={16}
-                    color={newTaskIcon === 'users' ? '#FFFFFF' : '#454A53'}
-                    strokeWidth={2.2}
-                  />
-                  <Text
-                    style={[
-                      styles.sheetPillText,
-                      newTaskIcon === 'users' && styles.sheetPillTextActive,
-                    ]}
-                  >
-                    Meeting / Team
-                  </Text>
+                  <View style={styles.scheduleIconWrap}>
+                    <Clock
+                      size={18}
+                      color={Colors.MidnightCharcoal}
+                      strokeWidth={2}
+                    />
+                  </View>
+                  <View style={styles.scheduleTileTextGroup}>
+                    <Text style={styles.scheduleTileSmallLabel}>TIME</Text>
+                    <Text style={styles.scheduleTileValue} numberOfLines={1}>
+                      {selectedTime}
+                    </Text>
+                  </View>
                 </TouchableOpacity>
               </View>
             </View>
 
-            {/* Priority */}
-            <View style={styles.sheetSection}>
-              <Text style={styles.sheetLabel}>Priority</Text>
-              <View style={styles.chipsRow}>
-                {[
-                  { key: 'low', label: 'Low', color: '#52D22E' },
-                  { key: 'medium', label: 'Medium', color: '#F5C518' },
-                  { key: 'high', label: 'High', color: '#FF5B65' },
-                ].map(p => {
-                  const isSelected = newTaskPriority === p.key;
+            {/* ─── Priority Weight Selector ─────────────────────────── */}
+            <View style={styles.sectionBlock}>
+              <View style={styles.sectionHeaderRow}>
+                <Text style={styles.sectionHeading}>Priority Weight</Text>
+                <Text style={styles.sectionSubtext}>Balance energy load</Text>
+              </View>
+
+              <View style={styles.priorityPillContainer}>
+                {(
+                  [
+                    { key: 'low', label: 'Low', dotColor: '#52D22E' },
+                    { key: 'medium', label: 'Medium', dotColor: '#F5C518' },
+                    { key: 'high', label: 'High', dotColor: '#FF5B65' },
+                  ] as const
+                ).map(item => {
+                  const isActive = selectedPriority === item.key;
                   return (
                     <TouchableOpacity
-                      key={p.key}
+                      key={item.key}
                       activeOpacity={0.8}
-                      onPress={() => setNewTaskPriority(p.key as any)}
+                      onPress={() => setSelectedPriority(item.key)}
                       style={[
-                        styles.sheetPill,
-                        isSelected && styles.sheetPillActive,
+                        styles.prioritySegment,
+                        isActive && styles.prioritySegmentActive,
                       ]}
                     >
                       <View
                         style={[
                           styles.priorityDot,
-                          { backgroundColor: p.color },
+                          { backgroundColor: item.dotColor },
                         ]}
                       />
                       <Text
                         style={[
-                          styles.sheetPillText,
-                          isSelected && styles.sheetPillTextActive,
+                          styles.prioritySegmentText,
+                          isActive && styles.prioritySegmentTextActive,
                         ]}
                       >
-                        {p.label}
+                        {item.label}
                       </Text>
                     </TouchableOpacity>
                   );
@@ -354,183 +547,572 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
               </View>
             </View>
 
-            {/* Due Date */}
-            <View style={styles.sheetSection}>
-              <Text style={styles.sheetLabel}>Due Date</Text>
-              <View style={styles.chipsRow}>
-                {['Today', 'Tomorrow', 'This Weekend', 'Next Week'].map(d => {
-                  const isSelected = newTaskDate === d;
-                  return (
+            {/* ─── Subtasks & Checklist Builder ─────────────────────── */}
+            <View style={styles.sectionBlock}>
+              <View style={styles.sectionHeaderRow}>
+                <View style={styles.subtasksCountRow}>
+                  <Text style={styles.sectionHeading}>Subtasks</Text>
+                  <View style={styles.counterChip}>
+                    <Text style={styles.counterChipText}>
+                      {completedSubtasksCount} / {subtasks.length}
+                    </Text>
+                  </View>
+                </View>
+
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={handleResetSubtasks}
+                >
+                  <Text style={styles.resetBtnText}>Reset</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Quick Add Subtask Field */}
+              <View style={styles.addSubtaskCard}>
+                <View style={styles.addSubtaskIconCircle}>
+                  <Plus
+                    size={16}
+                    color={Colors.MidnightCharcoal}
+                    strokeWidth={2.5}
+                  />
+                </View>
+
+                <TextInput
+                  style={styles.addSubtaskInput}
+                  placeholder="Add subtask item & hit enter..."
+                  placeholderTextColor="#A3A8B1"
+                  value={newSubtaskInput}
+                  onChangeText={setNewSubtaskInput}
+                  onSubmitEditing={handleAddSubtask}
+                  returnKeyType="done"
+                />
+
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={handleAddSubtask}
+                  style={styles.addSubtaskBtn}
+                >
+                  <Text style={styles.addSubtaskBtnText}>Add</Text>
+                </TouchableOpacity>
+              </View>
+
+              {/* Subtasks Item List */}
+              <View style={styles.subtasksList}>
+                {subtasks.map(item => (
+                  <View key={item.id} style={styles.subtaskItemRow}>
                     <TouchableOpacity
-                      key={d}
-                      activeOpacity={0.8}
-                      onPress={() => setNewTaskDate(d)}
-                      style={[
-                        styles.sheetPill,
-                        isSelected && styles.sheetPillActive,
-                      ]}
+                      activeOpacity={0.7}
+                      onPress={() => handleToggleSubtask(item.id)}
+                      style={styles.subtaskCheckboxArea}
                     >
-                      <Calendar
-                        size={14}
-                        color={isSelected ? '#FFFFFF' : '#6B7280'}
-                        strokeWidth={2}
-                      />
+                      <View
+                        style={[
+                          styles.subtaskCheckbox,
+                          item.done && styles.subtaskCheckboxDone,
+                        ]}
+                      >
+                        {item.done && (
+                          <Check size={14} color="#52D22E" strokeWidth={3} />
+                        )}
+                      </View>
+
                       <Text
                         style={[
-                          styles.sheetPillText,
-                          isSelected && styles.sheetPillTextActive,
+                          styles.subtaskItemText,
+                          item.done && styles.subtaskItemTextDone,
+                        ]}
+                        numberOfLines={2}
+                      >
+                        {item.text}
+                      </Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      onPress={() => handleRemoveSubtask(item.id)}
+                      style={styles.removeSubtaskBtn}
+                    >
+                      <X size={16} color="#A3A8B1" strokeWidth={2.2} />
+                    </TouchableOpacity>
+                  </View>
+                ))}
+              </View>
+            </View>
+
+            {/* ─── Spoken Voice Nudge (AI Feature) ───────────────────── */}
+            <View style={styles.voiceNudgeCard}>
+              <View style={styles.voiceNudgeLeft}>
+                <View style={styles.voiceIconBox}>
+                  <Volume2 size={22} color="#21AF85" strokeWidth={2.4} />
+                </View>
+
+                <View style={styles.voiceTextGroup}>
+                  <View style={styles.voiceTitleRow}>
+                    <Text style={styles.voiceTitle}>Spoken Voice Nudge</Text>
+                    <Badge variant="purple" size="sm" label="ARIA AI" />
+                  </View>
+                  <Text style={styles.voiceSubtitle}>
+                    Calm audio cue when deadline approaches
+                  </Text>
+                </View>
+              </View>
+
+              <Switch
+                value={voiceNudgeEnabled}
+                onValueChange={setVoiceNudgeEnabled}
+                trackColor={{ false: '#E4E2DD', true: Colors.MidnightCharcoal }}
+                thumbColor="#FFFFFF"
+                ios_backgroundColor="#E4E2DD"
+              />
+            </View>
+          </ScrollView>
+
+          {/* ─── Bottom Floating Hero CTA ──────────────────────────── */}
+          <View
+            style={[
+              styles.bottomStickyCta,
+              { paddingBottom: Math.max(insets.bottom, 16) + 6 },
+            ]}
+          >
+            <Animated.View style={{ transform: [{ scale: createAnim }] }}>
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={handleSave}
+                style={[
+                  styles.createTaskHeroBtn,
+                  !taskTitle.trim() && styles.createTaskHeroBtnDisabled,
+                ]}
+                disabled={!taskTitle.trim()}
+              >
+                <Text style={styles.createTaskHeroBtnText}>Create Task</Text>
+
+                <View style={styles.createTaskHeroCircle}>
+                  <ArrowRight size={18} color="#FFFFFF" strokeWidth={2.6} />
+                </View>
+              </TouchableOpacity>
+            </Animated.View>
+          </View>
+        </KeyboardAvoidingView>
+
+        {/* ─── Quick Schedule Date Modal ───────────────────────────── */}
+        <Modal
+          visible={showDateModal}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setShowDateModal(false)}
+        >
+          <TouchableWithoutFeedback onPress={() => setShowDateModal(false)}>
+            <View style={styles.modalOverlay}>
+              <TouchableWithoutFeedback>
+                <View style={styles.modalCard}>
+                  <Text style={styles.modalHeading}>Select Schedule Date</Text>
+                  {DATE_OPTIONS.map(d => (
+                    <TouchableOpacity
+                      key={d}
+                      activeOpacity={0.7}
+                      onPress={() => {
+                        setSelectedDate(d);
+                        setShowDateModal(false);
+                      }}
+                      style={[
+                        styles.modalOptionRow,
+                        selectedDate === d && styles.modalOptionRowActive,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.modalOptionText,
+                          selectedDate === d && styles.modalOptionTextActive,
                         ]}
                       >
                         {d}
                       </Text>
+                      {selectedDate === d && (
+                        <Check
+                          size={18}
+                          color={Colors.MidnightCharcoal}
+                          strokeWidth={2.5}
+                        />
+                      )}
                     </TouchableOpacity>
-                  );
-                })}
-              </View>
+                  ))}
+                </View>
+              </TouchableWithoutFeedback>
             </View>
-          </ScrollView>
+          </TouchableWithoutFeedback>
+        </Modal>
 
-          {/* Bottom Fixed Action CTA */}
-          <View style={[styles.sheetFooter, { paddingBottom: bottomInset }]}>
-            <TouchableOpacity
-              activeOpacity={0.88}
-              style={[
-                styles.createModalBtn,
-                !newTaskTitle.trim() && styles.createModalBtnDisabled,
-              ]}
-              onPress={handleCreate}
-              disabled={!newTaskTitle.trim()}
-            >
-              <Text style={styles.createModalBtnText}>Create Task</Text>
-            </TouchableOpacity>
-          </View>
-        </KeyboardAvoidingView>
+        {/* ─── Quick Schedule Time Modal ───────────────────────────── */}
+        <Modal
+          visible={showTimeModal}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setShowTimeModal(false)}
+        >
+          <TouchableWithoutFeedback onPress={() => setShowTimeModal(false)}>
+            <View style={styles.modalOverlay}>
+              <TouchableWithoutFeedback>
+                <View style={styles.modalCard}>
+                  <Text style={styles.modalHeading}>Select Due Time</Text>
+                  {TIME_OPTIONS.map(t => (
+                    <TouchableOpacity
+                      key={t}
+                      activeOpacity={0.7}
+                      onPress={() => {
+                        setSelectedTime(t);
+                        setShowTimeModal(false);
+                      }}
+                      style={[
+                        styles.modalOptionRow,
+                        selectedTime === t && styles.modalOptionRowActive,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.modalOptionText,
+                          selectedTime === t && styles.modalOptionTextActive,
+                        ]}
+                      >
+                        {t}
+                      </Text>
+                      {selectedTime === t && (
+                        <Check
+                          size={18}
+                          color={Colors.MidnightCharcoal}
+                          strokeWidth={2.5}
+                        />
+                      )}
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+
+        {/* ─── Quick Customize Category Modal ──────────────────────── */}
+        <Modal
+          visible={showCustomizeModal}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setShowCustomizeModal(false)}
+        >
+          <TouchableWithoutFeedback
+            onPress={() => setShowCustomizeModal(false)}
+          >
+            <View style={styles.modalOverlay}>
+              <TouchableWithoutFeedback>
+                <View style={styles.modalCard}>
+                  <Text style={styles.modalHeading}>Choose Category</Text>
+                  {CATEGORIES.map(cat => (
+                    <TouchableOpacity
+                      key={cat.id}
+                      activeOpacity={0.7}
+                      onPress={() => {
+                        setSelectedCategory(cat.id);
+                        setShowCustomizeModal(false);
+                      }}
+                      style={[
+                        styles.modalOptionRow,
+                        selectedCategory === cat.id &&
+                          styles.modalOptionRowActive,
+                      ]}
+                    >
+                      <View style={styles.modalCategoryRowLeft}>
+                        <View
+                          style={[
+                            styles.modalCatDot,
+                            { backgroundColor: cat.accentColor },
+                          ]}
+                        />
+                        <Text
+                          style={[
+                            styles.modalOptionText,
+                            selectedCategory === cat.id &&
+                              styles.modalOptionTextActive,
+                          ]}
+                        >
+                          {cat.label} ({cat.taskCount})
+                        </Text>
+                      </View>
+                      {selectedCategory === cat.id && (
+                        <Check
+                          size={18}
+                          color={Colors.MidnightCharcoal}
+                          strokeWidth={2.5}
+                        />
+                      )}
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              </TouchableWithoutFeedback>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
       </View>
     </Modal>
   );
 };
 
+// ─── Styles ───────────────────────────────────────────────────────────────────
+
 const styles = StyleSheet.create({
-  sheetContainer: {
+  canvasContainer: {
     flex: 1,
-    backgroundColor: '#FAF8F5',
+    backgroundColor: '#FAF8F5', // Regius Warm Paper Canvas
   },
-  sheetHeader: {
+
+  // Top Header Bar
+  topHeader: {
+    height: 56,
+    paddingHorizontal: ResponsivePixels.size20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: ResponsivePixels.size20,
-    paddingTop: Platform.OS === 'ios' ? 8 : 14,
-    paddingBottom: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: '#EDE8DF',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#FAF8F5',
   },
-  sheetCloseBtn: {
+  backBtn: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.2,
+    borderColor: '#E8E2D5',
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.04,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 1.5,
+      },
+    }),
+  },
+  headerTitle: {
+    fontFamily: Fonts.ranade.bold,
+    fontSize: 18,
+    color: Colors.MidnightCharcoal,
+    letterSpacing: -0.2,
+  },
+  avatarCircle: {
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: '#F3F0EA',
+    backgroundColor: Colors.MidnightCharcoal,
     alignItems: 'center',
     justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.12,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
-  sheetHeaderCenter: {
-    alignItems: 'center',
-  },
-  sheetTitle: {
-    fontFamily: Fonts.ranade.bold,
-    fontSize: 18,
-    color: '#1F2228',
-  },
-  sheetSubtitle: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
-    color: '#7E838F',
-    marginTop: 2,
-  },
-  sheetKeyboardAvoid: {
+
+  // Scroll Area
+  scrollArea: {
     flex: 1,
   },
-  sheetScroll: {
-    flex: 1,
-  },
-  sheetScrollContent: {
+  scrollContent: {
     paddingHorizontal: ResponsivePixels.size20,
-    paddingTop: 18,
-    paddingBottom: 36,
+    paddingTop: 8,
   },
-  sheetSection: {
-    marginBottom: 20,
-  },
-  sheetLabel: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
-    color: '#1F2228',
-    marginBottom: 8,
-    letterSpacing: 0.2,
-  },
-  inputCard: {
+
+  // Action Banner: New Entry / Craft Your Task / Save
+  actionBanner: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+    paddingTop: 4,
+  },
+  actionBannerLeft: {
+    flex: 1,
+    paddingRight: 12,
+  },
+  newEntryTag: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 11,
+    letterSpacing: 1.2,
+    color: '#7E838F',
+    textTransform: 'uppercase',
+  },
+  craftTaskHeadline: {
+    fontFamily: Fonts.ranade.bold,
+    fontSize: 26,
+    color: Colors.MidnightCharcoal,
+    lineHeight: 32,
+    marginTop: 2,
+    letterSpacing: -0.5,
+  },
+  savePillBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: Colors.MidnightCharcoal,
+    borderRadius: 50,
+    paddingHorizontal: 18,
+    paddingVertical: 9.5,
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.MidnightCharcoal,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.22,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 3.5,
+      },
+    }),
+  },
+  savePillText: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 13.5,
+    color: '#FFFFFF',
+  },
+
+  // Primary Task Name Card
+  primaryTaskCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
+    borderRadius: 22,
     borderWidth: 1.5,
     borderColor: '#E8E2D5',
-    paddingHorizontal: 16,
-    paddingVertical: Platform.OS === 'ios' ? 14 : 10,
+    padding: 16,
+    marginBottom: 20,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.05,
+        shadowRadius: 16,
+      },
+      android: {
+        elevation: 2.5,
+      },
+    }),
+  },
+  primaryTaskCardHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  cardSectionLabel: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 10.5,
+    letterSpacing: 0.8,
+    color: '#7E838F',
   },
   titleInput: {
+    fontFamily: Fonts.ranade.bold,
+    fontSize: 20,
+    color: Colors.MidnightCharcoal,
+    paddingVertical: 4,
+    lineHeight: 26,
+  },
+  contextRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginTop: 10,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#F3EFE6',
+  },
+  contextInput: {
     flex: 1,
-    fontSize: 15,
-    fontFamily: Fonts.poppins.medium,
-    color: '#1F2228',
-    padding: 0,
-  },
-  clearBtn: {
-    padding: 4,
-    marginLeft: 6,
-  },
-  noteInputCard: {
-    minHeight: 84,
-    alignItems: 'flex-start',
-    paddingVertical: 12,
-  },
-  noteInput: {
-    flex: 1,
-    fontSize: 14,
     fontFamily: Fonts.poppins.regular,
-    color: '#1F2228',
-    minHeight: 64,
+    fontSize: 13.5,
+    color: '#3F454D',
     padding: 0,
   },
-  categoryCardRow: {
+
+  // General Section Block
+  sectionBlock: {
+    marginBottom: 20,
+  },
+  sectionHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+    paddingHorizontal: 2,
+  },
+  sectionHeading: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 15.5,
+    color: Colors.MidnightCharcoal,
+  },
+  sectionSubtext: {
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 12,
+    color: '#7E838F',
+  },
+  customizeBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  customizeText: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 12.5,
+    color: '#7E838F',
+  },
+
+  // Category Cards Grid (Regius Signature Asymmetric Shape)
+  categoryGrid: {
     flexDirection: 'row',
     gap: 10,
   },
-  catSelectCard: {
+  categoryCard: {
     flex: 1,
-    minHeight: 90,
-    borderRadius: 18,
-    borderWidth: 1.5,
-    paddingVertical: 12,
-    paddingHorizontal: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  catSelectCardActive: {
+    height: 126,
+    borderRadius: 22,
+    borderTopRightRadius: 46, // Regius Signature Asymmetric Curve
     borderWidth: 2,
+    padding: 12,
+    justifyContent: 'space-between',
+    position: 'relative',
+    overflow: 'hidden',
     ...Platform.select({
       ios: {
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
+  },
+  categoryCardSelected: {
+    borderWidth: 2,
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.MidnightCharcoal,
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.16,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  catTopRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
   },
   catIconCircle: {
     width: 38,
@@ -539,79 +1121,472 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 6,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 1.5,
+      },
+    }),
   },
-  catSelectLabel: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
-    color: '#1F2228',
-  },
-  catSelectedBadge: {
-    position: 'absolute',
-    top: 6,
-    right: 6,
-    width: 18,
-    height: 18,
-    borderRadius: 9,
+  catCheckBadge: {
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    backgroundColor: Colors.MidnightCharcoal,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  chipsRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
+  catCheckPlaceholder: {
+    width: 20,
+    height: 20,
   },
-  sheetPill: {
+  catBottomInfo: {
+    marginTop: 'auto',
+  },
+  catLabel: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 14.5,
+    color: Colors.MidnightCharcoal,
+    lineHeight: 18,
+  },
+  catCount: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 11,
+    color: '#7E838F',
+    marginTop: 2,
+  },
+  catBottomAccentPill: {
+    position: 'absolute',
+    bottom: 0,
+    left: 20,
+    right: 20,
+    height: 3.5,
+    borderTopLeftRadius: 3,
+    borderTopRightRadius: 3,
+  },
+
+  // Schedule Block (When to do it)
+  scheduleContainerCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 22,
+    borderWidth: 1.5,
+    borderColor: '#E8E2D5',
+    padding: 10,
+    flexDirection: 'row',
+    gap: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.04,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  scheduleTile: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 24,
+    gap: 10,
+    backgroundColor: '#FAF8F5',
+    borderRadius: 16,
+    paddingVertical: 11,
+    paddingHorizontal: 12,
+  },
+  scheduleIconWrap: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: '#FFFFFF',
-    borderWidth: 1.2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.06,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 1,
+      },
+    }),
+  },
+  scheduleTileTextGroup: {
+    flex: 1,
+  },
+  scheduleTileSmallLabel: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 9.5,
+    color: '#7E838F',
+    letterSpacing: 0.6,
+  },
+  scheduleTileValue: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 13.5,
+    color: Colors.MidnightCharcoal,
+    marginTop: 1,
+  },
+
+  // Priority Pill Selector
+  priorityPillContainer: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 50,
+    borderWidth: 1.5,
     borderColor: '#E8E2D5',
+    padding: 4,
+    flexDirection: 'row',
+    gap: 4,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.04,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 1.5,
+      },
+    }),
   },
-  sheetPillActive: {
-    backgroundColor: '#1F2228',
-    borderColor: '#1F2228',
+  prioritySegment: {
+    flex: 1,
+    height: 40,
+    borderRadius: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 7,
   },
-  sheetPillText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 13,
-    color: '#454A53',
-  },
-  sheetPillTextActive: {
-    color: '#FFFFFF',
-    fontFamily: Fonts.poppins.semiBold,
+  prioritySegmentActive: {
+    backgroundColor: Colors.MidnightCharcoal,
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.MidnightCharcoal,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   priorityDot: {
     width: 8,
     height: 8,
     borderRadius: 4,
   },
-  sheetFooter: {
-    paddingHorizontal: ResponsivePixels.size20,
-    paddingTop: 12,
-    paddingBottom: Platform.OS === 'ios' ? 18 : 20,
-    backgroundColor: '#FFFFFF',
-    borderTopWidth: 1,
-    borderTopColor: '#EDE8DF',
+  prioritySegmentText: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 13,
+    color: '#454A53',
   },
-  createModalBtn: {
-    backgroundColor: '#1F2228',
-    borderRadius: 50,
-    height: 52,
+  prioritySegmentTextActive: {
+    fontFamily: Fonts.poppins.semiBold,
+    color: '#FFFFFF',
+  },
+
+  // Subtasks Block
+  subtasksCountRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  counterChip: {
+    backgroundColor: '#EDE8DF',
+    borderRadius: 12,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+  },
+  counterChipText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 11,
+    color: Colors.MidnightCharcoal,
+  },
+  resetBtnText: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 12.5,
+    color: '#7E838F',
+  },
+  addSubtaskCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 18,
+    borderWidth: 1.5,
+    borderColor: '#E8E2D5',
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.03,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 1.5,
+      },
+    }),
+  },
+  addSubtaskIconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#FAF8F5',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  createModalBtnDisabled: {
+  addSubtaskInput: {
+    flex: 1,
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 13,
+    color: Colors.MidnightCharcoal,
+    padding: 0,
+  },
+  addSubtaskBtn: {
+    backgroundColor: '#FAF8F5',
+    borderWidth: 1,
+    borderColor: '#E8E2D5',
+    borderRadius: 50,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+  },
+  addSubtaskBtnText: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 12,
+    color: Colors.MidnightCharcoal,
+  },
+  subtasksList: {
+    gap: 8,
+  },
+  subtaskItemRow: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    borderWidth: 1,
+    borderColor: '#E8E2D5',
+    paddingHorizontal: 12,
+    paddingVertical: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.02,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 1,
+      },
+    }),
+  },
+  subtaskCheckboxArea: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingRight: 8,
+  },
+  subtaskCheckbox: {
+    width: 22,
+    height: 22,
+    borderRadius: 6,
+    backgroundColor: '#FAF8F5',
+    borderWidth: 1.5,
+    borderColor: '#E8E2D5',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  subtaskCheckboxDone: {
+    backgroundColor: '#E8FDF0',
+    borderColor: '#82E8A6',
+  },
+  subtaskItemText: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 13.5,
+    color: Colors.MidnightCharcoal,
+    flex: 1,
+  },
+  subtaskItemTextDone: {
+    textDecorationLine: 'line-through',
+    color: '#A3A8B1',
+  },
+  removeSubtaskBtn: {
+    padding: 4,
+  },
+
+  // Voice Nudge Card
+  voiceNudgeCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 22,
+    borderWidth: 1.5,
+    borderColor: '#E8E2D5',
+    padding: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 24,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.04,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  voiceNudgeLeft: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingRight: 10,
+  },
+  voiceIconBox: {
+    width: 44,
+    height: 44,
+    borderRadius: 14,
+    backgroundColor: '#EDFDF5',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  voiceTextGroup: {
+    flex: 1,
+  },
+  voiceTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  voiceTitle: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 14,
+    color: Colors.MidnightCharcoal,
+  },
+  voiceSubtitle: {
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 11.5,
+    color: '#7E838F',
+    marginTop: 2,
+  },
+
+  // Bottom Sticky CTA Hero Button
+  bottomStickyCta: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#FAF8F5',
+    paddingHorizontal: ResponsivePixels.size20,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#F3EFE6',
+  },
+  createTaskHeroBtn: {
+    backgroundColor: Colors.MidnightCharcoal,
+    borderRadius: 50,
+    height: 54,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.MidnightCharcoal,
+        shadowOffset: { width: 0, height: 8 },
+        shadowOpacity: 0.28,
+        shadowRadius: 14,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+  createTaskHeroBtnDisabled: {
     backgroundColor: '#B5BAC2',
   },
-  createModalBtnText: {
+  createTaskHeroBtnText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 15,
+    fontSize: 16,
     color: '#FFFFFF',
+    letterSpacing: -0.2,
+  },
+  createTaskHeroCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.18)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  // Modal Common Styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.4)',
+    justifyContent: 'flex-end',
+  },
+  modalCard: {
+    backgroundColor: '#FFFFFF',
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    padding: 22,
+    paddingBottom: 36,
+  },
+  modalHeading: {
+    fontFamily: Fonts.ranade.bold,
+    fontSize: 18,
+    color: Colors.MidnightCharcoal,
+    marginBottom: 16,
+  },
+  modalOptionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 14,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3EFE6',
+  },
+  modalOptionRowActive: {
+    backgroundColor: '#FAF8F5',
+    marginHorizontal: -12,
+    paddingHorizontal: 12,
+    borderRadius: 12,
+  },
+  modalOptionText: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 14,
+    color: '#454A53',
+  },
+  modalOptionTextActive: {
+    fontFamily: Fonts.poppins.semiBold,
+    color: Colors.MidnightCharcoal,
+  },
+  modalCategoryRowLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  modalCatDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
   },
 });
 
