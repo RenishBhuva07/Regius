@@ -150,6 +150,11 @@ export const Typography = {
     fontSize: 12,
     lineHeight: 18,
   },
+  bodySmallPoppinsMedium: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 12,
+    lineHeight: 18,
+  },
   bodySmallPoppinsRegular: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 12,

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import {
   StyleSheet,
   ScrollView,
@@ -13,6 +13,8 @@ import {
 } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
+import { AuthContext } from '../../Context/AuthContext';
+import { resetNavigation } from '../../Navigators/Navigator';
 import type { VoiceOption } from './Components';
 import {
   VOICES,
@@ -36,6 +38,7 @@ export { VOICES };
 
 const SettingsScreen: React.FC = () => {
   const { bgMain, isDarkMode } = useSettingsTheme();
+  const { logout } = useContext(AuthContext);
   const insets = useSafeAreaInsets();
 
   const [profileName, setProfileName] = useState('Alex Mercer');
@@ -321,10 +324,12 @@ const SettingsScreen: React.FC = () => {
         onCancel={() => setLogoutConfirmVisible(false)}
         onConfirm={() => {
           setLogoutConfirmVisible(false);
+          logout();
           Toast.show({
             type: 'info',
             text2: 'Signed out of Regius',
           });
+          resetNavigation('Login');
         }}
       />
     </SafeAreaView>

@@ -8,27 +8,15 @@ import {
   FlatList,
   StatusBar,
   Platform,
-  Modal,
-  TextInput,
-  KeyboardAvoidingView,
-  TouchableWithoutFeedback,
 } from 'react-native';
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import {
   Bell,
   Clock,
-  Calendar,
   Filter,
   Check,
   Plus,
-  X,
-  Briefcase,
-  Heart,
   CalendarCheck,
-  Sparkles,
 } from 'lucide-react-native';
 import Svg, { Path } from 'react-native-svg';
 import { Typography } from '../../Theme/Typographys';
@@ -36,6 +24,7 @@ import { Fonts } from '../../Theme/fonts';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import { SVGS } from '../../Assets/Images';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
+import { useTaskReminder } from '../../Context/TaskReminderContext';
 
 // ─── Inline SVG for Office Bag ────────────────────────────────────────────────
 const OfficeBagIcon: React.FC<{ width?: number; height?: number }> = ({
@@ -74,16 +63,6 @@ interface Category {
   shadowColor: string;
   Icon: React.ComponentType<any>;
   accentColor: string;
-}
-
-interface Reminder {
-  id: string;
-  title: string;
-  time: string;
-  date: string;
-  category: string;
-  repeat: string;
-  done: boolean;
 }
 
 // ─── Initial Data ────────────────────────────────────────────────────────────
@@ -131,113 +110,25 @@ const INITIAL_CATEGORIES: Category[] = [
   },
 ];
 
-const INITIAL_REMINDERS: Reminder[] = [
-  {
-    id: '1',
-    title: 'Morning Meditation & Breathing',
-    time: '07:30 AM',
-    date: 'Today',
-    category: 'health',
-    repeat: 'Daily',
-    done: false,
-  },
-  {
-    id: '2',
-    title: 'Product Strategy Sync Call',
-    time: '11:00 AM',
-    date: 'Today',
-    category: 'work',
-    repeat: 'Once',
-    done: true,
-  },
-  {
-    id: '3',
-    title: 'Hydration & 2L Water Refill',
-    time: '02:00 PM',
-    date: 'Today',
-    category: 'daily',
-    repeat: 'Every 2 hrs',
-    done: false,
-  },
-  {
-    id: '4',
-    title: 'Evening Workout & Cardio',
-    time: '06:30 PM',
-    date: 'Today',
-    category: 'health',
-    repeat: 'Daily',
-    done: false,
-  },
-  {
-    id: '5',
-    title: 'Quarterly Team Dinner',
-    time: '08:00 PM',
-    date: 'Tomorrow',
-    category: 'events',
-    repeat: 'Once',
-    done: false,
-  },
-];
-
-const TIME_CHIPS = ['09:00 AM', '01:00 PM', '06:30 PM', '08:00 PM'];
-const DATE_CHIPS = ['Today', 'Tomorrow', 'This Weekend', 'Next Week'];
-
 // ─── Component ───────────────────────────────────────────────────────────────
 
 const RemindersScreen: React.FC<any> = ({ route }) => {
-  const insets = useSafeAreaInsets();
-  const topInset = Math.max(
-    insets.top,
-    Platform.OS === 'ios' ? 47 : StatusBar.currentHeight || 0,
-  );
-  const bottomInset = Math.max(insets.bottom, Platform.OS === 'ios' ? 24 : 16);
-
   const [activeTab, setActiveTab] = useState<TabKey>('upcoming');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [reminders, setReminders] = useState<Reminder[]>(INITIAL_REMINDERS);
-  const [selectedReminders, setSelectedReminders] = useState<Set<string>>(
-    new Set(['2']),
-  );
+  const {
+    reminders,
+    toggleReminder,
+    selectedReminders,
+    setSelectedReminders,
+    openReminderModal,
+  } = useTaskReminder();
 
-  // Add Reminder Modal State
-  const [modalVisible, setModalVisible] = useState(false);
-  const [newTitle, setNewTitle] = useState('');
-  const [newNotes, setNewNotes] = useState('');
-  const [newCategory, setNewCategory] = useState('daily');
-  const [newTime, setNewTime] = useState('09:00 AM');
-  const [newDate, setNewDate] = useState('Today');
-  const [newRepeat, setNewRepeat] = useState('Daily');
-
-  const resetForm = () => {
-    setNewTitle('');
-    setNewNotes('');
-    setNewCategory('daily');
-    setNewTime('09:00 AM');
-    setNewDate('Today');
-    setNewRepeat('Daily');
-  };
-
-  // Trigger from navigation params (e.g. from PlusActionSheet)
+  // Trigger from navigation params (e.g. from PlusActionSheet or other routes)
   useEffect(() => {
     if (route?.params?.openAddModal) {
-      setModalVisible(true);
+      openReminderModal();
     }
-  }, [route?.params]);
-
-  const toggleReminder = (id: string) => {
-    setReminders(prev =>
-      prev.map(r => (r.id === id ? { ...r, done: !r.done } : r)),
-    );
-    setSelectedReminders(prev => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-      return next;
-    });
-  };
+  }, [route?.params, openReminderModal]);
 
   const selectAll = () => {
     const currentList = displayedReminders;
@@ -255,22 +146,6 @@ const RemindersScreen: React.FC<any> = ({ route }) => {
         return next;
       });
     }
-  };
-
-  const handleCreateReminder = () => {
-    if (!newTitle.trim()) return;
-    const newRem: Reminder = {
-      id: Date.now().toString(),
-      title: newTitle.trim(),
-      time: newTime,
-      date: newDate,
-      category: newCategory,
-      repeat: newRepeat,
-      done: false,
-    };
-    setReminders(prev => [newRem, ...prev]);
-    resetForm();
-    setModalVisible(false);
   };
 
   // Filter reminders based on active tab and category
@@ -355,7 +230,7 @@ const RemindersScreen: React.FC<any> = ({ route }) => {
             <TouchableOpacity
               activeOpacity={0.85}
               style={styles.addBtn}
-              onPress={() => setModalVisible(true)}
+              onPress={openReminderModal}
             >
               <Text style={styles.addBtnText}>Add</Text>
             </TouchableOpacity>
@@ -435,7 +310,7 @@ const RemindersScreen: React.FC<any> = ({ route }) => {
             <TouchableOpacity
               activeOpacity={0.85}
               style={styles.addReminderBtn}
-              onPress={() => setModalVisible(true)}
+              onPress={openReminderModal}
             >
               <Plus size={14} color="#FFFFFF" strokeWidth={2.5} />
               <Text style={styles.addReminderBtnText}>Add Reminder</Text>
@@ -453,7 +328,7 @@ const RemindersScreen: React.FC<any> = ({ route }) => {
               <TouchableOpacity
                 activeOpacity={0.85}
                 style={styles.addEmptyBtn}
-                onPress={() => setModalVisible(true)}
+                onPress={openReminderModal}
               >
                 <Plus size={15} color="#FFFFFF" strokeWidth={2.5} />
                 <Text style={styles.addEmptyBtnText}>Add Reminder</Text>
@@ -549,257 +424,6 @@ const RemindersScreen: React.FC<any> = ({ route }) => {
           )}
         </View>
       </ScrollView>
-
-      {/* ── Add Reminder Full Screen Sheet ── */}
-      <Modal
-        visible={modalVisible}
-        animationType="slide"
-        presentationStyle="fullScreen"
-        onRequestClose={() => {
-          resetForm();
-          setModalVisible(false);
-        }}
-      >
-        <StatusBar barStyle="dark-content" />
-        <View style={styles.sheetContainer}>
-          {/* Top Notch / Dynamic Island Spacer with clean white background */}
-          <View style={{ height: topInset, backgroundColor: '#FFFFFF' }} />
-
-          {/* Header */}
-          <View style={styles.sheetHeader}>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => {
-                resetForm();
-                setModalVisible(false);
-              }}
-              style={styles.sheetCloseBtn}
-            >
-              <X size={20} color={Colors.MidnightCharcoal} strokeWidth={2.4} />
-            </TouchableOpacity>
-
-            <View style={styles.sheetHeaderCenter}>
-              <Text style={styles.sheetTitle}>New Reminder</Text>
-              <Text style={styles.sheetSubtitle}>
-                Set timely alerts & schedule
-              </Text>
-            </View>
-
-            <View style={{ width: 40 }} />
-          </View>
-
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            style={styles.sheetKeyboardAvoid}
-          >
-            <ScrollView
-              style={styles.sheetScroll}
-              contentContainerStyle={styles.sheetScrollContent}
-              showsVerticalScrollIndicator={false}
-              keyboardShouldPersistTaps="handled"
-            >
-              {/* Reminder Title */}
-              <View style={styles.sheetSection}>
-                <Text style={styles.sheetLabel}>Reminder Title</Text>
-                <View style={styles.inputCard}>
-                  <TextInput
-                    style={styles.titleInput}
-                    placeholder="e.g., Take vitamins, Team status sync"
-                    placeholderTextColor="#A3A8B1"
-                    value={newTitle}
-                    onChangeText={setNewTitle}
-                    autoFocus
-                  />
-                  {newTitle.length > 0 && (
-                    <TouchableOpacity
-                      onPress={() => setNewTitle('')}
-                      style={styles.clearBtn}
-                    >
-                      <X size={15} color="#9CA3AF" />
-                    </TouchableOpacity>
-                  )}
-                </View>
-              </View>
-
-              {/* Notes / Details */}
-              <View style={styles.sheetSection}>
-                <Text style={styles.sheetLabel}>
-                  Notes & Details (Optional)
-                </Text>
-                <View style={[styles.inputCard, styles.noteInputCard]}>
-                  <TextInput
-                    style={styles.noteInput}
-                    placeholder="Add extra reminder instructions or details..."
-                    placeholderTextColor="#A3A8B1"
-                    value={newNotes}
-                    onChangeText={setNewNotes}
-                    multiline
-                    textAlignVertical="top"
-                  />
-                </View>
-              </View>
-
-              {/* Category Picker (All 4 categories from the screen) */}
-              <View style={styles.sheetSection}>
-                <Text style={styles.sheetLabel}>Category</Text>
-                <View style={styles.categoryCardGrid}>
-                  {INITIAL_CATEGORIES.map(cat => {
-                    const isSelected = newCategory === cat.id;
-                    const CatIcon = cat.Icon;
-                    return (
-                      <TouchableOpacity
-                        key={cat.id}
-                        activeOpacity={0.8}
-                        onPress={() => setNewCategory(cat.id)}
-                        style={[
-                          styles.catSelectCard,
-                          {
-                            backgroundColor: cat.bgColor,
-                            borderColor: isSelected
-                              ? cat.accentColor || '#1F2228'
-                              : cat.borderColor,
-                          },
-                          isSelected && styles.catSelectCardActive,
-                        ]}
-                      >
-                        <View style={styles.catIconCircle}>
-                          <CatIcon width={22} height={22} />
-                        </View>
-                        <Text style={styles.catSelectLabel}>{cat.label}</Text>
-                        {isSelected && (
-                          <View
-                            style={[
-                              styles.catSelectedBadge,
-                              { backgroundColor: cat.accentColor || '#1F2228' },
-                            ]}
-                          >
-                            <Check size={11} color="#FFFFFF" strokeWidth={3} />
-                          </View>
-                        )}
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-              </View>
-
-              {/* Date Selection */}
-              <View style={styles.sheetSection}>
-                <Text style={styles.sheetLabel}>Date</Text>
-                <View style={styles.chipsRow}>
-                  {DATE_CHIPS.map(d => {
-                    const isSelected = newDate === d;
-                    return (
-                      <TouchableOpacity
-                        key={d}
-                        activeOpacity={0.8}
-                        onPress={() => setNewDate(d)}
-                        style={[
-                          styles.sheetPill,
-                          isSelected && styles.sheetPillActive,
-                        ]}
-                      >
-                        <Calendar
-                          size={14}
-                          color={isSelected ? '#FFFFFF' : '#6B7280'}
-                          strokeWidth={2}
-                        />
-                        <Text
-                          style={[
-                            styles.sheetPillText,
-                            isSelected && styles.sheetPillTextActive,
-                          ]}
-                        >
-                          {d}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-              </View>
-
-              {/* Time Selection */}
-              <View style={styles.sheetSection}>
-                <Text style={styles.sheetLabel}>Time</Text>
-                <View style={styles.chipsRow}>
-                  {TIME_CHIPS.map(t => {
-                    const isSelected = newTime === t;
-                    return (
-                      <TouchableOpacity
-                        key={t}
-                        activeOpacity={0.8}
-                        onPress={() => setNewTime(t)}
-                        style={[
-                          styles.sheetPill,
-                          isSelected && styles.sheetPillActive,
-                        ]}
-                      >
-                        <Clock
-                          size={14}
-                          color={isSelected ? '#FFFFFF' : '#6B7280'}
-                          strokeWidth={2}
-                        />
-                        <Text
-                          style={[
-                            styles.sheetPillText,
-                            isSelected && styles.sheetPillTextActive,
-                          ]}
-                        >
-                          {t}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-              </View>
-
-              {/* Repeat Interval */}
-              <View style={styles.sheetSection}>
-                <Text style={styles.sheetLabel}>Repeat</Text>
-                <View style={styles.chipsRow}>
-                  {['Once', 'Daily', 'Every 2 hrs', 'Weekly'].map(r => {
-                    const isSelected = newRepeat === r;
-                    return (
-                      <TouchableOpacity
-                        key={r}
-                        activeOpacity={0.8}
-                        onPress={() => setNewRepeat(r)}
-                        style={[
-                          styles.sheetPill,
-                          isSelected && styles.sheetPillActive,
-                        ]}
-                      >
-                        <Text
-                          style={[
-                            styles.sheetPillText,
-                            isSelected && styles.sheetPillTextActive,
-                          ]}
-                        >
-                          {r}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </View>
-              </View>
-            </ScrollView>
-
-            {/* Bottom Fixed Action CTA */}
-            <View style={[styles.sheetFooter, { paddingBottom: bottomInset }]}>
-              <TouchableOpacity
-                activeOpacity={0.88}
-                style={[
-                  styles.createModalBtn,
-                  !newTitle.trim() && styles.createModalBtnDisabled,
-                ]}
-                onPress={handleCreateReminder}
-                disabled={!newTitle.trim()}
-              >
-                <Text style={styles.createModalBtnText}>Set Reminder</Text>
-              </TouchableOpacity>
-            </View>
-          </KeyboardAvoidingView>
-        </View>
-      </Modal>
     </SafeAreaView>
   );
 };
