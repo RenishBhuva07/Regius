@@ -28,102 +28,34 @@ import { Fonts } from '../../Theme/fonts';
 import { Typography } from '../../Theme/Typographys';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import { SVGS } from '../../Assets/Images';
-
-interface HabitItem {
-  id: string;
-  title: string;
-  category: 'morning' | 'mindful' | 'evening';
-  streak: number;
-  frequency: string;
-  completed: boolean;
-  timeOfDay: string;
-  accentColor: string;
-}
-
-const INITIAL_HABITS: HabitItem[] = [
-  {
-    id: 'h-1',
-    title: 'Morning Sunlight & 500ml Water',
-    category: 'morning',
-    streak: 18,
-    frequency: 'Daily',
-    completed: true,
-    timeOfDay: '07:30 AM',
-    accentColor: '#4A7C59',
-  },
-  {
-    id: 'h-2',
-    title: '20-min Posture & Breath Reset',
-    category: 'mindful',
-    streak: 9,
-    frequency: 'Daily',
-    completed: false,
-    timeOfDay: '01:15 PM',
-    accentColor: '#7C68EE',
-  },
-  {
-    id: 'h-3',
-    title: 'Evening 5km Mindful Pace Run',
-    category: 'mindful',
-    streak: 5,
-    frequency: 'Mon, Wed, Fri',
-    completed: false,
-    timeOfDay: '06:00 PM',
-    accentColor: '#D97706',
-  },
-  {
-    id: 'h-4',
-    title: 'Read 15 Pages Screen-Free',
-    category: 'evening',
-    streak: 12,
-    frequency: 'Daily',
-    completed: false,
-    timeOfDay: '08:30 PM',
-    accentColor: '#4F46E5',
-  },
-  {
-    id: 'h-5',
-    title: 'Cold Hydration & Cortisol Reset',
-    category: 'morning',
-    streak: 21,
-    frequency: 'Daily',
-    completed: true,
-    timeOfDay: '08:00 AM',
-    accentColor: '#0EA5E9',
-  },
-];
+import { useTaskReminder } from '../../Context/TaskReminderContext';
 
 export const HabitsScreen: React.FC = () => {
   const navigation = useNavigation<any>();
-  const [habits, setHabits] = useState<HabitItem[]>(INITIAL_HABITS);
+  const { habits, toggleHabit, openHabitModal } = useTaskReminder();
   const [filter, setFilter] = useState<
     'all' | 'morning' | 'mindful' | 'evening'
   >('all');
 
   const completedCount = habits.filter(h => h.completed).length;
-  const progressPercent = Math.round((completedCount / habits.length) * 100);
+  const progressPercent =
+    habits.length > 0
+      ? Math.round((completedCount / habits.length) * 100)
+      : 0;
 
-  const toggleHabit = (id: string) => {
-    setHabits(prev =>
-      prev.map(item => {
-        if (item.id === id) {
-          const nextState = !item.completed;
-          Toast.show({
-            type: 'success',
-            text1: nextState ? 'Habit Checked In! 🔥' : 'Habit Reset',
-            text2: nextState
-              ? `Keep the momentum going! Streak: ${item.streak + 1} days`
-              : 'Unchecked for today.',
-          });
-          return {
-            ...item,
-            completed: nextState,
-            streak: nextState ? item.streak + 1 : Math.max(item.streak - 1, 0),
-          };
-        }
-        return item;
-      }),
-    );
+  const handleToggleHabit = (id: string) => {
+    toggleHabit(id);
+    const item = habits.find(h => h.id === id);
+    if (item) {
+      const nextState = !item.completed;
+      Toast.show({
+        type: 'success',
+        text1: nextState ? 'Habit Checked In! 🔥' : 'Habit Reset',
+        text2: nextState
+          ? `Keep the momentum going! Streak: ${item.streak + 1} days`
+          : 'Unchecked for today.',
+      });
+    }
   };
 
   const filteredHabits = habits.filter(h => {
@@ -242,14 +174,7 @@ export const HabitsScreen: React.FC = () => {
             <Text style={styles.sectionTitle}>Today's Rituals</Text>
             <TouchableOpacity
               activeOpacity={0.7}
-              onPress={() => {
-                Toast.show({
-                  type: 'info',
-                  text1: 'Add Habit',
-                  text2:
-                    'Use the quick action sheet (+) or tell "Hey Regius" to track a new habit.',
-                });
-              }}
+              onPress={openHabitModal}
               style={styles.addHabitQuickBtn}
             >
               <Plus size={15} color="#4A7C59" />
@@ -262,7 +187,7 @@ export const HabitsScreen: React.FC = () => {
               <TouchableOpacity
                 key={habit.id}
                 activeOpacity={0.88}
-                onPress={() => toggleHabit(habit.id)}
+                onPress={() => handleToggleHabit(habit.id)}
                 style={[
                   styles.habitCard,
                   habit.completed && styles.habitCardCompleted,
@@ -271,7 +196,7 @@ export const HabitsScreen: React.FC = () => {
                 <View style={styles.habitMainRow}>
                   <TouchableOpacity
                     activeOpacity={0.8}
-                    onPress={() => toggleHabit(habit.id)}
+                    onPress={() => handleToggleHabit(habit.id)}
                     style={[
                       styles.checkCircle,
                       habit.completed && styles.checkCircleActive,

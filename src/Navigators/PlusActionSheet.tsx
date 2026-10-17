@@ -10,19 +10,20 @@ import {
   Platform,
   Easing,
 } from 'react-native';
-import { CheckSquare, Bell, ChevronRight, Sparkles } from 'lucide-react-native';
+import { CheckSquare, Bell, ChevronRight, Sparkles, Flame } from 'lucide-react-native';
 import { Colors } from '../Assets/StyleUtilities/Colors';
 import { Fonts } from '../Theme/fonts';
 import { Badge } from '../Common/Badge';
 
 const { width: SW } = Dimensions.get('window');
-const SHEET_W = Math.min(SW - 32, 332);
+const SHEET_W = Math.min(SW - 24, 350);
 
 export interface PlusActionSheetProps {
   visible: boolean;
   onClose: () => void;
   onPressNewTask: () => void;
   onPressNewReminder: () => void;
+  onPressNewHabit?: () => void;
   bottomOffset: number;
   onDismissed?: () => void;
 }
@@ -32,6 +33,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
   onClose,
   onPressNewTask,
   onPressNewReminder,
+  onPressNewHabit,
   bottomOffset,
   onDismissed,
 }) => {
@@ -207,9 +209,9 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
 
               {/* Title & Subtitle */}
               <View style={styles.cardContent}>
-                <Text style={styles.optionTitle}>Add Reminder</Text>
+                <Text style={styles.optionTitle}>Reminder</Text>
                 <Text style={styles.optionSubtitle} numberOfLines={2}>
-                  Timely alerts & schedules
+                  Alerts & times
                 </Text>
               </View>
 
@@ -225,6 +227,43 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
               <View style={styles.cardAccentWrap}>
                 <View
                   style={[styles.cardAccent, { backgroundColor: '#FDD835' }]}
+                />
+              </View>
+            </TouchableOpacity>
+
+            {/* ── Option 3: Add New Habit ── */}
+            <TouchableOpacity
+              activeOpacity={0.82}
+              style={[styles.actionCard, styles.habitCard]}
+              onPress={onPressNewHabit}
+            >
+              {/* Top Row: Icon Bubble */}
+              <View style={styles.cardTopRow}>
+                <View style={[styles.iconWrap, styles.habitIconWrap]}>
+                  <Flame size={19} color="#2E7D32" strokeWidth={2.4} />
+                </View>
+              </View>
+
+              {/* Title & Subtitle */}
+              <View style={styles.cardContent}>
+                <Text style={styles.optionTitle}>Habit</Text>
+                <Text style={styles.optionSubtitle} numberOfLines={2}>
+                  Rituals & streaks
+                </Text>
+              </View>
+
+              {/* Action Footer: Badge + Chevron Button */}
+              <View style={styles.cardFooter}>
+                <Badge label="RITUAL" variant="green" size="sm" />
+                <View style={[styles.arrowCircle, styles.habitArrowCircle]}>
+                  <ChevronRight size={13} color="#2E7D32" strokeWidth={2.4} />
+                </View>
+              </View>
+
+              {/* Signature category bottom accent bar */}
+              <View style={styles.cardAccentWrap}>
+                <View
+                  style={[styles.cardAccent, { backgroundColor: '#2E7D32' }]}
                 />
               </View>
             </TouchableOpacity>
@@ -292,17 +331,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    gap: 12,
+    gap: 8,
     paddingVertical: 4,
   },
   actionCard: {
-    width: 132,
+    width: 98,
     height: 154,
-    borderRadius: 23,
-    borderTopRightRadius: 63,
+    borderRadius: 20,
+    borderTopRightRadius: 46,
     borderWidth: 1.8,
-    paddingHorizontal: 11,
-    paddingTop: 11,
+    paddingHorizontal: 8,
+    paddingTop: 10,
     paddingBottom: 12,
     position: 'relative',
     justifyContent: 'space-between',
@@ -335,14 +374,23 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  habitCard: {
+    backgroundColor: '#EDFDF5',
+    borderColor: '#C6FFDD',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#2E7D32',
+      },
+    }),
+  },
   cardTopRow: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 6,
   },
   iconWrap: {
-    width: 38,
-    height: 38,
+    width: 36,
+    height: 36,
     borderRadius: 12,
     backgroundColor: Colors.DefaultWhite,
     borderWidth: 1.5,
@@ -375,20 +423,28 @@ const styles = StyleSheet.create({
       },
     }),
   },
+  habitIconWrap: {
+    borderColor: '#C6FFDD',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#2E7D32',
+      },
+    }),
+  },
   cardContent: {
     marginBottom: 4,
   },
   optionTitle: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14,
+    fontSize: 13,
     color: Colors.MidnightCharcoal,
-    lineHeight: 18,
+    lineHeight: 17,
   },
   optionSubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 10,
+    fontSize: 9.5,
     color: Colors.MutedSteelText,
-    lineHeight: 13.5,
+    lineHeight: 13,
     marginTop: 2,
   },
   cardFooter: {
@@ -398,9 +454,9 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   arrowCircle: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
     backgroundColor: Colors.DefaultWhite,
     borderWidth: 1.2,
     alignItems: 'center',
@@ -429,6 +485,14 @@ const styles = StyleSheet.create({
     ...Platform.select({
       ios: {
         shadowColor: '#D97706',
+      },
+    }),
+  },
+  habitArrowCircle: {
+    borderColor: '#C6FFDD',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#2E7D32',
       },
     }),
   },

@@ -26,6 +26,7 @@ import { useTaskReminder } from '../Context/TaskReminderContext';
 import { useVoiceWakeWord } from '../Context/VoiceWakeWordContext';
 import AddTaskModal from '../Components/AddTaskModal';
 import AddReminderModal from '../Components/AddReminderModal';
+import AddHabitModal from '../Components/AddHabitModal';
 
 // ─── Dimensions ───────────────────────────────────────────────────────────────
 
@@ -123,7 +124,7 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
   // Height the nav system reserves: bar + button float + safe area
   const totalH = BAR_H + BTN_FLOAT + (BTN_SIZE + BTN_RING) / 2 + safeBot + 4;
 
-  const { openTaskModal, openReminderModal } = useTaskReminder();
+  const { openTaskModal, openReminderModal, openHabitModal } = useTaskReminder();
   const { triggerWakeWord } = useVoiceWakeWord();
 
   const scaleAnims = React.useRef(
@@ -322,6 +323,10 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
           closeSheet();
           openReminderModal();
         }}
+        onPressNewHabit={() => {
+          closeSheet();
+          openHabitModal();
+        }}
         bottomOffset={btnBottom + BTN_SIZE + BTN_RING + 14}
         onDismissed={() => setIsWrapperExpanded(false)}
       />
@@ -377,6 +382,9 @@ export default function BottomTabNavigator() {
     isReminderModalOpen,
     closeReminderModal,
     addReminder,
+    isHabitModalOpen,
+    closeHabitModal,
+    addHabit,
   } = useTaskReminder();
 
   return (
@@ -406,6 +414,15 @@ export default function BottomTabNavigator() {
         onCreateReminder={reminderData => {
           addReminder(reminderData);
           closeReminderModal();
+        }}
+      />
+
+      <AddHabitModal
+        visible={isHabitModalOpen}
+        onClose={closeHabitModal}
+        onCreateHabit={habitData => {
+          addHabit(habitData);
+          closeHabitModal();
         }}
       />
     </>

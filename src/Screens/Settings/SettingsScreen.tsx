@@ -17,6 +17,7 @@ import { AuthContext } from '../../Context/AuthContext';
 import { resetNavigation } from '../../Navigators/Navigator';
 import { VoiceSettingsService } from '../../Services/VoiceSettingsService';
 import { AudioPlayerService } from '../../Services/AudioPlayerService';
+import { RegiusSpeechService } from '../../Services/RegiusSpeechService';
 import type { VoiceOption } from './Components';
 import {
   VOICES,
@@ -210,6 +211,7 @@ const SettingsScreen: React.FC = () => {
   const handleSelectVoice = (voice: VoiceOption) => {
     setSelectedVoiceId(voice.id);
     VoiceSettingsService.setSelectedVoice(voice.id);
+    RegiusSpeechService.warmupVoice(voice.id).catch(() => {});
     Toast.show({
       type: 'success',
       text2: `Default voice set to ${voice.name} (${voice.tag})`,

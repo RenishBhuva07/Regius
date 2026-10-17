@@ -28,6 +28,7 @@ import { SVGS } from '../../Assets/Images';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { useTaskReminder } from '../../Context/TaskReminderContext';
 import { KokoroTTSService } from '../../Services/Kokoro/KokoroTTSService';
+import { AudioPlayerService } from '../../Services/AudioPlayerService';
 
 // ─── Inline SVG for Office Bag ────────────────────────────────────────────────
 const OfficeBagIcon: React.FC<{ width?: number; height?: number }> = ({
@@ -137,9 +138,10 @@ const RemindersScreen: React.FC<any> = ({ route }) => {
       setSpeakingReminderId(rem.id);
       const textToSpeak = `Reminder: ${rem.title}. Scheduled for ${rem.time}.`;
       await KokoroTTSService.speak(textToSpeak);
-      setTimeout(() => {
-        setSpeakingReminderId(prev => (prev === rem.id ? null : prev));
-      }, 5000);
+      const unsub = AudioPlayerService.onPlaybackFinished(() => {
+        setSpeakingReminderId(null);
+        unsub();
+      });
     }
   };
 

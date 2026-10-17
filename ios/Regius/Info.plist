@@ -35,6 +35,10 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Regius requires microphone access for hands-free "Hey Regius" wake word detection and voice commands.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Regius uses speech recognition to process your spoken productivity tasks, habits, and focus schedules.</string>
 	<key>RCTNewArchEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
