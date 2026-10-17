@@ -107,7 +107,7 @@ export const VOICES: VoiceOption[] = [
   },
   {
     id: 'af_heart',
-    kokoroVoiceId: 'af',
+    kokoroVoiceId: 'af_heart',
     name: 'Heart (Base)',
     tag: 'af • Warm & Energetic',
     gender: 'Female',

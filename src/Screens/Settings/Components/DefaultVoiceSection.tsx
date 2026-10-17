@@ -353,6 +353,33 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
               thumbColor="#FFFFFF"
             />
           </View>
+
+          <View
+            style={[
+              styles.wakeWordStatusBadge,
+              {
+                backgroundColor: wakeWordEnabled ? '#EDFDF5' : surfaceAlt,
+                borderColor: wakeWordEnabled ? '#A7F3D0' : borderLight,
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.statusDot,
+                { backgroundColor: wakeWordEnabled ? '#10B981' : '#9CA3AF' },
+              ]}
+            />
+            <Text
+              style={[
+                styles.wakeWordStatusText,
+                { color: wakeWordEnabled ? '#059669' : textSecondary },
+              ]}
+            >
+              {wakeWordEnabled
+                ? 'Active • Listening for "Hey Regius"'
+                : 'Wake word detection is disabled'}
+            </Text>
+          </View>
         </View>
       </View>
     </>
@@ -566,6 +593,25 @@ const styles = StyleSheet.create({
     ...Typography.bodySmallPoppinsRegular,
     fontSize: 11,
     marginTop: 1,
+  },
+  wakeWordStatusBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    marginTop: 6,
+  },
+  statusDot: {
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
+  },
+  wakeWordStatusText: {
+    ...Typography.bodySmallPoppinsSemiBold,
+    fontSize: 12,
   },
 });
 

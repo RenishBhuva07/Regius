@@ -1,40 +1,48 @@
 import vocabData from './vocab.json';
+import { phonemize } from './phonemizer';
+import { normalizeText } from './normalizer';
 
 const VOCAB: Record<string, number> = vocabData as Record<string, number>;
+const PAD_START_END_TOKEN = VOCAB['$'] ?? 0;
+const SPACE_TOKEN = VOCAB[' '] ?? 16;
+const MAX_TOKENS = 510;
 
 /**
- * Basic phoneme/text normalizer and tokenizer for Kokoro-82M.
- * Kokoro accepts tokens matching its 177-symbol vocabulary enclosed by '$' (token 0).
+ * Converts phoneme string directly into Kokoro-82M token IDs,
+ * bounded by '$' (0) at both ends.
  */
-export function tokenizeText(text: string): number[] {
-  if (!text || text.trim().length === 0) {
-    return [0, 0];
+export function phonemesToTokens(phonemes: string): number[] {
+  if (!phonemes || phonemes.trim().length === 0) {
+    return [PAD_START_END_TOKEN, PAD_START_END_TOKEN];
   }
 
-  // Basic normalization: trim and replace multiple spaces
-  const normalized = text.trim().replace(/\s+/g, ' ');
+  const tokens: number[] = [PAD_START_END_TOKEN];
 
-  const tokens: number[] = [VOCAB['$'] ?? 0];
-
-  for (let i = 0; i < normalized.length; i++) {
-    const char = normalized[i];
+  for (let i = 0; i < phonemes.length; i++) {
+    if (tokens.length >= MAX_TOKENS) {
+      break;
+    }
+    const char = phonemes[i];
     if (VOCAB[char] !== undefined) {
       tokens.push(VOCAB[char]);
     } else {
-      // If uppercase not found, try lowercase or fallback to space
-      const lower = char.toLowerCase();
-      if (VOCAB[lower] !== undefined) {
-        tokens.push(VOCAB[lower]);
-      } else {
-        // Unknown symbol -> treat as space if not consecutive
-        const spaceToken = VOCAB[' '] ?? 16;
-        if (tokens[tokens.length - 1] !== spaceToken) {
-          tokens.push(spaceToken);
-        }
+      // If unknown symbol, collapse to space if not duplicate
+      if (tokens[tokens.length - 1] !== SPACE_TOKEN) {
+        tokens.push(SPACE_TOKEN);
       }
     }
   }
 
-  tokens.push(VOCAB['$'] ?? 0);
+  tokens.push(PAD_START_END_TOKEN);
   return tokens;
+}
+
+/**
+ * End-to-end tokenizer pipeline:
+ * Raw text -> normalization -> phonemization/G2P -> tokenization
+ */
+export function tokenizeText(text: string): number[] {
+  const normalized = normalizeText(text);
+  const phonemes = phonemize(normalized);
+  return phonemesToTokens(phonemes);
 }
