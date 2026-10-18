@@ -25,7 +25,13 @@ export const VALID_ASSISTANT_TRANSITIONS: Record<
   wakeWordDetected: ['greeting', 'speaking', 'idle', 'error'],
   greeting: ['speaking', 'listening', 'idle', 'error'],
   speaking: ['listening', 'success', 'unrecognized', 'idle', 'error'],
-  listening: ['processing', 'idle', 'error'],
+  listening: [
+    'processing',
+    'generatingResponse',
+    'speaking',
+    'idle',
+    'error',
+  ],
   processing: [
     'executing',
     'generatingResponse',

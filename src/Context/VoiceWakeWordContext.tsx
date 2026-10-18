@@ -32,6 +32,7 @@ import {
   PendingClarification,
   ExecutionResult,
 } from '../Services/Voice/VoiceCommandService';
+import { VoiceSessionConfig } from '../Services/Voice/VoiceSessionConfig';
 
 export interface VoiceWakeWordContextType {
   isWakeWordEnabled: boolean;
@@ -210,6 +211,10 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
   const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const loopTransitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const maxUtteranceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const inactivityPromptTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const inactivityCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hasPromptedInactivityRef = useRef<boolean>(false);
+  const closeAssistantRef = useRef<() => void>(() => {});
 
   // Full Utterance Capture & Session Accumulator
   const accumulatedTranscriptRef = useRef<string>('');
@@ -277,7 +282,19 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, []);
 
+  const clearInactivityTimers = useCallback(() => {
+    if (inactivityPromptTimerRef.current) {
+      clearTimeout(inactivityPromptTimerRef.current);
+      inactivityPromptTimerRef.current = null;
+    }
+    if (inactivityCloseTimerRef.current) {
+      clearTimeout(inactivityCloseTimerRef.current);
+      inactivityCloseTimerRef.current = null;
+    }
+  }, []);
+
   const stopVoiceEngine = useCallback(async () => {
+    clearInactivityTimers();
     if (restartTimerRef.current) {
       clearTimeout(restartTimerRef.current);
       restartTimerRef.current = null;
@@ -297,8 +314,86 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
     } catch {
       // Ignored if already stopped
     }
-  }, []);
+  }, [clearInactivityTimers]);
   stopVoiceEngineRef.current = stopVoiceEngine;
+
+  const armInactivityTimer = useCallback(
+    (sessionId: string) => {
+      // If a prompt or close timer is already running for this active session, preserve countdown
+      if (inactivityPromptTimerRef.current || inactivityCloseTimerRef.current) {
+        return;
+      }
+      if (!sessionId || assistantStateRef.current !== 'listening') {
+        return;
+      }
+
+      const config = VoiceSessionConfig.getConfig();
+      hasPromptedInactivityRef.current = false;
+
+      inactivityPromptTimerRef.current = setTimeout(async () => {
+        inactivityPromptTimerRef.current = null;
+        if (
+          assistantStateRef.current !== 'listening' ||
+          currentInteractionIdRef.current !== sessionId
+        ) {
+          return;
+        }
+
+        console.log(
+          '[VoiceWakeWord] ⏳ 10s of listening silence. Prompting: "Are you still there?"',
+        );
+        hasPromptedInactivityRef.current = true;
+
+        await stopVoiceEngine();
+
+        const promptText = config.inactivityPromptText || 'Are you still there?';
+        setSpokenResponseText(promptText);
+        transitionState('speaking', sessionId);
+
+        await RegiusSpeechService.speakResponse(promptText, {
+          onStart: () => {
+            if (currentInteractionIdRef.current === sessionId) {
+              transitionState('speaking', sessionId);
+            }
+          },
+          onEnded: () => {
+            if (currentInteractionIdRef.current === sessionId) {
+              startCommandListeningSessionRef.current();
+
+              // Start 7-second grace closure timer
+              inactivityCloseTimerRef.current = setTimeout(() => {
+                inactivityCloseTimerRef.current = null;
+                if (
+                  assistantStateRef.current === 'listening' &&
+                  currentInteractionIdRef.current === sessionId
+                ) {
+                  console.log(
+                    '[VoiceWakeWord] ⏳ Grace period silence reached with no user input. Closing session gracefully.',
+                  );
+                  closeAssistantRef.current();
+                }
+              }, config.inactivityGracePeriodMs);
+            }
+          },
+          onError: () => {
+            if (currentInteractionIdRef.current === sessionId) {
+              startCommandListeningSessionRef.current();
+              inactivityCloseTimerRef.current = setTimeout(() => {
+                inactivityCloseTimerRef.current = null;
+                if (
+                  assistantStateRef.current === 'listening' &&
+                  currentInteractionIdRef.current === sessionId
+                ) {
+                  closeAssistantRef.current();
+                }
+              }, config.inactivityGracePeriodMs);
+            }
+          },
+        });
+      }, config.inactivityPromptDelayMs);
+    },
+    [stopVoiceEngine, transitionState],
+  );
 
   const scheduleWakeWordRestart = useCallback((delayMs: number = 400) => {
     if (restartTimerRef.current) {
@@ -435,6 +530,9 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
       transitionState('listening', currentInteractionIdRef.current);
       console.log('[VoiceWakeWord] 🎙️ Microphone active: Listening for command...');
 
+      // Arm the Siri-like inactivity timer (10s prompt + 7s closure)
+      armInactivityTimer(currentInteractionIdRef.current);
+
       // Max utterance timeout: guard against continuous background noise (20s)
       maxUtteranceTimerRef.current = setTimeout(() => {
         if (
@@ -453,7 +551,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
       transitionState('error', currentInteractionIdRef.current);
       setErrorMessage('Microphone failed to activate. Tap mic to retry.');
     }
-  }, [transitionState]);
+  }, [transitionState, armInactivityTimer]);
   startCommandListeningSessionRef.current = startCommandListeningSession;
 
   // Process & execute spoken command cleanly through state machine
@@ -632,6 +730,78 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         return;
       }
 
+      // D1: Explicit Goodbye / Session Dismissal (Section 7 & 10)
+      if (interpreted.intent === 'GOODBYE' || interpreted.shouldEndSession) {
+        pendingClarificationRef.current = null;
+        setConfirmedActionTitle(interpreted.displayTitle || 'Session Ended');
+        setConfirmedActionBody(
+          interpreted.displayBody || 'Say "Hey Regius" whenever you need me.',
+        );
+        const farewell =
+          interpreted.spokenConfirmation || 'Goodbye! Have a great day.';
+
+        const active = await RegiusSpeechService.getActiveVoice();
+        setActiveVoiceName(active.voice.name);
+
+        transitionState('generatingResponse', sessionId);
+        await RegiusSpeechService.speakResponse(farewell, {
+          onStart: () => {
+            if (sessionId === currentInteractionIdRef.current) {
+              transitionState('speaking', sessionId);
+              setSpokenResponseText(farewell);
+            }
+          },
+          onEnded: () => {
+            if (sessionId === currentInteractionIdRef.current) {
+              closeAssistantRef.current();
+            }
+          },
+          onError: () => {
+            if (sessionId === currentInteractionIdRef.current) {
+              closeAssistantRef.current();
+            }
+          },
+        });
+        return;
+      }
+
+      // D2: Courtesy / Thanks (Section 7)
+      if (interpreted.intent === 'THANKS') {
+        pendingClarificationRef.current = null;
+        setConfirmedActionTitle(interpreted.displayTitle || 'You’re Welcome ✨');
+        setConfirmedActionBody(
+          interpreted.displayBody ||
+            'Glad I could help. What’s next on your schedule?',
+        );
+        const reply =
+          interpreted.spokenConfirmation ||
+          "You're welcome! Anything else I can help with?";
+
+        const active = await RegiusSpeechService.getActiveVoice();
+        setActiveVoiceName(active.voice.name);
+
+        transitionState('generatingResponse', sessionId);
+        await RegiusSpeechService.speakResponse(reply, {
+          onStart: () => {
+            if (sessionId === currentInteractionIdRef.current) {
+              transitionState('speaking', sessionId);
+              setSpokenResponseText(reply);
+            }
+          },
+          onEnded: () => {
+            if (sessionId === currentInteractionIdRef.current) {
+              startCommandListeningSessionRef.current();
+            }
+          },
+          onError: () => {
+            if (sessionId === currentInteractionIdRef.current) {
+              startCommandListeningSessionRef.current();
+            }
+          },
+        });
+        return;
+      }
+
       // E: Valid Command: Execute Operation (Section 6)
       pendingClarificationRef.current = null;
       setSpeechFailed(false);
@@ -698,6 +868,11 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
                   Vibration.vibrate([0, 40, 30, 50]);
                 }
 
+                if (result.shouldEndSession) {
+                  closeAssistantRef.current();
+                  return;
+                }
+
                 // Core Continuous Conversation Loop:
                 // Keep success state visible for 2500ms so user can comfortably read result,
                 // then automatically return to listening!
@@ -722,7 +897,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
                 // Operation succeeded, but voice confirmation failed -> show truthful result
                 transitionState('success', sessionId);
                 setSpeechFailed(true);
-                setErrorMessage('Task added, but voice confirmation failed.');
+                setErrorMessage('Operation completed, but voice confirmation failed.');
               }
             },
           });
@@ -731,12 +906,16 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
             console.warn('[VoiceWakeWord] Speech synthesis exception:', err);
             transitionState('success', sessionId);
             setSpeechFailed(true);
-            setErrorMessage('Task added, but voice confirmation failed.');
+            setErrorMessage('Operation completed, but voice confirmation failed.');
           }
         }
       } else {
         // If autoSpeak is disabled, show success and loop to listening
         transitionState('success', sessionId);
+        if (result.shouldEndSession) {
+          closeAssistantRef.current();
+          return;
+        }
         if (loopTransitionTimerRef.current) {
           clearTimeout(loopTransitionTimerRef.current);
         }
@@ -829,6 +1008,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
   // Single centralized Voice event listeners for the entire application session
   useEffect(() => {
     Voice.onSpeechStart = () => {
+      clearInactivityTimers();
       isListeningRef.current = true;
       setIsListening(true);
       if (
@@ -859,6 +1039,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
 
       // When Assistant is in listening mode: stream live transcript and handle silence debounce
       if (assistantStateRef.current === 'listening') {
+        clearInactivityTimers();
         if (isFinalizingRef.current) return;
         const spokenSoFar = (candidates[0] || '').trim();
         if (!spokenSoFar) return;
@@ -1218,6 +1399,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   const closeAssistant = useCallback(() => {
+    clearInactivityTimers();
     if (loopTransitionTimerRef.current) {
       clearTimeout(loopTransitionTimerRef.current);
       loopTransitionTimerRef.current = null;
@@ -1251,7 +1433,8 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         startWakeWordEngineRef.current();
       }, 500);
     }
-  }, []);
+  }, [clearInactivityTimers]);
+  closeAssistantRef.current = closeAssistant;
 
   const toggleMicInSheet = useCallback(() => {
     if (loopTransitionTimerRef.current) {

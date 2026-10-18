@@ -1,5 +1,5 @@
 import { Task, Reminder, HabitItem } from '../../Context/TaskReminderContext';
-import { VoiceCommandIntent } from './VoiceCommandService';
+import { VoiceCommandIntent } from './VoiceTypes';
 
 export type CommandOperationType =
   | 'ADD_TASK'
@@ -9,12 +9,15 @@ export type CommandOperationType =
   | 'SHOW_REMINDERS'
   | 'ADD_HABIT'
   | 'LOG_HABIT'
+  | 'SHOW_HABITS'
   | 'START_FOCUS'
   | 'EXTEND_FOCUS'
   | 'PLAY_BRIEF'
   | 'SCHEDULE_SPRINT'
   | 'RESHUFFLE'
+  | 'THANKS'
   | 'CANCEL'
+  | 'GOODBYE'
   | 'UNRECOGNIZED';
 
 export interface CommandOperationData {
@@ -24,6 +27,8 @@ export interface CommandOperationData {
   title?: string;
   date?: string;
   time?: string;
+  repeat?: string;
+  frequency?: string;
   category?: string;
   durationMinutes?: number;
   count?: number;
@@ -58,18 +63,33 @@ function cleanTitleForSpeech(title: string): string {
 /**
  * Builds contextual in-progress executing text for each command type.
  */
-export function getContextualExecutingText(intent: VoiceCommandIntent, title?: string): string {
+export function getContextualExecutingText(
+  intent: VoiceCommandIntent,
+  title?: string,
+): string {
   switch (intent) {
     case 'ADD_TASK':
-      return title ? `Adding "${cleanTitleForSpeech(title)}" to tasks...` : 'Adding your task...';
+      return title
+        ? `Adding "${cleanTitleForSpeech(title)}" to tasks...`
+        : 'Adding your task...';
     case 'COMPLETE_TASK':
-      return title ? `Completing "${cleanTitleForSpeech(title)}"...` : 'Marking task complete...';
+      return title
+        ? `Completing "${cleanTitleForSpeech(title)}"...`
+        : 'Marking task complete...';
     case 'ADD_REMINDER':
-      return title ? `Setting reminder for "${cleanTitleForSpeech(title)}"...` : 'Setting your reminder...';
+      return title
+        ? `Setting reminder for "${cleanTitleForSpeech(title)}"...`
+        : 'Setting your reminder...';
     case 'ADD_HABIT':
-      return title ? `Adding "${cleanTitleForSpeech(title)}" habit...` : 'Adding your habit...';
+      return title
+        ? `Adding "${cleanTitleForSpeech(title)}" habit...`
+        : 'Adding your habit...';
     case 'LOG_HABIT':
-      return title ? `Logging "${cleanTitleForSpeech(title)}"...` : 'Logging your habit...';
+      return title
+        ? `Logging "${cleanTitleForSpeech(title)}"...`
+        : 'Logging your habit...';
+    case 'SHOW_HABITS':
+      return 'Fetching your habits...';
     case 'START_FOCUS':
       return 'Starting your focus session...';
     case 'EXTEND_FOCUS':
@@ -111,7 +131,10 @@ export function buildConfirmationMessage(
       }
 
       const displayTitle = `Task Added: ${clean}`;
-      const scheduleDetail = date || time ? `Scheduled for ${date || 'Today'}${time ? ' at ' + time : ''}.` : 'Added to your daily schedule.';
+      const scheduleDetail =
+        date || time
+          ? `Scheduled for ${date || 'Today'}${time ? ' at ' + time : ''}.`
+          : 'Added to your daily schedule.';
 
       return {
         spokenText,
@@ -137,16 +160,21 @@ export function buildConfirmationMessage(
     case 'ADD_REMINDER': {
       const title = data?.reminder?.title || data?.title || 'reminder';
       const clean = cleanTitleForSpeech(title);
-      const date = data?.reminder?.date || data?.date || 'Today';
+      const date = data?.reminder?.date || data?.date;
       const time = data?.reminder?.time || data?.time;
+      const repeat = data?.reminder?.repeat || data?.repeat;
 
       let spokenText = 'Your reminder has been set successfully.';
       if (time && date === 'Tonight') {
         spokenText = `Your reminder to ${clean} is set for ${time} tonight.`;
-      } else if (time && date && date !== 'Today') {
-        spokenText = `Your reminder to ${clean} is set for ${date.toLowerCase()} at ${time}.`;
       } else if (time && time.startsWith('In ')) {
         spokenText = `Your reminder to ${clean} is set for ${time.toLowerCase()}.`;
+      } else if (repeat === 'Daily' && time) {
+        spokenText = `Your reminder to ${clean} is set for every day at ${time}.`;
+      } else if (repeat && repeat.startsWith('Every ') && time) {
+        spokenText = `Your reminder to ${clean} is set for ${repeat.toLowerCase()} at ${time}.`;
+      } else if (time && date && date !== 'Today') {
+        spokenText = `Your reminder to ${clean} is set for ${date.toLowerCase()} at ${time}.`;
       } else if (time) {
         spokenText = `Your reminder to ${clean} is set for ${time}.`;
       } else {
@@ -156,7 +184,9 @@ export function buildConfirmationMessage(
       return {
         spokenText,
         displayTitle: `Reminder Set: ${clean}`,
-        displayBody: `Scheduled for ${date}${time ? ' at ' + time : ''}.`,
+        displayBody: `Scheduled for ${date || 'Today'}${
+          time ? ' at ' + time : ''
+        }${repeat ? ' (' + repeat + ')' : ''}.`,
         resultSummary: `Reminder set: ${clean}`,
         contextualExecutingText: `Setting reminder: ${clean}...`,
       };
@@ -165,10 +195,11 @@ export function buildConfirmationMessage(
     case 'ADD_HABIT': {
       const title = data?.habit?.title || data?.title || 'habit';
       const clean = cleanTitleForSpeech(title);
+      const freq = data?.habit?.frequency || data?.frequency || 'Daily';
       return {
-        spokenText: `I've added that to your daily habits.`,
+        spokenText: "I've added that to your daily habits.",
         displayTitle: `Habit Added: ${clean}`,
-        displayBody: `Added "${clean}" to your daily rituals.`,
+        displayBody: `Added "${clean}" to your daily rituals (${freq}).`,
         resultSummary: `Habit added: ${clean}`,
         contextualExecutingText: `Adding habit: ${clean}...`,
       };
@@ -187,6 +218,26 @@ export function buildConfirmationMessage(
         displayBody: `Logged your ${title} ritual for today. Streak updated!`,
         resultSummary: `Habit logged: ${title}`,
         contextualExecutingText: `Logging habit: ${title}...`,
+      };
+    }
+
+    case 'SHOW_HABITS': {
+      const count = data?.count || 0;
+      const items = data?.items || [];
+      const itemNames = items.slice(0, 3).join(', ');
+      const spokenText =
+        count === 0
+          ? 'You have no habits set up yet. Would you like to create one?'
+          : `You have ${count} active habit${
+              count === 1 ? '' : 's'
+            }${itemNames ? ': ' + itemNames : ''}.`;
+
+      return {
+        spokenText,
+        displayTitle: `Active Habits (${count})`,
+        displayBody: spokenText,
+        resultSummary: `${count} active habit${count === 1 ? '' : 's'}`,
+        contextualExecutingText: 'Fetching your habits...',
       };
     }
 
@@ -247,9 +298,12 @@ export function buildConfirmationMessage(
       const count = data?.count || 0;
       const items = data?.items || [];
       const itemNames = items.slice(0, 3).join(', ');
-      const spokenText = count === 0
-        ? 'You have no pending tasks for today. Great job!'
-        : `You have ${count} pending task${count === 1 ? '' : 's'}${itemNames ? ': ' + itemNames : ''}.`;
+      const spokenText =
+        count === 0
+          ? 'You have no pending tasks for today. Great job!'
+          : `You have ${count} pending task${
+              count === 1 ? '' : 's'
+            }${itemNames ? ': ' + itemNames : ''}.`;
 
       return {
         spokenText,
@@ -262,9 +316,10 @@ export function buildConfirmationMessage(
 
     case 'SHOW_REMINDERS': {
       const count = data?.count || 0;
-      const spokenText = count === 0
-        ? 'You have no scheduled reminders.'
-        : `You have ${count} scheduled reminder${count === 1 ? '' : 's'}.`;
+      const spokenText =
+        count === 0
+          ? 'You have no scheduled reminders.'
+          : `You have ${count} scheduled reminder${count === 1 ? '' : 's'}.`;
 
       return {
         spokenText,
@@ -272,6 +327,36 @@ export function buildConfirmationMessage(
         displayBody: spokenText,
         resultSummary: `${count} scheduled reminder${count === 1 ? '' : 's'}`,
         contextualExecutingText: 'Fetching your reminders...',
+      };
+    }
+
+    case 'THANKS': {
+      return {
+        spokenText: "You're welcome! Anything else I can help with?",
+        displayTitle: 'You’re Welcome ✨',
+        displayBody: "Glad I could help. What's next on your schedule?",
+        resultSummary: 'Thank you received',
+        contextualExecutingText: 'Processing...',
+      };
+    }
+
+    case 'CANCEL': {
+      return {
+        spokenText: 'Alright, I cancelled that request.',
+        displayTitle: 'Request Cancelled',
+        displayBody: 'Cancelled the pending operation.',
+        resultSummary: 'Cancelled',
+        contextualExecutingText: 'Cancelling...',
+      };
+    }
+
+    case 'GOODBYE': {
+      return {
+        spokenText: 'Goodbye! Have a great day.',
+        displayTitle: 'Session Ended',
+        displayBody: 'Say "Hey Regius" whenever you need me.',
+        resultSummary: 'Goodbye',
+        contextualExecutingText: 'Closing session...',
       };
     }
 
@@ -293,7 +378,12 @@ export function buildConfirmationMessage(
 export function buildFailureMessage(
   intent: VoiceCommandIntent,
   errorMessage?: string,
-): { spokenText: string; displayTitle: string; displayBody: string; resultSummary: string } {
+): {
+  spokenText: string;
+  displayTitle: string;
+  displayBody: string;
+  resultSummary: string;
+} {
   let spokenText = 'There was an error completing your request.';
   let displayTitle = 'Operation Failed';
 
@@ -324,7 +414,8 @@ export function buildFailureMessage(
   return {
     spokenText,
     displayTitle,
-    displayBody: errorMessage || 'Could not complete the operation. Please try again.',
+    displayBody:
+      errorMessage || 'Could not complete the operation. Please try again.',
     resultSummary: displayTitle,
   };
 }
