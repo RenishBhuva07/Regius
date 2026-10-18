@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef } from 'react';
+import React, { useState, useMemo, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -18,7 +18,7 @@ import {
   Plus,
   Mic,
 } from 'lucide-react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../../Theme/fonts';
@@ -103,7 +103,14 @@ const CURATED_DEFAULT_FLOW: TimelineItem[] = [
 export const DashboardScreen: React.FC = () => {
   const navigation = useNavigation<any>();
   const { tasks, toggleTask, reminders, openTaskModal } = useTaskReminder();
-  const { openAssistant, triggerWakeWord } = useVoiceWakeWord();
+  const { openAssistant, triggerWakeWord, startWakeWordListening } =
+    useVoiceWakeWord();
+
+  useFocusEffect(
+    useCallback(() => {
+      startWakeWordListening();
+    }, [startWakeWordListening]),
+  );
 
   const [activeFilter, setActiveFilter] = useState<FlowFilter>('all');
   const [timelineItems, setTimelineItems] =

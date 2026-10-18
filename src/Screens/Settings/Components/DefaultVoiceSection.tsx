@@ -16,12 +16,18 @@ import {
   Headphones,
   ChevronRight,
   SlidersHorizontal,
+  RotateCcw,
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 import { Typography } from '../../../Theme/Typographys';
 import { Colors as StaticColors } from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { VoiceOption, useSettingsTheme } from './types';
+import {
+  DEFAULT_WAKE_WORD_PHRASE,
+  SUPPORTED_WAKE_WORD_PRESETS,
+  DEFAULT_WAKE_WORD_PRESET,
+} from '../../../Services/WakeWord/WakeWordPresets';
 
 interface DefaultVoiceSectionProps {
   selectedVoice: VoiceOption;
@@ -38,6 +44,10 @@ interface DefaultVoiceSectionProps {
   onToggleAutoSpeakReplies: (val: boolean) => void;
   wakeWordEnabled: boolean;
   onToggleWakeWord: (val: boolean) => void;
+  wakeWordPhrase?: string;
+  onConfigureWakeWord?: () => void;
+  onSelectPresetPhrase?: (phrase: string) => void;
+  onResetDefaults?: () => void;
 }
 
 export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
@@ -55,6 +65,10 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
   onToggleAutoSpeakReplies,
   wakeWordEnabled,
   onToggleWakeWord,
+  wakeWordPhrase = DEFAULT_WAKE_WORD_PHRASE,
+  onConfigureWakeWord,
+  onSelectPresetPhrase,
+  onResetDefaults,
 }) => {
   const {
     isDarkMode,
@@ -81,18 +95,34 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
             Default Voice & Speech
           </Text>
         </View>
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={styles.sectionHeaderAction}
-          onPress={onOpenVoiceStudio}
-        >
-          <Text style={styles.sectionHeaderActionText}>Voice Studio</Text>
-          <ChevronRight
-            size={14}
-            color={StaticColors.LavenderPurple}
-            strokeWidth={2.4}
-          />
-        </TouchableOpacity>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+          {onResetDefaults && (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={[styles.sectionHeaderAction, { paddingHorizontal: 8 }]}
+              onPress={onResetDefaults}
+            >
+              <RotateCcw
+                size={12}
+                color={StaticColors.LavenderPurple}
+                strokeWidth={2.2}
+              />
+              <Text style={styles.sectionHeaderActionText}>Reset</Text>
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.sectionHeaderAction}
+            onPress={onOpenVoiceStudio}
+          >
+            <Text style={styles.sectionHeaderActionText}>Voice Studio</Text>
+            <ChevronRight
+              size={14}
+              color={StaticColors.LavenderPurple}
+              strokeWidth={2.4}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View
@@ -336,11 +366,43 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
 
           <View style={styles.toggleRow}>
             <View style={styles.toggleMeta}>
-              <Text style={[styles.toggleTitle, { color: textPrimary }]}>
-                Wake Word &ldquo;Hey Regius&rdquo;
-              </Text>
+              <View style={styles.wakeWordTitleRow}>
+                <Text style={[styles.toggleTitle, { color: textPrimary }]}>
+                  Wake Word “{wakeWordPhrase}”
+                </Text>
+                <View
+                  style={{ flexDirection: 'row', gap: 6, alignItems: 'center' }}
+                >
+                  {onResetDefaults && (
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      onPress={onResetDefaults}
+                      style={styles.configurePill}
+                    >
+                      <RotateCcw
+                        size={12}
+                        color={StaticColors.LavenderPurple}
+                      />
+                      <Text style={styles.configurePillText}>Reset</Text>
+                    </TouchableOpacity>
+                  )}
+                  {onConfigureWakeWord && (
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      onPress={onConfigureWakeWord}
+                      style={styles.configurePill}
+                    >
+                      <SlidersHorizontal
+                        size={12}
+                        color={StaticColors.LavenderPurple}
+                      />
+                      <Text style={styles.configurePillText}>Configure</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              </View>
               <Text style={[styles.toggleDesc, { color: textSecondary }]}>
-                Listen for voice trigger when app is open
+                Hands-free voice trigger when app is open
               </Text>
             </View>
             <Switch
@@ -353,6 +415,53 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
               thumbColor="#FFFFFF"
             />
           </View>
+
+          {wakeWordEnabled && onSelectPresetPhrase && (
+            <View style={styles.quickPresetRow}>
+              {SUPPORTED_WAKE_WORD_PRESETS.map(preset => {
+                const isActive =
+                  wakeWordPhrase.toLowerCase() === preset.phrase.toLowerCase();
+                const isDefault =
+                  preset.phrase.toLowerCase() ===
+                  DEFAULT_WAKE_WORD_PRESET.phrase.toLowerCase();
+                return (
+                  <TouchableOpacity
+                    key={preset.id}
+                    activeOpacity={0.75}
+                    style={[
+                      styles.quickPresetChip,
+                      {
+                        backgroundColor: isActive
+                          ? isDarkMode
+                            ? '#2E2248'
+                            : '#F3E8FF'
+                          : surfaceAlt,
+                        borderColor: isActive
+                          ? StaticColors.LavenderPurple
+                          : borderLight,
+                      },
+                    ]}
+                    onPress={() => onSelectPresetPhrase(preset.phrase)}
+                  >
+                    <Text
+                      style={[
+                        styles.quickPresetText,
+                        {
+                          color: isActive
+                            ? StaticColors.LavenderPurple
+                            : textSecondary,
+                          fontWeight: isActive ? '700' : '500',
+                        },
+                      ]}
+                    >
+                      {preset.phrase}
+                      {isDefault ? ' (Default)' : ''}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+            </View>
+          )}
 
           <View
             style={[
@@ -376,7 +485,7 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
               ]}
             >
               {wakeWordEnabled
-                ? 'Active • Listening for "Hey Regius"'
+                ? `Active • Listening for "${wakeWordPhrase}"`
                 : 'Wake word detection is disabled'}
             </Text>
           </View>
@@ -612,6 +721,42 @@ const styles = StyleSheet.create({
   wakeWordStatusText: {
     ...Typography.bodySmallPoppinsSemiBold,
     fontSize: 12,
+  },
+  wakeWordTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  configurePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 8,
+    backgroundColor: 'rgba(131, 131, 214, 0.12)',
+  },
+  configurePillText: {
+    ...Typography.bodySuperSmallPoppinsSemiBoldLoose,
+    fontSize: 11,
+    color: StaticColors.LavenderPurple,
+  },
+  quickPresetRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginTop: 6,
+    marginBottom: 4,
+  },
+  quickPresetChip: {
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+    borderRadius: 8,
+    borderWidth: 1,
+  },
+  quickPresetText: {
+    ...Typography.bodySuperSmallPoppinsRegularLoose,
+    fontSize: 11,
   },
 });
 

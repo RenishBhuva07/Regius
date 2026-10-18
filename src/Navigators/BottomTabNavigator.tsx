@@ -124,7 +124,8 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
   // Height the nav system reserves: bar + button float + safe area
   const totalH = BAR_H + BTN_FLOAT + (BTN_SIZE + BTN_RING) / 2 + safeBot + 4;
 
-  const { openTaskModal, openReminderModal, openHabitModal } = useTaskReminder();
+  const { openTaskModal, openReminderModal, openHabitModal } =
+    useTaskReminder();
   const { triggerWakeWord } = useVoiceWakeWord();
 
   const scaleAnims = React.useRef(
@@ -375,6 +376,7 @@ const Tab = createBottomTabNavigator();
 const renderTabBar = (props: BottomTabBarProps) => <CustomTabBar {...props} />;
 
 export default function BottomTabNavigator() {
+  const { startWakeWordListening } = useVoiceWakeWord();
   const {
     isTaskModalOpen,
     closeTaskModal,
@@ -386,6 +388,10 @@ export default function BottomTabNavigator() {
     closeHabitModal,
     addHabit,
   } = useTaskReminder();
+
+  React.useEffect(() => {
+    startWakeWordListening();
+  }, [startWakeWordListening]);
 
   return (
     <>

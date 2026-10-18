@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import {
   View,
   Text,
@@ -10,9 +10,10 @@ import {
   Pressable,
   AccessibilityInfo,
   Easing,
-  StyleProp,
-  ViewStyle,
+  ScrollView,
+  Platform,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Mic,
   X,
@@ -25,6 +26,10 @@ import {
   AlertTriangle,
 } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
+import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { useTheme } from '../../../Theme/ThemeContext';
+import { DEFAULT_WAKE_WORD_PHRASE } from '../../../Services/WakeWord/WakeWordPresets';
+import { SiaHolographicOrb } from './SiaHolographicOrb';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -86,6 +91,7 @@ export interface VoiceAssistantSheetProps {
   speechFailed?: boolean;
   onMicPress?: () => void;
   onRetrySpeech?: () => void;
+  wakeWordPhrase?: string;
   // Backward compatibility
   assistantReply?: string | null;
   isSpeaking?: boolean;
@@ -109,12 +115,19 @@ export const VoiceAssistantSheet: React.FC<VoiceAssistantSheetProps> = ({
   speechFailed,
   onMicPress,
   onRetrySpeech,
+  wakeWordPhrase = DEFAULT_WAKE_WORD_PHRASE,
 }) => {
+  const insets = useSafeAreaInsets();
+  const { isDarkMode } = useTheme();
   const currentState = normalizeAssistantState(assistantState);
 
-  const pulseAnim = useRef(new Animated.Value(1)).current;
+  // Animation Refs
   const slideAnim = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
+  const backdropAnim = useRef(new Animated.Value(0)).current;
   const [reduceMotion, setReduceMotion] = useState(false);
+
+  // Animated Ellipsis for "SIA is Thinking…" state
+  const [dotCount, setDotCount] = useState(1);
 
   // Equalizer wave bars for speaking animation
   const wave0 = useRef(new Animated.Value(0.25)).current;
@@ -136,49 +149,71 @@ export const VoiceAssistantSheet: React.FC<VoiceAssistantSheetProps> = ({
   const isUnrecognized = currentState === 'unrecognized';
   const isError = currentState === 'error';
 
+  // Genuine background thinking / AI processing state
+  const isThinking = isProcessing || isGeneratingResponse;
   const isFinalState = isSuccess || isUnrecognized || isError;
 
-  // Check reduced motion accessibility
+  // Accessibility reduced motion check
   useEffect(() => {
     AccessibilityInfo.isReduceMotionEnabled?.()
       .then(enabled => setReduceMotion(Boolean(enabled)))
       .catch(() => {});
   }, []);
 
-  // Slide-in modal animation & pulse loop
+  // Animated dots for thinking
+  useEffect(() => {
+    if (isThinking || isExecuting) {
+      const interval = setInterval(() => {
+        setDotCount(prev => (prev % 3) + 1);
+      }, 420);
+      return () => clearInterval(interval);
+    } else {
+      setDotCount(1);
+    }
+  }, [isThinking, isExecuting]);
+
+  // Smooth slide-up full-screen sheet presentation
   useEffect(() => {
     if (visible) {
-      Animated.spring(slideAnim, {
-        toValue: 0,
-        friction: 8,
-        tension: 65,
-        useNativeDriver: true,
-      }).start();
-
-      if (!reduceMotion && !isFinalState) {
-        const pulseLoop = Animated.loop(
-          Animated.sequence([
-            Animated.timing(pulseAnim, {
-              toValue: isProcessing || isExecuting ? 1.18 : 1.25,
-              duration: isProcessing || isExecuting ? 500 : 850,
-              useNativeDriver: true,
-            }),
-            Animated.timing(pulseAnim, {
-              toValue: 1,
-              duration: isProcessing || isExecuting ? 500 : 850,
-              useNativeDriver: true,
-            }),
-          ]),
-        );
-        pulseLoop.start();
-        return () => {
-          pulseLoop.stop();
-        };
-      }
+      Animated.parallel([
+        Animated.spring(slideAnim, {
+          toValue: 0,
+          friction: 9,
+          tension: 65,
+          useNativeDriver: true,
+        }),
+        Animated.timing(backdropAnim, {
+          toValue: 1,
+          duration: 260,
+          easing: Easing.out(Easing.ease),
+          useNativeDriver: true,
+        }),
+      ]).start();
     } else {
       slideAnim.setValue(SCREEN_HEIGHT);
+      backdropAnim.setValue(0);
     }
-  }, [visible, slideAnim, pulseAnim, isProcessing, isExecuting, isFinalState, reduceMotion]);
+  }, [visible, slideAnim, backdropAnim]);
+
+  // Handle smooth closing animation
+  const handleClose = useCallback(() => {
+    Animated.parallel([
+      Animated.timing(slideAnim, {
+        toValue: SCREEN_HEIGHT,
+        duration: 240,
+        easing: Easing.in(Easing.ease),
+        useNativeDriver: true,
+      }),
+      Animated.timing(backdropAnim, {
+        toValue: 0,
+        duration: 200,
+        easing: Easing.linear,
+        useNativeDriver: true,
+      }),
+    ]).start(() => {
+      onClose();
+    });
+  }, [onClose, slideAnim, backdropAnim]);
 
   // Speaking animation loop (runs strictly while isSpeaking is active)
   useEffect(() => {
@@ -235,437 +270,636 @@ export const VoiceAssistantSheet: React.FC<VoiceAssistantSheetProps> = ({
     }
   }, [isSpeaking, reduceMotion, wave0, wave1, wave2, wave3, wave4]);
 
-  if (!visible || isIdle) return null;
+  if (!visible && isIdle) return null;
 
-  // Determine dynamic badge & text
-  let badgeText = 'Aria Flow Assistant';
-  let badgeBg = '#CCE6D0';
-  let badgeTextColor = '#354C3B';
-  let BadgeIcon = Sparkles;
+  // ─── Status Headlines & Subtitles (Synchronized to SIA state) ───────────────
+  let statusHeadline = 'SIA is Ready';
+  let statusSubtitle =
+    'Say any command to plan tasks, set reminders, or log habits.';
+  let badgeLabel = 'SIA AI • Ready';
+  let badgeVariant = 'purple';
+  let badgeColor = '#8383D6';
+  let badgeBg = '#EEF0FD';
+  let badgeBorder = '#B6BEF5';
 
-  if (isSuccess) {
-    badgeText = 'Command Completed ✨';
-    badgeBg = '#D1FAE5';
-    badgeTextColor = '#065F46';
-    BadgeIcon = Sparkles;
-  } else if (isUnrecognized) {
-    badgeText = 'Command Not Recognized';
-    badgeBg = '#FEF3C7';
-    badgeTextColor = '#92400E';
-    BadgeIcon = HelpCircle;
-  } else if (isError) {
-    badgeText = 'Command Failed';
-    badgeBg = '#FEE2E2';
-    badgeTextColor = '#991B1B';
-    BadgeIcon = AlertTriangle;
+  if (isThinking) {
+    statusHeadline = `SIA is Thinking${'.'.repeat(dotCount)}`;
+    statusSubtitle = 'Interpreting your voice request...';
+    badgeLabel = 'SIA AI • Thinking ⚡';
+    badgeVariant = 'yellow';
+    badgeColor = '#B47804';
+    badgeBg = '#FFF8D0';
+    badgeBorder = '#DEAA14';
   } else if (isExecuting) {
-    badgeText = 'Working on Request... ⚙️';
+    statusHeadline = 'Taking care of it…';
+    statusSubtitle = confirmedActionTitle || 'Updating your flow schedule...';
+    badgeLabel = 'SIA AI • Taking Care of It ⚙️';
+    badgeVariant = 'purple';
+    badgeColor = '#4338CA';
     badgeBg = '#E0E7FF';
-    badgeTextColor = '#3730A3';
-    BadgeIcon = Sparkles;
-  } else if (isGeneratingResponse) {
-    badgeText = 'Preparing Response... 🪄';
-    badgeBg = '#F3E8FF';
-    badgeTextColor = '#6B21A8';
-    BadgeIcon = Sparkles;
-  } else if (isGreeting) {
-    badgeText = 'Preparing Greeting... 🪄';
-    badgeBg = '#F3E8FF';
-    badgeTextColor = '#6B21A8';
-    BadgeIcon = Sparkles;
-  } else if (isWakeWordDetected) {
-    badgeText = 'Hey Regius Detected ✨';
-    badgeBg = '#CCE6D0';
-    badgeTextColor = '#2E7D32';
-    BadgeIcon = Sparkles;
-  } else if (isProcessing) {
-    badgeText = 'Understanding Request... ⚡';
-    badgeBg = '#FEF3C7';
-    badgeTextColor = '#92400E';
-    BadgeIcon = Sparkles;
+    badgeBorder = '#A5B4FC';
   } else if (isSpeaking) {
-    badgeText = activeVoiceName
-      ? `Regius Speaking • ${activeVoiceName} 🔊`
-      : 'Regius Speaking 🔊';
+    statusHeadline = 'SIA is Speaking';
+    statusSubtitle = 'Playing voice confirmation...';
+    badgeLabel = activeVoiceName
+      ? `SIA AI • ${activeVoiceName} 🔊`
+      : 'SIA AI • Speaking 🔊';
+    badgeVariant = 'purple';
+    badgeColor = '#0369A1';
     badgeBg = '#E0F2FE';
-    badgeTextColor = '#0369A1';
-    BadgeIcon = Volume2;
+    badgeBorder = '#7DD3FC';
   } else if (isListening) {
-    badgeText = liveTranscript ? 'Listening Live 🎙️' : 'Listening... 🎙️';
-    badgeBg = '#CCE6D0';
-    badgeTextColor = '#2E7D32';
-    BadgeIcon = Mic;
-  }
-
-  // Determine Orb colors and icon
-  let micCircleStyle: StyleProp<ViewStyle> = styles.micCircle;
-  let pulseRingStyle: StyleProp<ViewStyle> = styles.pulseRing;
-
-  if (isSuccess) {
-    micCircleStyle = [styles.micCircle, styles.micCircleSuccess];
+    statusHeadline = 'Listening…';
+    statusSubtitle = liveTranscript
+      ? 'Hearing you clearly. Pause when you are done.'
+      : 'Speak now — SIA is listening.';
+    badgeLabel = liveTranscript ? 'SIA AI • Live 🎙️' : 'SIA AI • Listening 🎙️';
+    badgeVariant = 'green';
+    badgeColor = '#1B9A72';
+    badgeBg = '#E8FDF0';
+    badgeBorder = '#82E8A6';
+  } else if (isSuccess) {
+    statusHeadline = confirmedActionTitle || 'Task Added';
+    statusSubtitle =
+      confirmedActionBody || 'Updated your productivity flow schedule.';
+    badgeLabel = 'SIA AI • Completed ✨';
+    badgeVariant = 'green';
+    badgeColor = '#065F46';
+    badgeBg = '#D1FAE5';
+    badgeBorder = '#6EE7B7';
   } else if (isUnrecognized) {
-    micCircleStyle = [styles.micCircle, styles.micCircleUnrecognized];
+    statusHeadline = 'Command Not Recognized';
+    statusSubtitle =
+      'I heard you, but was unable to match a command. Try one below.';
+    badgeLabel = 'SIA AI • Not Recognized';
+    badgeVariant = 'yellow';
+    badgeColor = '#92400E';
+    badgeBg = '#FEF3C7';
+    badgeBorder = '#FCD34D';
   } else if (isError) {
-    micCircleStyle = [styles.micCircle, styles.micCircleError];
-  } else if (isSpeaking) {
-    micCircleStyle = [styles.micCircle, styles.micCircleSpeaking];
-    pulseRingStyle = [styles.pulseRing, styles.pulseRingSpeaking];
-  } else if (isGeneratingResponse || isGreeting) {
-    micCircleStyle = [styles.micCircle, styles.micCircleGenerating];
-    pulseRingStyle = [styles.pulseRing, styles.pulseRingGenerating];
+    statusHeadline = confirmedActionTitle || 'Unable to Complete';
+    statusSubtitle =
+      errorMessage ||
+      confirmedActionBody ||
+      'An unexpected error occurred. Please try again.';
+    badgeLabel = 'SIA AI • Error';
+    badgeVariant = 'red';
+    badgeColor = '#991B1B';
+    badgeBg = '#FEE2E2';
+    badgeBorder = '#FCA5A5';
   } else if (isWakeWordDetected) {
-    micCircleStyle = styles.micCircle;
-    pulseRingStyle = styles.pulseRing;
-  } else if (isExecuting) {
-    micCircleStyle = [styles.micCircle, styles.micCircleExecuting];
-    pulseRingStyle = [styles.pulseRing, styles.pulseRingExecuting];
-  } else if (isProcessing) {
-    micCircleStyle = [styles.micCircle, styles.micCircleProcessing];
-    pulseRingStyle = [styles.pulseRing, styles.pulseRingProcessing];
+    statusHeadline = `“${wakeWordPhrase}”`;
+    statusSubtitle = 'Wake phrase detected. Preparing assistant...';
+    badgeLabel = 'SIA AI • Initialized';
+    badgeVariant = 'purple';
+    badgeColor = '#8383D6';
+    badgeBg = '#EEF0FD';
+    badgeBorder = '#B6BEF5';
+  } else if (isGreeting) {
+    statusHeadline = 'Connecting…';
+    statusSubtitle = 'Preparing neural voice greeting...';
+    badgeLabel = 'SIA AI • Greeting';
+    badgeVariant = 'purple';
+    badgeColor = '#8383D6';
+    badgeBg = '#EEF0FD';
+    badgeBorder = '#B6BEF5';
   }
+
+  // Theme-aware palette
+  const backgroundColor = isDarkMode ? '#121417' : '#FAF8F5';
+  const cardBg = isDarkMode ? '#1E2228' : '#FFFFFF';
+  const cardBorder = isDarkMode ? '#2C3035' : '#E8E2D5';
+  const headlineColor = isDarkMode ? Colors.PureWhiteText : '#1F2228';
+  const subtitleColor = isDarkMode ? '#A3A8B1' : '#666665';
+  const closeBtnBg = isDarkMode ? '#2C3035' : '#EFECE6';
+  const closeIconColor = isDarkMode ? '#FFFFFF' : '#1F2228';
 
   return (
     <Modal
       visible={visible}
       transparent
       animationType="none"
-      onRequestClose={onClose}
+      onRequestClose={handleClose}
+      statusBarTranslucent
     >
-      <View style={styles.backdrop}>
-        <Pressable style={styles.dismissArea} onPress={onClose} />
-
+      <View style={styles.modalRoot}>
+        {/* Animated Dimming Backdrop */}
         <Animated.View
           style={[
-            styles.sheetContainer,
-            { transform: [{ translateY: slideAnim }] },
+            styles.backdrop,
+            {
+              opacity: backdropAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: [0, 0.65],
+              }),
+            },
           ]}
         >
-          {/* Top Grab Handle */}
-          <View style={styles.handle} />
+          <Pressable style={StyleSheet.absoluteFill} onPress={handleClose} />
+        </Animated.View>
 
-          {/* Header */}
+        {/* Full-Screen SIA Sheet (Edge-to-Edge) */}
+        <Animated.View
+          style={[
+            styles.fullScreenSheet,
+            {
+              backgroundColor,
+              paddingTop: Math.max(insets.top, 16),
+              paddingBottom: Math.max(insets.bottom, 16),
+              transform: [{ translateY: slideAnim }],
+            },
+          ]}
+        >
+          {/* Top Decorative Grab Handle */}
+          <View style={styles.grabHandleBar} />
+
+          {/* Header Navigation Bar */}
           <View style={styles.header}>
-            <View style={styles.headerTitleRow}>
-              <View
-                style={[styles.assistantBadge, { backgroundColor: badgeBg }]}
-              >
-                <BadgeIcon size={14} color={badgeTextColor} />
-                <Text
-                  style={[styles.assistantBadgeText, { color: badgeTextColor }]}
-                >
-                  {badgeText}
-                </Text>
-              </View>
-            </View>
-            <TouchableOpacity
-              onPress={onClose}
-              style={styles.closeBtn}
-              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+            {/* Regius 3D Tactile Status Badge */}
+            <View
+              style={[
+                styles.badge3DContainer,
+                {
+                  backgroundColor: badgeBg,
+                  borderBottomColor: badgeBorder,
+                },
+              ]}
             >
-              <X size={18} color="#1B1C19" />
+              <Sparkles size={13} color={badgeColor} />
+              <Text style={[styles.badge3DText, { color: badgeColor }]}>
+                {badgeLabel}
+              </Text>
+            </View>
+
+            {/* Tactile Close Button */}
+            <TouchableOpacity
+              onPress={handleClose}
+              style={[styles.closeButton, { backgroundColor: closeBtnBg }]}
+              hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+              accessibilityRole="button"
+              accessibilityLabel="Close SIA Voice Assistant"
+            >
+              <X size={18} color={closeIconColor} strokeWidth={2.4} />
             </TouchableOpacity>
           </View>
 
-          {/* Animated Glowing Voice Orb */}
-          <View style={styles.orbWrapper}>
-            {!isFinalState && (
-              <Animated.View
-                style={[
-                  pulseRingStyle,
-                  { transform: [{ scale: pulseAnim }] },
-                ]}
+          {/* Scrollable Immersive Body */}
+          <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContent}
+            showsVerticalScrollIndicator={false}
+            bounces={false}
+          >
+            {/* Status Headline & Subtitle */}
+            <View style={styles.headlineContainer}>
+              <Text
+                style={[styles.statusHeadline, { color: headlineColor }]}
+                numberOfLines={2}
+              >
+                {statusHeadline}
+              </Text>
+              <Text
+                style={[styles.statusSubtitle, { color: subtitleColor }]}
+                numberOfLines={2}
+              >
+                {statusSubtitle}
+              </Text>
+            </View>
+
+            {/* Futuristic Holographic Orb Centerpiece */}
+            <View style={styles.orbStage}>
+              <SiaHolographicOrb
+                state={currentState}
+                size={144}
+                onPress={onMicPress}
               />
-            )}
-            <TouchableOpacity
-              activeOpacity={0.85}
-              onPress={onMicPress}
-              style={micCircleStyle}
+            </View>
+
+            {/* Interactive Transcription / Response Card */}
+            <View
+              style={[
+                styles.dialogueCard,
+                {
+                  backgroundColor: cardBg,
+                  borderColor: cardBorder,
+                },
+              ]}
             >
               {isSuccess ? (
-                <Check size={28} color="#FFFFFF" strokeWidth={2.6} />
-              ) : isUnrecognized ? (
-                <HelpCircle size={28} color="#FFFFFF" strokeWidth={2.4} />
-              ) : isError ? (
-                <AlertTriangle size={28} color="#FFFFFF" strokeWidth={2.4} />
-              ) : isSpeaking ? (
-                <Volume2 size={26} color="#FFFFFF" strokeWidth={2.4} />
-              ) : isGeneratingResponse || isExecuting || isProcessing ? (
-                <Sparkles size={24} color="#FFFFFF" />
-              ) : (
-                <Mic size={28} color="#FFFFFF" strokeWidth={2.4} />
-              )}
-            </TouchableOpacity>
-          </View>
-
-          {/* Dialogue Box */}
-          <View style={styles.dialogueBox}>
-            {isSuccess ? (
-              <>
-                <Text style={styles.greetingTitleConfirmed}>
-                  {confirmedActionTitle || 'Command Completed!'}
-                </Text>
-                <Text style={styles.dialogueBodyConfirmed}>
-                  {confirmedActionBody ||
-                    'Updated your productivity flow schedule.'}
-                </Text>
-
-                {resultSummary ? (
-                  <View style={styles.resultSummaryContainer}>
-                    <Check size={14} color="#065F46" strokeWidth={2.5} />
-                    <Text style={styles.resultSummaryText}>{resultSummary}</Text>
-                  </View>
-                ) : null}
-
-                {speechFailed ? (
-                  <View style={styles.speechFailedNotice}>
-                    <AlertTriangle size={14} color="#D97706" />
-                    <Text style={styles.speechFailedNoticeText}>
-                      {errorMessage || 'Voice confirmation failed to play.'}
+                <>
+                  <View style={styles.cardHeaderRow}>
+                    <View style={styles.successCheckCircle}>
+                      <Check size={16} color="#FFFFFF" strokeWidth={3} />
+                    </View>
+                    <Text
+                      style={[
+                        styles.cardHeadlineConfirmed,
+                        { color: isDarkMode ? '#A7F3D0' : '#065F46' },
+                      ]}
+                    >
+                      {confirmedActionTitle || 'Command Executed'}
                     </Text>
                   </View>
-                ) : null}
 
-                {lastSpokenCommand ? (
-                  <View style={styles.spokenCommandTag}>
-                    <Text style={styles.spokenCommandTagText}>
-                      Spoken: &ldquo;{lastSpokenCommand}&rdquo;
-                    </Text>
-                  </View>
-                ) : null}
-              </>
-            ) : isUnrecognized ? (
-              <>
-                <Text style={styles.greetingTitleUnrecognized}>
-                  {confirmedActionTitle || 'Command Not Recognized'}
-                </Text>
-                <Text style={styles.dialogueBodyUnrecognized}>
-                  {confirmedActionBody ||
-                    `I heard "${lastSpokenCommand || 'that'}". Try saying "Schedule sprint review", "Log meditation", or "Add task..."`}
-                </Text>
-                {lastSpokenCommand ? (
-                  <View style={styles.spokenCommandTag}>
-                    <Text style={styles.spokenCommandTagText}>
-                      Spoken: &ldquo;{lastSpokenCommand}&rdquo;
-                    </Text>
-                  </View>
-                ) : null}
-              </>
-            ) : isError ? (
-              <>
-                <Text style={styles.greetingTitleError}>
-                  {confirmedActionTitle || 'Unable to Complete Request'}
-                </Text>
-                <Text style={styles.dialogueBodyError}>
-                  {errorMessage ||
-                    confirmedActionBody ||
-                    'An unexpected error occurred. Please try again.'}
-                </Text>
-                {lastSpokenCommand ? (
-                  <View style={styles.spokenCommandTag}>
-                    <Text style={styles.spokenCommandTagText}>
-                      Spoken: &ldquo;{lastSpokenCommand}&rdquo;
-                    </Text>
-                  </View>
-                ) : null}
-              </>
-            ) : isSpeaking ? (
-              <>
-                <Text style={styles.greetingTitle}>
-                  &ldquo;{spokenResponseText || greetingText || 'Yes, this is Regius.'}&rdquo;
-                </Text>
-                <View style={styles.speakingWaveformRow}>
-                  <Text style={styles.dialogueBodySpeaking}>
-                    Playing voice confirmation...
+                  <Text
+                    style={[
+                      styles.cardBodyConfirmed,
+                      { color: isDarkMode ? '#D1D5DB' : '#374151' },
+                    ]}
+                  >
+                    {confirmedActionBody ||
+                      'Updated your productivity flow schedule.'}
                   </Text>
-                  {/* Dynamic Equalizer Visualizer */}
-                  <View style={styles.speakingWaveformContainer}>
-                    {waveBars.map((barAnim, idx) => (
-                      <Animated.View
-                        key={idx}
-                        style={[
-                          styles.speakingWaveBar,
-                          {
-                            transform: [{ scaleY: barAnim }],
-                          },
-                        ]}
+
+                  {resultSummary ? (
+                    <View style={styles.resultSummaryChip}>
+                      <Check size={13} color="#065F46" strokeWidth={2.6} />
+                      <Text style={styles.resultSummaryChipText}>
+                        {resultSummary}
+                      </Text>
+                    </View>
+                  ) : null}
+
+                  {speechFailed ? (
+                    <View style={styles.speechFailedNotice}>
+                      <AlertTriangle size={13} color="#D97706" />
+                      <Text style={styles.speechFailedNoticeText}>
+                        {errorMessage || 'Voice confirmation failed to play.'}
+                      </Text>
+                    </View>
+                  ) : null}
+
+                  {lastSpokenCommand ? (
+                    <View style={styles.spokenQuoteTag}>
+                      <Text style={styles.spokenQuoteLabel}>Spoken:</Text>
+                      <Text style={styles.spokenQuoteContent} numberOfLines={2}>
+                        &ldquo;{lastSpokenCommand}&rdquo;
+                      </Text>
+                    </View>
+                  ) : null}
+                </>
+              ) : isUnrecognized ? (
+                <>
+                  <View style={styles.cardHeaderRow}>
+                    <View style={styles.unrecAlertCircle}>
+                      <HelpCircle size={16} color="#FFFFFF" strokeWidth={2.6} />
+                    </View>
+                    <Text style={styles.cardHeadlineUnrec}>
+                      {confirmedActionTitle || 'Not Recognized'}
+                    </Text>
+                  </View>
+
+                  <Text style={styles.cardBodyUnrec}>
+                    {confirmedActionBody ||
+                      `I heard "${
+                        lastSpokenCommand || 'that'
+                      }". Try saying "Schedule sprint review at 3 PM" or "Log 20-min meditation".`}
+                  </Text>
+
+                  {lastSpokenCommand ? (
+                    <View style={styles.spokenQuoteTag}>
+                      <Text style={styles.spokenQuoteLabel}>Heard:</Text>
+                      <Text style={styles.spokenQuoteContent} numberOfLines={2}>
+                        &ldquo;{lastSpokenCommand}&rdquo;
+                      </Text>
+                    </View>
+                  ) : null}
+                </>
+              ) : isError ? (
+                <>
+                  <View style={styles.cardHeaderRow}>
+                    <View style={styles.errorAlertCircle}>
+                      <AlertTriangle
+                        size={16}
+                        color="#FFFFFF"
+                        strokeWidth={2.6}
                       />
-                    ))}
+                    </View>
+                    <Text style={styles.cardHeadlineError}>
+                      {confirmedActionTitle || 'Request Incomplete'}
+                    </Text>
                   </View>
-                </View>
-              </>
-            ) : isWakeWordDetected ? (
-              <>
-                <Text style={styles.greetingTitle}>“Hey Regius”</Text>
-                <Text style={styles.dialogueBodyActive}>
-                  Wake word detected. Initializing assistant...
-                </Text>
-              </>
-            ) : isGreeting ? (
-              <>
-                <Text style={styles.greetingTitle}>“Connecting...”</Text>
-                <Text style={styles.dialogueBodyActive}>
-                  Preparing neural voice greeting...
-                </Text>
-              </>
-            ) : isGeneratingResponse ? (
-              <>
-                <Text style={styles.greetingTitle}>
-                  {confirmedActionTitle ? `“${confirmedActionTitle}”` : '“Preparing response...”'}
-                </Text>
-                <Text style={styles.dialogueBodyActive}>
-                  {activeVoiceName
-                    ? `Preparing voice confirmation with ${activeVoiceName}...`
-                    : 'Synthesizing voice confirmation...'}
-                </Text>
-              </>
-            ) : isExecuting ? (
-              <>
-                <Text style={styles.greetingTitle}>
-                  {confirmedActionTitle ? `“${confirmedActionTitle}”` : '“Working on your request...”'}
-                </Text>
-                <Text style={styles.dialogueBodyActive}>
-                  {lastSpokenCommand
-                    ? `“${lastSpokenCommand}”`
-                    : 'Executing command in your productivity flow...'}
-                </Text>
-              </>
-            ) : isProcessing ? (
-              <>
-                <Text style={styles.greetingTitle}>“Understanding request...”</Text>
-                <Text style={styles.dialogueBodyActive}>
-                  {lastSpokenCommand || liveTranscript
-                    ? `“${lastSpokenCommand || liveTranscript}”`
-                    : 'Interpreting voice input in your timeline...'}
-                </Text>
-              </>
-            ) : liveTranscript ? (
-              <>
-                <Text style={styles.greetingTitle}>“{liveTranscript}...”</Text>
-                <Text style={styles.dialogueBodyActive}>
-                  Listening in real-time. Pause when you are done speaking.
-                </Text>
-              </>
-            ) : (
-              <>
-                <Text style={styles.greetingTitle}>
-                  {greetingText ? `“${greetingText}”` : "“I'm listening...”"}
-                </Text>
-                <Text style={styles.dialogueBody}>
-                  Say any command: log meditation, schedule sprint review, or
-                  add a task to your flow.
-                </Text>
-              </>
-            )}
-          </View>
 
-          {/* Bottom Actions or Quick Suggestions */}
-          {isFinalState ? (
-            <View style={styles.finalActionsContainer}>
-              {/* For unrecognized commands, also show helpful command examples to tap */}
-              {isUnrecognized && (
-                <View style={styles.unrecognizedSuggestions}>
-                  <Text style={styles.actionsHeader}>Try One of These</Text>
-                  <View style={styles.chipsContainer}>
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={() => onActionSelected?.('schedule_sprint')}
-                      style={styles.actionChip}
-                    >
-                      <Clock size={13} color="#D97706" />
-                      <Text style={styles.actionChipText}>
-                        “Schedule sprint review”
+                  <Text style={styles.cardBodyError}>
+                    {errorMessage ||
+                      confirmedActionBody ||
+                      'An unexpected error occurred while executing the command.'}
+                  </Text>
+
+                  {lastSpokenCommand ? (
+                    <View style={styles.spokenQuoteTag}>
+                      <Text style={styles.spokenQuoteLabel}>Command:</Text>
+                      <Text style={styles.spokenQuoteContent} numberOfLines={2}>
+                        &ldquo;{lastSpokenCommand}&rdquo;
                       </Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      activeOpacity={0.8}
-                      onPress={() => onActionSelected?.('log_meditation')}
-                      style={styles.actionChip}
-                    >
-                      <Sparkles size={13} color="#2E7D32" />
-                      <Text style={styles.actionChipText}>
-                        “Log 20-min meditation”
-                      </Text>
-                    </TouchableOpacity>
+                    </View>
+                  ) : null}
+                </>
+              ) : isSpeaking ? (
+                <>
+                  <Text
+                    style={[
+                      styles.speakingResponseQuote,
+                      { color: isDarkMode ? '#FFFFFF' : '#1F2228' },
+                    ]}
+                  >
+                    &ldquo;
+                    {spokenResponseText ||
+                      greetingText ||
+                      'Yes, this is SIA. How can I assist you?'}
+                    &rdquo;
+                  </Text>
+
+                  <View style={styles.speakingWaveformRow}>
+                    <Text style={styles.speakingWaveformLabel}>
+                      {activeVoiceName
+                        ? `Synthesized with ${activeVoiceName}`
+                        : 'Playing audio confirmation'}
+                    </Text>
+                    {/* Dynamic Equalizer Visualizer */}
+                    <View style={styles.equalizerContainer}>
+                      {waveBars.map((barAnim, idx) => (
+                        <Animated.View
+                          key={idx}
+                          style={[
+                            styles.equalizerBar,
+                            {
+                              transform: [{ scaleY: barAnim }],
+                            },
+                          ]}
+                        />
+                      ))}
+                    </View>
                   </View>
-                </View>
+                </>
+              ) : isThinking ? (
+                <>
+                  {lastSpokenCommand ? (
+                    <View style={styles.thinkingQuoteRow}>
+                      <Text
+                        style={[
+                          styles.spokenQuoteContent,
+                          styles.thinkingQuoteText,
+                          { color: isDarkMode ? '#F3F4F6' : '#1F2228' },
+                        ]}
+                      >
+                        &ldquo;{lastSpokenCommand}&rdquo;
+                      </Text>
+                    </View>
+                  ) : null}
+
+                  <View style={styles.thinkingStatusRow}>
+                    <Sparkles size={16} color="#D97706" />
+                    <Text style={styles.thinkingStatusLabel}>
+                      SIA is analyzing your request and preparing actions…
+                    </Text>
+                  </View>
+                </>
+              ) : isExecuting ? (
+                <>
+                  <Text
+                    style={[
+                      styles.cardHeadline,
+                      { color: isDarkMode ? '#FFFFFF' : '#1F2228' },
+                    ]}
+                  >
+                    {confirmedActionTitle || 'Taking care of it…'}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.cardBody,
+                      { color: isDarkMode ? '#9CA3AF' : '#46464A' },
+                    ]}
+                  >
+                    {lastSpokenCommand
+                      ? `“${lastSpokenCommand}”`
+                      : 'Scheduling task in your flow timeline...'}
+                  </Text>
+                </>
+              ) : liveTranscript ? (
+                <>
+                  <Text
+                    style={[
+                      styles.liveTranscriptQuote,
+                      { color: isDarkMode ? '#FFFFFF' : '#1F2228' },
+                    ]}
+                  >
+                    &ldquo;{liveTranscript}…&rdquo;
+                  </Text>
+                  <Text style={styles.liveTranscriptHint}>
+                    Listening in real-time. Pause when you are finished
+                    speaking.
+                  </Text>
+                </>
+              ) : (
+                <>
+                  <Text
+                    style={[
+                      styles.cardHeadline,
+                      { color: isDarkMode ? '#FFFFFF' : '#1F2228' },
+                    ]}
+                  >
+                    {greetingText ? `“${greetingText}”` : '“I’m listening…”'}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.cardBody,
+                      { color: isDarkMode ? '#9CA3AF' : '#46464A' },
+                    ]}
+                  >
+                    Speak naturally. Try logging a meditation, scheduling a
+                    review, or creating a new task.
+                  </Text>
+                </>
               )}
+            </View>
 
-              <View style={styles.confirmedRow}>
+            {/* Quick Contextual Commands (when ready, listening, or unrecognized) */}
+            {(!isFinalState || isUnrecognized) && (
+              <View style={styles.quickCommandsSection}>
+                <Text
+                  style={[
+                    styles.quickCommandsTitle,
+                    { color: isDarkMode ? '#9CA3AF' : '#77767B' },
+                  ]}
+                >
+                  {isUnrecognized
+                    ? 'TRY ONE OF THESE'
+                    : 'QUICK SPOKEN COMMANDS'}
+                </Text>
+
+                <View style={styles.chipsWrap}>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => onActionSelected?.('schedule_sprint')}
+                    style={[
+                      styles.commandChip,
+                      {
+                        backgroundColor: isDarkMode ? '#272A30' : '#FFFCEB',
+                        borderColor: isDarkMode ? '#3A3F46' : '#FFF5B8',
+                      },
+                    ]}
+                  >
+                    <Clock size={14} color="#D97706" />
+                    <Text
+                      style={[
+                        styles.commandChipText,
+                        { color: isDarkMode ? '#F3F4F6' : '#1F2228' },
+                      ]}
+                    >
+                      “Schedule sprint review at 3 PM”
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => onActionSelected?.('log_meditation')}
+                    style={[
+                      styles.commandChip,
+                      {
+                        backgroundColor: isDarkMode ? '#1E2D26' : '#EDFDF5',
+                        borderColor: isDarkMode ? '#2A4638' : '#C6FFDD',
+                      },
+                    ]}
+                  >
+                    <Sparkles size={14} color="#2E7D32" />
+                    <Text
+                      style={[
+                        styles.commandChipText,
+                        { color: isDarkMode ? '#F3F4F6' : '#1F2228' },
+                      ]}
+                    >
+                      “Log 20-min meditation”
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => onActionSelected?.('play_brief')}
+                    style={[
+                      styles.commandChip,
+                      {
+                        backgroundColor: isDarkMode ? '#252538' : '#EFF2FE',
+                        borderColor: isDarkMode ? '#373756' : '#D8DBFF',
+                      },
+                    ]}
+                  >
+                    <Volume2 size={14} color="#8383D6" />
+                    <Text
+                      style={[
+                        styles.commandChipText,
+                        { color: isDarkMode ? '#F3F4F6' : '#1F2228' },
+                      ]}
+                    >
+                      “Play Morning Brief”
+                    </Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => onActionSelected?.('extend_time')}
+                    style={[
+                      styles.commandChip,
+                      {
+                        backgroundColor: isDarkMode ? '#2B2822' : '#FFF3E0',
+                        borderColor: isDarkMode ? '#453E32' : '#FFE0B2',
+                      },
+                    ]}
+                  >
+                    <RotateCcw size={14} color="#EA580C" />
+                    <Text
+                      style={[
+                        styles.commandChipText,
+                        { color: isDarkMode ? '#F3F4F6' : '#1F2228' },
+                      ]}
+                    >
+                      “+15 mins to Focus”
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
+          </ScrollView>
+
+          {/* Bottom Dock / Action Controls */}
+          <View style={styles.bottomDockContainer}>
+            {isFinalState ? (
+              <View style={styles.finalActionsRow}>
                 {speechFailed ? (
                   <TouchableOpacity
                     activeOpacity={0.85}
                     onPress={onRetrySpeech || onMicPress}
-                    style={styles.retrySpeechBtn}
+                    style={styles.retryVoiceBtn}
                   >
                     <Volume2 size={16} color="#0284C7" />
-                    <Text style={styles.retrySpeechBtnText}>Retry Voice</Text>
+                    <Text style={styles.retryVoiceBtnText}>Retry Voice</Text>
                   </TouchableOpacity>
                 ) : null}
-                <TouchableOpacity
-                  activeOpacity={0.85}
-                  onPress={onClose}
-                  style={styles.doneBtn}
-                >
-                  <Text style={styles.doneBtnText}>Done</Text>
-                </TouchableOpacity>
+
                 <TouchableOpacity
                   activeOpacity={0.85}
                   onPress={onMicPress}
-                  style={styles.speakAgainBtn}
+                  style={[
+                    styles.secondaryActionBtn,
+                    {
+                      backgroundColor: isDarkMode ? '#2C3035' : '#EFECE6',
+                    },
+                  ]}
                 >
-                  <Mic size={16} color="#1B1C19" />
-                  <Text style={styles.speakAgainBtnText}>
+                  <Mic size={16} color={isDarkMode ? '#FFFFFF' : '#1F2228'} />
+                  <Text
+                    style={[
+                      styles.secondaryActionBtnText,
+                      { color: isDarkMode ? '#FFFFFF' : '#1F2228' },
+                    ]}
+                  >
                     {isError ? 'Retry' : 'Speak Another'}
                   </Text>
                 </TouchableOpacity>
-              </View>
-            </View>
-          ) : (
-            <>
-              <Text style={styles.actionsHeader}>Quick Spoken Commands</Text>
-              <View style={styles.chipsContainer}>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => onActionSelected?.('log_meditation')}
-                  style={styles.actionChip}
-                >
-                  <Sparkles size={14} color="#2E7D32" />
-                  <Text style={styles.actionChipText}>
-                    “Log 20-min meditation”
-                  </Text>
-                </TouchableOpacity>
 
                 <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => onActionSelected?.('schedule_sprint')}
-                  style={styles.actionChip}
+                  activeOpacity={0.88}
+                  onPress={handleClose}
+                  style={styles.primaryDoneBtn}
                 >
-                  <Clock size={14} color="#D97706" />
-                  <Text style={styles.actionChipText}>
-                    “Schedule sprint review at 3 PM”
-                  </Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => onActionSelected?.('play_brief')}
-                  style={styles.actionChip}
-                >
-                  <Volume2 size={14} color="#1B1C19" />
-                  <Text style={styles.actionChipText}>Play Morning Brief</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  onPress={() => onActionSelected?.('extend_time')}
-                  style={styles.actionChip}
-                >
-                  <RotateCcw size={14} color="#1B1C19" />
-                  <Text style={styles.actionChipText}>+15 mins to Focus</Text>
+                  <Text style={styles.primaryDoneBtnText}>Done</Text>
                 </TouchableOpacity>
               </View>
-            </>
-          )}
+            ) : (
+              <View style={styles.activeDockRow}>
+                <TouchableOpacity
+                  activeOpacity={0.88}
+                  onPress={onMicPress}
+                  style={[
+                    styles.micPillBtn,
+                    isListening && styles.micPillBtnListening,
+                    isThinking && styles.micPillBtnThinking,
+                  ]}
+                  accessibilityRole="button"
+                  accessibilityLabel={
+                    isListening
+                      ? 'Stop microphone'
+                      : isThinking
+                      ? 'SIA is thinking'
+                      : isSpeaking
+                      ? 'Interrupt SIA'
+                      : 'Start speaking'
+                  }
+                >
+                  <Mic size={20} color="#FFFFFF" strokeWidth={2.4} />
+                  <Text style={styles.micPillBtnText}>
+                    {isListening
+                      ? 'Listening… (Tap to finish)'
+                      : isThinking
+                      ? 'SIA is Thinking…'
+                      : isSpeaking
+                      ? 'Tap mic to interrupt'
+                      : 'Tap to Speak'}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
         </Animated.View>
       </View>
     </Modal>
@@ -673,228 +907,291 @@ export const VoiceAssistantSheet: React.FC<VoiceAssistantSheetProps> = ({
 };
 
 const styles = StyleSheet.create({
+  modalRoot: {
+    flex: 1,
+    backgroundColor: 'transparent',
+  },
   backdrop: {
+    ...StyleSheet.absoluteFill,
+    backgroundColor: '#000000',
+  },
+  fullScreenSheet: {
     flex: 1,
-    backgroundColor: 'rgba(27, 28, 25, 0.45)',
-    justifyContent: 'flex-end',
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#FAF8F5',
   },
-  dismissArea: {
-    flex: 1,
-  },
-  sheetContainer: {
-    backgroundColor: '#FBF9F3',
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
-    paddingHorizontal: 22,
-    paddingTop: 12,
-    paddingBottom: 40,
-    alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 18,
-    elevation: 16,
-  },
-  handle: {
+  grabHandleBar: {
     width: 44,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#C7C6CA',
-    marginBottom: 16,
+    backgroundColor: '#D5D0C5',
+    alignSelf: 'center',
+    marginBottom: 10,
   },
   header: {
-    width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 18,
+    paddingHorizontal: 22,
+    paddingBottom: 6,
   },
-  headerTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  assistantBadge: {
+  badge3DContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: '#CCE6D0',
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 16,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    borderBottomWidth: 2.2,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#8383D6',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.22,
+        shadowRadius: 3.5,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
-  assistantBadgeText: {
+  badge3DText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 12,
-    color: '#354C3B',
+    letterSpacing: 0.3,
   },
-  closeBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#F0EEE8',
+  closeButton: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
-  orbWrapper: {
-    width: 100,
-    height: 100,
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingHorizontal: 22,
+    paddingTop: 10,
+    paddingBottom: 24,
     alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 12,
   },
-  pulseRing: {
-    position: 'absolute',
-    width: 90,
-    height: 90,
-    borderRadius: 45,
-    backgroundColor: 'rgba(204, 230, 208, 0.65)',
-  },
-  pulseRingProcessing: {
-    backgroundColor: 'rgba(254, 243, 199, 0.85)',
-  },
-  pulseRingExecuting: {
-    backgroundColor: 'rgba(224, 231, 255, 0.85)',
-  },
-  pulseRingGenerating: {
-    backgroundColor: 'rgba(243, 232, 255, 0.85)',
-  },
-  pulseRingSpeaking: {
-    backgroundColor: 'rgba(224, 242, 254, 0.85)',
-  },
-  micCircle: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: '#010102',
+  headlineContainer: {
     alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.2,
-    shadowRadius: 12,
-    elevation: 8,
+    marginVertical: 10,
+    paddingHorizontal: 16,
   },
-  micCircleProcessing: {
-    backgroundColor: '#D97706',
-  },
-  micCircleExecuting: {
-    backgroundColor: '#4F46E5',
-  },
-  micCircleGenerating: {
-    backgroundColor: '#7C3AED',
-  },
-  micCircleSpeaking: {
-    backgroundColor: '#0284C7',
-  },
-  micCircleSuccess: {
-    backgroundColor: '#2E7D32',
-  },
-  micCircleUnrecognized: {
-    backgroundColor: '#D97706',
-  },
-  micCircleError: {
-    backgroundColor: '#DC2626',
-  },
-  dialogueBox: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 18,
-    width: '100%',
-    borderWidth: 1,
-    borderColor: '#EAE8E2',
-    marginVertical: 14,
-  },
-  greetingTitle: {
-    fontFamily: Fonts.poppins.bold,
-    fontSize: 16,
-    color: '#1B1C19',
+  statusHeadline: {
+    fontFamily: Fonts.ranade.bold,
+    fontSize: 25,
+    lineHeight: 31,
+    textAlign: 'center',
+    letterSpacing: -0.3,
     marginBottom: 6,
   },
-  greetingTitleConfirmed: {
+  statusSubtitle: {
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 13.5,
+    lineHeight: 20,
+    textAlign: 'center',
+  },
+  orbStage: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 14,
+  },
+  dialogueCard: {
+    width: '100%',
+    borderRadius: 24,
+    padding: 20,
+    borderWidth: 1.5,
+    marginVertical: 12,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.06,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  cardHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    marginBottom: 8,
+  },
+  successCheckCircle: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: '#059669',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  unrecAlertCircle: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: '#D97706',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  errorAlertCircle: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    backgroundColor: '#DC2626',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  cardHeadlineConfirmed: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 16,
-    color: '#1B1C19',
-    marginBottom: 4,
   },
-  greetingTitleUnrecognized: {
+  cardBodyConfirmed: {
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 13.5,
+    lineHeight: 21,
+  },
+  cardHeadlineUnrec: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 16,
     color: '#92400E',
-    marginBottom: 4,
   },
-  greetingTitleError: {
+  cardBodyUnrec: {
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 13.5,
+    lineHeight: 21,
+    color: '#92400E',
+  },
+  cardHeadlineError: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 16,
     color: '#991B1B',
-    marginBottom: 4,
   },
-  dialogueBody: {
+  cardBodyError: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 13.5,
-    lineHeight: 20,
-    color: '#46464A',
-  },
-  dialogueBodyConfirmed: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 13.5,
-    lineHeight: 20,
-    color: '#2E7D32',
-  },
-  dialogueBodyUnrecognized: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 13.5,
-    lineHeight: 20,
-    color: '#92400E',
-  },
-  dialogueBodyError: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 13.5,
-    lineHeight: 20,
+    lineHeight: 21,
     color: '#B91C1C',
   },
-  dialogueBodyActive: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 13,
-    color: '#059669',
+  cardHeadline: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 16,
+    marginBottom: 6,
   },
-  dialogueBodySpeaking: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 13,
-    color: '#0284C7',
+  cardBody: {
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 13.5,
+    lineHeight: 21,
+  },
+  speakingResponseQuote: {
+    fontFamily: Fonts.ranade.medium,
+    fontSize: 17,
+    lineHeight: 25,
+    marginBottom: 10,
   },
   speakingWaveformRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 4,
+    paddingTop: 6,
+    borderTopWidth: 1,
+    borderTopColor: '#EFECE6',
   },
-  speakingWaveformContainer: {
+  speakingWaveformLabel: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 12,
+    color: '#0284C7',
+  },
+  equalizerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
     height: 24,
-    paddingHorizontal: 8,
+    paddingHorizontal: 4,
   },
-  speakingWaveBar: {
+  equalizerBar: {
     width: 3.5,
     height: 20,
     borderRadius: 2,
     backgroundColor: '#0284C7',
   },
-  spokenCommandTag: {
-    backgroundColor: '#F7F5EE',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 10,
+  thinkingQuoteRow: {
+    marginBottom: 10,
+  },
+  thinkingQuoteText: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 15,
+    lineHeight: 22,
+  },
+  thinkingStatusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#F3F4F6',
+  },
+  thinkingStatusLabel: {
+    flex: 1,
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 12.5,
+    color: '#D97706',
+  },
+  liveTranscriptQuote: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 16,
+    lineHeight: 24,
+    marginBottom: 6,
+  },
+  liveTranscriptHint: {
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 12.5,
+    color: '#059669',
+  },
+  spokenQuoteTag: {
+    backgroundColor: '#F5F3ED',
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    borderRadius: 12,
     alignSelf: 'flex-start',
     marginTop: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    maxWidth: '100%',
   },
-  spokenCommandTagText: {
-    fontFamily: Fonts.poppins.medium,
+  spokenQuoteLabel: {
+    fontFamily: Fonts.poppins.semiBold,
     fontSize: 11.5,
-    color: '#6B7280',
+    color: '#78716C',
   },
-  resultSummaryContainer: {
+  spokenQuoteContent: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 12,
+    color: '#292524',
+    flexShrink: 1,
+  },
+  resultSummaryChip: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
@@ -905,11 +1202,11 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 12,
     alignSelf: 'flex-start',
-    marginTop: 8,
+    marginTop: 10,
   },
-  resultSummaryText: {
+  resultSummaryChipText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12.5,
+    fontSize: 12,
     color: '#065F46',
   },
   speechFailedNotice: {
@@ -928,90 +1225,144 @@ const styles = StyleSheet.create({
     fontSize: 11.5,
     color: '#92400E',
   },
-  retrySpeechBtn: {
-    height: 48,
+  quickCommandsSection: {
+    width: '100%',
+    marginTop: 6,
+  },
+  quickCommandsTitle: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 12,
+    letterSpacing: 0.6,
+    marginBottom: 10,
+    paddingHorizontal: 2,
+  },
+  chipsWrap: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  commandChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 7,
+    paddingHorizontal: 14,
+    paddingVertical: 10,
+    borderRadius: 22,
+    borderWidth: 1,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.04,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 1,
+      },
+    }),
+  },
+  commandChipText: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 12,
+  },
+  bottomDockContainer: {
+    width: '100%',
+    paddingHorizontal: 22,
+    paddingTop: 12,
+  },
+  activeDockRow: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  micPillBtn: {
+    width: '100%',
+    height: 54,
+    borderRadius: 50,
+    backgroundColor: '#1F2228',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.25,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
+  },
+  micPillBtnListening: {
+    backgroundColor: '#059669',
+  },
+  micPillBtnThinking: {
+    backgroundColor: '#D97706',
+  },
+  micPillBtnText: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 15,
+    color: '#FFFFFF',
+  },
+  finalActionsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    width: '100%',
+  },
+  primaryDoneBtn: {
+    flex: 1,
+    height: 52,
+    borderRadius: 50,
+    backgroundColor: '#1F2228',
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  primaryDoneBtnText: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 15,
+    color: '#FFFFFF',
+  },
+  secondaryActionBtn: {
+    height: 52,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  secondaryActionBtnText: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 14,
+  },
+  retryVoiceBtn: {
+    height: 52,
     paddingHorizontal: 16,
-    borderRadius: 24,
+    borderRadius: 50,
     backgroundColor: '#E0F2FE',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
   },
-  retrySpeechBtnText: {
+  retryVoiceBtnText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 13,
     color: '#0284C7',
-  },
-  finalActionsContainer: {
-    width: '100%',
-  },
-  unrecognizedSuggestions: {
-    width: '100%',
-    marginBottom: 12,
-  },
-  confirmedRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    width: '100%',
-    marginTop: 6,
-  },
-  doneBtn: {
-    flex: 1,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#010102',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  doneBtnText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14,
-    color: '#FFFFFF',
-  },
-  speakAgainBtn: {
-    height: 48,
-    paddingHorizontal: 18,
-    borderRadius: 24,
-    backgroundColor: '#F0EEE8',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 6,
-  },
-  speakAgainBtnText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 13,
-    color: '#1B1C19',
-  },
-  actionsHeader: {
-    alignSelf: 'flex-start',
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12.5,
-    color: '#77767B',
-    marginBottom: 8,
-    marginTop: 4,
-  },
-  chipsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-    width: '100%',
-  },
-  actionChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: '#F0EEE8',
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 22,
-  },
-  actionChipText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
-    color: '#1B1C19',
   },
 });
 

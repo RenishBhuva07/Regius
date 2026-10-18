@@ -11,3 +11,4 @@ export { default as VoiceStudioModal } from './VoiceStudioModal';
 export { default as EditProfileModal } from './EditProfileModal';
 export { default as ClearCacheModal } from './ClearCacheModal';
 export { default as LogoutConfirmModal } from './LogoutConfirmModal';
+export { default as WakeWordConfigModal } from './WakeWordConfigModal';

@@ -57,28 +57,41 @@ export const WakeWordRepliesService = {
 
   /**
    * Retrieves a reply according to the configured selection policy.
+   * Can dynamically interpolate the configured assistant name.
    */
-  getNextReply(policy: ReplySelectionPolicy = 'random'): string {
+  getNextReply(
+    policy: ReplySelectionPolicy = 'random',
+    assistantName?: string,
+  ): string {
     if (this.replies.length === 0) {
       return "I'm listening. How can I help you?";
     }
 
+    let selectedText = '';
     if (policy === 'rotation') {
       const selected = this.replies[currentIndex % this.replies.length];
       currentIndex = (currentIndex + 1) % this.replies.length;
-      return selected.reply;
+      selectedText = selected.reply;
+    } else {
+      // Default: random selection
+      const index = Math.floor(Math.random() * this.replies.length);
+      selectedText = this.replies[index].reply;
     }
 
-    // Default: random selection
-    const index = Math.floor(Math.random() * this.replies.length);
-    return this.replies[index].reply;
+    if (assistantName && assistantName.toLowerCase() !== 'regius') {
+      return selectedText.replace(/\bRegius\b/gi, assistantName);
+    }
+    return selectedText;
   },
 
   getAllReplies(): WakeWordReplyConfig[] {
     return [...this.replies];
   },
 
-  addReply(replyText: string, triggerPhrase: string = 'Hey Regius'): WakeWordReplyConfig {
+  addReply(
+    replyText: string,
+    triggerPhrase: string = 'Hey Regius',
+  ): WakeWordReplyConfig {
     const newReply: WakeWordReplyConfig = {
       id: `reply_${Date.now()}`,
       triggerPhrase,

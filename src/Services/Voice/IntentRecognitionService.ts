@@ -4,8 +4,12 @@ import {
   PendingClarification,
   InterpretedVoiceCommand,
 } from './VoiceTypes';
+import {
+  isWakeWordOnly,
+  getActiveWakePhrase,
+} from '../WakeWord/WakeWordDetectionEngine';
 
-// Wake-word regex patterns
+// Default wake-word regex patterns for fallback
 const WAKE_WORD_REGEX =
   /^(?:hey|hay|hi|hello|ok|okay|ay|he)?\s*(?:regius|regis|regions|regeus|rejius|regus|rejus|reach\s+us|read\s+just|ready\s+us|radius|religious|rage\s+us|raygeus|radios|radious|rijus|regias|regios)[.!?\s]*$/i;
 
@@ -258,14 +262,19 @@ export const IntentRecognitionService = {
     const raw = rawText.trim();
     const cleanRaw = raw.replace(/[.,!?;]+$/g, '').trim();
     const normalized = cleanText(raw);
+    const activePhrase = getActiveWakePhrase();
 
     // 1. Wake word only or empty input
-    if (!normalized || WAKE_WORD_REGEX.test(normalized)) {
+    if (
+      !normalized ||
+      WAKE_WORD_REGEX.test(normalized) ||
+      isWakeWordOnly(normalized, activePhrase)
+    ) {
       return {
         intent: 'WAKE_WORD_ONLY',
         originalTranscript: raw,
         parameters: {},
-        displayTitle: 'Regius Listening',
+        displayTitle: `${activePhrase} Listening`,
         displayBody:
           'Say a command like "Add a task to take medicine", "Set a reminder", or "Log meditation".',
         spokenConfirmation: undefined,
@@ -299,7 +308,7 @@ export const IntentRecognitionService = {
         originalTranscript: raw,
         parameters: {},
         displayTitle: 'Session Ended',
-        displayBody: 'Say "Hey Regius" whenever you need me.',
+        displayBody: `Say "${getActiveWakePhrase()}" whenever you need me.`,
         spokenConfirmation: 'Goodbye! Have a great day.',
         shouldEndSession: true,
       };
@@ -314,7 +323,8 @@ export const IntentRecognitionService = {
     ) {
       let politeReply = "You're welcome! Anything else I can help with?";
       if (normalized.includes('so much')) {
-        politeReply = "You're very welcome! Let me know if you need anything else.";
+        politeReply =
+          "You're very welcome! Let me know if you need anything else.";
       } else if (normalized.includes('helpful')) {
         politeReply = 'Glad I could help.';
       }
@@ -343,7 +353,11 @@ export const IntentRecognitionService = {
 
     // 6. Multi-turn Pending Clarification Resolution
     if (pendingClarification) {
-      return this.resolveClarification(cleanRaw, normalized, pendingClarification);
+      return this.resolveClarification(
+        cleanRaw,
+        normalized,
+        pendingClarification,
+      );
     }
 
     // ─── 7. Fresh Command Parsing ──────────────────────────────────────────
@@ -497,7 +511,8 @@ export const IntentRecognitionService = {
               createdAt: Date.now(),
             },
             displayTitle: `When should I remind you to ${cleanTitle}?`,
-            displayBody: 'Specify a time or day, such as "At 8 PM" or "Tomorrow at 9 AM".',
+            displayBody:
+              'Specify a time or day, such as "At 8 PM" or "Tomorrow at 9 AM".',
             spokenConfirmation: 'When would you like the reminder?',
           };
         }
@@ -553,17 +568,18 @@ export const IntentRecognitionService = {
       if (pending.missingSlot === 'time') {
         const { date, time, repeat, isRecurring } = extractDateTime(cleanRaw);
         const resolvedTime =
-          time || (date ? '09:00 AM' : cleanRaw.length < 20 ? cleanRaw : undefined);
+          time ||
+          (date ? '09:00 AM' : cleanRaw.length < 20 ? cleanRaw : undefined);
         const resolvedDate =
           date || (resolvedTime?.includes('PM') ? 'Tonight' : 'Tomorrow');
 
         if (resolvedTime) {
-          const finalTitle =
-            pending.collectedData.title || 'Reminder';
+          const finalTitle = pending.collectedData.title || 'Reminder';
 
           // If recurrence was already provided or detected, finish now
           if (repeat || pending.collectedData.repeat) {
-            const finalRepeat = repeat || pending.collectedData.repeat || 'Once';
+            const finalRepeat =
+              repeat || pending.collectedData.repeat || 'Once';
             const scheduleDesc =
               finalRepeat === 'Daily'
                 ? `every day at ${resolvedTime}`
@@ -603,12 +619,15 @@ export const IntentRecognitionService = {
                 time: resolvedTime,
               },
               missingSlot: 'recurrence',
-              question: 'Should that be a one-time reminder or repeat every day?',
+              question:
+                'Should that be a one-time reminder or repeat every day?',
               createdAt: Date.now(),
             },
             displayTitle: 'One-time or recurring?',
-            displayBody: 'Should this reminder repeat daily or be a one-time alert?',
-            spokenConfirmation: 'Should that be a one-time reminder or repeat every day?',
+            displayBody:
+              'Should this reminder repeat daily or be a one-time alert?',
+            spokenConfirmation:
+              'Should that be a one-time reminder or repeat every day?',
           };
         }
       } else if (pending.missingSlot === 'title') {
@@ -641,8 +660,7 @@ export const IntentRecognitionService = {
       } else if (pending.missingSlot === 'recurrence') {
         const { repeat } = extractRecurrence(cleanRaw);
         const isEveryDay = /every|repeat|daily/i.test(normalized);
-        const resolvedRepeat =
-          repeat || (isEveryDay ? 'Daily' : 'Once');
+        const resolvedRepeat = repeat || (isEveryDay ? 'Daily' : 'Once');
         const finalTitle = pending.collectedData.title || 'Reminder';
         const finalDate = pending.collectedData.date || 'Today';
         const finalTime = pending.collectedData.time || '08:00 PM';
@@ -850,7 +868,9 @@ export const IntentRecognitionService = {
         title,
         date: finalDate,
         time: finalTime,
-        repeat: repeat || (cleanRaw.match(/\bevery\s+morning\b/i) ? 'Daily' : undefined),
+        repeat:
+          repeat ||
+          (cleanRaw.match(/\bevery\s+morning\b/i) ? 'Daily' : undefined),
         frequency,
         isRecurring,
         category: 'works',
@@ -910,10 +930,17 @@ export const IntentRecognitionService = {
 
     if (addHabitMatch) {
       let rawTitle = (addHabitMatch[1] || '').trim();
-      rawTitle = rawTitle.replace(/\b(?:habit|daily|weekly|a|my)\b/gi, '').trim();
+      rawTitle = rawTitle
+        .replace(/\b(?:habit|daily|weekly|a|my)\b/gi, '')
+        .trim();
       if (rawTitle.toLowerCase() === 'meditating') rawTitle = 'Meditation';
-      if (rawTitle.toLowerCase() === 'exercising' || rawTitle.toLowerCase() === 'working out') rawTitle = 'Exercise';
-      if (rawTitle.toLowerCase() === 'drinking more water') rawTitle = 'Drinking water';
+      if (
+        rawTitle.toLowerCase() === 'exercising' ||
+        rawTitle.toLowerCase() === 'working out'
+      )
+        rawTitle = 'Exercise';
+      if (rawTitle.toLowerCase() === 'drinking more water')
+        rawTitle = 'Drinking water';
       habitTitleCandidate = rawTitle;
     }
 
@@ -991,15 +1018,14 @@ export const IntentRecognitionService = {
     const logHabitMatch =
       cleanRaw.match(
         /\b(?:i\s+)?(?:completed|finished|logged|did)\s+(?:my\s+)?(.+?)(?:\s+for\s+today)?$/i,
-      ) ||
-      cleanRaw.match(
-        /\b(?:log|mark)\s+(?:my\s+)?(.*)$/i,
-      );
+      ) || cleanRaw.match(/\b(?:log|mark)\s+(?:my\s+)?(.*)$/i);
 
     if (
       logHabitMatch &&
       !/^(?:add|create|set|remind|schedule)\b/i.test(normalized) &&
-      /(?:meditat|water|hydrat|workout|exercise|run|jog|habit)/i.test(normalized)
+      /(?:meditat|water|hydrat|workout|exercise|run|jog|habit)/i.test(
+        normalized,
+      )
     ) {
       let habitName = 'meditation';
       let spokenTitle = '20-minute meditation';
@@ -1221,7 +1247,9 @@ export const IntentRecognitionService = {
 // ─── Helper Pattern Matchers ─────────────────────────────────────────────
 
 function focusSessionPattern(normalized: string): boolean {
-  return /\b(?:focus\s+session|start\s+focus|extend\s+focus)\b/i.test(normalized);
+  return /\b(?:focus\s+session|start\s+focus|extend\s+focus)\b/i.test(
+    normalized,
+  );
 }
 
 function morningBriefPattern(normalized: string): boolean {
@@ -1244,7 +1272,9 @@ function showTasksPattern(normalized: string): boolean {
     /\b(?:show|what\s+are|list|view|read)\s+(?:my\s+)?tasks\b/i.test(
       normalized,
     ) ||
-    /\bwhat['’]?s\s+on\s+my\s+(?:tasks?|to[\s-]do\s+list)\b/i.test(normalized) ||
+    /\bwhat['’]?s\s+on\s+my\s+(?:tasks?|to[\s-]do\s+list)\b/i.test(
+      normalized,
+    ) ||
     /^tasks\s*(?:for\s+today)?$/i.test(normalized)
   );
 }

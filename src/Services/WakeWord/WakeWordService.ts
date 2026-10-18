@@ -3,6 +3,49 @@ import Voice, {
   SpeechResultsEvent,
   SpeechErrorEvent,
 } from '@react-native-voice/voice';
+import { VoiceSettingsService } from '../VoiceSettingsService';
+import {
+  WakeWordPreset,
+  WakeWordMatchResult,
+  WakeWordValidationResult,
+  WakeWordTestResult,
+  WakeWordMatchType,
+} from './WakeWordTypes';
+import {
+  SUPPORTED_WAKE_WORD_PRESETS,
+  DEFAULT_WAKE_WORD_PRESET,
+  DEFAULT_WAKE_WORD_ID,
+  DEFAULT_WAKE_WORD_PHRASE,
+} from './WakeWordPresets';
+import {
+  detectWakeWordInTranscript,
+  isWakeWordOnly,
+  validateWakePhrase,
+  testWakeWordRecognition,
+  formatWakePhrase,
+  ENGINE_LIMITATIONS,
+} from './WakeWordDetectionEngine';
+
+// Re-exports for consumers
+export type {
+  WakeWordPreset,
+  WakeWordMatchResult,
+  WakeWordValidationResult,
+  WakeWordTestResult,
+  WakeWordMatchType,
+};
+export {
+  SUPPORTED_WAKE_WORD_PRESETS,
+  DEFAULT_WAKE_WORD_PRESET,
+  DEFAULT_WAKE_WORD_ID,
+  DEFAULT_WAKE_WORD_PHRASE,
+  detectWakeWordInTranscript,
+  isWakeWordOnly,
+  validateWakePhrase,
+  testWakeWordRecognition,
+  formatWakePhrase,
+  ENGINE_LIMITATIONS,
+};
 
 export type AssistantFlowState =
   | 'idle'
@@ -13,98 +56,35 @@ export type AssistantFlowState =
   | 'speaking'
   | 'error';
 
-export interface WakeWordMatchResult {
-  detected: boolean;
-  matchedPhrase?: string;
-  command?: string;
-}
-
-// Regex patterns for phonetic variants and STT misrecognitions of "Hey Regius"
-const WAKE_WORD_PATTERNS = [
-  /\b(?:hey|hay|hi|hello|ok|okay|ay|he)?\s*(?:regius|regis|regions|regeus|rejius|regus|rejus|reach\s+us|read\s+just|ready\s+us|radius|religious|rage\s+us|raygeus|radios|radious|rijus|regias|regios)\b/i,
-];
-
-function cleanPunctuation(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[.,/#!$%^&*;:{}=\-_`~()?]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function levenshtein(a: string, b: string): number {
-  const an = a ? a.length : 0;
-  const bn = b ? b.length : 0;
-  if (an === 0) return bn;
-  if (bn === 0) return an;
-  const matrix: number[][] = Array.from({ length: bn + 1 }, (_, i) => [i]);
-  for (let j = 0; j <= an; j++) matrix[0][j] = j;
-
-  for (let i = 1; i <= bn; i++) {
-    for (let j = 1; j <= an; j++) {
-      if (b.charAt(i - 1) === a.charAt(j - 1)) {
-        matrix[i][j] = matrix[i - 1][j - 1];
-      } else {
-        matrix[i][j] = Math.min(
-          matrix[i - 1][j - 1] + 1,
-          matrix[i][j - 1] + 1,
-          matrix[i - 1][j] + 1,
-        );
-      }
-    }
-  }
-  return matrix[bn][an];
-}
-
-export function detectWakeWordInTranscript(transcript: string): WakeWordMatchResult {
-  const normalized = cleanPunctuation(transcript);
-
-  // 1. Direct regex match
-  for (const pattern of WAKE_WORD_PATTERNS) {
-    const match = normalized.match(pattern);
-    if (match) {
-      const command = normalized.replace(pattern, '').trim();
-      return { detected: true, matchedPhrase: match[0], command };
-    }
-  }
-
-  // 2. Token-level fuzzy phonetic match
-  const tokens = normalized.split(/\s+/);
-  for (let i = 0; i < tokens.length; i++) {
-    const word = tokens[i];
-    if (levenshtein(word, 'regius') <= 2 || levenshtein(word, 'regis') <= 1) {
-      const prevWord = i > 0 ? tokens[i - 1] : '';
-      const isGreeting = ['hey', 'hay', 'hi', 'hello', 'ok', 'okay', 'ay', 'he'].includes(prevWord);
-      const commandTokens = [...tokens];
-      if (isGreeting) {
-        commandTokens.splice(i - 1, 2);
-      } else {
-        commandTokens.splice(i, 1);
-      }
-      return {
-        detected: true,
-        matchedPhrase: isGreeting ? `${prevWord} ${word}` : word,
-        command: commandTokens.join(' ').trim(),
-      };
-    }
-  }
-
-  return { detected: false };
-}
-
 class WakeWordServiceClass {
   private isEnabled: boolean = false;
   private isCapturing: boolean = false;
   private currentState: AssistantFlowState = 'idle';
   private lastTriggerTimestamp: number = 0;
   private readonly cooldownMs: number = 2500; // Guard against multiple triggers
+  private currentWakePhrase: string = DEFAULT_WAKE_WORD_PRESET.phrase;
 
-  private onWakeWordDetectedCallback: ((match: WakeWordMatchResult) => void) | null = null;
-  private onStateChangeCallback: ((state: AssistantFlowState) => void) | null = null;
+  private onWakeWordDetectedCallback:
+    | ((match: WakeWordMatchResult) => void)
+    | null = null;
+  private onStateChangeCallback: ((state: AssistantFlowState) => void) | null =
+    null;
   private onErrorCallback: ((err: string) => void) | null = null;
 
   constructor() {
     this.setupListeners();
+    this.loadSavedConfiguration();
+  }
+
+  private async loadSavedConfiguration() {
+    try {
+      const settings = await VoiceSettingsService.getSettings();
+      if (settings.wakeWordPhrase) {
+        this.currentWakePhrase = settings.wakeWordPhrase;
+      }
+    } catch {
+      // Use default
+    }
   }
 
   private setupListeners() {
@@ -146,7 +126,10 @@ class WakeWordServiceClass {
 
   private handleResults(results: string[]) {
     // If speaking or generating speech, mute/ignore input
-    if (this.currentState === 'speaking' || this.currentState === 'generatingSpeech') {
+    if (
+      this.currentState === 'speaking' ||
+      this.currentState === 'generatingSpeech'
+    ) {
       return;
     }
 
@@ -157,7 +140,7 @@ class WakeWordServiceClass {
 
     for (const text of results) {
       if (!text) continue;
-      const match = detectWakeWordInTranscript(text);
+      const match = detectWakeWordInTranscript(text, this.currentWakePhrase);
       if (match.detected) {
         this.lastTriggerTimestamp = now;
         this.setState('wakeWordDetected');
@@ -167,6 +150,27 @@ class WakeWordServiceClass {
         break;
       }
     }
+  }
+
+  public setWakePhrase(phrase: string): void {
+    const formatted = formatWakePhrase(phrase);
+    this.currentWakePhrase = formatted;
+  }
+
+  public getWakePhrase(): string {
+    return this.currentWakePhrase;
+  }
+
+  public getSupportedPresets(): WakeWordPreset[] {
+    return SUPPORTED_WAKE_WORD_PRESETS;
+  }
+
+  public validatePhrase(phrase: string): WakeWordValidationResult {
+    return validateWakePhrase(phrase);
+  }
+
+  public testRecognition(transcript: string): WakeWordTestResult {
+    return testWakeWordRecognition(transcript, this.currentWakePhrase);
   }
 
   public setState(state: AssistantFlowState) {
@@ -187,8 +191,7 @@ class WakeWordServiceClass {
           PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
           {
             title: 'Microphone Permission',
-            message:
-              'Regius requires microphone access for hands-free "Hey Regius" wake word detection and voice assistance.',
+            message: `Regius requires microphone access for hands-free "${this.currentWakePhrase}" wake word detection and voice assistance.`,
             buttonPositive: 'Allow',
             buttonNegative: 'Deny',
           },
@@ -205,7 +208,10 @@ class WakeWordServiceClass {
 
   public async startListening(): Promise<boolean> {
     if (!this.isEnabled) return false;
-    if (this.currentState === 'speaking' || this.currentState === 'generatingSpeech') {
+    if (
+      this.currentState === 'speaking' ||
+      this.currentState === 'generatingSpeech'
+    ) {
       return false;
     }
 
@@ -218,7 +224,9 @@ class WakeWordServiceClass {
     } catch (e: any) {
       console.warn('[WakeWordService] Error starting Voice engine:', e);
       if (this.onErrorCallback) {
-        this.onErrorCallback(e?.message || 'Failed to start microphone listener');
+        this.onErrorCallback(
+          e?.message || 'Failed to start microphone listener',
+        );
       }
       return false;
     }

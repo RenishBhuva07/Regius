@@ -1,10 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DEFAULT_WAKE_WORD_PHRASE } from './WakeWord/WakeWordPresets';
 
 export interface VoiceSettings {
   selectedVoiceId: string;
   speechSpeed: number;
   autoSpeakReplies: boolean;
   wakeWordEnabled: boolean;
+  wakeWordPhrase: string;
 }
 
 export const DEFAULT_VOICE_SETTINGS: VoiceSettings = {
@@ -12,6 +14,7 @@ export const DEFAULT_VOICE_SETTINGS: VoiceSettings = {
   speechSpeed: 1.0,
   autoSpeakReplies: true,
   wakeWordEnabled: true,
+  wakeWordPhrase: DEFAULT_WAKE_WORD_PHRASE,
 };
 
 const STORAGE_KEYS = {
@@ -56,5 +59,34 @@ export const VoiceSettingsService = {
 
   async setAutoSpeakReplies(enabled: boolean): Promise<void> {
     await this.saveSettings({ autoSpeakReplies: enabled });
+  },
+
+  async setWakeWordPhrase(phrase: string): Promise<void> {
+    await this.saveSettings({ wakeWordPhrase: phrase });
+  },
+
+  async getWakeWordPhrase(): Promise<string> {
+    const settings = await this.getSettings();
+    return settings.wakeWordPhrase || DEFAULT_VOICE_SETTINGS.wakeWordPhrase;
+  },
+
+  /**
+   * Clears saved voice and wake word preferences from AsyncStorage
+   * and reverts to system presets.
+   */
+  async clearSettings(): Promise<VoiceSettings> {
+    try {
+      await AsyncStorage.removeItem(STORAGE_KEYS.VOICE_SETTINGS);
+    } catch (error) {
+      console.warn('Failed to clear voice settings from AsyncStorage:', error);
+    }
+    return {
+      ...DEFAULT_VOICE_SETTINGS,
+      wakeWordPhrase: DEFAULT_WAKE_WORD_PHRASE,
+    };
+  },
+
+  async resetToDefaults(): Promise<VoiceSettings> {
+    return this.clearSettings();
   },
 };

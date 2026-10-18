@@ -1,4 +1,7 @@
-import { AudioPlayerService, AudioPlaybackCallbacks } from './AudioPlayerService';
+import {
+  AudioPlayerService,
+  AudioPlaybackCallbacks,
+} from './AudioPlayerService';
 import { VoiceSettingsService } from './VoiceSettingsService';
 import { VOICES, VoiceOption } from '../Screens/Settings/Components/types';
 import { KokoroTTSService } from './Kokoro/KokoroTTSService';
@@ -17,8 +20,8 @@ export const SIRI_WAKE_GREETINGS: string[] = DEFAULT_PREDEFINED_REPLIES.map(
 /**
  * Returns a configured reply from predefined responses.
  */
-export function getRandomWakeGreeting(): string {
-  return WakeWordRepliesService.getNextReply('random');
+export function getRandomWakeGreeting(assistantName?: string): string {
+  return WakeWordRepliesService.getNextReply('random', assistantName);
 }
 
 /**
@@ -51,14 +54,16 @@ export const RegiusSpeechService = {
       const targetSpeed = active.speed;
       const replies = DEFAULT_PREDEFINED_REPLIES.map(r => r.reply);
       // Run prewarm in background non-blocking
-      KokoroTTSService.prewarm(replies, targetVoiceId, targetSpeed).catch(() => {});
+      KokoroTTSService.prewarm(replies, targetVoiceId, targetSpeed).catch(
+        () => {},
+      );
     } catch {}
   },
 
   /**
    * Returns an instant pre-warmed greeting if available (0ms instant playback), otherwise random.
    */
-  async getFastWakeGreeting(): Promise<string> {
+  async getFastWakeGreeting(assistantName?: string): Promise<string> {
     const active = await this.getActiveVoice();
     const voiceId = active.voice.kokoroVoiceId;
     const speed = active.speed;
@@ -72,12 +77,16 @@ export const RegiusSpeechService = {
 
     if (cachedReplies.length > 0) {
       const idx = Math.floor(Math.random() * cachedReplies.length);
-      return cachedReplies[idx];
+      const chosen = cachedReplies[idx];
+      if (assistantName && assistantName.toLowerCase() !== 'regius') {
+        return chosen.replace(/\bRegius\b/gi, assistantName);
+      }
+      return chosen;
     }
 
     // Trigger background warm up if not yet cached
     this.warmupVoice(voiceId).catch(() => {});
-    return getRandomWakeGreeting();
+    return getRandomWakeGreeting(assistantName);
   },
 
   /**
@@ -110,7 +119,10 @@ export const RegiusSpeechService = {
         callbacks,
       );
     } catch (error) {
-      console.warn('[RegiusSpeechService] Kokoro speech playback notice:', error);
+      console.warn(
+        '[RegiusSpeechService] Kokoro speech playback notice:',
+        error,
+      );
       callbacks?.onError?.(error);
       return false;
     }
@@ -119,7 +131,11 @@ export const RegiusSpeechService = {
   /**
    * Speaks arbitrary user text dynamically with Kokoro TTS.
    */
-  async speak(text: string, voiceId?: string, speed?: number): Promise<boolean> {
+  async speak(
+    text: string,
+    voiceId?: string,
+    speed?: number,
+  ): Promise<boolean> {
     return await KokoroTTSService.speak(text, { voiceId, speed });
   },
 

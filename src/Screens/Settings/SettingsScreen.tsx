@@ -15,10 +15,14 @@ import Toast from 'react-native-toast-message';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { AuthContext } from '../../Context/AuthContext';
 import { resetNavigation } from '../../Navigators/Navigator';
-import { VoiceSettingsService } from '../../Services/VoiceSettingsService';
+import {
+  VoiceSettingsService,
+  DEFAULT_VOICE_SETTINGS,
+} from '../../Services/VoiceSettingsService';
 import { AudioPlayerService } from '../../Services/AudioPlayerService';
 import { RegiusSpeechService } from '../../Services/RegiusSpeechService';
 import type { VoiceOption } from './Components';
+import { useVoiceWakeWord } from '../../Context/VoiceWakeWordContext';
 import {
   VOICES,
   useSettingsTheme,
@@ -34,6 +38,7 @@ import {
   EditProfileModal,
   ClearCacheModal,
   LogoutConfirmModal,
+  WakeWordConfigModal,
 } from './Components';
 
 export type { VoiceOption };
@@ -49,10 +54,17 @@ const SettingsScreen: React.FC = () => {
   const [profileBio, setProfileBio] = useState('Architect & Product Designer');
   const [profileRole, setProfileRole] = useState('Regius Pro Member');
 
+  const {
+    wakeWordPhrase,
+    setWakeWordPhrase,
+    isWakeWordEnabled,
+    setWakeWordEnabled,
+    resetToDefaults,
+  } = useVoiceWakeWord();
+
   const [selectedVoiceId, setSelectedVoiceId] = useState('af_bella');
   const [speechSpeed, setSpeechSpeed] = useState<number>(1.0);
   const [autoSpeakReplies, setAutoSpeakReplies] = useState(true);
-  const [wakeWordEnabled, setWakeWordEnabled] = useState(true);
 
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [hapticFeedback, setHapticFeedback] = useState(true);
@@ -62,6 +74,7 @@ const SettingsScreen: React.FC = () => {
   const [cacheSize, setCacheSize] = useState('14.8 MB');
 
   const [voiceModalVisible, setVoiceModalVisible] = useState(false);
+  const [wakeWordModalVisible, setWakeWordModalVisible] = useState(false);
   const [profileModalVisible, setProfileModalVisible] = useState(false);
   const [cacheConfirmVisible, setCacheConfirmVisible] = useState(false);
   const [logoutConfirmVisible, setLogoutConfirmVisible] = useState(false);
@@ -230,7 +243,10 @@ const SettingsScreen: React.FC = () => {
 
   const handleToggleWakeWord = (enabled: boolean) => {
     setWakeWordEnabled(enabled);
-    VoiceSettingsService.saveSettings({ wakeWordEnabled: enabled });
+  };
+
+  const handleSelectWakePreset = (phrase: string) => {
+    setWakeWordPhrase(phrase);
   };
 
   const handleSaveProfile = (data: {
@@ -250,12 +266,24 @@ const SettingsScreen: React.FC = () => {
     });
   };
 
-  const handleClearCache = () => {
+  const handleResetVoiceDefaults = async () => {
+    await resetToDefaults();
+    setSelectedVoiceId(DEFAULT_VOICE_SETTINGS.selectedVoiceId);
+    setSpeechSpeed(DEFAULT_VOICE_SETTINGS.speechSpeed);
+    setAutoSpeakReplies(DEFAULT_VOICE_SETTINGS.autoSpeakReplies);
+  };
+
+  const handleClearCache = async () => {
+    await VoiceSettingsService.clearSettings();
+    await resetToDefaults();
+    setSelectedVoiceId(DEFAULT_VOICE_SETTINGS.selectedVoiceId);
+    setSpeechSpeed(DEFAULT_VOICE_SETTINGS.speechSpeed);
+    setAutoSpeakReplies(DEFAULT_VOICE_SETTINGS.autoSpeakReplies);
     setCacheSize('0.0 KB');
     setCacheConfirmVisible(false);
     Toast.show({
       type: 'success',
-      text2: 'Cache and temporary files cleared',
+      text2: 'Cache and voice storage cleared to system defaults',
     });
   };
 
@@ -303,8 +331,12 @@ const SettingsScreen: React.FC = () => {
           onChangeSpeechSpeed={handleChangeSpeechSpeed}
           autoSpeakReplies={autoSpeakReplies}
           onToggleAutoSpeakReplies={handleToggleAutoSpeakReplies}
-          wakeWordEnabled={wakeWordEnabled}
+          wakeWordEnabled={isWakeWordEnabled}
           onToggleWakeWord={handleToggleWakeWord}
+          wakeWordPhrase={wakeWordPhrase}
+          onConfigureWakeWord={() => setWakeWordModalVisible(true)}
+          onSelectPresetPhrase={handleSelectWakePreset}
+          onResetDefaults={handleResetVoiceDefaults}
         />
 
         <AppearanceSection
@@ -345,6 +377,13 @@ const SettingsScreen: React.FC = () => {
         isPlayingPreview={isPlayingPreview}
         playingVoiceId={playingVoiceId}
         onTogglePreview={handleTogglePreview}
+      />
+
+      <WakeWordConfigModal
+        visible={wakeWordModalVisible}
+        onClose={() => setWakeWordModalVisible(false)}
+        currentPhrase={wakeWordPhrase}
+        onSaveWakeWord={setWakeWordPhrase}
       />
 
       <EditProfileModal
