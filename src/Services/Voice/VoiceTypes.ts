@@ -17,6 +17,7 @@ export type VoiceCommandIntent =
   | 'THANKS'
   | 'CANCEL'
   | 'GOODBYE'
+  | 'DECLINE_FOLLOW_UP'
   | 'WAKE_WORD_ONLY'
   | 'UNRECOGNIZED';
 
@@ -45,7 +46,12 @@ export interface ExtractedSlots {
 
 export interface PendingClarification {
   id?: string;
-  intent: 'ADD_REMINDER' | 'ADD_TASK' | 'ADD_HABIT' | 'COMPLETE_TASK' | 'LOG_HABIT';
+  intent:
+    | 'ADD_REMINDER'
+    | 'ADD_TASK'
+    | 'ADD_HABIT'
+    | 'COMPLETE_TASK'
+    | 'LOG_HABIT';
   collectedData: ExtractedSlots;
   missingSlot: MissingSlotType;
   question: string;
@@ -62,6 +68,7 @@ export interface InterpretedVoiceCommand {
   displayTitle?: string;
   displayBody?: string;
   shouldEndSession?: boolean;
+  requiresFollowUp?: boolean;
 }
 
 export interface ExecutionContext {

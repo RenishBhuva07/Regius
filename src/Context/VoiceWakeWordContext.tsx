@@ -121,6 +121,8 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
   const [activeVoiceName, setActiveVoiceName] = useState<string | null>(null);
 
   const pendingClarificationRef = useRef<PendingClarification | null>(null);
+  const [pendingClarification, setPendingClarification] =
+    useState<PendingClarification | null>(null);
   const lastExecutedResultRef = useRef<ExecutionResult | null>(null);
 
   const appState = useRef(AppState.currentState);
@@ -129,7 +131,6 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
   assistantStateRef.current = assistantState;
 
   const currentInteractionIdRef = useRef<string>('');
-  const isCommandProcessingLatch = useRef(false);
 
   const isWakeWordEnabledRef = useRef(isWakeWordEnabled);
   isWakeWordEnabledRef.current = isWakeWordEnabled;
@@ -139,6 +140,9 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const isStartingRef = useRef(false);
   const restartTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const commandListeningRestartTimerRef = useRef<ReturnType<
+    typeof setTimeout
+  > | null>(null);
   const silenceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const loopTransitionTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
@@ -152,6 +156,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
   const inactivityCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
     null,
   );
+  const idleFlushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hasPromptedInactivityRef = useRef<boolean>(false);
   const closeAssistantRef = useRef<() => void>(() => {});
   const hasLoggedWakeWordListeningRef = useRef<boolean>(false);
@@ -226,6 +231,10 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const clearInactivityTimers = useCallback(() => {
+    if (idleFlushTimerRef.current) {
+      clearTimeout(idleFlushTimerRef.current);
+      idleFlushTimerRef.current = null;
+    }
     if (inactivityPromptTimerRef.current) {
       clearTimeout(inactivityPromptTimerRef.current);
       inactivityPromptTimerRef.current = null;
@@ -238,9 +247,17 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const stopVoiceEngine = useCallback(async () => {
     clearInactivityTimers();
+    if (idleFlushTimerRef.current) {
+      clearTimeout(idleFlushTimerRef.current);
+      idleFlushTimerRef.current = null;
+    }
     if (restartTimerRef.current) {
       clearTimeout(restartTimerRef.current);
       restartTimerRef.current = null;
+    }
+    if (commandListeningRestartTimerRef.current) {
+      clearTimeout(commandListeningRestartTimerRef.current);
+      commandListeningRestartTimerRef.current = null;
     }
     if (silenceTimerRef.current) {
       clearTimeout(silenceTimerRef.current);
@@ -256,6 +273,11 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
       await Voice.stop();
     } catch {
       // Ignored if already stopped
+    }
+    try {
+      await Voice.destroy();
+    } catch {
+      // Ignored if already destroyed
     }
   }, [clearInactivityTimers]);
   stopVoiceEngineRef.current = stopVoiceEngine;
@@ -339,6 +361,25 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
     [stopVoiceEngine, transitionState],
   );
 
+  const scheduleCommandListeningRestart = useCallback(
+    (delayMs: number = 400) => {
+      if (commandListeningRestartTimerRef.current) {
+        clearTimeout(commandListeningRestartTimerRef.current);
+        commandListeningRestartTimerRef.current = null;
+      }
+      if (assistantStateRef.current !== 'listening') {
+        return;
+      }
+      commandListeningRestartTimerRef.current = setTimeout(() => {
+        commandListeningRestartTimerRef.current = null;
+        if (assistantStateRef.current === 'listening') {
+          startCommandListeningSessionRef.current();
+        }
+      }, delayMs);
+    },
+    [],
+  );
+
   const scheduleWakeWordRestart = useCallback((delayMs: number = 400) => {
     if (restartTimerRef.current) {
       clearTimeout(restartTimerRef.current);
@@ -387,9 +428,20 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         try {
           await Voice.stop();
         } catch {}
+        try {
+          await Voice.destroy();
+        } catch {}
 
-        // Short delay for native audio session to yield cleanly
-        await new Promise<void>(resolve => setTimeout(() => resolve(), 150));
+        // Allow native audio session and SFSpeechRecognitionTask to yield cleanly
+        await new Promise<void>(resolve => setTimeout(resolve, 300));
+
+        if (
+          !isWakeWordEnabledRef.current ||
+          appState.current !== 'active' ||
+          assistantStateRef.current !== 'idle'
+        ) {
+          return;
+        }
 
         await Voice.start('en-US');
         isListeningRef.current = true;
@@ -460,6 +512,10 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Starts Voice engine in active command listening mode (inside conversation loop)
   const startCommandListeningSession = useCallback(async () => {
+    if (commandListeningRestartTimerRef.current) {
+      clearTimeout(commandListeningRestartTimerRef.current);
+      commandListeningRestartTimerRef.current = null;
+    }
     if (restartTimerRef.current) {
       clearTimeout(restartTimerRef.current);
       restartTimerRef.current = null;
@@ -473,28 +529,56 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
       maxUtteranceTimerRef.current = null;
     }
 
+    if (isStartingRef.current) {
+      return;
+    }
+    isStartingRef.current = true;
+
     accumulatedTranscriptRef.current = '';
     isFinalizingRef.current = false;
     setLiveTranscript(null);
 
-    try {
-      await Voice.stop();
-    } catch {}
+    // Ensure session is valid
+    if (!currentInteractionIdRef.current) {
+      currentInteractionIdRef.current =
+        stateMachineRef.current.startNewSession();
+    }
+    const sessionId = currentInteractionIdRef.current;
 
-    // Yield for audio playback hardware to switch cleanly to recording
-    await new Promise<void>(resolve => setTimeout(resolve, 160));
+    // Immediately transition state machine to listening so UI and state reflect listening mode
+    transitionState('listening', sessionId);
 
     try {
+      try {
+        await AudioPlayerService.stop();
+      } catch {}
+      try {
+        await Voice.stop();
+      } catch {}
+      try {
+        await Voice.destroy();
+      } catch {}
+
+      // Allow native audio session and SFSpeechRecognitionTask to yield cleanly
+      await new Promise<void>(resolve => setTimeout(resolve, 300));
+
+      // Guard: If assistant was closed or session changed during the 300ms pause, abort
+      if (
+        assistantStateRef.current !== 'listening' ||
+        currentInteractionIdRef.current !== sessionId
+      ) {
+        return;
+      }
+
       await Voice.start('en-US');
       isListeningRef.current = true;
       setIsListening(true);
-      transitionState('listening', currentInteractionIdRef.current);
       console.log(
         '[VoiceWakeWord] 🎙️ Microphone active: Listening for command...',
       );
 
       // Arm the Siri-like inactivity timer (10s prompt + 7s closure)
-      armInactivityTimer(currentInteractionIdRef.current);
+      armInactivityTimer(sessionId);
 
       // Max utterance timeout: guard against continuous background noise (20s)
       maxUtteranceTimerRef.current = setTimeout(() => {
@@ -519,10 +603,11 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
       );
       isListeningRef.current = false;
       setIsListening(false);
-      transitionState('error', currentInteractionIdRef.current);
-      setErrorMessage('Microphone failed to activate. Tap mic to retry.');
+      scheduleCommandListeningRestart(1200);
+    } finally {
+      isStartingRef.current = false;
     }
-  }, [transitionState, armInactivityTimer]);
+  }, [transitionState, armInactivityTimer, scheduleCommandListeningRestart]);
   startCommandListeningSessionRef.current = startCommandListeningSession;
 
   // Process & execute spoken command cleanly through state machine
@@ -560,6 +645,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
       const interpreted = VoiceCommandService.interpret(
         clean,
         pendingClarificationRef.current,
+        assistantStateRef.current,
       );
 
       // A: Wake word only / repeated echo
@@ -605,6 +691,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
       // C: Command needs follow-up question / clarification (Section 8)
       if (interpreted.needsClarification) {
         pendingClarificationRef.current = interpreted.needsClarification;
+        setPendingClarification(interpreted.needsClarification);
         setConfirmedActionTitle(
           interpreted.displayTitle || 'Information Needed',
         );
@@ -632,17 +719,20 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
             onEnded: () => {
               if (sessionId === currentInteractionIdRef.current) {
                 // Return to listening for the user's answer!
+                transitionState('awaitingClarification', sessionId);
                 startCommandListeningSessionRef.current();
               }
             },
             onError: () => {
               if (sessionId === currentInteractionIdRef.current) {
+                transitionState('awaitingClarification', sessionId);
                 startCommandListeningSessionRef.current();
               }
             },
           });
         } catch {
           if (sessionId === currentInteractionIdRef.current) {
+            transitionState('awaitingClarification', sessionId);
             startCommandListeningSessionRef.current();
           }
         }
@@ -714,6 +804,47 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         return;
       }
 
+      // D0: Decline follow-up / graceful close (Scenario B)
+      if (interpreted.intent === 'DECLINE_FOLLOW_UP') {
+        pendingClarificationRef.current = null;
+        setConfirmedActionTitle(
+          interpreted.displayTitle || 'Session Completed',
+        );
+        setConfirmedActionBody(
+          interpreted.displayBody ||
+            'Alright! Take care. I’m here whenever you need me.',
+        );
+        const farewell =
+          interpreted.spokenConfirmation ||
+          'Alright! Take care. I’m here whenever you need me.';
+
+        const active = await RegiusSpeechService.getActiveVoice();
+        setActiveVoiceName(active.voice.name);
+
+        transitionState('generatingResponse', sessionId);
+        await RegiusSpeechService.speakResponse(farewell, {
+          onStart: () => {
+            if (sessionId === currentInteractionIdRef.current) {
+              transitionState('closing', sessionId);
+              setSpokenResponseText(farewell);
+            }
+          },
+          onEnded: () => {
+            if (sessionId === currentInteractionIdRef.current) {
+              transitionState('completed', sessionId);
+              closeAssistantRef.current();
+            }
+          },
+          onError: () => {
+            if (sessionId === currentInteractionIdRef.current) {
+              transitionState('completed', sessionId);
+              closeAssistantRef.current();
+            }
+          },
+        });
+        return;
+      }
+
       // D1: Explicit Goodbye / Session Dismissal (Section 7 & 10)
       if (interpreted.intent === 'GOODBYE' || interpreted.shouldEndSession) {
         pendingClarificationRef.current = null;
@@ -731,17 +862,19 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         await RegiusSpeechService.speakResponse(farewell, {
           onStart: () => {
             if (sessionId === currentInteractionIdRef.current) {
-              transitionState('speaking', sessionId);
+              transitionState('closing', sessionId);
               setSpokenResponseText(farewell);
             }
           },
           onEnded: () => {
             if (sessionId === currentInteractionIdRef.current) {
+              transitionState('completed', sessionId);
               closeAssistantRef.current();
             }
           },
           onError: () => {
             if (sessionId === currentInteractionIdRef.current) {
+              transitionState('completed', sessionId);
               closeAssistantRef.current();
             }
           },
@@ -757,11 +890,11 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         );
         setConfirmedActionBody(
           interpreted.displayBody ||
-            'Glad I could help. What’s next on your schedule?',
+            "You're welcome! Is there anything else I can help with?",
         );
         const reply =
           interpreted.spokenConfirmation ||
-          "You're welcome! Anything else I can help with?";
+          "You're welcome! Is there anything else I can help with?";
 
         const active = await RegiusSpeechService.getActiveVoice();
         setActiveVoiceName(active.voice.name);
@@ -776,11 +909,14 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
           },
           onEnded: () => {
             if (sessionId === currentInteractionIdRef.current) {
+              // Explicitly enter awaiting_follow_up state and listen for the answer
+              transitionState('awaiting_follow_up', sessionId);
               startCommandListeningSessionRef.current();
             }
           },
           onError: () => {
             if (sessionId === currentInteractionIdRef.current) {
+              transitionState('awaiting_follow_up', sessionId);
               startCommandListeningSessionRef.current();
             }
           },
@@ -859,6 +995,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
                 }
 
                 if (result.shouldEndSession) {
+                  transitionState('completed', sessionId);
                   closeAssistantRef.current();
                   return;
                 }
@@ -918,6 +1055,8 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
             sessionId === currentInteractionIdRef.current &&
             assistantStateRef.current === 'success'
           ) {
+            setLastSpokenCommand(null);
+            setLiveTranscript(null);
             startCommandListeningSessionRef.current();
           }
         }, 2500);
@@ -926,11 +1065,12 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
     [stopVoiceEngine, transitionState, taskReminderContext],
   );
 
-  // Triggered when "Hey Regius" is detected (Section 4)
+  // Triggered when "Hey Regius" / "Hey Sia" is detected (Section 4)
   const lastTriggerTimeRef = useRef(0);
   const triggerWakeWord = useCallback(async () => {
     const now = Date.now();
     if (!isWakeWordEnabledRef.current) return;
+    if (assistantStateRef.current !== 'idle') return; // Guard against clobbering active conversation
     if (now - lastTriggerTimeRef.current < 2500) return; // 2.5s cooldown guard
     lastTriggerTimeRef.current = now;
 
@@ -951,12 +1091,21 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
       transitionState('wakeWordDetected', sessionId);
       await stopVoiceEngine();
 
+      // Yield 160ms for audio session to cleanly release recording mode before TrackPlayer playback
+      await new Promise<void>(resolve => setTimeout(resolve, 160));
+
+      if (sessionId !== currentInteractionIdRef.current) return;
+
       // 3. Transition to greeting
       transitionState('greeting', sessionId);
-      const assistantName = extractNameFromPhrase(wakeWordPhraseRef.current);
+      const assistantName =
+        extractNameFromPhrase(wakeWordPhraseRef.current) || 'Sia';
       const greeting = await RegiusSpeechService.getFastWakeGreeting(
         assistantName,
       );
+
+      if (sessionId !== currentInteractionIdRef.current) return;
+
       setCurrentGreeting(greeting);
       setSpokenResponseText(greeting);
 
@@ -981,12 +1130,15 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
             console.log(
               '[VoiceWakeWord] Greeting playback completed. Starting listening...',
             );
-            // Step 9 & 10 from prompt: Stop playback & automatically start listening
             AudioPlayerService.stop().catch(() => {});
             startCommandListeningSessionRef.current();
           }
         },
-        onError: () => {
+        onError: (playbackErr: any) => {
+          console.warn(
+            '[VoiceWakeWord] Greeting playback notice:',
+            playbackErr,
+          );
           if (sessionId === currentInteractionIdRef.current) {
             AudioPlayerService.stop().catch(() => {});
             startCommandListeningSessionRef.current();
@@ -1015,6 +1167,8 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
       setIsListening(true);
       if (
         assistantStateRef.current !== 'idle' &&
+        assistantStateRef.current !== 'wakeWordDetected' &&
+        assistantStateRef.current !== 'greeting' &&
         assistantStateRef.current !== 'speaking' &&
         assistantStateRef.current !== 'generatingResponse' &&
         assistantStateRef.current !== 'executing' &&
@@ -1026,13 +1180,14 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     Voice.onSpeechPartialResults = (e: SpeechResultsEvent) => {
-      // While Regius is actively speaking, executing, processing or generating, strictly ignore microphone input!
+      // While Regius/Sia is actively speaking, executing, processing, greeting or detecting, strictly ignore microphone input!
       if (
         assistantStateRef.current === 'speaking' ||
         assistantStateRef.current === 'executing' ||
         assistantStateRef.current === 'generatingResponse' ||
         assistantStateRef.current === 'processing' ||
-        assistantStateRef.current === 'greeting'
+        assistantStateRef.current === 'greeting' ||
+        assistantStateRef.current === 'wakeWordDetected'
       ) {
         return;
       }
@@ -1078,12 +1233,18 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
           );
         }
 
+        let detected = false;
         for (const text of candidates) {
           const result = detectWakeWordInTranscript(
             text,
             wakeWordPhraseRef.current,
           );
           if (result.detected) {
+            detected = true;
+            if (idleFlushTimerRef.current) {
+              clearTimeout(idleFlushTimerRef.current);
+              idleFlushTimerRef.current = null;
+            }
             console.log(
               `[VoiceWakeWord] 🎯 "${wakeWordPhraseRef.current}" matched in partials:`,
               result.matchedPhrase,
@@ -1091,6 +1252,23 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
             triggerWakeWordRef.current();
             break;
           }
+        }
+
+        // If speech was heard but wake word was not detected, schedule a clean buffer reset
+        // after 1500ms of silence so unrelated speech doesn't concatenate into future attempts
+        if (!detected && rawHypothesis) {
+          if (idleFlushTimerRef.current) {
+            clearTimeout(idleFlushTimerRef.current);
+          }
+          idleFlushTimerRef.current = setTimeout(() => {
+            idleFlushTimerRef.current = null;
+            if (assistantStateRef.current === 'idle') {
+              console.log(
+                '[VoiceWakeWord] 🧹 Flushing idle recognition buffer after silence...',
+              );
+              scheduleWakeWordRestartRef.current(100);
+            }
+          }, 1500);
         }
       }
     };
@@ -1101,7 +1279,8 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         assistantStateRef.current === 'executing' ||
         assistantStateRef.current === 'generatingResponse' ||
         assistantStateRef.current === 'processing' ||
-        assistantStateRef.current === 'greeting'
+        assistantStateRef.current === 'greeting' ||
+        assistantStateRef.current === 'wakeWordDetected'
       ) {
         return;
       }
@@ -1151,12 +1330,18 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
           );
         }
 
+        let detected = false;
         for (const text of candidates) {
           const result = detectWakeWordInTranscript(
             text,
             wakeWordPhraseRef.current,
           );
           if (result.detected) {
+            detected = true;
+            if (idleFlushTimerRef.current) {
+              clearTimeout(idleFlushTimerRef.current);
+              idleFlushTimerRef.current = null;
+            }
             console.log(
               `[VoiceWakeWord] 🎯 "${wakeWordPhraseRef.current}" matched in results:`,
               result.matchedPhrase,
@@ -1164,6 +1349,21 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
             triggerWakeWordRef.current();
             break;
           }
+        }
+
+        if (!detected && rawHypothesis) {
+          if (idleFlushTimerRef.current) {
+            clearTimeout(idleFlushTimerRef.current);
+          }
+          idleFlushTimerRef.current = setTimeout(() => {
+            idleFlushTimerRef.current = null;
+            if (assistantStateRef.current === 'idle') {
+              console.log(
+                '[VoiceWakeWord] 🧹 Flushing idle recognition buffer after silence...',
+              );
+              scheduleWakeWordRestartRef.current(100);
+            }
+          }, 1200);
         }
       }
     };
@@ -1174,7 +1374,8 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         assistantStateRef.current === 'executing' ||
         assistantStateRef.current === 'generatingResponse' ||
         assistantStateRef.current === 'processing' ||
-        assistantStateRef.current === 'greeting'
+        assistantStateRef.current === 'greeting' ||
+        assistantStateRef.current === 'wakeWordDetected'
       ) {
         return;
       }
@@ -1203,7 +1404,8 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         assistantStateRef.current === 'executing' ||
         assistantStateRef.current === 'generatingResponse' ||
         assistantStateRef.current === 'processing' ||
-        assistantStateRef.current === 'greeting'
+        assistantStateRef.current === 'greeting' ||
+        assistantStateRef.current === 'wakeWordDetected'
       ) {
         return;
       }
@@ -1218,11 +1420,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
           finalizeUtteranceRef.current(text);
         } else {
           // If speech ended with no words, keep microphone warm in continuous loop
-          setTimeout(() => {
-            if (assistantStateRef.current === 'listening') {
-              startCommandListeningSessionRef.current();
-            }
-          }, 300);
+          scheduleCommandListeningRestart(350);
         }
       } else if (assistantStateRef.current === 'idle') {
         scheduleWakeWordRestartRef.current(350);
@@ -1238,7 +1436,8 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         assistantStateRef.current === 'executing' ||
         assistantStateRef.current === 'generatingResponse' ||
         assistantStateRef.current === 'processing' ||
-        assistantStateRef.current === 'greeting'
+        assistantStateRef.current === 'greeting' ||
+        assistantStateRef.current === 'wakeWordDetected'
       ) {
         return;
       }
@@ -1296,11 +1495,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
           finalizeUtteranceRef.current(text);
         } else {
           // In listening mode, silence timeout is expected between commands -> keep listening!
-          setTimeout(() => {
-            if (assistantStateRef.current === 'listening') {
-              startCommandListeningSessionRef.current();
-            }
-          }, 300);
+          scheduleCommandListeningRestart(350);
         }
       } else if (assistantStateRef.current === 'idle') {
         scheduleWakeWordRestartRef.current(isSilenceTimeout ? 300 : 1200);
@@ -1314,7 +1509,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         // Ignored
       }
     };
-  }, [transitionState]);
+  }, [clearInactivityTimers, transitionState, scheduleCommandListeningRestart]);
 
   // Load saved preference from VoiceSettingsService ONCE on mount
   useEffect(() => {
@@ -1330,9 +1525,12 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         wakeWordPhraseRef.current = phrase;
         WakeWordService.setWakePhrase(phrase);
         setActiveWakePhrase(phrase);
-        RegiusSpeechService.warmupVoice(settings.selectedVoiceId).catch(
-          () => {},
-        );
+        AudioPlayerService.setup().catch(() => {});
+        const assistantName = extractNameFromPhrase(phrase) || 'Sia';
+        RegiusSpeechService.warmupVoice(
+          settings.selectedVoiceId,
+          assistantName,
+        ).catch(() => {});
         if (enabled && assistantStateRef.current === 'idle') {
           startWakeWordEngineRef.current();
         }
@@ -1544,6 +1742,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const closeAssistant = useCallback(() => {
+    isStartingRef.current = false;
     clearInactivityTimers();
     if (loopTransitionTimerRef.current) {
       clearTimeout(loopTransitionTimerRef.current);
@@ -1556,6 +1755,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
     stateMachineRef.current.reset();
     currentInteractionIdRef.current = '';
     pendingClarificationRef.current = null;
+    setPendingClarification(null);
     lastExecutedResultRef.current = null;
     accumulatedTranscriptRef.current = '';
     isFinalizingRef.current = false;
@@ -1587,7 +1787,10 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
       loopTransitionTimerRef.current = null;
     }
 
-    if (assistantStateRef.current === 'speaking') {
+    if (
+      assistantStateRef.current === 'speaking' ||
+      assistantStateRef.current === 'greeting'
+    ) {
       RegiusSpeechService.stop();
       startCommandListeningSessionRef.current();
       return;
@@ -1616,6 +1819,16 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
       setErrorMessage(null);
       startCommandListeningSessionRef.current();
     }
+  }, []);
+
+  const interruptSpeech = useCallback(async () => {
+    if (loopTransitionTimerRef.current) {
+      clearTimeout(loopTransitionTimerRef.current);
+      loopTransitionTimerRef.current = null;
+    }
+    await RegiusSpeechService.stop();
+    setSpokenResponseText(null);
+    startCommandListeningSessionRef.current();
   }, []);
 
   return (
@@ -1682,10 +1895,12 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         confirmedActionBody={confirmedActionBody}
         resultSummary={resultSummary}
         spokenResponseText={spokenResponseText}
+        pendingClarification={pendingClarification}
         errorMessage={errorMessage}
         speechFailed={speechFailed}
         onMicPress={toggleMicInSheet}
         onRetrySpeech={retryConfirmationSpeech}
+        onInterruptSpeech={interruptSpeech}
       />
     </VoiceWakeWordContext.Provider>
   );

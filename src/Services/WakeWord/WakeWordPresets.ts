@@ -98,6 +98,8 @@ export const SUPPORTED_WAKE_WORD_PRESETS: WakeWordPreset[] = [
     aliases: [
       'sia',
       'siya',
+      'siri',
+      'sierra',
       'see ya',
       'seeya',
       'cia',
@@ -106,9 +108,17 @@ export const SUPPORTED_WAKE_WORD_PRESETS: WakeWordPreset[] = [
       'shia',
       'theia',
       'cyan',
+      'syra',
+      'cera',
+      'seri',
+      'seera',
+      'saya',
+      'shya',
+      'cira',
+      'sera',
     ],
     pattern:
-      /\b(?:hey|hay|hi|hello|ok|okay|ay|he)?\s*(?:sia|siya|see\s+ya|seeya|ceea|ceeya|cia|shia|cyan)\b/i,
+      /\b(?:hey|hay|hi|hello|ok|okay|ay|he)?\s*(?:sia|siya|siri|sierra|see\s+ya|seeya|ceea|ceeya|cia|shia|cyan|syra|cera|seri|seera|saya|shya|cira|sera)\b/i,
     description:
       'Crisp, minimalist assistant wake phrase with STT phonetic tuning.',
     sampleGreeting: 'Hey there! Sia here, how can I help you today?',

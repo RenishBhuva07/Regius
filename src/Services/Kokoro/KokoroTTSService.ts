@@ -4,12 +4,15 @@ import { tokenizeText } from './tokenizer';
 import { phonemize } from './phonemizer';
 import { pcmToWavDataUri } from './wavHelper';
 import { getVoiceStyleVector, KOKORO_VOICES } from './voiceEmbeddings';
-import { AudioPlayerService, AudioPlaybackCallbacks } from '../AudioPlayerService';
+import {
+  AudioPlayerService,
+  AudioPlaybackCallbacks,
+} from '../AudioPlayerService';
 import { VoiceSettingsService } from '../VoiceSettingsService';
-import { VOICES } from '../../Screens/Settings/Components/types';
+import { VOICES, VoiceOption } from '../../Screens/Settings/Components/types';
 
 // In-memory synthesis cache: cacheKey -> WAV URI
-const audioCache = new Map<string, string>();
+const audioCache = new Map<string, any>();
 const CACHE_STORAGE_KEY = '@regius_kokoro_audio_cache_v2';
 let isCacheLoadedFromStorage = false;
 
@@ -20,8 +23,17 @@ async function loadPersistentCache(): Promise<void> {
     if (raw) {
       const parsed: Record<string, string> = JSON.parse(raw);
       for (const [k, v] of Object.entries(parsed)) {
-        if (!audioCache.has(k)) {
-          audioCache.set(k, v);
+        // Discard any legacy data: or blob: URIs that were saved to cache
+        if (
+          v &&
+          typeof v === 'string' &&
+          (v.startsWith('http://') ||
+            v.startsWith('https://') ||
+            v.startsWith('file://'))
+        ) {
+          if (!audioCache.has(k)) {
+            audioCache.set(k, v);
+          }
         }
       }
     }
@@ -30,6 +42,15 @@ async function loadPersistentCache(): Promise<void> {
 }
 
 async function saveToPersistentCache(key: string, url: string): Promise<void> {
+  if (
+    !url ||
+    typeof url !== 'string' ||
+    (!url.startsWith('http://') &&
+      !url.startsWith('https://') &&
+      !url.startsWith('file://'))
+  ) {
+    return;
+  }
   audioCache.set(key, url);
   try {
     const obj: Record<string, string> = {};
@@ -46,6 +67,8 @@ let ortSession: any = null;
 let isOrtInitialized = false;
 let isInitializingOrt = false;
 let activeSynthesisAbortController: AbortController | null = null;
+let activePrewarmAbortController: AbortController | null = null;
+let isPrewarmingActive = false;
 
 export interface KokoroSynthesizeOptions {
   voiceId?: string;
@@ -62,6 +85,10 @@ function streamGradioQueue(
   signal?: AbortSignal,
 ): Promise<string | null> {
   return new Promise(resolve => {
+    if (typeof XMLHttpRequest === 'undefined') {
+      resolve(null);
+      return;
+    }
     let resolved = false;
     const xhr = new XMLHttpRequest();
 
@@ -91,7 +118,11 @@ function streamGradioQueue(
     }
 
     const timer = setTimeout(() => {
-      console.warn('[KokoroTTSService] SSE stream timeout after', timeoutMs, 'ms');
+      console.warn(
+        '[KokoroTTSService] SSE stream timeout after',
+        timeoutMs,
+        'ms',
+      );
       finish(null);
     }, timeoutMs);
 
@@ -99,21 +130,55 @@ function streamGradioQueue(
       'GET',
       `https://hexgrad-kokoro-tts.hf.space/gradio_api/queue/data?session_hash=${sessionHash}`,
     );
+    try {
+      (xhr as any).responseType = 'text';
+    } catch {}
     xhr.setRequestHeader('Accept', 'text/event-stream');
 
     const checkText = () => {
       try {
         const text = xhr.responseText || '';
         if (text.includes('process_completed')) {
+          const lines = text.split('\n');
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              try {
+                const data = JSON.parse(line.substring(6));
+                if (
+                  data.msg === 'process_completed' &&
+                  data.output?.data?.[0]?.url
+                ) {
+                  let u = data.output.data[0].url;
+                  if (u.startsWith('/')) {
+                    u = `https://hexgrad-kokoro-tts.hf.space${u}`;
+                  }
+                  console.log(
+                    '[KokoroTTSService] Synthesis completed with URL:',
+                    u,
+                  );
+                  finish(u);
+                  return;
+                }
+              } catch {}
+            }
+          }
+
           const match = text.match(/"url"\s*:\s*"([^"]+)"/);
           if (match && match[1]) {
-            console.log('[KokoroTTSService] Synthesis completed with URL:', match[1]);
-            finish(match[1]);
+            let u = match[1];
+            if (u.startsWith('/')) {
+              u = `https://hexgrad-kokoro-tts.hf.space${u}`;
+            }
+            console.log('[KokoroTTSService] Synthesis completed with URL:', u);
+            finish(u);
             return;
           }
         }
         if (text.includes('unexpected_error') || text.includes('queue_full')) {
-          console.warn('[KokoroTTSService] Gradio reported error in stream:', text);
+          console.warn(
+            '[KokoroTTSService] Gradio reported error in stream:',
+            text,
+          );
           finish(null);
           return;
         }
@@ -169,9 +234,14 @@ export const KokoroTTSService = {
     text: string,
     voiceId: string = 'af_bella',
     speed: number = 1.0,
+    isPrewarm: boolean = false,
   ): Promise<string | null> {
     const trimmed = text.trim();
     if (!trimmed) return null;
+
+    if (isPrewarm && !isPrewarmingActive) {
+      return null;
+    }
 
     await loadPersistentCache();
 
@@ -186,12 +256,26 @@ export const KokoroTTSService = {
     // Step 1: Pre-process with normalizer & tokenizer
     const chunks = splitIntoChunks(trimmed, 260);
 
-    // Cancel any previous pending request
-    if (activeSynthesisAbortController) {
-      activeSynthesisAbortController.abort();
+    let signal: AbortSignal | undefined;
+    if (isPrewarm) {
+      if (!isPrewarmingActive) return null;
+      if (!activePrewarmAbortController) {
+        activePrewarmAbortController = new AbortController();
+      }
+      signal = activePrewarmAbortController.signal;
+    } else {
+      // Foreground user speech has top priority: stop background prewarm immediately
+      isPrewarmingActive = false;
+      if (activePrewarmAbortController) {
+        activePrewarmAbortController.abort();
+        activePrewarmAbortController = null;
+      }
+      if (activeSynthesisAbortController) {
+        activeSynthesisAbortController.abort();
+      }
+      activeSynthesisAbortController = new AbortController();
+      signal = activeSynthesisAbortController.signal;
     }
-    activeSynthesisAbortController = new AbortController();
-    const signal = activeSynthesisAbortController.signal;
 
     // Step 2: Try on-device ONNX Runtime if initialized with an active session
     if (ortSession) {
@@ -222,14 +306,19 @@ export const KokoroTTSService = {
           return wavUri;
         }
       } catch (ortErr) {
-        console.warn('[KokoroTTSService] ONNX on-device inference fallback:', ortErr);
+        console.warn(
+          '[KokoroTTSService] ONNX on-device inference fallback:',
+          ortErr,
+        );
       }
     }
 
     // Step 3: Run Kokoro-82M Neural Engine
     // Synthesizes dynamic text into real 24kHz speech using Kokoro voices
     try {
-      const sessionHash = `regius_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`;
+      const sessionHash = `regius_${Date.now()}_${Math.random()
+        .toString(36)
+        .substring(2, 8)}`;
       const payload = {
         data: [trimmed, validVoiceId, speed, false],
         fn_index: 4,
@@ -267,7 +356,9 @@ export const KokoroTTSService = {
     // Tokenizer verification logging
     const tokens = tokenizeText(trimmed);
     const phonemes = phonemize(trimmed);
-    console.log(`[KokoroTTSService] Phonemes: "${phonemes}", Tokens: ${tokens.length}`);
+    console.log(
+      `[KokoroTTSService] Phonemes: "${phonemes}", Tokens: ${tokens.length}`,
+    );
 
     return null;
   },
@@ -276,15 +367,38 @@ export const KokoroTTSService = {
    * Checks if a sentence has already been synthesized and cached (0ms instant playback).
    */
   isCached(text: string, voiceId?: string, speed: number = 1.0): boolean {
+    const trimmed = text.trim();
     const validVoiceId = KOKORO_VOICES[voiceId || 'af_bella']?.id || 'af_bella';
-    const cacheKey = `${validVoiceId}_${speed}_${text.trim()}`;
-    return audioCache.has(cacheKey);
+    const cacheKey = `${validVoiceId}_${speed}_${trimmed}`;
+    const cached = audioCache.get(cacheKey);
+    return (
+      !!cached &&
+      (typeof cached !== 'string' ||
+        cached.startsWith('http://') ||
+        cached.startsWith('https://') ||
+        cached.startsWith('file://'))
+    );
   },
 
-  getCachedUrl(text: string, voiceId?: string, speed: number = 1.0): string | null {
+  getCachedUrl(
+    text: string,
+    voiceId?: string,
+    speed: number = 1.0,
+  ): any | null {
+    const trimmed = text.trim();
     const validVoiceId = KOKORO_VOICES[voiceId || 'af_bella']?.id || 'af_bella';
-    const cacheKey = `${validVoiceId}_${speed}_${text.trim()}`;
-    return audioCache.get(cacheKey) || null;
+    const cacheKey = `${validVoiceId}_${speed}_${trimmed}`;
+    const cached = audioCache.get(cacheKey);
+    if (
+      cached &&
+      (typeof cached !== 'string' ||
+        cached.startsWith('http://') ||
+        cached.startsWith('https://') ||
+        cached.startsWith('file://'))
+    ) {
+      return cached;
+    }
+    return null;
   },
 
   /**
@@ -295,8 +409,15 @@ export const KokoroTTSService = {
     voiceId: string = 'af_bella',
     speed: number = 1.0,
   ): Promise<void> {
+    if (isPrewarmingActive) return;
+    isPrewarmingActive = true;
+    activePrewarmAbortController = new AbortController();
+
     await loadPersistentCache();
     for (const sentence of sentences) {
+      if (!isPrewarmingActive || activePrewarmAbortController?.signal.aborted) {
+        break;
+      }
       const trimmed = sentence.trim();
       if (!trimmed) continue;
       const validVoiceId = KOKORO_VOICES[voiceId]?.id || 'af_bella';
@@ -304,11 +425,12 @@ export const KokoroTTSService = {
       if (audioCache.has(cacheKey)) continue;
 
       try {
-        await this.synthesize(trimmed, voiceId, speed);
+        await this.synthesize(trimmed, voiceId, speed, true);
       } catch {
         // Non-blocking background pre-warming
       }
     }
+    isPrewarmingActive = false;
   },
 
   /**
@@ -318,19 +440,34 @@ export const KokoroTTSService = {
     text: string,
     options?: KokoroSynthesizeOptions,
   ): Promise<boolean> {
+    isPrewarmingActive = false;
+    if (activePrewarmAbortController) {
+      activePrewarmAbortController.abort();
+      activePrewarmAbortController = null;
+    }
+
     const settings = await VoiceSettingsService.getSettings();
     const voiceId = options?.voiceId || settings.selectedVoiceId;
     const speed = options?.speed || settings.speechSpeed;
-
-    const audioUri = await this.synthesize(text, voiceId, speed);
-    if (!audioUri) {
-      return false;
-    }
-
     const voiceOption = VOICES.find(v => v.id === voiceId) || VOICES[0];
+    const validVoiceId =
+      KOKORO_VOICES[voiceOption.kokoroVoiceId]?.id || 'af_bella';
+
+    let audioUri = await this.synthesize(text, validVoiceId, speed, false);
+    const isPlayable =
+      audioUri &&
+      (typeof audioUri !== 'string' ||
+        audioUri.startsWith('http://') ||
+        audioUri.startsWith('https://') ||
+        audioUri.startsWith('file://'));
+
+    const targetUrl = isPlayable
+      ? audioUri
+      : voiceOption.previewUrl || VOICES[0].previewUrl;
+
     await AudioPlayerService.play({
       id: `kokoro_speak_${Date.now()}`,
-      url: audioUri,
+      url: targetUrl,
       title: text.length > 40 ? text.substring(0, 40) + '...' : text,
       artist: `Kokoro Neural (${voiceOption.name})`,
     });
@@ -347,25 +484,53 @@ export const KokoroTTSService = {
     callbacks?: AudioPlaybackCallbacks,
     maxWaitMs?: number,
   ): Promise<boolean> {
+    isPrewarmingActive = false;
+    if (activePrewarmAbortController) {
+      activePrewarmAbortController.abort();
+      activePrewarmAbortController = null;
+    }
+
     const settings = await VoiceSettingsService.getSettings();
     const voiceId = options?.voiceId || settings.selectedVoiceId;
     const speed = options?.speed || settings.speechSpeed;
+    const voiceOption = VOICES.find(v => v.id === voiceId) || VOICES[0];
+    const validVoiceId =
+      KOKORO_VOICES[voiceOption.kokoroVoiceId]?.id || 'af_bella';
 
-    const audioUri = await this.synthesize(text, voiceId, speed);
+    const cachedUrl = this.getCachedUrl(text, validVoiceId, speed);
+    let audioUri: any = cachedUrl;
+
     if (!audioUri) {
-      callbacks?.onError?.(new Error('Kokoro TTS synthesis returned no audio'));
-      return false;
+      try {
+        audioUri = await Promise.race([
+          this.synthesize(text, validVoiceId, speed, false),
+          new Promise<null>(resolve => setTimeout(() => resolve(null), 20000)),
+        ]);
+      } catch {
+        audioUri = null;
+      }
     }
 
-    const voiceOption = VOICES.find(v => v.id === voiceId) || VOICES[0];
-    const timeout = maxWaitMs || Math.max(15000, text.length * 150);
+    const isPlayable =
+      audioUri &&
+      (typeof audioUri !== 'string' ||
+        audioUri.startsWith('http://') ||
+        audioUri.startsWith('https://') ||
+        audioUri.startsWith('file://'));
 
+    const targetUrl = isPlayable
+      ? audioUri
+      : voiceOption.previewUrl || VOICES[0].previewUrl;
+
+    const timeout = maxWaitMs || Math.max(20000, text.length * 200);
     return await AudioPlayerService.playWithCallbacks(
       {
         id: `kokoro_speak_${Date.now()}`,
-        url: audioUri,
+        url: targetUrl,
         title: text.length > 40 ? text.substring(0, 40) + '...' : text,
-        artist: `Kokoro Neural (${voiceOption.name})`,
+        artist: isPlayable
+          ? `Kokoro Neural (${voiceOption.name})`
+          : `Regius (${voiceOption.name})`,
       },
       callbacks,
       timeout,
@@ -373,9 +538,84 @@ export const KokoroTTSService = {
   },
 
   /**
+   * Speaks a wake greeting immediately in the active voice.
+   * If a dynamic synthesis is already cached, it uses it.
+   * Otherwise, it synthesizes dynamically with 100% priority and awaits completion.
+   */
+  async speakGreetingAndWait(
+    text: string,
+    voice: VoiceOption,
+    speed: number = 1.0,
+    callbacks?: AudioPlaybackCallbacks,
+  ): Promise<boolean> {
+    isPrewarmingActive = false;
+    if (activePrewarmAbortController) {
+      activePrewarmAbortController.abort();
+      activePrewarmAbortController = null;
+    }
+
+    const validVoiceId = KOKORO_VOICES[voice.kokoroVoiceId]?.id || 'af_bella';
+    const cachedUrl = this.getCachedUrl(text, validVoiceId, speed);
+
+    if (cachedUrl) {
+      return await AudioPlayerService.playWithCallbacks(
+        {
+          id: `kokoro_greeting_${Date.now()}`,
+          url: cachedUrl,
+          title: text,
+          artist: `Kokoro Neural (${voice.name})`,
+        },
+        callbacks,
+        20000,
+      );
+    }
+
+    // Synthesize greeting text dynamically with short race (1800ms)
+    let audioUri: string | null = null;
+    try {
+      audioUri = await Promise.race([
+        this.synthesize(text, validVoiceId, speed, false),
+        new Promise<null>(resolve => setTimeout(() => resolve(null), 1800)),
+      ]);
+    } catch {
+      audioUri = null;
+    }
+
+    const isPlayable =
+      audioUri &&
+      typeof audioUri === 'string' &&
+      (audioUri.startsWith('http://') ||
+        audioUri.startsWith('https://') ||
+        audioUri.startsWith('file://'));
+
+    // Guarantee audible playback: use synthesized online URL if ready, otherwise fallback immediately to the bundled voice asset
+    const targetUrl = isPlayable
+      ? audioUri
+      : voice.previewUrl || VOICES[0].previewUrl;
+
+    return await AudioPlayerService.playWithCallbacks(
+      {
+        id: `kokoro_greeting_${Date.now()}`,
+        url: targetUrl,
+        title: text,
+        artist: isPlayable
+          ? `Kokoro Neural (${voice.name})`
+          : `Regius (${voice.name})`,
+      },
+      callbacks,
+      20000,
+    );
+  },
+
+  /**
    * Immediately stops any current Kokoro speech and cancels pending synthesis.
    */
   async stop(): Promise<void> {
+    isPrewarmingActive = false;
+    if (activePrewarmAbortController) {
+      activePrewarmAbortController.abort();
+      activePrewarmAbortController = null;
+    }
     if (activeSynthesisAbortController) {
       activeSynthesisAbortController.abort();
       activeSynthesisAbortController = null;

@@ -14,6 +14,8 @@ import {
 } from './VoiceTypes';
 import { IntentRecognitionService } from './IntentRecognitionService';
 
+import { VoiceAssistantState } from './VoiceStateMachine';
+
 // Re-export types for backward compatibility across the project
 export type {
   VoiceCommandIntent,
@@ -32,8 +34,13 @@ export const VoiceCommandService = {
   interpret(
     rawText: string,
     pendingClarification?: PendingClarification | null,
+    conversationState?: VoiceAssistantState,
   ): InterpretedVoiceCommand {
-    return IntentRecognitionService.interpret(rawText, pendingClarification);
+    return IntentRecognitionService.interpret(
+      rawText,
+      pendingClarification,
+      conversationState,
+    );
   },
 
   /**
@@ -97,6 +104,8 @@ export const VoiceCommandService = {
               title: createdTask?.label || title,
               date: taskDate,
               time: taskTime,
+              hasExplicitTime: Boolean(command.parameters.time),
+              hasExplicitDate: Boolean(command.parameters.date),
             },
           };
           const conf = buildConfirmationMessage(opResult);
@@ -319,7 +328,9 @@ export const VoiceCommandService = {
               ((query.includes('water') || query.includes('hydrat')) &&
                 (t.includes('water') || t.includes('hydrat'))) ||
               ((query.includes('workout') || query.includes('run')) &&
-                (t.includes('run') || t.includes('workout') || t.includes('pace')))
+                (t.includes('run') ||
+                  t.includes('workout') ||
+                  t.includes('pace')))
             );
           });
 
@@ -551,6 +562,22 @@ export const VoiceCommandService = {
             displayBody: conf.displayBody,
             spokenResponse: command.spokenConfirmation || conf.spokenText,
             resultSummary: conf.resultSummary,
+            shouldEndSession: true,
+          };
+        }
+
+        case 'DECLINE_FOLLOW_UP': {
+          return {
+            success: true,
+            intent: 'DECLINE_FOLLOW_UP',
+            displayTitle: command.displayTitle || 'Session Completed',
+            displayBody:
+              command.displayBody ||
+              'Alright! Take care. I’m here whenever you need me.',
+            spokenResponse:
+              command.spokenConfirmation ||
+              'Alright! Take care. I’m here whenever you need me.',
+            resultSummary: 'Session Completed',
             shouldEndSession: true,
           };
         }

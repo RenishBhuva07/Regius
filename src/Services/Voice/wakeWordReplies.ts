@@ -48,6 +48,21 @@ export const DEFAULT_PREDEFINED_REPLIES: WakeWordReplyConfig[] = [
     triggerPhrase: 'Hey Regius',
     reply: 'Yes, how can I assist you?',
   },
+  {
+    id: 'reply_8',
+    triggerPhrase: 'Hey Regius',
+    reply: 'Hey! How can I help you?',
+  },
+  {
+    id: 'reply_9',
+    triggerPhrase: 'Hey Regius',
+    reply: "I'm listening, what can I do for you?",
+  },
+  {
+    id: 'reply_10',
+    triggerPhrase: 'Hey Regius',
+    reply: 'At your service, what do you need?',
+  },
 ];
 
 let currentIndex = 0;

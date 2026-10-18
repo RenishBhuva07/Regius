@@ -1,9 +1,13 @@
+import { PendingClarification, InterpretedVoiceCommand } from './VoiceTypes';
+import { VoiceAssistantState } from './VoiceStateMachine';
 import {
-  VoiceCommandIntent,
-  ExtractedSlots,
-  PendingClarification,
-  InterpretedVoiceCommand,
-} from './VoiceTypes';
+  normalizeTranscript,
+  isGratitudeIntent,
+  isGoodbyeIntent,
+  isDeclineIntent,
+  isCancellationIntent,
+  isSubstantiveSentenceWithNegative,
+} from './TranscriptNormalizer';
 import {
   isWakeWordOnly,
   getActiveWakePhrase,
@@ -12,14 +16,6 @@ import {
 // Default wake-word regex patterns for fallback
 const WAKE_WORD_REGEX =
   /^(?:hey|hay|hi|hello|ok|okay|ay|he)?\s*(?:regius|regis|regions|regeus|rejius|regus|rejus|reach\s+us|read\s+just|ready\s+us|radius|religious|rage\s+us|raygeus|radios|radious|rijus|regias|regios)[.!?\s]*$/i;
-
-function cleanText(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[.,/#!$%^&*;:{}=\-_`~()?]/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
 
 /**
  * Extracts and normalizes recurrence / frequency from user speech.
@@ -188,9 +184,6 @@ export function extractDateTime(text: string): {
   } else if (/\btomorrow\b/i.test(clean)) {
     date = 'Tomorrow';
     clean = clean.replace(/\btomorrow\b/gi, ' ').trim();
-  } else if (/\btonight\b/i.test(clean)) {
-    date = 'Tonight';
-    clean = clean.replace(/\btonight\b/gi, ' ').trim();
   } else if (/\btoday\b/i.test(clean)) {
     date = 'Today';
     clean = clean.replace(/\btoday\b/gi, ' ').trim();
@@ -209,6 +202,10 @@ export function extractDateTime(text: string): {
     time = `${hour}${min} PM`;
     date = 'Tonight';
     clean = clean.replace(tonightHourMatch[0], ' ').trim();
+  } else if (/\b(?:tonight|this\s+evening)\b/i.test(clean)) {
+    date = 'Tonight';
+    time = time || '07:00 PM';
+    clean = clean.replace(/\b(?:tonight|this\s+evening)\b/gi, ' ').trim();
   }
 
   // 4. Explicit time: "at 9 AM", "for 9 AM", "at 3:00 PM", "9 AM", "8 PM", "3 PM"
@@ -258,10 +255,10 @@ export const IntentRecognitionService = {
   interpret(
     rawText: string,
     pendingClarification?: PendingClarification | null,
+    conversationState?: VoiceAssistantState,
   ): InterpretedVoiceCommand {
     const raw = rawText.trim();
-    const cleanRaw = raw.replace(/[.,!?;]+$/g, '').trim();
-    const normalized = cleanText(raw);
+    const { cleanRaw, normalized } = normalizeTranscript(raw);
     const activePhrase = getActiveWakePhrase();
 
     // 1. Wake word only or empty input
@@ -281,12 +278,65 @@ export const IntentRecognitionService = {
       };
     }
 
-    // 2. Cancellation Intent
-    if (
-      /^(?:cancel|cancel\s+that|never\s*mind|dismiss|forget\s*it|stop|exit)$/i.test(
-        normalized,
-      )
-    ) {
+    // 2. Multi-turn Follow-up Context (Scenario B)
+    // When SIA previously asked "Anything else I can help you with?"
+    if (conversationState === 'awaiting_follow_up') {
+      if (isDeclineIntent(normalized) || isGoodbyeIntent(normalized)) {
+        return {
+          intent: 'DECLINE_FOLLOW_UP',
+          originalTranscript: raw,
+          parameters: {},
+          displayTitle: 'Session Completed',
+          displayBody: 'Alright! Take care. I’m here whenever you need me.',
+          spokenConfirmation:
+            'Alright! Take care. I’m here whenever you need me.',
+          shouldEndSession: true,
+        };
+      }
+    }
+
+    // 3. Multi-turn Pending Clarification / Confirmation Context (Scenario E)
+    if (pendingClarification) {
+      // If user says "no", "cancel", "never mind", etc. to a pending question:
+      // It cancels the pending action without terminating the entire voice session.
+      if (
+        isCancellationIntent(normalized) ||
+        /^no(?:\s+(?:do\s+not|cancel|never\s*mind))?$/i.test(normalized) ||
+        normalized === 'no' ||
+        normalized === 'nope' ||
+        normalized === 'cancel'
+      ) {
+        return {
+          intent: 'CANCEL',
+          originalTranscript: raw,
+          parameters: {},
+          displayTitle: 'Request Cancelled',
+          displayBody: 'Cancelled previous pending operation.',
+          spokenConfirmation: 'Alright, I cancelled that request.',
+          shouldEndSession: false,
+        };
+      }
+
+      // If user switches topic directly
+      if (
+        focusSessionPattern(normalized) ||
+        morningBriefPattern(normalized) ||
+        sprintPattern(normalized) ||
+        showTasksPattern(normalized) ||
+        showRemindersPattern(normalized)
+      ) {
+        pendingClarification = null;
+      } else {
+        return this.resolveClarification(
+          cleanRaw,
+          normalized,
+          pendingClarification,
+        );
+      }
+    }
+
+    // 4. Cancellation Intent (general)
+    if (isCancellationIntent(normalized)) {
       return {
         intent: 'CANCEL',
         originalTranscript: raw,
@@ -297,12 +347,13 @@ export const IntentRecognitionService = {
       };
     }
 
-    // 3. Goodbye Intent
-    if (
-      /^(?:that['’]?s\s+all|that['’]?s\s+it|goodbye|bye|bye\s+bye|see\s+you|nothing\s+else|i['’]?m\s+done|close|exit)$/i.test(
-        normalized,
-      )
-    ) {
+    // 5. Guard against sentences containing "no" as part of a task or note
+    // (e.g. "Add a task: no meeting today", "Remind me not to forget my keys")
+    const isSubstantiveNegative = isSubstantiveSentenceWithNegative(raw);
+
+    // 6. Direct & Combined Goodbye Intent (Scenario C & D)
+    // Examples: "Bye", "Goodbye", "Bye-bye", "See you later", "That's all", "Thanks, bye", "Okay, thanks, that's all"
+    if (!isSubstantiveNegative && isGoodbyeIntent(normalized)) {
       return {
         intent: 'GOODBYE',
         originalTranscript: raw,
@@ -314,19 +365,20 @@ export const IntentRecognitionService = {
       };
     }
 
-    // 4. Courtesy / Thanks Intent
-    if (
-      !pendingClarification &&
-      /^(?:thanks|thank\s+you|thank\s+you\s+so\s+much|appreciate\s+it|that['’]?s\s+helpful|glad\s+to\s+help|awesome\s+thanks|great\s+thanks)$/i.test(
-        normalized,
-      )
-    ) {
-      let politeReply = "You're welcome! Anything else I can help with?";
-      if (normalized.includes('so much')) {
+    // 7. Courtesy / Gratitude Intent (Scenario A)
+    // Examples: "Thanks", "Thank you", "Okay, thanks", "Thank you so much", "Cool, thanks", "Perfect, thank you"
+    if (!isSubstantiveNegative && isGratitudeIntent(normalized)) {
+      let politeReply =
+        "You're welcome! Is there anything else I can help you with?";
+      if (
+        normalized.includes('so much') ||
+        normalized.includes('very much') ||
+        normalized.includes('a lot')
+      ) {
         politeReply =
           "You're very welcome! Let me know if you need anything else.";
       } else if (normalized.includes('helpful')) {
-        politeReply = 'Glad I could help.';
+        politeReply = 'Glad I could help. Is there anything else you need?';
       }
 
       return {
@@ -336,28 +388,8 @@ export const IntentRecognitionService = {
         displayTitle: 'You’re Welcome ✨',
         displayBody: politeReply,
         spokenConfirmation: politeReply,
+        requiresFollowUp: true,
       };
-    }
-
-    // 5. Topic change discard check
-    if (
-      pendingClarification &&
-      (focusSessionPattern(normalized) ||
-        morningBriefPattern(normalized) ||
-        sprintPattern(normalized) ||
-        showTasksPattern(normalized) ||
-        showRemindersPattern(normalized))
-    ) {
-      pendingClarification = null;
-    }
-
-    // 6. Multi-turn Pending Clarification Resolution
-    if (pendingClarification) {
-      return this.resolveClarification(
-        cleanRaw,
-        normalized,
-        pendingClarification,
-      );
     }
 
     // ─── 7. Fresh Command Parsing ──────────────────────────────────────────
@@ -566,7 +598,7 @@ export const IntentRecognitionService = {
       }
 
       if (pending.missingSlot === 'time') {
-        const { date, time, repeat, isRecurring } = extractDateTime(cleanRaw);
+        const { date, time, repeat } = extractDateTime(cleanRaw);
         const resolvedTime =
           time ||
           (date ? '09:00 AM' : cleanRaw.length < 20 ? cleanRaw : undefined);
@@ -762,10 +794,10 @@ export const IntentRecognitionService = {
   parseReminder(
     raw: string,
     cleanRaw: string,
-    normalized: string,
+    _normalized: string,
   ): InterpretedVoiceCommand | null {
     const isReminderMatch = cleanRaw.match(
-      /^(?:remind\s+me(?:\s+to|\s+about)?|set\s+a\s+reminder(?:\s+to|\s+for|\s+about)?|create\s+a\s+reminder(?:\s+to|\s+for|\s+about)?|new\s+reminder(?:\s+for|\s+to)?|reminder(?:\s+for|\s+to)?|i\s+don['’]?t\s+want\s+to\s+forget|i\s+need\s+an\s+alert(?:\s+to)?)\s*(.*)$/i,
+      /^(?:can\s+you\s+|could\s+you\s+|please\s+)?(?:remind\s+me(?:\s+to|\s+about)?|set\s+a\s+reminder(?:\s+to|\s+for|\s+about)?|create\s+a\s+reminder(?:\s+to|\s+for|\s+about)?|new\s+reminder(?:\s+for|\s+to)?|reminder(?:\s+for|\s+to)?|i\s+don['’]?t\s+want\s+to\s+forget|i\s+need\s+an\s+alert(?:\s+to)?)\s*(.*)$/i,
     );
 
     if (!isReminderMatch) return null;
@@ -925,6 +957,9 @@ export const IntentRecognitionService = {
         /\badd\s+(?:a\s+)?(?:daily\s+|weekly\s+)?(.+?)\s+to\s+(?:my\s+)?habits\b/i,
       ) ||
       cleanRaw.match(
+        /^(?:let['’]?s\s+|can\s+we\s+)?make\s+(?:a\s+)?habit\s+(?:of|out\s+of)\s*(.*)$/i,
+      ) ||
+      cleanRaw.match(
         /\b(?:i\s+want\s+to\s+)?start\s+(drinking\s+more\s+water|meditating|working\s+out|exercising|running|reading)\b/i,
       );
 
@@ -934,6 +969,7 @@ export const IntentRecognitionService = {
         .replace(/\b(?:habit|daily|weekly|a|my)\b/gi, '')
         .trim();
       if (rawTitle.toLowerCase() === 'meditating') rawTitle = 'Meditation';
+      if (rawTitle.toLowerCase() === 'reading') rawTitle = 'Reading';
       if (
         rawTitle.toLowerCase() === 'exercising' ||
         rawTitle.toLowerCase() === 'working out'
@@ -1064,7 +1100,7 @@ export const IntentRecognitionService = {
   parseTask(
     raw: string,
     cleanRaw: string,
-    normalized: string,
+    _normalized: string,
   ): InterpretedVoiceCommand | null {
     // 1. Add Task via standard prefix
     const addTaskMatch = cleanRaw.match(
@@ -1093,26 +1129,25 @@ export const IntentRecognitionService = {
 
       const { cleanTitle, date, time } = extractDateTime(remainder);
       const title = cleanTitle || remainder;
-      const targetDate = date || 'Today';
 
       return {
         intent: 'ADD_TASK',
         originalTranscript: raw,
         parameters: {
           title,
-          date: targetDate,
+          date,
           time,
         },
         displayTitle: `Task Added: ${title}`,
-        displayBody: `Added to your daily schedule for ${targetDate}.`,
+        displayBody: date
+          ? `Added to your daily schedule for ${date}.`
+          : 'Added to your daily schedule.',
         spokenConfirmation: `Your task to ${title} has been added.`,
       };
     }
 
-    // 2. Action phrase: "Remind me to complete my assignment" -> user intends task when no time/date scheduled
-    const remindTaskMatch = cleanRaw.match(
-      /^remind\s+me\s+to\s+(complete|finish|do|submit|prepare|write|buy|review|email|call|work\s+on)\s+(.+)$/i,
-    );
+    // 2. Action phrase: "Remind me to [action]" or "Remind me to complete my assignment" -> user intends task when no time/date scheduled
+    const remindTaskMatch = cleanRaw.match(/^remind\s+me\s+to\s+(.+)$/i);
     if (remindTaskMatch) {
       const remainder = cleanRaw.replace(/^remind\s+me\s+to\s+/i, '');
       const { cleanTitle, date, time } = extractDateTime(remainder);
@@ -1130,6 +1165,54 @@ export const IntentRecognitionService = {
           spokenConfirmation: `Your task to ${title} has been added.`,
         };
       }
+    }
+
+    // 2B. Natural phrasing: "I need to call John tomorrow" / "I have to finish the report"
+    const needToMatch = cleanRaw.match(
+      /^(?:i\s+need\s+to|i\s+have\s+to|i['’]?ve\s+got\s+to|i\s+must)\s+(.*)$/i,
+    );
+    if (
+      needToMatch &&
+      !/\b(?:remember\s+to|reminder|alert|habit|focus)\b/i.test(cleanRaw)
+    ) {
+      const remainder = needToMatch[1].trim();
+      const { cleanTitle, date, time } = extractDateTime(remainder);
+      const title = cleanTitle || remainder;
+      const targetDate = date || 'Today';
+      return {
+        intent: 'ADD_TASK',
+        originalTranscript: raw,
+        parameters: {
+          title,
+          date: targetDate,
+          time,
+        },
+        displayTitle: `Task Added: ${title}`,
+        displayBody: `Added to your daily schedule for ${targetDate}.`,
+        spokenConfirmation: `Your task to ${title} has been added.`,
+      };
+    }
+
+    // 2C. "Can you add calling John to my list?" / "Add [X] to my tasks"
+    const addToListMatch = cleanRaw.match(
+      /^(?:can\s+you\s+)?add\s+(.+?)\s+to\s+(?:my\s+)?(?:list|to[\s-]do(?:\s+list)?|tasks?)\b/i,
+    );
+    if (addToListMatch && !/\b(?:habit|habits)\b/i.test(cleanRaw)) {
+      const core = addToListMatch[1].trim();
+      const { cleanTitle, date, time } = extractDateTime(core);
+      const title = cleanTitle || core;
+      return {
+        intent: 'ADD_TASK',
+        originalTranscript: raw,
+        parameters: {
+          title,
+          date: date || 'Today',
+          time,
+        },
+        displayTitle: `Task Added: ${title}`,
+        displayBody: 'Added to your daily schedule for Today.',
+        spokenConfirmation: `Your task to ${title} has been added.`,
+      };
     }
 
     // 3. "I need to remember to submit my assignment" / "Remember to submit my assignment"
@@ -1154,9 +1237,9 @@ export const IntentRecognitionService = {
       };
     }
 
-    // 3. Put [X] on my to-do list
+    // 3. Put [X] on my to-do list / Put [X] on my list
     const putOnListMatch = cleanRaw.match(
-      /\bput\s+(.+?)\s+on\s+(?:my\s+)?to[\s-]do(?:\s+list)?\b/i,
+      /\b(?:put|place)\s+(.+?)\s+on\s+(?:my\s+)?(?:to[\s-]do(?:\s+list)?|list|tasks?)\b/i,
     );
     if (putOnListMatch) {
       const core = putOnListMatch[1].trim();
@@ -1223,7 +1306,10 @@ export const IntentRecognitionService = {
     }
 
     if (
-      /\b(?:add|extend)\s+(\d+)?\s*(?:min|minute|mins)?\s*(?:to\s+)?(?:my\s+)?focus\b/i.test(
+      /\b(?:add|extend|move|push)\s+(?:my\s+)?(?:focus\s+(?:timer|session)\s+)?(?:forward\s+)?(?:by\s+)?(\d+)?\s*(?:min|minute|mins)?/i.test(
+        raw,
+      ) ||
+      /\b(?:add|extend|move)\s+(\d+)?\s*(?:min|minute|mins)?\s*(?:to|forward)?\s*(?:my\s+)?focus/i.test(
         raw,
       ) ||
       /\+?15\s*mins?\s*to\s*focus/i.test(normalized)
@@ -1254,9 +1340,9 @@ function focusSessionPattern(normalized: string): boolean {
 
 function morningBriefPattern(normalized: string): boolean {
   return (
-    /\b(?:play|listen|start)\s+(?:my\s+)?(?:morning\s+)?brief\b/i.test(
+    /\b(?:play|listen|start)\s+(?:my\s+)?(?:morning\s+)?brief(?:ing)?\b/i.test(
       normalized,
-    ) || /\bmorning\s+brief\b/i.test(normalized)
+    ) || /\bmorning\s+brief(?:ing)?\b/i.test(normalized)
   );
 }
 

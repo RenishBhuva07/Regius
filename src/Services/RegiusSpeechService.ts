@@ -47,14 +47,21 @@ export const RegiusSpeechService = {
   /**
    * Warm up / pre-synthesizes wake word greetings for the active voice in the background.
    */
-  async warmupVoice(voiceId?: string): Promise<void> {
+  async warmupVoice(
+    voiceId?: string,
+    assistantName?: string,
+  ): Promise<void> {
     try {
       const active = await this.getActiveVoice();
       const targetVoiceId = voiceId || active.voice.kokoroVoiceId;
       const targetSpeed = active.speed;
-      const replies = DEFAULT_PREDEFINED_REPLIES.map(r => r.reply);
-      // Run prewarm in background non-blocking
-      KokoroTTSService.prewarm(replies, targetVoiceId, targetSpeed).catch(
+      const allReplies = WakeWordRepliesService.getAllReplies().map(r => {
+        if (assistantName && assistantName.toLowerCase() !== 'regius') {
+          return r.reply.replace(/\bRegius\b/gi, assistantName);
+        }
+        return r.reply;
+      });
+      KokoroTTSService.prewarm(allReplies, targetVoiceId, targetSpeed).catch(
         () => {},
       );
     } catch {}
@@ -68,24 +75,24 @@ export const RegiusSpeechService = {
     const voiceId = active.voice.kokoroVoiceId;
     const speed = active.speed;
 
-    const cachedReplies: string[] = [];
-    for (const item of DEFAULT_PREDEFINED_REPLIES) {
-      if (KokoroTTSService.isCached(item.reply, voiceId, speed)) {
-        cachedReplies.push(item.reply);
+    const allReplies = WakeWordRepliesService.getAllReplies().map(r => {
+      if (assistantName && assistantName.toLowerCase() !== 'regius') {
+        return r.reply.replace(/\bRegius\b/gi, assistantName);
       }
-    }
+      return r.reply;
+    });
+
+    const cachedReplies: string[] = allReplies.filter(reply =>
+      KokoroTTSService.isCached(reply, voiceId, speed),
+    );
 
     if (cachedReplies.length > 0) {
       const idx = Math.floor(Math.random() * cachedReplies.length);
-      const chosen = cachedReplies[idx];
-      if (assistantName && assistantName.toLowerCase() !== 'regius') {
-        return chosen.replace(/\bRegius\b/gi, assistantName);
-      }
-      return chosen;
+      return cachedReplies[idx];
     }
 
     // Trigger background warm up if not yet cached
-    this.warmupVoice(voiceId).catch(() => {});
+    this.warmupVoice(voiceId, assistantName).catch(() => {});
     return getRandomWakeGreeting(assistantName);
   },
 
@@ -97,7 +104,22 @@ export const RegiusSpeechService = {
     text: string,
     callbacks?: AudioPlaybackCallbacks,
   ): Promise<boolean> {
-    return this.speakResponse(text, callbacks);
+    try {
+      const { voice, speed } = await this.getActiveVoice();
+      return await KokoroTTSService.speakGreetingAndWait(
+        text,
+        voice,
+        speed,
+        callbacks,
+      );
+    } catch (error) {
+      console.warn(
+        '[RegiusSpeechService] Kokoro greeting speech playback notice:',
+        error,
+      );
+      callbacks?.onError?.(error);
+      return false;
+    }
   },
 
   /**

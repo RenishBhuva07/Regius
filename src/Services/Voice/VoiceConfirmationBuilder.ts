@@ -131,10 +131,19 @@ export function buildConfirmationMessage(
       }
 
       const displayTitle = `Task Added: ${clean}`;
-      const scheduleDetail =
-        date || time
-          ? `Scheduled for ${date || 'Today'}${time ? ' at ' + time : ''}.`
-          : 'Added to your daily schedule.';
+      const hasExplicitTime =
+        data?.hasExplicitTime ?? (time && time !== '10:00 AM');
+      const hasExplicitDate =
+        data?.hasExplicitDate ?? (date && date !== 'Today');
+
+      let scheduleDetail = 'Added to your daily schedule.';
+      if (hasExplicitDate && hasExplicitTime) {
+        scheduleDetail = `Scheduled for ${date || 'Today'} at ${time}.`;
+      } else if (hasExplicitDate) {
+        scheduleDetail = `Scheduled for ${date}.`;
+      } else if (hasExplicitTime) {
+        scheduleDetail = `Scheduled for Today at ${time}.`;
+      }
 
       return {
         spokenText,

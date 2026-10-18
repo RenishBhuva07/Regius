@@ -3,6 +3,7 @@ import TrackPlayer, {
   Event,
   State,
 } from 'react-native-track-player';
+import { VOICE_AUDIO_ASSETS } from '../Assets/Audio';
 
 let isPlayerReady = false;
 
@@ -22,6 +23,19 @@ export interface AudioPlaybackCallbacks {
 
 let activeSessionId = 0;
 let activeSessionCleanup: (() => void) | null = null;
+
+function sanitizePlayableTrackUrl(url: any): any {
+  if (
+    typeof url === 'string' &&
+    (url.startsWith('data:') || url.startsWith('blob:'))
+  ) {
+    console.warn(
+      '[AudioPlayerService] data:/blob: URI is not supported natively by AVPlayer, falling back to bundled voice asset',
+    );
+    return VOICE_AUDIO_ASSETS.af_bella;
+  }
+  return url;
+}
 
 export const AudioPlayerService = {
   async setup(): Promise<boolean> {
@@ -58,10 +72,11 @@ export const AudioPlayerService = {
     await this.setup();
     try {
       this.cancelActiveSession();
+      const safeUrl = sanitizePlayableTrackUrl(track.url);
       await TrackPlayer.reset();
       await TrackPlayer.add({
         id: track.id,
-        url: track.url,
+        url: safeUrl,
         title: track.title,
         artist: track.artist || 'Regius Neural Voice',
         artwork: track.artwork,
@@ -136,11 +151,21 @@ export const AudioPlayerService = {
       }, maxTimeoutMs);
 
       try {
+        if (!track.url) {
+          console.warn('[AudioPlayerService] Empty track URL provided');
+          cleanup();
+          callbacks?.onError?.(new Error('Empty track URL'));
+          resolve(false);
+          return;
+        }
+
+        const safeUrl = sanitizePlayableTrackUrl(track.url);
+
         // Reset and queue track BEFORE registering listeners so reset does not trigger premature completion
         await TrackPlayer.reset();
         await TrackPlayer.add({
           id: track.id,
-          url: track.url,
+          url: safeUrl,
           title: track.title,
           artist: track.artist || 'Regius Neural Voice',
           artwork: track.artwork,
@@ -156,6 +181,7 @@ export const AudioPlayerService = {
               callbacks?.onStart?.();
             }
           } else if (event.state === State.Ended) {
+            if (!hasStarted) return;
             cleanup();
             callbacks?.onEnded?.();
             resolve(true);
@@ -173,6 +199,7 @@ export const AudioPlayerService = {
           Event.PlaybackQueueEnded,
           () => {
             if (sessionId !== activeSessionId || settled) return;
+            if (!hasStarted) return;
             cleanup();
             callbacks?.onEnded?.();
             resolve(true);
@@ -192,18 +219,26 @@ export const AudioPlayerService = {
           },
         );
 
-        subError = TrackPlayer.addEventListener(
-          Event.PlaybackError,
-          event => {
-            if (sessionId !== activeSessionId || settled) return;
-            console.warn('[AudioPlayerService] PlaybackError event:', event);
-            cleanup();
-            callbacks?.onError?.(event);
-            resolve(false);
-          },
-        );
+        subError = TrackPlayer.addEventListener(Event.PlaybackError, event => {
+          if (sessionId !== activeSessionId || settled) return;
+          console.warn('[AudioPlayerService] PlaybackError event:', event);
+          cleanup();
+          callbacks?.onError?.(event);
+          resolve(false);
+        });
 
         await TrackPlayer.play();
+        const initialPlaybackState = await TrackPlayer.getState().catch(
+          () => null,
+        );
+        if (
+          initialPlaybackState === State.Playing &&
+          !hasStarted &&
+          sessionId === activeSessionId
+        ) {
+          hasStarted = true;
+          callbacks?.onStart?.();
+        }
       } catch (e) {
         console.warn('[AudioPlayerService] playWithCallbacks error:', e);
         cleanup();

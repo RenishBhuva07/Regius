@@ -1,0 +1,32 @@
+diff --git a/node_modules/@react-native/dev-middleware/dist/inspector-proxy/InspectorProxy.js b/node_modules/@react-native/dev-middleware/dist/inspector-proxy/InspectorProxy.js
+index 0f14ba1..ecbca4c 100644
+--- a/node_modules/@react-native/dev-middleware/dist/inspector-proxy/InspectorProxy.js
++++ b/node_modules/@react-native/dev-middleware/dist/inspector-proxy/InspectorProxy.js
+@@ -480,13 +480,20 @@ class InspectorProxy {
+           });
+         });
+       } catch (error) {
+-        this.#logger?.error(
+-          "Connection failed to be established with DevTools for app='%s' on device='%s' and device id='%s' with error:",
+-          device?.getApp() || "unknown",
+-          device?.getName() || "unknown",
+-          deviceId || "unknown",
+-          error,
+-        );
++        if (error?.message === INTERNAL_ERROR_MESSAGES.UNREGISTERED_DEVICE) {
++          debug(
++            "Connection failed to be established with DevTools for unregistered device id='%s'",
++            deviceId || "unknown",
++          );
++        } else {
++          this.#logger?.error(
++            "Connection failed to be established with DevTools for app='%s' on device='%s' and device id='%s' with error:",
++            device?.getApp() || "unknown",
++            device?.getName() || "unknown",
++            deviceId || "unknown",
++            error,
++          );
++        }
+         socket.close(INTERNAL_ERROR_CODE, error?.toString() ?? "Unknown error");
+         this.#eventReporter?.logEvent({
+           type: "connect_debugger_frontend",

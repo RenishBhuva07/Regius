@@ -6,52 +6,217 @@
 
 export type VoiceAssistantState =
   | 'idle'
+  | 'requestingPermission'
+  | 'listening'
+  | 'processingTranscript'
+  | 'understanding'
+  | 'awaitingClarification'
+  | 'executingAction'
+  | 'responding'
+  | 'completed'
+  | 'unrecognized'
+  | 'error'
+  // Backward-compatible & granular aliases
+  | 'processing'
+  | 'speaking'
+  | 'awaiting_follow_up'
+  | 'awaiting_confirmation'
+  | 'closing'
   | 'wakeWordDetected'
   | 'greeting'
-  | 'speaking'
-  | 'listening'
-  | 'processing'
   | 'executing'
   | 'generatingResponse'
-  | 'success'
-  | 'unrecognized'
-  | 'error';
+  | 'success';
 
 export const VALID_ASSISTANT_TRANSITIONS: Record<
   VoiceAssistantState,
   VoiceAssistantState[]
 > = {
-  idle: ['wakeWordDetected', 'greeting', 'listening', 'processing'],
-  wakeWordDetected: ['greeting', 'speaking', 'idle', 'error'],
-  greeting: ['speaking', 'listening', 'idle', 'error'],
-  speaking: ['listening', 'success', 'unrecognized', 'idle', 'error'],
+  idle: [
+    'requestingPermission',
+    'listening',
+    'wakeWordDetected',
+    'greeting',
+    'processing',
+    'processingTranscript',
+    'speaking',
+    'responding',
+  ],
+  requestingPermission: ['listening', 'idle', 'error'],
   listening: [
+    'processingTranscript',
+    'understanding',
     'processing',
     'generatingResponse',
     'speaking',
+    'responding',
+    'closing',
+    'completed',
     'idle',
     'error',
+  ],
+  processingTranscript: [
+    'understanding',
+    'processing',
+    'executingAction',
+    'executing',
+    'awaitingClarification',
+    'awaiting_confirmation',
+    'awaiting_follow_up',
+    'responding',
+    'speaking',
+    'unrecognized',
+    'error',
+    'idle',
+  ],
+  understanding: [
+    'executingAction',
+    'executing',
+    'awaitingClarification',
+    'awaiting_confirmation',
+    'awaiting_follow_up',
+    'responding',
+    'speaking',
+    'unrecognized',
+    'error',
+    'idle',
   ],
   processing: [
     'executing',
+    'executingAction',
+    'understanding',
     'generatingResponse',
+    'speaking',
+    'responding',
+    'awaiting_follow_up',
+    'awaiting_confirmation',
+    'awaitingClarification',
     'unrecognized',
+    'closing',
+    'completed',
     'listening',
     'idle',
     'error',
   ],
-  executing: ['generatingResponse', 'speaking', 'success', 'idle', 'error'],
+  executingAction: [
+    'responding',
+    'speaking',
+    'completed',
+    'success',
+    'idle',
+    'error',
+  ],
+  executing: [
+    'generatingResponse',
+    'speaking',
+    'responding',
+    'success',
+    'completed',
+    'idle',
+    'error',
+  ],
   generatingResponse: [
     'speaking',
+    'responding',
     'listening',
+    'awaiting_follow_up',
+    'awaiting_confirmation',
+    'awaitingClarification',
+    'closing',
+    'completed',
     'success',
     'unrecognized',
     'idle',
     'error',
   ],
-  success: ['listening', 'idle', 'generatingResponse', 'speaking'],
-  unrecognized: ['listening', 'idle'],
-  error: ['listening', 'idle', 'generatingResponse', 'speaking'],
+  awaitingClarification: [
+    'listening',
+    'processingTranscript',
+    'processing',
+    'speaking',
+    'responding',
+    'closing',
+    'completed',
+    'idle',
+    'error',
+  ],
+  awaiting_follow_up: [
+    'listening',
+    'processingTranscript',
+    'processing',
+    'speaking',
+    'responding',
+    'closing',
+    'completed',
+    'idle',
+    'error',
+  ],
+  awaiting_confirmation: [
+    'listening',
+    'processingTranscript',
+    'processing',
+    'speaking',
+    'responding',
+    'executing',
+    'executingAction',
+    'closing',
+    'completed',
+    'idle',
+    'error',
+  ],
+  speaking: [
+    'listening',
+    'awaiting_follow_up',
+    'awaiting_confirmation',
+    'awaitingClarification',
+    'closing',
+    'completed',
+    'success',
+    'unrecognized',
+    'idle',
+    'error',
+  ],
+  responding: [
+    'listening',
+    'awaiting_follow_up',
+    'awaiting_confirmation',
+    'awaitingClarification',
+    'closing',
+    'completed',
+    'success',
+    'unrecognized',
+    'idle',
+    'error',
+  ],
+  closing: ['speaking', 'responding', 'completed', 'idle', 'error'],
+  completed: ['listening', 'idle', 'speaking', 'responding'],
+  success: [
+    'listening',
+    'awaiting_follow_up',
+    'idle',
+    'generatingResponse',
+    'speaking',
+    'responding',
+    'completed',
+  ],
+  unrecognized: ['listening', 'idle', 'speaking', 'responding'],
+  error: [
+    'listening',
+    'idle',
+    'generatingResponse',
+    'speaking',
+    'responding',
+    'completed',
+  ],
+  wakeWordDetected: [
+    'greeting',
+    'speaking',
+    'responding',
+    'listening',
+    'idle',
+    'error',
+  ],
+  greeting: ['speaking', 'responding', 'listening', 'idle', 'error'],
 };
 
 export type StateChangeListener = (
@@ -78,7 +243,9 @@ export class VoiceStateMachine {
   }
 
   public startNewSession(): string {
-    this.currentSessionId = `vas_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
+    this.currentSessionId = `vas_${Date.now()}_${Math.random()
+      .toString(36)
+      .substring(2, 7)}`;
     return this.currentSessionId;
   }
 
@@ -122,7 +289,9 @@ export class VoiceStateMachine {
     const prevState = this.currentState;
     this.currentState = nextState;
     console.log(
-      `[VoiceStateMachine] Transitioned: ${prevState} -> ${nextState} (Session: ${this.currentSessionId || 'none'})`,
+      `[VoiceStateMachine] Transitioned: ${prevState} -> ${nextState} (Session: ${
+        this.currentSessionId || 'none'
+      })`,
     );
 
     this.listeners.forEach(listener => {

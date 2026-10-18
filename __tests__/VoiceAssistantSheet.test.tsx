@@ -8,6 +8,7 @@ jest.mock('lucide-react-native', () => ({
   Check: 'Check',
   HelpCircle: 'HelpCircle',
   AlertTriangle: 'AlertTriangle',
+  Square: 'Square',
 }));
 
 jest.mock('react-native-safe-area-context', () => ({
