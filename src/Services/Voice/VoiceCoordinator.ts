@@ -1,5 +1,8 @@
 import { KokoroTTSService } from '../Kokoro/KokoroTTSService';
-import { WakeWordService, AssistantFlowState } from '../WakeWord/WakeWordService';
+import {
+  WakeWordService,
+  AssistantFlowState,
+} from '../WakeWord/WakeWordService';
 import { WakeWordRepliesService } from './wakeWordReplies';
 import { VoiceSettingsService } from '../VoiceSettingsService';
 import { VOICES } from '../../Screens/Settings/Components/types';
@@ -41,9 +44,7 @@ class VoiceCoordinatorClass {
     this.handlers = { ...this.handlers, ...handlers };
   }
 
-  /**
-   * Main flow executed when "Hey Regius" is detected.
-   */
+  // Handles wake word detection flow
   public async handleWakeWordTrigger(_pendingCommand?: string): Promise<void> {
     if (this.isProcessingWakeWord) return;
     this.isProcessingWakeWord = true;
@@ -101,16 +102,16 @@ class VoiceCoordinatorClass {
       console.warn('[VoiceCoordinator] Error handling wake word trigger:', err);
       WakeWordService.setState('error');
       if (this.handlers.onError) {
-        this.handlers.onError(err?.message || 'Error executing wake-word reply');
+        this.handlers.onError(
+          err?.message || 'Error executing wake-word reply',
+        );
       }
     } finally {
       this.isProcessingWakeWord = false;
     }
   }
 
-  /**
-   * Speaks arbitrary user text with Kokoro TTS, coordinating microphone muting.
-   */
+  // Speaks text with Kokoro, muting mic during playback
   public async speakText(
     text: string,
     voiceId?: string,
@@ -132,9 +133,7 @@ class VoiceCoordinatorClass {
     }
   }
 
-  /**
-   * Stops any active speech and speech synthesis immediately.
-   */
+  // Stops active speech immediately
   public async stop(): Promise<void> {
     await KokoroTTSService.stop();
     WakeWordService.setState('idle');

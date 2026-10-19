@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 export const Fonts = {
     ranade: {
         regular: 'Ranade-Regular',
@@ -11,6 +13,11 @@ export const Fonts = {
         semiBold: 'Poppins-SemiBold',
         bold: 'Poppins-Bold',
     },
+    transcity: Platform.select({
+        ios: 'Transcity',
+        android: 'Transcity Demo',
+        default: 'Transcity',
+    }),
     regular: 'Poppins-Regular',
     medium: 'Poppins-Medium',
     semiBold: 'Poppins-SemiBold',

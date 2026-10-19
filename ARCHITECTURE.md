@@ -285,16 +285,24 @@ Regius enforces automated test verification across conversational flows, state m
 
 ### Test Suite Structure (`__tests__/`)
 
-| Test File                                | Verification Scope                                                | Tests |
-| :--------------------------------------- | :---------------------------------------------------------------- | :---- |
-| `WakeWordDetection.test.ts`              | Regex matching, phonetic alias recognition, cooldown logic        | 12    |
-| `VoiceStateMachine.test.ts` / Suite      | Valid state transitions, session isolation, stale callback guards | 24    |
-| `VoiceCommandService.test.ts`            | Intent classification, slot extraction, allowlist execution       | 18    |
-| `VoiceConfirmationBuilder.test.ts`       | Verbal confirmation phrasing, error messaging                     | 14    |
-| `VoiceAssistantConversationFlow.test.ts` | End-to-end multi-turn dialogue, silence debounce, session reset   | 22    |
-| `VoiceAssistantGreetingPlayback.test.ts` | Dynamic greeting resolution, cache hit, audio lifecycle callbacks | 16    |
-| `ConversationalVoiceAssistant.test.ts`   | Slot clarification, cancellation, inactivity timeouts             | 14    |
-| `VoiceAssistantSheet.test.tsx`           | UI sheet rendering, Lottie orb coordination, mic controls         | 10    |
+| Test File                                | Verification Scope                                                     | Tests |
+| :--------------------------------------- | :--------------------------------------------------------------------- | :---- |
+| `WakeWordDetection.test.ts`              | Regex matching, phonetic alias recognition, cooldown logic             | 12    |
+| `VoiceStateMachine.test.ts` / Suite      | Valid state transitions, session isolation, stale callback guards      | 24    |
+| `VoiceCommandService.test.ts`            | Intent classification, slot extraction, allowlist execution            | 18    |
+| `VoiceConfirmationBuilder.test.ts`       | Verbal confirmation phrasing, error messaging                          | 14    |
+| `VoiceAssistantConversationFlow.test.ts` | End-to-end multi-turn dialogue, silence debounce, session reset        | 22    |
+| `VoiceAssistantGreetingPlayback.test.ts` | Dynamic greeting resolution, cache hit, audio lifecycle callbacks      | 16    |
+| `ConversationalVoiceAssistant.test.ts`   | Slot clarification, cancellation, inactivity timeouts                  | 14    |
+| `VoiceAssistantSheet.test.tsx`           | UI sheet rendering, Lottie orb coordination, mic controls              | 10    |
+| `DashboardRedesign.test.tsx`             | Metrics, chronological flow, scooped card SVG, scroll layer & logotype | 17    |
+
+### 7.1 Scroll-Reactive Layer Header Architecture (`DashboardScreen.tsx`)
+
+- Uses `useRef(new Animated.Value(0)).current` with `Animated.event` to drive visual transitions without bridge bottlenecks.
+- Smoothly animates `backgroundColor` from `#FBF9F3` to `Colors.LavenderPurple` (`#8383D6`), `borderBottomLeftRadius` & `borderBottomRightRadius` from `0` to `24`, `shadowOpacity` from `0` to `0.22`, and `paddingBottom` from `0` to `14px` (`headerPaddingBottom`) for cushion around controls.
+- Tracks active threshold state via `isScrolledRef.current` to synchronously toggle `StatusBar` (`dark-content` ↔ `light-content`), `RegiusLogo` (`default` ↔ `light`), and button styling with zero closure lag.
+- Employs absolute positioning (`position: 'absolute', top: 0, left: 0, right: 0, zIndex: 100`) and dynamic safe-area insets (`paddingTop: insets.top`) so the scrolling viewport glides behind the rounded bottom layer.
 
 ### Build & Verification Commands
 

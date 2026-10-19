@@ -1,8 +1,4 @@
-/**
- * Normalizes arbitrary user text for the Kokoro TTS pipeline.
- * Expands numbers, dates, times, abbreviations, and splits long paragraphs
- * into clauses/sentences suitable for Kokoro synthesis.
- */
+// Normalizes numbers, dates, times and abbreviations for Kokoro TTS
 
 const NUMBER_MAP: Record<number, string> = {
   0: 'zero',
@@ -46,12 +42,16 @@ function numberToWords(num: number): string {
   if (num < 1000) {
     const hundreds = Math.floor(num / 100);
     const rest = num % 100;
-    return `${NUMBER_MAP[hundreds]} hundred${rest > 0 ? ` and ${numberToWords(rest)}` : ''}`;
+    return `${NUMBER_MAP[hundreds]} hundred${
+      rest > 0 ? ` and ${numberToWords(rest)}` : ''
+    }`;
   }
   if (num < 1000000) {
     const thousands = Math.floor(num / 1000);
     const rest = num % 1000;
-    return `${numberToWords(thousands)} thousand${rest > 0 ? ` ${numberToWords(rest)}` : ''}`;
+    return `${numberToWords(thousands)} thousand${
+      rest > 0 ? ` ${numberToWords(rest)}` : ''
+    }`;
   }
   return num.toString();
 }
@@ -78,9 +78,9 @@ const ABBREVIATIONS: Record<string, string> = {
   'e.g.': 'for example',
   'i.e.': 'that is',
   'p.m.': 'P M',
-  'pm': 'P M',
+  pm: 'P M',
   'a.m.': 'A M',
-  'am': 'A M',
+  am: 'A M',
   'w/': 'with',
   'w/o': 'without',
 };
@@ -129,11 +129,11 @@ export function normalizeText(rawText: string): string {
   return text;
 }
 
-/**
- * Splits arbitrary text into sentence chunks under maxChars to prevent
- * Kokoro sequence token overflow while preserving natural pause phrasing.
- */
-export function splitIntoChunks(text: string, maxChars: number = 280): string[] {
+// Split text into sentence chunks under maxChars
+export function splitIntoChunks(
+  text: string,
+  maxChars: number = 280,
+): string[] {
   const normalized = normalizeText(text);
   if (normalized.length <= maxChars) {
     return [normalized];

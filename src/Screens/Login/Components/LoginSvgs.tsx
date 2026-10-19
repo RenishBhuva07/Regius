@@ -9,9 +9,7 @@ import Svg, {
   SvgProps,
 } from 'react-native-svg';
 
-/**
- * Regal Crown Crest Illustration for Regius Auth
- */
+// Auth SVG icons and illustrations
 export const RegiusCrownCrestSvg: React.FC<
   SvgProps & { glowColor?: string }
 > = ({ glowColor: _glowColor, ...props }) => {
@@ -99,9 +97,6 @@ export const RegiusCrownCrestSvg: React.FC<
   );
 };
 
-/**
- * Organic Decorative Canvas Waves for Top Background
- */
 export const DecorativeHeaderWavesSvg: React.FC<
   SvgProps & { isDark?: boolean }
 > = ({ isDark = false, ...props }) => {
@@ -181,9 +176,6 @@ export const DecorativeHeaderWavesSvg: React.FC<
   );
 };
 
-/**
- * Modern Envelope SVG Icon for Email Field
- */
 export const MailFieldSvg: React.FC<SvgProps & { color?: string }> = ({
   color = '#8383D6',
   ...props
@@ -210,9 +202,6 @@ export const MailFieldSvg: React.FC<SvgProps & { color?: string }> = ({
   </Svg>
 );
 
-/**
- * Lock SVG Icon for Password Field
- */
 export const LockFieldSvg: React.FC<SvgProps & { color?: string }> = ({
   color = '#8383D6',
   ...props
@@ -240,9 +229,6 @@ export const LockFieldSvg: React.FC<SvgProps & { color?: string }> = ({
   </Svg>
 );
 
-/**
- * User SVG Icon for Name Field
- */
 export const UserFieldSvg: React.FC<SvgProps & { color?: string }> = ({
   color = '#8383D6',
   ...props
@@ -258,9 +244,6 @@ export const UserFieldSvg: React.FC<SvgProps & { color?: string }> = ({
   </Svg>
 );
 
-/**
- * Eye Open Icon for Show Password
- */
 export const EyeOpenSvg: React.FC<SvgProps & { color?: string }> = ({
   color = '#7E838F',
   ...props
@@ -277,9 +260,6 @@ export const EyeOpenSvg: React.FC<SvgProps & { color?: string }> = ({
   </Svg>
 );
 
-/**
- * Eye Closed Icon for Hide Password
- */
 export const EyeClosedSvg: React.FC<SvgProps & { color?: string }> = ({
   color = '#7E838F',
   ...props
@@ -302,9 +282,6 @@ export const EyeClosedSvg: React.FC<SvgProps & { color?: string }> = ({
   </Svg>
 );
 
-/**
- * Tactile Checkmark SVG for Regius Custom Checkbox
- */
 export const TactileCheckmarkSvg: React.FC<SvgProps & { color?: string }> = ({
   color = '#52D22E',
   ...props
@@ -320,9 +297,6 @@ export const TactileCheckmarkSvg: React.FC<SvgProps & { color?: string }> = ({
   </Svg>
 );
 
-/**
- * Google SVG Logo
- */
 export const GoogleLogoSvg: React.FC<SvgProps & { size?: number }> = ({
   size = 20,
   ...props
@@ -347,9 +321,6 @@ export const GoogleLogoSvg: React.FC<SvgProps & { size?: number }> = ({
   </Svg>
 );
 
-/**
- * Apple SVG Logo
- */
 export const AppleLogoSvg: React.FC<
   SvgProps & { size?: number; color?: string }
 > = ({ size = 20, color = '#FFFFFF', ...props }) => (
@@ -361,9 +332,6 @@ export const AppleLogoSvg: React.FC<
   </Svg>
 );
 
-/**
- * Sparkle Star SVG
- */
 export const SparkleSvg: React.FC<
   SvgProps & { color?: string; size?: number }
 > = ({ color = '#F5C518', size = 18, ...props }) => (

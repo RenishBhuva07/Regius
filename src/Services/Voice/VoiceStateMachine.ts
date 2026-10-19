@@ -1,8 +1,4 @@
-/**
- * Strongly-typed Centralized State Machine for Regius Voice Assistant.
- * Coordinates all conversational phases: wake word detection, greeting,
- * speech recognition, parsing, command execution, and Kokoro speech playback.
- */
+// Voice assistant state machine and valid state transitions
 
 export type VoiceAssistantState =
   | 'idle'

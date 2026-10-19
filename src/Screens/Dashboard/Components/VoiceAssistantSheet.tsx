@@ -207,7 +207,7 @@ export const VoiceAssistantSheet: React.FC<VoiceAssistantSheetProps> = ({
             },
           ]}
         >
-          {/* 1. Top Navigation Bar */}
+          {/* Header */}
           <AssistantHeader
             assistantName={resolvedAssistantName}
             state={currentState}
@@ -216,7 +216,7 @@ export const VoiceAssistantSheet: React.FC<VoiceAssistantSheetProps> = ({
             onToggleSuggestions={toggleSuggestions}
           />
 
-          {/* 2. Scrollable Body containing Holographic Centerpiece and Conversation Surface */}
+          {/* Content */}
           <ScrollView
             style={styles.scrollView}
             contentContainerStyle={styles.scrollContent}
@@ -224,14 +224,12 @@ export const VoiceAssistantSheet: React.FC<VoiceAssistantSheetProps> = ({
             bounces={true}
             keyboardShouldPersistTaps="handled"
           >
-            {/* Holographic Visualization (Dominant focal centerpiece) */}
             <AssistantOrb
               state={currentState}
               onPress={handleMicAction}
               theme={theme}
             />
 
-            {/* Conversational Text & Adaptive Contextual Feedback */}
             <ConversationSurface
               state={currentState}
               assistantName={resolvedAssistantName}
@@ -251,7 +249,7 @@ export const VoiceAssistantSheet: React.FC<VoiceAssistantSheetProps> = ({
             />
           </ScrollView>
 
-          {/* 3. Bottom Controls Dock (Three balanced circular actions) */}
+          {/* Controls */}
           <View style={styles.dockContainer}>
             <VoiceInputControls
               state={currentState}

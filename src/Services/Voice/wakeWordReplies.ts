@@ -1,8 +1,4 @@
-/**
- * Typed configuration for predefined replies to "Hey Regius".
- * Predefined items are dynamic text strings that Kokoro synthesizes at runtime
- * using the user's selected voice.
- */
+// Predefined wake reply templates
 
 export interface WakeWordReplyConfig {
   id: string;
@@ -70,10 +66,7 @@ let currentIndex = 0;
 export const WakeWordRepliesService = {
   replies: [...DEFAULT_PREDEFINED_REPLIES],
 
-  /**
-   * Retrieves a reply according to the configured selection policy.
-   * Can dynamically interpolate the configured assistant name.
-   */
+  // Pick next wake reply by policy (random or rotation)
   getNextReply(
     policy: ReplySelectionPolicy = 'random',
     assistantName?: string,

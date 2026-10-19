@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -7,8 +7,11 @@ import {
   ScrollView,
   StatusBar,
   Platform,
+  Animated,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Sparkles, Sun, Settings, Mic, Calendar } from 'lucide-react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
@@ -26,10 +29,9 @@ import TimelineItemCard, { TimelineItem } from './Components/TimelineItemCard';
 
 type FlowFilter = 'all' | 'tasks' | 'habits' | 'reminders' | 'voice';
 
-/**
- * Robustly parses a 12-hour or 24-hour time string into total minutes since midnight.
- * e.g., "07:30 AM" -> 450, "01:15 PM" -> 795, undefined -> 9999.
- */
+const HEADER_HEIGHT = 52;
+
+// Parse 12h/24h time string into minutes since midnight
 function parseTimeToMinutes(timeStr?: string): number {
   if (!timeStr) return 9999;
   const clean = timeStr.trim().toUpperCase();
@@ -47,6 +49,7 @@ function parseTimeToMinutes(timeStr?: string): number {
 }
 
 export const DashboardScreen: React.FC = () => {
+  const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
   const { tasks, toggleTask, reminders, toggleReminder, habits, toggleHabit } =
     useTaskReminder();
@@ -65,6 +68,59 @@ export const DashboardScreen: React.FC = () => {
   );
 
   const [activeFilter, setActiveFilter] = useState<FlowFilter>('all');
+
+  // Scroll tracking for reactive header layer
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const isScrolledRef = useRef(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Interpolate header visual styles based on scroll position (0 to 30px)
+  const headerBgColor = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: ['#FBF9F3', Colors.LavenderPurple],
+    extrapolate: 'clamp',
+  });
+
+  const headerRadius = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 24],
+    extrapolate: 'clamp',
+  });
+
+  const headerShadowOpacity = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 0.22],
+    extrapolate: 'clamp',
+  });
+
+  const headerElevation = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 6],
+    extrapolate: 'clamp',
+  });
+
+  const headerPaddingBottom = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 14],
+    extrapolate: 'clamp',
+  });
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    {
+      useNativeDriver: false,
+      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const offsetY = event?.nativeEvent?.contentOffset?.y ?? 0;
+        if (offsetY > 15 && !isScrolledRef.current) {
+          isScrolledRef.current = true;
+          setIsScrolled(true);
+        } else if (offsetY <= 15 && isScrolledRef.current) {
+          isScrolledRef.current = false;
+          setIsScrolled(false);
+        }
+      },
+    },
+  );
 
   // Format dynamic greeting based on time of day
   const greeting = useMemo(() => {
@@ -223,65 +279,107 @@ export const DashboardScreen: React.FC = () => {
   );
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top']}>
+    <View style={styles.safeArea}>
       <StatusBar
-        barStyle="dark-content"
+        barStyle={isScrolled ? 'light-content' : 'dark-content'}
         {...(Platform.OS === 'android'
-          ? { backgroundColor: '#FBF9F3', translucent: true }
+          ? {
+              backgroundColor: isScrolled ? Colors.LavenderPurple : '#FBF9F3',
+              translucent: true,
+            }
           : {})}
       />
 
-      {/* ── Fixed Header ── */}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <RegiusLogo size="md" variant="default" />
+      {/* Header */}
+      <Animated.View
+        style={[
+          styles.headerContainer,
+          {
+            paddingTop: insets.top,
+            paddingBottom: headerPaddingBottom,
+            backgroundColor: headerBgColor,
+            borderBottomLeftRadius: headerRadius,
+            borderBottomRightRadius: headerRadius,
+            shadowOpacity: headerShadowOpacity,
+            elevation: headerElevation,
+          },
+        ]}
+      >
+        <View style={styles.header}>
+          <View style={styles.headerLeft}>
+            <RegiusLogo size="md" variant={isScrolled ? 'light' : 'default'} />
+          </View>
+
+          <View style={styles.headerRight}>
+            <TouchableOpacity
+              activeOpacity={0.75}
+              onPress={() => triggerWakeWord()}
+              style={[
+                styles.voiceHeaderBtn,
+                isScrolled && styles.voiceHeaderBtnScrolled,
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel="Hey Regius Voice Assistant"
+              hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
+            >
+              <View
+                style={[
+                  styles.voiceHeaderGlow,
+                  isScrolled && styles.voiceHeaderGlowScrolled,
+                ]}
+              />
+              <Mic
+                size={16}
+                color={isScrolled ? Colors.LavenderPurple : '#7059C8'}
+                strokeWidth={2.4}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              activeOpacity={0.75}
+              onPress={() => navigation.navigate('Settings')}
+              style={[
+                styles.settingsBtn,
+                isScrolled && styles.settingsBtnScrolled,
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel="Open Settings"
+              hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
+            >
+              <Settings
+                size={18}
+                color={isScrolled ? Colors.MidnightCharcoal : '#1B1C19'}
+                strokeWidth={2}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => navigation.navigate('Settings')}
+              style={[
+                styles.avatarRing,
+                isScrolled && styles.avatarRingScrolled,
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel="User Profile"
+            >
+              <SVGS.RegiusAvatar width={36} height={36} />
+            </TouchableOpacity>
+          </View>
         </View>
-
-        <View style={styles.headerRight}>
-          {/* Small Holographic Voice Button */}
-          <TouchableOpacity
-            activeOpacity={0.75}
-            onPress={() => triggerWakeWord()}
-            style={styles.voiceHeaderBtn}
-            accessibilityRole="button"
-            accessibilityLabel="Hey Regius Voice Assistant"
-            hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
-          >
-            <View style={styles.voiceHeaderGlow} />
-            <Mic size={16} color="#7059C8" strokeWidth={2.4} />
-          </TouchableOpacity>
-
-          {/* Proper Settings Gear Button */}
-          <TouchableOpacity
-            activeOpacity={0.75}
-            onPress={() => navigation.navigate('Settings')}
-            style={styles.settingsBtn}
-            accessibilityRole="button"
-            accessibilityLabel="Open Settings"
-            hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
-          >
-            <Settings size={18} color="#1B1C19" strokeWidth={2} />
-          </TouchableOpacity>
-
-          {/* Profile Avatar with signature RingBorder (exact match to HomeScreen) */}
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => navigation.navigate('Settings')}
-            style={styles.avatarRing}
-            accessibilityRole="button"
-            accessibilityLabel="User Profile"
-          >
-            <SVGS.RegiusAvatar width={36} height={36} />
-          </TouchableOpacity>
-        </View>
-      </View>
+      </Animated.View>
 
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[
+          styles.scrollContent,
+          { paddingTop: insets.top + HEADER_HEIGHT + 10 },
+        ]}
         showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
       >
-        {/* ── Greeting & Ambient Assistant State ── */}
+        {/* Greeting */}
         <View style={styles.greetingSection}>
           <View style={styles.stateRow}>
             <Badge
@@ -303,7 +401,7 @@ export const DashboardScreen: React.FC = () => {
           <Text style={styles.greetingText}>{greeting}</Text>
         </View>
 
-        {/* ── Dynamic Voice Briefing Banner (Playable Audio) ── */}
+        {/* Voice briefing card */}
         <DailyBriefingCard
           taskCount={tasks.length}
           reminderCount={reminders.length}
@@ -312,7 +410,7 @@ export const DashboardScreen: React.FC = () => {
           onOpenVoiceAssistant={() => openAssistant()}
         />
 
-        {/* ── Daily Balance & Energy Gauge (Bento Grid) ── */}
+        {/* Daily balance grid */}
         <DailyBalanceGrid
           tasksCompleted={completedTasksCount}
           tasksTotal={tasks.length}
@@ -325,7 +423,7 @@ export const DashboardScreen: React.FC = () => {
           onPressHabits={() => navigation.navigate('Habits')}
         />
 
-        {/* ── Today's Curated Flow Timeline ── */}
+        {/* Curated flow timeline */}
         <View style={styles.flowSection}>
           <View style={styles.flowHeader}>
             <View>
@@ -336,7 +434,7 @@ export const DashboardScreen: React.FC = () => {
             </View>
           </View>
 
-          {/* Filter Pills in Standard Sequence: All, Tasks, Reminders, Habits */}
+          {/* Filter pills */}
           <View style={styles.filterRow}>
             {(
               [
@@ -373,7 +471,7 @@ export const DashboardScreen: React.FC = () => {
             })}
           </View>
 
-          {/* Chronological Timeline Nodes List */}
+          {/* Timeline list */}
           <View style={styles.timelineList}>
             {scheduledItems.map((item, idx) => (
               <TimelineItemCard
@@ -389,7 +487,7 @@ export const DashboardScreen: React.FC = () => {
               />
             ))}
 
-            {/* Unscheduled / Any time section if applicable */}
+            {/* Unscheduled items */}
             {unscheduledItems.length > 0 && (
               <View style={styles.unscheduledSection}>
                 <View style={styles.unscheduledHeaderRow}>
@@ -417,10 +515,10 @@ export const DashboardScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* Clean bottom padding to ensure final item scrolls comfortably above bottom tabs */}
+        {/* Bottom tab spacer */}
         <View style={{ height: 100 }} />
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -429,13 +527,22 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FBF9F3',
   },
+  headerContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 100,
+    shadowColor: '#4A3E8A',
+    shadowOffset: { width: 0, height: 4 },
+    shadowRadius: 10,
+  },
   header: {
-    height: 52,
+    height: HEADER_HEIGHT,
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#FBF9F3',
   },
   headerLeft: {
     flexDirection: 'row',
@@ -462,12 +569,24 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 3,
   },
+  voiceHeaderBtnScrolled: {
+    backgroundColor: '#FFFFFF',
+    borderColor: 'rgba(255, 255, 255, 0.85)',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
+    elevation: 3,
+  },
   voiceHeaderGlow: {
     position: 'absolute',
     width: 28,
     height: 28,
     borderRadius: 14,
     backgroundColor: 'rgba(131, 131, 214, 0.08)',
+  },
+  voiceHeaderGlowScrolled: {
+    backgroundColor: 'rgba(131, 131, 214, 0.15)',
   },
   settingsBtn: {
     width: 36,
@@ -484,6 +603,15 @@ const styles = StyleSheet.create({
     shadowRadius: 3,
     elevation: 1,
   },
+  settingsBtnScrolled: {
+    backgroundColor: '#FFFFFF',
+    borderColor: 'rgba(255, 255, 255, 0.85)',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
+    elevation: 3,
+  },
   avatarRing: {
     width: 44,
     height: 44,
@@ -493,6 +621,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
+  },
+  avatarRingScrolled: {
+    borderColor: '#FFFFFF',
+    borderWidth: 2,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
+    elevation: 3,
   },
   scroll: {
     flex: 1,

@@ -7,10 +7,7 @@ const PAD_START_END_TOKEN = VOCAB['$'] ?? 0;
 const SPACE_TOKEN = VOCAB[' '] ?? 16;
 const MAX_TOKENS = 510;
 
-/**
- * Converts phoneme string directly into Kokoro-82M token IDs,
- * bounded by '$' (0) at both ends.
- */
+// Convert phonemes to Kokoro token IDs bounded by '$'
 export function phonemesToTokens(phonemes: string): number[] {
   if (!phonemes || phonemes.trim().length === 0) {
     return [PAD_START_END_TOKEN, PAD_START_END_TOKEN];
@@ -37,10 +34,7 @@ export function phonemesToTokens(phonemes: string): number[] {
   return tokens;
 }
 
-/**
- * End-to-end tokenizer pipeline:
- * Raw text -> normalization -> phonemization/G2P -> tokenization
- */
+// Normalize, phonemize, and tokenize text
 export function tokenizeText(text: string): number[] {
   const normalized = normalizeText(text);
   const phonemes = phonemize(normalized);

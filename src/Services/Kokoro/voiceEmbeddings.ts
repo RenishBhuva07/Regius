@@ -1,7 +1,4 @@
-/**
- * Voice IDs and Style Embeddings supported by Kokoro-82M.
- * Each voice style vector guides the neural model's pitch, timbre, and accent.
- */
+// Kokoro-82M voice profiles and style embeddings
 
 export interface KokoroVoiceProfile {
   id: string;
@@ -63,10 +60,7 @@ export const KOKORO_VOICES: Record<string, KokoroVoiceProfile> = {
   },
 };
 
-/**
- * Returns a 512-float deterministic seed vector for on-device ONNX inference
- * customized per voice identifier.
- */
+// Deterministic style seed vector per voice for ONNX inference
 export function getVoiceStyleVector(voiceId: string): Float32Array {
   const vector = new Float32Array(512);
   let seed = 0;

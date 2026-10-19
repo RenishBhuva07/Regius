@@ -1,14 +1,4 @@
-/**
- * TranscriptNormalizer.ts
- *
- * Reusable transcript normalization and conversational signal detection for SIA Voice Assistant.
- *
- * Normalizes speech input across:
- * - Casing and whitespace
- * - Contractions ("that's" -> "that is", "i'm" -> "i am", etc.)
- * - Punctuation and filler words ("okay", "well", "alright", "yeah", etc.)
- * - Conversational intents: gratitude, goodbyes, declines, confirmations, cancellations.
- */
+// Normalization and conversational intent helpers for voice input
 
 export interface NormalizedTranscript {
   raw: string;
@@ -18,9 +8,7 @@ export interface NormalizedTranscript {
   tokens: string[];
 }
 
-/**
- * Common English contractions mapped to expanded forms.
- */
+// Contraction expansion map
 const CONTRACTION_MAP: Record<string, string> = {
   "that's": 'that is',
   'that’s': 'that is',
@@ -60,15 +48,11 @@ const CONTRACTION_MAP: Record<string, string> = {
   'hasn’t': 'has not',
 };
 
-/**
- * Natural conversational filler words that often prefix or pad spoken commands.
- */
+// Conversational filler prefix words
 const LEADING_FILLERS_REGEX =
   /^(?:okay|ok|well|alright|all\s+right|yeah|yep|ya|so|um|uh|hey|hi|please|can\s+you|could\s+you|would\s+you|will\s+you)\b[\s,]*/i;
 
-/**
- * Normalizes speech transcript for conversational intelligence.
- */
+// Normalizes transcript casing, contractions, and fillers
 export function normalizeTranscript(raw: string): NormalizedTranscript {
   const trimmed = (raw || '').trim();
 
@@ -112,10 +96,7 @@ export function normalizeTranscript(raw: string): NormalizedTranscript {
   };
 }
 
-/**
- * Determines whether the user utterance expresses pure gratitude.
- * (e.g. "Thanks", "Thank you", "Okay, thanks", "Thank you so much", "Cool, thanks")
- */
+// Check if utterance is a thank-you intent
 export function isGratitudeIntent(normalizedText: string): boolean {
   const { normalized, strippedFillers } = normalizeTranscript(normalizedText);
 
@@ -135,11 +116,7 @@ export function isGratitudeIntent(normalizedText: string): boolean {
   );
 }
 
-/**
- * Determines whether the user utterance expresses goodbye / ending the session.
- * Covers direct goodbyes ("Bye", "Goodbye", "See you later", "I'm done", "That's all for now")
- * and combined phrases ("Thanks, bye", "Okay, thanks, that's all", "No, thank you").
- */
+// Check if utterance is ending session (e.g. "bye", "that's all")
 export function isGoodbyeIntent(normalizedText: string): boolean {
   const { normalized, strippedFillers } = normalizeTranscript(normalizedText);
 
@@ -173,10 +150,7 @@ export function isGoodbyeIntent(normalizedText: string): boolean {
   );
 }
 
-/**
- * Determines whether the utterance expresses a decline/negative response in a follow-up context.
- * e.g. "No", "No thanks", "Nothing else", "I'm good", "I'm all set", "That's it", "That's all", "Nope"
- */
+// Check if utterance declines follow-up (e.g. "no", "I'm all set")
 export function isDeclineIntent(normalizedText: string): boolean {
   const { normalized, strippedFillers } = normalizeTranscript(normalizedText);
 
@@ -196,10 +170,7 @@ export function isDeclineIntent(normalizedText: string): boolean {
   );
 }
 
-/**
- * Determines whether the utterance is a cancellation request.
- * e.g. "cancel", "never mind", "dismiss", "forget it"
- */
+// Check if utterance is a cancellation request
 export function isCancellationIntent(normalizedText: string): boolean {
   const { normalized, strippedFillers } = normalizeTranscript(normalizedText);
 
@@ -213,11 +184,7 @@ export function isCancellationIntent(normalizedText: string): boolean {
   );
 }
 
-/**
- * Checks if the word "no" in an utterance is merely part of a larger, unrelated sentence
- * (such as "Add a task: no meeting today" or "Remind me not to forget my keys").
- * Returns true if the sentence has substantive content beyond the negative word.
- */
+// Check if negation word is part of a substantive sentence (e.g. "no meeting today")
 export function isSubstantiveSentenceWithNegative(rawText: string): boolean {
   const { normalized } = normalizeTranscript(rawText);
 

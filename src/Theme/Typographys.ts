@@ -177,6 +177,13 @@ export const Typography = {
     fontSize: 11,
     lineHeight: 16.5,
   },
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // 🔷 TRANSCITY (Brand Logo & Luxury Display)
+  // ─────────────────────────────────────────────────────────────────────────
+  brandLogoTranscity: {
+    fontFamily: Fonts.transcity,
+  },
 };
 
 import { Platform } from 'react-native';

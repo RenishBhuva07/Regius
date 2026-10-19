@@ -120,8 +120,8 @@ import { Badge } from '../Common/Badge';
 
 A distinctive, polished typographic wordmark preserving the artisanal luxury identity:
 
-- **Font**: `Ranade-Bold` with precision optical letter spacing.
-- **Sizes**: `'sm'` (18px), `'md'` (24px, default for headers), `'lg'` (30px), `'xl'` (36px, splash display).
+- **Font**: `Transcity` (`Transcity Demo.otf` / `Fonts.transcity`) luxury display serif with precision optical letter spacing.
+- **Sizes**: `'sm'` (17px), `'md'` (22px, default for headers), `'lg'` (28px), `'xl'` (36px, splash display).
 - **Variants**: `'default'` (`#1B1C19`), `'dark'` (`Colors.MidnightCharcoal`), `'light'` (`#FFFFFF`), `'gold'` (`#B38F48`), `'muted'` (`Colors.SlateGraphiteText`).
 
 ```tsx
@@ -238,7 +238,39 @@ Used for list items in `HomeScreen`, `TasksScreen`, `RemindersScreen`, and `Dash
 
 ---
 
-### 4.5 Floating Curved Tab Bar & Action Dock (`src/Navigators/BottomTabNavigator.tsx`)
+### 4.5 Dynamic Scroll-Reactive Layer Header (`src/Screens/Dashboard/DashboardScreen.tsx`)
+
+A signature luxury header architecture where scrolling elevates the header from a seamless canvas into a distinct floating brand layer:
+
+- **Unscrolled Initial State (`scrollY <= 15px`)**:
+
+  - **Surface Canvas**: Merges seamlessly with the soft cream background (`#FBF9F3` / `CreamBackground`).
+  - **Corner Geometry**: Flush square corners (`borderBottomLeftRadius: 0`, `borderBottomRightRadius: 0`).
+  - **Elevation / Shadow**: Completely flat (`shadowOpacity: 0`, `elevation: 0`).
+  - **Status Bar**: `dark-content` for optimal legibility against the cream canvas.
+  - **Brand Wordmark**: Dark `#1B1C19` via `<RegiusLogo size="md" variant="default" />`.
+  - **Action Controls**: Voice button with ambient purple tint (`rgba(131, 131, 214, 0.12)`); Settings gear in white circular card (`#FFFFFF`) with hairline border (`#ECE8DF`); User avatar with signature `Colors.RingBorder` (`#E8E2D5`).
+
+- **Scrolled Floating Layer State (`scrollY > 15px`)**:
+  - **Layer Surface**: Theme primary brand color `LavenderPurple` (`#8383D6`), smoothly animated via `Animated.event` (0 to 30px interpolation).
+  - **Dynamic Bottom Padding Cushion**: Smoothly interpolates `paddingBottom` from `0` to `14px` (`headerPaddingBottom`), creating generous vertical breathing space between the controls and the rounded bottom lip so the buttons and logo are never clipped.
+  - **Layer Geometry**: Rounded bottom corners (`borderBottomLeftRadius: 24`, `borderBottomRightRadius: 24`) appearing as an elevated floating card overlaying the scroll stream.
+  - **Ambient Layer Shadow**: Deep purple luxury drop shadow (`shadowColor: '#4A3E8A'`, `shadowOffset: { width: 0, height: 4 }`, `shadowRadius: 10`, `shadowOpacity: 0.22`, `elevation: 6`).
+  - **Status Bar**: Smoothly toggles to `light-content` to preserve crisp white status indicators (time, battery, signal) over the purple header.
+  - **Unique Logotype Architecture (`RegiusLogo.tsx`)**:
+    - **Architectural Crown Crest**: Bespoke 3-pillar royal crown vector icon featuring faceted angular wings, an inner negative-space diamond core, a solid foundation base bar, and a radiant star jewel tip (`#F5C518` gold / `#8383D6` purple / `#FFFFFF` white).
+    - **Stylized Wordmark**: `Transcity` luxury display serif (`Fonts.transcity`) with precision letter-spacing (`0.6` to `0.8`).
+    - **Radiant Star Sparkle**: A 4-point geometric diamond sparkle (`✦`) accent positioned at the upper-right of the wordmark.
+    - **Adaptive Color Switching**: Seamlessly transitions from Obsidian Black (`#1B1C19`) to Pure White (`#FFFFFF`) on scroll.
+  - **Adaptive Contrast & Color Preservation**:
+    - **Voice Button**: Elevated crisp white circular surface (`#FFFFFF`) preserving its signature `#7059C8` mic icon and soft lavender glow.
+    - **Settings Button**: Elevated crisp white circular surface (`#FFFFFF`) maintaining its dark `#1B1C19` gear icon.
+    - **Avatar Ring**: Adapts to a crisp white outline (`#FFFFFF`, `borderWidth: 2`) framing the avatar illustration against the purple background.
+  - **Z-Index Layer Hierarchy**: Rendered as a fixed absolute layer (`position: 'absolute', top: 0, left: 0, right: 0, zIndex: 100`) with safe-area top inset padding, allowing list items to glide beneath the rounded bottom lip.
+
+---
+
+### 4.6 Floating Curved Tab Bar & Action Dock (`src/Navigators/BottomTabNavigator.tsx`)
 
 - **Visual Shape**: Custom SVG bezier curve path with an inverted center notch (`CORNER_R: 34`, `NOTCH_W: 40`, `NOTCH_DEEP: 24`).
 - **Bar Surface**: `LavenderPurple` (`#8383D6`) with a `4px` `CreamBackground` (`#FFFCE3`) outer border outline.
@@ -251,7 +283,7 @@ Used for list items in `HomeScreen`, `TasksScreen`, `RemindersScreen`, and `Dash
 
 ---
 
-### 4.6 Quick Action Sheet (`src/Navigators/PlusActionSheet.tsx`)
+### 4.7 Quick Action Sheet (`src/Navigators/PlusActionSheet.tsx`)
 
 - Sits above the floating dock with a dim backdrop (`rgba(0, 0, 0, 0.35)`).
 - Renders 3 horizontal quick action asymmetric cards:

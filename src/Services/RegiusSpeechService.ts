@@ -10,27 +10,18 @@ import {
   WakeWordRepliesService,
 } from './Voice/wakeWordReplies';
 
-/**
- * Predefined replies for "Hey Regius".
- */
+// Predefined wake replies
 export const SIRI_WAKE_GREETINGS: string[] = DEFAULT_PREDEFINED_REPLIES.map(
   r => r.reply,
 );
 
-/**
- * Returns a configured reply from predefined responses.
- */
+// Get configured reply from presets
 export function getRandomWakeGreeting(assistantName?: string): string {
   return WakeWordRepliesService.getNextReply('random', assistantName);
 }
 
-/**
- * Service to manage speaking text out loud via the user's default selected Kokoro voice.
- */
+// Speaks text aloud using selected Kokoro voice
 export const RegiusSpeechService = {
-  /**
-   * Retrieves the currently selected voice option from user settings.
-   */
   async getActiveVoice(): Promise<{
     voice: VoiceOption;
     speed: number;
@@ -44,13 +35,8 @@ export const RegiusSpeechService = {
     return { voice, speed, autoSpeak };
   },
 
-  /**
-   * Warm up / pre-synthesizes wake word greetings for the active voice in the background.
-   */
-  async warmupVoice(
-    voiceId?: string,
-    assistantName?: string,
-  ): Promise<void> {
+  // Pre-warm greetings in background
+  async warmupVoice(voiceId?: string, assistantName?: string): Promise<void> {
     try {
       const active = await this.getActiveVoice();
       const targetVoiceId = voiceId || active.voice.kokoroVoiceId;
@@ -67,9 +53,7 @@ export const RegiusSpeechService = {
     } catch {}
   },
 
-  /**
-   * Returns an instant pre-warmed greeting if available (0ms instant playback), otherwise random.
-   */
+  // Get pre-cached greeting if available, else random
   async getFastWakeGreeting(assistantName?: string): Promise<string> {
     const active = await this.getActiveVoice();
     const voiceId = active.voice.kokoroVoiceId;
@@ -96,10 +80,7 @@ export const RegiusSpeechService = {
     return getRandomWakeGreeting(assistantName);
   },
 
-  /**
-   * Speaks the wake greeting dynamically with the user's selected Kokoro voice.
-   * Runs real-time neural TTS inference and coordinates playback with callbacks.
-   */
+  // Speak wake greeting dynamically
   async speakGreeting(
     text: string,
     callbacks?: AudioPlaybackCallbacks,
@@ -122,10 +103,7 @@ export const RegiusSpeechService = {
     }
   },
 
-  /**
-   * Speaks any dynamic response or clarification sentence out loud.
-   * Coordinates playback lifecycle events with the voice assistant state machine.
-   */
+  // Speak response or clarification text
   async speakResponse(
     text: string,
     callbacks?: AudioPlaybackCallbacks,
@@ -150,9 +128,6 @@ export const RegiusSpeechService = {
     }
   },
 
-  /**
-   * Speaks arbitrary user text dynamically with Kokoro TTS.
-   */
   async speak(
     text: string,
     voiceId?: string,
@@ -161,9 +136,6 @@ export const RegiusSpeechService = {
     return await KokoroTTSService.speak(text, { voiceId, speed });
   },
 
-  /**
-   * Immediately stops any active speech playback.
-   */
   async stop(): Promise<void> {
     try {
       await KokoroTTSService.stop();

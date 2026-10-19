@@ -18,9 +18,7 @@ import {
 const WAKE_WORD_REGEX =
   /^(?:hey|hay|hi|hello|ok|okay|ay|he)?\s*(?:regius|regis|regions|regeus|rejius|regus|rejus|reach\s+us|read\s+just|ready\s+us|radius|religious|rage\s+us|raygeus|radios|radious|rijus|regias|regios)[.!?\s]*$/i;
 
-/**
- * Extracts and normalizes recurrence / frequency from user speech.
- */
+// Extracts recurrence and frequency from speech
 export function extractRecurrence(text: string): {
   repeat?: string;
   frequency?: string;
@@ -118,9 +116,7 @@ export function extractRecurrence(text: string): {
   return { repeat, frequency, isRecurring, cleanText: clean };
 }
 
-/**
- * Extracts relative date and time strings from conversational speech.
- */
+// Extracts relative date and time from speech
 export function extractDateTime(text: string): {
   cleanTitle: string;
   date?: string;
@@ -250,9 +246,7 @@ export function extractDateTime(text: string): {
 }
 
 export const IntentRecognitionService = {
-  /**
-   * Main entry point to interpret any user utterance into structured intent and parameters.
-   */
+  // Interprets utterance into structured intent and parameters
   interpret(
     rawText: string,
     pendingClarification?: PendingClarification | null,
@@ -353,8 +347,7 @@ export const IntentRecognitionService = {
     // (e.g. "Add a task: no meeting today", "Remind me not to forget my keys")
     const isSubstantiveNegative = isSubstantiveSentenceWithNegative(raw);
 
-    // 6. Direct & Combined Goodbye Intent (Scenario C & D)
-    // Examples: "Bye", "Goodbye", "Bye-bye", "See you later", "That's all", "Thanks, bye", "Okay, thanks, that's all"
+    // Goodbye intent
     if (!isSubstantiveNegative && isGoodbyeIntent(normalized)) {
       return {
         intent: 'GOODBYE',
@@ -367,8 +360,7 @@ export const IntentRecognitionService = {
       };
     }
 
-    // 7. Courtesy / Gratitude Intent (Scenario A)
-    // Examples: "Thanks", "Thank you", "Okay, thanks", "Thank you so much", "Cool, thanks", "Perfect, thank you"
+    // Gratitude intent
     if (!isSubstantiveNegative && isGratitudeIntent(normalized)) {
       let politeReply =
         "You're welcome! Is there anything else I can help you with?";
@@ -516,9 +508,7 @@ export const IntentRecognitionService = {
     };
   },
 
-  /**
-   * Multi-turn slot filling handler for incomplete actions.
-   */
+  // Multi-turn slot filling for incomplete commands
   resolveClarification(
     cleanRaw: string,
     normalized: string,
@@ -790,9 +780,7 @@ export const IntentRecognitionService = {
     };
   },
 
-  /**
-   * Parses natural language reminder commands.
-   */
+  // Parses reminder commands
   parseReminder(
     raw: string,
     cleanRaw: string,
@@ -808,8 +796,7 @@ export const IntentRecognitionService = {
     const { cleanTitle, date, time, repeat, frequency, isRecurring } =
       extractDateTime(remainder);
 
-    // If the phrasing matches "remind me to (complete|finish|do|submit|prepare|write|buy|review|email|call|work on)" and has NO time and NO date,
-    // this expresses an unscheduled task on a to-do list ("Remind me to complete my assignment").
+    // "Remind me to [verb]" without time/date is treated as an unscheduled task
     const remindTaskMatch = cleanRaw.match(
       /^remind\s+me\s+to\s+(complete|finish|do|submit|prepare|write|buy|review|email|call|work\s+on)\s+(.+)$/i,
     );
@@ -915,9 +902,7 @@ export const IntentRecognitionService = {
     };
   },
 
-  /**
-   * Parses natural language habit commands.
-   */
+  // Parses habit commands
   parseHabit(
     raw: string,
     cleanRaw: string,
@@ -1096,9 +1081,7 @@ export const IntentRecognitionService = {
     return null;
   },
 
-  /**
-   * Parses natural language task commands.
-   */
+  // Parses task commands
   parseTask(
     raw: string,
     cleanRaw: string,
@@ -1148,7 +1131,7 @@ export const IntentRecognitionService = {
       };
     }
 
-    // 2. Action phrase: "Remind me to [action]" or "Remind me to complete my assignment" -> user intends task when no time/date scheduled
+    // "Remind me to [action]" without time/date -> task
     const remindTaskMatch = cleanRaw.match(/^remind\s+me\s+to\s+(.+)$/i);
     if (remindTaskMatch) {
       const remainder = cleanRaw.replace(/^remind\s+me\s+to\s+/i, '');
@@ -1284,9 +1267,7 @@ export const IntentRecognitionService = {
     return null;
   },
 
-  /**
-   * Parses Focus Session commands.
-   */
+  // Parses focus session commands
   parseFocus(
     raw: string,
     cleanRaw: string,

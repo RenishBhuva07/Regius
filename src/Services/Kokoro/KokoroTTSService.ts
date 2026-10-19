@@ -75,10 +75,7 @@ export interface KokoroSynthesizeOptions {
   speed?: number;
 }
 
-/**
- * Consumes the Gradio SSE queue using React Native's XMLHttpRequest.
- * Resolves immediately when process_completed event arrives with the synthesized WAV URL.
- */
+// Consumes Gradio SSE queue and resolves when WAV URL is ready
 function streamGradioQueue(
   sessionHash: string,
   timeoutMs: number = 25000,
@@ -204,9 +201,7 @@ function streamGradioQueue(
 }
 
 export const KokoroTTSService = {
-  /**
-   * Attempts to initialize on-device ONNX Runtime session if model file is bundled.
-   */
+  // Initialize on-device ONNX runtime session if available
   async initialize(): Promise<boolean> {
     if (isOrtInitialized) return true;
     if (isInitializingOrt) return false;
@@ -226,10 +221,7 @@ export const KokoroTTSService = {
     return false;
   },
 
-  /**
-   * Synthesizes dynamic speech from arbitrary text using real Kokoro-82M neural inference.
-   * Pipeline: text -> normalization -> G2P phonemization -> tokenization -> Kokoro inference -> 24kHz audio.
-   */
+  // Synthesizes speech from text using Kokoro-82M neural inference
   async synthesize(
     text: string,
     voiceId: string = 'af_bella',
@@ -363,9 +355,7 @@ export const KokoroTTSService = {
     return null;
   },
 
-  /**
-   * Checks if a sentence has already been synthesized and cached (0ms instant playback).
-   */
+  // Check if text has cached audio
   isCached(text: string, voiceId?: string, speed: number = 1.0): boolean {
     const trimmed = text.trim();
     const validVoiceId = KOKORO_VOICES[voiceId || 'af_bella']?.id || 'af_bella';
@@ -401,9 +391,7 @@ export const KokoroTTSService = {
     return null;
   },
 
-  /**
-   * Pre-synthesizes an array of sentences in the background and saves to persistent cache.
-   */
+  // Pre-synthesizes sentences in background into cache
   async prewarm(
     sentences: string[],
     voiceId: string = 'af_bella',
@@ -433,9 +421,7 @@ export const KokoroTTSService = {
     isPrewarmingActive = false;
   },
 
-  /**
-   * Speaks arbitrary user text aloud using the selected Kokoro voice.
-   */
+  // Play text with selected Kokoro voice
   async speak(
     text: string,
     options?: KokoroSynthesizeOptions,
@@ -474,10 +460,7 @@ export const KokoroTTSService = {
     return true;
   },
 
-  /**
-   * Speaks aloud and awaits until playback finishes before resolving.
-   * Coordinates with wake-word detection to prevent audio self-triggering.
-   */
+  // Play speech and await completion
   async speakAndWait(
     text: string,
     options?: KokoroSynthesizeOptions,
@@ -537,11 +520,7 @@ export const KokoroTTSService = {
     );
   },
 
-  /**
-   * Speaks a wake greeting immediately in the active voice.
-   * If a dynamic synthesis is already cached, it uses it.
-   * Otherwise, it synthesizes dynamically with 100% priority and awaits completion.
-   */
+  // Play wake greeting immediately using cached or dynamic synthesis
   async speakGreetingAndWait(
     text: string,
     voice: VoiceOption,
@@ -607,9 +586,7 @@ export const KokoroTTSService = {
     );
   },
 
-  /**
-   * Immediately stops any current Kokoro speech and cancels pending synthesis.
-   */
+  // Stop current speech playback and pending synthesis
   async stop(): Promise<void> {
     isPrewarmingActive = false;
     if (activePrewarmAbortController) {

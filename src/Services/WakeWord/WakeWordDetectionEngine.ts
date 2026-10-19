@@ -9,28 +9,7 @@ import {
   DEFAULT_WAKE_WORD_PRESET,
 } from './WakeWordPresets';
 
-/**
- * ENGINE-SPECIFIC ARCHITECTURAL CHARACTERISTICS & LIMITATIONS:
- *
- * 1. Architecture: Regius utilizes mobile OS Speech-to-Text streaming transcription
- *    via `@react-native-voice/voice` (Apple Speech framework on iOS, Google SpeechRecognizer on Android).
- *
- * 2. Distinction from Acoustic Keyword Spotters:
- *    Unlike hardware/DSP-based keyword engines (such as Picovoice Porcupine, Snowboy, or custom
- *    TensorFlow Lite acoustic models) which operate directly on raw audio MFCC spectrogram frames
- *    at low power, this engine parses intermediate and final textual transcriptions output by the OS STT.
- *
- * 3. STT Vocabulary & Phonetic Misrecognitions:
- *    Because the OS STT engine transcribes speech into words from its general dictionary, names that
- *    are uncommon or invented (e.g. "Regius") are frequently transcribed as phonetic approximations
- *    (such as "regis", "regions", "reach us", "radius"). The supported presets in `SUPPORTED_WAKE_WORD_PRESETS`
- *    have custom-tuned phonetic aliases and regex patterns to bridge this STT limitation.
- *
- * 4. Custom Phrases Limitation:
- *    Arbitrary custom phrases do NOT have pre-trained phonetic STT misrecognition maps. While the engine
- *    applies dynamic fuzzy Levenshtein and prefix tokenization, recognition reliability on custom words
- *    depends heavily on whether the device's OS speech recognizer transcribes the syllables accurately.
- */
+// Wake word detection using mobile OS STT transcript matching and phonetic aliases
 export const ENGINE_LIMITATIONS = [
   'Engine Type: OS Speech-to-Text Transcript Matcher (@react-native-voice/voice).',
   'Presets ("Hey Regius", "Hey Aria", "Hello Nova", "Hey Jarvis", "Hey Echo") include fine-tuned phonetic and acoustic misrecognition mappings.',
@@ -92,9 +71,7 @@ export function levenshtein(a: string, b: string): number {
   return matrix[bn][an];
 }
 
-/**
- * Finds a matching preset by ID, name, or phrase (case-insensitive).
- */
+// Finds matching preset by ID, name, or phrase
 export function findPreset(phraseOrName: string): WakeWordPreset | undefined {
   if (!phraseOrName) return undefined;
   const clean = cleanPunctuation(phraseOrName);
@@ -109,9 +86,7 @@ export function findPreset(phraseOrName: string): WakeWordPreset | undefined {
   });
 }
 
-/**
- * Extracts the assistant's name from any wake phrase (e.g. "Hey Aria" -> "Aria").
- */
+// Extracts assistant name from wake phrase (e.g. "Hey Aria" -> "Aria")
 export function extractNameFromPhrase(phrase: string): string {
   const preset = findPreset(phrase);
   if (preset) return preset.name;
@@ -130,9 +105,7 @@ export function extractNameFromPhrase(phrase: string): string {
   return clean.charAt(0).toUpperCase() + clean.slice(1);
 }
 
-/**
- * Normalizes wake phrase to standard format (e.g. "hey aria" -> "Hey Aria").
- */
+// Normalizes wake phrase casing and whitespace
 export function formatWakePhrase(phrase: string): string {
   const preset = findPreset(phrase);
   if (preset) return preset.phrase;
@@ -144,9 +117,7 @@ export function formatWakePhrase(phrase: string): string {
     .join(' ');
 }
 
-/**
- * Builds dynamic regex for an arbitrary custom phrase.
- */
+// Builds regex pattern for custom wake phrases
 function buildCustomRegex(phrase: string): RegExp {
   const clean = cleanPunctuation(phrase);
   const words = clean.split(' ').filter(Boolean);
@@ -165,9 +136,7 @@ function buildCustomRegex(phrase: string): RegExp {
   return new RegExp(`\\b(?:hey|hay|hi|hello|ok|okay)?\\s*${joined}\\b`, 'i');
 }
 
-/**
- * Detects whether the wake word is present in a transcript.
- */
+// Checks if wake word is present in transcript
 export function detectWakeWordInTranscript(
   transcript: string,
   activePhrase: string = DEFAULT_WAKE_WORD_PRESET.phrase,
@@ -287,9 +256,7 @@ export function detectWakeWordInTranscript(
   return { detected: false };
 }
 
-/**
- * Checks if the utterance contains only the wake word without a command.
- */
+// Checks if transcript contains only the wake word
 export function isWakeWordOnly(
   transcript: string,
   activePhrase: string = DEFAULT_WAKE_WORD_PRESET.phrase,
@@ -321,9 +288,7 @@ export function isWakeWordOnly(
   return false;
 }
 
-/**
- * Validates a wake phrase and provides detailed engine compatibility feedback.
- */
+// Validates wake phrase against stop-words and length rules
 export function validateWakePhrase(phrase: string): WakeWordValidationResult {
   const trimmed = (phrase || '').trim();
   const clean = cleanPunctuation(trimmed);
@@ -402,9 +367,7 @@ export function validateWakePhrase(phrase: string): WakeWordValidationResult {
   };
 }
 
-/**
- * Interactive developer validation tester.
- */
+// Test helper for wake word recognition
 export function testWakeWordRecognition(
   inputTranscript: string,
   targetPhrase: string,

@@ -39,12 +39,7 @@ export interface TimelineItem {
   badgeText?: string;
   originalId: string;
 }
-
-/**
- * Generates an SVG path for the card with rounded corners and an inverted
- * scooped corner cutout at the top-right, creating the negative space where
- * the floating round checkbox resides outside the card boundary.
- */
+// Rounded card SVG path with top-right cutout for the floating checkbox
 export const getCutoutCardPath = (W: number, H: number): string => {
   if (W <= 60 || H <= 60) return '';
   const sw = 1.5;
@@ -191,7 +186,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
 
   return (
     <View style={styles.container}>
-      {/* ── Left Time & Indicator Column ── */}
+      {/* Time column */}
       <View style={styles.timeColumn}>
         <View style={styles.timeTextContainer}>
           <Text
@@ -206,9 +201,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
           </Text>
         </View>
 
-        {/* Timeline connector line & node marker */}
         <View style={styles.nodeColumn}>
-          {/* Vertical connecting line */}
           <View
             style={[
               styles.timelineLine,
@@ -217,7 +210,6 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
             ]}
           />
 
-          {/* Node icon container (always keeps category icon and subtle border) */}
           <View
             style={[
               styles.nodeCircle,
@@ -232,7 +224,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
         </View>
       </View>
 
-      {/* ── Right Content Card with Signature Inverted Corner Cutout ── */}
+      {/* Content card */}
       <TouchableOpacity
         activeOpacity={0.88}
         onLayout={handleCardLayout}
@@ -245,7 +237,6 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
           item.time
         }, ${isCompleted ? 'completed' : 'not completed'}`}
       >
-        {/* SVG background shape with signature inverted top-right corner scoop */}
         <Svg
           width={cardSize.width}
           height={cardSize.height}
@@ -261,7 +252,6 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
           />
         </Svg>
 
-        {/* Leading vertical accent bar (Reference flow style) */}
         <View
           style={[
             styles.accentBar,
@@ -269,7 +259,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
           ]}
         />
 
-        {/* Floating Round Little Checkbox outside the card in the scooped cutout */}
+        {/* Floating Checkbox */}
         <TouchableOpacity
           activeOpacity={0.75}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
@@ -295,7 +285,6 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
         </TouchableOpacity>
 
         <View style={styles.cardContent}>
-          {/* Title Row (with right padding so text never collides with floating top-right checkbox) */}
           <View style={styles.cardTopRow}>
             <Text
               style={[styles.title, isCompleted && styles.titleCompleted]}
@@ -305,7 +294,6 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
             </Text>
           </View>
 
-          {/* Subtitle / Context description */}
           {item.subtitle ? (
             <Text
               style={[styles.subtitle, isCompleted && styles.subtitleCompleted]}
@@ -315,9 +303,8 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
             </Text>
           ) : null}
 
-          {/* Meta & Time-range Badges Row */}
+          {/* Meta & Badges */}
           <View style={styles.metaRow}>
-            {/* Time range pill (Reference style) */}
             <View
               style={[
                 styles.timePill,

@@ -70,10 +70,7 @@ export const VoiceSettingsService = {
     return settings.wakeWordPhrase || DEFAULT_VOICE_SETTINGS.wakeWordPhrase;
   },
 
-  /**
-   * Clears saved voice and wake word preferences from AsyncStorage
-   * and reverts to system presets.
-   */
+  // Revert voice settings to defaults in AsyncStorage
   async clearSettings(): Promise<VoiceSettings> {
     try {
       await AsyncStorage.removeItem(STORAGE_KEYS.VOICE_SETTINGS);

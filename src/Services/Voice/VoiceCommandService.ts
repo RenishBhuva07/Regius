@@ -27,10 +27,7 @@ export type {
 };
 
 export const VoiceCommandService = {
-  /**
-   * Interprets user spoken utterance into a structured intent with parameters.
-   * If a pending clarification question was awaiting answer, interprets in that context.
-   */
+  // Interprets utterance into intent and parameters
   interpret(
     rawText: string,
     pendingClarification?: PendingClarification | null,
@@ -43,10 +40,7 @@ export const VoiceCommandService = {
     );
   },
 
-  /**
-   * Executes the interpreted command directly against application state / context.
-   * Enforces allowlisted operations, parameter validation, and truthful results.
-   */
+  // Executes validated voice command against context state
   execute(
     command: InterpretedVoiceCommand,
     ctx: ExecutionContext,

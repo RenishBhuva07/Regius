@@ -1458,12 +1458,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
       const lowerMsg = message.toLowerCase();
       const lowerCode = code.toLowerCase();
 
-      // Normal silence / timeout codes:
-      // iOS: 1110 (kAFAssistantErrorDomain error 1110: "No speech detected" / "recognition_fail: 1110/No speech detected")
-      // iOS: 203 (kLSRErrorDomain: "Retry: Spoken request was not understood or no speech")
-      // iOS: 209 (kLSRErrorDomain: "Recognition request was canceled")
-      // iOS: 1101, 1107
-      // Android: 7 (ERROR_NO_MATCH), 6 (ERROR_SPEECH_TIMEOUT)
+      // Silence & timeout error codes (iOS & Android)
       const isSilenceTimeout =
         code === '7' ||
         code === '6' ||

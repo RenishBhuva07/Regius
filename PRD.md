@@ -87,6 +87,9 @@ flowchart LR
     - **Category Color Matching**: Tasks follow yellow (`#FFFCEB`), Reminders follow green (`#EDFDF5`), Habits follow purple (`#EFF2FE`).
     - **Outside Floating Round Checkbox**: A circular checkbox (`26x26`, `borderRadius: 13`) floats elevated in the carved-out negative space outside the card, with the screen background showing through the cutout.
     - **Persistent Left Category Icon**: The timeline node on the left always retains the category icon and is never replaced by a check.
+  - **Dynamic Scroll-Reactive Layer Header**:
+    - **Unscrolled**: Renders flush with the canvas `#FBF9F3` with dark wordmark (`#1B1C19`) and `dark-content` status bar.
+    - **Scrolled (`scrollY > 15px`)**: Seamlessly elevates into a floating brand layer with primary `LavenderPurple` (`#8383D6`) background, dynamic `14px` bottom padding cushion, rounded bottom corners (`24px`), deep purple drop shadow (`#4A3E8A`), `light-content` status bar, unique crown-crested `<RegiusLogo variant="light" />` with radiant star sparkle, and elevated circular white action buttons preserving their icon colors.
   - **Hands-Free Activation**: Long-press on the center floating plus button or vocal wake phrase instantly activates the assistant.
 
 ---

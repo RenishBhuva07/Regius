@@ -12,7 +12,7 @@ As an AI coding agent working on **Regius**, your primary obligation is to maint
 
 Regius is a refined, production-grade codebase with active, finely-tuned native audio integrations, background speech recognition, real-time neural TTS, and custom gesture-driven navigation. **Casual modifications, careless refactors, or standard generic templates will break native audio pipelines and violate the luxury brand aesthetic.**
 
-### The 10 Mandatory Agent Directives
+### The 11 Mandatory Agent Directives
 
 1. **Inspect Before Modifying**: Never edit a file without reading its active implementation and understanding its callers.
 2. **Root-Cause Analysis First**: When fixing a bug, identify the root cause before writing code. Never apply superficial masking patches.
@@ -24,6 +24,7 @@ Regius is a refined, production-grade codebase with active, finely-tuned native 
 8. **Run Available Verification Checks**: Always execute `npm test` and `npx tsc --noEmit` after making changes. Report actual test counts and compiler outputs.
 9. **Update Documentation Continuously**: Whenever a change impacts product requirements, architectural flow, design tokens, or feature status, immediately update [PRD.md](PRD.md), [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md), [ARCHITECTURE.md](ARCHITECTURE.md), or [FEATURES.md](FEATURES.md).
 10. **Explain Conflicts Transparently**: If instructions or specifications conflict with codebase realities, explain the conflict clearly rather than silently discarding existing behavior.
+11. **Concise, Human-Style Comments (No AI Fluff)**: Never write multi-paragraph block comments, redundant JSDocs repeating method names, or decorative emojis. Write brief human comments only when explaining tricky or non-obvious logic; remove obvious comments and dead commented-out code.
 
 ---
 
@@ -141,6 +142,13 @@ The voice pipeline in Regius manages sensitive native audio hardware. Agents mod
 2. **Yield Audio Session**: After stopping voice recording and before starting TrackPlayer playback, introduce a 160ms–300ms pause to let `AVAudioSession` / `AudioRecord` transition cleanly.
 3. **Session ID Guards**: All state machine transitions triggered from asynchronous callbacks (such as audio completion or network arrival) must check `sessionId === currentInteractionIdRef.current` to avoid stale race conditions.
 4. **Guaranteed Fallback**: If remote Kokoro neural TTS synthesis times out (default 1800ms race for greetings, 20s for general speech), immediately fall back to the bundled voice asset (`voice.previewUrl`).
+
+### 4.4 Commenting Standards (Concise & Human-Style)
+
+- **No AI-Generated Essays**: Never write multi-paragraph block comments, repetitive JSDocs, architectural dissertations, or decorative emoji headers (e.g. `/** 🌟 ... */`).
+- **Concise & Purpose-Driven**: Use short, 1-line human comments only when explaining non-obvious logic, tricky regexes, or hardware edge cases.
+- **Omit Obvious Comments**: If a function or component name is self-explanatory (e.g. `navigate()`, `AppleLogoSvg`, `stop()`), omit comments entirely rather than stating the obvious.
+- **No Dead Code**: Remove dead, commented-out JSX or legacy code blocks rather than leaving them in active files.
 
 ---
 

@@ -60,9 +60,7 @@ function cleanTitleForSpeech(title: string): string {
     .trim();
 }
 
-/**
- * Builds contextual in-progress executing text for each command type.
- */
+// Contextual in-progress executing text per intent
 export function getContextualExecutingText(
   intent: VoiceCommandIntent,
   title?: string,
@@ -105,10 +103,7 @@ export function getContextualExecutingText(
   }
 }
 
-/**
- * Builds user-facing confirmation text and summaries from the ACTUAL operation result.
- * Supports task creation, reminders, habits, focus sessions, morning brief, sprint reviews, etc.
- */
+// Builds confirmation message from execution result
 export function buildConfirmationMessage(
   result: OperationExecutionResult,
 ): BuiltConfirmationMessage {
@@ -237,9 +232,9 @@ export function buildConfirmationMessage(
       const spokenText =
         count === 0
           ? 'You have no habits set up yet. Would you like to create one?'
-          : `You have ${count} active habit${
-              count === 1 ? '' : 's'
-            }${itemNames ? ': ' + itemNames : ''}.`;
+          : `You have ${count} active habit${count === 1 ? '' : 's'}${
+              itemNames ? ': ' + itemNames : ''
+            }.`;
 
       return {
         spokenText,
@@ -310,9 +305,9 @@ export function buildConfirmationMessage(
       const spokenText =
         count === 0
           ? 'You have no pending tasks for today. Great job!'
-          : `You have ${count} pending task${
-              count === 1 ? '' : 's'
-            }${itemNames ? ': ' + itemNames : ''}.`;
+          : `You have ${count} pending task${count === 1 ? '' : 's'}${
+              itemNames ? ': ' + itemNames : ''
+            }.`;
 
       return {
         spokenText,
@@ -381,9 +376,7 @@ export function buildConfirmationMessage(
   }
 }
 
-/**
- * Builds a truthful failure message when an operation cannot be completed.
- */
+// Builds failure message for an intent
 export function buildFailureMessage(
   intent: VoiceCommandIntent,
   errorMessage?: string,

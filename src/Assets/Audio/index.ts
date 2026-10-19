@@ -1,7 +1,4 @@
-/**
- * Bundled native audio assets for each Kokoro neural voice.
- * Resolved natively by React Native Metro & react-native-track-player.
- */
+// Fallback audio assets for Kokoro voices
 export const VOICE_AUDIO_ASSETS: Record<string, any> = {
   af_bella: require('./af_bella.wav'),
   af_nicole: require('./af_nicole.wav'),

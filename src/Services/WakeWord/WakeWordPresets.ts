@@ -127,11 +127,7 @@ export const SUPPORTED_WAKE_WORD_PRESETS: WakeWordPreset[] = [
   },
 ];
 
-/**
- * 🌟 SINGLE SOURCE OF TRUTH:
- * Change this one key ID to switch the app-wide default wake word.
- * Options: 'hey_regius' | 'hey_sia' | 'hey_aria' | 'hello_nova' | 'hey_jarvis' | 'hey_echo'
- */
+// App-wide default wake word options
 export type SupportedWakeWordId =
   | 'hey_regius'
   | 'hey_sia'

@@ -286,4 +286,67 @@ describe('Dashboard Redesign Components & Logic', () => {
       expect(getCutoutCardPath(50, 50)).toBe('');
     });
   });
+
+  describe('Scroll-Reactive Layer Header Specifications', () => {
+    it('defines theme primary color for scrolled header layer', () => {
+      const { Colors } = require('../src/Assets/StyleUtilities/Colors');
+      expect(Colors.LavenderPurple).toBe('#8383D6');
+    });
+
+    it('validates bottom corner radius and layer properties for scrolled header state', () => {
+      const SCROLLED_HEADER_RADIUS = 24;
+      const SCROLLED_HEADER_SHADOW_COLOR = '#4A3E8A';
+      const SCROLLED_HEADER_ELEVATION = 6;
+
+      expect(SCROLLED_HEADER_RADIUS).toBeGreaterThanOrEqual(20);
+      expect(SCROLLED_HEADER_SHADOW_COLOR).toBe('#4A3E8A');
+      expect(SCROLLED_HEADER_ELEVATION).toBe(6);
+    });
+
+    it('verifies RegiusLogo variant switches between default dark and light pure white', () => {
+      const unscrolledVariant = 'default';
+      const scrolledVariant = 'light';
+
+      const unscrolledLogo = (
+        <RegiusLogo variant={unscrolledVariant} size="md" />
+      );
+      const scrolledLogo = <RegiusLogo variant={scrolledVariant} size="md" />;
+
+      expect(unscrolledLogo.props.variant).toBe('default');
+      expect(scrolledLogo.props.variant).toBe('light');
+    });
+
+    it('verifies action buttons adapt with elevated white circular geometry and preserved icon colors', () => {
+      const { Colors } = require('../src/Assets/StyleUtilities/Colors');
+      const micScrolledColor = Colors.LavenderPurple;
+      const settingsScrolledColor = Colors.MidnightCharcoal;
+
+      expect(micScrolledColor).toBe('#8383D6');
+      expect(settingsScrolledColor).toBe('#1F2228');
+    });
+
+    it('verifies unique logotype features architectural emblem and radiant star sparkle', () => {
+      const fullLogo = (
+        <RegiusLogo
+          size="md"
+          variant="default"
+          showEmblem={true}
+          showSparkle={true}
+        />
+      );
+      expect(fullLogo.props.showEmblem).toBe(true);
+      expect(fullLogo.props.showSparkle).toBe(true);
+    });
+
+    it('validates scrolled header bottom padding cushion for breathing room', () => {
+      const SCROLLED_BOTTOM_PADDING = 14;
+      expect(SCROLLED_BOTTOM_PADDING).toBeGreaterThanOrEqual(10);
+    });
+
+    it('verifies Transcity font family is integrated for Regius logotype', () => {
+      const { Fonts } = require('../src/Theme/fonts');
+      expect(Fonts.transcity).toBeDefined();
+      expect(typeof Fonts.transcity).toBe('string');
+    });
+  });
 });

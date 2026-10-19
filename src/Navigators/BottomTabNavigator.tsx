@@ -445,10 +445,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
 
-  // Floating white card
-  // NOTE: no borderRadius here — SVG handles the visual shape.
-  // Adding borderRadius with overflow:hidden on a 64px-tall card
-  // where CORNER_R=34 would clip all children (radius > 50% height).
+  // Floating card: SVG handles visual shape to avoid clipping
   card: {
     position: 'absolute',
   },

@@ -1,7 +1,4 @@
-/**
- * Encodes Float32Array PCM samples (from Kokoro-82M 24kHz output)
- * into a valid base64 data URI (audio/wav).
- */
+// Encodes Float32Array PCM samples (24kHz) into WAV buffer/data URI
 
 function writeString(view: DataView, offset: number, string: string) {
   for (let i = 0; i < string.length; i++) {
@@ -11,7 +8,7 @@ function writeString(view: DataView, offset: number, string: string) {
 
 export function pcmToWavBuffer(
   samples: Float32Array,
-  sampleRate: number = 24000
+  sampleRate: number = 24000,
 ): ArrayBuffer {
   const numChannels = 1; // Mono
   const bytesPerSample = 2; // 16-bit PCM
@@ -91,7 +88,7 @@ export function bufferToBase64(buffer: ArrayBuffer): string {
 
 export function pcmToWavDataUri(
   samples: Float32Array,
-  sampleRate: number = 24000
+  sampleRate: number = 24000,
 ): string {
   const buffer = pcmToWavBuffer(samples, sampleRate);
   const base64 = bufferToBase64(buffer);

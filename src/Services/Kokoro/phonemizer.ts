@@ -1,8 +1,4 @@
-/**
- * Grapheme-to-Phoneme (G2P) phonetic translator for Kokoro TTS.
- * Translates English words into the International Phonetic Alphabet (IPA)
- * representations required by the Kokoro-82M vocabulary.
- */
+// G2P phonetic translator for Kokoro TTS (IPA mapping)
 
 // Common English dictionary with phonetic IPA mappings for Kokoro-82M
 const PHONEME_DICTIONARY: Record<string, string> = {
@@ -144,9 +140,7 @@ const CHAR_TO_IPA: Record<string, string> = {
   z: 'z',
 };
 
-/**
- * Phonemizes a single word into Kokoro IPA phonemes.
- */
+// Convert single word to IPA phonemes
 export function phonemizeWord(word: string): string {
   const lower = word.toLowerCase().trim();
   if (!lower) return '';
@@ -160,7 +154,12 @@ export function phonemizeWord(word: string): string {
   for (const [pattern, ipa] of SUFFIX_RULES) {
     if (pattern.test(lower)) {
       const stem = lower.replace(pattern, '');
-      const stemIpa = PHONEME_DICTIONARY[stem] || stem.split('').map(c => CHAR_TO_IPA[c] || c).join('');
+      const stemIpa =
+        PHONEME_DICTIONARY[stem] ||
+        stem
+          .split('')
+          .map(c => CHAR_TO_IPA[c] || c)
+          .join('');
       return `${stemIpa}${ipa}`;
     }
   }
@@ -193,9 +192,7 @@ export function phonemizeWord(word: string): string {
   return result;
 }
 
-/**
- * Converts arbitrary normalized text to IPA phonemes with punctuation preserved.
- */
+// Convert text to IPA phonemes preserving punctuation
 export function phonemize(text: string): string {
   if (!text) return '';
 

@@ -87,10 +87,7 @@ export const AudioPlayerService = {
     }
   },
 
-  /**
-   * Plays a track and coordinates with native playback lifecycle callbacks.
-   * Resolves ONLY when playback genuinely finishes, errors, or reaches safety timeout.
-   */
+  // Play track and await native playback completion
   async playWithCallbacks(
     track: PlaybackTrack,
     callbacks?: AudioPlaybackCallbacks,

@@ -1,0 +1,45 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "src/Assets/Fonts/Poppins-Bold.ttf",
+      "sha1": "875cf0cecd647bcf22e79d633d868c1b1ec98dfa"
+    },
+    {
+      "path": "src/Assets/Fonts/Poppins-Medium.ttf",
+      "sha1": "283f21b44efbdbf276ba802be2d949a36bbc4233"
+    },
+    {
+      "path": "src/Assets/Fonts/Poppins-Regular.ttf",
+      "sha1": "fdd3002e7d814ee47c1c1b8487c72c6bbb3a2d00"
+    },
+    {
+      "path": "src/Assets/Fonts/Poppins-SemiBold.ttf",
+      "sha1": "8a4ace9392d06bcb7f8ea2f5169b07e4c383a90d"
+    },
+    {
+      "path": "src/Assets/Fonts/Ranade-Bold.ttf",
+      "sha1": "2c0493cba0b1f573185f281e1bdd0f6962d47cc7"
+    },
+    {
+      "path": "src/Assets/Fonts/Ranade-Medium.ttf",
+      "sha1": "2923660cd09d4f09a25c4985d5775774391711fa"
+    },
+    {
+      "path": "src/Assets/Fonts/Ranade-Regular.ttf",
+      "sha1": "29cccf8ba827762416543bbad4883f885438a2c0"
+    },
+    {
+      "path": "src/Assets/Fonts/Ranade-SemiBold.ttf",
+      "sha1": "90e1a22811c72e85b0e665f356222fe45b64bdf1"
+    },
+    {
+      "path": "src/Assets/Fonts/README.md",
+      "sha1": "685a0ae1d3555faaec5a6f302e6506c20a0cbeb1"
+    },
+    {
+      "path": "src/Assets/Fonts/Transcity Demo.otf",
+      "sha1": "69324c39f0814e886b88bfa5b630e02ef8af7946"
+    }
+  ]
+}

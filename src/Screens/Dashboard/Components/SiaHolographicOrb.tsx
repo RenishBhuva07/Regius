@@ -18,13 +18,7 @@ export const DEFAULT_HOLOGRAPHIC_ORB_SIZE = Math.min(
   Math.round(SCREEN_HEIGHT * 0.5),
   480,
 );
-
-/**
- * 🌟 SiaHolographicOrb
- *
- * Immersive, luminous holographic centerpiece for the Regius Voice Assistant.
- * Scaled significantly to match the reference layout with an atmospheric ambient glow.
- */
+// Holographic orb animation for the voice assistant
 export interface SiaHolographicOrbProps {
   state: VoiceAssistantState;
   size?: number;
@@ -176,45 +170,6 @@ export const SiaHolographicOrb: React.FC<SiaHolographicOrbProps> = ({
 
   return (
     <View style={[styles.container, { width: size, height: size }]}>
-      {/* 1. Futuristic Atmospheric Aura (Backdrop Glow) */}
-      {/* <Animated.View
-        pointerEvents="none"
-        style={[
-          styles.ambientGlow,
-          {
-            width: glowSize,
-            height: glowSize,
-            borderRadius: glowSize / 2,
-            backgroundColor: isDarkMode ? accentColor : '#826EEA',
-            opacity: glowAnim.interpolate({
-              inputRange: [0, 1],
-              outputRange: isDarkMode ? [0.08, 0.24] : [0.04, 0.14],
-            }),
-            transform: [{ scale: breathAnim }],
-          },
-        ]}
-      /> */}
-
-      {/* 2. Main Lottie Hologram */}
-      {/* <Animated.View
-        style={[
-          styles.animationWrapper,
-          {
-            width: size,
-            height: size,
-            transform: [{ scale: breathAnim }],
-          },
-        ]}
-      >
-        <TouchableOpacity
-          activeOpacity={0.92}
-          onPress={onPress}
-          disabled={disabled || !onPress}
-          style={[styles.touchable, { width: size, height: size }]}
-          accessibilityRole="button"
-          accessibilityLabel={`Voice Assistant Hologram, status: ${state}`}
-          accessibilityHint={onPress ? 'Tap to toggle microphone' : undefined}
-        > */}
       <CustomAnimation
         ref={lottieRef}
         animationFile={lottieSource || HolographAnimation}
@@ -224,8 +179,6 @@ export const SiaHolographicOrb: React.FC<SiaHolographicOrbProps> = ({
         animationStyle={{ width: size, height: size }}
         resizeMode="contain"
       />
-      {/* </TouchableOpacity>
-      </Animated.View> */}
     </View>
   );
 };
