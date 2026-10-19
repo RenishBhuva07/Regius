@@ -4,38 +4,89 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  Animated,
+  Platform,
+  Dimensions,
+  LayoutChangeEvent,
 } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 import {
   Check,
-  Briefcase,
-  Mic,
+  CheckCircle2,
+  Flame,
   Bell,
-  Activity,
-  BookOpen,
-  Volume2,
+  Mic,
+  Clock,
+  Sparkles,
 } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
+import { Badge } from '../../../Common/Badge';
+
+export type TimelineCategoryType = 'task' | 'habit' | 'reminder';
 
 export interface TimelineItem {
   id: string;
-  time: string;
-  category: string;
+  type: TimelineCategoryType;
+  time: string; // e.g. "08:30 AM"
+  timeMinutes: number;
   title: string;
-  description: string;
-  status: 'completed' | 'in_progress' | 'upcoming' | 'spoken_checkin';
+  subtitle?: string;
+  timeRange?: string;
+  category: string;
+  accentColor: string;
+  completed: boolean;
+  isVoiceNudge?: boolean;
+  streak?: number;
   badgeText?: string;
-  badgeType?: 'mint' | 'amber' | 'neutral' | 'work' | 'voice_prep' | 'icon';
-  iconType?: 'bell' | 'fitness' | 'book' | 'work' | 'voice';
+  originalId: string;
 }
+
+/**
+ * Generates an SVG path for the card with rounded corners and an inverted
+ * scooped corner cutout at the top-right, creating the negative space where
+ * the floating round checkbox resides outside the card boundary.
+ */
+export const getCutoutCardPath = (W: number, H: number): string => {
+  if (W <= 60 || H <= 60) return '';
+  const sw = 1.5;
+  const half = sw / 2;
+  const x0 = half;
+  const y0 = half;
+  const x1 = W - half;
+  const y1 = H - half;
+
+  const CW = 44; // Cutout notch width
+  const CH = 44; // Cutout notch height
+  const R_tl = 18; // Top-left corner radius
+  const R_bl = 18; // Bottom-left corner radius
+  const R_br = 18; // Bottom-right corner radius
+  const R_outer = 12; // Fillet entering and exiting the notch
+  const R_inner = 14; // Fillet at inner scooped corner
+
+  return [
+    `M ${x0} ${y0 + R_tl}`,
+    `Q ${x0} ${y0}, ${x0 + R_tl} ${y0}`,
+    `L ${x1 - CW - R_outer} ${y0}`,
+    `Q ${x1 - CW} ${y0}, ${x1 - CW} ${y0 + R_outer}`,
+    `L ${x1 - CW} ${y0 + CH - R_inner}`,
+    `Q ${x1 - CW} ${y0 + CH}, ${x1 - CW + R_inner} ${y0 + CH}`,
+    `L ${x1 - R_outer} ${y0 + CH}`,
+    `Q ${x1} ${y0 + CH}, ${x1} ${y0 + CH + R_outer}`,
+    `L ${x1} ${y1 - R_br}`,
+    `Q ${x1} ${y1}, ${x1 - R_br} ${y1}`,
+    `L ${x0 + R_bl} ${y1}`,
+    `Q ${x0} ${y1}, ${x0} ${y1 - R_bl}`,
+    `L ${x0} ${y0 + R_tl}`,
+    'Z',
+  ].join(' ');
+};
 
 interface TimelineItemCardProps {
   item: TimelineItem;
   isFirst?: boolean;
   isLast?: boolean;
-  onToggleComplete?: (id: string) => void;
-  onExtendMinutes?: (id: string) => void;
+  onToggleComplete?: (item: TimelineItem) => void;
   onPressCard?: (item: TimelineItem) => void;
+  onExtendMinutes?: (item: TimelineItem) => void;
 }
 
 export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
@@ -43,353 +94,527 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
   isFirst = false,
   isLast = false,
   onToggleComplete,
-  onExtendMinutes,
   onPressCard,
+  onExtendMinutes,
 }) => {
-  const isCompleted = item.status === 'completed';
-  const isInProgress = item.status === 'in_progress';
-  const isSpoken = item.status === 'spoken_checkin';
+  const isCompleted = item.completed;
 
-  const renderBadge = () => {
-    if (item.badgeType === 'work') {
-      return (
-        <View style={styles.workBadge}>
-          <Briefcase size={12} color="#46464A" />
-          <Text style={styles.workBadgeText}>Work</Text>
-        </View>
-      );
+  // Responsive card size state for exact SVG path rendering
+  const initialW = Dimensions.get('window').width - 108;
+  const [cardSize, setCardSize] = React.useState({
+    width: Math.max(initialW, 200),
+    height: 92,
+  });
+
+  const handleCardLayout = React.useCallback((e: LayoutChangeEvent) => {
+    const { width, height } = e.nativeEvent.layout;
+    if (width > 0 && height > 0) {
+      setCardSize(prev => {
+        if (
+          Math.abs(prev.width - width) < 1 &&
+          Math.abs(prev.height - height) < 1
+        ) {
+          return prev;
+        }
+        return { width, height };
+      });
     }
-    if (item.badgeType === 'voice_prep') {
-      return (
-        <View style={styles.voicePrepBadge}>
-          <Volume2 size={11} color="#4D4727" />
-          <Text style={styles.voicePrepBadgeText}>Aria Voice Prep</Text>
-        </View>
-      );
+  }, []);
+
+  // Split time into hours:minutes and AM/PM
+  const timeParts = item.time.trim().split(/\s+/);
+  const timeNumber = timeParts[0] || '08:00';
+  const timePeriod = timeParts[1] || 'AM';
+
+  // Category styling facets matching Daily Balance and Design System
+  const getCategoryStyles = () => {
+    switch (item.type) {
+      case 'task':
+        return {
+          accent: '#F5C518',
+          bgTint: '#FFFCEB',
+          borderTint: '#FFF5B8',
+          shadowColor: '#F5C518',
+          pillBg: '#FFF9D2',
+          pillText: '#B48216',
+          iconBg: '#FFFCEB',
+          iconColor: '#B48216',
+          badgeVariant: 'yellow' as const,
+        };
+      case 'reminder':
+        return {
+          accent: '#1B9A72',
+          bgTint: '#EDFDF5',
+          borderTint: '#C6FFDD',
+          shadowColor: '#52D22E',
+          pillBg: '#E8FDF0',
+          pillText: '#1B9A72',
+          iconBg: '#EDFDF5',
+          iconColor: '#1B9A72',
+          badgeVariant: 'green' as const,
+        };
+      case 'habit':
+      default:
+        return {
+          accent: '#8383D6',
+          bgTint: '#EFF2FE',
+          borderTint: '#D8DBFF',
+          shadowColor: '#8383D6',
+          pillBg: '#EDEAFB',
+          pillText: '#7059C8',
+          iconBg: '#EFF2FE',
+          iconColor: '#7059C8',
+          badgeVariant: 'purple' as const,
+        };
     }
-    if (item.badgeType === 'mint' && item.badgeText) {
-      return (
-        <View style={styles.mintBadge}>
-          <Text style={styles.mintBadgeText}>{item.badgeText}</Text>
-        </View>
-      );
-    }
-    if (item.badgeText) {
-      return (
-        <View style={styles.neutralBadge}>
-          <Text style={styles.neutralBadgeText}>{item.badgeText}</Text>
-        </View>
-      );
-    }
-    if (item.iconType === 'bell') {
-      return <Bell size={16} color="#665F3D" />;
-    }
-    if (item.iconType === 'fitness') {
-      return <Activity size={16} color="#4C6452" />;
-    }
-    if (item.iconType === 'book') {
-      return <BookOpen size={16} color="#665F3D" />;
-    }
-    return null;
   };
 
-  const renderTimelinePin = () => {
-    if (isCompleted) {
-      return (
-        <View style={[styles.pinCircle, styles.pinCompleted]}>
-          <Check size={12} color="#2D5A37" strokeWidth={3} />
-        </View>
-      );
+  const catStyle = getCategoryStyles();
+
+  // Category-specific icon below time (always shows category icon, never replaced with a checkbox)
+  const renderCategoryIcon = () => {
+    const iconColor = isCompleted ? '#8E8D92' : catStyle.iconColor;
+    if (item.type === 'task') {
+      return <CheckCircle2 size={14} color={iconColor} strokeWidth={2.4} />;
     }
-    if (isInProgress) {
-      return (
-        <View style={[styles.pinCircle, styles.pinInProgress]}>
-          <View style={styles.pulsingDot} />
-        </View>
-      );
+    if (item.type === 'reminder') {
+      return <Bell size={14} color={iconColor} strokeWidth={2.2} />;
     }
-    if (isSpoken) {
-      return (
-        <View style={[styles.pinCircle, styles.pinSpoken]}>
-          <Mic size={11} color="#092012" strokeWidth={2.4} />
-        </View>
-      );
+    if (item.type === 'habit') {
+      return <Flame size={14} color={iconColor} strokeWidth={2.2} />;
     }
-    return (
-      <View style={[styles.pinCircle, styles.pinUpcoming]}>
-        <View style={styles.upcomingDot} />
-      </View>
-    );
+    if (item.isVoiceNudge) {
+      return <Mic size={14} color={iconColor} strokeWidth={2.4} />;
+    }
+    return <CheckCircle2 size={14} color={iconColor} strokeWidth={2.4} />;
   };
 
   return (
-    <View style={styles.rowContainer}>
-      {/* Vertical guideline rail */}
-      <View style={styles.guidelineWrapper}>
-        <View
-          style={[
-            styles.guideline,
-            isFirst && styles.guidelineFirst,
-            isLast && styles.guidelineLast,
-          ]}
-        />
-        {renderTimelinePin()}
-      </View>
-
-      {/* Content Card */}
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={() => onPressCard?.(item)}
-        style={[
-          styles.card,
-          isInProgress && styles.cardActiveRing,
-          isCompleted && styles.cardCompleted,
-        ]}
-      >
-        {/* Card Header */}
-        <View style={styles.cardHeader}>
+    <View style={styles.container}>
+      {/* ── Left Time & Indicator Column ── */}
+      <View style={styles.timeColumn}>
+        <View style={styles.timeTextContainer}>
           <Text
-            style={[
-              styles.timeCategory,
-              isCompleted && styles.timeCategoryCompleted,
-              isInProgress && styles.timeCategoryActive,
-            ]}
+            style={[styles.timeNumber, isCompleted && styles.timeCompletedText]}
           >
-            {item.time} • {item.category}
+            {timeNumber}
           </Text>
-          {renderBadge()}
+          <Text
+            style={[styles.timePeriod, isCompleted && styles.timeCompletedText]}
+          >
+            {timePeriod}
+          </Text>
         </View>
 
-        {/* Title */}
-        <Text
-          style={[styles.cardTitle, isCompleted && styles.cardTitleCompleted]}
-          numberOfLines={2}
-        >
-          {item.title}
-        </Text>
+        {/* Timeline connector line & node marker */}
+        <View style={styles.nodeColumn}>
+          {/* Vertical connecting line */}
+          <View
+            style={[
+              styles.timelineLine,
+              isFirst && styles.timelineLineFirst,
+              isLast && styles.timelineLineLast,
+            ]}
+          />
 
-        {/* Description */}
-        {item.description ? (
-          <Text style={styles.cardDesc}>{item.description}</Text>
-        ) : null}
-
-        {/* Quick action buttons for active in-progress items */}
-        {isInProgress && (
-          <View style={styles.actionsRow}>
-            <TouchableOpacity
-              activeOpacity={0.85}
-              onPress={() => onToggleComplete?.(item.id)}
-              style={styles.markCompleteBtn}
-            >
-              <Text style={styles.markCompleteText}>Mark Complete</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.85}
-              onPress={() => onExtendMinutes?.(item.id)}
-              style={styles.extendBtn}
-            >
-              <Text style={styles.extendText}>+15 mins</Text>
-            </TouchableOpacity>
+          {/* Node icon container (always keeps category icon and subtle border) */}
+          <View
+            style={[
+              styles.nodeCircle,
+              {
+                backgroundColor: isCompleted ? '#F7F6F2' : catStyle.iconBg,
+                borderColor: isCompleted ? '#E8E5DE' : catStyle.borderTint,
+              },
+            ]}
+          >
+            {renderCategoryIcon()}
           </View>
-        )}
+        </View>
+      </View>
+
+      {/* ── Right Content Card with Signature Inverted Corner Cutout ── */}
+      <TouchableOpacity
+        activeOpacity={0.88}
+        onLayout={handleCardLayout}
+        onPress={() =>
+          onPressCard ? onPressCard(item) : onToggleComplete?.(item)
+        }
+        style={styles.card}
+        accessibilityRole="button"
+        accessibilityLabel={`${item.title}, ${item.category}, scheduled for ${
+          item.time
+        }, ${isCompleted ? 'completed' : 'not completed'}`}
+      >
+        {/* SVG background shape with signature inverted top-right corner scoop */}
+        <Svg
+          width={cardSize.width}
+          height={cardSize.height}
+          style={styles.cardSvgBackground}
+          pointerEvents="none"
+        >
+          <Path
+            d={getCutoutCardPath(cardSize.width, cardSize.height)}
+            fill={isCompleted ? '#FAFAF8' : catStyle.bgTint}
+            stroke={isCompleted ? '#ECEAE4' : catStyle.borderTint}
+            strokeWidth={1.5}
+            strokeLinejoin="round"
+          />
+        </Svg>
+
+        {/* Leading vertical accent bar (Reference flow style) */}
+        <View
+          style={[
+            styles.accentBar,
+            { backgroundColor: isCompleted ? '#A0A4A8' : catStyle.accent },
+          ]}
+        />
+
+        {/* Floating Round Little Checkbox outside the card in the scooped cutout */}
+        <TouchableOpacity
+          activeOpacity={0.75}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          onPress={() => onToggleComplete?.(item)}
+          style={[
+            styles.floatingCheckbox,
+            isCompleted
+              ? styles.floatingCheckboxChecked
+              : [
+                  styles.floatingCheckboxUnchecked,
+                  { borderColor: catStyle.borderTint },
+                ],
+          ]}
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: isCompleted }}
+          accessibilityLabel={`Mark ${item.title} as ${
+            isCompleted ? 'incomplete' : 'complete'
+          }`}
+        >
+          {isCompleted ? (
+            <Check size={14} color="#1B9A72" strokeWidth={3} />
+          ) : null}
+        </TouchableOpacity>
+
+        <View style={styles.cardContent}>
+          {/* Title Row (with right padding so text never collides with floating top-right checkbox) */}
+          <View style={styles.cardTopRow}>
+            <Text
+              style={[styles.title, isCompleted && styles.titleCompleted]}
+              numberOfLines={2}
+            >
+              {item.title}
+            </Text>
+          </View>
+
+          {/* Subtitle / Context description */}
+          {item.subtitle ? (
+            <Text
+              style={[styles.subtitle, isCompleted && styles.subtitleCompleted]}
+              numberOfLines={2}
+            >
+              {item.subtitle}
+            </Text>
+          ) : null}
+
+          {/* Meta & Time-range Badges Row */}
+          <View style={styles.metaRow}>
+            {/* Time range pill (Reference style) */}
+            <View
+              style={[
+                styles.timePill,
+                { backgroundColor: isCompleted ? '#EEEEEE' : catStyle.pillBg },
+              ]}
+            >
+              <Clock
+                size={11}
+                color={isCompleted ? '#77767B' : catStyle.pillText}
+                style={{ marginRight: 4 }}
+              />
+              <Text
+                style={[
+                  styles.timePillText,
+                  { color: isCompleted ? '#77767B' : catStyle.pillText },
+                ]}
+              >
+                {item.timeRange || item.time}
+              </Text>
+            </View>
+
+            {/* Category or Streak 3D tactile badge matching design system */}
+            {item.streak ? (
+              <Badge
+                label={`${item.streak}d streak`}
+                variant="yellow"
+                size="sm"
+                icon={<Flame size={10} color="#B47804" />}
+              />
+            ) : item.type === 'reminder' ? (
+              <Badge
+                label={item.category || 'Reminder'}
+                variant={item.category === 'Alert' ? 'red' : 'green'}
+                size="sm"
+                icon={
+                  <Bell
+                    size={10}
+                    color={item.category === 'Alert' ? '#D92A0F' : '#1B9A72'}
+                  />
+                }
+              />
+            ) : item.isVoiceNudge ? (
+              <Badge
+                label="Voice Nudge"
+                variant="purple"
+                size="sm"
+                icon={<Sparkles size={10} color="#8383D6" />}
+              />
+            ) : (
+              <Badge
+                label={item.category}
+                variant={catStyle.badgeVariant}
+                size="sm"
+              />
+            )}
+          </View>
+        </View>
       </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  rowContainer: {
+  container: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'stretch',
     marginBottom: 12,
   },
-  guidelineWrapper: {
-    width: 32,
+  timeColumn: {
+    width: 68,
+    alignItems: 'center',
+    paddingTop: 4,
+    position: 'relative',
+  },
+  timeTextContainer: {
+    alignItems: 'center',
+    marginBottom: 6,
+  },
+  timeNumber: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 13,
+    color: '#1B1C19',
+    letterSpacing: -0.2,
+    lineHeight: 17,
+  },
+  timePeriod: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 10,
+    color: '#8E8D92',
+    lineHeight: 13,
+  },
+  timeCompletedText: {
+    color: '#A8A6A4',
+  },
+  nodeColumn: {
     alignItems: 'center',
     position: 'relative',
-    alignSelf: 'stretch',
+    flex: 1,
+    width: '100%',
   },
-  guideline: {
+  timelineLine: {
     position: 'absolute',
     top: 0,
-    bottom: 0,
+    bottom: -16,
     width: 2,
-    backgroundColor: '#E4E2DD',
+    backgroundColor: '#E6E3DC',
   },
-  guidelineFirst: {
-    top: 14,
+  timelineLineFirst: {
+    top: 10,
   },
-  guidelineLast: {
-    bottom: '60%',
+  timelineLineLast: {
+    bottom: '70%',
   },
-  pinCircle: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+  nodeCircle: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 14,
     zIndex: 2,
-    shadowColor: '#000',
+    marginTop: 2,
+    borderWidth: 1.5,
+    borderColor: '#FFFFFF',
+    shadowColor: '#000000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.08,
     shadowRadius: 2,
     elevation: 2,
   },
-  pinCompleted: {
-    backgroundColor: '#CCE6D0',
-  },
-  pinInProgress: {
-    backgroundColor: '#010102',
-  },
-  pulsingDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#FBF9F3',
-  },
-  pinSpoken: {
-    backgroundColor: '#CEE9D3',
-  },
-  pinUpcoming: {
-    backgroundColor: '#E4E2DD',
-  },
-  upcomingDot: {
-    width: 4,
-    height: 4,
-    borderRadius: 2,
-    backgroundColor: '#77767B',
-  },
   card: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 14,
-    shadowColor: '#1C1C1E',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 10,
-    elevation: 2,
-    borderWidth: 1,
-    borderColor: 'rgba(234, 232, 226, 0.7)',
+    flexDirection: 'row',
+    paddingVertical: 14,
+    paddingHorizontal: 14,
+    position: 'relative',
+    minHeight: 88,
+    backgroundColor: 'transparent',
+    ...Platform.select({
+      ios: {
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.12,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
-  cardActiveRing: {
-    borderColor: 'rgba(1, 1, 2, 0.12)',
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    elevation: 4,
+  cardSvgBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
   },
   cardCompleted: {
-    opacity: 0.85,
+    backgroundColor: 'transparent',
   },
-  cardHeader: {
-    flexDirection: 'row',
+  floatingCheckbox: {
+    position: 'absolute',
+    top: 9,
+    right: 9,
+    width: 26,
+    height: 26,
+    borderRadius: 13, // Perfectly round circular checkbox outside the card
+    borderWidth: 1.5,
     alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.12,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  floatingCheckboxChecked: {
+    backgroundColor: '#E8FDF0',
+    borderColor: '#52D22E',
+  },
+  floatingCheckboxUnchecked: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#ECE8DF',
+  },
+  // Retained alias for backwards compatibility
+  taskCheckbox: {
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    borderWidth: 1.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  taskCheckboxChecked: {
+    backgroundColor: '#E8FDF0',
+    borderColor: '#C6FFDD',
+  },
+  taskCheckboxUnchecked: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#ECE8DF',
+  },
+  accentBar: {
+    width: 3.5,
+    borderRadius: 2,
+    marginRight: 11,
+    alignSelf: 'stretch',
+  },
+  cardContent: {
+    flex: 1,
     justifyContent: 'space-between',
-    marginBottom: 6,
+    gap: 6,
   },
-  timeCategory: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
-    color: '#77767B',
+  cardTopRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    paddingRight: 48, // Guarantees title stays completely clear of the floating checkbox cutout
   },
-  timeCategoryCompleted: {
-    color: '#354C3B',
-  },
-  timeCategoryActive: {
-    color: '#010102',
+  title: {
+    flex: 1,
     fontFamily: Fonts.poppins.semiBold,
+    fontSize: 14,
+    color: '#1B1C19',
+    lineHeight: 19,
+    letterSpacing: -0.2,
   },
-  workBadge: {
+  titleCompleted: {
+    color: '#8E8D92',
+  },
+  subtitle: {
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 12,
+    color: '#666665',
+    lineHeight: 16,
+  },
+  subtitleCompleted: {
+    color: '#A09F9E',
+  },
+  metaRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    flexWrap: 'wrap',
+    gap: 8,
+    marginTop: 2,
   },
-  workBadgeText: {
+  timePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 8,
+    paddingVertical: 3.5,
+    borderRadius: 10,
+  },
+  timePillText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 11,
-    color: '#46464A',
+    letterSpacing: -0.1,
+  },
+  streakBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FEF7E8',
+    paddingHorizontal: 7,
+    paddingVertical: 3.5,
+    borderRadius: 10,
+  },
+  streakBadgeText: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 10.5,
+    color: '#9C6E10',
   },
   voicePrepBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    backgroundColor: '#EDE3B8',
-    paddingHorizontal: 8,
-    paddingVertical: 2.5,
+    backgroundColor: '#F1EFFF',
+    paddingHorizontal: 7,
+    paddingVertical: 3.5,
     borderRadius: 10,
   },
   voicePrepBadgeText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10,
-    color: '#201C02',
+    fontSize: 10.5,
+    color: '#6351B5',
   },
-  mintBadge: {
-    backgroundColor: '#CEE9D3',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
+  categoryBadge: {
+    backgroundColor: '#F4F2EC',
+    paddingHorizontal: 7,
+    paddingVertical: 3.5,
     borderRadius: 10,
   },
-  mintBadgeText: {
+  categoryBadgeText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10,
-    color: '#092012',
-  },
-  neutralBadge: {
-    backgroundColor: '#F0EEE8',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 10,
-  },
-  neutralBadgeText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 10,
-    color: '#77767B',
-  },
-  cardTitle: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 15,
-    color: '#1B1C19',
-    lineHeight: 20,
-  },
-  cardTitleCompleted: {
-    textDecorationLine: 'line-through',
-    color: '#77767B',
-  },
-  cardDesc: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
-    lineHeight: 17,
-    color: '#5F5E60',
-    marginTop: 3,
-  },
-  actionsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginTop: 12,
-  },
-  markCompleteBtn: {
-    backgroundColor: '#010102',
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 20,
-  },
-  markCompleteText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
-    color: '#FFFFFF',
-  },
-  extendBtn: {
-    backgroundColor: '#F0EEE8',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-  },
-  extendText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
-    color: '#1B1C19',
+    fontSize: 10.5,
+    color: '#6E6B65',
   },
 });
 

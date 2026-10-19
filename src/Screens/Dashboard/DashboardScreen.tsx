@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import {
   View,
   Text,
@@ -7,104 +7,56 @@ import {
   ScrollView,
   StatusBar,
   Platform,
-  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  Sparkles,
-  Sun,
-  SlidersHorizontal,
-  RotateCcw,
-  Plus,
-  Mic,
-} from 'lucide-react-native';
+import { Sparkles, Sun, Settings, Mic, Calendar } from 'lucide-react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../../Theme/fonts';
+import { Colors } from '../../Assets/StyleUtilities/Colors';
 import { SVGS } from '../../Assets/Images';
+import { RegiusLogo } from '../../Common/RegiusLogo';
+import { Badge } from '../../Common/Badge';
 import { useTaskReminder } from '../../Context/TaskReminderContext';
 import { useVoiceWakeWord } from '../../Context/VoiceWakeWordContext';
 import DailyBriefingCard from './Components/DailyBriefingCard';
 import DailyBalanceGrid from './Components/DailyBalanceGrid';
 import TimelineItemCard, { TimelineItem } from './Components/TimelineItemCard';
-import VoiceAssistantSheet from './Components/VoiceAssistantSheet';
 
-type FlowFilter = 'all' | 'tasks' | 'habits' | 'voice';
+type FlowFilter = 'all' | 'tasks' | 'habits' | 'reminders' | 'voice';
 
-const CURATED_DEFAULT_FLOW: TimelineItem[] = [
-  {
-    id: 'flow-1',
-    time: '07:30 AM',
-    category: 'Habit Completed',
-    title: 'Morning Sunlight & 500ml Water',
-    description: 'Natural cortisol reset completed on porch',
-    status: 'completed',
-    badgeType: 'mint',
-    badgeText: 'Hydrated',
-  },
-  {
-    id: 'flow-2',
-    time: '09:00 AM',
-    category: 'In Progress',
-    title: 'Email & Inbox Zero Flow',
-    description: 'Processed 14 critical communications. Focus block active.',
-    status: 'in_progress',
-    badgeType: 'work',
-  },
-  {
-    id: 'flow-3',
-    time: '11:30 AM',
-    category: 'Strategy',
-    title: 'Weekly Team Strategy & Review',
-    description: 'Aria will chime 5 minutes prior with talking points.',
-    status: 'upcoming',
-    badgeType: 'voice_prep',
-  },
-  {
-    id: 'flow-4',
-    time: '01:15 PM',
-    category: 'Mindful Habit',
-    title: '20-min Posture & Breath Reset',
-    description: 'Gentle audio chime and guided diaphragmatic breathing.',
-    status: 'upcoming',
-    iconType: 'bell',
-  },
-  {
-    id: 'flow-5',
-    time: '03:00 PM',
-    category: 'Spoken Check-in',
-    title: 'Hydration & Energy Alignment',
-    description:
-      'Aria prompts via earbuds: status on water goal & mental clarity.',
-    status: 'spoken_checkin',
-    badgeText: 'Scheduled',
-  },
-  {
-    id: 'flow-6',
-    time: '06:00 PM',
-    category: 'Fitness',
-    title: 'Evening 5km Mindful Pace Run',
-    description: 'Lakeside route • Music & breathing focus.',
-    status: 'upcoming',
-    iconType: 'fitness',
-  },
-  {
-    id: 'flow-7',
-    time: '08:30 PM',
-    category: 'Wind Down',
-    title: 'Read 15 Pages of Philosophy',
-    description: 'Soft lighting, screen-free wind down.',
-    status: 'upcoming',
-    iconType: 'book',
-  },
-];
+/**
+ * Robustly parses a 12-hour or 24-hour time string into total minutes since midnight.
+ * e.g., "07:30 AM" -> 450, "01:15 PM" -> 795, undefined -> 9999.
+ */
+function parseTimeToMinutes(timeStr?: string): number {
+  if (!timeStr) return 9999;
+  const clean = timeStr.trim().toUpperCase();
+  const match = clean.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/);
+  if (!match) return 9999;
+
+  let hours = parseInt(match[1], 10);
+  const minutes = parseInt(match[2], 10);
+  const modifier = match[3];
+
+  if (modifier === 'PM' && hours < 12) hours += 12;
+  if (modifier === 'AM' && hours === 12) hours = 0;
+
+  return hours * 60 + minutes;
+}
 
 export const DashboardScreen: React.FC = () => {
   const navigation = useNavigation<any>();
-  const { tasks, toggleTask, reminders, openTaskModal } = useTaskReminder();
-  const { openAssistant, triggerWakeWord, startWakeWordListening } =
-    useVoiceWakeWord();
+  const { tasks, toggleTask, reminders, toggleReminder, habits, toggleHabit } =
+    useTaskReminder();
+
+  const {
+    assistantName,
+    openAssistant,
+    triggerWakeWord,
+    startWakeWordListening,
+  } = useVoiceWakeWord();
 
   useFocusEffect(
     useCallback(() => {
@@ -113,11 +65,6 @@ export const DashboardScreen: React.FC = () => {
   );
 
   const [activeFilter, setActiveFilter] = useState<FlowFilter>('all');
-  const [timelineItems, setTimelineItems] =
-    useState<TimelineItem[]>(CURATED_DEFAULT_FLOW);
-
-  // Reshuffle rotation animation
-  const rotateAnim = useRef(new Animated.Value(0)).current;
 
   // Format dynamic greeting based on time of day
   const greeting = useMemo(() => {
@@ -137,106 +84,143 @@ export const DashboardScreen: React.FC = () => {
     return new Date().toLocaleDateString('en-US', options).toUpperCase();
   }, []);
 
-  // Computed metrics
+  // Compute real metrics from context data in standard sequence: Tasks, Reminders, Habits
   const completedTasksCount = useMemo(
     () => tasks.filter(t => t.done).length,
     [tasks],
   );
+  const completedRemindersCount = useMemo(
+    () => reminders.filter(r => r.done).length,
+    [reminders],
+  );
   const completedHabitsCount = useMemo(
-    () => timelineItems.filter(i => i.status === 'completed').length,
-    [timelineItems],
+    () => habits.filter(h => h.completed).length,
+    [habits],
   );
 
-  // Merged and filtered flow
+  // Combine tasks, reminders, and habits into a single unified chronological timeline
+  const unifiedTimeline = useMemo<TimelineItem[]>(() => {
+    const items: TimelineItem[] = [];
+
+    // 1. Tasks (Gold/Yellow theme matching Daily Balance)
+    tasks.forEach(t => {
+      items.push({
+        id: `task-${t.id}`,
+        originalId: t.id,
+        type: 'task',
+        time: t.time || '',
+        timeMinutes: parseTimeToMinutes(t.time),
+        title: t.label,
+        subtitle: t.note,
+        category: 'Task',
+        accentColor: '#F5C518',
+        completed: t.done,
+        isVoiceNudge: !!t.voiceNudge,
+      });
+    });
+
+    // 2. Reminders (Green theme matching Daily Balance)
+    reminders.forEach(r => {
+      items.push({
+        id: `reminder-${r.id}`,
+        originalId: r.id,
+        type: 'reminder',
+        time: r.time || '12:00 PM',
+        timeMinutes: parseTimeToMinutes(r.time || '12:00 PM'),
+        title: r.title,
+        subtitle: r.notes,
+        category: r.category
+          ? r.category.charAt(0).toUpperCase() + r.category.slice(1)
+          : r.urgentAlarm
+          ? 'Alert'
+          : 'Reminder',
+        accentColor: '#1B9A72',
+        completed: r.done,
+        isVoiceNudge: false,
+      });
+    });
+
+    // 3. Habits (Lavender Purple theme matching Daily Balance)
+    habits.forEach(h => {
+      items.push({
+        id: `habit-${h.id}`,
+        originalId: h.id,
+        type: 'habit',
+        time: h.timeOfDay || '08:00 AM',
+        timeMinutes: parseTimeToMinutes(h.timeOfDay || '08:00 AM'),
+        title: h.title,
+        subtitle: `${h.frequency} • ${h.streak}d streak`,
+        category: 'Habit',
+        accentColor: '#8383D6',
+        completed: h.completed,
+        streak: h.streak,
+      });
+    });
+
+    // Stable chronological sort: scheduled items first by time, then alphabetical by title
+    return items.sort((a, b) => {
+      if (a.timeMinutes !== b.timeMinutes) {
+        return a.timeMinutes - b.timeMinutes;
+      }
+      return a.title.localeCompare(b.title);
+    });
+  }, [tasks, reminders, habits]);
+
+  // Filter without modifying order
   const filteredTimeline = useMemo(() => {
-    return timelineItems.filter(item => {
-      if (activeFilter === 'tasks') {
-        return (
-          item.category.toLowerCase().includes('in progress') ||
-          item.badgeType === 'work'
-        );
-      }
-      if (activeFilter === 'habits') {
-        return (
-          item.category.toLowerCase().includes('habit') ||
-          item.category.toLowerCase().includes('fitness') ||
-          item.category.toLowerCase().includes('wind down')
-        );
-      }
-      if (activeFilter === 'voice') {
-        return (
-          item.status === 'spoken_checkin' ||
-          item.badgeType === 'voice_prep' ||
-          item.category.toLowerCase().includes('strategy')
-        );
-      }
+    return unifiedTimeline.filter(item => {
+      if (activeFilter === 'tasks') return item.type === 'task';
+      if (activeFilter === 'habits') return item.type === 'habit';
+      if (activeFilter === 'reminders' || (activeFilter as string) === 'voice')
+        return item.type === 'reminder';
       return true;
     });
-  }, [timelineItems, activeFilter]);
+  }, [unifiedTimeline, activeFilter]);
 
-  // Handle Mark Complete toggle
-  const handleToggleComplete = (id: string) => {
-    setTimelineItems(prev =>
-      prev.map(item => {
-        if (item.id === id) {
-          const nextStatus =
-            item.status === 'completed' ? 'in_progress' : 'completed';
-          return {
-            ...item,
-            status: nextStatus,
-            category: nextStatus === 'completed' ? 'Completed' : 'In Progress',
-          };
-        }
-        return item;
-      }),
-    );
-    Toast.show({
-      type: 'success',
-      text1: 'Task Updated',
-      text2: 'Great job maintaining your daily focus streak!',
-    });
-  };
+  // Scheduled vs Unscheduled partition
+  const scheduledItems = useMemo(
+    () => filteredTimeline.filter(i => i.timeMinutes < 9999),
+    [filteredTimeline],
+  );
 
-  // Handle +15 mins extension
-  const handleExtendMinutes = (id: string) => {
-    Toast.show({
-      type: 'info',
-      text1: 'Focus Extended',
-      text2: 'Added +15 minutes to your current flow session.',
-    });
-  };
+  const unscheduledItems = useMemo(
+    () => filteredTimeline.filter(i => i.timeMinutes >= 9999),
+    [filteredTimeline],
+  );
 
-  // Handle Reshuffle / Optimization
-  const handleReshuffle = () => {
-    Animated.timing(rotateAnim, {
-      toValue: 1,
-      duration: 600,
-      useNativeDriver: true,
-    }).start(() => {
-      rotateAnim.setValue(0);
-    });
+  // Handle Mark Complete toggle across data models
+  const handleToggleComplete = useCallback(
+    (item: TimelineItem) => {
+      if (item.type === 'task') {
+        toggleTask(item.originalId);
+      } else if (item.type === 'habit') {
+        toggleHabit(item.originalId);
+      } else if (item.type === 'reminder') {
+        toggleReminder(item.originalId);
+      }
 
-    // Reorder flow intelligently
-    setTimelineItems(prev => {
-      const items = [...prev];
-      const inProg = items.filter(i => i.status === 'in_progress');
-      const upcoming = items.filter(i => i.status === 'upcoming');
-      const spoken = items.filter(i => i.status === 'spoken_checkin');
-      const completed = items.filter(i => i.status === 'completed');
-      return [...completed, ...inProg, ...spoken, ...upcoming];
-    });
+      Toast.show({
+        type: 'success',
+        text1: `${item.category} Updated`,
+        text2: item.completed
+          ? 'Marked as incomplete'
+          : 'Great job maintaining your daily focus streak!',
+      });
+    },
+    [toggleTask, toggleHabit, toggleReminder],
+  );
 
-    Toast.show({
-      type: 'success',
-      text1: 'Aria Curated Flow',
-      text2: 'Timeline re-sequenced around your peak cognitive energy.',
-    });
-  };
-
-  const spin = rotateAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
+  // Handle Card Tap
+  const handlePressCard = useCallback(
+    (item: TimelineItem) => {
+      if (item.isVoiceNudge) {
+        openAssistant();
+      } else {
+        handleToggleComplete(item);
+      }
+    },
+    [openAssistant, handleToggleComplete],
+  );
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top']}>
@@ -250,32 +234,42 @@ export const DashboardScreen: React.FC = () => {
       {/* ── Fixed Header ── */}
       <View style={styles.header}>
         <View style={styles.headerLeft}>
-          <Text style={styles.brandTitle}>Regius</Text>
+          <RegiusLogo size="md" variant="default" />
         </View>
 
         <View style={styles.headerRight}>
+          {/* Small Holographic Voice Button */}
           <TouchableOpacity
-            activeOpacity={0.7}
+            activeOpacity={0.75}
             onPress={() => triggerWakeWord()}
             style={styles.voiceHeaderBtn}
+            accessibilityRole="button"
             accessibilityLabel="Hey Regius Voice Assistant"
+            hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
           >
-            <Mic size={18} color="#2D5A37" />
+            <View style={styles.voiceHeaderGlow} />
+            <Mic size={16} color="#7059C8" strokeWidth={2.4} />
           </TouchableOpacity>
 
+          {/* Proper Settings Gear Button */}
           <TouchableOpacity
-            activeOpacity={0.7}
+            activeOpacity={0.75}
             onPress={() => navigation.navigate('Settings')}
-            style={styles.tuneButton}
-            accessibilityLabel="Filter or customize flow"
+            style={styles.settingsBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Open Settings"
+            hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
           >
-            <SlidersHorizontal size={18} color="#1B1C19" />
+            <Settings size={18} color="#1B1C19" strokeWidth={2} />
           </TouchableOpacity>
 
+          {/* Profile Avatar with signature RingBorder (exact match to HomeScreen) */}
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => navigation.navigate('Settings')}
-            style={styles.avatarButton}
+            style={styles.avatarRing}
+            accessibilityRole="button"
+            accessibilityLabel="User Profile"
           >
             <SVGS.RegiusAvatar width={36} height={36} />
           </TouchableOpacity>
@@ -287,13 +281,15 @@ export const DashboardScreen: React.FC = () => {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* ── Greeting & Assistant State ── */}
+        {/* ── Greeting & Ambient Assistant State ── */}
         <View style={styles.greetingSection}>
           <View style={styles.stateRow}>
-            <View style={styles.ariaActiveBadge}>
-              <Sparkles size={13} color="#2D5A37" />
-              <Text style={styles.ariaActiveText}>Aria Flow Active</Text>
-            </View>
+            <Badge
+              label={`${assistantName} Flow Active`}
+              variant="green"
+              size="md"
+              icon={<Sparkles size={12} color="#1B9A72" />}
+            />
 
             <View style={styles.ambientStatus}>
               <Sun size={15} color="#665F3D" />
@@ -307,56 +303,47 @@ export const DashboardScreen: React.FC = () => {
           <Text style={styles.greetingText}>{greeting}</Text>
         </View>
 
-        {/* ── Aria Voice Briefing Banner ── */}
+        {/* ── Dynamic Voice Briefing Banner (Playable Audio) ── */}
         <DailyBriefingCard
           taskCount={tasks.length}
-          habitCount={timelineItems.length}
           reminderCount={reminders.length}
+          habitCount={habits.length}
+          assistantName={assistantName}
           onOpenVoiceAssistant={() => openAssistant()}
         />
 
         {/* ── Daily Balance & Energy Gauge (Bento Grid) ── */}
         <DailyBalanceGrid
           tasksCompleted={completedTasksCount}
-          tasksTotal={tasks.length > 0 ? tasks.length : 4}
+          tasksTotal={tasks.length}
+          remindersCompleted={completedRemindersCount}
+          remindersTotal={reminders.length}
           habitsCompleted={completedHabitsCount}
-          habitsTotal={timelineItems.length}
-          nudgesCount={reminders.length > 0 ? reminders.length : 2}
+          habitsTotal={habits.length}
           onPressTasks={() => navigation.navigate('Tasks')}
-          onPressHabits={() => setActiveFilter('habits')}
-          onPressNudges={() => openAssistant()}
+          onPressReminders={() => navigation.navigate('Reminders')}
+          onPressHabits={() => navigation.navigate('Habits')}
         />
 
         {/* ── Today's Curated Flow Timeline ── */}
         <View style={styles.flowSection}>
           <View style={styles.flowHeader}>
             <View>
-              <Text style={styles.flowTitle}>Today's Curated Flow</Text>
+              <Text style={styles.flowTitle}>Today’s Curated Flow</Text>
               <Text style={styles.flowSubtitle}>
                 Sequenced around your peak clarity
               </Text>
             </View>
-
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={handleReshuffle}
-              style={styles.reshuffleBtn}
-            >
-              <Animated.View style={{ transform: [{ rotate: spin }] }}>
-                <RotateCcw size={14} color="#1B1C19" />
-              </Animated.View>
-              <Text style={styles.reshuffleText}>Reshuffle</Text>
-            </TouchableOpacity>
           </View>
 
-          {/* Filter Pills */}
+          {/* Filter Pills in Standard Sequence: All, Tasks, Reminders, Habits */}
           <View style={styles.filterRow}>
             {(
               [
                 { key: 'all', label: 'All Flow' },
                 { key: 'tasks', label: 'Tasks' },
+                { key: 'reminders', label: 'Reminders' },
                 { key: 'habits', label: 'Habits' },
-                { key: 'voice', label: 'Voice Nudges' },
               ] as const
             ).map(f => {
               const isActive = activeFilter === f.key;
@@ -369,6 +356,9 @@ export const DashboardScreen: React.FC = () => {
                     styles.filterPill,
                     isActive && styles.filterPillActive,
                   ]}
+                  accessibilityRole="tab"
+                  accessibilityState={{ selected: isActive }}
+                  accessibilityLabel={`Filter by ${f.label}`}
                 >
                   <Text
                     style={[
@@ -383,51 +373,52 @@ export const DashboardScreen: React.FC = () => {
             })}
           </View>
 
-          {/* Timeline Nodes List */}
+          {/* Chronological Timeline Nodes List */}
           <View style={styles.timelineList}>
-            {filteredTimeline.map((item, idx) => (
+            {scheduledItems.map((item, idx) => (
               <TimelineItemCard
                 key={item.id}
                 item={item}
                 isFirst={idx === 0}
-                isLast={idx === filteredTimeline.length - 1}
+                isLast={
+                  idx === scheduledItems.length - 1 &&
+                  unscheduledItems.length === 0
+                }
                 onToggleComplete={handleToggleComplete}
-                onExtendMinutes={handleExtendMinutes}
-                onPressCard={selected => {
-                  if (selected.status === 'spoken_checkin') {
-                    openAssistant();
-                  } else {
-                    handleToggleComplete(selected.id);
-                  }
-                }}
+                onPressCard={handlePressCard}
               />
             ))}
+
+            {/* Unscheduled / Any time section if applicable */}
+            {unscheduledItems.length > 0 && (
+              <View style={styles.unscheduledSection}>
+                <View style={styles.unscheduledHeaderRow}>
+                  <Calendar
+                    size={14}
+                    color="#77767B"
+                    style={{ marginRight: 6 }}
+                  />
+                  <Text style={styles.unscheduledHeaderText}>
+                    Unscheduled / Any Time
+                  </Text>
+                </View>
+                {unscheduledItems.map((item, idx) => (
+                  <TimelineItemCard
+                    key={item.id}
+                    item={item}
+                    isFirst={scheduledItems.length === 0 && idx === 0}
+                    isLast={idx === unscheduledItems.length - 1}
+                    onToggleComplete={handleToggleComplete}
+                    onPressCard={handlePressCard}
+                  />
+                ))}
+              </View>
+            )}
           </View>
         </View>
 
-        {/* ── Bottom Quick Action Trigger Bar ── */}
-        <View style={styles.actionTriggersRow}>
-          <TouchableOpacity
-            activeOpacity={0.88}
-            onPress={openTaskModal}
-            style={styles.addFlowBtn}
-          >
-            <Plus size={18} color="#FFFFFF" strokeWidth={2.4} />
-            <Text style={styles.addFlowBtnText}>Add to Today’s Flow</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            activeOpacity={0.88}
-            onPress={() => openAssistant()}
-            style={styles.voiceAssistantBtn}
-            accessibilityLabel="Ask Aria Voice Assistant"
-          >
-            <Mic size={20} color="#665F3D" strokeWidth={2.2} />
-          </TouchableOpacity>
-        </View>
-
-        {/* Extra bottom padding to avoid overlapping floating tab bar */}
-        <View style={{ height: 96 }} />
+        {/* Clean bottom padding to ensure final item scrolls comfortably above bottom tabs */}
+        <View style={{ height: 100 }} />
       </ScrollView>
     </SafeAreaView>
   );
@@ -439,7 +430,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FBF9F3',
   },
   header: {
-    height: 54,
+    height: 52,
     paddingHorizontal: 20,
     flexDirection: 'row',
     alignItems: 'center',
@@ -450,41 +441,58 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  brandTitle: {
-    fontFamily: Fonts.ranade.bold,
-    fontSize: 26,
-    color: '#1B1C19',
-    letterSpacing: -0.4,
-  },
   headerRight: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
   },
   voiceHeaderBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: '#CCE6D0',
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: 'rgba(131, 131, 214, 0.12)',
+    borderWidth: 1,
+    borderColor: 'rgba(131, 131, 214, 0.35)',
     alignItems: 'center',
     justifyContent: 'center',
+    position: 'relative',
+    shadowColor: '#8383D6',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.22,
+    shadowRadius: 5,
+    elevation: 3,
   },
-  tuneButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: '#F0EEE8',
+  voiceHeaderGlow: {
+    position: 'absolute',
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(131, 131, 214, 0.08)',
+  },
+  settingsBtn: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#ECE8DF',
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 3,
+    elevation: 1,
   },
-  avatarButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+  avatarRing: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    borderWidth: 2,
+    borderColor: Colors.RingBorder,
+    alignItems: 'center',
+    justifyContent: 'center',
     overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#010102',
   },
   scroll: {
     flex: 1,
@@ -500,20 +508,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: 10,
   },
   ariaActiveBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
     backgroundColor: '#CCE6D0',
     paddingHorizontal: 10,
-    paddingVertical: 3.5,
-    borderRadius: 14,
+    paddingVertical: 5,
+    borderRadius: 20,
+    gap: 5,
   },
   ariaActiveText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 11.5,
     color: '#2D5A37',
   },
   ambientStatus: {
@@ -523,25 +531,24 @@ const styles = StyleSheet.create({
   },
   ambientStatusText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
-    color: '#77767B',
+    fontSize: 12,
+    color: '#665F3D',
   },
   dateText: {
-    fontFamily: Fonts.poppins.semiBold,
+    fontFamily: Fonts.poppins.medium,
     fontSize: 12,
     color: '#77767B',
     letterSpacing: 0.8,
-    marginTop: 4,
+    marginBottom: 2,
   },
   greetingText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 26,
+    fontSize: 27,
     color: '#1B1C19',
     letterSpacing: -0.5,
-    marginTop: 2,
   },
   flowSection: {
-    marginBottom: 24,
+    marginBottom: 16,
   },
   flowHeader: {
     flexDirection: 'row',
@@ -550,7 +557,7 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   flowTitle: {
-    fontFamily: Fonts.poppins.bold,
+    fontFamily: Fonts.poppins.semiBold,
     fontSize: 18,
     color: '#1B1C19',
     letterSpacing: -0.2,
@@ -559,88 +566,50 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.regular,
     fontSize: 12,
     color: '#77767B',
-    marginTop: 2,
-  },
-  reshuffleBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: '#F0EEE8',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-  },
-  reshuffleText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11.5,
-    color: '#1B1C19',
+    marginTop: 1,
   },
   filterRow: {
     flexDirection: 'row',
     gap: 8,
-    marginBottom: 16,
+    marginBottom: 18,
   },
   filterPill: {
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 14,
-    backgroundColor: '#F0EEE8',
+    paddingHorizontal: 13,
+    paddingVertical: 6,
+    borderRadius: 20,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#ECE8DF',
   },
   filterPillActive: {
-    backgroundColor: '#1C1C1E',
+    backgroundColor: '#1B1C19',
+    borderColor: '#1B1C19',
   },
   filterPillText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
-    color: '#77767B',
+    fontSize: 12,
+    color: '#666665',
   },
   filterPillTextActive: {
     color: '#FFFFFF',
-    fontFamily: Fonts.poppins.semiBold,
   },
   timelineList: {
-    marginTop: 4,
+    position: 'relative',
   },
-  actionTriggersRow: {
+  unscheduledSection: {
+    marginTop: 12,
+  },
+  unscheduledHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    marginTop: 8,
+    paddingVertical: 8,
+    paddingLeft: 4,
+    marginBottom: 4,
   },
-  addFlowBtn: {
-    flex: 1,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#010102',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.16,
-    shadowRadius: 12,
-    elevation: 6,
-  },
-  addFlowBtnText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14,
-    color: '#FFFFFF',
-  },
-  voiceAssistantBtn: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 1,
-    borderColor: '#EAE8E2',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 6,
-    elevation: 3,
+  unscheduledHeaderText: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 12,
+    color: '#77767B',
   },
 });
 

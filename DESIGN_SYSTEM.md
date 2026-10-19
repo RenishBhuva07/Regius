@@ -48,15 +48,18 @@ Regius embraces **Modern Warm Luxury & Mindful Productivity** (_"Plan Your Day I
 
 ### 2.3 Category Trios & Semantic Accents
 
-Every major category or card type pairs 4 harmonized color values:
+Every major category or card type pairs 4 harmonized color values, structured according to the **Universal Product Navigation & Metric Sequence Standard**:
 
-| Category            | Bg Tint (`bgColor`) | Border Tint (`borderColor`) | Vibrant Accent / Icon       | Drop Shadow Glow (`shadowColor`) |
-| :------------------ | :------------------ | :-------------------------- | :-------------------------- | :------------------------------- |
-| **Works / Tasks**   | `#FFFCEB`           | `#FFF5B8`                   | `#F5C518` / `#FFE600`       | `#F5C518` (Gold Glow)            |
-| **Sport / Health**  | `#EDFDF5`           | `#C6FFDD`                   | `#52D22E` / `#21AF85`       | `#52D22E` (Fresh Green Glow)     |
-| **Habits / Brand**  | `#EFF2FE`           | `#D8DBFF`                   | `#8383D6` (Lavender Purple) | `#8383D6` (Lavender Glow)        |
-| **Events / Alerts** | `#FFF3E0`           | `#FFE0B2`                   | `#FF9800` (Amber)           | `#FF9800` (Amber Glow)           |
-| **Danger / Delete** | `#FEEFEF`           | `#FED6D6`                   | `#FF3B30` / `#D92A0F`       | `#FF3B30` (Crimson Glow)         |
+> **Universal Product Hierarchy**: **1. Tasks** (Works / Gold-Yellow) → **2. Reminders** (Alerts & Nudges / Mint-Green) → **3. Habits** (Mindful Routines / Lavender-Purple).  
+> This order is enforced across all surfaces: Bottom Tab Bar (`Dashboard` → `Tasks` → `[+]` → `Reminders` → `Habits`), Daily Balance Grid (`Tasks` → `Reminders` → `Habits`), Flow Filters (`All Flow` → `Tasks` → `Reminders` → `Habits`), and Dynamic Assistant Spoken Briefings.
+
+| Sequence & Category      | Bg Tint (`bgColor`) | Border Tint (`borderColor`) | Vibrant Accent / Icon             | Drop Shadow Glow (`shadowColor`) |
+| :----------------------- | :------------------ | :-------------------------- | :-------------------------------- | :------------------------------- |
+| **1. Works / Tasks**     | `#FFFCEB`           | `#FFF5B8`                   | `#F5C518` / `#FFE600` / `#B48216` | `#F5C518` (Gold Glow)            |
+| **2. Sport / Reminders** | `#EDFDF5`           | `#C6FFDD`                   | `#1B9A72` / `#52D22E`             | `#52D22E` (Fresh Green Glow)     |
+| **3. Habits / Brand**    | `#EFF2FE`           | `#D8DBFF`                   | `#8383D6` (Lavender Purple)       | `#8383D6` (Lavender Glow)        |
+| **4. Events / Alerts**   | `#FFF3E0`           | `#FFE0B2`                   | `#FF9800` (Amber)                 | `#FF9800` (Amber Glow)           |
+| **5. Danger / Delete**   | `#FEEFEF`           | `#FED6D6`                   | `#FF3B30` / `#D92A0F`             | `#FF3B30` (Crimson Glow)         |
 
 ### 2.4 Typography Foregrounds
 
@@ -113,6 +116,20 @@ import { Badge } from '../Common/Badge';
 <Badge label="HIGH FOCUS" variant="purple" size="lg" />
 ```
 
+### 4.2 Reusable Regius Brand Wordmark (`src/Common/RegiusLogo.tsx`)
+
+A distinctive, polished typographic wordmark preserving the artisanal luxury identity:
+
+- **Font**: `Ranade-Bold` with precision optical letter spacing.
+- **Sizes**: `'sm'` (18px), `'md'` (24px, default for headers), `'lg'` (30px), `'xl'` (36px, splash display).
+- **Variants**: `'default'` (`#1B1C19`), `'dark'` (`Colors.MidnightCharcoal`), `'light'` (`#FFFFFF`), `'gold'` (`#B38F48`), `'muted'` (`Colors.SlateGraphiteText`).
+
+```tsx
+import { RegiusLogo } from '../Common/RegiusLogo';
+
+<RegiusLogo size="md" variant="default" />;
+```
+
 #### Anatomy of a 3D Badge:
 
 1. **Full Pill Geometry**: `borderRadius: 20` (`sm`/`md`) or `24` (`lg`).
@@ -152,11 +169,12 @@ Primary buttons follow full-pill geometry (`borderRadius: 28`) and tactile debou
 
 ---
 
-### 4.3 Signature Asymmetric Category Cards
+### 4.3 Signature Asymmetric Category & Bento Cards
 
-Used for Category Carousels in `HomeScreen`, `TasksScreen`, `RemindersScreen`, and `PlusActionSheet`:
+Used for Category Carousels in `HomeScreen`, `TasksScreen`, `RemindersScreen`, `PlusActionSheet`, and Bento Metric Cards in `DashboardScreen` (`DailyBalanceGrid.tsx`):
 
 ```tsx
+// Category Carousel Card (HomeScreen / TasksScreen)
 categoryCard: {
   width: 124,
   borderRadius: 23,
@@ -167,31 +185,56 @@ categoryCard: {
   backgroundColor: cat.bgColor, // e.g. #FFFCEB, #EDFDF5, #EFF2FE
   position: 'relative',
 }
+
+// Daily Balance Bento Metric Card (DashboardScreen / DailyBalanceGrid.tsx)
+metricCard: {
+  flex: 1,
+  minWidth: 0,
+  borderRadius: 20,
+  borderTopRightRadius: 38, // Scaled asymmetric curve
+  padding: 13,
+  paddingBottom: 15,
+  borderWidth: 1.5,
+  justifyContent: 'space-between',
+  minHeight: 110,
+  position: 'relative',
+  overflow: 'hidden',
+}
 ```
 
-- **Inner Icon Circle**: `46x46` circular white container (`borderRadius: 23`, `backgroundColor: '#FFFFFF'`) with a `1.5px` tinted border matching category accent.
-- **Bottom Accent Pill**: Centered accent indicator bar (`height: 4`, `width: 48`, `borderTopLeftRadius: 3`, `borderTopRightRadius: 3`, `backgroundColor: cat.accentColor`).
-- **Colored Glow Shadow (iOS)**: `shadowOffset: { width: 0, height: 8 }`, `shadowOpacity: 0.38`, `shadowRadius: 14`, `shadowColor: cat.shadowColor`.
+- **4-Facet Coordinated Ecosystem**:
+  1. Soft Pastel Background (`#FFFCEB` Tasks, `#EFF2FE` Habits, `#EDFDF5` Sport/Wellness/Reminders)
+  2. Matching Pastel Border (`#FFF5B8`, `#D8DBFF`, `#C6FFDD`)
+  3. Elevated Circular White Icon Wrap (`32x32` or `46x46`, `backgroundColor: '#FFFFFF'`, with border & shadow matching category)
+  4. Matching Colored Glow Shadow (`shadowColor: #F5C518`, `#8383D6`, `#52D22E`, `elevation: 3`)
+- **Bottom Accent Pill**: Centered accent indicator bar (`height: 3.5-4`, `width: 36-48`, `borderTopLeftRadius: 3`, `borderTopRightRadius: 3`, `backgroundColor: cat.accentColor`).
 
 ---
 
-### 4.4 Clean Elevated Task & Reminder Cards
+### 4.4 Clean Elevated Task & Curated Flow Cards
 
-Used for list items in `TasksScreen`, `RemindersScreen`, and `DashboardScreen`:
+Used for list items in `HomeScreen`, `TasksScreen`, `RemindersScreen`, and `DashboardScreen` (`TimelineItemCard.tsx`):
 
-- **Surface**: `#FFFFFF` (`borderRadius: 18`)
-- **Ambient Shadow**:
-  ```tsx
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.04,
-  shadowRadius: 8,
-  elevation: 1.5,
-  ```
-- **Custom Tactile Checkbox**:
-  - Size: `24x24`, `borderRadius: 6`.
-  - Unchecked state: `backgroundColor: '#EFF1F4'`.
-  - Checked state: `backgroundColor: '#E8FDF0'` with `#52D22E` Check icon (`strokeWidth: 3`).
+- **Signature Inverted Scooped Corner Cutout (`TimelineItemCard.tsx`)**:
+  - **Inverted Top-Right Scoop**: Rather than a standard rounded corner, the top-right corner features an organic concave scoop / cutout (`CW: 44, CH: 44`) with smooth quadratic bezier fillets (`R_outer: 12, R_inner: 14`), rendered dynamically via SVG.
+  - **Base Border Radius**: `18px` on top-left, bottom-left, and bottom-right corners.
+  - **Leading Accent Sliver**: `width: 3.5`, `borderRadius: 2`, matching category accent tint.
+- **Surface & Category Color Harmony**:
+  - **Tasks**: `#FFFCEB` tinted surface with `#FFF5B8` border (`borderWidth: 1.5`), `#F5C518` gold accent bar and drop shadow glow, yellow 3D `<Badge />`, and `#FFF9D2` time pill (`#B48216` text). Matches Daily Balance Tasks Card.
+  - **Reminders**: `#EDFDF5` tinted surface with `#C6FFDD` border (`borderWidth: 1.5`), `#52D22E` green accent bar and drop shadow glow, green 3D `<Badge />`, and `#E8FDF0` time pill (`#1B9A72` text).
+  - **Habits**: `#EFF2FE` tinted surface with `#D8DBFF` border (`borderWidth: 1.5`), `#8383D6` lavender accent bar and drop shadow glow, purple 3D `<Badge />`, and `#EDEAFB` time pill (`#7059C8` text).
+- **Completed State**: Subdued `#FAFAF8` background with `#ECEAE4` hairline border and muted text (`#8E8D92`), retaining full typography clarity.
+- **Floating Round Checkbox Outside the Card (Top-Right Cutout)**:
+  - **Position**: Floats completely **outside the card's filled surface** in the top-right scooped negative space (`position: 'absolute'`, `top: 9`, `right: 9`, `zIndex: 10`). The screen background (`#FBF9F3`) shines through the cutout, perfectly cradling the circular element as in signature luxury cutout card patterns.
+  - **Shape & Dimensions**: Pure round circular vessel (`width: 26`, `height: 26`, `borderRadius: 13`).
+  - **Tactile Elevation**: Soft floating drop shadow (`shadowColor: '#000000'`, `shadowOffset: { width: 0, height: 2 }`, `shadowOpacity: 0.12`, `shadowRadius: 3`, `elevation: 3`).
+  - **Title Padding**: Title container reserves `paddingRight: 48` ensuring text never encroaches into the scooped cutout.
+  - **Unchecked state**: `backgroundColor: '#FFFFFF'`, `borderWidth: 1.5`, category-tinted border (`borderColor: catStyle.borderTint`).
+  - **Checked state**: `backgroundColor: '#E8FDF0'`, `borderWidth: 1.5`, `borderColor: '#52D22E'` with `#1B9A72` Check icon (`size: 14, strokeWidth: 3`).
+- **Left Timeline Node Icon**:
+  - **Always displays the persistent category icon** (`CheckCircle2` for Tasks, `Bell` for Reminders, `Flame` for Habits, `Mic` for Voice Nudges).
+  - **Never replaced by a checkmark or checkbox when completed** (completion is indicated strictly by the outside floating checkbox, muted card copy, and subdued node border).
+- **Tactile 3D Badges**: Integrated `<Badge />` chips for category stamps, streaks, and voice check-in indicators floating above the card surface.
 
 ---
 

@@ -21,6 +21,9 @@ Use this lookup table to identify exactly which files, components, hooks, and se
 | **Task Management**           | `Implemented` | `TasksScreen.tsx`, `AddTaskModal.tsx`               | `TaskReminderContext.tsx`                               | [TasksScreen.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Screens/Tasks/TasksScreen.tsx), [TaskReminderContext.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Context/TaskReminderContext.tsx)                                                 |
 | **Reminder Management**       | `Implemented` | `RemindersScreen.tsx`, `AddReminderModal.tsx`       | `TaskReminderContext.tsx`                               | [RemindersScreen.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Screens/Reminders/RemindersScreen.tsx)                                                                                                                                                                         |
 | **Habit Streak Tracking**     | `Implemented` | `HabitsScreen.tsx`, `AddHabitModal.tsx`             | `TaskReminderContext.tsx`                               | [HabitsScreen.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Screens/Habits/HabitsScreen.tsx)                                                                                                                                                                                  |
+| **Curated Flow Timeline**     | `Implemented` | `DashboardScreen.tsx`, `TimelineItemCard.tsx`       | `TaskReminderContext.tsx`, `parseTimeToMinutes`         | [DashboardScreen.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Screens/Dashboard/DashboardScreen.tsx), [TimelineItemCard.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Screens/Dashboard/Components/TimelineItemCard.tsx)                      |
+| **Playable Morning Brief**    | `Implemented` | `DailyBriefingCard.tsx`                             | `AudioPlayerService.ts`, `KokoroTTSService.ts`          | [DailyBriefingCard.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Screens/Dashboard/Components/DailyBriefingCard.tsx), [AudioPlayerService.ts](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Services/AudioPlayerService.ts)                         |
+| **Regius Brand Wordmark**     | `Implemented` | `RegiusLogo.tsx`, `DashboardScreen.tsx`             | Design System / `Fonts.ranade.bold`                     | [RegiusLogo.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Common/RegiusLogo.tsx), [index.ts](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Common/index.ts)                                                                                         |
 | **Curved Floating Dock**      | `Implemented` | `BottomTabNavigator.tsx`, `PlusActionSheet.tsx`     | Custom SVG Path, React Native Animated                  | [BottomTabNavigator.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Navigators/BottomTabNavigator.tsx)                                                                                                                                                                          |
 | **3D Upper-Layer Badges**     | `Implemented` | `Badge.tsx`                                         | `Platform.select`, `VARIANT_CONFIGS`                    | [Badge.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Common/Badge.tsx)                                                                                                                                                                                                        |
 | **Onboarding & Splash**       | `Implemented` | `Splash.tsx`, `Intro.tsx`                           | `AppNavigator.tsx`, Animated timer gate                 | [Splash.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Screens/Splash/Splash.tsx), [Intro.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Screens/Intro/Intro.tsx)                                                                                |
@@ -357,6 +360,30 @@ sequenceDiagram
 - **Technical Implementation**:
   - Badges rendered with specular top rims, extruded bottom borders, and colored drop shadows.
   - Holographic orb speed synchronizes with assistant state machine (`1.35x` listening, `1.55x` processing, `1.25x` speaking).
+
+---
+
+### 2.10 Dashboard Bento Balance Grid & Curated Flow Timeline
+
+- **Purpose**: Unified daily executive overview summarizing progress across all three core productivity pillars in the **Universal Product Navigation & Metric Sequence Standard**: **1. Tasks** → **2. Reminders** → **3. Habits**.
+- **Status**: `Implemented`
+- **Source Files**:
+  - `src/Screens/Dashboard/DashboardScreen.tsx`
+  - `src/Screens/Dashboard/Components/DailyBalanceGrid.tsx`
+  - `src/Screens/Dashboard/Components/TimelineItemCard.tsx`
+  - `src/Screens/Dashboard/Components/DailyBriefingCard.tsx`
+- **Standardized Core Pillars (Bento Grid)**:
+  - **1. Tasks Card**: Displays completed/total tasks and percentage badge (`CheckCircle2`, yellow palette `#FFFCEB` / `#FFF5B8` / `#F5C518`). Tapping navigates to `TasksScreen`.
+  - **2. Reminders Card**: Displays completed/total reminders and completion percentage badge (`Bell`, green palette `#EDFDF5` / `#C6FFDD` / `#52D22E`). Tapping navigates to `RemindersScreen`.
+  - **3. Habits Card**: Displays completed/total habits and percentage badge (`Flame`, purple palette `#EFF2FE` / `#D8DBFF` / `#8383D6`). Tapping navigates to `HabitsScreen`.
+- **Chronological Curated Flow Timeline**:
+  - Unified timeline automatically sorts scheduled tasks, reminders, and habits in chronological order by time from midnight.
+  - **Signature Inverted Scooped Corner Cutout**: Employs an inverted concave notch (`44×44`) at the top-right corner with smooth quadratic fillets (`R_outer: 12`, `R_inner: 14`) rendered dynamically via SVG.
+  - **Outside Floating Round Checkbox**: A tactile circular checkbox (`width: 26`, `height: 26`, `borderRadius: 13`) floats elevated in the carved-out negative space outside the card (`top: 9`, `right: 9`), allowing the dashboard background to shine through the cutout, with reserved title padding (`paddingRight: 48`).
+  - **Category Color Harmony**: Tasks strictly follow the yellow palette (`#FFFCEB` surface, `#FFF5B8` border, `#F5C518` accent, yellow `<Badge />`, `#FFF9D2` time pill) matching Daily Balance; Reminders follow green (`#EDFDF5`); Habits follow purple (`#EFF2FE`).
+  - **Persistent Left Category Icon**: The timeline node icon on the left always displays the category icon (`CheckCircle2` for Tasks, `Bell` for Reminders, `Flame` for Habits, `Mic` for Voice Nudges) and is never replaced with a checkbox or completion check.
+  - **Standardized Filter Pills**: `All Flow`, `Tasks`, `Reminders`, and `Habits`.
+  - **Dynamic Assistant Spoken Daily Briefing**: Spoken text, audio card, and flow badge dynamically adapt to the active assistant persona (defaulting to Regius), adhering to standard sequence: `taskCount` → `reminderCount` → `habitCount`.
 
 ---
 

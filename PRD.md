@@ -77,11 +77,16 @@ flowchart LR
 
 ### 4.2 Daily Dashboard & Briefing Journey
 
-- **User Story**: As an active user opening the app in the morning, I want to see my daily readiness, balance breakdown, and chronological timeline.
+- **User Story**: As an active user opening the app in the morning, I want to see my daily readiness, balance breakdown, and chronological timeline structured in the standard sequence.
 - **Functional Requirements**:
-  - **Daily Briefing Card**: Displays current greeting (e.g., "Good morning, Alex"), date banner, quick metrics (Active Tasks, Habits, Focus Minutes), and action buttons (_Play Spoken Briefing_, _Reshuffle Flow_).
-  - **Daily Balance Grid**: 3-card summary tracking Work Focus, Mindful Health, and Habit Momentum with completion percentages.
-  - **Timeline Item Flow**: Chronological cards representing the day's schedule (`TimelineItemCard.tsx`), filterable by _All_, _Tasks_, _Habits_, or _Voice Prep_.
+  - **Universal Product Sequence Standard**: All navigation, balance grids, filters, and briefings strictly follow **1. Tasks** → **2. Reminders** → **3. Habits**.
+  - **Daily Briefing Card**: Displays current greeting (e.g., "Good morning, Alex"), date banner, quick metrics (`taskCount` → `reminderCount` → `habitCount`), and playable Kokoro-powered spoken briefing audio.
+  - **Daily Balance Grid**: 3-card bento grid tracking **Tasks** (Yellow `#FFFCEB`), **Reminders** (Green `#EDFDF5`), and **Habits** (Purple `#EFF2FE`) with completion percentages and one-tap deep navigation.
+  - **Today's Curated Flow Timeline**: Chronological cards representing the day's schedule (`TimelineItemCard.tsx`), filterable by _All Flow_, _Tasks_, _Reminders_, and _Habits_.
+    - **Signature Inverted Scooped Corner Cutout**: The top-right corner features an organic concave cutout (`CW: 44, CH: 44`) with smooth bezier fillets, rendered via SVG.
+    - **Category Color Matching**: Tasks follow yellow (`#FFFCEB`), Reminders follow green (`#EDFDF5`), Habits follow purple (`#EFF2FE`).
+    - **Outside Floating Round Checkbox**: A circular checkbox (`26x26`, `borderRadius: 13`) floats elevated in the carved-out negative space outside the card, with the screen background showing through the cutout.
+    - **Persistent Left Category Icon**: The timeline node on the left always retains the category icon and is never replaced by a check.
   - **Hands-Free Activation**: Long-press on the center floating plus button or vocal wake phrase instantly activates the assistant.
 
 ---

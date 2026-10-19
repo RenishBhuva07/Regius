@@ -1,33 +1,48 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { CheckCircle2, Flame, Mic } from 'lucide-react-native';
+import { CheckCircle2, Flame, Bell } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
 
-interface DailyBalanceGridProps {
+export interface DailyBalanceGridProps {
   tasksCompleted: number;
   tasksTotal: number;
+  remindersCompleted?: number;
+  remindersTotal?: number;
   habitsCompleted: number;
   habitsTotal: number;
-  nudgesCount: number;
+  nudgesCount?: number;
   onPressTasks?: () => void;
+  onPressReminders?: () => void;
   onPressHabits?: () => void;
   onPressNudges?: () => void;
 }
 
 export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
-  tasksCompleted = 1,
-  tasksTotal = 4,
-  habitsCompleted = 2,
-  habitsTotal = 4,
-  nudgesCount = 2,
+  tasksCompleted = 0,
+  tasksTotal = 0,
+  remindersCompleted,
+  remindersTotal,
+  habitsCompleted = 0,
+  habitsTotal = 0,
+  nudgesCount = 0,
   onPressTasks,
+  onPressReminders,
   onPressHabits,
   onPressNudges,
 }) => {
+  // Safe percentage calculations handling zero totals
   const taskPercent =
     tasksTotal > 0 ? Math.round((tasksCompleted / tasksTotal) * 100) : 0;
   const habitPercent =
     habitsTotal > 0 ? Math.round((habitsCompleted / habitsTotal) * 100) : 0;
+
+  // Reminders metrics
+  const remDone = remindersCompleted !== undefined ? remindersCompleted : 0;
+  const remTotal = remindersTotal !== undefined ? remindersTotal : nudgesCount;
+  const reminderPercent =
+    remTotal > 0 ? Math.round((remDone / remTotal) * 100) : 0;
+
+  const handlePressReminders = onPressReminders || onPressNudges;
 
   return (
     <View style={styles.container}>
@@ -37,19 +52,21 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
         <Text style={styles.sectionPace}>Optimal Pace</Text>
       </View>
 
-      {/* Bento 3-Column Grid */}
+      {/* Bento 3-Column Grid: Standard Sequence (Tasks, Reminders, Habits) */}
       <View style={styles.gridRow}>
-        {/* Tasks Metric Card */}
+        {/* 1. Tasks Metric Card */}
         <TouchableOpacity
-          activeOpacity={0.88}
+          activeOpacity={0.85}
           onPress={onPressTasks}
-          style={styles.metricCard}
+          style={[styles.metricCard, styles.tasksCard]}
+          accessibilityRole="button"
+          accessibilityLabel={`Tasks: ${tasksCompleted} of ${tasksTotal} completed, ${taskPercent} percent`}
         >
           <View style={styles.cardTop}>
-            <View style={[styles.iconCircle, { backgroundColor: '#CCE6D0' }]}>
-              <CheckCircle2 size={16} color="#354C3B" strokeWidth={2.4} />
+            <View style={[styles.iconCircle, styles.tasksIconCircle]}>
+              <CheckCircle2 size={16} color="#B48216" strokeWidth={2.4} />
             </View>
-            <Text style={[styles.percentBadge, { color: '#354C3B' }]}>
+            <Text style={[styles.percentBadge, { color: '#B48216' }]}>
               {taskPercent}%
             </Text>
           </View>
@@ -58,21 +75,56 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
               {tasksCompleted}
               <Text style={styles.countTotalText}>/{tasksTotal}</Text>
             </Text>
-            <Text style={styles.label}>Tasks</Text>
+            <Text style={styles.label} numberOfLines={1}>
+              Tasks
+            </Text>
           </View>
+          {/* Bottom Accent Pill */}
+          <View style={[styles.accentPill, { backgroundColor: '#FDD835' }]} />
         </TouchableOpacity>
 
-        {/* Habits Metric Card */}
+        {/* 2. Reminders Metric Card */}
         <TouchableOpacity
-          activeOpacity={0.88}
-          onPress={onPressHabits}
-          style={styles.metricCard}
+          activeOpacity={0.85}
+          onPress={handlePressReminders}
+          style={[styles.metricCard, styles.remindersCard]}
+          accessibilityRole="button"
+          accessibilityLabel={`Reminders: ${remDone} of ${remTotal} completed, ${reminderPercent} percent`}
         >
           <View style={styles.cardTop}>
-            <View style={[styles.iconCircle, { backgroundColor: '#EDE3B8' }]}>
-              <Flame size={16} color="#665F3D" strokeWidth={2.4} />
+            <View style={[styles.iconCircle, styles.remindersIconCircle]}>
+              <Bell size={16} color="#1B9A72" strokeWidth={2.4} />
             </View>
-            <Text style={[styles.percentBadge, { color: '#665F3D' }]}>
+            <Text style={[styles.percentBadge, { color: '#1B9A72' }]}>
+              {reminderPercent}%
+            </Text>
+          </View>
+          <View style={styles.cardBottom}>
+            <Text style={styles.countText}>
+              {remDone}
+              <Text style={styles.countTotalText}>/{remTotal}</Text>
+            </Text>
+            <Text style={styles.label} numberOfLines={1}>
+              Reminders
+            </Text>
+          </View>
+          {/* Bottom Accent Pill */}
+          <View style={[styles.accentPill, { backgroundColor: '#52D22E' }]} />
+        </TouchableOpacity>
+
+        {/* 3. Habits Metric Card */}
+        <TouchableOpacity
+          activeOpacity={0.85}
+          onPress={onPressHabits}
+          style={[styles.metricCard, styles.habitsCard]}
+          accessibilityRole="button"
+          accessibilityLabel={`Habits: ${habitsCompleted} of ${habitsTotal} completed, ${habitPercent} percent`}
+        >
+          <View style={styles.cardTop}>
+            <View style={[styles.iconCircle, styles.habitsIconCircle]}>
+              <Flame size={16} color="#7059C8" strokeWidth={2.4} />
+            </View>
+            <Text style={[styles.percentBadge, { color: '#7059C8' }]}>
               {habitPercent}%
             </Text>
           </View>
@@ -81,28 +133,12 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
               {habitsCompleted}
               <Text style={styles.countTotalText}>/{habitsTotal}</Text>
             </Text>
-            <Text style={styles.label}>Habits</Text>
-          </View>
-        </TouchableOpacity>
-
-        {/* Voice Nudges Metric Card */}
-        <TouchableOpacity
-          activeOpacity={0.88}
-          onPress={onPressNudges}
-          style={styles.metricCard}
-        >
-          <View style={styles.cardTop}>
-            <View style={[styles.iconCircle, { backgroundColor: '#F0EEE8' }]}>
-              <Mic size={16} color="#1B1C19" strokeWidth={2.4} />
-            </View>
-            <Text style={[styles.percentBadge, { color: '#77767B' }]}>
-              Active
+            <Text style={styles.label} numberOfLines={1}>
+              Habits
             </Text>
           </View>
-          <View style={styles.cardBottom}>
-            <Text style={styles.countText}>{nudgesCount}</Text>
-            <Text style={styles.label}>Nudges</Text>
-          </View>
+          {/* Bottom Accent Pill */}
+          <View style={[styles.accentPill, { backgroundColor: '#8383D6' }]} />
         </TouchableOpacity>
       </View>
     </View>
@@ -134,56 +170,129 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 10,
   },
+  // Base asymmetric card matching HomeScreen signature geometry
   metricCard: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 18,
-    padding: 14,
-    minHeight: 102,
+    minWidth: 0,
+    borderRadius: 20,
+    borderTopRightRadius: 38, // Signature asymmetric curve
+    padding: 13,
+    paddingBottom: 15,
+    borderWidth: 1.5,
     justifyContent: 'space-between',
-    shadowColor: '#1C1C1E',
+    minHeight: 110,
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  // Tasks palette (Works/Yellow)
+  tasksCard: {
+    backgroundColor: '#FFFCEB',
+    borderColor: '#FFF5B8',
+    shadowColor: '#F5C518',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.04,
-    shadowRadius: 16,
+    shadowOpacity: 0.22,
+    shadowRadius: 8,
     elevation: 3,
-    borderWidth: 1,
-    borderColor: 'rgba(234, 232, 226, 0.6)',
+  },
+  // Habits palette (Regius Purple)
+  habitsCard: {
+    backgroundColor: '#EFF2FE',
+    borderColor: '#D8DBFF',
+    shadowColor: '#8383D6',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.22,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  // Reminders palette (Sport/Wellness/Reminders Green)
+  remindersCard: {
+    backgroundColor: '#EDFDF5',
+    borderColor: '#C6FFDD',
+    shadowColor: '#52D22E',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.22,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  nudgesCard: {
+    backgroundColor: '#EDFDF5',
+    borderColor: '#C6FFDD',
+    shadowColor: '#52D22E',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.22,
+    shadowRadius: 8,
+    elevation: 3,
   },
   cardTop: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    marginBottom: 10,
   },
+  // Elevated circular white icon container matching HomeScreen
   iconCircle: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  tasksIconCircle: {
+    borderColor: '#FFF5B8',
+    shadowColor: '#F5C518',
+  },
+  habitsIconCircle: {
+    borderColor: '#D8DBFF',
+    shadowColor: '#8383D6',
+  },
+  remindersIconCircle: {
+    borderColor: '#C6FFDD',
+    shadowColor: '#52D22E',
+  },
+  nudgesIconCircle: {
+    borderColor: '#C6FFDD',
+    shadowColor: '#52D22E',
   },
   percentBadge: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
+    fontSize: 12.5,
+    letterSpacing: -0.2,
   },
   cardBottom: {
-    marginTop: 8,
+    gap: 1,
   },
   countText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 18,
+    fontSize: 21,
     color: '#1B1C19',
-    lineHeight: 22,
+    letterSpacing: -0.4,
   },
   countTotalText: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
-    color: '#77767B',
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 13,
+    color: '#8E8D92',
   },
   label: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
-    color: '#77767B',
-    marginTop: 2,
+    fontSize: 12,
+    color: '#666665',
+    letterSpacing: -0.1,
+  },
+  // Bottom accent pill matching HomeScreen category card indicator
+  accentPill: {
+    position: 'absolute',
+    bottom: 0,
+    alignSelf: 'center',
+    height: 3.5,
+    width: 36,
+    borderTopLeftRadius: 3,
+    borderTopRightRadius: 3,
   },
 });
 

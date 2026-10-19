@@ -92,58 +92,77 @@ The app uses two dedicated typefaces imported into `src/Theme/fonts.ts`:
 
 ### 1. The Signature "Regius Asymmetric" Card
 
-Used for Category Cards (`HomeScreen`, `TasksScreen`, `RemindersScreen`) and Quick Action Cards (`PlusActionSheet`):
+Used for Category Cards (`HomeScreen`, `TasksScreen`, `RemindersScreen`), Quick Action Cards (`PlusActionSheet`), and Bento Metric Cards on `DashboardScreen` (`DailyBalanceGrid.tsx`):
 
 ```tsx
+// Category Carousel Card (HomeScreen)
 categoryCard: {
   width: 124, // or 132 for action sheets
   borderRadius: 23,
   borderTopRightRadius: 63, // Signature exaggerated curve
   padding: 16,
   borderWidth: 2,
-  borderColor: 'transparent', // or matching border tint
+  borderColor: 'transparent',
   backgroundColor: cat.bgColor, // e.g. #FFFCEB, #EDFDF5, #EFF2FE
   position: 'relative',
 }
+
+// Daily Balance Bento Card (DashboardScreen)
+metricCard: {
+  flex: 1,
+  minWidth: 0,
+  borderRadius: 20,
+  borderTopRightRadius: 38, // Scaled asymmetric curve
+  padding: 13,
+  paddingBottom: 15,
+  borderWidth: 1.5,
+  justifyContent: 'space-between',
+  minHeight: 110,
+  position: 'relative',
+  overflow: 'hidden',
+}
 ```
 
-- **Icon Container**: 46×46 circular white wrap (`borderRadius: 23`, `backgroundColor: '#FFFFFF'`) with a `1.5px` tinted border and matching category shadow.
-- **Bottom Accent Pill**: A subtle colored accent bar centered at the bottom of the active card:
+- **4-Facet Harmonic Ecosystem**:
+  1. Soft Pastel Background (`#FFFCEB` Tasks, `#EFF2FE` Habits, `#EDFDF5` Sport/Wellness/Reminders)
+  2. Matching Pastel Border (`#FFF5B8`, `#D8DBFF`, `#C6FFDD`)
+  3. Elevated Circular White Icon Wrap (`32x32` or `46x46`, `backgroundColor: '#FFFFFF'`) with tinted border & matching category shadow
+  4. Matching Colored Glow Shadow (`shadowColor: #F5C518`, `#8383D6`, `#52D22E`, `elevation: 3`)
+- **Bottom Accent Pill**: A subtle colored accent bar centered at the bottom edge:
   ```tsx
   categoryAccent: {
-    height: 4,
-    width: 48,
+    height: 3.5, // or 4 for larger cards
+    width: 36,   // or 48 for larger cards
     borderTopLeftRadius: 3,
     borderTopRightRadius: 3,
     backgroundColor: cat.accentColor,
   }
   ```
-- **Drop Shadow Glow (iOS)**:
-  ```tsx
-  shadowOffset: { width: 0, height: 8 },
-  shadowOpacity: 0.38,
-  shadowRadius: 14,
-  shadowColor: cat.shadowColor,
-  ```
 
-### 2. Clean Elevated Task & Reminder Cards
+### 2. Clean Elevated Task & Timeline Flow Cards
 
-Used for task items in lists:
+Used for task and timeline items in `HomeScreen`, `TasksScreen`, `RemindersScreen`, and `DashboardScreen` (`TimelineItemCard.tsx`):
 
-- **Background**: `#FFFFFF`
-- **Border Radius**: `18px`
-- **Shadow**: Clean, low-contrast ambient shadow:
-  ```tsx
-  shadowColor: '#000',
-  shadowOffset: { width: 0, height: 2 },
-  shadowOpacity: 0.04,
-  shadowRadius: 8,
-  elevation: 1.5,
-  ```
-- **Custom Checkbox**:
-  - Size: 24×24, `borderRadius: 6`
-  - Unchecked state: `backgroundColor: '#EFF1F4'`
-  - Checked state: `backgroundColor: '#E8FDF0'` with `#52D22E` Check icon (`strokeWidth: 3`).
+- **Signature Inverted Scooped Corner Cutout (`TimelineItemCard.tsx`)**:
+  - Inverted top-right corner notch (`44×44`) with smooth quadratic fillets (`R_outer: 12`, `R_inner: 14`), rendered dynamically via SVG.
+  - Base corner radius: `18px` on remaining corners.
+  - Leading vertical accent bar: `width: 3.5`, `borderRadius: 2`.
+- **Category Palette & Surface Harmony**:
+  - **Tasks**: `#FFFCEB` tinted surface, `#FFF5B8` border, `#F5C518` gold accent bar and drop shadow, yellow 3D `<Badge />`, and `#FFF9D2` time pill (`#B48216`). Follows Daily Balance Tasks Card.
+  - **Reminders**: `#EDFDF5` tinted surface, `#C6FFDD` border, `#52D22E` green accent bar and drop shadow, green 3D `<Badge />`, and `#E8FDF0` time pill (`#1B9A72`).
+  - **Habits**: `#EFF2FE` tinted surface, `#D8DBFF` border, `#8383D6` lavender accent bar and drop shadow, purple 3D `<Badge />`, and `#EDEAFB` time pill (`#7059C8`).
+- **Completed State**: Subdued `#FAFAF8` background with `#ECEAE4` border and clear `#8E8D92` muted typography.
+- **Floating Round Checkbox Outside the Card (Curated Flow Cards)**:
+  - Position: **Floating outside the card's filled boundary** in the scooped top-right cutout (`position: 'absolute'`, `top: 9`, `right: 9`, `zIndex: 10`). The linen background canvas (`#FBF9F3`) sits directly behind it.
+  - Shape & Size: Circular vessel (`26×26`, `borderRadius: 13`).
+  - Tactile micro-shadow: `elevation: 3`, `shadowOpacity: 0.12`, `shadowRadius: 3`.
+  - Title right spacing: `paddingRight: 48` ensuring title never intrudes into the scooped cutout.
+  - Unchecked state: `backgroundColor: '#FFFFFF'`, `borderWidth: 1.5`, category-tinted border (`catStyle.borderTint`).
+  - Checked state: `backgroundColor: '#E8FDF0'`, `borderWidth: 1.5`, `borderColor: '#52D22E'` with `#1B9A72` Check icon (`strokeWidth: 3`).
+- **Left Timeline Node Icon**:
+  - **Always displays the persistent category icon** (`CheckCircle2` for Tasks, `Bell` for Reminders, `Flame` for Habits, `Mic` for Voice Nudges).
+  - **Never replaced by a checkmark or checkbox when completed**.
+- **Tactile 3D Badges**: Integrated `<Badge />` upper layer chips for status, streak, and voice check-ins.
 
 ### 3. Settings & Profile Container Cards
 

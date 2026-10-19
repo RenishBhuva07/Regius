@@ -11,6 +11,7 @@ import {
 import {
   isWakeWordOnly,
   getActiveWakePhrase,
+  extractNameFromPhrase,
 } from '../WakeWord/WakeWordDetectionEngine';
 
 // Default wake-word regex patterns for fallback
@@ -260,6 +261,7 @@ export const IntentRecognitionService = {
     const raw = rawText.trim();
     const { cleanRaw, normalized } = normalizeTranscript(raw);
     const activePhrase = getActiveWakePhrase();
+    const assistantName = extractNameFromPhrase(activePhrase) || 'Regius';
 
     // 1. Wake word only or empty input
     if (
@@ -463,7 +465,7 @@ export const IntentRecognitionService = {
         intent: 'PLAY_BRIEF',
         originalTranscript: raw,
         parameters: {},
-        displayTitle: 'Aria’s Morning Brief 🎧',
+        displayTitle: `${assistantName}’s Morning Brief 🎧`,
         displayBody: 'Playing personalized audio briefing for today.',
         spokenConfirmation: 'Playing your morning brief.',
       };

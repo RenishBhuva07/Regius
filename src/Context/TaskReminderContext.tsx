@@ -103,24 +103,30 @@ export const INITIAL_HABITS: HabitItem[] = [
 export const INITIAL_TASKS: Task[] = [
   {
     id: '1',
-    label: 'Email Check',
+    label: 'Email Check & Inbox Zero',
     iconType: 'mail',
     done: true,
     category: 'works',
+    time: '09:00 AM',
+    note: 'Processed 14 critical communications. Focus block active.',
   },
   {
     id: '2',
-    label: 'Weekly Meeting',
+    label: 'Weekly Team Strategy & Review',
     iconType: 'users',
     done: false,
     category: 'works',
+    time: '11:30 AM',
+    note: 'Regius will chime 5 minutes prior with talking points.',
   },
   {
     id: '3',
-    label: 'Team Discussion',
+    label: 'Product Design & Dev Handoff',
     iconType: 'users',
     done: false,
     category: 'works',
+    time: '03:30 PM',
+    note: 'Review interactive timeline component specs.',
   },
 ];
 

@@ -281,6 +281,14 @@ export const AudioPlayerService = {
     }
   },
 
+  async resume(): Promise<void> {
+    try {
+      await TrackPlayer.play();
+    } catch (e) {
+      console.warn('[AudioPlayerService] Resume error:', e);
+    }
+  },
+
   async getState(): Promise<State> {
     try {
       return (await TrackPlayer.getPlaybackState()).state;

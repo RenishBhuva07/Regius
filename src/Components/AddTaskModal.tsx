@@ -35,6 +35,7 @@ import { Colors } from '../Assets/StyleUtilities/Colors';
 import { SVGS } from '../Assets/Images';
 import { Badge } from '../Common/Badge';
 import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
+import { useOptionalVoiceWakeWord } from '../Context/VoiceWakeWordContext';
 
 // ─── Inline Office Bag SVG ────────────────────────────────────────────────────
 
@@ -166,6 +167,8 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
   onCreateTask,
 }) => {
   const insets = useSafeAreaInsets();
+  const voiceContext = useOptionalVoiceWakeWord();
+  const assistantName = voiceContext?.assistantName || 'Regius';
 
   // Form State
   const [taskTitle, setTaskTitle] = useState('Prepare Q3 Product Presentation');
@@ -649,7 +652,11 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                 <View style={styles.voiceTextGroup}>
                   <View style={styles.voiceTitleRow}>
                     <Text style={styles.voiceTitle}>Spoken Voice Nudge</Text>
-                    <Badge variant="purple" size="sm" label="ARIA AI" />
+                    <Badge
+                      variant="purple"
+                      size="sm"
+                      label={`${assistantName.toUpperCase()} AI`}
+                    />
                   </View>
                   <Text style={styles.voiceSubtitle}>
                     Calm audio cue when deadline approaches

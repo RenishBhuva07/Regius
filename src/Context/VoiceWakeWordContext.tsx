@@ -4,6 +4,7 @@ import React, {
   useState,
   useEffect,
   useCallback,
+  useMemo,
   useRef,
 } from 'react';
 import {
@@ -52,6 +53,7 @@ import {
 } from '../Services/WakeWord/WakeWordDetectionEngine';
 
 export interface VoiceWakeWordContextType {
+  assistantName: string;
   isWakeWordEnabled: boolean;
   setWakeWordEnabled: (enabled: boolean) => Promise<void>;
   wakeWordPhrase: string;
@@ -99,6 +101,13 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
   const [wakeWordPhrase, setWakeWordPhraseState] = useState<string>(
     DEFAULT_WAKE_WORD_PRESET.phrase,
   );
+  const assistantName = useMemo(() => {
+    return (
+      extractNameFromPhrase(wakeWordPhrase) ||
+      DEFAULT_WAKE_WORD_PRESET.name ||
+      'Regius'
+    );
+  }, [wakeWordPhrase]);
   const [isListening, setIsListening] = useState(false);
 
   const [lastSpokenCommand, setLastSpokenCommand] = useState<string | null>(
@@ -1098,10 +1107,12 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
 
       // 3. Transition to greeting
       transitionState('greeting', sessionId);
-      const assistantName =
-        extractNameFromPhrase(wakeWordPhraseRef.current) || 'Sia';
+      const activeAssistantName =
+        extractNameFromPhrase(wakeWordPhraseRef.current) ||
+        DEFAULT_WAKE_WORD_PRESET.name ||
+        'Regius';
       const greeting = await RegiusSpeechService.getFastWakeGreeting(
-        assistantName,
+        activeAssistantName,
       );
 
       if (sessionId !== currentInteractionIdRef.current) return;
@@ -1526,10 +1537,13 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         WakeWordService.setWakePhrase(phrase);
         setActiveWakePhrase(phrase);
         AudioPlayerService.setup().catch(() => {});
-        const assistantName = extractNameFromPhrase(phrase) || 'Sia';
+        const activeAssistantName =
+          extractNameFromPhrase(phrase) ||
+          DEFAULT_WAKE_WORD_PRESET.name ||
+          'Regius';
         RegiusSpeechService.warmupVoice(
           settings.selectedVoiceId,
-          assistantName,
+          activeAssistantName,
         ).catch(() => {});
         if (enabled && assistantStateRef.current === 'idle') {
           startWakeWordEngineRef.current();
@@ -1838,6 +1852,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         setWakeWordEnabled,
         wakeWordPhrase,
         setWakeWordPhrase,
+        assistantName,
         supportedWakeWords: SUPPORTED_WAKE_WORD_PRESETS,
         validateWakeWord: validateWakePhrase,
         testWakeWordRecognition: (transcript: string, phrase?: string) =>
@@ -1872,6 +1887,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
       <VoiceAssistantSheet
         visible={assistantState !== 'idle'}
         onClose={closeAssistant}
+        assistantName={assistantName}
         wakeWordPhrase={wakeWordPhrase}
         onActionSelected={actionType => {
           let commandText = actionType;
@@ -1914,6 +1930,10 @@ export const useVoiceWakeWord = (): VoiceWakeWordContextType => {
     );
   }
   return context;
+};
+
+export const useOptionalVoiceWakeWord = (): VoiceWakeWordContextType | null => {
+  return useContext(VoiceWakeWordContext) ?? null;
 };
 
 export default VoiceWakeWordContext;

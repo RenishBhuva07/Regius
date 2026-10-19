@@ -4,3 +4,4 @@ export * from './MainContainer';
 export * from './CustomAnimation';
 export * from './ToastConfig';
 export * from './ToastHelper';
+export * from './RegiusLogo';

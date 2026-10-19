@@ -36,6 +36,7 @@ import { SVGS } from '../../Assets/Images';
 import { Badge } from '../../Common/Badge';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { useTaskReminder } from '../../Context/TaskReminderContext';
+import { useOptionalVoiceWakeWord } from '../../Context/VoiceWakeWordContext';
 
 // ─── Inline Office Bag SVG ────────────────────────────────────────────────────
 
@@ -156,6 +157,8 @@ export const AddTaskScreen: React.FC<AddTaskScreenProps> = ({
 }) => {
   const insets = useSafeAreaInsets();
   const { addTask } = useTaskReminder();
+  const voiceContext = useOptionalVoiceWakeWord();
+  const assistantName = voiceContext?.assistantName || 'Regius';
 
   // Form State
   const [taskTitle, setTaskTitle] = useState('Prepare Q3 Product Presentation');
@@ -621,7 +624,11 @@ export const AddTaskScreen: React.FC<AddTaskScreenProps> = ({
               <View style={styles.voiceTextGroup}>
                 <View style={styles.voiceTitleRow}>
                   <Text style={styles.voiceTitle}>Spoken Voice Nudge</Text>
-                  <Badge variant="purple" size="sm" label="ARIA AI" />
+                  <Badge
+                    variant="purple"
+                    size="sm"
+                    label={`${assistantName.toUpperCase()} AI`}
+                  />
                 </View>
                 <Text style={styles.voiceSubtitle}>
                   Calm audio cue when deadline approaches
