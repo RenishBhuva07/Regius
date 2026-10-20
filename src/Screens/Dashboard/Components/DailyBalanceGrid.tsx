@@ -245,7 +245,7 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 24,
+    marginBottom: 18,
   },
   sectionHeader: {
     flexDirection: 'row',

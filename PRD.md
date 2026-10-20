@@ -82,10 +82,11 @@ flowchart LR
   - **Universal Product Sequence Standard**: All navigation, balance grids, filters, and briefings strictly follow **1. Tasks** → **2. Reminders** → **3. Habits**.
   - **Daily Briefing Card**: Displays current greeting (e.g., "Good morning, Alex"), date banner, quick metrics (`taskCount` → `reminderCount` → `habitCount`), and playable Kokoro-powered spoken briefing audio.
   - **Daily Balance Grid**: 3-card bento grid tracking **Tasks** (Yellow `#FFFCEB`), **Reminders** (Green `#EDFDF5`), and **Habits** (Purple `#EFF2FE`) with completion percentages and one-tap deep navigation.
-  - **Today's Curated Flow Timeline**: Chronological cards representing the day's schedule (`TimelineItemCard.tsx`), filterable by _All Flow_, _Tasks_, _Reminders_, and _Habits_.
+  - **Today's Flow Timeline**: Chronological cards representing the day's schedule (`TimelineItemCard.tsx`), enclosed in a unified luxury container box (`backgroundColor: '#FFFFFF'`, `borderRadius: 24`, `borderWidth: 1.5`, `borderColor: '#ECE8DF'`), filterable by _All Flow_, _Tasks_, _Reminders_, and _Habits_.
+    - **Simplified Header**: "Today’s Flow" • "Your day at a glance".
     - **Signature Inverted Scooped Corner Cutout**: The top-right corner features an organic concave cutout (`CW: 44, CH: 44`) with smooth bezier fillets, rendered via SVG.
     - **Category Color Matching**: Tasks follow yellow (`#FFFCEB`), Reminders follow green (`#EDFDF5`), Habits follow purple (`#EFF2FE`).
-    - **Outside Floating Round Checkbox**: A circular checkbox (`26x26`, `borderRadius: 13`) floats elevated in the carved-out negative space outside the card, with the screen background showing through the cutout.
+    - **Outside Floating Round Checkbox**: A circular checkbox (`26x26`, `borderRadius: 13`) floats elevated in the carved-out negative space outside the card, with the container surface showing through the cutout.
     - **Persistent Left Category Icon**: The timeline node on the left always retains the category icon and is never replaced by a check.
   - **Dynamic Scroll-Reactive Layer Header**:
     - **Unscrolled**: Renders flush with the canvas `#FBF9F3` with dark wordmark (`#1B1C19`) and `dark-content` status bar.

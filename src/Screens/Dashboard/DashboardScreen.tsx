@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  FlatList,
   StatusBar,
   Platform,
   Animated,
@@ -31,6 +32,13 @@ import TimelineItemCard, { TimelineItem } from './Components/TimelineItemCard';
 import HeaderPatternSvg from './Components/HeaderPatternSvg';
 
 type FlowFilter = 'all' | 'tasks' | 'habits' | 'reminders' | 'voice';
+
+const FILTER_TABS = [
+  { key: 'all' as FlowFilter, label: 'All Flow' },
+  { key: 'tasks' as FlowFilter, label: 'Tasks' },
+  { key: 'reminders' as FlowFilter, label: 'Reminders' },
+  { key: 'habits' as FlowFilter, label: 'Habits' },
+] as const;
 
 const HEADER_HEIGHT = 52;
 
@@ -80,7 +88,7 @@ export const DashboardScreen: React.FC = () => {
   // Interpolate header visual styles based on scroll position (0 to 30px)
   const headerBgColor = scrollY.interpolate({
     inputRange: [0, 30],
-    outputRange: ['#FBF9F3', Colors.LavenderPurple],
+    outputRange: [Colors.DefaultWhite, Colors.LavenderPurple],
     extrapolate: 'clamp',
   });
 
@@ -443,25 +451,21 @@ export const DashboardScreen: React.FC = () => {
 
         {/* Curated flow timeline */}
         <View style={styles.flowSection}>
-          <View style={styles.flowHeader}>
-            <View>
-              <Text style={styles.flowTitle}>Today’s Curated Flow</Text>
-              <Text style={styles.flowSubtitle}>
-                Sequenced around your peak clarity
-              </Text>
-            </View>
+          {/* Header crest badge centered on top border */}
+          <View style={styles.flowHeaderBadge}>
+            <Text style={styles.flowTitle}>Today’s Flow</Text>
+            <Text style={styles.flowSubtitle}>Your day at a glance</Text>
           </View>
 
           {/* Filter pills */}
-          <View style={styles.filterRow}>
-            {(
-              [
-                { key: 'all', label: 'All Flow' },
-                { key: 'tasks', label: 'Tasks' },
-                { key: 'reminders', label: 'Reminders' },
-                { key: 'habits', label: 'Habits' },
-              ] as const
-            ).map(f => {
+          <FlatList
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={FILTER_TABS}
+            keyExtractor={item => item.key}
+            contentContainerStyle={styles.filterRow}
+            style={styles.filterScroll}
+            renderItem={({ item: f }) => {
               const isActive = activeFilter === f.key;
               return (
                 <TouchableOpacity
@@ -486,24 +490,28 @@ export const DashboardScreen: React.FC = () => {
                   </Text>
                 </TouchableOpacity>
               );
-            })}
-          </View>
+            }}
+          />
 
           {/* Timeline list */}
           <View style={styles.timelineList}>
-            {scheduledItems.map((item, idx) => (
-              <TimelineItemCard
-                key={item.id}
-                item={item}
-                isFirst={idx === 0}
-                isLast={
-                  idx === scheduledItems.length - 1 &&
-                  unscheduledItems.length === 0
-                }
-                onToggleComplete={handleToggleComplete}
-                onPressCard={handlePressCard}
-              />
-            ))}
+            <FlatList
+              data={scheduledItems}
+              keyExtractor={item => item.id}
+              scrollEnabled={false}
+              renderItem={({ item, index }) => (
+                <TimelineItemCard
+                  item={item}
+                  isFirst={index === 0}
+                  isLast={
+                    index === scheduledItems.length - 1 &&
+                    unscheduledItems.length === 0
+                  }
+                  onToggleComplete={handleToggleComplete}
+                  onPressCard={handlePressCard}
+                />
+              )}
+            />
 
             {/* Unscheduled items */}
             {unscheduledItems.length > 0 && (
@@ -518,16 +526,28 @@ export const DashboardScreen: React.FC = () => {
                     Unscheduled / Any Time
                   </Text>
                 </View>
-                {unscheduledItems.map((item, idx) => (
-                  <TimelineItemCard
-                    key={item.id}
-                    item={item}
-                    isFirst={scheduledItems.length === 0 && idx === 0}
-                    isLast={idx === unscheduledItems.length - 1}
-                    onToggleComplete={handleToggleComplete}
-                    onPressCard={handlePressCard}
-                  />
-                ))}
+                <FlatList
+                  data={unscheduledItems}
+                  keyExtractor={item => item.id}
+                  scrollEnabled={false}
+                  renderItem={({ item, index }) => (
+                    <TimelineItemCard
+                      item={item}
+                      isFirst={scheduledItems.length === 0 && index === 0}
+                      isLast={index === unscheduledItems.length - 1}
+                      onToggleComplete={handleToggleComplete}
+                      onPressCard={handlePressCard}
+                    />
+                  )}
+                />
+              </View>
+            )}
+
+            {scheduledItems.length === 0 && unscheduledItems.length === 0 && (
+              <View style={styles.emptyFlowState}>
+                <Text style={styles.emptyFlowText}>
+                  No {activeFilter === 'all' ? 'items' : activeFilter} for today
+                </Text>
               </View>
             )}
           </View>
@@ -543,7 +563,7 @@ export const DashboardScreen: React.FC = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FBF9F3',
+    backgroundColor: Colors.DefaultWhite,
   },
   headerContainer: {
     position: 'absolute',
@@ -634,11 +654,11 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
     paddingTop: 10,
   },
   greetingSection: {
-    marginBottom: 20,
+    marginBottom: 10,
   },
   dateWeatherRow: {
     flexDirection: 'row',
@@ -669,30 +689,69 @@ const styles = StyleSheet.create({
     letterSpacing: -0.5,
   },
   flowSection: {
-    marginBottom: 16,
+    backgroundColor: Colors.SoftCream,
+    borderRadius: 24,
+    borderWidth: 1.5,
+    borderColor: '#ECE8DF',
+    paddingHorizontal: 8,
+    paddingBottom: 8,
+    paddingTop: 40,
+    marginTop: 24,
+    marginBottom: 60,
+    shadowColor: '#5C5441',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 2,
+    position: 'relative',
   },
-  flowHeader: {
-    flexDirection: 'row',
+  flowHeaderBadge: {
+    position: 'absolute',
+    top: -24,
+    alignSelf: 'center',
+    backgroundColor: Colors.NeroBlack,
+    paddingHorizontal: 22,
+    paddingVertical: 7,
+    borderRadius: 22,
+    borderWidth: 1.5,
+    borderTopColor: '#4A4E5C',
+    borderLeftColor: '#363944',
+    borderRightColor: '#363944',
+    borderBottomWidth: 4,
+    borderBottomColor: '#090A0D',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 14,
+    justifyContent: 'center',
+    shadowColor: '#0B0D11',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.32,
+    shadowRadius: 8,
+    elevation: 6,
+    zIndex: 20,
   },
   flowTitle: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 18,
-    color: '#1B1C19',
-    letterSpacing: -0.2,
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 14.5,
+    color: Colors.DefaultWhite,
+    letterSpacing: -0.1,
+    textAlign: 'center',
   },
   flowSubtitle: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
-    color: '#77767B',
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 10.5,
+    color: '#B6B9C3',
     marginTop: 1,
+    textAlign: 'center',
+  },
+  filterScroll: {
+    marginHorizontal: -8,
+    marginBottom: 6,
   },
   filterRow: {
     flexDirection: 'row',
     gap: 8,
-    marginBottom: 18,
+    paddingHorizontal: 12,
+    paddingTop: 6,
+    paddingBottom: 16,
   },
   filterPill: {
     paddingHorizontal: 14,
@@ -710,14 +769,17 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   filterPillActive: {
-    backgroundColor: '#1B1C19',
-    borderColor: '#2D2E2B',
+    backgroundColor: Colors.NeroBlack,
+    borderWidth: 1.5,
+    borderTopColor: '#454955',
+    borderLeftColor: '#333640',
+    borderRightColor: '#333640',
     borderBottomWidth: 3.5,
-    borderBottomColor: '#0E0F0D',
-    shadowColor: '#1B1C19',
+    borderBottomColor: '#0A0B0E',
+    shadowColor: '#000000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 6,
+    shadowOpacity: 0.28,
+    shadowRadius: 5,
     elevation: 5,
   },
   filterPillText: {
@@ -727,7 +789,7 @@ const styles = StyleSheet.create({
     letterSpacing: -0.1,
   },
   filterPillTextActive: {
-    color: '#FFFCE3',
+    color: Colors.DefaultWhite,
     fontFamily: Fonts.poppins.bold,
   },
   timelineList: {
@@ -747,6 +809,16 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.medium,
     fontSize: 12,
     color: '#77767B',
+  },
+  emptyFlowState: {
+    paddingVertical: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emptyFlowText: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 13,
+    color: '#8E8D92',
   },
 });
 

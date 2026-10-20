@@ -7,6 +7,8 @@ export const Colors = {
   ButtonDark: '#242424',
   RingBorder: '#E8E2D5',
   HomeIndicator: '#D5D0C5',
+  NeroBlack: '#1C1D22',
+  Grey: '#77767B',
 
   // Character & Accent Accents
   LavenderPurple: '#8383D6',

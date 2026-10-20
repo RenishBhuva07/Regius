@@ -414,7 +414,13 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         restartTimerRef.current = null;
       }
 
-      if (!forceRestart && isStartingRef.current) {
+      // Mutex: never allow concurrent startup sequences
+      if (isStartingRef.current) {
+        return;
+      }
+
+      // If already listening and not a forced restart, do nothing
+      if (!forceRestart && isListeningRef.current) {
         return;
       }
 
@@ -1661,13 +1667,19 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const startWakeWordListening = useCallback(async () => {
-    hasLoggedWakeWordListeningRef.current = false;
-    isStartingRef.current = false;
+    // If wake word engine is already active and listening in idle state, do nothing
+    if (isListeningRef.current && assistantStateRef.current === 'idle') {
+      return;
+    }
+    // Prevent overlapping startup sequences
+    if (isStartingRef.current) {
+      return;
+    }
     if (restartTimerRef.current) {
       clearTimeout(restartTimerRef.current);
       restartTimerRef.current = null;
     }
-    await startWakeWordEngineRef.current(true);
+    await startWakeWordEngineRef.current(false);
   }, []);
 
   // When user becomes authenticated (login / signup), automatically start wake word listening

@@ -192,6 +192,8 @@ stateDiagram-v2
 ### 4.2 Wake Word Detection Engine (`WakeWordDetectionEngine.ts`)
 
 - **Engine**: Consumes `@react-native-voice/voice` continuous background streaming.
+- **Native Patch & SFSpeechAudioBufferRecognitionRequest Guard**: Patched via `patch-package` (`patches/@react-native-voice+voice+3.2.4.patch`) to serialize iOS `startSpeech:` invocations onto the main queue, prevent concurrent recognition requests, handle session de-multiplexing safely without terminating new sessions on stale result callbacks, and catch native `NSInternalInconsistencyException` exceptions.
+- **Context Mutex & Fast-Refresh Resilience**: `VoiceWakeWordContext.tsx` enforces strict `isStartingRef` exclusion and suppresses redundant voice engine teardowns when already actively listening in idle state.
 - **Phonetic STT Tuning**: Because mobile STT engines frequently transcribe names phonetically or imperfectly, the engine evaluates transcripts against compiled regex patterns with extensive phonetic aliases (e.g., `sia`, `siya`, `see ya`, `ceeya`, `cera`, `regius`, `regis`, `reach us`, `ready us`).
 - **Cooldown Guard**: Enforces a 2500ms cooldown window between wake triggers to prevent double-firing.
 - **Haptic Feedback**: Immediately triggers dual haptic pulses (iOS: 50ms; Android: `[0, 50, 40, 70]`) upon detection.

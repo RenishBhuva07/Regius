@@ -20,6 +20,7 @@ import {
 } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
 import { Badge } from '../../../Common/Badge';
+import Colors from '../../../Assets/StyleUtilities/Colors';
 
 export type TimelineCategoryType = 'task' | 'habit' | 'reminder';
 
@@ -95,7 +96,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
   const isCompleted = item.completed;
 
   // Responsive card size state for exact SVG path rendering
-  const initialW = Dimensions.get('window').width - 108;
+  const initialW = Dimensions.get('window').width - 118;
   const [cardSize, setCardSize] = React.useState({
     width: Math.max(initialW, 200),
     height: 92,
@@ -170,24 +171,32 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
   const renderCategoryIcon = () => {
     const iconColor = isCompleted ? '#8E8D92' : catStyle.iconColor;
     if (item.type === 'task') {
-      return <CheckCircle2 size={14} color={iconColor} strokeWidth={2.4} />;
+      return <CheckCircle2 size={12} color={iconColor} strokeWidth={2.4} />;
     }
     if (item.type === 'reminder') {
-      return <Bell size={14} color={iconColor} strokeWidth={2.2} />;
+      return <Bell size={12} color={iconColor} strokeWidth={2.2} />;
     }
     if (item.type === 'habit') {
-      return <Flame size={14} color={iconColor} strokeWidth={2.2} />;
+      return <Flame size={12} color={iconColor} strokeWidth={2.2} />;
     }
     if (item.isVoiceNudge) {
-      return <Mic size={14} color={iconColor} strokeWidth={2.4} />;
+      return <Mic size={12} color={iconColor} strokeWidth={2.4} />;
     }
-    return <CheckCircle2 size={14} color={iconColor} strokeWidth={2.4} />;
+    return <CheckCircle2 size={12} color={iconColor} strokeWidth={2.4} />;
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, isLast && styles.containerLast]}>
       {/* Time column */}
       <View style={styles.timeColumn}>
+        <View
+          style={[
+            styles.timelineLine,
+            isFirst && styles.timelineLineFirst,
+            isLast && styles.timelineLineLast,
+          ]}
+        />
+
         <View style={styles.timeTextContainer}>
           <Text
             style={[styles.timeNumber, isCompleted && styles.timeCompletedText]}
@@ -201,26 +210,16 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
           </Text>
         </View>
 
-        <View style={styles.nodeColumn}>
-          <View
-            style={[
-              styles.timelineLine,
-              isFirst && styles.timelineLineFirst,
-              isLast && styles.timelineLineLast,
-            ]}
-          />
-
-          <View
-            style={[
-              styles.nodeCircle,
-              {
-                backgroundColor: isCompleted ? '#F7F6F2' : catStyle.iconBg,
-                borderColor: isCompleted ? '#E8E5DE' : catStyle.borderTint,
-              },
-            ]}
-          >
-            {renderCategoryIcon()}
-          </View>
+        <View
+          style={[
+            styles.nodeCircle,
+            {
+              backgroundColor: isCompleted ? '#F7F6F2' : catStyle.iconBg,
+              borderColor: isCompleted ? '#E8E5DE' : catStyle.borderTint,
+            },
+          ]}
+        >
+          {renderCategoryIcon()}
         </View>
       </View>
 
@@ -373,59 +372,64 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     marginBottom: 12,
   },
+  containerLast: {
+    marginBottom: 0,
+  },
   timeColumn: {
-    width: 68,
+    width: 40,
     alignItems: 'center',
-    paddingTop: 4,
+    justifyContent: 'center',
     position: 'relative',
   },
   timeTextContainer: {
+    position: 'absolute',
+    bottom: '50%',
+    marginBottom: 15,
     alignItems: 'center',
-    marginBottom: 6,
+    backgroundColor: Colors.SoftCream,
+    paddingHorizontal: 2,
+    borderRadius: 3,
+    zIndex: 0,
   },
   timeNumber: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
+    fontSize: 11.5,
     color: '#1B1C19',
     letterSpacing: -0.2,
-    lineHeight: 17,
+    lineHeight: 15,
   },
   timePeriod: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10,
+    fontSize: 9,
     color: '#8E8D92',
-    lineHeight: 13,
+    lineHeight: 12,
   },
   timeCompletedText: {
     color: '#A8A6A4',
-  },
-  nodeColumn: {
-    alignItems: 'center',
-    position: 'relative',
-    flex: 1,
-    width: '100%',
   },
   timelineLine: {
     position: 'absolute',
     top: 0,
     bottom: -16,
-    width: 2,
+    width: 1.5,
     backgroundColor: '#E6E3DC',
   },
   timelineLineFirst: {
-    top: 10,
+    top: '50%',
   },
   timelineLineLast: {
-    bottom: '70%',
+    bottom: '50%',
   },
   nodeCircle: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
+    position: 'absolute',
+    top: '50%',
+    marginTop: -11,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 2,
-    marginTop: 2,
     borderWidth: 1.5,
     borderColor: '#FFFFFF',
     shadowColor: '#000000',
@@ -437,8 +441,7 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     flexDirection: 'row',
-    paddingVertical: 14,
-    paddingHorizontal: 14,
+    alignItems: 'center',
     position: 'relative',
     minHeight: 88,
     backgroundColor: 'transparent',
@@ -513,12 +516,17 @@ const styles = StyleSheet.create({
   },
   accentBar: {
     width: 3.5,
-    borderRadius: 2,
-    marginRight: 11,
-    alignSelf: 'stretch',
+    height: 36,
+    borderTopRightRadius: 3,
+    borderBottomRightRadius: 3,
+    alignSelf: 'center',
+    zIndex: 2,
   },
   cardContent: {
     flex: 1,
+    paddingVertical: 13,
+    paddingLeft: 12,
+    paddingRight: 14,
     justifyContent: 'space-between',
     gap: 6,
   },
@@ -543,6 +551,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#666665',
     lineHeight: 16,
+    paddingRight: 36, // Clears the floating checkbox and scooped cutout notch
   },
   subtitleCompleted: {
     color: '#A09F9E',
