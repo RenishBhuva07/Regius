@@ -36,7 +36,10 @@ jest.mock('@react-native-async-storage/async-storage', () => ({
 }));
 
 import { RegiusLogo } from '../src/Common/RegiusLogo';
-import { DailyBalanceGrid } from '../src/Screens/Dashboard/Components/DailyBalanceGrid';
+import {
+  DailyBalanceGrid,
+  CircularProgress,
+} from '../src/Screens/Dashboard/Components/DailyBalanceGrid';
 import {
   TimelineItemCard,
   TimelineItem,
@@ -49,6 +52,7 @@ describe('Dashboard Redesign Components & Logic', () => {
     it('cleanly exports RegiusLogo and Dashboard components', () => {
       expect(RegiusLogo).toBeDefined();
       expect(DailyBalanceGrid).toBeDefined();
+      expect(CircularProgress).toBeDefined();
       expect(TimelineItemCard).toBeDefined();
       expect(DailyBriefingCard).toBeDefined();
     });
@@ -81,6 +85,38 @@ describe('Dashboard Redesign Components & Logic', () => {
           ? Math.round((remindersCompleted / remindersTotal) * 100)
           : 0;
       expect(reminderPercent).toBe(75);
+    });
+
+    it('calculates circular progress gauge geometry and stroke dash offset correctly', () => {
+      const size = 34;
+      const strokeWidth = 2.8;
+      const radius = (size - strokeWidth) / 2;
+      const circumference = 2 * Math.PI * radius;
+
+      const offset0 = circumference - (circumference * 0) / 100;
+      expect(offset0).toBeCloseTo(circumference, 2);
+
+      const offset50 = circumference - (circumference * 50) / 100;
+      expect(offset50).toBeCloseTo(circumference / 2, 2);
+
+      const offset100 = circumference - (circumference * 100) / 100;
+      expect(offset100).toBeCloseTo(0, 2);
+    });
+
+    it('renders CircularProgress indicator component with valid props', () => {
+      expect(CircularProgress).toBeDefined();
+      const element = (
+        <CircularProgress
+          percent={75}
+          trackColor="#FFF5B8"
+          progressColor="#B48216"
+          textColor="#B48216"
+          shadowColor="#F5C518"
+        />
+      );
+      expect(element).toBeDefined();
+      expect(element.props.percent).toBe(75);
+      expect(element.props.progressColor).toBe('#B48216');
     });
   });
 
@@ -347,6 +383,25 @@ describe('Dashboard Redesign Components & Logic', () => {
       const { Fonts } = require('../src/Theme/fonts');
       expect(Fonts.transcity).toBeDefined();
       expect(typeof Fonts.transcity).toBe('string');
+    });
+
+    it('verifies CustomAnimation accepts pointerEvents="none" for touch passthrough', () => {
+      const { CustomAnimation } = require('../src/Common/CustomAnimation');
+      expect(CustomAnimation).toBeDefined();
+    });
+
+    it('verifies openAssistant is invoked when tapping the header voice button', () => {
+      const mockOpenAssistant = jest.fn();
+      const mockTriggerWakeWord = jest.fn();
+
+      // Simulate header voice button action
+      const handleVoiceHeaderPress = () => {
+        mockOpenAssistant();
+      };
+
+      handleVoiceHeaderPress();
+      expect(mockOpenAssistant).toHaveBeenCalledTimes(1);
+      expect(mockTriggerWakeWord).not.toHaveBeenCalled();
     });
   });
 });

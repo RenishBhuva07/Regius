@@ -18,7 +18,7 @@ Regius embraces **Modern Warm Luxury & Mindful Productivity** (_"Plan Your Day I
    `Soft Tinted Background` + `Matching Pastel Border` + `Vibrant Accent Icon` + `Colored Drop Shadow Glow`.
 4. **Pill Architecture**: Controls, toggles, badges, and primary action buttons favor full-pill geometry (`borderRadius: 50` or `borderRadius: 28`).
 5. **Upper Layer 3D Badges**: Badges represent the highest physical elevation layer and are **always rendered with 3D specular rims and extruded depth bevels**. Never render flat or borderless tags.
-6. **Fluid Tactile Motion**: Spring animations, rotating floating plus button (`0°` to `135°`), scale bounces on tab select, and organic holographic breathing.
+6. **Fluid Tactile Motion**: Spring animations, rotating floating plus button (`0°` to `135°`), live sliding active tab indicator pill, and organic holographic breathing.
 
 ---
 
@@ -207,6 +207,7 @@ metricCard: {
   2. Matching Pastel Border (`#FFF5B8`, `#D8DBFF`, `#C6FFDD`)
   3. Elevated Circular White Icon Wrap (`32x32` or `46x46`, `backgroundColor: '#FFFFFF'`, with border & shadow matching category)
   4. Matching Colored Glow Shadow (`shadowColor: #F5C518`, `#8383D6`, `#52D22E`, `elevation: 3`)
+- **Circular Progress Percentage Graph**: SVG circular progress ring (`size: 34`, `strokeWidth: 2.8`) with category track background and dynamic arc stroke indicating completion percentage with centered bold percentage text.
 - **Bottom Accent Pill**: Centered accent indicator bar (`height: 3.5-4`, `width: 36-48`, `borderTopLeftRadius: 3`, `borderTopRightRadius: 3`, `backgroundColor: cat.accentColor`).
 
 ---
@@ -253,9 +254,8 @@ A signature luxury header architecture where scrolling elevates the header from 
 
 - **Scrolled Floating Layer State (`scrollY > 15px`)**:
   - **Layer Surface**: Theme primary brand color `LavenderPurple` (`#8383D6`), smoothly animated via `Animated.event` (0 to 30px interpolation).
-  - **Dynamic Bottom Padding Cushion**: Smoothly interpolates `paddingBottom` from `0` to `14px` (`headerPaddingBottom`), creating generous vertical breathing space between the controls and the rounded bottom lip so the buttons and logo are never clipped.
-  - **Layer Geometry**: Rounded bottom corners (`borderBottomLeftRadius: 24`, `borderBottomRightRadius: 24`) appearing as an elevated floating card overlaying the scroll stream.
-  - **Ambient Layer Shadow**: Deep purple luxury drop shadow (`shadowColor: '#4A3E8A'`, `shadowOffset: { width: 0, height: 4 }`, `shadowRadius: 10`, `shadowOpacity: 0.22`, `elevation: 6`).
+  - **Dynamic Bottom Padding Cushion**: Smoothly interpolates `paddingBottom` from `0` to `8px` (`headerPaddingBottom`), keeping a snug, balanced vertical cushion between the controls and the rounded bottom lip so the elements feel compact and refined.
+  - **3D Layer Shadow**: Rich midnight-violet 3D bottom drop shadow (`shadowColor: '#201646'`, `shadowOffset: { width: 0, height: 6 }`, `shadowRadius: 7`, `shadowOpacity: 0.32`, `elevation: 8`) casting downward depth to give the header a tactile 3D floating layer feel as items scroll underneath.
   - **Status Bar**: Smoothly toggles to `light-content` to preserve crisp white status indicators (time, battery, signal) over the purple header.
   - **Unique Logotype Architecture (`RegiusLogo.tsx`)**:
     - **Architectural Crown Crest**: Bespoke 3-pillar royal crown vector icon featuring faceted angular wings, an inner negative-space diamond core, a solid foundation base bar, and a radiant star jewel tip (`#F5C518` gold / `#8383D6` purple / `#FFFFFF` white).
@@ -274,6 +274,10 @@ A signature luxury header architecture where scrolling elevates the header from 
 
 - **Visual Shape**: Custom SVG bezier curve path with an inverted center notch (`CORNER_R: 34`, `NOTCH_W: 40`, `NOTCH_DEEP: 24`).
 - **Bar Surface**: `LavenderPurple` (`#8383D6`) with a `4px` `CreamBackground` (`#FFFCE3`) outer border outline.
+- **Tab Items & Labels**:
+  - Sliding Indicator: A single animated black pill (`Colors.DefaultBlack`, `width: 66`, `height: 50`, `borderRadius: 16`) rendered behind the tab items that smoothly glides along the bar (`translateX`) to the newly selected tab.
+  - Focused State: Enclosed over the sliding black container pill with `PureWhiteText` (`#FFFFFF`) icon (strokeWidth `2.4`) and centered bold label.
+  - Inactive State: Transparent background with translucent white icon (`rgba(255, 255, 255, 0.65)`, strokeWidth `1.7`) and medium label (`rgba(255, 255, 255, 0.7)`).
 - **Center Floating FAB Button**:
   - Size: `54x54` circle in `LavenderPurple` (`#8383D6`).
   - Outer Halo: `62x62` circle in `CreamBackground` (`#FFFCE3`).
@@ -372,7 +376,8 @@ The voice assistant presents as an immersive bottom-anchored modal sheet with ri
 ## 7. Motion & Animation Standards
 
 1. **Spring Configurations**:
-   - Tab Selection Bounce: `friction: 5`, `tension: 300`
+   - Tab Indicator Glide: `friction: 14`, `tension: 140`
+   - Tab Tap Feedback: `friction: 6`, `tension: 260`
    - Plus Button Scale: `friction: 4`, `tension: 250`
    - Plus Button Rotation: `friction: 6`, `tension: 180` (`0°` to `135°`)
    - Modal Sheet Slide: `friction: 9`, `tension: 65`

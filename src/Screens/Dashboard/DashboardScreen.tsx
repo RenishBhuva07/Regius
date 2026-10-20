@@ -10,9 +10,10 @@ import {
   Animated,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  Dimensions,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Sparkles, Sun, Settings, Mic, Calendar } from 'lucide-react-native';
+import { Sun, Settings, Calendar } from 'lucide-react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
@@ -20,12 +21,14 @@ import { Fonts } from '../../Theme/fonts';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import { SVGS } from '../../Assets/Images';
 import { RegiusLogo } from '../../Common/RegiusLogo';
-import { Badge } from '../../Common/Badge';
+import { CustomAnimation } from '../../Common/CustomAnimation';
+import HolographAnimation from '../../Assets/JsonAnimations/Holograph.json';
 import { useTaskReminder } from '../../Context/TaskReminderContext';
 import { useVoiceWakeWord } from '../../Context/VoiceWakeWordContext';
 import DailyBriefingCard from './Components/DailyBriefingCard';
 import DailyBalanceGrid from './Components/DailyBalanceGrid';
 import TimelineItemCard, { TimelineItem } from './Components/TimelineItemCard';
+import HeaderPatternSvg from './Components/HeaderPatternSvg';
 
 type FlowFilter = 'all' | 'tasks' | 'habits' | 'reminders' | 'voice';
 
@@ -89,21 +92,29 @@ export const DashboardScreen: React.FC = () => {
 
   const headerShadowOpacity = scrollY.interpolate({
     inputRange: [0, 30],
-    outputRange: [0, 0.22],
+    outputRange: [0, 0.32],
     extrapolate: 'clamp',
   });
 
   const headerElevation = scrollY.interpolate({
     inputRange: [0, 30],
-    outputRange: [0, 6],
+    outputRange: [0, 8],
     extrapolate: 'clamp',
   });
 
   const headerPaddingBottom = scrollY.interpolate({
     inputRange: [0, 30],
-    outputRange: [0, 14],
+    outputRange: [0, 8],
     extrapolate: 'clamp',
   });
+
+  const headerPatternOpacity = scrollY.interpolate({
+    inputRange: [0, 25],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
+
+  const { width: screenWidth } = Dimensions.get('window');
 
   const handleScroll = Animated.event(
     [{ nativeEvent: { contentOffset: { y: scrollY } } }],
@@ -305,34 +316,47 @@ export const DashboardScreen: React.FC = () => {
           },
         ]}
       >
+        {/* Background Theme SVG Designs for Scrolled State */}
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              opacity: headerPatternOpacity,
+              borderBottomLeftRadius: headerRadius,
+              borderBottomRightRadius: headerRadius,
+              overflow: 'hidden',
+            },
+          ]}
+        >
+          <HeaderPatternSvg width={screenWidth} insetsTop={insets.top} />
+        </Animated.View>
+
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <RegiusLogo size="md" variant={isScrolled ? 'light' : 'default'} />
+            <RegiusLogo size="xl" variant={isScrolled ? 'light' : 'default'} />
           </View>
 
           <View style={styles.headerRight}>
             <TouchableOpacity
               activeOpacity={0.75}
-              onPress={() => triggerWakeWord()}
-              style={[
-                styles.voiceHeaderBtn,
-                isScrolled && styles.voiceHeaderBtnScrolled,
-              ]}
+              onPress={() => openAssistant()}
+              style={styles.voiceHeaderBtn}
               accessibilityRole="button"
-              accessibilityLabel="Hey Regius Voice Assistant"
-              hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
+              accessibilityLabel={`Open ${assistantName} Voice Assistant`}
+              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
-              <View
-                style={[
-                  styles.voiceHeaderGlow,
-                  isScrolled && styles.voiceHeaderGlowScrolled,
-                ]}
-              />
-              <Mic
-                size={16}
-                color={isScrolled ? Colors.LavenderPurple : '#7059C8'}
-                strokeWidth={2.4}
-              />
+              <View pointerEvents="none">
+                <CustomAnimation
+                  animationFile={HolographAnimation}
+                  size={56}
+                  animationStyle={styles.voiceHeaderAnimation}
+                  autoPlay
+                  loop
+                  resizeMode="contain"
+                  pointerEvents="none"
+                />
+              </View>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -347,7 +371,7 @@ export const DashboardScreen: React.FC = () => {
               hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
             >
               <Settings
-                size={18}
+                size={24}
                 color={isScrolled ? Colors.MidnightCharcoal : '#1B1C19'}
                 strokeWidth={2}
               />
@@ -363,7 +387,7 @@ export const DashboardScreen: React.FC = () => {
               accessibilityRole="button"
               accessibilityLabel="User Profile"
             >
-              <SVGS.RegiusAvatar width={36} height={36} />
+              <SVGS.RegiusAvatar width={36} height={36} style={styles.avatar} />
             </TouchableOpacity>
           </View>
         </View>
@@ -381,23 +405,16 @@ export const DashboardScreen: React.FC = () => {
       >
         {/* Greeting */}
         <View style={styles.greetingSection}>
-          <View style={styles.stateRow}>
-            <Badge
-              label={`${assistantName} Flow Active`}
-              variant="green"
-              size="md"
-              icon={<Sparkles size={12} color="#1B9A72" />}
-            />
-
+          <View style={styles.dateWeatherRow}>
+            <Text style={styles.dateText}>{formattedDate}</Text>
             <View style={styles.ambientStatus}>
-              <Sun size={15} color="#665F3D" />
+              <Sun size={14} color="#77767B" strokeWidth={2.2} />
               <Text style={styles.ambientStatusText}>
                 Calm & Focused • 68°F
               </Text>
             </View>
           </View>
 
-          <Text style={styles.dateText}>{formattedDate}</Text>
           <Text style={styles.greetingText}>{greeting}</Text>
         </View>
 
@@ -408,6 +425,7 @@ export const DashboardScreen: React.FC = () => {
           habitCount={habits.length}
           assistantName={assistantName}
           onOpenVoiceAssistant={() => openAssistant()}
+          onTriggerWakeWord={() => triggerWakeWord()}
         />
 
         {/* Daily balance grid */}
@@ -533,9 +551,9 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 100,
-    shadowColor: '#4A3E8A',
-    shadowOffset: { width: 0, height: 4 },
-    shadowRadius: 10,
+    shadowColor: '#201646',
+    shadowOffset: { width: 0, height: 6 },
+    shadowRadius: 7,
   },
   header: {
     height: HEADER_HEIGHT,
@@ -556,37 +574,12 @@ const styles = StyleSheet.create({
   voiceHeaderBtn: {
     width: 36,
     height: 36,
-    borderRadius: 18,
-    backgroundColor: 'rgba(131, 131, 214, 0.12)',
-    borderWidth: 1,
-    borderColor: 'rgba(131, 131, 214, 0.35)',
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'relative',
-    shadowColor: '#8383D6',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.22,
-    shadowRadius: 5,
-    elevation: 3,
   },
-  voiceHeaderBtnScrolled: {
-    backgroundColor: '#FFFFFF',
-    borderColor: 'rgba(255, 255, 255, 0.85)',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  voiceHeaderGlow: {
-    position: 'absolute',
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: 'rgba(131, 131, 214, 0.08)',
-  },
-  voiceHeaderGlowScrolled: {
-    backgroundColor: 'rgba(131, 131, 214, 0.15)',
+  voiceHeaderAnimation: {
+    width: 56,
+    height: 56,
   },
   settingsBtn: {
     width: 36,
@@ -621,15 +614,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
+    backgroundColor: Colors.DefaultWhite,
   },
   avatarRingScrolled: {
-    borderColor: '#FFFFFF',
+    borderColor: Colors.RingBorder,
     borderWidth: 2,
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.12,
     shadowRadius: 4,
     elevation: 3,
+    backgroundColor: Colors.DefaultWhite,
+  },
+  avatar: {
+    position: 'absolute',
+    bottom: 0,
   },
   scroll: {
     flex: 1,
@@ -641,25 +640,11 @@ const styles = StyleSheet.create({
   greetingSection: {
     marginBottom: 20,
   },
-  stateRow: {
+  dateWeatherRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 10,
-  },
-  ariaActiveBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#CCE6D0',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 20,
-    gap: 5,
-  },
-  ariaActiveText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
-    color: '#2D5A37',
+    marginBottom: 4,
   },
   ambientStatus: {
     flexDirection: 'row',
@@ -668,15 +653,14 @@ const styles = StyleSheet.create({
   },
   ambientStatusText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
-    color: '#665F3D',
+    fontSize: 11.5,
+    color: '#77767B',
   },
   dateText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 11.5,
     color: '#77767B',
     letterSpacing: 0.8,
-    marginBottom: 2,
   },
   greetingText: {
     fontFamily: Fonts.poppins.bold,
@@ -711,24 +695,40 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   filterPill: {
-    paddingHorizontal: 13,
-    paddingVertical: 6,
-    borderRadius: 20,
+    paddingHorizontal: 14,
+    paddingVertical: 7,
+    borderRadius: 22,
     backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#ECE8DF',
+    borderWidth: 1.5,
+    borderColor: '#ECE7DB',
+    borderBottomWidth: 3.5,
+    borderBottomColor: '#D8D1C0',
+    shadowColor: '#5C5441',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.12,
+    shadowRadius: 4,
+    elevation: 3,
   },
   filterPillActive: {
     backgroundColor: '#1B1C19',
-    borderColor: '#1B1C19',
+    borderColor: '#2D2E2B',
+    borderBottomWidth: 3.5,
+    borderBottomColor: '#0E0F0D',
+    shadowColor: '#1B1C19',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 6,
+    elevation: 5,
   },
   filterPillText: {
-    fontFamily: Fonts.poppins.medium,
+    fontFamily: Fonts.poppins.semiBold,
     fontSize: 12,
-    color: '#666665',
+    color: '#555450',
+    letterSpacing: -0.1,
   },
   filterPillTextActive: {
-    color: '#FFFFFF',
+    color: '#FFFCE3',
+    fontFamily: Fonts.poppins.bold,
   },
   timelineList: {
     position: 'relative',

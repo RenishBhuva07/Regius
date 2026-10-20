@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { CheckCircle2, Flame, Bell } from 'lucide-react-native';
+import Svg, { Circle } from 'react-native-svg';
 import { Fonts } from '../../../Theme/fonts';
 
 export interface DailyBalanceGridProps {
@@ -16,6 +17,92 @@ export interface DailyBalanceGridProps {
   onPressHabits?: () => void;
   onPressNudges?: () => void;
 }
+
+interface CircularProgressProps {
+  percent: number;
+  size?: number;
+  strokeWidth?: number;
+  trackColor: string;
+  progressColor: string;
+  textColor: string;
+  shadowColor?: string;
+}
+
+// Circular progress indicator showing percentage as a round graph line
+export const CircularProgress: React.FC<CircularProgressProps> = ({
+  percent,
+  size = 34,
+  strokeWidth = 2.8,
+  trackColor,
+  progressColor,
+  textColor,
+  shadowColor,
+}) => {
+  const clampedPercent = Math.min(100, Math.max(0, percent));
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset =
+    circumference - (circumference * clampedPercent) / 100;
+  const center = size / 2;
+
+  return (
+    <View
+      style={[
+        styles.progressContainer,
+        {
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          shadowColor: shadowColor || 'rgba(0, 0, 0, 0.1)',
+        },
+      ]}
+      accessibilityRole="image"
+      accessibilityLabel={`${clampedPercent}% completed`}
+    >
+      <View style={styles.svgRotator}>
+        <Svg width={size} height={size}>
+          {/* Background track circle */}
+          <Circle
+            cx={center}
+            cy={center}
+            r={radius}
+            stroke={trackColor}
+            strokeWidth={strokeWidth}
+            fill="#FFFFFF"
+          />
+          {/* Foreground progress arc indicating percentage */}
+          {clampedPercent > 0 && (
+            <Circle
+              cx={center}
+              cy={center}
+              r={radius}
+              stroke={progressColor}
+              strokeWidth={strokeWidth}
+              strokeDasharray={`${circumference} ${circumference}`}
+              strokeDashoffset={strokeDashoffset}
+              strokeLinecap="round"
+              fill="transparent"
+            />
+          )}
+        </Svg>
+      </View>
+      <View style={styles.percentTextContainer} pointerEvents="none">
+        <Text
+          style={[
+            styles.percentIndicatorText,
+            {
+              color: textColor,
+              fontSize: clampedPercent >= 100 ? 8.5 : 10,
+            },
+          ]}
+          numberOfLines={1}
+        >
+          {clampedPercent}%
+        </Text>
+      </View>
+    </View>
+  );
+};
 
 export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
   tasksCompleted = 0,
@@ -49,7 +136,6 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
       {/* Section Header */}
       <View style={styles.sectionHeader}>
         <Text style={styles.sectionTitle}>Daily Balance</Text>
-        <Text style={styles.sectionPace}>Optimal Pace</Text>
       </View>
 
       {/* Bento 3-Column Grid: Standard Sequence (Tasks, Reminders, Habits) */}
@@ -66,9 +152,13 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
             <View style={[styles.iconCircle, styles.tasksIconCircle]}>
               <CheckCircle2 size={16} color="#B48216" strokeWidth={2.4} />
             </View>
-            <Text style={[styles.percentBadge, { color: '#B48216' }]}>
-              {taskPercent}%
-            </Text>
+            <CircularProgress
+              percent={taskPercent}
+              trackColor="#FFF5B8"
+              progressColor="#B48216"
+              textColor="#B48216"
+              shadowColor="#F5C518"
+            />
           </View>
           <View style={styles.cardBottom}>
             <Text style={styles.countText}>
@@ -95,9 +185,13 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
             <View style={[styles.iconCircle, styles.remindersIconCircle]}>
               <Bell size={16} color="#1B9A72" strokeWidth={2.4} />
             </View>
-            <Text style={[styles.percentBadge, { color: '#1B9A72' }]}>
-              {reminderPercent}%
-            </Text>
+            <CircularProgress
+              percent={reminderPercent}
+              trackColor="#C6FFDD"
+              progressColor="#1B9A72"
+              textColor="#1B9A72"
+              shadowColor="#52D22E"
+            />
           </View>
           <View style={styles.cardBottom}>
             <Text style={styles.countText}>
@@ -124,9 +218,13 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
             <View style={[styles.iconCircle, styles.habitsIconCircle]}>
               <Flame size={16} color="#7059C8" strokeWidth={2.4} />
             </View>
-            <Text style={[styles.percentBadge, { color: '#7059C8' }]}>
-              {habitPercent}%
-            </Text>
+            <CircularProgress
+              percent={habitPercent}
+              trackColor="#D8DBFF"
+              progressColor="#7059C8"
+              textColor="#7059C8"
+              shadowColor="#8383D6"
+            />
           </View>
           <View style={styles.cardBottom}>
             <Text style={styles.countText}>
@@ -259,10 +357,58 @@ const styles = StyleSheet.create({
     borderColor: '#C6FFDD',
     shadowColor: '#52D22E',
   },
-  percentBadge: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12.5,
-    letterSpacing: -0.2,
+  progressContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    backgroundColor: '#FFFFFF',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  svgRotator: {
+    transform: [{ rotate: '-90deg' }],
+  },
+  percentTextContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  percentIndicator: {
+    minWidth: 32,
+    height: 32,
+    borderRadius: 16,
+    paddingHorizontal: 4,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 3,
+    elevation: 2,
+  },
+  tasksPercentIndicator: {
+    borderColor: '#FFF5B8',
+    shadowColor: '#F5C518',
+  },
+  remindersPercentIndicator: {
+    borderColor: '#C6FFDD',
+    shadowColor: '#52D22E',
+  },
+  habitsPercentIndicator: {
+    borderColor: '#D8DBFF',
+    shadowColor: '#8383D6',
+  },
+  percentIndicatorText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 10.5,
+    letterSpacing: -0.3,
   },
   cardBottom: {
     gap: 1,
@@ -279,10 +425,11 @@ const styles = StyleSheet.create({
     color: '#8E8D92',
   },
   label: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
-    color: '#666665',
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 13,
+    color: '#1B1C19',
     letterSpacing: -0.1,
+    marginTop: 2,
   },
   // Bottom accent pill matching HomeScreen category card indicator
   accentPill: {

@@ -45,8 +45,10 @@ const BTN_SIZE = 54;
 const BTN_RING = 8; // cream ring around button
 const BTN_FLOAT = 22; // how far center of button floats above bar top
 
-const SIDE_PADDING = 14; // breathing room from rounded pill caps
+const SIDE_PADDING = 10; // breathing room from rounded pill caps
 const TAB_SLOT_W = (BAR_W - SIDE_PADDING * 2) / 5; // equal width for all 5 slots
+const TAB_INNER_W = Math.min(66, Math.floor(TAB_SLOT_W));
+const TAB_INNER_H = 50;
 
 // ─── SVG curved card (rounded corners + center notch) ────────────────────────
 
@@ -115,6 +117,16 @@ const RIGHT_TABS = [
 ];
 const ALL_TABS = [...LEFT_TABS, ...RIGHT_TABS];
 
+const TAB_SLOTS: Record<string, number> = {
+  Dashboard: 0,
+  Tasks: 1,
+  Reminders: 3,
+  Habits: 4,
+};
+
+const getTabX = (slot: number): number =>
+  SIDE_PADDING + slot * TAB_SLOT_W + (TAB_SLOT_W - TAB_INNER_W) / 2;
+
 // ─── Custom tab bar ───────────────────────────────────────────────────────────
 
 const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
@@ -131,23 +143,41 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
   const scaleAnims = React.useRef(
     ALL_TABS.map(() => new Animated.Value(1)),
   ).current;
+
+  const currentRouteName = state.routes[state.index]?.name;
+  const initialSlot = TAB_SLOTS[currentRouteName] ?? 0;
+  const indicatorX = React.useRef(
+    new Animated.Value(getTabX(initialSlot)),
+  ).current;
+
   const [isSheetOpen, setIsSheetOpen] = React.useState(false);
   const [isWrapperExpanded, setIsWrapperExpanded] = React.useState(false);
 
   const plusScale = React.useRef(new Animated.Value(1)).current;
   const plusRotate = React.useRef(new Animated.Value(0)).current;
 
+  React.useEffect(() => {
+    const routeName = state.routes[state.index]?.name;
+    const slot = TAB_SLOTS[routeName] ?? 0;
+    Animated.spring(indicatorX, {
+      toValue: getTabX(slot),
+      friction: 14,
+      tension: 140,
+      useNativeDriver: true,
+    }).start();
+  }, [state.index, state.routes, indicatorX]);
+
   const animateTab = (i: number) => {
     Animated.sequence([
       Animated.timing(scaleAnims[i], {
-        toValue: 0.78,
+        toValue: 0.93,
         duration: 70,
         useNativeDriver: true,
       }),
       Animated.spring(scaleAnims[i], {
         toValue: 1,
-        friction: 5,
-        tension: 300,
+        friction: 6,
+        tension: 260,
         useNativeDriver: true,
       }),
     ]).start();
@@ -218,6 +248,14 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
     }
     animateTab(tabIdx);
     if (!focused) {
+      const slot = TAB_SLOTS[name] ?? 0;
+      Animated.spring(indicatorX, {
+        toValue: getTabX(slot),
+        friction: 14,
+        tension: 140,
+        useNativeDriver: true,
+      }).start();
+
       const ri = state.routes.findIndex(r => r.name === name);
       const ev = navigation.emit({
         type: 'tabPress',
@@ -304,6 +342,15 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
           { bottom: barBottom, left: H_MARGIN, width: BAR_W, height: BAR_H },
         ]}
       >
+        <Animated.View
+          pointerEvents="none"
+          style={[
+            styles.activeIndicator,
+            {
+              transform: [{ translateX: indicatorX }],
+            },
+          ]}
+        />
         <View style={styles.row}>
           {LEFT_TABS.map((t, i) => renderTab(t, i))}
           {/* Center spacer — sits under notch with equal slot width */}
@@ -469,6 +516,15 @@ const styles = StyleSheet.create({
     paddingHorizontal: SIDE_PADDING,
     paddingBottom: 2,
   },
+  activeIndicator: {
+    position: 'absolute',
+    top: 6,
+    left: 0,
+    width: TAB_INNER_W,
+    height: TAB_INNER_H,
+    borderRadius: 16,
+    backgroundColor: Colors.DefaultBlack,
+  },
   tabItem: {
     flex: 1,
     height: '100%',
@@ -476,10 +532,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   tabInner: {
+    width: TAB_INNER_W,
+    height: TAB_INNER_H,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 3,
     paddingHorizontal: 2,
+    borderRadius: 16,
     position: 'relative',
   },
   label: {
@@ -487,6 +546,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.medium,
     fontSize: 9.5,
     lineHeight: 12,
+    textAlign: 'center',
     color: 'rgba(255, 255, 255, 0.7)',
   },
   labelActive: {
@@ -494,6 +554,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.bold,
     fontSize: 9.5,
     lineHeight: 12,
+    textAlign: 'center',
     color: Colors.PureWhiteText,
   },
 

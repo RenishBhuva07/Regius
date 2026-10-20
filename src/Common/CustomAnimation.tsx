@@ -1,11 +1,12 @@
 import React, { forwardRef } from 'react';
-import { StyleSheet, StyleProp, ViewStyle } from 'react-native';
+import { View, StyleSheet, StyleProp, ViewStyle } from 'react-native';
 import LottieView, { LottieViewProps } from 'lottie-react-native';
 import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
 export interface CustomAnimationProps {
   animationFile: any;
   animationStyle?: StyleProp<ViewStyle>;
+  size?: number;
   autoPlay?: boolean;
   loop?: boolean;
   speed?: number;
@@ -13,6 +14,7 @@ export interface CustomAnimationProps {
   colorFilters?: LottieViewProps['colorFilters'];
   onAnimationFinish?: (isCancelled: boolean) => void;
   testID?: string;
+  pointerEvents?: 'box-none' | 'none' | 'box-only' | 'auto';
 }
 
 export const CustomAnimation = forwardRef<LottieView, CustomAnimationProps>(
@@ -20,6 +22,7 @@ export const CustomAnimation = forwardRef<LottieView, CustomAnimationProps>(
     {
       animationFile,
       animationStyle,
+      size,
       autoPlay = true,
       loop = true,
       speed = 1,
@@ -27,13 +30,19 @@ export const CustomAnimation = forwardRef<LottieView, CustomAnimationProps>(
       colorFilters,
       onAnimationFinish,
       testID,
+      pointerEvents,
     },
     ref,
   ) => {
-    return (
+    const lottieNode = (
       <LottieView
         ref={ref}
-        style={animationStyle ? animationStyle : styles.animationView}
+        style={[
+          size !== undefined
+            ? { width: size, height: size }
+            : !animationStyle && styles.animationView,
+          animationStyle,
+        ]}
         source={animationFile}
         autoPlay={autoPlay}
         loop={loop}
@@ -44,6 +53,12 @@ export const CustomAnimation = forwardRef<LottieView, CustomAnimationProps>(
         testID={testID}
       />
     );
+
+    if (pointerEvents) {
+      return <View pointerEvents={pointerEvents}>{lottieNode}</View>;
+    }
+
+    return lottieNode;
   },
 );
 

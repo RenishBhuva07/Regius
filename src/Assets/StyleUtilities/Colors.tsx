@@ -10,10 +10,12 @@ export const Colors = {
 
   // Character & Accent Accents
   LavenderPurple: '#8383D6',
+  LightLavenderPurple: 'rgba(156, 156, 227, 0.5)',
   AccentGreen: '#52D22E',
   AccentYellow: '#F5C518',
   LuminousGreen: '#21AF85',
   Success: '#008552',
+  GreenGracious: '#1B9A72',
   Misty: '#BAEBCB',
   CrimsonPulse: '#FF3B30',
   BurntEmber: '#D92A0F',
@@ -32,6 +34,8 @@ export const Colors = {
   FogGrey: '#D9D9D9',
   CarbonSlate: '#2C3035',
   MoonDust: '#F0F0F0',
+  SoftCream: '#FBF9F3',
+  WhiteHighlight: 'rgba(255, 255, 255, 0.06)',
 
   // Foregrounds (Text)
   MidnightInkText: '#000000',

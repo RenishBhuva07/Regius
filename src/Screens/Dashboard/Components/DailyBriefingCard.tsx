@@ -8,7 +8,7 @@ import {
   Easing,
   ActivityIndicator,
 } from 'react-native';
-import { Play, Pause, AudioWaveform } from 'lucide-react-native';
+import { Play, Pause, AudioWaveform, Sparkles } from 'lucide-react-native';
 import TrackPlayer from 'react-native-track-player';
 import Toast from 'react-native-toast-message';
 
@@ -18,6 +18,7 @@ import { AudioPlayerService } from '../../../Services/AudioPlayerService';
 import { KokoroTTSService } from '../../../Services/Kokoro/KokoroTTSService';
 import { VoiceSettingsService } from '../../../Services/VoiceSettingsService';
 import { VOICES } from '../../Settings/Components/types';
+import Colors from '../../../Assets/StyleUtilities/Colors';
 
 interface DailyBriefingCardProps {
   taskCount?: number;
@@ -25,6 +26,7 @@ interface DailyBriefingCardProps {
   habitCount?: number;
   assistantName?: string;
   onOpenVoiceAssistant?: () => void;
+  onTriggerWakeWord?: () => void;
 }
 
 export const DailyBriefingCard: React.FC<DailyBriefingCardProps> = ({
@@ -33,6 +35,7 @@ export const DailyBriefingCard: React.FC<DailyBriefingCardProps> = ({
   habitCount = 7,
   assistantName = 'Regius',
   onOpenVoiceAssistant,
+  onTriggerWakeWord,
 }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -268,105 +271,133 @@ export const DailyBriefingCard: React.FC<DailyBriefingCardProps> = ({
     : '01:20';
 
   return (
-    <View style={styles.card}>
-      {/* Ambient background decoration */}
-      <View style={styles.ambientGlow} />
+    <View style={styles.cardShadowWrapper}>
+      <View style={styles.card}>
+        {/* Ambient background decoration positioned safely behind header */}
+        <View style={styles.ambientGlow} />
 
-      <View style={styles.content}>
-        {/* Header row */}
-        <View style={styles.headerRow}>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={onOpenVoiceAssistant}
-            style={styles.headerLeft}
-            accessibilityRole="button"
-            accessibilityLabel={`Open ${assistantName} Voice Assistant`}
-          >
-            <View style={styles.iconCircle}>
-              <AudioWaveform size={18} color="#CCE6D0" />
-            </View>
-            <View>
-              <Text style={styles.title}>{assistantName}’s Morning Brief</Text>
-              <Text style={styles.subtitle}>1 min 20s audio overview</Text>
-            </View>
-          </TouchableOpacity>
+        <View style={styles.content}>
+          {/* Header row */}
+          <View style={styles.headerRow}>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={onOpenVoiceAssistant}
+              style={styles.headerLeft}
+              accessibilityRole="button"
+              accessibilityLabel={`Open ${assistantName} Voice Assistant`}
+            >
+              <View style={styles.iconCircle}>
+                <AudioWaveform size={18} color={Colors.LavenderPurple} />
+              </View>
+              <View style={styles.titleContainer}>
+                <Text style={styles.title} numberOfLines={1}>
+                  {assistantName}’s Morning Brief
+                </Text>
+                <Text style={styles.subtitle}>1 min 20s audio overview</Text>
+              </View>
+            </TouchableOpacity>
 
-          <Badge label="TODAY" variant="neutral" size="sm" />
-        </View>
-
-        {/* Audio Player Controls */}
-        <View style={styles.playerRow}>
-          <TouchableOpacity
-            activeOpacity={0.85}
-            onPress={handleTogglePlayback}
-            disabled={isLoading}
-            style={[styles.playBtn, isPlaying && styles.playBtnActive]}
-            accessibilityRole="button"
-            accessibilityLabel={
-              isPlaying ? 'Pause Morning Brief' : 'Play Morning Brief'
-            }
-          >
-            {isLoading ? (
-              <ActivityIndicator size="small" color="#010102" />
-            ) : isPlaying ? (
-              <Pause size={18} color="#010102" strokeWidth={2.5} />
-            ) : (
-              <Play
-                size={18}
-                color="#010102"
-                fill="#010102"
-                style={{ marginLeft: 2 }}
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={onTriggerWakeWord || onOpenVoiceAssistant}
+              accessibilityRole="button"
+              accessibilityLabel={`${assistantName} is ready, tap to talk`}
+            >
+              <Badge
+                label={`${assistantName} is ready`}
+                variant="green"
+                size="sm"
+                icon={<Sparkles size={11} color={Colors.GreenGracious} />}
               />
-            )}
-          </TouchableOpacity>
-
-          {/* Dynamic Waveform Visualizer */}
-          <View style={styles.waveformContainer}>
-            {barHeights.map((barAnim, idx) => {
-              const isMint = idx % 2 === 0 || idx === 3 || idx === 9;
-              return (
-                <Animated.View
-                  key={idx}
-                  style={[
-                    styles.waveformBar,
-                    {
-                      height: barAnim,
-                      backgroundColor: isMint
-                        ? '#CCE6D0'
-                        : 'rgba(255, 255, 255, 0.28)',
-                    },
-                  ]}
-                />
-              );
-            })}
+            </TouchableOpacity>
           </View>
 
-          <Text style={styles.timerText}>{displayTime}</Text>
-        </View>
+          {/* Audio Player Controls */}
+          <View style={styles.playerRow}>
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={handleTogglePlayback}
+              disabled={isLoading}
+              style={[styles.playBtn, isPlaying && styles.playBtnActive]}
+              accessibilityRole="button"
+              accessibilityLabel={
+                isPlaying ? 'Pause Morning Brief' : 'Play Morning Brief'
+              }
+            >
+              {isLoading ? (
+                <ActivityIndicator size="small" color={Colors.DefaultBlack} />
+              ) : isPlaying ? (
+                <Pause
+                  size={18}
+                  color={Colors.DefaultBlack}
+                  strokeWidth={2.5}
+                  fill={Colors.DefaultBlack}
+                />
+              ) : (
+                <Play
+                  size={18}
+                  color={Colors.DefaultBlack}
+                  fill={Colors.DefaultBlack}
+                  style={{ marginLeft: 2 }}
+                />
+              )}
+            </TouchableOpacity>
 
-        {/* Dynamic Contextual Quote Synchronized with Real Counts */}
-        <Text style={styles.quoteText}>
-          “You have {taskCount} tasks, {habitCount} habits, and {reminderCount}{' '}
-          scheduled voice check-ins today. Focus block opens at 11:30 AM.”
-        </Text>
+            {/* Dynamic Waveform Visualizer */}
+            <View style={styles.waveformContainer}>
+              {barHeights.map((barAnim, idx) => {
+                const isMint = idx % 2 === 0 || idx === 3 || idx === 9;
+                return (
+                  <Animated.View
+                    key={idx}
+                    style={[
+                      styles.waveformBar,
+                      {
+                        height: barAnim,
+                        backgroundColor: isMint
+                          ? '#CCE6D0'
+                          : 'rgba(255, 255, 255, 0.35)',
+                      },
+                    ]}
+                  />
+                );
+              })}
+            </View>
+
+            <Text style={styles.timerText}>{displayTime}</Text>
+          </View>
+
+          {/* Dynamic Contextual Quote Synchronized with Real Counts */}
+          <Text style={styles.quoteText}>
+            “You have {taskCount} tasks, {habitCount} habits, and{' '}
+            {reminderCount} scheduled voice check-ins today. Focus block opens
+            at 11:30 AM.”
+          </Text>
+        </View>
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  cardShadowWrapper: {
+    marginBottom: 24,
+    borderRadius: 24,
+    backgroundColor: '#1C1D22',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.28,
+    shadowRadius: 18,
+    elevation: 10,
+  },
   card: {
-    backgroundColor: '#1C1C1E',
+    backgroundColor: '#1C1D22',
     borderRadius: 24,
     padding: 20,
     position: 'relative',
     overflow: 'hidden',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.16,
-    shadowRadius: 20,
-    elevation: 8,
-    marginBottom: 24,
+    borderWidth: 4,
+    borderColor: 'rgba(255, 255, 255, 0.9)',
   },
   ambientGlow: {
     position: 'absolute',
@@ -375,7 +406,8 @@ const styles = StyleSheet.create({
     width: 140,
     height: 140,
     borderRadius: 70,
-    backgroundColor: 'rgba(95, 94, 96, 0.22)',
+    backgroundColor: Colors.LightLavenderPurple,
+    zIndex: 0,
   },
   content: {
     position: 'relative',
@@ -386,11 +418,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    gap: 8,
   },
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+    flex: 1,
+    marginRight: 4,
+  },
+  titleContainer: {
+    flexShrink: 1,
   },
   iconCircle: {
     width: 38,
@@ -412,41 +450,38 @@ const styles = StyleSheet.create({
     color: '#A19FA3',
     marginTop: 1,
   },
-  todayBadge: {
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 12,
-  },
-  todayBadgeText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
-    color: '#FBF9F3',
-  },
   playerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    backgroundColor: '#272932',
     borderRadius: 30,
     paddingHorizontal: 8,
     paddingVertical: 6,
     gap: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.15,
+    shadowRadius: 4,
+    elevation: 2,
+    zIndex: 2,
   },
   playBtn: {
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: '#FBF9F3',
+    backgroundColor: Colors.LavenderPurple,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
+    shadowColor: Colors.LavenderPurple,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowOpacity: 0.35,
+    shadowRadius: 5,
+    elevation: 3,
   },
   playBtnActive: {
-    backgroundColor: '#CCE6D0',
+    backgroundColor: Colors.LavenderPurple,
   },
   waveformContainer: {
     flex: 1,
@@ -454,16 +489,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 4,
+    paddingHorizontal: 7,
   },
   waveformBar: {
     width: 3,
     borderRadius: 2,
   },
   timerText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
-    color: '#C8C6C8',
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 12,
+    color: '#D4D2D6',
     paddingRight: 6,
   },
   quoteText: {
