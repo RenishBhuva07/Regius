@@ -270,19 +270,30 @@ A signature luxury header architecture where scrolling elevates the header from 
 
 ---
 
-### 4.6 Floating Curved Tab Bar & Action Dock (`src/Navigators/BottomTabNavigator.tsx`)
+### 4.6 Floating Curved Tab Bar & Action Dock (`src/Navigators/BottomTabNavigator.tsx`, `BottomTabPatternSvg.tsx`)
 
 - **Visual Shape**: Custom SVG bezier curve path with an inverted center notch (`CORNER_R: 34`, `NOTCH_W: 40`, `NOTCH_DEEP: 24`).
-- **Bar Surface**: `LavenderPurple` (`#8383D6`) with a `4px` `CreamBackground` (`#FFFCE3`) outer border outline.
+- **Bar Surface & Aesthetic Background (`BottomTabPatternSvg.tsx`)**:
+  - Masked precisely to the curved notch path via `<ClipPath id="curvedBarClip">`.
+  - Base Rich Velvet Lavender Gradient (`#9494EC` → `#8383D6` → `#6C6CC4`).
+  - Radiant Center Dawn Halo under floating FAB notch (`#FFFCE3` / `#F5C518` ambient illumination).
+  - Left celestial violet aura (`#B2B2FF`) & right warm gold dawn aura (`#F5C518`).
+  - Left & right concentric acoustic orbital rings (`r=16`, dashed `r=28`, `r=44`).
+  - Notch acoustic echo arcs propagating downward beneath the floating action button.
+  - Curated flowing harmonic waves stretching across the dock width.
+  - Top polished chamfer light rim lines following the upper edge.
+  - Golden 4-point diamond sparkle stars and celestial starlight micro-dots.
+  - Crisp `4px` `CreamBackground` (`#FFFCE3`) outer border outline on top layer.
 - **Tab Items & Labels**:
-  - Sliding Indicator: A single animated black pill (`Colors.DefaultBlack`, `width: 66`, `height: 50`, `borderRadius: 16`) rendered behind the tab items that smoothly glides along the bar (`translateX`) to the newly selected tab.
+  - Sliding Indicator: A single animated black pill (`Colors.DefaultBlack`, `width: 66`, `height: 50`, `borderRadius: 16`) with `FocusedTabPatternSvg` rendered behind the tab items that smoothly glides along the bar (`translateX`) to the newly selected tab.
   - Focused State: Enclosed over the sliding black container pill with `PureWhiteText` (`#FFFFFF`) icon (strokeWidth `2.4`) and centered bold label.
   - Inactive State: Transparent background with translucent white icon (`rgba(255, 255, 255, 0.65)`, strokeWidth `1.7`) and medium label (`rgba(255, 255, 255, 0.7)`).
-- **Center Floating FAB Button**:
-  - Size: `54x54` circle in `LavenderPurple` (`#8383D6`).
-  - Outer Halo: `62x62` circle in `CreamBackground` (`#FFFCE3`).
+- **Center Floating FAB Button (`PlusButtonPatternSvg.tsx`)**:
+  - Size: `54x54` circle with multi-tone royal lavender gradient (`#A2A2F8` → `#8A8AE6` → `#7171CE` → `#5656B2`).
+  - Luminous golden dawn core glow (`#FFFCE3` / `#F5C518`), domed sapphire lens gloss highlight, concentric acoustic precision orbital tracks, cardinal ticks, and 4 Regius signature diagonal diamond stars (`PlusButtonPatternSvg.tsx`).
+  - Outer Halo: `62x62` circle in `CreamBackground` (`#FFFCE3`) with beveled 1.5px border (`borderTopColor: #FFFFFF`, `borderBottomColor: #D8D1C0`).
   - Shadow: Deep purple drop shadow (`shadowColor: #8383D6`, opacity `0.45`, radius `12`, elevation `16`).
-  - Animated Rotation: Springs from `0°` (plus icon) to `135°` (cross icon) when `PlusActionSheet` opens.
+  - Animated Rotation: Springs from `0°` (plus icon) to `135°` (cross icon) when `PlusActionSheet` opens, rotating the inner starbursts and micro-tracks smoothly.
   - Interaction: Tap opens `PlusActionSheet`; **Long press (320ms) triggers Voice Assistant immediately**.
 
 ---
@@ -294,6 +305,26 @@ A signature luxury header architecture where scrolling elevates the header from 
   1. **New Task** (`#FFFCEB`, gold accent `#F5C518`)
   2. **New Reminder** (`#FFF3E0`, amber accent `#FF9800`)
   3. **New Habit** (`#EDFDF5`, green accent `#52D22E`)
+
+---
+
+### 4.8 Curated Flow Section Background (`FlowSectionBackgroundSvg.tsx`)
+
+Dynamic container background for the timeline list in `DashboardScreen.tsx`:
+
+- **Dynamic Layout & 1:1 Pixel Coordinate Space**: Automatically measures its container bounds via `onLayout` (`handleLayout`), rendering `<Svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} fill="none">`. This eliminates vertical stretching and ensures all circles, starbursts, and acoustic arcs remain 100% distortion-free at any height (from 250px up to 1500px+).
+- **Surface & Base Sheen**: Multi-layer warm cream gradient (`#FFFDF7` → `#FAF6ED` → `#F5EFE3` → `#EDE5D6`) matching the light canvas.
+- **Circular Ambient Auras (`userSpaceOnUse`)**:
+  - Top-center circular golden dawn halo (`cx=W/2, cy=0, r=160`) focused beneath the floating obsidian crest badge.
+  - Top-right velvet lavender aura (`cx=W-10, cy=40, r=130`).
+  - Top-left golden accent aura (`cx=10, cy=40, r=110`).
+  - Bottom-left emerald/mint productivity aura (`cx=20, cy=H-40, r=120`).
+  - Bottom-right sunset peach aura (`cx=W-20, cy=H-40, r=120`).
+- **Acoustic Ripples & Line Art (Fixed Pixel Radii)**:
+  - 4 concentric true circular ripples radiating beneath the crest badge (`r=46`, dashed `r=78`, `r=116`, dashed `r=160`).
+  - Top and bottom flank wave ribbons and vertical dashed timeline micro-guides adapting to container height.
+  - Symmetrical 4-point diamond starbursts (`star(x, y, s)`) and stardust points framing the timeline without clipping or distortion.
+  - Adaptive inner beveled highlight rim (`width=W-2, height=H-2, rx=23`).
 
 ---
 

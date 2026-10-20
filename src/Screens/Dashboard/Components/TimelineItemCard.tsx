@@ -386,7 +386,7 @@ const styles = StyleSheet.create({
     bottom: '50%',
     marginBottom: 15,
     alignItems: 'center',
-    backgroundColor: Colors.SoftCream,
+    backgroundColor: 'transparent',
     paddingHorizontal: 2,
     borderRadius: 3,
     zIndex: 0,

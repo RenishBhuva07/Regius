@@ -30,6 +30,8 @@ import DailyBriefingCard from './Components/DailyBriefingCard';
 import DailyBalanceGrid from './Components/DailyBalanceGrid';
 import TimelineItemCard, { TimelineItem } from './Components/TimelineItemCard';
 import HeaderPatternSvg from './Components/HeaderPatternSvg';
+import FlowBadgePatternSvg from './Components/FlowBadgePatternSvg';
+import FlowSectionBackgroundSvg from './Components/FlowSectionBackgroundSvg';
 
 type FlowFilter = 'all' | 'tasks' | 'habits' | 'reminders' | 'voice';
 
@@ -451,8 +453,14 @@ export const DashboardScreen: React.FC = () => {
 
         {/* Curated flow timeline */}
         <View style={styles.flowSection}>
+          {/* Aesthetic luxury background */}
+          <View style={styles.flowSectionBgWrapper} pointerEvents="none">
+            <FlowSectionBackgroundSvg />
+          </View>
+
           {/* Header crest badge centered on top border */}
           <View style={styles.flowHeaderBadge}>
+            <FlowBadgePatternSvg />
             <Text style={styles.flowTitle}>Today’s Flow</Text>
             <Text style={styles.flowSubtitle}>Your day at a glance</Text>
           </View>
@@ -692,7 +700,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.SoftCream,
     borderRadius: 24,
     borderWidth: 1.5,
-    borderColor: '#ECE8DF',
+    borderTopColor: '#FAF6EE',
+    borderLeftColor: '#EFE9DE',
+    borderRightColor: '#EFE9DE',
+    borderBottomColor: '#DDD6C6',
     paddingHorizontal: 8,
     paddingBottom: 8,
     paddingTop: 40,
@@ -704,6 +715,11 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     elevation: 2,
     position: 'relative',
+  },
+  flowSectionBgWrapper: {
+    ...StyleSheet.absoluteFill,
+    borderRadius: 24,
+    overflow: 'hidden',
   },
   flowHeaderBadge: {
     position: 'absolute',
@@ -727,6 +743,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 6,
     zIndex: 20,
+    overflow: 'hidden',
   },
   flowTitle: {
     fontFamily: Fonts.poppins.bold,

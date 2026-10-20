@@ -46,6 +46,8 @@ import {
   getCutoutCardPath,
 } from '../src/Screens/Dashboard/Components/TimelineItemCard';
 import { DailyBriefingCard } from '../src/Screens/Dashboard/Components/DailyBriefingCard';
+import { FlowSectionBackgroundSvg } from '../src/Screens/Dashboard/Components/FlowSectionBackgroundSvg';
+import { PlusButtonPatternSvg } from '../src/Navigators/PlusButtonPatternSvg';
 
 describe('Dashboard Redesign Components & Logic', () => {
   describe('Component Definitions & Integrity', () => {
@@ -55,6 +57,8 @@ describe('Dashboard Redesign Components & Logic', () => {
       expect(CircularProgress).toBeDefined();
       expect(TimelineItemCard).toBeDefined();
       expect(DailyBriefingCard).toBeDefined();
+      expect(FlowSectionBackgroundSvg).toBeDefined();
+      expect(PlusButtonPatternSvg).toBeDefined();
     });
   });
 

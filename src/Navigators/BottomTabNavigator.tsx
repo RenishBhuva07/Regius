@@ -11,7 +11,6 @@ import {
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import Svg, { Path } from 'react-native-svg';
 import { Plus, House, CheckSquare, Bell, Flame } from 'lucide-react-native';
 
 import { DashboardScreen } from '../Screens/Dashboard';
@@ -22,6 +21,9 @@ import { Colors } from '../Assets/StyleUtilities/Colors';
 import { Typography } from '../Theme/Typographys';
 import { Fonts } from '../Theme/fonts';
 import PlusActionSheet from './PlusActionSheet';
+import FocusedTabPatternSvg from './FocusedTabPatternSvg';
+import BottomTabPatternSvg from './BottomTabPatternSvg';
+import PlusButtonPatternSvg from './PlusButtonPatternSvg';
 import { useTaskReminder } from '../Context/TaskReminderContext';
 import { useVoiceWakeWord } from '../Context/VoiceWakeWordContext';
 import AddTaskModal from '../Components/AddTaskModal';
@@ -50,58 +52,21 @@ const TAB_SLOT_W = (BAR_W - SIDE_PADDING * 2) / 5; // equal width for all 5 slot
 const TAB_INNER_W = Math.min(66, Math.floor(TAB_SLOT_W));
 const TAB_INNER_H = 50;
 
-// ─── SVG curved card (rounded corners + center notch) ────────────────────────
+// ─── SVG curved card (rounded corners + center notch + aesthetic background) ──
 
 const BAR_BORDER_W = 4; // cream border matching plus button halo
 
 const CurvedBar: React.FC = () => {
-  const W = BAR_W;
-  const H = BAR_H;
-  const cx = W / 2;
-  const R = CORNER_R;
-
-  const d = [
-    `M ${R} 0`,
-    `L ${cx - NOTCH_W} 0`,
-    // curve down into notch
-    `C ${cx - NOTCH_W + CP} 0, ${
-      cx - NOTCH_W * 0.55
-    } ${NOTCH_DEEP}, ${cx} ${NOTCH_DEEP}`,
-    // curve back up out of notch
-    `C ${cx + NOTCH_W * 0.55} ${NOTCH_DEEP}, ${cx + NOTCH_W - CP} 0, ${
-      cx + NOTCH_W
-    } 0`,
-    `L ${W - R} 0`,
-    `Q ${W} 0, ${W} ${R}`,
-    `L ${W} ${H - R}`,
-    `Q ${W} ${H}, ${W - R} ${H}`,
-    `L ${R} ${H}`,
-    `Q 0 ${H}, 0 ${H - R}`,
-    `L 0 ${R}`,
-    `Q 0 0, ${R} 0 Z`,
-  ].join(' ');
-
-  const pad = BAR_BORDER_W;
-
   return (
-    <Svg
-      width={BAR_W + pad * 2}
-      height={BAR_H + pad * 2}
-      viewBox={`${-pad} ${-pad} ${BAR_W + pad * 2} ${BAR_H + pad * 2}`}
-      style={{
-        position: 'absolute',
-        top: -pad,
-        left: -pad,
-      }}
-    >
-      <Path
-        d={d}
-        fill={Colors.LavenderPurple}
-        stroke={Colors.CreamBackground}
-        strokeWidth={BAR_BORDER_W}
-        strokeLinejoin="round"
-      />
-    </Svg>
+    <BottomTabPatternSvg
+      width={BAR_W}
+      height={BAR_H}
+      cornerR={CORNER_R}
+      notchW={NOTCH_W}
+      notchDeep={NOTCH_DEEP}
+      cp={CP}
+      borderW={BAR_BORDER_W}
+    />
   );
 };
 
@@ -350,7 +315,9 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
               transform: [{ translateX: indicatorX }],
             },
           ]}
-        />
+        >
+          <FocusedTabPatternSvg width={TAB_INNER_W} height={TAB_INNER_H} />
+        </Animated.View>
         <View style={styles.row}>
           {LEFT_TABS.map((t, i) => renderTab(t, i))}
           {/* Center spacer — sits under notch with equal slot width */}
@@ -394,6 +361,7 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
               { transform: [{ scale: plusScale }, { rotate: rotateDeg }] },
             ]}
           >
+            <PlusButtonPatternSvg size={BTN_SIZE} />
             <TouchableOpacity
               activeOpacity={0.88}
               onPress={toggleSheet}
@@ -523,7 +491,8 @@ const styles = StyleSheet.create({
     width: TAB_INNER_W,
     height: TAB_INNER_H,
     borderRadius: 16,
-    backgroundColor: Colors.DefaultBlack,
+    backgroundColor: '#121417',
+    overflow: 'hidden',
   },
   tabItem: {
     flex: 1,
@@ -568,6 +537,11 @@ const styles = StyleSheet.create({
     height: BTN_SIZE + BTN_RING,
     borderRadius: (BTN_SIZE + BTN_RING) / 2,
     backgroundColor: Colors.CreamBackground,
+    borderWidth: 1.5,
+    borderTopColor: '#FFFFFF',
+    borderLeftColor: '#F5F0E6',
+    borderRightColor: '#F5F0E6',
+    borderBottomColor: '#D8D1C0',
     alignItems: 'center',
     justifyContent: 'center',
   },
