@@ -1,538 +1,381 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo, useCallback, useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  FlatList,
   StatusBar,
   Platform,
   Animated,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  Flame,
-  Check,
-  Plus,
-  Sparkles,
-  Sun,
-  Moon,
-  Compass,
-  Trophy,
-  SlidersHorizontal,
-} from 'lucide-react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Plus, Flame } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../../Theme/fonts';
 import { Typography } from '../../Theme/Typographys';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
-import { SVGS } from '../../Assets/Images';
-import { useTaskReminder } from '../../Context/TaskReminderContext';
+import { useTaskReminder, HabitItem } from '../../Context/TaskReminderContext';
+import HabitConsistencyBento from './Components/HabitConsistencyBento';
+import HabitCategoryFilters, {
+  HabitFilterKey,
+} from './Components/HabitCategoryFilters';
+import HabitItemCard from './Components/HabitItemCard';
+import HabitSectionBackgroundSvg from './Components/HabitSectionBackgroundSvg';
+import FlowBadgePatternSvg from '../Dashboard/Components/FlowBadgePatternSvg';
+import AddHabitModal from '../../Components/AddHabitModal';
+import { ScreenHeader, SCREEN_HEADER_HEIGHT } from '../../Common/ScreenHeader';
 
 export const HabitsScreen: React.FC = () => {
-  const navigation = useNavigation<any>();
-  const { habits, toggleHabit, openHabitModal } = useTaskReminder();
-  const [filter, setFilter] = useState<
-    'all' | 'morning' | 'mindful' | 'evening'
-  >('all');
+  const insets = useSafeAreaInsets();
 
-  const completedCount = habits.filter(h => h.completed).length;
-  const progressPercent =
-    habits.length > 0
-      ? Math.round((completedCount / habits.length) * 100)
-      : 0;
+  const {
+    habits,
+    toggleHabit,
+    addHabit,
+    updateHabit,
+    deleteHabit,
+    isHabitModalOpen,
+    openHabitModal,
+    closeHabitModal,
+  } = useTaskReminder();
 
-  const handleToggleHabit = (id: string) => {
-    toggleHabit(id);
-    const item = habits.find(h => h.id === id);
-    if (item) {
-      const nextState = !item.completed;
-      Toast.show({
-        type: 'success',
-        text1: nextState ? 'Habit Checked In! 🔥' : 'Habit Reset',
-        text2: nextState
-          ? `Keep the momentum going! Streak: ${item.streak + 1} days`
-          : 'Unchecked for today.',
-      });
-    }
-  };
+  const [filter, setFilter] = useState<HabitFilterKey>('all');
+  const [editingHabit, setEditingHabit] = useState<HabitItem | null>(null);
 
-  const filteredHabits = habits.filter(h => {
-    if (filter === 'all') return true;
-    return h.category === filter;
-  });
+  // Scroll tracking matching DashboardScreen reactive header
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const isScrolledRef = useRef(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    {
+      useNativeDriver: false,
+      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const offsetY = event?.nativeEvent?.contentOffset?.y ?? 0;
+        if (offsetY > 15 && !isScrolledRef.current) {
+          isScrolledRef.current = true;
+          setIsScrolled(true);
+        } else if (offsetY <= 15 && isScrolledRef.current) {
+          isScrolledRef.current = false;
+          setIsScrolled(false);
+        }
+      },
+    },
+  );
+
+  const handleToggleHabit = useCallback(
+    (id: string) => {
+      const updated = toggleHabit(id);
+      if (updated) {
+        Toast.show({
+          type: 'success',
+          text1: updated.completed ? 'Habit Checked In! 🔥' : 'Habit Reset',
+          text2: updated.completed
+            ? `Momentum active! Current streak: ${updated.streak} days`
+            : 'Unchecked for today.',
+        });
+      }
+    },
+    [toggleHabit],
+  );
+
+  const filteredHabits = useMemo(() => {
+    return habits.filter(h => {
+      if (filter === 'all') return true;
+      return h.category === filter;
+    });
+  }, [habits, filter]);
+
+  const completedCount = useMemo(
+    () => habits.filter(h => h.completed).length,
+    [habits],
+  );
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top']}>
+    <View style={styles.safeArea}>
       <StatusBar
-        barStyle="dark-content"
+        barStyle={isScrolled ? 'light-content' : 'dark-content'}
         {...(Platform.OS === 'android'
-          ? { backgroundColor: '#FBF9F3', translucent: true }
+          ? {
+              backgroundColor: isScrolled ? Colors.LavenderPurple : '#FBF9F3',
+              translucent: true,
+            }
           : {})}
       />
 
-      {/* Header */}
-      <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <Text style={styles.brandTitle}>Regius Habits</Text>
-          <Text style={styles.brandSubtitle}>Daily Rituals & Consistency</Text>
-        </View>
-
-        <View style={styles.headerRight}>
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={() => navigation.navigate('Settings')}
-            style={styles.avatarButton}
-            accessibilityLabel="Open Settings"
-          >
-            <SVGS.RegiusAvatar width={36} height={36} />
-          </TouchableOpacity>
-        </View>
-      </View>
+      {/* Reusable Screen Header with title, subtitle, Holograph voice orb, and profile */}
+      <ScreenHeader
+        title="Habits"
+        subtitle="Daily Rituals & Consistency"
+        scrollY={scrollY}
+        isScrolled={isScrolled}
+      />
 
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[
+          styles.scrollContent,
+          {
+            paddingTop: insets.top + SCREEN_HEADER_HEIGHT + 10,
+            paddingBottom: 0,
+          },
+        ]}
         showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
       >
-        {/* Streak & Consistency Bento Card */}
-        <View style={styles.streakCard}>
-          <View style={styles.streakTopRow}>
-            <View style={styles.streakBadge}>
-              <Flame size={16} color="#E65100" />
-              <Text style={styles.streakBadgeText}>Active Streak</Text>
-            </View>
-            <View style={styles.trophyPill}>
-              <Trophy size={14} color="#B45309" />
-              <Text style={styles.trophyPillText}>Top 5% Consistency</Text>
-            </View>
-          </View>
-
-          <View style={styles.metricRow}>
-            <View>
-              <Text style={styles.metricBig}>18 Days</Text>
-              <Text style={styles.metricLabel}>Longest Current Chain</Text>
-            </View>
-            <View style={styles.progressCircleWrap}>
-              <Text style={styles.progressPercentText}>{progressPercent}%</Text>
-              <Text style={styles.progressSubtext}>
-                {completedCount}/{habits.length} Done
-              </Text>
-            </View>
-          </View>
-
-          {/* Progress Bar */}
-          <View style={styles.progressBarTrack}>
-            <View
-              style={[styles.progressBarFill, { width: `${progressPercent}%` }]}
-            />
-          </View>
+        {/* Habit Streak & Consistency Bento Card matching DailyBriefingCard */}
+        <View style={styles.bentoCardWrapper}>
+          <HabitConsistencyBento habits={habits} />
         </View>
 
-        {/* Filter Pills */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.filtersScroll}
-        >
-          {[
-            { key: 'all', label: 'All Habits', icon: Compass },
-            { key: 'morning', label: 'Morning Rituals', icon: Sun },
-            { key: 'mindful', label: 'Mindful Breaks', icon: Sparkles },
-            { key: 'evening', label: 'Evening Recovery', icon: Moon },
-          ].map(f => {
-            const isActive = filter === f.key;
-            const IconComponent = f.icon;
-            return (
-              <TouchableOpacity
-                key={f.key}
-                activeOpacity={0.8}
-                onPress={() => setFilter(f.key as any)}
-                style={[styles.filterChip, isActive && styles.filterChipActive]}
-              >
-                <IconComponent
-                  size={14}
-                  color={isActive ? '#FFFFFF' : '#49454F'}
-                />
-                <Text
-                  style={[
-                    styles.filterChipText,
-                    isActive && styles.filterChipTextActive,
-                  ]}
-                >
-                  {f.label}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
+        {/* 3D Tactile Filter Capsules scrolling left to right edge */}
+        <HabitCategoryFilters
+          activeFilter={filter}
+          onSelectFilter={setFilter}
+          habits={habits}
+        />
 
-        {/* Habits List */}
+        {/* Habits Section with centered black crest badge & top-right floating plus button */}
         <View style={styles.habitsSection}>
-          <View style={styles.sectionTitleRow}>
-            <Text style={styles.sectionTitle}>Today's Rituals</Text>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={openHabitModal}
-              style={styles.addHabitQuickBtn}
-            >
-              <Plus size={15} color="#4A7C59" />
-              <Text style={styles.addHabitQuickText}>New Habit</Text>
-            </TouchableOpacity>
+          {/* Aesthetic luxury background */}
+          <View style={styles.habitsSectionBgWrapper} pointerEvents="none">
+            <HabitSectionBackgroundSvg />
           </View>
 
-          {filteredHabits.map(habit => {
-            return (
-              <TouchableOpacity
-                key={habit.id}
-                activeOpacity={0.88}
-                onPress={() => handleToggleHabit(habit.id)}
-                style={[
-                  styles.habitCard,
-                  habit.completed && styles.habitCardCompleted,
-                ]}
-              >
-                <View style={styles.habitMainRow}>
-                  <TouchableOpacity
-                    activeOpacity={0.8}
-                    onPress={() => handleToggleHabit(habit.id)}
-                    style={[
-                      styles.checkCircle,
-                      habit.completed && styles.checkCircleActive,
-                    ]}
-                  >
-                    {habit.completed && (
-                      <Check size={16} color="#FFFFFF" strokeWidth={3} />
-                    )}
-                  </TouchableOpacity>
+          {/* Header crest badge centered on top border - half outside, half inside */}
+          <View style={styles.flowHeaderBadge}>
+            <FlowBadgePatternSvg />
+            <Text style={styles.flowTitle}>Today’s Rituals</Text>
+            <Text style={styles.flowSubtitle}>
+              {completedCount} of {filteredHabits.length} completed
+            </Text>
+          </View>
 
-                  <View style={styles.habitContent}>
-                    <Text
-                      style={[
-                        styles.habitTitle,
-                        habit.completed && styles.habitTitleCompleted,
-                      ]}
-                      numberOfLines={1}
-                    >
-                      {habit.title}
-                    </Text>
-                    <View style={styles.habitMetaRow}>
-                      <Text style={styles.habitTime}>{habit.timeOfDay}</Text>
-                      <Text style={styles.metaDot}>•</Text>
-                      <Text style={styles.habitFreq}>{habit.frequency}</Text>
-                    </View>
-                  </View>
+          {/* New Habit floating button at right corner - half outside, half inside */}
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={openHabitModal}
+            style={styles.addHabitFloatingBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Add new habit"
+          >
+            <Plus size={18} color="#FFFFFF" strokeWidth={2.6} />
+          </TouchableOpacity>
 
-                  <View style={styles.habitStreakBadge}>
-                    <Flame
-                      size={14}
-                      color={habit.completed ? '#E65100' : '#8E8E93'}
-                    />
-                    <Text
-                      style={[
-                        styles.habitStreakText,
-                        habit.completed && styles.habitStreakTextActive,
-                      ]}
-                    >
-                      {habit.streak}d
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            );
-          })}
+          {/* All habits list using FlatList */}
+          <FlatList
+            data={filteredHabits}
+            keyExtractor={item => item.id}
+            scrollEnabled={false}
+            contentContainerStyle={{ paddingBottom: insets.bottom + 130 }}
+            renderItem={({ item }) => (
+              <HabitItemCard
+                habit={item}
+                onToggle={handleToggleHabit}
+                onEdit={setEditingHabit}
+              />
+            )}
+            ItemSeparatorComponent={() => <View style={styles.listSeparator} />}
+            ListEmptyComponent={
+              <View style={styles.emptyCard}>
+                <Flame size={32} color="#D8D4CA" strokeWidth={1.5} />
+                <Text style={styles.emptyTitle}>No Rituals In This Flow</Text>
+                <Text style={styles.emptySubtitle}>
+                  Tap below to establish your next healthy daily habit.
+                </Text>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  onPress={openHabitModal}
+                  style={styles.emptyCreateBtn}
+                >
+                  <Plus size={14} color="#FFFFFF" strokeWidth={2.4} />
+                  <Text style={styles.emptyCreateText}>Add Habit</Text>
+                </TouchableOpacity>
+              </View>
+            }
+          />
         </View>
       </ScrollView>
-    </SafeAreaView>
+
+      {/* Add / Edit Habit Modal */}
+      <AddHabitModal
+        visible={isHabitModalOpen || editingHabit !== null}
+        onClose={() => {
+          closeHabitModal();
+          setEditingHabit(null);
+        }}
+        habitToEdit={editingHabit}
+        onCreateHabit={habitData => {
+          addHabit(habitData);
+          closeHabitModal();
+        }}
+        onUpdateHabit={(id, habitData) => {
+          updateHabit(id, habitData);
+          setEditingHabit(null);
+        }}
+        onDeleteHabit={id => {
+          deleteHabit(id);
+          setEditingHabit(null);
+        }}
+      />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FBF9F3',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 22,
-    paddingTop: 12,
-    paddingBottom: 14,
-  },
-  headerLeft: {
-    gap: 2,
-  },
-  brandTitle: {
-    ...Typography.h1RanadeBold,
-    fontSize: 26,
-    color: '#1B1C19',
-    letterSpacing: -0.5,
-  },
-  brandSubtitle: {
-    ...Typography.bodySmallPoppinsRegular,
-    fontSize: 12,
-    color: '#767772',
-  },
-  headerRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  avatarButton: {
-    borderRadius: 18,
-    overflow: 'hidden',
-    borderWidth: 1.5,
-    borderColor: '#E8E2D5',
+    backgroundColor: Colors.DefaultWhite,
   },
   scroll: {
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: 20,
-    paddingBottom: 120,
-    gap: 20,
+    // gap: 16,
   },
-  streakCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 24,
-    padding: 20,
-    borderWidth: 1.5,
-    borderColor: '#EBE5D8',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#1B1C19',
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 0.06,
-        shadowRadius: 14,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-  streakTopRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  streakBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    backgroundColor: '#FFF3E0',
+  bentoCardWrapper: {
+    paddingTop: 5,
     paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 14,
-  },
-  streakBadgeText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
-    color: '#E65100',
-  },
-  trophyPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    backgroundColor: '#FEF3C7',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 14,
-  },
-  trophyPillText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
-    color: '#92400E',
-  },
-  metricRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 18,
-  },
-  metricBig: {
-    ...Typography.h1RanadeBold,
-    fontSize: 32,
-    color: '#1B1C19',
-  },
-  metricLabel: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
-    color: '#767772',
-    marginTop: 2,
-  },
-  progressCircleWrap: {
-    alignItems: 'flex-end',
-  },
-  progressPercentText: {
-    fontFamily: Fonts.poppins.bold,
-    fontSize: 24,
-    color: '#2D5A37',
-  },
-  progressSubtext: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
-    color: '#767772',
-  },
-  progressBarTrack: {
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: '#F0EFE9',
-    overflow: 'hidden',
-  },
-  progressBarFill: {
-    height: '100%',
-    borderRadius: 4,
-    backgroundColor: '#2D5A37',
-  },
-  filtersScroll: {
-    gap: 10,
-    paddingVertical: 4,
-  },
-  filterChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 7,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1.2,
-    borderColor: '#E8E2D5',
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
-  },
-  filterChipActive: {
-    backgroundColor: Colors.LavenderPurple,
-    borderColor: Colors.LavenderPurple,
-  },
-  filterChipText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
-    color: '#49454F',
-  },
-  filterChipTextActive: {
-    color: '#FFFFFF',
   },
   habitsSection: {
-    gap: 12,
-  },
-  sectionTitleRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginTop: 6,
-    marginBottom: 4,
-  },
-  sectionTitle: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 17,
-    color: '#1B1C19',
-  },
-  addHabitQuickBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: '#E8F5E9',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 14,
-  },
-  addHabitQuickText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
-    color: '#2E7D32',
-  },
-  habitCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 16,
+    backgroundColor: Colors.SoftCream,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
     borderWidth: 1.5,
-    borderColor: '#EFEAE0',
+    borderTopColor: '#FAF6EE',
+    borderLeftColor: '#EFE9DE',
+    borderRightColor: '#EFE9DE',
+    borderBottomColor: '#DDD6C6',
+    paddingTop: 40,
+    marginTop: 26,
+    flex: 1,
+    position: 'relative',
     ...Platform.select({
       ios: {
         shadowColor: '#1B1C19',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.04,
-        shadowRadius: 10,
+        shadowOffset: { width: 0, height: -4 },
+        shadowOpacity: 0.12,
+        shadowRadius: 12,
       },
       android: {
-        elevation: 2,
+        elevation: 4,
       },
     }),
   },
-  habitCardCompleted: {
-    backgroundColor: '#FAF9F6',
-    borderColor: '#E0E7DE',
-    opacity: 0.88,
+  habitsSectionBgWrapper: {
+    ...StyleSheet.absoluteFill,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+    overflow: 'hidden',
   },
-  habitMainRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 14,
-  },
-  checkCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    borderWidth: 2,
-    borderColor: '#C7C6CA',
+  flowHeaderBadge: {
+    position: 'absolute',
+    top: -24,
+    alignSelf: 'center',
+    backgroundColor: Colors.NeroBlack,
+    paddingHorizontal: 22,
+    paddingVertical: 7,
+    borderRadius: 22,
+    borderWidth: 1.5,
+    borderTopColor: '#4A4E5C',
+    borderLeftColor: '#363944',
+    borderRightColor: '#363944',
+    borderBottomWidth: 4,
+    borderBottomColor: '#090A0D',
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#0B0D11',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.32,
+    shadowRadius: 8,
+    elevation: 6,
+    zIndex: 20,
+    overflow: 'hidden',
   },
-  checkCircleActive: {
-    backgroundColor: '#2D5A37',
-    borderColor: '#2D5A37',
+  flowTitle: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 14.5,
+    color: Colors.DefaultWhite,
+    letterSpacing: -0.1,
+    textAlign: 'center',
   },
-  habitContent: {
-    flex: 1,
-    gap: 3,
+  flowSubtitle: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 10.5,
+    color: '#B6B9C3',
+    marginTop: 1,
+    textAlign: 'center',
   },
-  habitTitle: {
+  addHabitFloatingBtn: {
+    position: 'absolute',
+    top: -21,
+    right: 18,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: Colors.NeroBlack,
+    borderWidth: 1.5,
+    borderTopColor: '#4A4E5C',
+    borderLeftColor: '#363944',
+    borderRightColor: '#363944',
+    borderBottomWidth: 3.5,
+    borderBottomColor: '#090A0D',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#0B0D11',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.32,
+    shadowRadius: 6,
+    elevation: 6,
+    zIndex: 20,
+  },
+  listSeparator: {
+    height: 12,
+  },
+  emptyCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 22,
+    padding: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1.5,
+    borderColor: '#ECE7DC',
+    gap: 8,
+  },
+  emptyTitle: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14,
+    fontSize: 15,
     color: '#1B1C19',
-    lineHeight: 19,
+    marginTop: 4,
   },
-  habitTitleCompleted: {
-    textDecorationLine: 'line-through',
-    color: '#767772',
+  emptySubtitle: {
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 12,
+    color: '#8E8E93',
+    textAlign: 'center',
+    paddingHorizontal: 20,
   },
-  habitMetaRow: {
+  emptyCreateBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
+    backgroundColor: Colors.MidnightCharcoal,
+    paddingHorizontal: 16,
+    paddingVertical: 9,
+    borderRadius: 18,
+    marginTop: 8,
   },
-  habitTime: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
-    color: '#767772',
-  },
-  metaDot: {
-    fontSize: 10,
-    color: '#C7C6CA',
-  },
-  habitFreq: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
-    color: '#4A7C59',
-  },
-  habitStreakBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: '#F7F6F1',
-    paddingHorizontal: 8,
-    paddingVertical: 5,
-    borderRadius: 12,
-  },
-  habitStreakText: {
+  emptyCreateText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
-    color: '#8E8E93',
-  },
-  habitStreakTextActive: {
-    color: '#E65100',
+    fontSize: 12,
+    color: '#FFFFFF',
   },
 });
 
