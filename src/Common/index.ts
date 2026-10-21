@@ -5,3 +5,4 @@ export * from './CustomAnimation';
 export * from './ToastConfig';
 export * from './ToastHelper';
 export * from './RegiusLogo';
+export * from './ScreenHeader';

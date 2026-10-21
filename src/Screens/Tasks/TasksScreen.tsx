@@ -521,7 +521,7 @@ const styles = StyleSheet.create({
 
   // Task Section (#FAFAFA background)
   taskSection: {
-    backgroundColor: '#FAFAFA',
+    backgroundColor: Colors.LightGrey,
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     paddingHorizontal: ResponsivePixels.size20,

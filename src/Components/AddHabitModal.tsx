@@ -11,6 +11,7 @@ import {
   KeyboardAvoidingView,
   Animated,
   Vibration,
+  Alert,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
@@ -19,14 +20,15 @@ import {
   Sun,
   Moon,
   Sparkles,
-  Compass,
   Clock,
-  Repeat,
   Check,
+  Trash2,
 } from 'lucide-react-native';
 import { Fonts } from '../Theme/fonts';
 import { Typography } from '../Theme/Typographys';
 import { Colors } from '../Assets/StyleUtilities/Colors';
+import { Badge } from '../Common/Badge';
+import { HabitItem } from '../Context/TaskReminderContext';
 import Toast from 'react-native-toast-message';
 
 interface AddHabitModalProps {
@@ -39,12 +41,35 @@ interface AddHabitModalProps {
     timeOfDay: string;
     accentColor: string;
   }) => void;
+  onUpdateHabit?: (
+    id: string,
+    habitData: {
+      title: string;
+      category: 'morning' | 'mindful' | 'evening';
+      frequency: string;
+      timeOfDay: string;
+      accentColor: string;
+    },
+  ) => void;
+  onDeleteHabit?: (id: string) => void;
+  habitToEdit?: HabitItem | null;
 }
+
+const TIME_PRESETS = [
+  '07:00 AM',
+  '08:00 AM',
+  '01:00 PM',
+  '06:00 PM',
+  '08:30 PM',
+];
 
 export const AddHabitModal: React.FC<AddHabitModalProps> = ({
   visible,
   onClose,
   onCreateHabit,
+  onUpdateHabit,
+  onDeleteHabit,
+  habitToEdit,
 }) => {
   const insets = useSafeAreaInsets();
   const slideAnim = useRef(new Animated.Value(600)).current;
@@ -58,6 +83,18 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
 
   useEffect(() => {
     if (visible) {
+      if (habitToEdit) {
+        setTitle(habitToEdit.title);
+        setCategory(habitToEdit.category);
+        setFrequency(habitToEdit.frequency);
+        setTimeOfDay(habitToEdit.timeOfDay);
+      } else {
+        setTitle('');
+        setCategory('morning');
+        setFrequency('Daily');
+        setTimeOfDay('07:30 AM');
+      }
+
       Animated.spring(slideAnim, {
         toValue: 0,
         friction: 8,
@@ -66,15 +103,14 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
       }).start();
     } else {
       slideAnim.setValue(600);
-      setTitle('');
     }
-  }, [visible, slideAnim]);
+  }, [visible, habitToEdit, slideAnim]);
 
   const handleSave = () => {
     if (!title.trim()) {
       Toast.show({
         type: 'error',
-        text1: 'Habit Title Required',
+        text1: 'Habit Name Required',
         text2: 'Please name your daily ritual to begin tracking.',
       });
       return;
@@ -88,27 +124,68 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
       category === 'morning'
         ? '#4A7C59'
         : category === 'mindful'
-        ? '#7C68EE'
+        ? Colors.LavenderPurple
         : '#4F46E5';
 
-    onCreateHabit({
-      title: title.trim(),
-      category,
-      frequency,
-      timeOfDay,
-      accentColor,
-    });
-
-    Toast.show({
-      type: 'success',
-      text1: 'Habit Created! 🔥',
-      text2: `"${title.trim()}" added to your daily consistency flow.`,
-    });
+    if (habitToEdit && onUpdateHabit) {
+      onUpdateHabit(habitToEdit.id, {
+        title: title.trim(),
+        category,
+        frequency,
+        timeOfDay,
+        accentColor,
+      });
+      Toast.show({
+        type: 'success',
+        text1: 'Habit Updated',
+        text2: `"${title.trim()}" changes saved.`,
+      });
+    } else {
+      onCreateHabit({
+        title: title.trim(),
+        category,
+        frequency,
+        timeOfDay,
+        accentColor,
+      });
+      Toast.show({
+        type: 'success',
+        text1: 'Habit Created! 🔥',
+        text2: `"${title.trim()}" added to your daily consistency flow.`,
+      });
+    }
 
     onClose();
   };
 
+  const handleDelete = () => {
+    if (!habitToEdit || !onDeleteHabit) return;
+
+    Alert.alert(
+      'Delete Habit',
+      `Are you sure you want to delete "${habitToEdit.title}"?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            onDeleteHabit(habitToEdit.id);
+            Toast.show({
+              type: 'info',
+              text1: 'Habit Deleted',
+              text2: 'Habit removed from your daily rituals.',
+            });
+            onClose();
+          },
+        },
+      ],
+    );
+  };
+
   if (!visible) return null;
+
+  const isEditing = !!habitToEdit;
 
   return (
     <Modal
@@ -131,7 +208,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
           style={[
             styles.container,
             {
-              paddingBottom: Math.max(insets.bottom, 20),
+              paddingBottom: Math.max(insets.bottom, 24),
               transform: [{ translateY: slideAnim }],
             },
           ]}
@@ -141,12 +218,22 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
           {/* Header */}
           <View style={styles.header}>
             <View style={styles.headerTitleWrap}>
-              <View style={styles.flameBadge}>
-                <Flame size={15} color="#E65100" />
-                <Text style={styles.flameBadgeText}>New Daily Habit</Text>
-              </View>
-              <Text style={styles.headerTitle}>Build Ritual</Text>
+              <Badge
+                label={isEditing ? 'EDIT RITUAL' : 'NEW DAILY RITUAL'}
+                variant={isEditing ? 'purple' : 'yellow'}
+                size="sm"
+                icon={
+                  <Flame
+                    size={12}
+                    color={isEditing ? Colors.LavenderPurple : '#E65100'}
+                  />
+                }
+              />
+              <Text style={styles.headerTitle}>
+                {isEditing ? 'Customize Habit' : 'Build Daily Ritual'}
+              </Text>
             </View>
+
             <TouchableOpacity onPress={onClose} style={styles.closeBtn}>
               <X size={18} color="#1B1C19" />
             </TouchableOpacity>
@@ -167,17 +254,27 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
 
             {/* Category Selector */}
             <View style={styles.fieldSection}>
-              <Text style={styles.fieldLabel}>Category & Ritual Flow</Text>
+              <Text style={styles.fieldLabel}>Category & Flow</Text>
               <View style={styles.categoryRow}>
                 {[
-                  { id: 'morning', label: 'Morning', icon: Sun, color: '#4A7C59' },
+                  {
+                    id: 'morning',
+                    label: 'Morning',
+                    icon: Sun,
+                    color: '#4A7C59',
+                  },
                   {
                     id: 'mindful',
                     label: 'Mindful',
                     icon: Sparkles,
-                    color: '#7C68EE',
+                    color: Colors.LavenderPurple,
                   },
-                  { id: 'evening', label: 'Evening', icon: Moon, color: '#4F46E5' },
+                  {
+                    id: 'evening',
+                    label: 'Evening',
+                    icon: Moon,
+                    color: '#4F46E5',
+                  },
                 ].map(c => {
                   const isSelected = category === c.id;
                   const Icon = c.icon;
@@ -201,7 +298,10 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                       <Text
                         style={[
                           styles.categoryText,
-                          isSelected && { color: c.color, fontFamily: Fonts.poppins.bold },
+                          isSelected && {
+                            color: c.color,
+                            fontFamily: Fonts.poppins.bold,
+                          },
                         ]}
                       >
                         {c.label}
@@ -223,10 +323,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                       key={f}
                       activeOpacity={0.8}
                       onPress={() => setFrequency(f)}
-                      style={[
-                        styles.chip,
-                        isSelected && styles.chipActive,
-                      ]}
+                      style={[styles.chip, isSelected && styles.chipActive]}
                     >
                       <Text
                         style={[
@@ -255,17 +352,59 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                   style={styles.timeInput}
                 />
               </View>
+
+              {/* Time Presets */}
+              <View style={styles.timePresetsRow}>
+                {TIME_PRESETS.map(preset => {
+                  const isPresetSelected = timeOfDay === preset;
+                  return (
+                    <TouchableOpacity
+                      key={preset}
+                      activeOpacity={0.75}
+                      onPress={() => setTimeOfDay(preset)}
+                      style={[
+                        styles.timePresetChip,
+                        isPresetSelected && styles.timePresetChipActive,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.timePresetText,
+                          isPresetSelected && styles.timePresetTextActive,
+                        ]}
+                      >
+                        {preset}
+                      </Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
             </View>
 
-            {/* Save Button */}
-            <TouchableOpacity
-              activeOpacity={0.88}
-              onPress={handleSave}
-              style={styles.saveBtn}
-            >
-              <Check size={18} color="#FFFFFF" strokeWidth={2.4} />
-              <Text style={styles.saveBtnText}>Save Habit Flow</Text>
-            </TouchableOpacity>
+            {/* Action Buttons */}
+            <View style={styles.actionsWrap}>
+              <TouchableOpacity
+                activeOpacity={0.88}
+                onPress={handleSave}
+                style={styles.saveBtn}
+              >
+                <Check size={18} color="#FFFFFF" strokeWidth={2.4} />
+                <Text style={styles.saveBtnText}>
+                  {isEditing ? 'Save Changes' : 'Save Habit Flow'}
+                </Text>
+              </TouchableOpacity>
+
+              {isEditing && onDeleteHabit && (
+                <TouchableOpacity
+                  activeOpacity={0.85}
+                  onPress={handleDelete}
+                  style={styles.deleteBtn}
+                >
+                  <Trash2 size={16} color="#D32F2F" />
+                  <Text style={styles.deleteBtnText}>Delete Habit</Text>
+                </TouchableOpacity>
+              )}
+            </View>
           </ScrollView>
         </Animated.View>
       </KeyboardAvoidingView>
@@ -288,7 +427,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 30,
     paddingHorizontal: 22,
     paddingTop: 12,
-    maxHeight: '85%',
+    maxHeight: '88%',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.12,
@@ -307,29 +446,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: 18,
   },
   headerTitleWrap: {
-    gap: 3,
-  },
-  flameBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    backgroundColor: '#FFF3E0',
-    paddingHorizontal: 10,
-    paddingVertical: 3,
-    borderRadius: 12,
-    alignSelf: 'flex-start',
-  },
-  flameBadgeText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
-    color: '#E65100',
+    gap: 4,
   },
   headerTitle: {
     ...Typography.h1RanadeBold,
-    fontSize: 24,
+    fontSize: 22,
     color: '#1B1C19',
   },
   closeBtn: {
@@ -341,7 +465,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   fieldSection: {
-    marginBottom: 18,
+    marginBottom: 16,
     gap: 8,
   },
   fieldLabel: {
@@ -394,8 +518,8 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
   },
   chipActive: {
-    backgroundColor: Colors.LavenderPurple,
-    borderColor: Colors.LavenderPurple,
+    backgroundColor: Colors.MidnightCharcoal,
+    borderColor: Colors.MidnightCharcoal,
   },
   chipText: {
     fontFamily: Fonts.poppins.medium,
@@ -423,6 +547,35 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#1B1C19',
   },
+  timePresetsRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+    marginTop: 6,
+  },
+  timePresetChip: {
+    backgroundColor: '#F3EFE6',
+    borderRadius: 12,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  timePresetChipActive: {
+    backgroundColor: Colors.LavenderPurple,
+  },
+  timePresetText: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 11,
+    color: '#63625E',
+  },
+  timePresetTextActive: {
+    color: '#FFFFFF',
+    fontFamily: Fonts.poppins.semiBold,
+  },
+  actionsWrap: {
+    marginTop: 8,
+    marginBottom: 16,
+    gap: 10,
+  },
   saveBtn: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -430,9 +583,7 @@ const styles = StyleSheet.create({
     gap: 8,
     backgroundColor: '#2D5A37',
     paddingVertical: 15,
-    borderRadius: 20,
-    marginTop: 8,
-    marginBottom: 16,
+    borderRadius: 22,
     shadowColor: '#2D5A37',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
@@ -443,6 +594,20 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.bold,
     fontSize: 15,
     color: '#FFFFFF',
+  },
+  deleteBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+    paddingVertical: 12,
+    borderRadius: 18,
+    backgroundColor: '#FEEFEF',
+  },
+  deleteBtnText: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 13,
+    color: '#D32F2F',
   },
 });
 

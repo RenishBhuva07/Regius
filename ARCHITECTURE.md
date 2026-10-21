@@ -238,7 +238,7 @@ graph LR
     TRC -->|tasks, reminders, habits| Dash
     TRC -->|tasks, addTask, toggleTask| Tasks
     TRC -->|reminders, addReminder| Reminders
-    TRC -->|habits, toggleHabit| Habits
+    TRC -->|habits, toggleHabit, updateHabit, addHabit, deleteHabit| Habits
     VWC -->|assistantState, liveTranscript| Assistant
     VWC -->|triggerWakeWord| Dash
     AC -->|user, logout| Settings

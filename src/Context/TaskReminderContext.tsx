@@ -240,6 +240,10 @@ interface TaskReminderContextType {
     accentColor?: string;
   }) => HabitItem | null;
   toggleHabit: (id: string) => HabitItem | null;
+  updateHabit: (
+    id: string,
+    updates: Partial<Omit<HabitItem, 'id'>>,
+  ) => HabitItem | null;
   deleteHabit: (id: string) => void;
   isHabitModalOpen: boolean;
   openHabitModal: () => void;
@@ -272,6 +276,7 @@ const TaskReminderContext = createContext<TaskReminderContextType>({
   habits: INITIAL_HABITS,
   addHabit: () => null,
   toggleHabit: () => null,
+  updateHabit: () => null,
   deleteHabit: () => {},
   isHabitModalOpen: false,
   openHabitModal: () => {},
@@ -473,6 +478,23 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
     return updatedHabit;
   };
 
+  const updateHabit = (
+    id: string,
+    updates: Partial<Omit<HabitItem, 'id'>>,
+  ): HabitItem | null => {
+    let updated: HabitItem | null = null;
+    setHabits(prev =>
+      prev.map(h => {
+        if (h.id === id) {
+          updated = { ...h, ...updates };
+          return updated;
+        }
+        return h;
+      }),
+    );
+    return updated;
+  };
+
   const deleteHabit = (id: string) => {
     setHabits(prev => prev.filter(h => h.id !== id));
   };
@@ -507,6 +529,7 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
       habits,
       addHabit,
       toggleHabit,
+      updateHabit,
       deleteHabit,
       isHabitModalOpen,
       openHabitModal,

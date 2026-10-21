@@ -237,6 +237,22 @@ Used for list items in `HomeScreen`, `TasksScreen`, `RemindersScreen`, and `Dash
   - **Never replaced by a checkmark or checkbox when completed** (completion is indicated strictly by the outside floating checkbox, muted card copy, and subdued node border).
 - **Tactile 3D Badges**: Integrated `<Badge />` chips for category stamps, streaks, and voice check-in indicators floating above the card surface.
 
+#### 4.4.1 Habits Section Sheet & Habit Item Card Architecture (`HabitsScreen.tsx`, `HabitItemCard.tsx`)
+
+- **Habits Section Sheet Surface**:
+  - `backgroundColor: SheetSurface` (`#FAF8F5`) with `borderTopLeftRadius: 32, borderTopRightRadius: 32`.
+  - Top hairline border (`borderTopWidth: 1.5, borderTopColor: '#ECE7DC'`) and soft upward drop shadow (`shadowOffset: { width: 0, height: -3 }, shadowOpacity: 0.04, shadowRadius: 10, elevation: 2`).
+  - Seamless bottom tab dock clearance (`paddingBottom: insets.bottom + 120` inside the sheet wrapper) preventing item clipping under floating tab bars.
+  - Section header row with status capsule (`completedDot` + completion count) and full-pill CTA button (`Plus` icon + "New Habit", `backgroundColor: #1F2228`).
+- **Habit Item Card Colors & Active vs Completed States**:
+  - **Category-Harmonized Trios**:
+    - **Morning**: Active `#FFFFFF` with `#D8F3E5` border, `#EDFDF5` time pill (`#1B9A72`), green 3D Badge; Completed `#F0FAF4` with `#BBE8CE` border.
+    - **Mindful**: Active `#FFFFFF` with `#E3E5FD` border, `#EFF2FE` time pill (`#7059C8`), purple 3D Badge; Completed `#F5F6FE` with `#D2D6FB` border.
+    - **Evening**: Active `#FFFFFF` with `#FFE8D6` border, `#FFF2E6` time pill (`#D95D0F`), orange 3D Badge; Completed `#FFF8F2` with `#FFDAC0` border.
+  - **No Strikethrough Typography**: Titles remain 100% visible, bold, and readable without line-through decoration when marked complete (`color: '#1B1C19'`).
+  - **Tactile Interactive Checkbox**: Rounded square (`26x26`, `borderRadius: 8`, `borderWidth: 1.8`). Unchecked has crisp white fill with category border; Checked fills with category accent color and white checkmark icon.
+  - **7-Day Consistency Dots**: Past completed days are filled with category accent; current day (7th dot) displays an outlined waiting ring when active and a filled accent dot upon completion.
+
 ---
 
 ### 4.5 Dynamic Scroll-Reactive Layer Header (`src/Screens/Dashboard/DashboardScreen.tsx`)

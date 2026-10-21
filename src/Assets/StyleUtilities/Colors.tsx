@@ -9,6 +9,7 @@ export const Colors = {
   HomeIndicator: '#D5D0C5',
   NeroBlack: '#1C1D22',
   Grey: '#77767B',
+  LightGrey: '#FAFAFA',
 
   // Character & Accent Accents
   LavenderPurple: '#8383D6',
