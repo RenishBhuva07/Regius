@@ -128,6 +128,24 @@ export const INITIAL_TASKS: Task[] = [
     time: '03:30 PM',
     note: 'Review interactive timeline component specs.',
   },
+  {
+    id: '4',
+    label: '5km Aerobic Run & Core Stretch',
+    iconType: 'users',
+    done: false,
+    category: 'sport',
+    time: '05:30 PM',
+    note: 'Cardio endurance and post-run mobility routine.',
+  },
+  {
+    id: '5',
+    label: 'Evening Mindful Reading & Reflection',
+    iconType: 'mail',
+    done: false,
+    category: 'habits',
+    time: '09:00 PM',
+    note: 'Read 15 pages screen-free before sleep.',
+  },
 ];
 
 export const INITIAL_REMINDERS: Reminder[] = [

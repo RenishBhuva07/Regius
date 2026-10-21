@@ -29,6 +29,8 @@ import HabitSectionBackgroundSvg from './Components/HabitSectionBackgroundSvg';
 import FlowBadgePatternSvg from '../Dashboard/Components/FlowBadgePatternSvg';
 import AddHabitModal from '../../Components/AddHabitModal';
 import { ScreenHeader, SCREEN_HEADER_HEIGHT } from '../../Common/ScreenHeader';
+import HabitNotesDoodleSvg from './Components/HabitNotesDoodleSvg';
+import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 
 export const HabitsScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
@@ -143,7 +145,9 @@ export const HabitsScreen: React.FC = () => {
         />
 
         {/* Habits Section with centered black crest badge & top-right floating plus button */}
-        <View style={styles.habitsSection}>
+        <View
+          style={[styles.habitsSection, { paddingBottom: insets.bottom + 130 }]}
+        >
           {/* Aesthetic luxury background */}
           <View style={styles.habitsSectionBgWrapper} pointerEvents="none">
             <HabitSectionBackgroundSvg />
@@ -174,7 +178,7 @@ export const HabitsScreen: React.FC = () => {
             data={filteredHabits}
             keyExtractor={item => item.id}
             scrollEnabled={false}
-            contentContainerStyle={{ paddingBottom: insets.bottom + 130 }}
+            contentContainerStyle={styles.habitListContainer}
             renderItem={({ item }) => (
               <HabitItemCard
                 habit={item}
@@ -201,6 +205,31 @@ export const HabitsScreen: React.FC = () => {
               </View>
             }
           />
+
+          {/* Swiggy-Inspired Brand Watermark Footer: "Your future self is taking notes!" + "Crafted with ❤️ in Ahmedabad, India" + Habit Notes Doodles */}
+          <View style={styles.footerWatermarkWrapper} pointerEvents="none">
+            <View style={styles.footerWatermarkRow}>
+              {/* Left Column: Bold Typography & Sign-off */}
+              <View style={styles.footerTextBlock}>
+                <Text style={styles.footerWatermarkText}>
+                  Your future self{'\n'}is taking notes!
+                </Text>
+                <View style={styles.craftedWithRow}>
+                  <Text style={styles.craftedWithText}>Crafted with </Text>
+                  <Text style={styles.craftedWithHeart}>❤️</Text>
+                  <Text style={styles.craftedWithText}>
+                    {' '}
+                    in Ahmedabad, India
+                  </Text>
+                </View>
+              </View>
+
+              {/* Right Column: Extraordinary Habit Notes Doodle Illustration */}
+              <View style={styles.footerDoodleWrapper}>
+                <HabitNotesDoodleSvg />
+              </View>
+            </View>
+          </View>
         </View>
       </ScrollView>
 
@@ -336,6 +365,10 @@ const styles = StyleSheet.create({
     elevation: 6,
     zIndex: 20,
   },
+  habitListContainer: {
+    paddingTop: 8,
+    paddingBottom: 20,
+  },
   listSeparator: {
     height: 12,
   },
@@ -348,6 +381,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: '#ECE7DC',
     gap: 8,
+    marginHorizontal: 16,
   },
   emptyTitle: {
     fontFamily: Fonts.poppins.semiBold,
@@ -376,6 +410,48 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 12,
     color: '#FFFFFF',
+  },
+
+  // Swiggy-Inspired Watermark Footer
+  footerWatermarkWrapper: {
+    paddingHorizontal: ResponsivePixels.size24,
+    marginTop: ResponsivePixels.size16,
+    marginBottom: ResponsivePixels.size20,
+  },
+  footerWatermarkRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+  },
+  footerTextBlock: {
+    flex: 1,
+    justifyContent: 'flex-start',
+  },
+  footerWatermarkText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 38,
+    lineHeight: 46,
+    color: '#8E95A5',
+    letterSpacing: -1.5,
+  },
+  craftedWithRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 18,
+  },
+  craftedWithText: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 14,
+    color: '#8E95A5',
+  },
+  craftedWithHeart: {
+    fontSize: 13.5,
+  },
+  footerDoodleWrapper: {
+    marginLeft: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 6,
   },
 });
 

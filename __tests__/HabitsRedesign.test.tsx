@@ -53,6 +53,8 @@ import { HabitsScreen } from '../src/Screens/Habits/HabitsScreen';
 import { HabitConsistencyBento } from '../src/Screens/Habits/Components/HabitConsistencyBento';
 import { HabitCategoryFilters } from '../src/Screens/Habits/Components/HabitCategoryFilters';
 import { HabitItemCard } from '../src/Screens/Habits/Components/HabitItemCard';
+import { HabitSectionBackgroundSvg } from '../src/Screens/Habits/Components/HabitSectionBackgroundSvg';
+import { HabitNotesDoodleSvg } from '../src/Screens/Habits/Components/HabitNotesDoodleSvg';
 import { AddHabitModal } from '../src/Components/AddHabitModal';
 import { INITIAL_HABITS, HabitItem } from '../src/Context/TaskReminderContext';
 
@@ -63,6 +65,8 @@ describe('Habits Redesign Suite', () => {
       expect(HabitConsistencyBento).toBeDefined();
       expect(HabitCategoryFilters).toBeDefined();
       expect(HabitItemCard).toBeDefined();
+      expect(HabitSectionBackgroundSvg).toBeDefined();
+      expect(HabitNotesDoodleSvg).toBeDefined();
       expect(AddHabitModal).toBeDefined();
     });
   });

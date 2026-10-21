@@ -161,6 +161,19 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               <Stop offset="100%" stopColor="#ECE4D4" stopOpacity={0} />
             </RadialGradient>
 
+            {/* Bottom footer radiance aura behind "Your future self is taking notes!" and doodles */}
+            <RadialGradient
+              id="habitFooterAura"
+              cx={centerX}
+              cy={H - 110}
+              r={210}
+              gradientUnits="userSpaceOnUse"
+            >
+              <Stop offset="0%" stopColor="#1B9A72" stopOpacity={0.15} />
+              <Stop offset="45%" stopColor="#F5C518" stopOpacity={0.06} />
+              <Stop offset="100%" stopColor="#ECE4D4" stopOpacity={0} />
+            </RadialGradient>
+
             {/* Gold gradient for spark nodes */}
             <LinearGradient
               id="habitGoldNode"
@@ -224,6 +237,7 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
           />
           <Rect x={0} y={0} width={W} height={H} fill="url(#habitStreakAura)" />
           <Rect x={0} y={0} width={W} height={H} fill="url(#habitSageAura)" />
+          <Rect x={0} y={0} width={W} height={H} fill="url(#habitFooterAura)" />
 
           {/* 3. Sacred Concentric Growth Rings radiating from center crest badge */}
           <G opacity={0.65}>
@@ -395,8 +409,165 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
             opacity={0.4}
           />
 
-          {/* 6. Sacred Streak Flame Watermark on Bottom-Right */}
-          <G transform={`translate(${W - 74}, ${H - 145})`} opacity={0.15}>
+          {/* 6. 7-Day Habit Consistency Tracker Doodle (Mid-Right) */}
+          <G transform={`translate(${W - 68}, 235)`} opacity={0.22}>
+            {/* Dashed trajectory arc */}
+            <Path
+              d="M -25 35 Q -8 32 4 16"
+              stroke="#F5C518"
+              strokeWidth={1}
+              strokeDasharray="2 3"
+              fill="none"
+            />
+            {/* Mini Calendar Tablet Outline */}
+            <Rect
+              x={0}
+              y={0}
+              width={34}
+              height={38}
+              rx={6}
+              stroke="#D4CCA8"
+              strokeWidth={1}
+              fill="none"
+            />
+            {/* Top header bar */}
+            <Line
+              x1={0}
+              y1={10}
+              x2={34}
+              y2={10}
+              stroke="#F5C518"
+              strokeWidth={1}
+            />
+            {/* 7-Day streak nodes */}
+            <Circle cx={8} cy={18} r={2} fill="#1B9A72" />
+            <Circle cx={17} cy={18} r={2} fill="#1B9A72" />
+            <Circle cx={26} cy={18} r={2} fill="#1B9A72" />
+            <Circle cx={8} cy={28} r={2} fill="#1B9A72" />
+            <Circle cx={17} cy={28} r={2} fill="#F5C518" />
+            <Circle
+              cx={26}
+              cy={28}
+              r={2}
+              stroke="#D4CCA8"
+              strokeWidth={0.8}
+              fill="none"
+            />
+          </G>
+
+          {/* 7. Parchment Habit Journal Checklist Doodle (Mid-Left) */}
+          <G
+            transform={`translate(28, ${Math.min(390, H * 0.48)})`}
+            opacity={0.18}
+          >
+            {/* Mini notepad outline */}
+            <Rect
+              x={0}
+              y={0}
+              width={34}
+              height={42}
+              rx={6}
+              stroke="#D4CCA8"
+              strokeWidth={1}
+              fill="none"
+            />
+            {/* Top wire spiral rings */}
+            <Rect
+              x={8}
+              y={-3}
+              width={18}
+              height={4}
+              rx={2}
+              stroke="#F5C518"
+              strokeWidth={1}
+              fill="none"
+            />
+            {/* Emerald bookmark ribbon peek */}
+            <Path
+              d="M 22 -3 L 22 18 L 24 16 L 26 18 L 26 -3"
+              fill="#1B9A72"
+              opacity={0.7}
+            />
+            {/* Checklist row 1 (Emerald check) */}
+            <Rect
+              x={5}
+              y={8}
+              width={6}
+              height={6}
+              rx={1.5}
+              stroke="#1B9A72"
+              strokeWidth={0.9}
+              fill="none"
+            />
+            <Line
+              x1={15}
+              y1={11}
+              x2={28}
+              y2={11}
+              stroke="#C4BCA8"
+              strokeWidth={1}
+              strokeLinecap="round"
+            />
+            {/* Checklist row 2 (Flame streak check) */}
+            <Rect
+              x={5}
+              y={19}
+              width={6}
+              height={6}
+              rx={1.5}
+              stroke="#E65100"
+              strokeWidth={0.9}
+              fill="none"
+            />
+            <Line
+              x1={15}
+              y1={22}
+              x2={27}
+              y2={22}
+              stroke="#C4BCA8"
+              strokeWidth={1}
+              strokeLinecap="round"
+            />
+            {/* Checklist row 3 (Active gold scribble) */}
+            <Rect
+              x={5}
+              y={30}
+              width={6}
+              height={6}
+              rx={1.5}
+              stroke="#F5C518"
+              strokeWidth={0.9}
+              fill="none"
+            />
+            <Line
+              x1={15}
+              y1={33}
+              x2={25}
+              y2={33}
+              stroke="#C4BCA8"
+              strokeWidth={1}
+              strokeLinecap="round"
+            />
+          </G>
+
+          {/* 8. Calligraphic Fountain Pen Flourish Checkmark Doodle (Above Footer) */}
+          <G transform={`translate(22, ${H - 225})`} opacity={0.2}>
+            {/* Continuous flourish check stroke */}
+            <Path
+              d="M 6 34 Q 16 48 24 54 Q 38 30 56 8"
+              stroke="#1B9A72"
+              strokeWidth={2.4}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              fill="none"
+            />
+            {/* Ink flourish drop */}
+            <Circle cx={58} cy={7} r={2.2} fill="#1B9A72" />
+            <Circle cx={6} cy={34} r={1.6} fill="#F5C518" />
+          </G>
+
+          {/* 9. Sacred Streak Flame Watermark on Bottom-Right */}
+          <G transform={`translate(${W - 74}, ${H - 145})`} opacity={0.16}>
             {/* Elegant continuous-line streak flame silhouette */}
             <Path
               d="M 28 65 C 10 52 4 35 16 18 C 19 26 23 30 27 28 C 24 16 32 6 42 0 C 42 12 48 20 54 22 C 58 14 62 10 65 14 C 70 28 66 50 48 62 C 40 68 34 68 28 65 Z"
@@ -415,7 +586,7 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
             />
           </G>
 
-          {/* 7. Golden Habit Diamond Stars & Constellation Nodes */}
+          {/* 10. Golden Habit Diamond Stars & Constellation Nodes */}
           <Path
             d={habitDiamond(38, 115, 6)}
             fill="url(#habitGoldNode)"
@@ -442,6 +613,23 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
             opacity={0.45}
           />
 
+          {/* Bottom constellation milestone points behind footer */}
+          <Path
+            d={habitDiamond(W - 45, H - 75, 6)}
+            fill="url(#habitGoldNode)"
+            opacity={0.55}
+          />
+          <Path
+            d={habitDiamond(48, H - 90, 5)}
+            fill="url(#habitGoldNode)"
+            opacity={0.45}
+          />
+          <Path
+            d={habitDiamond(W * 0.52, H - 120, 4.5)}
+            fill="url(#habitGoldNode)"
+            opacity={0.4}
+          />
+
           {/* Starlight micro nodes */}
           <Circle cx={W * 0.22} cy={85} r={1.6} fill="#F5C518" opacity={0.45} />
           <Circle cx={W * 0.78} cy={90} r={1.6} fill="#F5C518" opacity={0.45} />
@@ -453,6 +641,20 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
             r={1.6}
             fill="#F5C518"
             opacity={0.35}
+          />
+          <Circle
+            cx={W * 0.45}
+            cy={H - 50}
+            r={2}
+            fill="#F5C518"
+            opacity={0.4}
+          />
+          <Circle
+            cx={W * 0.72}
+            cy={H - 100}
+            r={2.2}
+            fill="#1B9A72"
+            opacity={0.45}
           />
 
           {/* 8. Crisp Top-Down Specular Light Rim (1.5px bevel edge) */}

@@ -288,15 +288,22 @@ sequenceDiagram
 - **Purpose**: Full task lifecycle organization by category, priority, and completion status.
 - **Status**: `Implemented` (In-memory Context)
 - **Source Files**:
-  - `src/Screens/Tasks/TasksScreen.tsx`
+  - `src/Screens/Tasks/TasksScreen.tsx` (Reactive scroll header with voice orb, productivity bento card, segmented tab control with dynamic counts, centered crest badge, floating half-outside New Task button, and safe bottom clearance for floating tab bar)
+  - `src/Screens/Tasks/Components/TaskProductivityBento.tsx` (Luxury dark ambient bento card with solar gold auras, completion percentage, live focus indicator, and pending/completed/total metric capsules)
+  - `src/Screens/Tasks/Components/TaskCategoryCarousel.tsx` (Signature asymmetric category cards with real-time dynamic task counts and category filtering)
+  - `src/Screens/Tasks/Components/TaskCardItem.tsx` (Luxury tactile task card with category icon, title, note snippet, time tag, 3D priority badges, voice nudge badge, and animated checkbox)
+  - `src/Screens/Tasks/Components/TaskSectionBackgroundSvg.tsx` (Dynamic luxury aesthetic background with focus chronometer rings, solar gold focus auras, and starlight diamond nodes)
   - `src/Screens/Tasks/AddTaskScreen.tsx`
   - `src/Components/AddTaskModal.tsx`
   - `src/Context/TaskReminderContext.tsx`
 - **Categories**: Works (`#FFFCEB`), Sport (`#EDFDF5`), Habits (`#EFF2FE`), Events (`#FFF3E0`).
 - **User-Facing Workflow**:
-  - Tap checkbox to toggle done state with green check bounce.
-  - Filter tasks by category pills.
-  - Add task via modal or full-screen route with subtasks and priority tags.
+  - Switch between "Task List" and "Completed" segmented tabs with live counts.
+  - View real-time completion percentage and motivational progress in the Task Productivity Bento.
+  - Filter tasks dynamically by tapping Category cards or "Show All".
+  - Tap tactile checkbox to toggle done state with spring bounce and toast confirmation.
+  - Add task via floating corner CTA button or bento card quick action.
+- **Test Coverage**: Tested in `__tests__/TasksRedesign.test.tsx`.
 - **Known Limitation**: Data resets on full app reload because persistence to `AsyncStorage` is **Partial** (see Section 3).
 
 ---
@@ -323,8 +330,9 @@ sequenceDiagram
 - **Purpose**: Build recurring daily routines across Morning, Mindful, and Evening buckets with modern luxury aesthetics.
 - **Status**: `Implemented`
 - **Source Files**:
-  - `src/Screens/Habits/HabitsScreen.tsx` (Reactive scroll header, hero bento card, Today's Flow centered black crest badge, floating half-outside New Habit plus button, and bottom safe area clearance)
-  - `src/Screens/Habits/Components/HabitSectionBackgroundSvg.tsx` (Dynamic luxury aesthetic background with habit growth rings, solar chronometer ticks, emerald vitality aura, diamond constellation lattice, and streak flame watermark)
+  - `src/Screens/Habits/HabitsScreen.tsx` (Reactive scroll header, hero bento card, Today's Flow centered black crest badge, floating half-outside New Habit plus button, Swiggy-inspired brand watermark footer with "Your future self is taking notes!" and "Crafted with ❤️ in Ahmedabad, India")
+  - `src/Screens/Habits/Components/HabitNotesDoodleSvg.tsx` (Extraordinary 3D luxury obsidian journal, floating golden fountain pen actively writing calligraphic notes, Day 21 streak seal badge, and celestial doodle energy arcs)
+  - `src/Screens/Habits/Components/HabitSectionBackgroundSvg.tsx` (Dynamic luxury aesthetic background with habit growth rings, solar chronometer ticks, emerald vitality aura, 7-day tracker matrix doodle, journal checklist doodle, calligraphic flourish checkmark, and footer constellation diamonds)
   - `src/Screens/Habits/Components/HabitConsistencyBento.tsx` (Dynamic longest streak calculation, dual 3D badges, 7-day consistency strip)
   - `src/Screens/Habits/Components/HabitItemCard.tsx` (Category accent strip, tactile animated checkmark, 7-day mini history dots, top-right floating circular edit button)
   - `src/Screens/Habits/Components/HabitCategoryFilters.tsx` (Category pills with dynamic item count badges)
@@ -337,6 +345,7 @@ sequenceDiagram
   - Category filters (`All`, `Morning`, `Mindful`, `Evening`) show dynamic habit counts per ritual flow.
   - Habits section features Today's Flow crest badge centered on top border and floating plus button on top-right.
   - Top-right floating edit button on habit cards launches `AddHabitModal` pre-filled for customization and deletion.
+  - Swiggy-inspired watermark brand footer at the bottom of the rituals flow with bold editorial typography: _"Your future self is taking notes!"_, sign-off _"Crafted with ❤️ in Ahmedabad, India"_, and extraordinary 3D habit notes doodle illustration.
 
 ---
 
@@ -402,6 +411,26 @@ sequenceDiagram
     - Smoothly transitions from flush `#FBF9F3` cream canvas to primary `LavenderPurple` (`#8383D6`) via `Animated.event`.
     - Features rounded bottom corners (`borderBottomLeftRadius: 24`, `borderBottomRightRadius: 24`) and deep purple floating shadow (`#4A3E8A`), creating a distinct luxury layer overlaying the scroll viewport.
     - Synchronously adapts `<RegiusLogo variant="light" />` (pure white `#FFFFFF`), toggles `StatusBar` to `light-content`, and elevates action buttons into white circular cards while preserving signature icon colors (`#7059C8` for voice mic, `#1B1C19` for settings gear, `#FFFFFF` ring for avatar).
+
+---
+
+### 2.12 Comprehensive Tasks Screen Redesign
+
+- **Purpose**: Modernize `TasksScreen` into a luxury executive command center matching `HabitsScreen` and `DashboardScreen`.
+- **Status**: `Implemented`
+- **Source Files**:
+  - `src/Screens/Tasks/TasksScreen.tsx`
+  - `src/Screens/Tasks/Components/TaskProductivityBento.tsx`
+  - `src/Screens/Tasks/Components/TaskCategoryCarousel.tsx`
+  - `src/Screens/Tasks/Components/TaskCardItem.tsx`
+  - `src/Screens/Tasks/Components/TaskSectionBackgroundSvg.tsx`
+  - `src/Screens/Tasks/Components/TaskCompleteDoodleSvg.tsx`
+- **Technical Implementation**:
+  - **Compact Productivity Focus Bar**: 84px single-card bento with circular progress meter, percentage badge, and quick action.
+  - **Dynamic Category Carousel**: Horizontal category selector with live task count pills.
+  - **Tactile Task Cards**: High-contrast white surfaces, semantic badges, interactive checkboxes, and time pills.
+  - **Centered Crest Badge & Section Extension**: Crest header badge (`Today's Tasks`) and top-right floating plus button extending to the bottom screen edge (`paddingBottom: insets.bottom + 130`).
+  - **Swiggy-Inspired Footer Watermark & Task Complete Doodles**: Giant, ultra-bold, tight-leading geometric sans typography (`Live\nit up!`, Poppins Bold 60pt, `#8E95A5`, -2 letter spacing) with attribution subline (`Crafted with ❤️ in Ahmedabad, India`), paired alongside the handcrafted `TaskCompleteDoodleSvg` (tilted completed checklist clipboard with green/gold checks, orbital 100% seal, and celebratory starbursts) and non-occluding background watermark auras.
 
 ---
 

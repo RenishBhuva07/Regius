@@ -1,4 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useRef,
+} from 'react';
 import {
   View,
   Text,
@@ -8,99 +14,61 @@ import {
   FlatList,
   StatusBar,
   Platform,
+  Animated,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { Mail, Users, Filter, Check, Plus } from 'lucide-react-native';
-import Svg, { Path } from 'react-native-svg';
-import { Typography } from '../../Theme/Typographys';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Plus, CheckSquare } from 'lucide-react-native';
+import Toast from 'react-native-toast-message';
+
 import { Fonts } from '../../Theme/fonts';
+import { Typography } from '../../Theme/Typographys';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
-import { SVGS } from '../../Assets/Images';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
-import { useTaskReminder } from '../../Context/TaskReminderContext';
+import { useTaskReminder, Task } from '../../Context/TaskReminderContext';
+import { ScreenHeader, SCREEN_HEADER_HEIGHT } from '../../Common/ScreenHeader';
+import FlowBadgePatternSvg from '../Dashboard/Components/FlowBadgePatternSvg';
 
-// ─── Inline SVGs ─────────────────────────────────────────────────────────────
-
-const OfficeBagIcon: React.FC<{ width?: number; height?: number }> = ({
-  width = 24,
-  height = 24,
-}) => (
-  <Svg width={width} height={height} viewBox="23 19 24 24" fill="none">
-    <Path
-      opacity={0.4}
-      d="M25.0002 30.0785C25.0502 32.4165 25.1902 36.4155 25.2102 36.8565C25.2812 37.7995 25.6422 38.7525 26.2042 39.4245C26.9862 40.3675 27.9492 40.7885 29.2922 40.7885C31.1482 40.7985 33.1942 40.7985 35.1812 40.7985C37.1762 40.7985 39.1122 40.7985 40.7472 40.7885C42.0712 40.7885 43.0642 40.3565 43.8362 39.4245C44.3982 38.7525 44.7592 37.7895 44.8102 36.8565C44.8302 36.4855 44.9302 32.1445 44.9902 30.0785H25.0002Z"
-      fill="#FFE600"
-    />
-    <Path
-      d="M34.2454 34.3842V35.6782C34.2454 36.0922 34.5814 36.4282 34.9954 36.4282C35.4094 36.4282 35.7454 36.0922 35.7454 35.6782V34.3842C35.7454 33.9702 35.4094 33.6342 34.9954 33.6342C35.4094 33.6342 34.2454 33.9702 34.2454 34.3842Z"
-      fill="#FFE600"
-    />
-    <Path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M33.2113 33.5564C33.1113 33.9194 32.7623 34.1514 32.3843 34.1014C29.8333 33.7454 27.3953 32.8404 25.3373 31.4814C25.1263 31.3434 25.0003 31.1074 25.0003 30.8554V27.3894C25.0003 25.2894 26.7123 23.5814 28.8173 23.5814H30.7843C30.9723 22.1294 32.2023 21.0004 33.7043 21.0004H36.2863C37.7873 21.0004 39.0183 22.1294 39.2063 23.5814H41.1833C43.2823 23.5814 44.9903 25.2894 44.9903 27.3894V30.8554C44.9903 31.1074 44.8633 31.3424 44.6543 31.4814C42.5923 32.8464 40.1443 33.7554 37.5763 34.1104C37.5413 34.1154 37.5073 34.1174 37.4733 34.1174C37.1343 34.1174 36.8313 33.8884 36.7463 33.5524C36.5443 32.7564 35.8213 32.1994 34.9903 32.1994C34.1483 32.1994 33.4333 32.7444 33.2113 33.5564ZM36.2863 22.5004H33.7043C33.0313 22.5004 32.4693 22.9604 32.3013 23.5814H37.6883C37.5203 22.9604 36.9583 22.5004 36.2863 22.5004Z"
-      fill="#FFE600"
-    />
-  </Svg>
-);
-
-// ─── Types ───────────────────────────────────────────────────────────────────
+import TaskSectionBackgroundSvg from './Components/TaskSectionBackgroundSvg';
+import TaskProductivityBento from './Components/TaskProductivityBento';
+import TaskCategoryCarousel from './Components/TaskCategoryCarousel';
+import TaskCardItem from './Components/TaskCardItem';
+import TaskCompleteDoodleSvg from './Components/TaskCompleteDoodleSvg';
 
 type TabKey = 'taskList' | 'completed';
 
-interface Category {
-  id: string;
-  label: string;
-  taskCount: string;
-  bgColor: string;
-  borderColor: string;
-  shadowColor: string;
-  Icon: React.ComponentType<any>;
-  accentColor?: string;
-}
-
-// ─── Data ────────────────────────────────────────────────────────────────────
-
-const CATEGORIES: Category[] = [
-  {
-    id: 'works',
-    label: 'Works',
-    taskCount: '+03 task',
-    bgColor: '#FFFCEB',
-    borderColor: '#FFF5B8',
-    shadowColor: '#F5C518',
-    Icon: OfficeBagIcon,
-    accentColor: '#FDD835',
-  },
-  {
-    id: 'sport',
-    label: 'Sport',
-    taskCount: '+10 task',
-    bgColor: '#EDFDF5',
-    borderColor: '#C6FFDD',
-    shadowColor: '#52D22E',
-    Icon: SVGS.FloatHeart,
-    accentColor: '#52D22E',
-  },
-  {
-    id: 'habits',
-    label: 'Habits',
-    taskCount: '+4 task',
-    bgColor: '#EFF2FE',
-    borderColor: '#D8DBFF',
-    shadowColor: '#8383D6',
-    Icon: SVGS.FloatPicture,
-    accentColor: '#8383D6',
-  },
-];
-
-// ─── Component ───────────────────────────────────────────────────────────────
-
-const TasksScreen: React.FC<any> = ({ route }) => {
+export const TasksScreen: React.FC<any> = ({ route }) => {
+  const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState<TabKey>('taskList');
-  const [selectedCategory, setSelectedCategory] = useState<string>('works');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    'works',
+  );
+
   const { tasks, toggleTask, selectedTasks, selectAllTasks, openTaskModal } =
     useTaskReminder();
+
+  // Scroll tracking matching DashboardScreen and HabitsScreen reactive headers
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const isScrolledRef = useRef(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    {
+      useNativeDriver: false,
+      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const offsetY = event?.nativeEvent?.contentOffset?.y ?? 0;
+        if (offsetY > 15 && !isScrolledRef.current) {
+          isScrolledRef.current = true;
+          setIsScrolled(true);
+        } else if (offsetY <= 15 && isScrolledRef.current) {
+          isScrolledRef.current = false;
+          setIsScrolled(false);
+        }
+      },
+    },
+  );
 
   // Trigger from navigation params (e.g. from PlusActionSheet or other routes)
   useEffect(() => {
@@ -109,21 +77,114 @@ const TasksScreen: React.FC<any> = ({ route }) => {
     }
   }, [route?.params, openTaskModal]);
 
+  // Compute live task counts
+  const completedTasksCount = useMemo(
+    () => tasks.filter(t => t.done).length,
+    [tasks],
+  );
+  const pendingTasksCount = useMemo(
+    () => tasks.filter(t => !t.done).length,
+    [tasks],
+  );
+
+  // Filter tasks based on activeTab ('taskList' vs 'completed') and selectedCategory
+  const filteredTasks = useMemo(() => {
+    return tasks.filter(task => {
+      // 1. Tab filtering
+      if (activeTab === 'taskList' && task.done) return false;
+      if (activeTab === 'completed' && !task.done) return false;
+
+      // 2. Category filtering
+      if (selectedCategory) {
+        if (selectedCategory === 'works') {
+          return task.category === 'works' || !task.category;
+        }
+        return task.category === selectedCategory;
+      }
+
+      return true;
+    });
+  }, [tasks, activeTab, selectedCategory]);
+
+  const handleToggleTask = useCallback(
+    (id: string) => {
+      const updated = toggleTask(id);
+      if (updated) {
+        Toast.show({
+          type: 'success',
+          text1: updated.done ? 'Task Completed! 🎯' : 'Task Active',
+          text2: updated.done
+            ? 'Great momentum on your daily flow!'
+            : 'Returned to your active task list.',
+        });
+      }
+    },
+    [toggleTask],
+  );
+
+  // Section title matching HabitsScreen Today's Rituals style
+  const sectionTitle = useMemo(() => {
+    if (activeTab === 'completed') {
+      return 'Completed Tasks';
+    }
+    if (selectedCategory === 'works') {
+      return 'Today’s Works';
+    }
+    if (selectedCategory) {
+      return `Today’s ${
+        selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)
+      }`;
+    }
+    return 'Today’s Tasks';
+  }, [activeTab, selectedCategory]);
+
+  // Section subtitle matching HabitsScreen: "X of Y completed"
+  const sectionSubtitle = useMemo(() => {
+    const total = filteredTasks.length;
+    const completed = filteredTasks.filter(t => t.done).length;
+    if (activeTab === 'completed') {
+      return `${completedTasksCount} finished items`;
+    }
+    return `${completed} of ${total} completed`;
+  }, [filteredTasks, activeTab, completedTasksCount]);
+
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top']}>
+    <View style={styles.safeArea}>
       <StatusBar
-        barStyle="dark-content"
+        barStyle={isScrolled ? 'light-content' : 'dark-content'}
         {...(Platform.OS === 'android'
-          ? { backgroundColor: '#FFFFFF', translucent: true }
+          ? {
+              backgroundColor: isScrolled ? Colors.LavenderPurple : '#FBF9F3',
+              translucent: true,
+            }
           : {})}
+      />
+
+      {/* Reusable reactive Screen Header with voice orb and avatar */}
+      <ScreenHeader
+        title="Tasks"
+        subtitle="Daily Objectives & Focus"
+        scrollY={scrollY}
+        isScrolled={isScrolled}
       />
 
       <ScrollView
         style={styles.scroll}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[
+          styles.scrollContent,
+          {
+            paddingTop: insets.top + SCREEN_HEADER_HEIGHT + 6,
+            paddingBottom: 0,
+          },
+        ]}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
       >
-        {/* ── Toggle Tabs ── */}
+        {/* Compact Focus Bar */}
+        <TaskProductivityBento tasks={tasks} onAddTask={openTaskModal} />
+
+        {/* Tactile Segmented Tabs */}
         <View style={styles.toggleContainer}>
           <TouchableOpacity
             activeOpacity={0.85}
@@ -141,7 +202,7 @@ const TasksScreen: React.FC<any> = ({ route }) => {
                   : styles.toggleTextInactive,
               ]}
             >
-              Task List
+              Task List ({pendingTasksCount})
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -160,225 +221,162 @@ const TasksScreen: React.FC<any> = ({ route }) => {
                   : styles.toggleTextInactive,
               ]}
             >
-              Completed
+              Completed ({completedTasksCount})
             </Text>
           </TouchableOpacity>
         </View>
 
-        {/* ── Categories ── */}
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Categories</Text>
-          <View style={styles.sectionActions}>
-            <TouchableOpacity activeOpacity={0.7} style={styles.filterBtn}>
-              <Filter size={16} color="#1F2228" strokeWidth={2.2} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.85}
-              style={styles.addBtn}
-              onPress={openTaskModal}
-            >
-              <Text style={styles.addBtnText}>Add</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <FlatList
-          horizontal
-          data={CATEGORIES}
-          keyExtractor={item => item.id}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.categoriesRow}
-          style={styles.categoriesScroll}
-          renderItem={({ item: cat }) => {
-            const isSelected = selectedCategory === cat.id;
-            return (
-              <TouchableOpacity
-                key={cat.id}
-                activeOpacity={0.85}
-                onPress={() => setSelectedCategory(cat.id)}
-                style={[
-                  styles.categoryCard,
-                  { backgroundColor: cat.bgColor },
-                  isSelected && [
-                    styles.categoryCardSelected,
-                    { shadowColor: cat.shadowColor },
-                  ],
-                ]}
-              >
-                <View
-                  style={[
-                    styles.categoryIconWrap,
-                    {
-                      borderColor: cat.borderColor,
-                      shadowColor: cat.shadowColor,
-                    },
-                  ]}
-                >
-                  <cat.Icon width={24} height={24} />
-                </View>
-                <Text style={styles.categoryLabel}>{cat.label}</Text>
-                <Text style={styles.categoryCount}>{cat.taskCount}</Text>
-                {isSelected && cat.accentColor ? (
-                  <View style={styles.categoryAccentWrap}>
-                    <View
-                      style={[
-                        styles.categoryAccent,
-                        { backgroundColor: cat.accentColor },
-                      ]}
-                    />
-                  </View>
-                ) : null}
-              </TouchableOpacity>
-            );
-          }}
+        {/* Categories Carousel */}
+        <TaskCategoryCarousel
+          tasks={tasks}
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+          onAddPress={openTaskModal}
         />
 
-        {/* ── Task List (same as Figma with #FAFAFA background) ── */}
-        <View style={styles.taskSection}>
-          <View style={styles.taskSectionHeader}>
-            <Text style={styles.taskSectionTitle}>Task List</Text>
-            <TouchableOpacity
-              activeOpacity={0.85}
-              style={styles.addTaskBtn}
-              onPress={openTaskModal}
-            >
-              <Text style={styles.addTaskBtnText}>Add Task</Text>
-            </TouchableOpacity>
+        {/* Tasks Section matching HabitsScreen with centered black crest badge & top-right floating plus button */}
+        <View
+          style={[styles.taskSection, { paddingBottom: insets.bottom + 130 }]}
+        >
+          <View style={styles.taskSectionBgWrapper} pointerEvents="none">
+            <TaskSectionBackgroundSvg />
           </View>
 
-          {tasks.length === 0 ? (
-            <View style={styles.emptyContainer}>
-              <Mail size={40} color="#D1D5DB" strokeWidth={1.5} />
-              <Text style={styles.emptyTitle}>No tasks yet</Text>
-              <Text style={styles.emptySubtitle}>
-                Tap &ldquo;Add Task&rdquo; to add your first to-do item.
-              </Text>
-              <TouchableOpacity
-                activeOpacity={0.85}
-                style={styles.addEmptyBtn}
-                onPress={openTaskModal}
-              >
-                <Plus size={15} color="#FFFFFF" strokeWidth={2.5} />
-                <Text style={styles.addEmptyBtnText}>Add Task</Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View style={styles.taskListCards}>
-              {tasks.map(task => {
-                const isChecked = task.done || selectedTasks.has(task.id);
-                return (
-                  <TouchableOpacity
-                    key={task.id}
-                    activeOpacity={0.85}
-                    style={styles.taskCard}
-                    onPress={() => toggleTask(task.id)}
-                  >
-                    <View style={styles.taskCardLeft}>
-                      <View style={styles.taskIconContainer}>
-                        {task.iconType === 'mail' ? (
-                          <Mail size={19} color="#454A53" strokeWidth={2.2} />
-                        ) : (
-                          <Users size={19} color="#454A53" strokeWidth={2.2} />
-                        )}
-                      </View>
-                      <Text style={styles.taskLabel}>{task.label}</Text>
-                    </View>
+          {/* Header crest badge centered on top border - half outside, half inside (matching HabitsScreen) */}
+          <View style={styles.flowHeaderBadge}>
+            <FlowBadgePatternSvg />
+            <Text style={styles.flowTitle}>{sectionTitle}</Text>
+            <Text style={styles.flowSubtitle}>{sectionSubtitle}</Text>
+          </View>
 
-                    <View
-                      style={[
-                        styles.taskCheckbox,
-                        isChecked
-                          ? styles.taskCheckboxChecked
-                          : styles.taskCheckboxUnchecked,
-                      ]}
-                    >
-                      {isChecked ? (
-                        <Check size={14} color="#52D22E" strokeWidth={3} />
-                      ) : null}
-                    </View>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          )}
-
-          {/* ── Select All Task ── */}
+          {/* New Task floating button at right corner - half outside, half inside (matching HabitsScreen) */}
           <TouchableOpacity
             activeOpacity={0.85}
-            onPress={selectAllTasks}
-            style={styles.selectAllBtn}
+            onPress={openTaskModal}
+            style={styles.addTaskFloatingBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Add new task"
           >
-            <Text style={styles.selectAllText}>Select All Task</Text>
+            <Plus size={18} color="#FFFFFF" strokeWidth={2.6} />
           </TouchableOpacity>
+
+          {/* Tasks List */}
+          <FlatList
+            data={filteredTasks}
+            keyExtractor={item => item.id}
+            scrollEnabled={false}
+            contentContainerStyle={styles.taskListContainer}
+            renderItem={({ item }) => {
+              const isChecked = item.done || selectedTasks.has(item.id);
+              return (
+                <TaskCardItem
+                  task={item}
+                  isChecked={isChecked}
+                  onToggle={handleToggleTask}
+                />
+              );
+            }}
+            ItemSeparatorComponent={() => <View style={styles.listSeparator} />}
+            ListEmptyComponent={
+              <View style={styles.emptyContainer}>
+                <CheckSquare size={38} color="#D1D5DB" strokeWidth={1.5} />
+                <Text style={styles.emptyTitle}>
+                  {activeTab === 'completed'
+                    ? 'No Completed Tasks Yet'
+                    : 'No Tasks in This Category'}
+                </Text>
+                <Text style={styles.emptySubtitle}>
+                  {activeTab === 'completed'
+                    ? 'Completed tasks will appear here as you conquer your daily focus.'
+                    : 'Tap below to add your next objective.'}
+                </Text>
+                {activeTab === 'taskList' && (
+                  <TouchableOpacity
+                    activeOpacity={0.85}
+                    style={styles.addEmptyBtn}
+                    onPress={openTaskModal}
+                  >
+                    <Plus size={14} color="#FFFFFF" strokeWidth={2.4} />
+                    <Text style={styles.addEmptyBtnText}>Add Task</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            }
+          />
+
+          {/* Select All Task Button */}
+          {tasks.length > 0 && (
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={selectAllTasks}
+              style={styles.selectAllBtn}
+            >
+              <Text style={styles.selectAllText}>Select All Tasks</Text>
+            </TouchableOpacity>
+          )}
+
+          {/* Swiggy-Inspired Brand Watermark Footer: "Dreams move when you do!" + "Crafted with ❤️ in Ahmedabad, India" + Task Complete Doodles */}
+          <View style={styles.footerWatermarkWrapper} pointerEvents="none">
+            <View style={styles.footerWatermarkRow}>
+              {/* Left Column: Bold "Live it up!" Typography & Sign-off */}
+              <View style={styles.liveItUpBlock}>
+                <Text style={styles.liveItUpText}>
+                  Dreams move{'\n'}when you do!
+                </Text>
+                <View style={styles.craftedWithRow}>
+                  <Text style={styles.craftedWithText}>Crafted with </Text>
+                  <Text style={styles.craftedWithHeart}>❤️</Text>
+                  <Text style={styles.craftedWithText}>
+                    {' '}
+                    in Ahmedabad, India
+                  </Text>
+                </View>
+              </View>
+
+              {/* Right Column: Task Complete Doodle Illustration */}
+              <View style={styles.footerDoodleWrapper}>
+                <TaskCompleteDoodleSvg />
+              </View>
+            </View>
+          </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
-
-// ─── Styles ──────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.DefaultWhite,
   },
   scroll: {
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 120,
+    // padding applied dynamically with safe insets
   },
 
-  // Header
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: ResponsivePixels.size20,
-    paddingTop: ResponsivePixels.size16,
-    paddingBottom: ResponsivePixels.size8,
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: ResponsivePixels.size14,
-  },
-  menuIcon: {
-    gap: 4.5,
-    justifyContent: 'center',
-    paddingVertical: 4,
-  },
-  menuLine: {
-    width: 18,
-    height: 2.2,
-    backgroundColor: '#1F2228',
-    borderRadius: 2,
-  },
-  headerTitle: {
-    ...Typography.h1RanadeBold,
-    color: '#000000',
-    fontSize: 26,
-  },
-  avatarRing: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 2,
-    borderColor: Colors.RingBorder,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-
-  // Toggle
+  // Toggle Tabs
   toggleContainer: {
     flexDirection: 'row',
     marginHorizontal: ResponsivePixels.size20,
-    marginTop: ResponsivePixels.size16,
+    marginTop: ResponsivePixels.size10,
+    marginBottom: ResponsivePixels.size4,
     backgroundColor: '#1F2228',
     borderRadius: 50,
     padding: 4,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   toggleTab: {
     flex: 1,
@@ -392,7 +390,7 @@ const styles = StyleSheet.create({
   },
   toggleText: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 14,
+    fontSize: 13,
   },
   toggleTextActive: {
     color: '#1F2228',
@@ -401,215 +399,115 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
 
-  // Section Header
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: ResponsivePixels.size20,
-    marginTop: ResponsivePixels.size24,
-    marginBottom: ResponsivePixels.size14,
-  },
-  sectionTitle: {
-    ...Typography.h6Bold,
-    color: '#000000',
-    fontSize: 18,
-  },
-  sectionActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: ResponsivePixels.size10,
-  },
-  filterBtn: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    backgroundColor: '#F5F6F8',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  addBtn: {
-    backgroundColor: '#1F2228',
-    paddingHorizontal: ResponsivePixels.size16,
-    paddingVertical: ResponsivePixels.size8,
-    borderRadius: 50,
-  },
-  addBtnText: {
-    ...Typography.bodySmallPoppinsSemiBold,
-    color: '#FFFFFF',
-    fontSize: 12,
-  },
-
-  // Categories
-  categoriesScroll: {
-    overflow: 'visible',
-    marginBottom: ResponsivePixels.size4,
-  },
-  categoriesRow: {
-    paddingHorizontal: ResponsivePixels.size20,
-    paddingTop: ResponsivePixels.size10,
-    paddingBottom: ResponsivePixels.size30,
-    gap: ResponsivePixels.size14,
-  },
-  categoryCard: {
-    width: 124,
-    borderRadius: 23,
-    borderTopRightRadius: 63,
-    padding: ResponsivePixels.size16,
-    paddingBottom: ResponsivePixels.size18,
-    gap: ResponsivePixels.size6,
-    position: 'relative',
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  categoryCardSelected: {
-    borderColor: '#FFFFFF',
-    ...Platform.select({
-      ios: {
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.38,
-        shadowRadius: 14,
-      },
-      android: {
-        elevation: 6,
-      },
-    }),
-  },
-  categoryIconWrap: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1.5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: ResponsivePixels.size8,
-    ...Platform.select({
-      ios: {
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 0.22,
-        shadowRadius: 8,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-  categoryLabel: {
-    ...Typography.bodyMediumPoppinsSemiBold,
-    color: '#000000',
-    fontSize: 15,
-  },
-  categoryCount: {
-    ...Typography.bodySmallPoppinsRegular,
-    color: Colors.SubtitleGray,
-    fontSize: 12,
-  },
-  categoryAccentWrap: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    alignItems: 'center',
-  },
-  categoryAccent: {
-    height: 4,
-    width: 48,
-    borderTopLeftRadius: 3,
-    borderTopRightRadius: 3,
-  },
-
-  // Task Section (#FAFAFA background)
+  // Tasks Section Container matching HabitsScreen
   taskSection: {
-    backgroundColor: Colors.LightGrey,
+    backgroundColor: Colors.SoftCream,
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
-    paddingHorizontal: ResponsivePixels.size20,
-    paddingTop: ResponsivePixels.size24,
-    paddingBottom: ResponsivePixels.size32,
+    borderWidth: 1.5,
+    borderTopColor: '#FAF6EE',
+    borderLeftColor: '#EFE9DE',
+    borderRightColor: '#EFE9DE',
+    borderBottomWidth: 0,
+    paddingTop: 40,
+    marginTop: 26,
     flex: 1,
-  },
-  taskSectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: ResponsivePixels.size18,
-  },
-  taskSectionTitle: {
-    ...Typography.h6Bold,
-    color: '#000000',
-    fontSize: 18,
-  },
-  addTaskBtn: {
-    backgroundColor: '#1F2228',
-    paddingHorizontal: ResponsivePixels.size16,
-    paddingVertical: ResponsivePixels.size8,
-    borderRadius: 50,
-  },
-  addTaskBtnText: {
-    ...Typography.bodySmallPoppinsSemiBold,
-    color: '#FFFFFF',
-    fontSize: 12,
-  },
-
-  // Task Cards
-  taskListCards: {
-    gap: ResponsivePixels.size12,
-  },
-  taskCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 18,
-    paddingHorizontal: ResponsivePixels.size16,
-    paddingVertical: ResponsivePixels.size16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    position: 'relative',
     ...Platform.select({
       ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.04,
-        shadowRadius: 8,
+        shadowColor: '#1B1C19',
+        shadowOffset: { width: 0, height: -4 },
+        shadowOpacity: 0.12,
+        shadowRadius: 12,
       },
       android: {
-        elevation: 1.5,
+        elevation: 4,
       },
     }),
   },
-  taskCardLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: ResponsivePixels.size14,
-    flex: 1,
-  },
-  taskIconContainer: {
-    width: 32,
-    height: 32,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  taskLabel: {
-    ...Typography.bodyMediumPoppinsMedium,
-    color: '#000000',
-    fontSize: 15,
+  taskSectionBgWrapper: {
+    ...StyleSheet.absoluteFill,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+    overflow: 'hidden',
   },
 
-  // Checkboxes
-  taskCheckbox: {
-    width: 24,
-    height: 24,
-    borderRadius: 6,
+  // Header crest badge centered on top border matching HabitsScreen Today's Rituals
+  flowHeaderBadge: {
+    position: 'absolute',
+    top: -24,
+    alignSelf: 'center',
+    backgroundColor: Colors.NeroBlack,
+    paddingHorizontal: 22,
+    paddingVertical: 7,
+    borderRadius: 22,
+    borderWidth: 1.5,
+    borderTopColor: '#4A4E5C',
+    borderLeftColor: '#363944',
+    borderRightColor: '#363944',
+    borderBottomWidth: 4,
+    borderBottomColor: '#090A0D',
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#0B0D11',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.32,
+    shadowRadius: 8,
+    elevation: 6,
+    zIndex: 20,
+    overflow: 'hidden',
   },
-  taskCheckboxChecked: {
-    backgroundColor: '#E8FDF0',
+  flowTitle: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 14.5,
+    color: Colors.DefaultWhite,
+    letterSpacing: -0.1,
+    textAlign: 'center',
   },
-  taskCheckboxUnchecked: {
-    backgroundColor: '#EFF1F4',
+  flowSubtitle: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 10.5,
+    color: '#B6B9C3',
+    marginTop: 1,
+    textAlign: 'center',
   },
 
-  // Select All Task
+  // New Task floating button at right corner matching HabitsScreen addHabitFloatingBtn
+  addTaskFloatingBtn: {
+    position: 'absolute',
+    top: -21,
+    right: 18,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: Colors.NeroBlack,
+    borderWidth: 1.5,
+    borderTopColor: '#4A4E5C',
+    borderLeftColor: '#363944',
+    borderRightColor: '#363944',
+    borderBottomWidth: 3.5,
+    borderBottomColor: '#090A0D',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#0B0D11',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.32,
+    shadowRadius: 6,
+    elevation: 6,
+    zIndex: 20,
+  },
+
+  // Task List
+  taskListContainer: {
+    paddingHorizontal: ResponsivePixels.size20,
+    paddingTop: 10,
+    paddingBottom: 20,
+  },
+  listSeparator: {
+    height: 12,
+  },
+
+  // Select All Tasks Button
   selectAllBtn: {
     backgroundColor: '#1F2228',
     borderRadius: 50,
@@ -618,12 +516,66 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-    marginTop: ResponsivePixels.size24,
+    marginBottom: ResponsivePixels.size24,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   selectAllText: {
     ...Typography.bodyMediumPoppinsSemiBold,
     color: '#FFFFFF',
+    fontSize: 13.5,
+  },
+
+  // Swiggy-Inspired Watermark Footer
+  footerWatermarkWrapper: {
+    paddingHorizontal: ResponsivePixels.size24,
+    marginTop: ResponsivePixels.size16,
+    marginBottom: ResponsivePixels.size20,
+  },
+  footerWatermarkRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+  },
+  liveItUpBlock: {
+    flex: 1,
+    justifyContent: 'flex-start',
+  },
+  liveItUpText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 38,
+    lineHeight: 46,
+    color: '#8E95A5',
+    letterSpacing: -1.5,
+  },
+  craftedWithRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 18,
+    // flexWrap: 'wrap',
+  },
+  craftedWithText: {
+    fontFamily: Fonts.poppins.medium,
     fontSize: 14,
+    color: '#8E95A5',
+  },
+  craftedWithHeart: {
+    fontSize: 13.5,
+  },
+  footerDoodleWrapper: {
+    marginLeft: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 6,
   },
 
   // Empty State
@@ -631,19 +583,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 40,
+    paddingHorizontal: 20,
     gap: 8,
   },
   emptyTitle: {
     ...Typography.bodyMediumPoppinsSemiBold,
     color: '#374151',
-    fontSize: 16,
+    fontSize: 15,
     marginTop: 6,
   },
   emptySubtitle: {
     ...Typography.bodySmallPoppinsRegular,
     color: '#9CA3AF',
     textAlign: 'center',
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
     lineHeight: 18,
   },
   addEmptyBtn: {
@@ -654,216 +607,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: ResponsivePixels.size20,
     paddingVertical: ResponsivePixels.size10,
     borderRadius: 50,
-    marginTop: 10,
+    marginTop: 12,
   },
   addEmptyBtnText: {
     ...Typography.bodySmallPoppinsSemiBold,
     color: '#FFFFFF',
-    fontSize: 13,
-  },
-
-  // Full-screen Sheet Styles
-  sheetContainer: {
-    flex: 1,
-    backgroundColor: '#FAF8F5',
-  },
-  sheetHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: ResponsivePixels.size20,
-    paddingTop: Platform.OS === 'ios' ? 8 : 14,
-    paddingBottom: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: '#EDE8DF',
-    backgroundColor: '#FFFFFF',
-  },
-  sheetCloseBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: '#F3F0EA',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sheetHeaderCenter: {
-    alignItems: 'center',
-  },
-  sheetTitle: {
-    fontFamily: Fonts.ranade.bold,
-    fontSize: 18,
-    color: '#1F2228',
-  },
-  sheetSubtitle: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
-    color: '#7E838F',
-    marginTop: 2,
-  },
-  sheetKeyboardAvoid: {
-    flex: 1,
-  },
-  sheetScroll: {
-    flex: 1,
-  },
-  sheetScrollContent: {
-    paddingHorizontal: ResponsivePixels.size20,
-    paddingTop: 18,
-    paddingBottom: 36,
-  },
-  sheetSection: {
-    marginBottom: 20,
-  },
-  sheetLabel: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
-    color: '#1F2228',
-    marginBottom: 8,
-    letterSpacing: 0.2,
-  },
-  inputCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: '#E8E2D5',
-    paddingHorizontal: 16,
-    paddingVertical: Platform.OS === 'ios' ? 14 : 10,
-  },
-  titleInput: {
-    flex: 1,
-    fontSize: 15,
-    fontFamily: Fonts.poppins.medium,
-    color: '#1F2228',
-    padding: 0,
-  },
-  clearBtn: {
-    padding: 4,
-    marginLeft: 6,
-  },
-  noteInputCard: {
-    minHeight: 84,
-    alignItems: 'flex-start',
-    paddingVertical: 12,
-  },
-  noteInput: {
-    flex: 1,
-    fontSize: 14,
-    fontFamily: Fonts.poppins.regular,
-    color: '#1F2228',
-    minHeight: 64,
-    padding: 0,
-  },
-  categoryCardRow: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  catSelectCard: {
-    flex: 1,
-    minHeight: 90,
-    borderRadius: 18,
-    borderWidth: 1.5,
-    paddingVertical: 12,
-    paddingHorizontal: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  catSelectCardActive: {
-    borderWidth: 2,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-  catIconCircle: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 6,
-  },
-  catSelectLabel: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
-    color: '#1F2228',
-  },
-  catSelectedBadge: {
-    position: 'absolute',
-    top: 6,
-    right: 6,
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  chipsRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  sheetPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 24,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1.2,
-    borderColor: '#E8E2D5',
-  },
-  sheetPillActive: {
-    backgroundColor: '#1F2228',
-    borderColor: '#1F2228',
-  },
-  sheetPillText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 13,
-    color: '#454A53',
-  },
-  sheetPillTextActive: {
-    color: '#FFFFFF',
-    fontFamily: Fonts.poppins.semiBold,
-  },
-  priorityDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
-  sheetFooter: {
-    paddingHorizontal: ResponsivePixels.size20,
-    paddingTop: 12,
-    paddingBottom: Platform.OS === 'ios' ? 18 : 20,
-    backgroundColor: '#FFFFFF',
-    borderTopWidth: 1,
-    borderTopColor: '#EDE8DF',
-  },
-  createModalBtn: {
-    backgroundColor: '#1F2228',
-    borderRadius: 50,
-    height: 52,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  createModalBtnDisabled: {
-    backgroundColor: '#B5BAC2',
-  },
-  createModalBtnText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 15,
-    color: '#FFFFFF',
+    fontSize: 12.5,
   },
 });
 
