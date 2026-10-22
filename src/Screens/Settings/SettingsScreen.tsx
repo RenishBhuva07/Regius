@@ -1,17 +1,18 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import {
+  View,
   StyleSheet,
   ScrollView,
   Animated,
   Platform,
   StatusBar,
   Easing,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
-import {
-  SafeAreaView,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
+import { Colors } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { AuthContext } from '../../Context/AuthContext';
 import { resetNavigation } from '../../Navigators/Navigator';
@@ -27,6 +28,7 @@ import {
   VOICES,
   useSettingsTheme,
   SettingsHeader,
+  SETTINGS_HEADER_HEIGHT,
   ProfileCard,
   DefaultVoiceSection,
   AppearanceSection,
@@ -34,11 +36,13 @@ import {
   StorageSection,
   AccountSupportSection,
   SettingsFooter,
+  SettingsBackgroundSvg,
   VoiceStudioModal,
   EditProfileModal,
   ClearCacheModal,
   LogoutConfirmModal,
   WakeWordConfigModal,
+  WakeWordSection,
 } from './Components';
 
 export type { VoiceOption };
@@ -68,6 +72,9 @@ const SettingsScreen: React.FC = () => {
 
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [hapticFeedback, setHapticFeedback] = useState(true);
+  const [hapticIntensity, setHapticIntensity] = useState<
+    'subtle' | 'medium' | 'crisp'
+  >('medium');
   const [smartCategorization, setSmartCategorization] = useState(true);
   const [morningBriefing, setMorningBriefing] = useState(true);
   const [cloudSync, setCloudSync] = useState(true);
@@ -81,6 +88,27 @@ const SettingsScreen: React.FC = () => {
 
   const [isPlayingPreview, setIsPlayingPreview] = useState(false);
   const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
+
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const isScrolledRef = useRef(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    {
+      useNativeDriver: false,
+      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const offsetY = event?.nativeEvent?.contentOffset?.y ?? 0;
+        if (offsetY > 15 && !isScrolledRef.current) {
+          isScrolledRef.current = true;
+          setIsScrolled(true);
+        } else if (offsetY <= 15 && isScrolledRef.current) {
+          isScrolledRef.current = false;
+          setIsScrolled(false);
+        }
+      },
+    },
+  );
 
   const waveAnim1 = useRef(new Animated.Value(0.3)).current;
   const waveAnim2 = useRef(new Animated.Value(0.7)).current;
@@ -214,7 +242,7 @@ const SettingsScreen: React.FC = () => {
         id: targetVoice.id,
         url: targetVoice.previewUrl,
         title: targetVoice.name,
-        artist: `Kokoro Neural Voice (${targetVoice.kokoroVoiceId})`,
+        artist: 'Kokoro Neural Voice',
       });
     }
   };
@@ -288,27 +316,44 @@ const SettingsScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView
-      style={[styles.safeArea, { backgroundColor: bgMain }]}
-      edges={['top']}
-    >
+    <View style={[styles.safeArea, { backgroundColor: bgMain }]}>
       <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        barStyle={
+          isScrolled
+            ? 'light-content'
+            : isDarkMode
+            ? 'light-content'
+            : 'dark-content'
+        }
         {...(Platform.OS === 'android'
-          ? { backgroundColor: bgMain, translucent: true }
+          ? {
+              backgroundColor: isScrolled
+                ? isDarkMode
+                  ? '#282048'
+                  : Colors.LavenderPurple
+                : bgMain,
+              translucent: true,
+            }
           : {})}
       />
+
+      <SettingsBackgroundSvg />
+
+      <SettingsHeader scrollY={scrollY} isScrolled={isScrolled} />
 
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingBottom: 120 + insets.bottom },
+          {
+            paddingTop: insets.top + SETTINGS_HEADER_HEIGHT + 10,
+            paddingBottom: 120 + insets.bottom,
+          },
         ]}
         showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
       >
-        <SettingsHeader />
-
         <ProfileCard
           name={profileName}
           email={profileEmail}
@@ -331,6 +376,10 @@ const SettingsScreen: React.FC = () => {
           onChangeSpeechSpeed={handleChangeSpeechSpeed}
           autoSpeakReplies={autoSpeakReplies}
           onToggleAutoSpeakReplies={handleToggleAutoSpeakReplies}
+          onResetDefaults={handleResetVoiceDefaults}
+        />
+
+        <WakeWordSection
           wakeWordEnabled={isWakeWordEnabled}
           onToggleWakeWord={handleToggleWakeWord}
           wakeWordPhrase={wakeWordPhrase}
@@ -342,6 +391,8 @@ const SettingsScreen: React.FC = () => {
         <AppearanceSection
           hapticFeedback={hapticFeedback}
           onToggleHapticFeedback={setHapticFeedback}
+          hapticIntensity={hapticIntensity}
+          onChangeHapticIntensity={setHapticIntensity}
         />
 
         <AiWorkflowSection
@@ -416,7 +467,7 @@ const SettingsScreen: React.FC = () => {
           resetNavigation('Login');
         }}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -428,8 +479,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: ResponsivePixels.size20,
-    paddingTop: ResponsivePixels.size12,
+    paddingHorizontal: ResponsivePixels.size16,
   },
 });
 

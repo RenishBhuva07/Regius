@@ -1,11 +1,16 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Edit3, Sparkles } from 'lucide-react-native';
+import { Edit3 } from 'lucide-react-native';
 import { Typography } from '../../../Theme/Typographys';
-import { Colors as StaticColors } from '../../../Assets/StyleUtilities/Colors';
+import { Fonts } from '../../../Theme/fonts';
+import Colors, {
+  Colors as StaticColors,
+} from '../../../Assets/StyleUtilities/Colors';
 import { SVGS } from '../../../Assets/Images';
+import { Badge } from '../../../Common/Badge';
+import { ProBadge } from '../../../Common/ProBadge';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
-import { useSettingsTheme } from './types';
+import ProfileCardBackgroundSvg from './ProfileCardBackgroundSvg';
 
 interface ProfileCardProps {
   name: string;
@@ -24,119 +29,81 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   selectedVoiceName,
   onEditPress,
 }) => {
-  const {
-    isDarkMode,
-    cardBg,
-    textPrimary,
-    textSecondary,
-    borderLight,
-    surfaceAlt,
-  } = useSettingsTheme();
-
   return (
-    <View
-      style={[
-        styles.profileCard,
-        {
-          backgroundColor: cardBg,
-          borderColor: borderLight,
-          shadowColor: isDarkMode ? '#000000' : 'rgba(0,0,0,0.06)',
-        },
-      ]}
-    >
-      <View style={styles.profileCardTop}>
-        <View style={styles.avatarWrapper}>
-          <View
-            style={[
-              styles.avatarRing,
-              {
-                borderColor: '#F5C518',
-                backgroundColor: isDarkMode ? '#252932' : '#FFFCEB',
-              },
-            ]}
-          >
-            <SVGS.RegiusAvatar width={52} height={52} />
-          </View>
-          <View style={styles.proPillBadge}>
-            <Sparkles size={10} color="#FFFFFF" strokeWidth={2.8} />
-            <Text style={styles.proPillText}>PRO</Text>
-          </View>
-        </View>
+    <View style={styles.cardShadowWrapper}>
+      <View style={styles.card}>
+        {/* Specular dark luxury obsidian bento background */}
+        <ProfileCardBackgroundSvg />
 
-        <View style={styles.profileDetails}>
-          <View style={styles.profileNameRow}>
-            <Text
-              style={[styles.profileName, { color: textPrimary }]}
-              numberOfLines={1}
+        <View style={styles.cardContent}>
+          {/* Top Row: Avatar, Info (Name + Pro Badge), and Edit Button */}
+          <View style={styles.profileCardTop}>
+            <View style={styles.avatarWrapper}>
+              <View style={styles.avatarRing}>
+                <SVGS.RegiusAvatar width={52} height={52} />
+              </View>
+            </View>
+
+            <View style={styles.profileDetails}>
+              <View style={styles.nameRow}>
+                <Text style={styles.profileName} numberOfLines={1}>
+                  {name}
+                </Text>
+                <ProBadge size="sm" />
+              </View>
+              <Text style={styles.profileEmail} numberOfLines={1}>
+                {email}
+              </Text>
+              <View style={styles.roleBadgeWrapper}>
+                <Badge label={role} variant="yellow" size="sm" />
+              </View>
+            </View>
+
+            <TouchableOpacity
+              activeOpacity={0.8}
+              style={styles.editProfileBtn}
+              onPress={onEditPress}
+              accessibilityRole="button"
+              accessibilityLabel="Edit Profile"
             >
-              {name}
-            </Text>
+              <Edit3 size={14} color="#FFFFFF" strokeWidth={2.2} />
+              <Text style={styles.editProfileBtnText}>Edit</Text>
+            </TouchableOpacity>
           </View>
-          <Text
-            style={[styles.profileEmail, { color: textSecondary }]}
-            numberOfLines={1}
-          >
-            {email}
-          </Text>
-          <View style={styles.profileRoleChip}>
-            <Text style={styles.profileRoleText}>{role}</Text>
+
+          {/* User Designation Snippet (Clean without quotation marks) */}
+          {bio ? (
+            <View style={styles.bioSnippet}>
+              <Text style={styles.bioSnippetText} numberOfLines={2}>
+                {bio}
+              </Text>
+            </View>
+          ) : null}
+
+          {/* Metrics Row: Tasks Done, Active Alerts, AI Voice */}
+          <View style={styles.profileMetricsRow}>
+            <View style={styles.metricItem}>
+              <Text style={styles.metricValue}>142</Text>
+              <Text style={styles.metricLabel}>Tasks Done</Text>
+            </View>
+            <View style={styles.metricDivider} />
+            <View style={styles.metricItem}>
+              <Text style={styles.metricValue}>8</Text>
+              <Text style={styles.metricLabel}>Active Alerts</Text>
+            </View>
+            <View style={styles.metricDivider} />
+            <View style={styles.metricItem}>
+              <Text
+                style={[
+                  styles.metricValue,
+                  { color: StaticColors.LavenderPurple },
+                ]}
+              >
+                {selectedVoiceName}
+              </Text>
+              <Text style={styles.metricLabel}>AI Voice</Text>
+            </View>
           </View>
-        </View>
-
-        <TouchableOpacity
-          activeOpacity={0.8}
-          style={[
-            styles.editProfileBtn,
-            {
-              backgroundColor: isDarkMode ? '#2C3035' : '#1F2228',
-            },
-          ]}
-          onPress={onEditPress}
-        >
-          <Edit3 size={15} color="#FFFFFF" strokeWidth={2.2} />
-          <Text style={styles.editProfileBtnText}>Edit</Text>
-        </TouchableOpacity>
-      </View>
-
-      {bio ? (
-        <View style={[styles.bioSnippet, { backgroundColor: surfaceAlt }]}>
-          <Text
-            style={[styles.bioSnippetText, { color: textSecondary }]}
-            numberOfLines={2}
-          >
-            &ldquo;{bio}&rdquo;
-          </Text>
-        </View>
-      ) : null}
-
-      <View style={[styles.profileMetricsRow, { borderTopColor: borderLight }]}>
-        <View style={styles.metricItem}>
-          <Text style={[styles.metricValue, { color: textPrimary }]}>142</Text>
-          <Text style={[styles.metricLabel, { color: textSecondary }]}>
-            Tasks Done
-          </Text>
-        </View>
-        <View
-          style={[styles.metricDivider, { backgroundColor: borderLight }]}
-        />
-        <View style={styles.metricItem}>
-          <Text style={[styles.metricValue, { color: textPrimary }]}>8</Text>
-          <Text style={[styles.metricLabel, { color: textSecondary }]}>
-            Active Alerts
-          </Text>
-        </View>
-        <View
-          style={[styles.metricDivider, { backgroundColor: borderLight }]}
-        />
-        <View style={styles.metricItem}>
-          <Text
-            style={[styles.metricValue, { color: StaticColors.LavenderPurple }]}
-          >
-            {selectedVoiceName}
-          </Text>
-          <Text style={[styles.metricLabel, { color: textSecondary }]}>
-            AI Voice
-          </Text>
         </View>
       </View>
     </View>
@@ -144,15 +111,26 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
 };
 
 const styles = StyleSheet.create({
-  profileCard: {
-    borderRadius: 24,
-    borderWidth: 1.5,
-    padding: ResponsivePixels.size18,
+  cardShadowWrapper: {
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.28,
+    shadowRadius: 18,
+    elevation: 8,
     marginBottom: ResponsivePixels.size24,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 14,
-    elevation: 3,
+  },
+  card: {
+    backgroundColor: Colors.NeroBlack,
+    borderRadius: 24,
+    padding: ResponsivePixels.size18,
+    position: 'relative',
+    overflow: 'hidden',
+    borderWidth: 4,
+    borderColor: 'rgba(255, 255, 255, 0.9)',
+  },
+  cardContent: {
+    position: 'relative',
+    zIndex: 1,
   },
   profileCardTop: {
     flexDirection: 'row',
@@ -160,93 +138,76 @@ const styles = StyleSheet.create({
   },
   avatarWrapper: {
     position: 'relative',
-    marginRight: ResponsivePixels.size14,
+    marginRight: 12,
   },
   avatarRing: {
-    width: 62,
-    height: 62,
-    borderRadius: 31,
-    borderWidth: 2,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    borderWidth: 2.5,
+    borderColor: '#F5C518',
+    backgroundColor: '#1E2128',
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
   },
-  proPillBadge: {
-    position: 'absolute',
-    bottom: -3,
-    right: -3,
-    backgroundColor: '#F5C518',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 10,
-    borderWidth: 1.5,
-    borderColor: '#FFFFFF',
-  },
-  proPillText: {
-    fontFamily: Typography.bodySmallRanadeBold.fontFamily,
-    fontSize: 9,
-    color: '#000000',
-    fontWeight: '700',
-  },
   profileDetails: {
     flex: 1,
+    marginRight: 8,
     justifyContent: 'center',
   },
-  profileNameRow: {
+  nameRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 7,
   },
   profileName: {
-    ...Typography.h6Bold,
-    fontSize: 18,
+    fontFamily: Fonts.ranade.bold,
+    fontSize: 17,
+    lineHeight: 22,
+    color: Colors.DefaultWhite,
   },
   profileEmail: {
-    ...Typography.bodySmallPoppinsRegular,
+    fontFamily: Fonts.poppins.regular,
     fontSize: 12,
+    color: '#A19FA3',
     marginTop: 1,
   },
-  profileRoleChip: {
-    alignSelf: 'flex-start',
-    backgroundColor: '#FFFCEB',
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 8,
+  roleBadgeWrapper: {
     marginTop: 4,
-    borderWidth: 1,
-    borderColor: '#FFF5B8',
-  },
-  profileRoleText: {
-    ...Typography.bodySmallPoppinsSemiBold,
-    fontSize: 10,
-    color: '#8D7000',
+    alignSelf: 'flex-start',
   },
   editProfileBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
-    paddingHorizontal: 12,
+    gap: 6,
+    paddingHorizontal: 14,
     paddingVertical: 7,
     borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.22)',
+    alignSelf: 'center',
   },
   editProfileBtnText: {
-    ...Typography.bodySmallPoppinsSemiBold,
-    fontSize: 12,
-    color: '#FFFFFF',
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 12.5,
+    color: Colors.DefaultWhite,
   },
   bioSnippet: {
-    marginTop: ResponsivePixels.size12,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 12,
+    marginTop: 12,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255, 255, 255, 0.07)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.08)',
   },
   bioSnippetText: {
-    ...Typography.bodySmallPoppinsRegular,
+    fontFamily: Fonts.poppins.medium,
     fontSize: 12,
-    fontStyle: 'italic',
+    lineHeight: 17,
+    color: '#D4D2D6',
   },
   profileMetricsRow: {
     flexDirection: 'row',
@@ -255,23 +216,27 @@ const styles = StyleSheet.create({
     marginTop: ResponsivePixels.size14,
     paddingTop: ResponsivePixels.size12,
     borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.12)',
   },
   metricItem: {
     alignItems: 'center',
     flex: 1,
   },
   metricValue: {
-    ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 15,
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 16,
+    color: Colors.DefaultWhite,
   },
   metricLabel: {
-    ...Typography.bodySmallPoppinsRegular,
+    fontFamily: Fonts.poppins.medium,
     fontSize: 11,
-    marginTop: 1,
+    color: '#8E95A5',
+    marginTop: 2,
   },
   metricDivider: {
     width: 1,
     height: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
   },
 });
 

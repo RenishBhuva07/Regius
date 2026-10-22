@@ -40,7 +40,12 @@ export const AiWorkflowSection: React.FC<AiWorkflowSectionProps> = ({
       <View
         style={[
           styles.settingsGroupCard,
-          { backgroundColor: cardBg, borderColor: borderLight },
+          {
+            backgroundColor: cardBg,
+            borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#FFFFFF',
+            borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
+            shadowColor: isDarkMode ? '#000000' : 'rgba(82, 210, 46, 0.12)',
+          },
         ]}
       >
         <View style={styles.settingItemRow}>
@@ -159,9 +164,14 @@ const styles = StyleSheet.create({
   settingsGroupCard: {
     borderRadius: 22,
     borderWidth: 1.5,
+    borderBottomWidth: 3.5,
     paddingHorizontal: ResponsivePixels.size16,
     paddingVertical: ResponsivePixels.size6,
     marginBottom: ResponsivePixels.size24,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.1,
+    shadowRadius: 14,
+    elevation: 4,
   },
   settingItemRow: {
     flexDirection: 'row',

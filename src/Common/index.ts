@@ -6,3 +6,4 @@ export * from './ToastConfig';
 export * from './ToastHelper';
 export * from './RegiusLogo';
 export * from './ScreenHeader';
+export * from './ProBadge';

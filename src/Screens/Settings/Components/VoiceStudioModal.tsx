@@ -37,9 +37,9 @@ interface VoiceStudioModalProps {
 }
 
 const PRESET_SENTENCES = [
-  "Hey Regius, ready when you are.",
-  "Meeting with the team at 3:00 PM today.",
-  "Great job! You completed your daily meditation habit.",
+  'Hey Regius, ready when you are.',
+  'Meeting with the team at 3:00 PM today.',
+  'Great job! You completed your daily meditation habit.',
 ];
 
 export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
@@ -69,8 +69,7 @@ export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
   >('idle');
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
-  const selectedVoice =
-    voices.find(v => v.id === selectedVoiceId) || voices[0];
+  const selectedVoice = voices.find(v => v.id === selectedVoiceId) || voices[0];
 
   const handleGenerateAndSpeak = async () => {
     if (!testText.trim()) return;
@@ -184,7 +183,7 @@ export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
                     { color: selectedVoice.accentColor },
                   ]}
                 >
-                  {selectedVoice.name} ({selectedVoice.kokoroVoiceId})
+                  {selectedVoice.name}
                 </Text>
               </View>
             </View>
@@ -353,7 +352,7 @@ export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
                               { color: voice.accentColor },
                             ]}
                           >
-                            {voice.kokoroVoiceId}
+                            {voice.accent} • {voice.gender}
                           </Text>
                         </View>
                         {isSelected && (

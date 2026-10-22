@@ -116,6 +116,22 @@ import { Badge } from '../Common/Badge';
 <Badge label="HIGH FOCUS" variant="purple" size="lg" />
 ```
 
+#### 4.1.1 Universal 3D Pro Badge (`src/Common/ProBadge.tsx`)
+
+The singular, unified Pro user indicator across the entire Regius application:
+
+- **Geometry**: Tactile 3D full pill (`borderRadius: 14` for `sm`, `16` for `md`, `20` for `lg`).
+- **Icon**: Crown icon from `lucide-react-native` (`<Crown color="#B47804" fill="#F5C518" strokeWidth={2.4} />`).
+- **Surface**: Warm imperial gold tint (`#FFF8D0`) with specular light rim (`borderWidth: 1`, `borderColor: '#FFFFFF'`) and extruded 3D bottom bevel (`borderBottomWidth: 2.2`, `borderBottomColor: '#DEAA14'`).
+- **Drop Shadow**: Gold ambient glow (`shadowColor: '#D97706'`, `shadowOffset: { width: 0, height: 2 }`, `shadowOpacity: 0.25`, `shadowRadius: 3.5`, `elevation: 3`).
+- **Typography**: Poppins Bold uppercase `'PRO'` (`#B47804`, letter-spacing `0.8px`).
+
+```tsx
+import { ProBadge } from '../Common/ProBadge';
+
+<ProBadge size="sm" />;
+```
+
 ### 4.2 Reusable Regius Brand Wordmark (`src/Common/RegiusLogo.tsx`)
 
 A distinctive, polished typographic wordmark preserving the artisanal luxury identity:

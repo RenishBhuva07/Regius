@@ -11,23 +11,17 @@ import {
 import {
   Mic,
   Play,
-  Square,
+  Pause,
   Check,
   Headphones,
   ChevronRight,
-  SlidersHorizontal,
   RotateCcw,
 } from 'lucide-react-native';
-import Toast from 'react-native-toast-message';
 import { Typography } from '../../../Theme/Typographys';
+import { Fonts } from '../../../Theme/fonts';
 import { Colors as StaticColors } from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { VoiceOption, useSettingsTheme } from './types';
-import {
-  DEFAULT_WAKE_WORD_PHRASE,
-  SUPPORTED_WAKE_WORD_PRESETS,
-  DEFAULT_WAKE_WORD_PRESET,
-} from '../../../Services/WakeWord/WakeWordPresets';
 
 interface DefaultVoiceSectionProps {
   selectedVoice: VoiceOption;
@@ -38,15 +32,10 @@ interface DefaultVoiceSectionProps {
   playingVoiceId: string | null;
   onTogglePreview: (voiceId: string) => void;
   waveAnims: Animated.Value[];
-  speechSpeed: number;
-  onChangeSpeechSpeed: (speed: number) => void;
+  speechSpeed?: number;
+  onChangeSpeechSpeed?: (speed: number) => void;
   autoSpeakReplies: boolean;
   onToggleAutoSpeakReplies: (val: boolean) => void;
-  wakeWordEnabled: boolean;
-  onToggleWakeWord: (val: boolean) => void;
-  wakeWordPhrase?: string;
-  onConfigureWakeWord?: () => void;
-  onSelectPresetPhrase?: (phrase: string) => void;
   onResetDefaults?: () => void;
 }
 
@@ -59,15 +48,8 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
   playingVoiceId,
   onTogglePreview,
   waveAnims,
-  speechSpeed,
-  onChangeSpeechSpeed,
   autoSpeakReplies,
   onToggleAutoSpeakReplies,
-  wakeWordEnabled,
-  onToggleWakeWord,
-  wakeWordPhrase = DEFAULT_WAKE_WORD_PHRASE,
-  onConfigureWakeWord,
-  onSelectPresetPhrase,
   onResetDefaults,
 }) => {
   const {
@@ -83,7 +65,8 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
     isPlayingPreview && playingVoiceId === selectedVoice.id;
 
   return (
-    <>
+    <View style={styles.container}>
+      {/* Section Header: Title + Voice Studio CTA */}
       <View style={styles.sectionHeaderRow}>
         <View style={styles.sectionTitleWithIcon}>
           <Headphones
@@ -91,50 +74,47 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
             color={StaticColors.LavenderPurple}
             strokeWidth={2.4}
           />
-          <Text style={[styles.sectionTitle, { color: textPrimary }]}>
+          <Text
+            style={[styles.sectionTitle, { color: textPrimary }]}
+            numberOfLines={1}
+            ellipsizeMode="tail"
+          >
             Default Voice & Speech
           </Text>
         </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-          {onResetDefaults && (
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={[styles.sectionHeaderAction, { paddingHorizontal: 8 }]}
-              onPress={onResetDefaults}
-            >
-              <RotateCcw
-                size={12}
-                color={StaticColors.LavenderPurple}
-                strokeWidth={2.2}
-              />
-              <Text style={styles.sectionHeaderActionText}>Reset</Text>
-            </TouchableOpacity>
-          )}
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={styles.sectionHeaderAction}
-            onPress={onOpenVoiceStudio}
-          >
-            <Text style={styles.sectionHeaderActionText}>Voice Studio</Text>
-            <ChevronRight
-              size={14}
-              color={StaticColors.LavenderPurple}
-              strokeWidth={2.4}
-            />
-          </TouchableOpacity>
-        </View>
+
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={[
+            styles.sectionHeaderAction,
+            { backgroundColor: surfaceAlt, borderColor: borderLight },
+          ]}
+          onPress={onOpenVoiceStudio}
+          accessibilityRole="button"
+          accessibilityLabel="Open Voice Studio"
+        >
+          <Text style={styles.sectionHeaderActionText}>Voice Studio</Text>
+          <ChevronRight
+            size={13}
+            color={StaticColors.LavenderPurple}
+            strokeWidth={2.4}
+          />
+        </TouchableOpacity>
       </View>
 
+      {/* 3D Tactile Active Voice Bento Card */}
       <View
         style={[
           styles.activeVoiceCard,
           {
             backgroundColor: cardBg,
-            borderColor: selectedVoice.borderColor,
-            shadowColor: isDarkMode ? '#000000' : 'rgba(131, 131, 214, 0.12)',
+            borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#FFFFFF',
+            borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
+            shadowColor: isDarkMode ? '#000000' : 'rgba(131, 131, 214, 0.16)',
           },
         ]}
       >
+        {/* Selected Voice Info Row with Play/Pause Icon Button */}
         <View style={styles.voiceTopRow}>
           <View
             style={[
@@ -151,6 +131,7 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
               strokeWidth={2.2}
             />
           </View>
+
           <View style={styles.voiceMeta}>
             <View style={styles.voiceNameLine}>
               <Text style={[styles.voiceNameText, { color: textPrimary }]}>
@@ -159,7 +140,10 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
               <View
                 style={[
                   styles.voiceTagBadge,
-                  { backgroundColor: selectedVoice.bgColor },
+                  {
+                    backgroundColor: selectedVoice.bgColor,
+                    borderColor: selectedVoice.borderColor,
+                  },
                 ]}
               >
                 <Text
@@ -167,21 +151,26 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
                     styles.voiceTagText,
                     { color: selectedVoice.accentColor },
                   ]}
+                  numberOfLines={1}
                 >
                   {selectedVoice.tag}
                 </Text>
               </View>
             </View>
-            <Text style={[styles.voiceSubtitle, { color: textSecondary }]}>
+            <Text
+              style={[styles.voiceSubtitle, { color: textSecondary }]}
+              numberOfLines={1}
+            >
               {selectedVoice.gender} • {selectedVoice.accent} •{' '}
               {selectedVoice.personality}
             </Text>
           </View>
 
+          {/* Compact Play/Pause Icon Button */}
           <TouchableOpacity
             activeOpacity={0.8}
             style={[
-              styles.playPreviewBtn,
+              styles.playPauseCircleBtn,
               {
                 backgroundColor: isCurrentVoicePlaying
                   ? '#1F2228'
@@ -189,18 +178,27 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
               },
             ]}
             onPress={() => onTogglePreview(selectedVoice.id)}
+            accessibilityRole="button"
+            accessibilityLabel={
+              isCurrentVoicePlaying
+                ? 'Pause Voice Preview'
+                : 'Play Voice Preview'
+            }
           >
             {isCurrentVoicePlaying ? (
-              <Square size={13} color="#FFFFFF" fill="#FFFFFF" />
+              <Pause size={14} color="#FFFFFF" fill="#FFFFFF" />
             ) : (
-              <Play size={13} color="#FFFFFF" fill="#FFFFFF" />
+              <Play
+                size={14}
+                color="#FFFFFF"
+                fill="#FFFFFF"
+                style={styles.playIconOffset}
+              />
             )}
-            <Text style={styles.playPreviewBtnText}>
-              {isCurrentVoicePlaying ? 'Stop' : 'Listen'}
-            </Text>
           </TouchableOpacity>
         </View>
 
+        {/* Dynamic Waveform & Sample Preview */}
         <View
           style={[styles.waveformContainer, { backgroundColor: surfaceAlt }]}
         >
@@ -226,121 +224,99 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
           </Text>
         </View>
 
-        <View style={styles.speedControlRow}>
-          <View style={styles.speedControlLabel}>
-            <SlidersHorizontal
-              size={14}
-              color={textSecondary}
-              strokeWidth={2}
+        {/* Voice Presets Inside Box (Matching Haptic Intensity design) */}
+        <View
+          style={[
+            styles.presetsInsideBox,
+            { backgroundColor: surfaceAlt, borderColor: borderLight },
+          ]}
+        >
+          <View style={styles.presetsInsideHeader}>
+            <Headphones
+              size={13}
+              color={StaticColors.LavenderPurple}
+              strokeWidth={2.2}
             />
-            <Text style={[styles.speedLabelText, { color: textSecondary }]}>
-              Speech Speed:
+            <Text style={[styles.presetsInsideTitle, { color: textSecondary }]}>
+              Voice Presets:
             </Text>
           </View>
-          <View style={styles.speedPillsWrap}>
-            {[0.75, 1.0, 1.25, 1.5].map(speed => {
-              const isActive = speechSpeed === speed;
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={styles.voicePillsScroll}
+            contentContainerStyle={styles.voicePillsScrollContent}
+          >
+            {voices.map(voice => {
+              const isSelected = voice.id === selectedVoice.id;
               return (
                 <TouchableOpacity
-                  key={speed}
-                  activeOpacity={0.8}
-                  style={[
-                    styles.speedPill,
-                    isActive && styles.speedPillActive,
-                    {
-                      backgroundColor: isActive
-                        ? isDarkMode
-                          ? '#FFFFFF'
-                          : '#1F2228'
-                        : surfaceAlt,
-                    },
-                  ]}
-                  onPress={() => {
-                    onChangeSpeechSpeed(speed);
-                    Toast.show({
-                      type: 'info',
-                      text2: `Speech speed set to ${speed}x`,
-                    });
-                  }}
+                  key={voice.id}
+                  activeOpacity={0.85}
+                  style={styles.roundVoiceItem}
+                  onPress={() => onSelectVoice(voice)}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Select voice ${voice.name}`}
                 >
-                  <Text
+                  <View
                     style={[
-                      styles.speedPillText,
+                      styles.roundAvatarCircle,
                       {
-                        color: isActive
-                          ? isDarkMode
-                            ? '#000000'
-                            : '#FFFFFF'
-                          : textSecondary,
-                        fontFamily: isActive
-                          ? Typography.bodyMediumPoppinsSemiBold.fontFamily
-                          : Typography.bodySmallPoppinsRegular.fontFamily,
+                        backgroundColor: voice.bgColor,
+                        borderColor: isSelected
+                          ? voice.accentColor
+                          : isDarkMode
+                          ? '#2C3038'
+                          : '#E8E2D5',
+                        borderWidth: isSelected ? 2.5 : 1.5,
+                        shadowColor: isSelected ? voice.accentColor : '#000000',
+                        shadowOpacity: isSelected ? 0.3 : 0.06,
                       },
                     ]}
                   >
-                    {speed}x
+                    <Text
+                      style={[
+                        styles.roundAvatarInitial,
+                        { color: voice.accentColor },
+                      ]}
+                    >
+                      {voice.name.charAt(0)}
+                    </Text>
+
+                    {isSelected && (
+                      <View
+                        style={[
+                          styles.roundCheckBadge,
+                          { backgroundColor: voice.accentColor },
+                        ]}
+                      >
+                        <Check size={8} color="#FFFFFF" strokeWidth={3} />
+                      </View>
+                    )}
+                  </View>
+
+                  <Text
+                    style={[
+                      styles.roundVoiceName,
+                      {
+                        color: isSelected ? voice.accentColor : textPrimary,
+                        fontFamily: isSelected
+                          ? Fonts.poppins.semiBold
+                          : Fonts.poppins.medium,
+                      },
+                    ]}
+                    numberOfLines={1}
+                  >
+                    {voice.name}
                   </Text>
                 </TouchableOpacity>
               );
             })}
-          </View>
+          </ScrollView>
         </View>
 
-        <View style={styles.voiceSelectorHeader}>
-          <Text style={[styles.voiceSelectorTitle, { color: textSecondary }]}>
-            Switch Voice Preset:
-          </Text>
-        </View>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={styles.voicePillsScroll}
-        >
-          {voices.map(voice => {
-            const isSelected = voice.id === selectedVoice.id;
-            return (
-              <TouchableOpacity
-                key={voice.id}
-                activeOpacity={0.85}
-                style={[
-                  styles.voiceQuickCard,
-                  {
-                    backgroundColor: isSelected ? voice.bgColor : surfaceAlt,
-                    borderColor: isSelected ? voice.borderColor : borderLight,
-                  },
-                ]}
-                onPress={() => onSelectVoice(voice)}
-              >
-                <View style={styles.voiceQuickHeader}>
-                  <Text
-                    style={[
-                      styles.voiceQuickName,
-                      {
-                        color: isSelected ? voice.accentColor : textPrimary,
-                      },
-                    ]}
-                  >
-                    {voice.name}
-                  </Text>
-                  {isSelected && (
-                    <View
-                      style={[
-                        styles.voiceCheckDot,
-                        { backgroundColor: voice.accentColor },
-                      ]}
-                    >
-                      <Check size={9} color="#FFFFFF" strokeWidth={3} />
-                    </View>
-                  )}
-                </View>
-                <Text style={[styles.voiceQuickDesc, { color: textSecondary }]}>
-                  {voice.kokoroVoiceId}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
-
+        {/* Auto-Read Responses Toggle */}
         <View
           style={[styles.voiceTogglesBlock, { borderTopColor: borderLight }]}
         >
@@ -363,332 +339,236 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
               thumbColor="#FFFFFF"
             />
           </View>
-
-          <View style={styles.toggleRow}>
-            <View style={styles.toggleMeta}>
-              <View style={styles.wakeWordTitleRow}>
-                <Text style={[styles.toggleTitle, { color: textPrimary }]}>
-                  Wake Word “{wakeWordPhrase}”
-                </Text>
-                <View
-                  style={{ flexDirection: 'row', gap: 6, alignItems: 'center' }}
-                >
-                  {onResetDefaults && (
-                    <TouchableOpacity
-                      activeOpacity={0.7}
-                      onPress={onResetDefaults}
-                      style={styles.configurePill}
-                    >
-                      <RotateCcw
-                        size={12}
-                        color={StaticColors.LavenderPurple}
-                      />
-                      <Text style={styles.configurePillText}>Reset</Text>
-                    </TouchableOpacity>
-                  )}
-                  {onConfigureWakeWord && (
-                    <TouchableOpacity
-                      activeOpacity={0.7}
-                      onPress={onConfigureWakeWord}
-                      style={styles.configurePill}
-                    >
-                      <SlidersHorizontal
-                        size={12}
-                        color={StaticColors.LavenderPurple}
-                      />
-                      <Text style={styles.configurePillText}>Configure</Text>
-                    </TouchableOpacity>
-                  )}
-                </View>
-              </View>
-              <Text style={[styles.toggleDesc, { color: textSecondary }]}>
-                Hands-free voice trigger when app is open
-              </Text>
-            </View>
-            <Switch
-              value={wakeWordEnabled}
-              onValueChange={onToggleWakeWord}
-              trackColor={{
-                false: '#D9D9D9',
-                true: StaticColors.LavenderPurple,
-              }}
-              thumbColor="#FFFFFF"
-            />
-          </View>
-
-          {wakeWordEnabled && onSelectPresetPhrase && (
-            <View style={styles.quickPresetRow}>
-              {SUPPORTED_WAKE_WORD_PRESETS.map(preset => {
-                const isActive =
-                  wakeWordPhrase.toLowerCase() === preset.phrase.toLowerCase();
-                const isDefault =
-                  preset.phrase.toLowerCase() ===
-                  DEFAULT_WAKE_WORD_PRESET.phrase.toLowerCase();
-                return (
-                  <TouchableOpacity
-                    key={preset.id}
-                    activeOpacity={0.75}
-                    style={[
-                      styles.quickPresetChip,
-                      {
-                        backgroundColor: isActive
-                          ? isDarkMode
-                            ? '#2E2248'
-                            : '#F3E8FF'
-                          : surfaceAlt,
-                        borderColor: isActive
-                          ? StaticColors.LavenderPurple
-                          : borderLight,
-                      },
-                    ]}
-                    onPress={() => onSelectPresetPhrase(preset.phrase)}
-                  >
-                    <Text
-                      style={[
-                        styles.quickPresetText,
-                        {
-                          color: isActive
-                            ? StaticColors.LavenderPurple
-                            : textSecondary,
-                          fontWeight: isActive ? '700' : '500',
-                        },
-                      ]}
-                    >
-                      {preset.phrase}
-                      {isDefault ? ' (Default)' : ''}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-            </View>
-          )}
-
-          <View
-            style={[
-              styles.wakeWordStatusBadge,
-              {
-                backgroundColor: wakeWordEnabled ? '#EDFDF5' : surfaceAlt,
-                borderColor: wakeWordEnabled ? '#A7F3D0' : borderLight,
-              },
-            ]}
-          >
-            <View
-              style={[
-                styles.statusDot,
-                { backgroundColor: wakeWordEnabled ? '#10B981' : '#9CA3AF' },
-              ]}
-            />
-            <Text
-              style={[
-                styles.wakeWordStatusText,
-                { color: wakeWordEnabled ? '#059669' : textSecondary },
-              ]}
-            >
-              {wakeWordEnabled
-                ? `Active • Listening for "${wakeWordPhrase}"`
-                : 'Wake word detection is disabled'}
-            </Text>
-          </View>
         </View>
+
+        {/* Reset Action Placed Inside the Section Itself */}
+        {onResetDefaults && (
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={[styles.insideResetRow, { borderTopColor: borderLight }]}
+            onPress={onResetDefaults}
+            accessibilityRole="button"
+            accessibilityLabel="Reset voice defaults"
+          >
+            <RotateCcw
+              size={12}
+              color={StaticColors.LavenderPurple}
+              strokeWidth={2.2}
+            />
+            <Text style={styles.insideResetText}>Reset Voice Defaults</Text>
+          </TouchableOpacity>
+        )}
       </View>
-    </>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    marginBottom: ResponsivePixels.size24,
+  },
   sectionHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginBottom: ResponsivePixels.size12,
-    marginTop: ResponsivePixels.size4,
   },
   sectionTitleWithIcon: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+    marginRight: 8,
   },
   sectionTitle: {
-    ...Typography.h6Bold,
-    fontSize: 16,
+    fontFamily: Fonts.ranade.bold,
+    fontSize: 17,
+    flexShrink: 1,
   },
   sectionHeaderAction: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 2,
+    gap: 4,
+    paddingHorizontal: 11,
+    paddingVertical: 5.5,
+    borderRadius: 14,
+    borderWidth: 1,
+    flexShrink: 0,
   },
   sectionHeaderActionText: {
-    ...Typography.bodySmallPoppinsSemiBold,
-    fontSize: 12,
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 11,
     color: StaticColors.LavenderPurple,
   },
   activeVoiceCard: {
-    borderRadius: 24,
+    borderRadius: 22,
     borderWidth: 1.5,
+    borderBottomWidth: 3.5,
     padding: ResponsivePixels.size16,
-    marginBottom: ResponsivePixels.size24,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 1,
-    shadowRadius: 12,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.1,
+    shadowRadius: 14,
+    elevation: 4,
   },
   voiceTopRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
   },
   voiceIconSquare: {
-    width: 46,
-    height: 46,
+    width: 44,
+    height: 44,
     borderRadius: 14,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: 10,
+    flexShrink: 0,
   },
   voiceMeta: {
     flex: 1,
+    marginRight: 8,
+    justifyContent: 'center',
   },
   voiceNameLine: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    flexWrap: 'wrap',
+    gap: 6,
   },
   voiceNameText: {
-    ...Typography.bodyLargePoppinsSemiBold,
+    fontFamily: Fonts.ranade.bold,
     fontSize: 17,
   },
   voiceTagBadge: {
     paddingHorizontal: 7,
     paddingVertical: 2,
     borderRadius: 8,
+    borderWidth: 1,
+    maxWidth: 150,
   },
   voiceTagText: {
-    ...Typography.bodySmallPoppinsSemiBold,
+    fontFamily: Fonts.poppins.semiBold,
     fontSize: 10,
   },
   voiceSubtitle: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 12,
+    fontSize: 11.5,
     marginTop: 2,
   },
-  playPreviewBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+  playPauseCircleBtn: {
+    width: 36,
+    height: 36,
     borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexShrink: 0,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.18,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  playPreviewBtnText: {
-    ...Typography.bodySmallPoppinsSemiBold,
-    fontSize: 12,
-    color: '#FFFFFF',
+  playIconOffset: {
+    marginLeft: 2,
   },
   waveformContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    marginTop: ResponsivePixels.size14,
+    gap: 12,
     paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRadius: 14,
+    paddingVertical: 9,
+    borderRadius: 12,
+    marginTop: 12,
   },
   waveformBars: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 3.5,
-    height: 22,
+    gap: 3,
+    height: 20,
+    width: 24,
+    justifyContent: 'center',
   },
   waveBar: {
-    width: 3.5,
-    height: 20,
+    width: 2.5,
+    height: 18,
     borderRadius: 2,
   },
   waveformSampleText: {
-    flex: 1,
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 12,
+    fontSize: 11,
+    lineHeight: 15,
+    flex: 1,
     fontStyle: 'italic',
   },
-  speedControlRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: ResponsivePixels.size14,
-    paddingTop: ResponsivePixels.size10,
+  presetsInsideBox: {
+    borderRadius: 14,
+    borderWidth: 1,
+    padding: 10,
+    marginTop: 14,
+    overflow: 'hidden',
   },
-  speedControlLabel: {
+  presetsInsideHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-  },
-  speedLabelText: {
-    ...Typography.bodySmallPoppinsMedium,
-    fontSize: 12,
-  },
-  speedPillsWrap: {
-    flexDirection: 'row',
-    gap: 6,
-  },
-  speedPill: {
-    paddingHorizontal: 9,
-    paddingVertical: 4,
-    borderRadius: 12,
-  },
-  speedPillActive: {},
-  speedPillText: {
-    fontSize: 12,
-  },
-  voiceSelectorHeader: {
-    marginTop: ResponsivePixels.size14,
     marginBottom: 8,
   },
-  voiceSelectorTitle: {
-    ...Typography.bodySmallPoppinsMedium,
-    fontSize: 12,
+  presetsInsideTitle: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 11.5,
   },
   voicePillsScroll: {
-    marginHorizontal: -4,
+    marginHorizontal: -10,
   },
-  voiceQuickCard: {
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 16,
-    borderWidth: 1.5,
-    marginRight: 10,
-    minWidth: 115,
+  voicePillsScrollContent: {
+    paddingHorizontal: 10,
+    gap: 12,
   },
-  voiceQuickHeader: {
-    flexDirection: 'row',
+  roundVoiceItem: {
     alignItems: 'center',
-    justifyContent: 'space-between',
+    width: 56,
   },
-  voiceQuickName: {
-    ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 14,
+  roundAvatarCircle: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 4,
+    elevation: 2,
   },
-  voiceCheckDot: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
+  roundAvatarInitial: {
+    fontFamily: Fonts.ranade.bold,
+    fontSize: 19,
+  },
+  roundCheckBadge: {
+    position: 'absolute',
+    bottom: -1,
+    right: -1,
+    width: 15,
+    height: 15,
+    borderRadius: 7.5,
+    borderWidth: 1.5,
+    borderColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  voiceQuickDesc: {
-    ...Typography.bodySmallPoppinsRegular,
+  roundVoiceName: {
     fontSize: 11,
-    marginTop: 2,
+    marginTop: 5,
+    textAlign: 'center',
   },
   voiceTogglesBlock: {
+    marginTop: 14,
+    paddingTop: 12,
     borderTopWidth: 1,
-    marginTop: ResponsivePixels.size16,
-    paddingTop: ResponsivePixels.size8,
   },
   toggleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: ResponsivePixels.size10,
   },
   toggleMeta: {
     flex: 1,
@@ -697,66 +577,26 @@ const styles = StyleSheet.create({
   toggleTitle: {
     ...Typography.bodyMediumPoppinsSemiBold,
     fontSize: 14,
+    marginBottom: 2,
   },
   toggleDesc: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 11,
-    marginTop: 1,
+    fontSize: 11.5,
+    lineHeight: 16,
   },
-  wakeWordStatusBadge: {
+  insideResetRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    borderWidth: 1,
-    borderRadius: 10,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginTop: 6,
-  },
-  statusDot: {
-    width: 7,
-    height: 7,
-    borderRadius: 3.5,
-  },
-  wakeWordStatusText: {
-    ...Typography.bodySmallPoppinsSemiBold,
-    fontSize: 12,
-  },
-  wakeWordTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  configurePill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
-    backgroundColor: 'rgba(131, 131, 214, 0.12)',
-  },
-  configurePillText: {
-    ...Typography.bodySuperSmallPoppinsSemiBoldLoose,
-    fontSize: 11,
-    color: StaticColors.LavenderPurple,
-  },
-  quickPresetRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+    justifyContent: 'center',
     gap: 6,
-    marginTop: 6,
-    marginBottom: 4,
+    marginTop: 12,
+    paddingTop: 10,
+    borderTopWidth: 1,
   },
-  quickPresetChip: {
-    paddingHorizontal: 9,
-    paddingVertical: 5,
-    borderRadius: 8,
-    borderWidth: 1,
-  },
-  quickPresetText: {
-    ...Typography.bodySuperSmallPoppinsRegularLoose,
-    fontSize: 11,
+  insideResetText: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 11.5,
+    color: StaticColors.LavenderPurple,
   },
 });
 

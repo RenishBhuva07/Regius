@@ -269,6 +269,14 @@ sequenceDiagram
 - **Source Files**:
   - `src/Services/VoiceSettingsService.ts`
   - `src/Screens/Settings/SettingsScreen.tsx`
+  - `src/Screens/Settings/Components/SettingsHeader.tsx` (Fixed reactive header fixed at top with scroll interpolation, luxury LavenderPurple/deep purple theme transitions, HeaderPatternSvg background aura, and back navigation)
+  - `src/Screens/Settings/Components/ProfileCard.tsx` (Signature luxury dark hero bento card matching Rule 5: 4px ceramic white border, deep 18px volumetric shadow, solar gold dawn auras, PRO badge, and bio/metrics display)
+  - `src/Screens/Settings/Components/ProfileCardBackgroundSvg.tsx` (Specular dark obsidian bento canvas with celestial stardust & concentric orbits)
+  - `src/Screens/Settings/Components/DefaultVoiceSection.tsx` (Cleaned voice preset selector, waveform audio preview, and speech speed pills without overlapping text)
+  - `src/Screens/Settings/Components/WakeWordSection.tsx` (Dedicated Wake Word engine section with hands-free trigger toggle, live listening status badge, preset phrase chips, and hardware sensitivity config)
+  - `src/Screens/Settings/Components/SettingsBackgroundSvg.tsx` (Extraordinary luxury adaptive ambient background with calibration dials, acoustic wave ribbons, and starlight constellation)
+  - `src/Screens/Settings/Components/SettingsFooter.tsx` (Swiggy-inspired brand watermark footer featuring bold "Regius • Crafted with AI & Precision" typography and artisan doodle creativity)
+  - `src/Screens/Settings/Components/SettingsWatermarkDoodleSvg.tsx` (Hand-drawn precision cogwheel, AI neural spark, drafting caliper, and acoustic wave doodle illustration)
   - `src/Screens/Settings/Components/VoiceStudioModal.tsx`
   - `src/Screens/Settings/Components/WakeWordConfigModal.tsx`
   - `src/Screens/Settings/Components/types.ts`
@@ -468,6 +476,38 @@ sequenceDiagram
   - **Consecutive-Day Collision Prevention**: Enforces cross-week boundary check so Saturday night into Sunday morning midnight transitions never repeat the same quote.
   - **12:00 AM Midnight Rollover**: Reactive hook `useDailyQuote` schedules high-precision timer for upcoming midnight and listens to `AppState` foreground resume events to guarantee instantaneous rollover when date changes.
   - **Design System Typography**: Rendered in Poppins Bold 34pt (`#8E95A5`, `letterSpacing: -1.2`, `lineHeight: 42`), gracefully wrapping naturally across all iOS and Android device widths.
+
+---
+
+### 2.14 Settings Module & Preferences Overhaul
+
+- **Purpose**: Executive settings and configuration center providing fine-grained audio, wake-word, appearance, haptics, and cloud preferences with luxury 3D tactile bento aesthetics.
+- **Status**: `Implemented`
+- **Source Files**:
+  - `src/Screens/Settings/SettingsScreen.tsx`
+  - `src/Screens/Settings/Components/SettingsHeader.tsx`
+  - `src/Screens/Settings/Components/ProfileCard.tsx`
+  - `src/Screens/Settings/Components/DefaultVoiceSection.tsx`
+  - `src/Screens/Settings/Components/WakeWordSection.tsx`
+  - `src/Screens/Settings/Components/AppearanceSection.tsx`
+  - `src/Screens/Settings/Components/StorageSection.tsx`
+  - `src/Screens/Settings/Components/AccountSupportSection.tsx`
+  - `src/Screens/Settings/Components/SettingsFooter.tsx`
+  - `src/Screens/Settings/Components/SettingsBackgroundSvg.tsx`
+  - `src/Screens/Settings/Components/SettingsWatermarkDoodleSvg.tsx`
+  - `src/Common/ProBadge.tsx`
+- **Technical Implementation & Enhancements**:
+  - **Fixed Reactive Scrolled Header**: Re-architected `SettingsHeader` to float fixed at the top with `position: 'absolute'`, animated corner radius (`0 -> 24px`), dynamic volumetric shadow/elevation, and animated background color transitioning to brand `Colors.LavenderPurple` (`#8383D6`) in light mode and deep midnight purple (`#282048`) in dark mode, layered with `HeaderPatternSvg`. `SettingsScreen` tracks `Animated.event` scroll offsets with synchronized `StatusBar` styling.
+  - **Universal ProBadge**: Signature 3D tactile badge with Lucide `Crown` icon, specular top rim, extruded bottom bevel (`#DEAA14`), and gold drop shadow glow. Standardized across `SettingsHeader` and `ProfileCard`.
+  - **Profile Card Alignment**: Pro badge positioned directly right of user name. User designation rendered cleanly as professional copy without quotation marks.
+  - **Interactive Cloud Sync**: In `StorageSection`, live "Last synced 2m ago" pill paired with interactive 3D "Sync Now" button. Features continuous 360-degree spin animation via `Animated.timing` during sync, updating dynamically to "Last synced just now" with haptic vibration feedback.
+  - **Live Haptic Intensity Selector**: In `AppearanceSection`, 3-pill tactile intensity selector (`Subtle` 15ms, `Medium` 35ms, `Crisp` dual-strike pattern) triggering instantaneous live tactile preview.
+  - **Guaranteed Non-Overflowing Voice Header & Edge-to-Edge Preset Scroll**: Re-architected flex layout prevents the "Voice Studio" button from being pushed off-screen. Circular voice preset cards scroll seamlessly edge-to-edge within the inner container (`presetsInsideBox` with `overflow: 'hidden'`, `marginHorizontal: -10`, and `paddingHorizontal: 10`).
+  - **Circular Voice Presets & Zero Raw IDs**: Voice preset capsules redesigned into circular avatar item glyphs with initials, illuminated accent ring, and floating check badge. Completely eliminated all raw model IDs (`af_bella`, `am_adam`, etc.) across the entire user interface.
+  - **Contained Wake Word Threshold Tile & Clean Reset Alignment**: Sensitivity/acoustic threshold testing callout encapsulated into a contained rounded tile (`borderRadius: 12`, border, `surfaceAlt`) aligned with the status badge, eliminating negative margin edge clashes and jagged backgrounds. Reset button positioned harmoniously below a clean border divider.
+  - **Unified 3D Card Architecture**: All settings cards adhere to 3D tactile depth rules (`borderWidth: 1.5`, `borderBottomWidth: 3.5`, specular top light rim, extruded bottom border, and volumetric soft shadows).
+  - **Theme Lavender Brand Typography & Inline Version Footer**: `SettingsWatermarkDoodleSvg` renders a hand-drawn Royal Regius Crown with neural starbursts and acoustic wave arcs. "Regius" spell styled in theme lavender (`Colors.LavenderPurple` / `#8383D6` and `#9C9CE3`) with increased font size (44pt). The "Production" environment badge is guaranteed strictly inline with version details across all screen widths.
+- **Test Coverage**: Tested in `__tests__/SettingsRedesignSuite.test.tsx` (9 unit tests).
 
 ---
 
