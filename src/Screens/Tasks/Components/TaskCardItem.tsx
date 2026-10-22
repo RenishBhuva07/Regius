@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -14,6 +14,7 @@ import {
   Clock,
   Heart,
   Sparkles,
+  Briefcase,
 } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
 import { Typography } from '../../../Theme/Typographys';
@@ -32,11 +33,19 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
   onToggle,
 }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const [localChecked, setLocalChecked] = useState(isChecked);
+
+  useEffect(() => {
+    setLocalChecked(isChecked);
+  }, [isChecked]);
 
   const handlePress = () => {
+    const nextChecked = !localChecked;
+    setLocalChecked(nextChecked);
+
     Animated.sequence([
       Animated.timing(scaleAnim, {
-        toValue: 0.96,
+        toValue: 0.95,
         duration: 75,
         useNativeDriver: true,
       }),
@@ -48,7 +57,10 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
       }),
     ]).start();
 
-    onToggle(task.id);
+    // Smooth delay allows the tactile spring and checkmark to complete before tab list changes
+    setTimeout(() => {
+      onToggle(task.id);
+    }, 130);
   };
 
   const renderIcon = () => {
@@ -56,7 +68,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
       return (
         <Heart
           size={18}
-          color={isChecked ? '#1B9A72' : '#52D22E'}
+          color={localChecked ? '#1B9A72' : '#52D22E'}
           strokeWidth={2.2}
         />
       );
@@ -65,7 +77,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
       return (
         <Sparkles
           size={18}
-          color={isChecked ? '#1B9A72' : '#8383D6'}
+          color={localChecked ? '#1B9A72' : '#8383D6'}
           strokeWidth={2.2}
         />
       );
@@ -74,30 +86,45 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
       return (
         <Mail
           size={18}
-          color={isChecked ? '#1B9A72' : '#454A53'}
+          color={localChecked ? '#1B9A72' : '#454A53'}
+          strokeWidth={2.2}
+        />
+      );
+    }
+    if (task.iconType === 'users') {
+      return (
+        <Users
+          size={18}
+          color={localChecked ? '#1B9A72' : '#454A53'}
           strokeWidth={2.2}
         />
       );
     }
     return (
-      <Users
+      <Briefcase
         size={18}
-        color={isChecked ? '#1B9A72' : '#454A53'}
+        color={localChecked ? '#1B9A72' : '#B48216'}
         strokeWidth={2.2}
       />
     );
   };
 
-  const hasFooter = !!(task.time || task.priority || task.voiceNudge);
+  const hasSubtasks = !!(task.subtasks && task.subtasks.length > 0);
+  const hasFooter = !!(
+    task.time ||
+    task.priority ||
+    task.voiceNudge ||
+    hasSubtasks
+  );
 
   return (
     <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
       <TouchableOpacity
         activeOpacity={0.88}
-        style={[styles.card, isChecked && styles.cardCompleted]}
+        style={[styles.card, localChecked && styles.cardCompleted]}
         onPress={handlePress}
         accessibilityRole="checkbox"
-        accessibilityState={{ checked: isChecked }}
+        accessibilityState={{ checked: localChecked }}
         accessibilityLabel={task.label}
       >
         <View style={styles.cardHeaderRow}>
@@ -105,7 +132,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
             <View
               style={[
                 styles.iconContainer,
-                isChecked && styles.iconContainerChecked,
+                localChecked && styles.iconContainerChecked,
               ]}
             >
               {renderIcon()}
@@ -113,7 +140,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
 
             <View style={styles.textBlock}>
               <Text
-                style={[styles.title, isChecked && styles.titleCompleted]}
+                style={[styles.title, localChecked && styles.titleCompleted]}
                 numberOfLines={2}
               >
                 {task.label}
@@ -121,7 +148,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
 
               {task.note ? (
                 <Text
-                  style={[styles.note, isChecked && styles.noteCompleted]}
+                  style={[styles.note, localChecked && styles.noteCompleted]}
                   numberOfLines={2}
                 >
                   {task.note}
@@ -134,14 +161,16 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
           <View
             style={[
               styles.checkbox,
-              isChecked ? styles.checkboxChecked : styles.checkboxUnchecked,
+              localChecked ? styles.checkboxChecked : styles.checkboxUnchecked,
             ]}
           >
-            {isChecked && <Check size={14} color="#52D22E" strokeWidth={3} />}
+            {localChecked && (
+              <Check size={14} color="#52D22E" strokeWidth={3} />
+            )}
           </View>
         </View>
 
-        {/* Footer Badges & Metadata (time, priority, voice nudge) */}
+        {/* Footer Badges & Metadata (time, priority, subtasks, voice nudge) */}
         {hasFooter && (
           <View style={styles.cardFooter}>
             <View style={styles.footerLeft}>
@@ -160,6 +189,16 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
               )}
               {task.priority === 'low' && (
                 <Badge label="LOW" variant="neutral" size="sm" />
+              )}
+
+              {hasSubtasks && (
+                <Badge
+                  label={`${task.subtasks!.filter(s => s.done).length}/${
+                    task.subtasks!.length
+                  } SUBTASKS`}
+                  variant="neutral"
+                  size="sm"
+                />
               )}
             </View>
 
@@ -232,8 +271,7 @@ const styles = StyleSheet.create({
     lineHeight: 21,
   },
   titleCompleted: {
-    color: '#8A8F98',
-    textDecorationLine: 'line-through',
+    color: '#7E838F',
   },
   note: {
     ...Typography.bodySmallPoppinsRegular,

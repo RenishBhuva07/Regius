@@ -222,7 +222,7 @@ interface TaskReminderContextType {
   toggleTask: (id: string) => Task | null;
   selectedTasks: Set<string>;
   setSelectedTasks: React.Dispatch<React.SetStateAction<Set<string>>>;
-  selectAllTasks: () => void;
+  selectAllTasks: (markDone?: boolean, targetIds?: string[]) => void;
 
   reminders: Reminder[];
   addReminder: (data: {
@@ -369,13 +369,27 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
     return updatedTask;
   };
 
-  const selectAllTasks = useCallback(() => {
-    if (selectedTasks.size === tasks.length) {
-      setSelectedTasks(new Set());
-    } else {
-      setSelectedTasks(new Set(tasks.map(t => t.id)));
-    }
-  }, [selectedTasks.size, tasks]);
+  const selectAllTasks = useCallback(
+    (markDone?: boolean, targetIds?: string[]) => {
+      setTasks(prev => {
+        const idsSet = targetIds ? new Set(targetIds) : null;
+        const relevant = idsSet ? prev.filter(t => idsSet.has(t.id)) : prev;
+        const shouldComplete =
+          markDone !== undefined ? markDone : !relevant.every(t => t.done);
+
+        const updated = prev.map(t => {
+          if (!idsSet || idsSet.has(t.id)) {
+            return { ...t, done: shouldComplete };
+          }
+          return t;
+        });
+
+        setSelectedTasks(new Set(updated.filter(t => t.done).map(t => t.id)));
+        return updated;
+      });
+    },
+    [],
+  );
 
   const addReminder = (data: {
     title: string;

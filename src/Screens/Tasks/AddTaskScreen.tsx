@@ -1397,7 +1397,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   subtaskItemTextDone: {
-    textDecorationLine: 'line-through',
     color: '#A3A8B1',
   },
   removeSubtaskBtn: {

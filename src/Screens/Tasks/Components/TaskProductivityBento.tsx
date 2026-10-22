@@ -16,7 +16,7 @@ import Svg, {
   Stop,
 } from 'react-native-svg';
 import { Fonts } from '../../../Theme/fonts';
-import { Typography } from '../../../Theme/Typographys';
+import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import { Badge } from '../../../Common/Badge';
 import { Task } from '../../../Context/TaskReminderContext';
 
@@ -35,7 +35,7 @@ const FocusBarBackgroundSvg: React.FC = React.memo(() => (
     <Svg
       width="100%"
       height="100%"
-      viewBox="0 0 360 84"
+      viewBox="0 0 360 88"
       preserveAspectRatio="none"
       fill="none"
     >
@@ -81,6 +81,58 @@ const FocusBarBackgroundSvg: React.FC = React.memo(() => (
     </Svg>
   </View>
 ));
+
+const TaskPercentBadge: React.FC<{ percent: number }> = React.memo(
+  ({ percent }) => (
+    <View style={styles.percentBadgeContainer}>
+      <Svg width={56} height={56} viewBox="0 0 56 56" fill="none">
+        <Defs>
+          <LinearGradient
+            id="uniqueBorderGrad"
+            x1="0%"
+            y1="0%"
+            x2="100%"
+            y2="100%"
+          >
+            <Stop offset="0%" stopColor="#FFF176" stopOpacity={0.9} />
+            <Stop offset="50%" stopColor="#F5C518" stopOpacity={0.65} />
+            <Stop offset="100%" stopColor="#DEAA14" stopOpacity={0.85} />
+          </LinearGradient>
+        </Defs>
+
+        {/* Outer Unique Rounded Rect Frame with Specular Gold Gradient Border */}
+        <Rect
+          x={1.5}
+          y={1.5}
+          width={53}
+          height={53}
+          rx={18}
+          stroke="url(#uniqueBorderGrad)"
+          strokeWidth={1.8}
+          fill="rgba(245, 197, 24, 0.08)"
+        />
+
+        {/* Inner Subtle Hairline Accent */}
+        <Rect
+          x={4.5}
+          y={4.5}
+          width={47}
+          height={47}
+          rx={14}
+          stroke="rgba(255, 255, 255, 0.12)"
+          strokeWidth={1}
+          fill="rgba(0, 0, 0, 0.28)"
+        />
+      </Svg>
+
+      {/* Centered Typography */}
+      <View style={styles.graphTextOverlay} pointerEvents="none">
+        <Text style={styles.percentageText}>{percent}%</Text>
+        <Text style={styles.percentageLabel}>DONE</Text>
+      </View>
+    </View>
+  ),
+);
 
 export const TaskProductivityBento: React.FC<TaskProductivityBentoProps> = ({
   tasks,
@@ -130,11 +182,8 @@ export const TaskProductivityBento: React.FC<TaskProductivityBentoProps> = ({
         <FocusBarBackgroundSvg />
 
         <View style={styles.content}>
-          {/* Left: Percentage Circle */}
-          <View style={styles.percentageCircle}>
-            <Text style={styles.percentageText}>{progressPercent}%</Text>
-            <Text style={styles.percentageLabel}>DONE</Text>
-          </View>
+          {/* Left: Unique Bordered Percentage Badge */}
+          <TaskPercentBadge percent={progressPercent} />
 
           {/* Center: Title + Progress Bar + Status */}
           <View style={styles.centerBlock}>
@@ -165,15 +214,15 @@ export const TaskProductivityBento: React.FC<TaskProductivityBentoProps> = ({
             </Text>
           </View>
 
-          {/* Right: Quick Stats */}
+          {/* Right: Quick Stats with Glassy Tactile Badges */}
           <View style={styles.rightStats}>
-            <View style={styles.miniStatPill}>
+            <View style={styles.glassStatPill}>
               <View style={[styles.statDot, { backgroundColor: '#F5C518' }]} />
               <Text style={styles.statNumber}>{pendingCount}</Text>
               <Text style={styles.statCaption}>left</Text>
             </View>
 
-            <View style={styles.miniStatPill}>
+            <View style={styles.glassStatPill}>
               <View style={[styles.statDot, { backgroundColor: '#52D22E' }]} />
               <Text style={styles.statNumber}>{completedCount}</Text>
               <Text style={styles.statCaption}>done</Text>
@@ -187,29 +236,28 @@ export const TaskProductivityBento: React.FC<TaskProductivityBentoProps> = ({
 
 const styles = StyleSheet.create({
   cardShadowWrapper: {
-    marginHorizontal: 16,
-    marginTop: 6,
-    marginBottom: 8,
+    borderRadius: 24,
+    backgroundColor: Colors.NeroBlack,
     ...Platform.select({
       ios: {
-        shadowColor: '#141519',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.12,
-        shadowRadius: 10,
+        shadowColor: Colors.DefaultBlack,
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.28,
+        shadowRadius: 18,
       },
       android: {
-        elevation: 3,
+        elevation: 8,
       },
     }),
   },
   card: {
-    backgroundColor: '#1C1E26',
-    borderRadius: 20,
-    borderWidth: 1.2,
-    borderColor: '#2F3342',
+    backgroundColor: Colors.NeroBlack,
+    borderRadius: 24,
+    borderWidth: 4,
+    borderColor: 'rgba(255, 255, 255, 0.9)',
     overflow: 'hidden',
     position: 'relative',
-    height: 84,
+    height: 88,
     justifyContent: 'center',
   },
   content: {
@@ -218,25 +266,27 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     gap: 12,
   },
-  percentageCircle: {
+  percentBadgeContainer: {
     width: 56,
     height: 56,
-    borderRadius: 28,
-    backgroundColor: 'rgba(245, 197, 24, 0.12)',
-    borderWidth: 1.5,
-    borderColor: 'rgba(245, 197, 24, 0.4)',
+    position: 'relative',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  graphTextOverlay: {
+    position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
   },
   percentageText: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 17,
+    fontSize: 15,
     color: '#FFE600',
-    lineHeight: 20,
+    lineHeight: 18,
   },
   percentageLabel: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 8,
+    fontSize: 7.5,
     color: '#E8E2D5',
     letterSpacing: 0.6,
   },
@@ -287,33 +337,46 @@ const styles = StyleSheet.create({
     color: '#D4CCA8',
   },
   rightStats: {
-    gap: 5,
+    gap: 6,
   },
-  miniStatPill: {
+  glassStatPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 10,
-    borderWidth: 0.8,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    gap: 6,
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    paddingHorizontal: 9,
+    paddingVertical: 4.5,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.22)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.18,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   statDot: {
-    width: 5,
-    height: 5,
-    borderRadius: 2.5,
+    width: 6.5,
+    height: 6.5,
+    borderRadius: 3.5,
   },
   statNumber: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 12,
     color: '#FFFFFF',
+    letterSpacing: -0.2,
   },
   statCaption: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 9.5,
-    color: '#A3A8B1',
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 10,
+    color: '#E0DFE3',
+    letterSpacing: 0.2,
   },
 });
 

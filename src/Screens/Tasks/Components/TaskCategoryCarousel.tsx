@@ -8,7 +8,7 @@ import {
   Platform,
 } from 'react-native';
 import { Filter } from 'lucide-react-native';
-import Svg, { Path } from 'react-native-svg';
+import Svg, { Path, Circle } from 'react-native-svg';
 import { Typography } from '../../../Theme/Typographys';
 import { Fonts } from '../../../Theme/fonts';
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
@@ -17,8 +17,8 @@ import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { Task } from '../../../Context/TaskReminderContext';
 
 const OfficeBagIcon: React.FC<{ width?: number; height?: number }> = ({
-  width = 24,
-  height = 24,
+  width = 16,
+  height = 16,
 }) => (
   <Svg width={width} height={height} viewBox="23 19 24 24" fill="none">
     <Path
@@ -47,6 +47,9 @@ export interface CategoryItem {
   shadowColor: string;
   Icon: React.ComponentType<any>;
   accentColor: string;
+  trackColor: string;
+  progressColor: string;
+  textColor: string;
 }
 
 const CATEGORY_ITEMS: CategoryItem[] = [
@@ -58,6 +61,9 @@ const CATEGORY_ITEMS: CategoryItem[] = [
     shadowColor: '#F5C518',
     Icon: OfficeBagIcon,
     accentColor: '#FDD835',
+    trackColor: '#FFF5B8',
+    progressColor: '#B48216',
+    textColor: '#B48216',
   },
   {
     id: 'sport',
@@ -67,6 +73,9 @@ const CATEGORY_ITEMS: CategoryItem[] = [
     shadowColor: '#52D22E',
     Icon: SVGS.FloatHeart,
     accentColor: '#52D22E',
+    trackColor: '#C6FFDD',
+    progressColor: '#1B9A72',
+    textColor: '#1B9A72',
   },
   {
     id: 'habits',
@@ -76,8 +85,94 @@ const CATEGORY_ITEMS: CategoryItem[] = [
     shadowColor: '#8383D6',
     Icon: SVGS.FloatPicture,
     accentColor: '#8383D6',
+    trackColor: '#D8DBFF',
+    progressColor: '#7059C8',
+    textColor: '#7059C8',
   },
 ];
+
+interface CircularProgressProps {
+  percent: number;
+  size?: number;
+  strokeWidth?: number;
+  trackColor: string;
+  progressColor: string;
+  textColor: string;
+  shadowColor?: string;
+}
+
+const CircularProgress: React.FC<CircularProgressProps> = ({
+  percent,
+  size = 28,
+  strokeWidth = 2.4,
+  trackColor,
+  progressColor,
+  textColor,
+  shadowColor,
+}) => {
+  const clampedPercent = Math.min(100, Math.max(0, percent));
+  const radius = (size - strokeWidth) / 2;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset =
+    circumference - (circumference * clampedPercent) / 100;
+  const center = size / 2;
+
+  return (
+    <View
+      style={[
+        styles.progressContainer,
+        {
+          width: size,
+          height: size,
+          borderRadius: size / 2,
+          shadowColor: shadowColor || 'rgba(0, 0, 0, 0.1)',
+        },
+      ]}
+      accessibilityRole="image"
+      accessibilityLabel={`${clampedPercent}% completed`}
+    >
+      <View style={styles.svgRotator}>
+        <Svg width={size} height={size}>
+          <Circle
+            cx={center}
+            cy={center}
+            r={radius}
+            stroke={trackColor}
+            strokeWidth={strokeWidth}
+            fill="#FFFFFF"
+          />
+          {clampedPercent > 0 && (
+            <Circle
+              cx={center}
+              cy={center}
+              r={radius}
+              stroke={progressColor}
+              strokeWidth={strokeWidth}
+              strokeDasharray={`${circumference} ${circumference}`}
+              strokeDashoffset={strokeDashoffset}
+              strokeLinecap="round"
+              fill="transparent"
+            />
+          )}
+        </Svg>
+      </View>
+      <View style={styles.percentTextContainer} pointerEvents="none">
+        <Text
+          style={[
+            styles.percentIndicatorText,
+            {
+              color: textColor,
+              fontSize: clampedPercent >= 100 ? 7.5 : 9,
+            },
+          ]}
+          numberOfLines={1}
+        >
+          {clampedPercent}%
+        </Text>
+      </View>
+    </View>
+  );
+};
 
 interface TaskCategoryCarouselProps {
   tasks: Task[];
@@ -92,12 +187,15 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
   onSelectCategory,
   onAddPress,
 }) => {
-  const getCategoryCount = (catId: string): string => {
-    const count = tasks.filter(t => {
+  const getCategoryMetrics = (catId: string) => {
+    const catTasks = tasks.filter(t => {
       if (catId === 'works') return t.category === 'works' || !t.category;
       return t.category === catId;
-    }).length;
-    return `+${count.toString().padStart(2, '0')} task`;
+    });
+    const total = catTasks.length;
+    const completed = catTasks.filter(t => t.done).length;
+    const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+    return { total, completed, percent };
   };
 
   return (
@@ -154,7 +252,7 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
         style={styles.categoriesScroll}
         renderItem={({ item: cat }) => {
           const isSelected = selectedCategory === cat.id;
-          const countLabel = getCategoryCount(cat.id);
+          const metrics = getCategoryMetrics(cat.id);
 
           return (
             <TouchableOpacity
@@ -176,19 +274,37 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
                 ],
               ]}
             >
-              <View
-                style={[
-                  styles.categoryIconWrap,
-                  {
-                    borderColor: cat.borderColor,
-                    shadowColor: cat.shadowColor,
-                  },
-                ]}
-              >
-                <cat.Icon width={24} height={24} />
+              <View style={styles.cardTop}>
+                <View
+                  style={[
+                    styles.categoryIconWrap,
+                    {
+                      borderColor: cat.borderColor,
+                      shadowColor: cat.shadowColor,
+                    },
+                  ]}
+                >
+                  <cat.Icon width={16} height={16} />
+                </View>
+                <CircularProgress
+                  percent={metrics.percent}
+                  trackColor={cat.trackColor}
+                  progressColor={cat.progressColor}
+                  textColor={cat.textColor}
+                  shadowColor={cat.shadowColor}
+                />
               </View>
-              <Text style={styles.categoryLabel}>{cat.label}</Text>
-              <Text style={styles.categoryCount}>{countLabel}</Text>
+
+              <View style={styles.cardBottom}>
+                <Text style={styles.countText}>
+                  {metrics.completed}
+                  <Text style={styles.countTotalText}>/{metrics.total}</Text>
+                </Text>
+                <Text style={styles.categoryLabel} numberOfLines={1}>
+                  {cat.label}
+                </Text>
+              </View>
+
               {isSelected && cat.accentColor ? (
                 <View style={styles.categoryAccentWrap}>
                   <View
@@ -208,16 +324,14 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
-    marginVertical: 4,
-  },
+  container: {},
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: ResponsivePixels.size20,
-    marginTop: ResponsivePixels.size14,
-    marginBottom: ResponsivePixels.size12,
+    marginTop: ResponsivePixels.size10,
+    marginBottom: ResponsivePixels.size10,
   },
   titleRow: {
     flexDirection: 'row',
@@ -227,7 +341,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     ...Typography.h6Bold,
     color: '#000000',
-    fontSize: 18,
+    fontSize: 17,
   },
   clearFilterChip: {
     backgroundColor: '#EFF1F4',
@@ -246,9 +360,9 @@ const styles = StyleSheet.create({
     gap: ResponsivePixels.size10,
   },
   filterBtn: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     backgroundColor: '#F5F6F8',
     alignItems: 'center',
     justifyContent: 'center',
@@ -258,78 +372,127 @@ const styles = StyleSheet.create({
   },
   addBtn: {
     backgroundColor: '#1F2228',
-    paddingHorizontal: ResponsivePixels.size16,
-    paddingVertical: ResponsivePixels.size8,
+    paddingHorizontal: ResponsivePixels.size14,
+    paddingVertical: ResponsivePixels.size6,
     borderRadius: 50,
   },
   addBtnText: {
     ...Typography.bodySmallPoppinsSemiBold,
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 11.5,
   },
   categoriesScroll: {
     overflow: 'visible',
-    marginBottom: ResponsivePixels.size4,
+    marginBottom: ResponsivePixels.size2,
   },
   categoriesRow: {
     paddingHorizontal: ResponsivePixels.size20,
-    paddingTop: ResponsivePixels.size6,
-    paddingBottom: ResponsivePixels.size20,
-    gap: ResponsivePixels.size14,
+    paddingBottom: ResponsivePixels.size8,
+    gap: ResponsivePixels.size10,
   },
   categoryCard: {
-    width: 124,
-    borderRadius: 23,
-    borderTopRightRadius: 63,
-    padding: ResponsivePixels.size16,
-    paddingBottom: ResponsivePixels.size18,
-    gap: ResponsivePixels.size6,
+    width: 108,
+    borderRadius: 18,
+    borderTopRightRadius: 44,
+    paddingTop: ResponsivePixels.size12,
+    paddingBottom: ResponsivePixels.size12,
+    paddingHorizontal: ResponsivePixels.size11,
     position: 'relative',
-    borderWidth: 2,
-    borderColor: 'transparent',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    justifyContent: 'space-between',
   },
   categoryCardSelected: {
     borderColor: '#FFFFFF',
     ...Platform.select({
       ios: {
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.38,
-        shadowRadius: 14,
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.32,
+        shadowRadius: 10,
       },
       android: {
-        elevation: 6,
+        elevation: 5,
       },
     }),
   },
+  cardTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: ResponsivePixels.size8,
+  },
   categoryIconWrap: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
+    width: 30,
+    height: 30,
+    borderRadius: 15,
     backgroundColor: '#FFFFFF',
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: ResponsivePixels.size8,
     ...Platform.select({
       ios: {
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 0.22,
-        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 3,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },
-  categoryLabel: {
-    ...Typography.bodyMediumPoppinsSemiBold,
-    color: '#000000',
-    fontSize: 15,
+  progressContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
+    backgroundColor: '#FFFFFF',
+    ...Platform.select({
+      ios: {
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
-  categoryCount: {
-    ...Typography.bodySmallPoppinsRegular,
-    color: Colors.SubtitleGray,
+  svgRotator: {
+    transform: [{ rotate: '-90deg' }],
+  },
+  percentTextContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  percentIndicatorText: {
+    fontFamily: Fonts.poppins.bold,
+    letterSpacing: -0.3,
+  },
+  cardBottom: {
+    gap: 1,
+  },
+  countText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 18,
+    color: '#1B1C19',
+    letterSpacing: -0.4,
+    lineHeight: 22,
+  },
+  countTotalText: {
+    fontFamily: Fonts.poppins.medium,
     fontSize: 12,
+    color: '#8E8D92',
+  },
+  categoryLabel: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 12.5,
+    color: '#1B1C19',
+    letterSpacing: -0.1,
+    lineHeight: 16,
   },
   categoryAccentWrap: {
     position: 'absolute',
@@ -339,10 +502,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   categoryAccent: {
-    height: 4,
-    width: 48,
-    borderTopLeftRadius: 3,
-    borderTopRightRadius: 3,
+    height: 3,
+    width: 32,
+    borderTopLeftRadius: 2.5,
+    borderTopRightRadius: 2.5,
   },
 });
 

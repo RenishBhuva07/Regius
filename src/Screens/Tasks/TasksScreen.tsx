@@ -19,14 +19,14 @@ import {
   NativeScrollEvent,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Plus, CheckSquare } from 'lucide-react-native';
+import { Plus, CheckSquare, CheckCircle2 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../../Theme/fonts';
 import { Typography } from '../../Theme/Typographys';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
-import { useTaskReminder, Task } from '../../Context/TaskReminderContext';
+import { useTaskReminder } from '../../Context/TaskReminderContext';
 import { ScreenHeader, SCREEN_HEADER_HEIGHT } from '../../Common/ScreenHeader';
 import FlowBadgePatternSvg from '../Dashboard/Components/FlowBadgePatternSvg';
 
@@ -181,10 +181,12 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
-        {/* Compact Focus Bar */}
-        <TaskProductivityBento tasks={tasks} onAddTask={openTaskModal} />
+        {/* Compact Focus Bar matching DailyBriefingCard */}
+        <View style={styles.bentoCardWrapper}>
+          <TaskProductivityBento tasks={tasks} onAddTask={openTaskModal} />
+        </View>
 
-        {/* Tactile Segmented Tabs */}
+        {/* Signature Regius Tactile Segmented Tabs */}
         <View style={styles.toggleContainer}>
           <TouchableOpacity
             activeOpacity={0.85}
@@ -193,7 +195,14 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
               styles.toggleTab,
               activeTab === 'taskList' && styles.toggleTabActive,
             ]}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: activeTab === 'taskList' }}
           >
+            <CheckSquare
+              size={14}
+              color={activeTab === 'taskList' ? '#D97706' : '#9EA3B0'}
+              strokeWidth={activeTab === 'taskList' ? 2.4 : 2}
+            />
             <Text
               style={[
                 styles.toggleText,
@@ -202,9 +211,29 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
                   : styles.toggleTextInactive,
               ]}
             >
-              Task List ({pendingTasksCount})
+              Task List
             </Text>
+            <View
+              style={[
+                styles.tabCountPill,
+                activeTab === 'taskList'
+                  ? styles.tabCountPillActiveTasks
+                  : styles.tabCountPillInactive,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.tabCountText,
+                  activeTab === 'taskList'
+                    ? styles.tabCountTextActiveTasks
+                    : styles.tabCountTextInactive,
+                ]}
+              >
+                {pendingTasksCount}
+              </Text>
+            </View>
           </TouchableOpacity>
+
           <TouchableOpacity
             activeOpacity={0.85}
             onPress={() => setActiveTab('completed')}
@@ -212,7 +241,14 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
               styles.toggleTab,
               activeTab === 'completed' && styles.toggleTabActive,
             ]}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: activeTab === 'completed' }}
           >
+            <CheckCircle2
+              size={14}
+              color={activeTab === 'completed' ? '#10B981' : '#9EA3B0'}
+              strokeWidth={activeTab === 'completed' ? 2.4 : 2}
+            />
             <Text
               style={[
                 styles.toggleText,
@@ -221,8 +257,27 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
                   : styles.toggleTextInactive,
               ]}
             >
-              Completed ({completedTasksCount})
+              Completed
             </Text>
+            <View
+              style={[
+                styles.tabCountPill,
+                activeTab === 'completed'
+                  ? styles.tabCountPillActiveCompleted
+                  : styles.tabCountPillInactive,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.tabCountText,
+                  activeTab === 'completed'
+                    ? styles.tabCountTextActiveCompleted
+                    : styles.tabCountTextInactive,
+                ]}
+              >
+                {completedTasksCount}
+              </Text>
+            </View>
           </TouchableOpacity>
         </View>
 
@@ -267,11 +322,10 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
             scrollEnabled={false}
             contentContainerStyle={styles.taskListContainer}
             renderItem={({ item }) => {
-              const isChecked = item.done || selectedTasks.has(item.id);
               return (
                 <TaskCardItem
                   task={item}
-                  isChecked={isChecked}
+                  isChecked={item.done}
                   onToggle={handleToggleTask}
                 />
               );
@@ -279,7 +333,11 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
             ItemSeparatorComponent={() => <View style={styles.listSeparator} />}
             ListEmptyComponent={
               <View style={styles.emptyContainer}>
-                <CheckSquare size={38} color="#D1D5DB" strokeWidth={1.5} />
+                {activeTab === 'completed' ? (
+                  <CheckCircle2 size={38} color="#10B981" strokeWidth={1.6} />
+                ) : (
+                  <CheckSquare size={38} color="#D1D5DB" strokeWidth={1.5} />
+                )}
                 <Text style={styles.emptyTitle}>
                   {activeTab === 'completed'
                     ? 'No Completed Tasks Yet'
@@ -304,14 +362,36 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
             }
           />
 
-          {/* Select All Task Button */}
-          {tasks.length > 0 && (
+          {/* Complete / Restore All Task Button */}
+          {filteredTasks.length > 0 && (
             <TouchableOpacity
               activeOpacity={0.85}
-              onPress={selectAllTasks}
+              onPress={() => {
+                const markDone = activeTab === 'taskList';
+                const ids = filteredTasks.map(t => t.id);
+                selectAllTasks(markDone, ids);
+                Toast.show({
+                  type: 'success',
+                  text1: markDone
+                    ? 'All Tasks Completed! 🎯'
+                    : 'Tasks Restored to Active List',
+                  text2: markDone
+                    ? 'Great momentum on conquering your focus items!'
+                    : 'Items are now back in your active task list.',
+                });
+              }}
               style={styles.selectAllBtn}
             >
-              <Text style={styles.selectAllText}>Select All Tasks</Text>
+              <Text style={styles.selectAllText}>
+                {activeTab === 'taskList'
+                  ? selectedCategory
+                    ? `Complete All ${
+                        selectedCategory.charAt(0).toUpperCase() +
+                        selectedCategory.slice(1)
+                      }`
+                    : 'Complete All Tasks'
+                  : 'Restore All to Active'}
+              </Text>
             </TouchableOpacity>
           )}
 
@@ -356,46 +436,137 @@ const styles = StyleSheet.create({
   scrollContent: {
     // padding applied dynamically with safe insets
   },
+  bentoCardWrapper: {
+    paddingTop: 5,
+    paddingHorizontal: 10,
+    marginBottom: 4,
+  },
 
-  // Toggle Tabs
+  // Signature Regius Tactile Segmented Tabs
   toggleContainer: {
     flexDirection: 'row',
-    marginHorizontal: ResponsivePixels.size20,
-    marginTop: ResponsivePixels.size10,
-    marginBottom: ResponsivePixels.size4,
-    backgroundColor: '#1F2228',
+    marginHorizontal: 10,
+    marginTop: 10,
+    marginBottom: 6,
+    backgroundColor: '#181A20',
     borderRadius: 50,
-    padding: 4,
+    padding: 4.5,
+    borderWidth: 1.5,
+    borderTopColor: '#363A48',
+    borderLeftColor: '#282B35',
+    borderRightColor: '#282B35',
+    borderBottomWidth: 3,
+    borderBottomColor: '#0E1015',
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
+        shadowColor: '#0B0D11',
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.25,
+        shadowRadius: 10,
       },
       android: {
-        elevation: 3,
+        elevation: 6,
       },
     }),
   },
   toggleTab: {
     flex: 1,
-    paddingVertical: ResponsivePixels.size10,
-    borderRadius: 50,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    paddingVertical: 4,
+    borderRadius: 50,
+    gap: 7,
   },
   toggleTabActive: {
     backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.95)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.22,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
   toggleText: {
-    ...Typography.bodyMediumPoppinsSemiBold,
+    fontFamily: Fonts.poppins.semiBold,
     fontSize: 13,
+    letterSpacing: -0.2,
   },
   toggleTextActive: {
-    color: '#1F2228',
+    fontFamily: Fonts.poppins.bold,
+    color: '#121417',
   },
   toggleTextInactive: {
+    fontFamily: Fonts.poppins.semiBold,
+    color: '#E5E7EB',
+  },
+  tabCountPill: {
+    paddingHorizontal: 8,
+    paddingVertical: 1.5,
+    borderRadius: 12,
+    minWidth: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tabCountPillActiveTasks: {
+    backgroundColor: '#FFF8D0',
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    borderBottomWidth: 2,
+    borderBottomColor: '#DEAA14',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#D97706',
+        shadowOffset: { width: 0, height: 1.5 },
+        shadowOpacity: 0.25,
+        shadowRadius: 2.5,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  tabCountPillActiveCompleted: {
+    backgroundColor: '#E8FDF0',
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    borderBottomWidth: 2,
+    borderBottomColor: '#82E8A6',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#52D22E',
+        shadowOffset: { width: 0, height: 1.5 },
+        shadowOpacity: 0.25,
+        shadowRadius: 2.5,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  tabCountPillInactive: {
+    backgroundColor: 'rgba(255, 255, 255, 0.14)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  tabCountText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 10.5,
+  },
+  tabCountTextActiveTasks: {
+    color: '#B47804',
+  },
+  tabCountTextActiveCompleted: {
+    color: '#1B9A72',
+  },
+  tabCountTextInactive: {
     color: '#FFFFFF',
   },
 
@@ -409,6 +580,7 @@ const styles = StyleSheet.create({
     borderLeftColor: '#EFE9DE',
     borderRightColor: '#EFE9DE',
     borderBottomWidth: 0,
+    paddingHorizontal: 8,
     paddingTop: 40,
     marginTop: 26,
     flex: 1,
@@ -499,7 +671,7 @@ const styles = StyleSheet.create({
 
   // Task List
   taskListContainer: {
-    paddingHorizontal: ResponsivePixels.size20,
+    paddingHorizontal: 0,
     paddingTop: 10,
     paddingBottom: 20,
   },
@@ -537,7 +709,8 @@ const styles = StyleSheet.create({
 
   // Swiggy-Inspired Watermark Footer
   footerWatermarkWrapper: {
-    paddingHorizontal: ResponsivePixels.size24,
+    paddingLeft: ResponsivePixels.size10,
+    paddingRight: ResponsivePixels.size16,
     marginTop: ResponsivePixels.size16,
     marginBottom: ResponsivePixels.size20,
   },
