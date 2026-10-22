@@ -39,61 +39,106 @@ export const VoiceInputControls: React.FC<VoiceInputControlsProps> = ({
   const isCompleted = state === 'completed' || state === 'success';
   const isErrorOrUnrecognized = state === 'unrecognized' || state === 'error';
 
-  // Pulsing animated ring for active recording
-  const pulseAnim = useRef(new Animated.Value(1)).current;
-  const pulseOpacity = useRef(new Animated.Value(0.4)).current;
+  // Double concentric pulsing animated rings for active recording
+  const pulseAnim1 = useRef(new Animated.Value(1)).current;
+  const pulseOpacity1 = useRef(new Animated.Value(0.45)).current;
+  const pulseAnim2 = useRef(new Animated.Value(1)).current;
+  const pulseOpacity2 = useRef(new Animated.Value(0.3)).current;
 
   useEffect(() => {
     if (isListening) {
-      const pulse = Animated.loop(
+      const ring1 = Animated.loop(
         Animated.parallel([
           Animated.sequence([
-            Animated.timing(pulseAnim, {
-              toValue: 1.3,
-              duration: 1000,
+            Animated.timing(pulseAnim1, {
+              toValue: 1.35,
+              duration: 950,
               easing: Easing.out(Easing.ease),
               useNativeDriver: true,
             }),
-            Animated.timing(pulseAnim, {
+            Animated.timing(pulseAnim1, {
               toValue: 1,
-              duration: 300,
+              duration: 250,
               easing: Easing.in(Easing.ease),
               useNativeDriver: true,
             }),
           ]),
           Animated.sequence([
-            Animated.timing(pulseOpacity, {
+            Animated.timing(pulseOpacity1, {
               toValue: 0,
-              duration: 1000,
+              duration: 950,
               easing: Easing.out(Easing.ease),
               useNativeDriver: true,
             }),
-            Animated.timing(pulseOpacity, {
-              toValue: 0.45,
-              duration: 300,
+            Animated.timing(pulseOpacity1, {
+              toValue: 0.5,
+              duration: 250,
               useNativeDriver: true,
             }),
           ]),
         ]),
       );
-      pulse.start();
+
+      const ring2 = Animated.loop(
+        Animated.sequence([
+          Animated.delay(200),
+          Animated.parallel([
+            Animated.sequence([
+              Animated.timing(pulseAnim2, {
+                toValue: 1.6,
+                duration: 1100,
+                easing: Easing.out(Easing.ease),
+                useNativeDriver: true,
+              }),
+              Animated.timing(pulseAnim2, {
+                toValue: 1,
+                duration: 200,
+                easing: Easing.in(Easing.ease),
+                useNativeDriver: true,
+              }),
+            ]),
+            Animated.sequence([
+              Animated.timing(pulseOpacity2, {
+                toValue: 0,
+                duration: 1100,
+                easing: Easing.out(Easing.ease),
+                useNativeDriver: true,
+              }),
+              Animated.timing(pulseOpacity2, {
+                toValue: 0.35,
+                duration: 200,
+                useNativeDriver: true,
+              }),
+            ]),
+          ]),
+        ]),
+      );
+
+      ring1.start();
+      ring2.start();
       return () => {
-        pulse.stop();
-        pulseAnim.setValue(1);
-        pulseOpacity.setValue(0.4);
+        ring1.stop();
+        ring2.stop();
+        pulseAnim1.setValue(1);
+        pulseOpacity1.setValue(0.45);
+        pulseAnim2.setValue(1);
+        pulseOpacity2.setValue(0.3);
       };
     } else {
-      pulseAnim.setValue(1);
-      pulseOpacity.setValue(0.4);
+      pulseAnim1.setValue(1);
+      pulseOpacity1.setValue(0.45);
+      pulseAnim2.setValue(1);
+      pulseOpacity2.setValue(0.3);
     }
-  }, [isListening, pulseAnim, pulseOpacity]);
+  }, [isListening, pulseAnim1, pulseOpacity1, pulseAnim2, pulseOpacity2]);
 
-  const secondaryBtnBg = theme.isDarkMode
-    ? 'rgba(255, 255, 255, 0.08)'
-    : 'rgba(0, 0, 0, 0.05)';
+  const secondaryBtnBg = theme.isDarkMode ? '#1E2228' : '#FFFFFF';
   const secondaryBorder = theme.isDarkMode
-    ? 'rgba(255, 255, 255, 0.12)'
-    : 'rgba(0, 0, 0, 0.08)';
+    ? 'rgba(255, 255, 255, 0.16)'
+    : '#FFFFFF';
+  const secondaryBottomBorder = theme.isDarkMode
+    ? 'rgba(0, 0, 0, 0.5)'
+    : '#D5D0C5';
 
   // Center Mic button background & icon
   let micBg = theme.accent;
@@ -124,7 +169,7 @@ export const VoiceInputControls: React.FC<VoiceInputControlsProps> = ({
 
   return (
     <View style={styles.dockContainer}>
-      {/* 1. Left Secondary Action: Suggestions / Conversation */}
+      {/* 1. Left Secondary Action: 3D Tactile Suggestions Button */}
       <Pressable
         onPress={onToggleSuggestions}
         style={({ pressed }) => [
@@ -132,31 +177,46 @@ export const VoiceInputControls: React.FC<VoiceInputControlsProps> = ({
           {
             backgroundColor: secondaryBtnBg,
             borderColor: secondaryBorder,
+            borderBottomColor: secondaryBottomBorder,
             opacity: pressed ? 0.75 : 1,
+            shadowColor: theme.isDarkMode ? '#000000' : '#8383D6',
           },
         ]}
         hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
         accessibilityRole="button"
         accessibilityLabel="Suggestions and conversations"
       >
-        <MessageSquare size={22} color={theme.textPrimary} strokeWidth={2.2} />
+        <MessageSquare size={21} color={theme.textPrimary} strokeWidth={2.2} />
       </Pressable>
 
-      {/* 2. Center Primary Action: Futuristic Microphone Button */}
+      {/* 2. Center Primary Action: Futuristic 3D Microphone Button */}
       <View style={styles.micWrapper}>
-        {/* Active Recording Pulsing Ring */}
+        {/* Double Active Recording Pulsing Rings */}
         {isListening ? (
-          <Animated.View
-            pointerEvents="none"
-            style={[
-              styles.pulseRing,
-              {
-                backgroundColor: theme.accent,
-                opacity: pulseOpacity,
-                transform: [{ scale: pulseAnim }],
-              },
-            ]}
-          />
+          <>
+            <Animated.View
+              pointerEvents="none"
+              style={[
+                styles.pulseRingOuter,
+                {
+                  backgroundColor: theme.accent,
+                  opacity: pulseOpacity2,
+                  transform: [{ scale: pulseAnim2 }],
+                },
+              ]}
+            />
+            <Animated.View
+              pointerEvents="none"
+              style={[
+                styles.pulseRingInner,
+                {
+                  backgroundColor: theme.accent,
+                  opacity: pulseOpacity1,
+                  transform: [{ scale: pulseAnim1 }],
+                },
+              ]}
+            />
+          </>
         ) : null}
 
         <Pressable
@@ -166,6 +226,7 @@ export const VoiceInputControls: React.FC<VoiceInputControlsProps> = ({
             styles.micBtn,
             {
               backgroundColor: micBg,
+              shadowColor: micBg,
               opacity: pressed ? 0.85 : 1,
             },
           ]}
@@ -177,7 +238,7 @@ export const VoiceInputControls: React.FC<VoiceInputControlsProps> = ({
         </Pressable>
       </View>
 
-      {/* 3. Right Secondary Action: Close Assistant */}
+      {/* 3. Right Secondary Action: 3D Tactile Close Assistant */}
       <Pressable
         onPress={onClose}
         style={({ pressed }) => [
@@ -185,14 +246,16 @@ export const VoiceInputControls: React.FC<VoiceInputControlsProps> = ({
           {
             backgroundColor: secondaryBtnBg,
             borderColor: secondaryBorder,
+            borderBottomColor: secondaryBottomBorder,
             opacity: pressed ? 0.75 : 1,
+            shadowColor: theme.isDarkMode ? '#000000' : '#8383D6',
           },
         ]}
         hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
         accessibilityRole="button"
         accessibilityLabel="Dismiss voice assistant"
       >
-        <X size={22} color={theme.textPrimary} strokeWidth={2.4} />
+        <X size={21} color={theme.textPrimary} strokeWidth={2.4} />
       </Pressable>
     </View>
   );
@@ -211,33 +274,47 @@ const styles = StyleSheet.create({
     width: 52,
     height: 52,
     borderRadius: 26,
-    borderWidth: 1,
+    borderWidth: 1.2,
+    borderBottomWidth: 2.6,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowOffset: { width: 0, height: 2.5 },
+    shadowOpacity: 0.14,
+    shadowRadius: 5,
+    elevation: 3.5,
   },
   micWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 84,
-    height: 84,
+    width: 88,
+    height: 88,
   },
-  pulseRing: {
+  pulseRingOuter: {
+    position: 'absolute',
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+  },
+  pulseRingInner: {
     position: 'absolute',
     width: 72,
     height: 72,
     borderRadius: 36,
   },
   micBtn: {
-    width: 70,
-    height: 70,
-    borderRadius: 35,
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.45)',
+    borderBottomWidth: 4,
+    borderBottomColor: 'rgba(0, 0, 0, 0.28)',
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 8,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.38,
+    shadowRadius: 14,
+    elevation: 8,
   },
 });
 

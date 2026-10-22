@@ -10,9 +10,9 @@ export function getAssistantTheme(isDarkMode: boolean): VoiceAssistantTheme {
     textPrimary: isDarkMode ? Colors.PureWhiteText : '#181A1F',
     textSecondary: isDarkMode ? '#A5ABB5' : '#5E6470',
     textMuted: isDarkMode ? '#6C727F' : '#8A919E',
-    accent: isDarkMode ? '#9D9BF0' : '#5B58E6',
-    success: isDarkMode ? '#34D399' : '#059669',
-    warning: isDarkMode ? '#FBBF24' : '#D97706',
+    accent: isDarkMode ? '#9D9BF0' : Colors.LavenderPurple,
+    success: isDarkMode ? '#34D399' : '#10B981',
+    warning: isDarkMode ? '#FBBF24' : '#F5C518',
     error: isDarkMode ? '#F87171' : '#DC2626',
   };
 }

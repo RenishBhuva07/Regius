@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,10 @@ import {
   TouchableOpacity,
   Animated,
   Platform,
+  Dimensions,
+  LayoutChangeEvent,
 } from 'react-native';
+import Svg, { Path } from 'react-native-svg';
 import {
   Mail,
   Users,
@@ -20,6 +23,7 @@ import { Fonts } from '../../../Theme/fonts';
 import { Typography } from '../../../Theme/Typographys';
 import { Badge } from '../../../Common/Badge';
 import { Task } from '../../../Context/TaskReminderContext';
+import { getCutoutCardPath } from '../../Dashboard/Components/TimelineItemCard';
 
 interface TaskCardItemProps {
   task: Task;
@@ -34,6 +38,27 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
 }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const [localChecked, setLocalChecked] = useState(isChecked);
+
+  const initialW = Dimensions.get('window').width - 16;
+  const [cardSize, setCardSize] = useState({
+    width: Math.max(initialW, 200),
+    height: 96,
+  });
+
+  const handleCardLayout = useCallback((e: LayoutChangeEvent) => {
+    const { width, height } = e.nativeEvent.layout;
+    if (width > 0 && height > 0) {
+      setCardSize(prev => {
+        if (
+          Math.abs(prev.width - width) < 1 &&
+          Math.abs(prev.height - height) < 1
+        ) {
+          return prev;
+        }
+        return { width, height };
+      });
+    }
+  }, []);
 
   useEffect(() => {
     setLocalChecked(isChecked);
@@ -128,16 +153,52 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
     <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
       <TouchableOpacity
         activeOpacity={0.88}
-        style={[
-          styles.card,
-          localChecked && styles.cardCompleted,
-          { shadowColor: getCategoryShadowColor() },
-        ]}
+        onLayout={handleCardLayout}
+        style={[styles.card, { shadowColor: getCategoryShadowColor() }]}
         onPress={handlePress}
         accessibilityRole="checkbox"
         accessibilityState={{ checked: localChecked }}
         accessibilityLabel={task.label}
       >
+        {/* Dynamic Cutout Notch Background SVG matching Dashboard TimelineItemCard */}
+        <Svg
+          width={cardSize.width}
+          height={cardSize.height}
+          style={styles.cardSvgBackground}
+          pointerEvents="none"
+        >
+          <Path
+            d={getCutoutCardPath(cardSize.width, cardSize.height)}
+            fill={localChecked ? '#FBFDFB' : '#FFFFFF'}
+            stroke={localChecked ? '#E2F4E9' : '#F0ECE4'}
+            strokeWidth={1.5}
+            strokeLinejoin="round"
+          />
+        </Svg>
+
+        {/* Floating Checkbox in Top-Right Cutout */}
+        <TouchableOpacity
+          activeOpacity={0.75}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          onPress={e => {
+            e.stopPropagation();
+            handlePress();
+          }}
+          style={[
+            styles.floatingCheckbox,
+            localChecked
+              ? styles.floatingCheckboxChecked
+              : styles.floatingCheckboxUnchecked,
+          ]}
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: localChecked }}
+          accessibilityLabel={`Mark ${task.label} as ${
+            localChecked ? 'incomplete' : 'complete'
+          }`}
+        >
+          {localChecked && <Check size={14} color="#1B9A72" strokeWidth={3} />}
+        </TouchableOpacity>
+
         <View style={styles.cardHeaderRow}>
           <View style={styles.leftInfo}>
             <View
@@ -166,18 +227,6 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
                 </Text>
               ) : null}
             </View>
-          </View>
-
-          {/* Interactive Tactile Checkbox */}
-          <View
-            style={[
-              styles.checkbox,
-              localChecked ? styles.checkboxChecked : styles.checkboxUnchecked,
-            ]}
-          >
-            {localChecked && (
-              <Check size={14} color="#52D22E" strokeWidth={3} />
-            )}
           </View>
         </View>
 
@@ -225,12 +274,10 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 20,
+    backgroundColor: 'transparent',
     padding: 16,
     gap: 10,
-    borderWidth: 1.5,
-    borderColor: '#F0ECE4',
+    position: 'relative',
     ...Platform.select({
       ios: {
         shadowColor: '#F5C518',
@@ -243,15 +290,48 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  cardCompleted: {
-    backgroundColor: '#FBFDFB',
-    borderColor: '#E2F4E9',
+  cardSvgBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  },
+  floatingCheckbox: {
+    position: 'absolute',
+    top: 9,
+    right: 9,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    borderWidth: 1.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.12,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  floatingCheckboxChecked: {
+    backgroundColor: '#E8FDF0',
+    borderColor: '#52D22E',
+  },
+  floatingCheckboxUnchecked: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#ECE8DF',
   },
   cardHeaderRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    gap: 12,
+    paddingRight: 40,
   },
   leftInfo: {
     flexDirection: 'row',
@@ -292,24 +372,6 @@ const styles = StyleSheet.create({
   },
   noteCompleted: {
     color: '#AAB0B9',
-  },
-  checkbox: {
-    width: 26,
-    height: 26,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 2,
-  },
-  checkboxChecked: {
-    backgroundColor: '#E8FDF0',
-    borderWidth: 1.2,
-    borderColor: '#A3E4BF',
-  },
-  checkboxUnchecked: {
-    backgroundColor: '#EFF1F4',
-    borderWidth: 1.2,
-    borderColor: '#E0E3E8',
   },
   cardFooter: {
     flexDirection: 'row',

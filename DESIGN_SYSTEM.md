@@ -279,9 +279,9 @@ Replacing brutalist black toggles with an artisanal, warm luxury minimal segment
 
 ### 4.4 Clean Elevated Task & Curated Flow Cards
 
-Used for list items in `HomeScreen`, `TasksScreen`, `RemindersScreen`, and `DashboardScreen` (`TimelineItemCard.tsx`):
+Used for list items in `HomeScreen`, `TasksScreen` (`TaskCardItem.tsx`), `RemindersScreen` (`ReminderCardItem.tsx`), and `DashboardScreen` (`TimelineItemCard.tsx`):
 
-- **Signature Inverted Scooped Corner Cutout (`TimelineItemCard.tsx`)**:
+- **Signature Inverted Scooped Corner Cutout (`TimelineItemCard.tsx`, `TaskCardItem.tsx`, `ReminderCardItem.tsx`)**:
   - **Inverted Top-Right Scoop**: Rather than a standard rounded corner, the top-right corner features an organic concave scoop / cutout (`CW: 44, CH: 44`) with smooth quadratic bezier fillets (`R_outer: 12, R_inner: 14`), rendered dynamically via SVG.
   - **Base Border Radius**: `18px` on top-left, bottom-left, and bottom-right corners.
   - **Leading Accent Sliver**: `width: 3.5`, `borderRadius: 2`, matching category accent tint.
@@ -459,6 +459,35 @@ The voice assistant presents as an immersive bottom-anchored modal sheet with ri
 4. **Action Confirmation**: Card displays confirmed title and body with tactile category badge (`ActionConfirmation.tsx`).
 5. **Awaiting Clarification**: Highlighted follow-up question badge with contextual quick-reply suggestion chips.
 6. **Error / Recovery**: Friendly error message with retry and microphone reactivation buttons (`ErrorRecovery.tsx`).
+
+### 5.3 Celestial Acoustic Doodles & Neural Atmosphere (`VoiceAcousticDoodleSvg.tsx`)
+
+- **Artisanal Neural Layer**: Full-fidelity vector doodle backdrop encircling the orb.
+- **Components**:
+  - Cosmic dashed acoustic resonance orbits (`strokeDasharray="4 6"`).
+  - Sonic reverberation wave ripples (`)))` and `(((`) radiating outward.
+  - Regius signature 4-point diamond celestial stars in 24K Gold (`#F5C518`), Lavender (`#8383D6`), Mint (`#10B981`), and Coral (`#FF8772`).
+  - Hand-drawn acoustic music note chime doodle (`♫`).
+  - Imperial Regius micro-crown doodle of luxury and triumph.
+  - Electric ambition lightning bolt and playful flourish loop-de-loop.
+  - Warm luminous radial aura background glow adapting to Light/Dark modes.
+
+### 5.4 Dynamic Acoustic Waveform Bar Visualizer (`VoiceWaveVisualizer.tsx`)
+
+- **Interactive Vitality**: 5 vertical pill bars dynamically bouncing with staggered sin-wave animations during `listening` and `speaking` states.
+- **Harmonized Color Spectrum**: Staggered with Regius category brand palette (`#8383D6` Lavender, `#F5C518` Gold, `#FF8772` Coral, `#10B981` Mint).
+
+### 5.5 Luxury Tactile Bento Capsule Card (`ConversationSurface.tsx`)
+
+- **Card Architecture**: Frosted elevated surface with `borderRadius: 22`, warm perimeter border, and volumetric drop shadow.
+- **Fixed Viewport Architecture**: Zero scroll requirement; holograph orb and conversation capsule are rendered in a fixed non-scrolling body with reduced vertical margin (`marginBottom: -40px` on orb container), ensuring all speech content and instructions fit cleanly on screen without clipping above the dock.
+- **Signature 3D Tactile State Badge**: Elevated floating chip from `<Badge />` indicating live assistant state (`LISTENING • SPEAK NOW`, `SIA IS THINKING`, `SIA IS SPEAKING`, `ACTION CONFIRMED`).
+- **Category-Themed Suggestion Chips**: 3D tactile pills categorized by Works/Yellow, Reminders/Mint, Habits/Lavender, and Focus/Orange with micro-icons and extruded bevels.
+
+### 5.6 Dual-Shockwave Pulsing Microphone Dock (`VoiceInputControls.tsx`)
+
+- **Double Concentric Rings**: Outer and inner pulsing shockwave auras with staggered phase delays.
+- **3D Tactile Geometry**: Specular highlight top rim, extruded 4px bottom bevel, and rich colored ambient drop shadow.
 
 ---
 

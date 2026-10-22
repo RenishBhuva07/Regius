@@ -11,3 +11,5 @@ export * from './ErrorRecovery';
 export * from './VoiceInputControls';
 export * from './AudioPlaybackControls';
 export * from './ContextualSuggestions';
+export * from './VoiceAcousticDoodleSvg';
+export * from './VoiceWaveVisualizer';

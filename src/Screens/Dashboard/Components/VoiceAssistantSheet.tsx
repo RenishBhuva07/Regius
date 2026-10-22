@@ -14,7 +14,6 @@ import {
   Pressable,
   AccessibilityInfo,
   Easing,
-  ScrollView,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../../Theme/ThemeContext';
@@ -30,6 +29,7 @@ import {
   AssistantOrb,
   ConversationSurface,
   VoiceInputControls,
+  VoiceAcousticDoodleSvg,
   getAssistantTheme,
   normalizeAssistantState,
   AssistantVisualState,
@@ -207,6 +207,12 @@ export const VoiceAssistantSheet: React.FC<VoiceAssistantSheetProps> = ({
             },
           ]}
         >
+          {/* Extraordinary Celestial Acoustic Doodles & Ambient Neural Atmosphere */}
+          <VoiceAcousticDoodleSvg
+            isDarkMode={theme.isDarkMode}
+            state={currentState}
+          />
+
           {/* Header */}
           <AssistantHeader
             assistantName={resolvedAssistantName}
@@ -216,38 +222,36 @@ export const VoiceAssistantSheet: React.FC<VoiceAssistantSheetProps> = ({
             onToggleSuggestions={toggleSuggestions}
           />
 
-          {/* Content */}
-          <ScrollView
-            style={styles.scrollView}
-            contentContainerStyle={styles.scrollContent}
-            showsVerticalScrollIndicator={false}
-            bounces={true}
-            keyboardShouldPersistTaps="handled"
-          >
-            <AssistantOrb
-              state={currentState}
-              onPress={handleMicAction}
-              theme={theme}
-            />
+          {/* Fixed Content Layout (Non-scrolling, tightly tuned spacing) */}
+          <View style={styles.contentBody}>
+            <View style={styles.orbWrapper}>
+              <AssistantOrb
+                state={currentState}
+                onPress={handleMicAction}
+                theme={theme}
+              />
+            </View>
 
-            <ConversationSurface
-              state={currentState}
-              assistantName={resolvedAssistantName}
-              liveTranscript={liveTranscript}
-              lastSpokenCommand={lastSpokenCommand}
-              confirmedActionTitle={confirmedActionTitle}
-              confirmedActionBody={confirmedActionBody}
-              resultSummary={resultSummary}
-              spokenResponseText={spokenResponseText}
-              greetingText={greetingText}
-              activeVoiceName={activeVoiceName}
-              pendingClarification={pendingClarification}
-              errorMessage={errorMessage}
-              theme={theme}
-              showSuggestions={shouldShowSuggestions}
-              onSelectSuggestion={onActionSelected}
-            />
-          </ScrollView>
+            <View style={styles.conversationWrapper}>
+              <ConversationSurface
+                state={currentState}
+                assistantName={resolvedAssistantName}
+                liveTranscript={liveTranscript}
+                lastSpokenCommand={lastSpokenCommand}
+                confirmedActionTitle={confirmedActionTitle}
+                confirmedActionBody={confirmedActionBody}
+                resultSummary={resultSummary}
+                spokenResponseText={spokenResponseText}
+                greetingText={greetingText}
+                activeVoiceName={activeVoiceName}
+                pendingClarification={pendingClarification}
+                errorMessage={errorMessage}
+                theme={theme}
+                showSuggestions={shouldShowSuggestions}
+                onSelectSuggestion={onActionSelected}
+              />
+            </View>
+          </View>
 
           {/* Controls */}
           <View style={styles.dockContainer}>
@@ -280,17 +284,23 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'space-between',
   },
-  scrollView: {
+  contentBody: {
     flex: 1,
     width: '100%',
-  },
-  scrollContent: {
-    paddingHorizontal: 20,
-    paddingTop: 4,
-    paddingBottom: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    flexGrow: 1,
+    paddingHorizontal: 16,
+  },
+  orbWrapper: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: -40,
+  },
+  conversationWrapper: {
+    width: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 5,
   },
   dockContainer: {
     width: '100%',

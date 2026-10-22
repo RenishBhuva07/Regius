@@ -98,5 +98,14 @@ describe('VoiceAssistantSheet & SiaHolographicOrb State Machine Unit Tests', () 
       expect(VoiceAssistantSheet).toBeDefined();
       expect(SiaHolographicOrb).toBeDefined();
     });
+
+    it('exports VoiceAcousticDoodleSvg and VoiceWaveVisualizer creative additions', () => {
+      const {
+        VoiceAcousticDoodleSvg,
+        VoiceWaveVisualizer,
+      } = require('../src/Screens/Dashboard/Components/VoiceAssistant');
+      expect(VoiceAcousticDoodleSvg).toBeDefined();
+      expect(VoiceWaveVisualizer).toBeDefined();
+    });
   });
 });

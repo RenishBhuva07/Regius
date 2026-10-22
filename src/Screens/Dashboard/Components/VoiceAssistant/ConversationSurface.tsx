@@ -5,6 +5,8 @@ import { VoiceAssistantTheme } from './types';
 import { VoiceAssistantState } from '../../../../Services/Voice/VoiceStateMachine';
 import { PendingClarification } from '../../../../Services/Voice/VoiceTypes';
 import { ClarificationPrompt } from './ClarificationPrompt';
+import { Badge, BadgeVariant } from '../../../../Common/Badge';
+import { VoiceWaveVisualizer } from './VoiceWaveVisualizer';
 import { Check } from 'lucide-react-native';
 
 export interface ConversationSurfaceProps {
@@ -25,11 +27,17 @@ export interface ConversationSurfaceProps {
   onSelectSuggestion?: (command: string) => void;
 }
 
-const QUICK_SUGGESTIONS = [
-  'Play badminton today at 5 PM',
-  'Remind me to call Mom',
-  'Log 20-min meditation',
-  'Add 15 min focus time',
+interface SuggestionItem {
+  label: string;
+  category: 'task' | 'reminder' | 'habit' | 'focus';
+  symbol: string;
+}
+
+const QUICK_SUGGESTIONS: SuggestionItem[] = [
+  { label: 'Play badminton today at 5 PM', category: 'task', symbol: '⚡' },
+  { label: 'Remind me to call Mom', category: 'reminder', symbol: '⏰' },
+  { label: 'Log 20-min meditation', category: 'habit', symbol: '💜' },
+  { label: 'Add 15 min focus time', category: 'focus', symbol: '🎯' },
 ];
 
 function getConfirmationBadgeText(title?: string | null): string {
@@ -42,6 +50,68 @@ function getConfirmationBadgeText(title?: string | null): string {
     return 'Event Scheduled';
   if (lower.includes('focus')) return 'Focus Block Updated';
   return 'Confirmed';
+}
+
+function getStatusBadgeConfig(
+  state: VoiceAssistantState,
+  hasLiveTranscript: boolean,
+): { label: string; variant: BadgeVariant } {
+  switch (state) {
+    case 'listening':
+      return {
+        label: hasLiveTranscript
+          ? 'TRANSCRIPTION LIVE'
+          : 'LISTENING • SPEAK NOW',
+        variant: 'purple',
+      };
+    case 'processing':
+    case 'processingTranscript':
+    case 'understanding':
+    case 'generatingResponse':
+      return {
+        label: 'SIA IS THINKING',
+        variant: 'yellow',
+      };
+    case 'executing':
+    case 'executingAction':
+      return {
+        label: 'APPLYING ACTION',
+        variant: 'yellow',
+      };
+    case 'speaking':
+    case 'responding':
+      return {
+        label: 'SIA IS SPEAKING',
+        variant: 'purple',
+      };
+    case 'greeting':
+    case 'wakeWordDetected':
+      return {
+        label: 'SIA NEURAL READY',
+        variant: 'purple',
+      };
+    case 'success':
+    case 'completed':
+      return {
+        label: 'ACTION CONFIRMED',
+        variant: 'green',
+      };
+    case 'unrecognized':
+      return {
+        label: 'TRY AGAIN',
+        variant: 'orange',
+      };
+    case 'error':
+      return {
+        label: 'NEEDS ATTENTION',
+        variant: 'red',
+      };
+    default:
+      return {
+        label: 'SIA ASSISTANT',
+        variant: 'neutral',
+      };
+  }
 }
 
 export const ConversationSurface: React.FC<ConversationSurfaceProps> = ({
@@ -76,6 +146,11 @@ export const ConversationSurface: React.FC<ConversationSurfaceProps> = ({
     state === 'executingAction' ||
     state === 'generatingResponse';
 
+  const hasLiveTranscript = Boolean(
+    liveTranscript && liveTranscript.trim().length > 0,
+  );
+  const statusBadge = getStatusBadgeConfig(state, hasLiveTranscript);
+
   // 1. Resolve Primary Conversational Headline
   let headlineText = "Hey, I'm ready.";
   let supportingText: string | null = 'What would you like to get done?';
@@ -86,8 +161,8 @@ export const ConversationSurface: React.FC<ConversationSurfaceProps> = ({
       ? `Voice: ${activeVoiceName}`
       : 'Ready when you are.';
   } else if (isListening) {
-    if (liveTranscript && liveTranscript.trim().length > 0) {
-      headlineText = `“${liveTranscript.trim()}”`;
+    if (hasLiveTranscript) {
+      headlineText = `“${liveTranscript!.trim()}”`;
       supportingText = 'Listening… pause when done.';
     } else {
       headlineText = "I'm listening.";
@@ -125,8 +200,38 @@ export const ConversationSurface: React.FC<ConversationSurfaceProps> = ({
           theme={theme}
         />
       ) : (
-        /* Unified Conversational Text Block */
-        <View style={styles.textBlock}>
+        /* Luxury Tactile Bento Capsule Card */
+        <View
+          style={[
+            styles.capsuleCard,
+            {
+              backgroundColor: theme.isDarkMode
+                ? 'rgba(27, 30, 36, 0.82)'
+                : 'rgba(255, 255, 255, 0.88)',
+              borderColor: theme.isDarkMode
+                ? 'rgba(255, 255, 255, 0.12)'
+                : 'rgba(131, 131, 214, 0.16)',
+              shadowColor: theme.isDarkMode ? '#000000' : '#8383D6',
+            },
+          ]}
+        >
+          {/* Top Status 3D Tactile Badge */}
+          <View style={styles.badgeRow}>
+            <Badge
+              label={statusBadge.label}
+              variant={statusBadge.variant}
+              size="md"
+            />
+          </View>
+
+          {/* Dynamic Soundwave Equalizer (when listening or speaking) */}
+          {isListening || isSpeaking ? (
+            <VoiceWaveVisualizer
+              isActive={true}
+              isDarkMode={theme.isDarkMode}
+            />
+          ) : null}
+
           {/* Main Headline */}
           <Text
             style={[styles.headline, { color: theme.textPrimary }]}
@@ -151,11 +256,11 @@ export const ConversationSurface: React.FC<ConversationSurfaceProps> = ({
                 styles.confirmationBadge,
                 {
                   backgroundColor: theme.isDarkMode
-                    ? 'rgba(52, 211, 153, 0.12)'
+                    ? 'rgba(52, 211, 153, 0.14)'
                     : 'rgba(5, 150, 105, 0.08)',
                   borderColor: theme.isDarkMode
-                    ? 'rgba(52, 211, 153, 0.28)'
-                    : 'rgba(5, 150, 105, 0.2)',
+                    ? 'rgba(52, 211, 153, 0.35)'
+                    : 'rgba(5, 150, 105, 0.22)',
                 },
               ]}
             >
@@ -179,34 +284,72 @@ export const ConversationSurface: React.FC<ConversationSurfaceProps> = ({
           {showSuggestions && onSelectSuggestion ? (
             <View style={styles.suggestionsContainer}>
               <View style={styles.suggestionsRow}>
-                {QUICK_SUGGESTIONS.map((item, idx) => (
-                  <Pressable
-                    key={idx}
-                    onPress={() => onSelectSuggestion(item)}
-                    style={({ pressed }) => [
-                      styles.suggestionPill,
-                      {
-                        backgroundColor: theme.isDarkMode
-                          ? 'rgba(255, 255, 255, 0.07)'
-                          : 'rgba(0, 0, 0, 0.04)',
-                        borderColor: theme.cardBorder,
-                        opacity: pressed ? 0.7 : 1,
-                      },
-                    ]}
-                    accessibilityRole="button"
-                    accessibilityLabel={`Suggestion: ${item}`}
-                  >
-                    <Text
-                      style={[
-                        styles.suggestionText,
-                        { color: theme.textSecondary },
+                {QUICK_SUGGESTIONS.map((item, idx) => {
+                  let pillBg = theme.isDarkMode
+                    ? 'rgba(255, 255, 255, 0.07)'
+                    : 'rgba(0, 0, 0, 0.04)';
+                  let pillBorder = theme.cardBorder;
+                  let pillText = theme.textSecondary;
+
+                  if (item.category === 'task') {
+                    pillBg = theme.isDarkMode
+                      ? 'rgba(245, 197, 24, 0.12)'
+                      : '#FFF8D0';
+                    pillBorder = theme.isDarkMode
+                      ? 'rgba(245, 197, 24, 0.3)'
+                      : '#DEAA14';
+                    pillText = theme.isDarkMode ? '#FBBF24' : '#B47804';
+                  } else if (item.category === 'reminder') {
+                    pillBg = theme.isDarkMode
+                      ? 'rgba(16, 185, 129, 0.12)'
+                      : '#E8FDF0';
+                    pillBorder = theme.isDarkMode
+                      ? 'rgba(16, 185, 129, 0.3)'
+                      : '#82E8A6';
+                    pillText = theme.isDarkMode ? '#34D399' : '#1B9A72';
+                  } else if (item.category === 'habit') {
+                    pillBg = theme.isDarkMode
+                      ? 'rgba(131, 131, 214, 0.12)'
+                      : '#EEF0FD';
+                    pillBorder = theme.isDarkMode
+                      ? 'rgba(131, 131, 214, 0.3)'
+                      : '#B6BEF5';
+                    pillText = theme.isDarkMode ? '#A78BFA' : '#8383D6';
+                  } else if (item.category === 'focus') {
+                    pillBg = theme.isDarkMode
+                      ? 'rgba(255, 135, 114, 0.12)'
+                      : '#FFF0DE';
+                    pillBorder = theme.isDarkMode
+                      ? 'rgba(255, 135, 114, 0.3)'
+                      : '#FFB86B';
+                    pillText = theme.isDarkMode ? '#FB7185' : '#E65100';
+                  }
+
+                  return (
+                    <Pressable
+                      key={idx}
+                      onPress={() => onSelectSuggestion(item.label)}
+                      style={({ pressed }) => [
+                        styles.suggestionPill,
+                        {
+                          backgroundColor: pillBg,
+                          borderColor: pillBorder,
+                          opacity: pressed ? 0.72 : 1,
+                        },
                       ]}
-                      numberOfLines={1}
+                      accessibilityRole="button"
+                      accessibilityLabel={`Suggestion: ${item.label}`}
                     >
-                      {item}
-                    </Text>
-                  </Pressable>
-                ))}
+                      <Text style={styles.suggestionSymbol}>{item.symbol}</Text>
+                      <Text
+                        style={[styles.suggestionText, { color: pillText }]}
+                        numberOfLines={1}
+                      >
+                        {item.label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
               </View>
             </View>
           ) : null}
@@ -221,33 +364,45 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 20,
-    paddingTop: 4,
-    paddingBottom: 8,
+    paddingHorizontal: 16,
+    paddingTop: 0,
+    paddingBottom: 4,
   },
-  textBlock: {
+  capsuleCard: {
     width: '100%',
+    maxWidth: 380,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    borderRadius: 22,
+    borderWidth: 1.4,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 3.5,
+  },
+  badgeRow: {
+    marginBottom: 4,
+    alignItems: 'center',
   },
   headline: {
-    fontFamily: Fonts.bold,
+    fontFamily: Fonts.ranade.bold,
     fontSize: 21,
-    lineHeight: 27,
-    fontWeight: '700',
+    lineHeight: 26,
     textAlign: 'center',
     letterSpacing: -0.3,
-    paddingHorizontal: 8,
+    paddingHorizontal: 6,
+    marginTop: 2,
   },
   supportingText: {
-    fontFamily: Fonts.medium,
-    fontSize: 14,
-    lineHeight: 20,
-    fontWeight: '500',
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 13,
+    lineHeight: 18,
     textAlign: 'center',
-    marginTop: 6,
+    marginTop: 4,
     maxWidth: '92%',
-    paddingHorizontal: 8,
+    paddingHorizontal: 6,
   },
   confirmationBadge: {
     flexDirection: 'row',
@@ -255,8 +410,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 6,
     borderRadius: 20,
-    borderWidth: 1,
-    marginTop: 10,
+    borderWidth: 1.2,
+    marginTop: 12,
     gap: 8,
     maxWidth: '92%',
   },
@@ -268,9 +423,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   confirmationText: {
-    fontFamily: Fonts.bold,
+    fontFamily: Fonts.poppins.semiBold,
     fontSize: 13,
-    fontWeight: '600',
     flexShrink: 1,
   },
   suggestionsContainer: {
@@ -284,13 +438,20 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   suggestionPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 7,
-    borderRadius: 16,
+    borderRadius: 18,
     borderWidth: 1,
+    borderBottomWidth: 2,
+    gap: 5,
+  },
+  suggestionSymbol: {
+    fontSize: 12,
   },
   suggestionText: {
-    fontFamily: Fonts.medium,
+    fontFamily: Fonts.poppins.medium,
     fontSize: 12,
   },
 });
