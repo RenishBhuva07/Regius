@@ -100,6 +100,7 @@ Regius/
     │   ├── playbackService.ts         # Headless TrackPlayer background receiver
     │   ├── RegiusSpeechService.ts     # Speech synthesis facade and wake greetings
     │   ├── VoiceSettingsService.ts    # AsyncStorage persistence for user settings
+    │   ├── DailyQuotes/               # Deterministic PRNG daily footer quotes & midnight rollover
     │   ├── Kokoro/                    # Kokoro-82M neural TTS synthesis & cache
     │   ├── Voice/                     # State machine, intent recognition, command execution
     │   └── WakeWord/                  # Wake word detection engine and presets

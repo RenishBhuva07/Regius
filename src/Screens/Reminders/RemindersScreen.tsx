@@ -38,11 +38,13 @@ import ReminderCardItem from './Components/ReminderCardItem';
 import ReminderSectionBackgroundSvg from './Components/ReminderSectionBackgroundSvg';
 import ReminderEmptyDoodleSvg from './Components/ReminderEmptyDoodleSvg';
 import ReminderWatermarkDoodleSvg from './Components/ReminderWatermarkDoodleSvg';
+import { useDailyQuote } from '../../Services/DailyQuotes';
 
 type TabKey = 'upcoming' | 'completed';
 
 export const RemindersScreen: React.FC<any> = ({ route }) => {
   const insets = useSafeAreaInsets();
+  const dailyQuote = useDailyQuote('reminders');
   const [activeTab, setActiveTab] = useState<TabKey>('upcoming');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     'daily',
@@ -406,6 +408,7 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
                     />
                   );
                 }}
+                style={styles.reminderList}
                 contentContainerStyle={styles.listContent}
               />
 
@@ -446,9 +449,7 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
             <View style={styles.footerWatermarkRow}>
               {/* Left Column: Bold Typography & Sign-off */}
               <View style={styles.liveItUpBlock}>
-                <Text style={styles.liveItUpText}>
-                  Because your{'\n'}best ideas{'\n'}shouldn’t{'\n'}slip away!
-                </Text>
+                <Text style={styles.liveItUpText}>{dailyQuote}</Text>
                 <View style={styles.craftedWithRow}>
                   <Text style={styles.craftedWithText}>Crafted with </Text>
                   <Text style={styles.craftedWithHeart}>❤️</Text>
@@ -715,10 +716,15 @@ const styles = StyleSheet.create({
   reminderListWrapper: {
     flex: 1,
   },
+  reminderList: {
+    overflow: 'visible',
+  },
   listContent: {
     gap: 12,
     paddingTop: 10,
     paddingHorizontal: 0,
+    paddingBottom: 20,
+    overflow: 'visible',
   },
   selectAllBtn: {
     backgroundColor: '#1F2228',
@@ -728,7 +734,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-    marginTop: ResponsivePixels.size18,
+    marginTop: ResponsivePixels.size8,
     marginBottom: ResponsivePixels.size24,
     ...Platform.select({
       ios: {
@@ -766,10 +772,10 @@ const styles = StyleSheet.create({
   },
   liveItUpText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 38,
-    lineHeight: 46,
+    fontSize: 34,
+    lineHeight: 42,
     color: '#8E95A5',
-    letterSpacing: -1.5,
+    letterSpacing: -1.2,
   },
   craftedWithRow: {
     flexDirection: 'row',

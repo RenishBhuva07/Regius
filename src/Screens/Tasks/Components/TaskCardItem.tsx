@@ -109,6 +109,13 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
     );
   };
 
+  const getCategoryShadowColor = () => {
+    if (task.category === 'sport') return '#52D22E';
+    if (task.category === 'habits') return '#8383D6';
+    if (task.priority === 'high') return '#FF3B30';
+    return '#F5C518';
+  };
+
   const hasSubtasks = !!(task.subtasks && task.subtasks.length > 0);
   const hasFooter = !!(
     task.time ||
@@ -121,7 +128,11 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
     <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
       <TouchableOpacity
         activeOpacity={0.88}
-        style={[styles.card, localChecked && styles.cardCompleted]}
+        style={[
+          styles.card,
+          localChecked && styles.cardCompleted,
+          { shadowColor: getCategoryShadowColor() },
+        ]}
         onPress={handlePress}
         accessibilityRole="checkbox"
         accessibilityState={{ checked: localChecked }}
@@ -222,13 +233,13 @@ const styles = StyleSheet.create({
     borderColor: '#F0ECE4',
     ...Platform.select({
       ios: {
-        shadowColor: '#1F2228',
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.05,
+        shadowColor: '#F5C518',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.12,
         shadowRadius: 8,
       },
       android: {
-        elevation: 2,
+        elevation: 3,
       },
     }),
   },

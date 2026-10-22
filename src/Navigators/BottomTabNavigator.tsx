@@ -356,10 +356,7 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
         {/* Cream halo — visually separates button from bar */}
         <View style={[styles.btnHalo, styles.btnShadow]}>
           <Animated.View
-            style={[
-              styles.btnCircle,
-              { transform: [{ scale: plusScale }, { rotate: rotateDeg }] },
-            ]}
+            style={[styles.btnCircle, { transform: [{ scale: plusScale }] }]}
           >
             <PlusButtonPatternSvg size={BTN_SIZE} />
             <TouchableOpacity
@@ -375,7 +372,18 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
                   : 'Add new item (Long press for Voice)'
               }
             >
-              <Plus size={26} color={Colors.PureWhiteText} strokeWidth={2.6} />
+              <Animated.View
+                style={[
+                  styles.plusIconWrap,
+                  { transform: [{ rotate: rotateDeg }] },
+                ]}
+              >
+                <Plus
+                  size={26}
+                  color={Colors.PureWhiteText}
+                  strokeWidth={2.6}
+                />
+              </Animated.View>
             </TouchableOpacity>
           </Animated.View>
         </View>
@@ -567,6 +575,12 @@ const styles = StyleSheet.create({
     width: BTN_SIZE,
     height: BTN_SIZE,
     borderRadius: BTN_SIZE / 2,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  plusIconWrap: {
+    width: 26,
+    height: 26,
     alignItems: 'center',
     justifyContent: 'center',
   },

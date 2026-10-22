@@ -113,7 +113,11 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
     <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
       <TouchableOpacity
         activeOpacity={0.88}
-        style={[styles.card, localChecked && styles.cardCompleted]}
+        style={[
+          styles.card,
+          localChecked && styles.cardCompleted,
+          { shadowColor: theme.accentColor },
+        ]}
         onPress={handlePress}
         accessibilityRole="checkbox"
         accessibilityState={{ checked: localChecked }}
@@ -234,13 +238,13 @@ const styles = StyleSheet.create({
     borderColor: '#F0ECE4',
     ...Platform.select({
       ios: {
-        shadowColor: '#1F2228',
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.05,
+        shadowColor: '#52D22E',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.12,
         shadowRadius: 8,
       },
       android: {
-        elevation: 2,
+        elevation: 3,
       },
     }),
   },

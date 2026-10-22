@@ -230,7 +230,12 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
         onPress={() =>
           onPressCard ? onPressCard(item) : onToggleComplete?.(item)
         }
-        style={styles.card}
+        style={[
+          styles.card,
+          {
+            shadowColor: catStyle.shadowColor,
+          },
+        ]}
         accessibilityRole="button"
         accessibilityLabel={`${item.title}, ${item.category}, scheduled for ${
           item.time
@@ -373,7 +378,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   containerLast: {
-    marginBottom: 0,
+    marginBottom: 4,
   },
   timeColumn: {
     width: 40,
@@ -447,12 +452,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     ...Platform.select({
       ios: {
-        shadowOffset: { width: 0, height: 3 },
+        shadowColor: '#F5C518',
+        shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.12,
-        shadowRadius: 6,
+        shadowRadius: 8,
       },
       android: {
-        elevation: 2,
+        elevation: 3,
       },
     }),
   },

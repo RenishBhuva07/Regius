@@ -449,6 +449,28 @@ sequenceDiagram
 
 ---
 
+### 2.13 Daily Footer Quotes Service & Midnight Rollover System
+
+- **Purpose**: Deliver randomized, non-repeating daily editorial quotes at the bottom watermark footer of each primary screen (`Dashboard`, `Tasks`, `Reminders`, `Habits`), rolling over dynamically at 12:00 AM midnight.
+- **Status**: `Implemented`
+- **Source Files**:
+  - `src/Services/DailyQuotes/dailyQuotesData.ts`
+  - `src/Services/DailyQuotes/DailyQuotesService.ts`
+  - `src/Services/DailyQuotes/useDailyQuote.ts`
+  - `src/Services/DailyQuotes/index.ts`
+  - `src/Screens/Dashboard/DashboardScreen.tsx`
+  - `src/Screens/Tasks/TasksScreen.tsx`
+  - `src/Screens/Reminders/RemindersScreen.tsx`
+  - `src/Screens/Habits/HabitsScreen.tsx`
+- **Technical Implementation**:
+  - **Screen-Specific Quote Pools**: Dedicated curated pools for each screen (Dashboard: 7 quotes, Tasks: 8 quotes, Reminders: 8 quotes, Habits: 7 quotes).
+  - **Deterministic Weekly PRNG Shuffle**: Mulberry32 PRNG seeded with week Sunday date ensures deterministic, non-repeating permutation across all 7 days of any week without async loading flash or storage corruption risk.
+  - **Consecutive-Day Collision Prevention**: Enforces cross-week boundary check so Saturday night into Sunday morning midnight transitions never repeat the same quote.
+  - **12:00 AM Midnight Rollover**: Reactive hook `useDailyQuote` schedules high-precision timer for upcoming midnight and listens to `AppState` foreground resume events to guarantee instantaneous rollover when date changes.
+  - **Design System Typography**: Rendered in Poppins Bold 34pt (`#8E95A5`, `letterSpacing: -1.2`, `lineHeight: 42`), gracefully wrapping naturally across all iOS and Android device widths.
+
+---
+
 ## 3. Partially Implemented & Planned Features Registry
 
 | Feature Name                    | Status    | Current Reality                                                                         | Required Next Steps                                                               |

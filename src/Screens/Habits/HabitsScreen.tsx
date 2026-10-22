@@ -31,9 +31,11 @@ import AddHabitModal from '../../Components/AddHabitModal';
 import { ScreenHeader, SCREEN_HEADER_HEIGHT } from '../../Common/ScreenHeader';
 import HabitNotesDoodleSvg from './Components/HabitNotesDoodleSvg';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
+import { useDailyQuote } from '../../Services/DailyQuotes';
 
 export const HabitsScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
+  const dailyQuote = useDailyQuote('habits');
 
   const {
     habits,
@@ -211,9 +213,7 @@ export const HabitsScreen: React.FC = () => {
             <View style={styles.footerWatermarkRow}>
               {/* Left Column: Bold Typography & Sign-off */}
               <View style={styles.footerTextBlock}>
-                <Text style={styles.footerWatermarkText}>
-                  Your future self{'\n'}is taking notes!
-                </Text>
+                <Text style={styles.footerWatermarkText}>{dailyQuote}</Text>
                 <View style={styles.craftedWithRow}>
                   <Text style={styles.craftedWithText}>Crafted with </Text>
                   <Text style={styles.craftedWithHeart}>❤️</Text>
@@ -431,10 +431,10 @@ const styles = StyleSheet.create({
   },
   footerWatermarkText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 38,
-    lineHeight: 46,
+    fontSize: 34,
+    lineHeight: 42,
     color: '#8E95A5',
-    letterSpacing: -1.5,
+    letterSpacing: -1.2,
   },
   craftedWithRow: {
     flexDirection: 'row',

@@ -34,6 +34,7 @@ import FlowBadgePatternSvg from './Components/FlowBadgePatternSvg';
 import FlowSectionBackgroundSvg from './Components/FlowSectionBackgroundSvg';
 import LegendaryDoodleSvg from './Components/LegendaryDoodleSvg';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
+import { useDailyQuote } from '../../Services/DailyQuotes';
 
 type FlowFilter = 'all' | 'tasks' | 'habits' | 'reminders' | 'voice';
 
@@ -66,6 +67,7 @@ function parseTimeToMinutes(timeStr?: string): number {
 export const DashboardScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
+  const dailyQuote = useDailyQuote('dashboard');
   const { tasks, toggleTask, reminders, toggleReminder, habits, toggleHabit } =
     useTaskReminder();
 
@@ -517,6 +519,8 @@ export const DashboardScreen: React.FC = () => {
               data={scheduledItems}
               keyExtractor={item => item.id}
               scrollEnabled={false}
+              style={styles.timelineFlatList}
+              contentContainerStyle={styles.timelineListContent}
               renderItem={({ item, index }) => (
                 <TimelineItemCard
                   item={item}
@@ -548,6 +552,8 @@ export const DashboardScreen: React.FC = () => {
                   data={unscheduledItems}
                   keyExtractor={item => item.id}
                   scrollEnabled={false}
+                  style={styles.timelineFlatList}
+                  contentContainerStyle={styles.timelineListContent}
                   renderItem={({ item, index }) => (
                     <TimelineItemCard
                       item={item}
@@ -575,9 +581,7 @@ export const DashboardScreen: React.FC = () => {
             <View style={styles.footerWatermarkRow}>
               {/* Left Column: Bold Typography & Sign-off */}
               <View style={styles.footerTextBlock}>
-                <Text style={styles.footerWatermarkText}>
-                  Make today{'\n'}a little{'\n'}legendary!
-                </Text>
+                <Text style={styles.footerWatermarkText}>{dailyQuote}</Text>
                 <View style={styles.craftedWithRow}>
                   <Text style={styles.craftedWithText}>Crafted with </Text>
                   <Text style={styles.craftedWithHeart}>❤️</Text>
@@ -852,6 +856,14 @@ const styles = StyleSheet.create({
   },
   timelineList: {
     position: 'relative',
+    overflow: 'visible',
+  },
+  timelineFlatList: {
+    overflow: 'visible',
+  },
+  timelineListContent: {
+    paddingBottom: 16,
+    overflow: 'visible',
   },
   unscheduledSection: {
     marginTop: 12,

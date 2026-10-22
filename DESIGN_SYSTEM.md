@@ -381,11 +381,15 @@ A signature luxury header architecture where scrolling elevates the header from 
 
 ### 4.7 Quick Action Sheet (`src/Navigators/PlusActionSheet.tsx`)
 
-- Sits above the floating dock with a dim backdrop (`rgba(0, 0, 0, 0.35)`).
-- Renders 3 horizontal quick action asymmetric cards:
-  1. **New Task** (`#FFFCEB`, gold accent `#F5C518`)
-  2. **New Reminder** (`#FFF3E0`, amber accent `#FF9800`)
-  3. **New Habit** (`#EDFDF5`, green accent `#52D22E`)
+- **Placement & Motion**: Floats right above the center dock with a subtle pointer notch pointing down toward the plus/cross button, backed by a soft dim backdrop (`rgba(18, 20, 23, 0.42)`). Features a silky-smooth entrance spring animation (`tension: 85, friction: 9`).
+- **Signature 2-Layer Shadow Wrapper**: Outer wrapper provides volumetric luxury drop shadow (`shadowColor: '#121417', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.18, shadowRadius: 20, elevation: 16`) encasing an inner clipped card (`borderRadius: 26, borderWidth: 1.5, borderColor: '#E8E2D5'`).
+- **Pristine Luxury Background (`SheetBackgroundAestheticSvg`)**: Clean warm ivory canvas with delicate concentric champagne celestial guilloché arcs, perimeter registration frame, and micro-sparkles.
+- **Header with Right Tag**: Left-aligned 3D `QUICK CREATE` badge paired with an elegant right-aligned `INSTANT` tag with gold sparkle.
+- **3 Responsive Action Cards (158px Compact Height)**:
+  1. **Add Task**: `#EFF2FE`, border `#D8DBFF`, lavender accent `#8383D6`, `TO-DO` 3D badge.
+  2. **Reminder**: `#FFFCEB`, border `#FFF5B8`, amber accent `#D97706`, `ALERT` 3D badge.
+  3. **Habit**: `#EDFDF5`, border `#C6FFDD`, emerald accent `#2E7D32`, `RITUAL` 3D badge.
+  - Formatted at compact `height: 158` with snug vertical spacing, zero awkward dead voids, and complete copy readability.
 
 ---
 

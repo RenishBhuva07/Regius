@@ -35,11 +35,13 @@ import TaskProductivityBento from './Components/TaskProductivityBento';
 import TaskCategoryCarousel from './Components/TaskCategoryCarousel';
 import TaskCardItem from './Components/TaskCardItem';
 import TaskCompleteDoodleSvg from './Components/TaskCompleteDoodleSvg';
+import { useDailyQuote } from '../../Services/DailyQuotes';
 
 type TabKey = 'taskList' | 'completed';
 
 export const TasksScreen: React.FC<any> = ({ route }) => {
   const insets = useSafeAreaInsets();
+  const dailyQuote = useDailyQuote('tasks');
   const [activeTab, setActiveTab] = useState<TabKey>('taskList');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     'works',
@@ -320,6 +322,7 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
             data={filteredTasks}
             keyExtractor={item => item.id}
             scrollEnabled={false}
+            style={styles.taskList}
             contentContainerStyle={styles.taskListContainer}
             renderItem={({ item }) => {
               return (
@@ -400,9 +403,7 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
             <View style={styles.footerWatermarkRow}>
               {/* Left Column: Bold "Live it up!" Typography & Sign-off */}
               <View style={styles.liveItUpBlock}>
-                <Text style={styles.liveItUpText}>
-                  Dreams move{'\n'}when you do!
-                </Text>
+                <Text style={styles.liveItUpText}>{dailyQuote}</Text>
                 <View style={styles.craftedWithRow}>
                   <Text style={styles.craftedWithText}>Crafted with </Text>
                   <Text style={styles.craftedWithHeart}>❤️</Text>
@@ -670,10 +671,14 @@ const styles = StyleSheet.create({
   },
 
   // Task List
+  taskList: {
+    overflow: 'visible',
+  },
   taskListContainer: {
     paddingHorizontal: 0,
     paddingTop: 10,
     paddingBottom: 20,
+    overflow: 'visible',
   },
   listSeparator: {
     height: 12,
@@ -688,6 +693,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
+    marginTop: ResponsivePixels.size8,
     marginBottom: ResponsivePixels.size24,
     ...Platform.select({
       ios: {
@@ -725,10 +731,10 @@ const styles = StyleSheet.create({
   },
   liveItUpText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 38,
-    lineHeight: 46,
+    fontSize: 34,
+    lineHeight: 42,
     color: '#8E95A5',
-    letterSpacing: -1.5,
+    letterSpacing: -1.2,
   },
   craftedWithRow: {
     flexDirection: 'row',
