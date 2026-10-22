@@ -32,6 +32,8 @@ import TimelineItemCard, { TimelineItem } from './Components/TimelineItemCard';
 import HeaderPatternSvg from './Components/HeaderPatternSvg';
 import FlowBadgePatternSvg from './Components/FlowBadgePatternSvg';
 import FlowSectionBackgroundSvg from './Components/FlowSectionBackgroundSvg';
+import LegendaryDoodleSvg from './Components/LegendaryDoodleSvg';
+import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 
 type FlowFilter = 'all' | 'tasks' | 'habits' | 'reminders' | 'voice';
 
@@ -407,52 +409,60 @@ export const DashboardScreen: React.FC = () => {
         style={styles.scroll}
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingTop: insets.top + HEADER_HEIGHT + 10 },
+          {
+            paddingTop: insets.top + HEADER_HEIGHT + 10,
+            paddingBottom: 0,
+          },
         ]}
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
-        {/* Greeting */}
-        <View style={styles.greetingSection}>
-          <View style={styles.dateWeatherRow}>
-            <Text style={styles.dateText}>{formattedDate}</Text>
-            <View style={styles.ambientStatus}>
-              <Sun size={14} color="#77767B" strokeWidth={2.2} />
-              <Text style={styles.ambientStatusText}>
-                Calm & Focused • 68°F
-              </Text>
+        {/* Top sections with horizontal padding */}
+        <View style={styles.topSectionWrapper}>
+          {/* Greeting */}
+          <View style={styles.greetingSection}>
+            <View style={styles.dateWeatherRow}>
+              <Text style={styles.dateText}>{formattedDate}</Text>
+              <View style={styles.ambientStatus}>
+                <Sun size={14} color="#77767B" strokeWidth={2.2} />
+                <Text style={styles.ambientStatusText}>
+                  Calm & Focused • 68°F
+                </Text>
+              </View>
             </View>
+
+            <Text style={styles.greetingText}>{greeting}</Text>
           </View>
 
-          <Text style={styles.greetingText}>{greeting}</Text>
+          {/* Voice briefing card */}
+          <DailyBriefingCard
+            taskCount={tasks.length}
+            reminderCount={reminders.length}
+            habitCount={habits.length}
+            assistantName={assistantName}
+            onOpenVoiceAssistant={() => openAssistant()}
+            onTriggerWakeWord={() => triggerWakeWord()}
+          />
+
+          {/* Daily balance grid */}
+          <DailyBalanceGrid
+            tasksCompleted={completedTasksCount}
+            tasksTotal={tasks.length}
+            remindersCompleted={completedRemindersCount}
+            remindersTotal={reminders.length}
+            habitsCompleted={completedHabitsCount}
+            habitsTotal={habits.length}
+            onPressTasks={() => navigation.navigate('Tasks')}
+            onPressReminders={() => navigation.navigate('Reminders')}
+            onPressHabits={() => navigation.navigate('Habits')}
+          />
         </View>
 
-        {/* Voice briefing card */}
-        <DailyBriefingCard
-          taskCount={tasks.length}
-          reminderCount={reminders.length}
-          habitCount={habits.length}
-          assistantName={assistantName}
-          onOpenVoiceAssistant={() => openAssistant()}
-          onTriggerWakeWord={() => triggerWakeWord()}
-        />
-
-        {/* Daily balance grid */}
-        <DailyBalanceGrid
-          tasksCompleted={completedTasksCount}
-          tasksTotal={tasks.length}
-          remindersCompleted={completedRemindersCount}
-          remindersTotal={reminders.length}
-          habitsCompleted={completedHabitsCount}
-          habitsTotal={habits.length}
-          onPressTasks={() => navigation.navigate('Tasks')}
-          onPressReminders={() => navigation.navigate('Reminders')}
-          onPressHabits={() => navigation.navigate('Habits')}
-        />
-
-        {/* Curated flow timeline */}
-        <View style={styles.flowSection}>
+        {/* Curated flow timeline - Full width and till bottom edge */}
+        <View
+          style={[styles.flowSection, { paddingBottom: insets.bottom + 130 }]}
+        >
           {/* Aesthetic luxury background */}
           <View style={styles.flowSectionBgWrapper} pointerEvents="none">
             <FlowSectionBackgroundSvg />
@@ -559,10 +569,32 @@ export const DashboardScreen: React.FC = () => {
               </View>
             )}
           </View>
-        </View>
 
-        {/* Bottom tab spacer */}
-        <View style={{ height: 100 }} />
+          {/* Swiggy-Inspired Brand Watermark Footer: "Make today a little legendary!" + "Crafted with ❤️ in Ahmedabad, India" + Legendary Crown & Triumph Doodles */}
+          <View style={styles.footerWatermarkWrapper} pointerEvents="none">
+            <View style={styles.footerWatermarkRow}>
+              {/* Left Column: Bold Typography & Sign-off */}
+              <View style={styles.footerTextBlock}>
+                <Text style={styles.footerWatermarkText}>
+                  Make today{'\n'}a little{'\n'}legendary!
+                </Text>
+                <View style={styles.craftedWithRow}>
+                  <Text style={styles.craftedWithText}>Crafted with </Text>
+                  <Text style={styles.craftedWithHeart}>❤️</Text>
+                  <Text style={styles.craftedWithText}>
+                    {' '}
+                    in Ahmedabad, India
+                  </Text>
+                </View>
+              </View>
+
+              {/* Right Column: Extraordinary Legendary Crown & Triumph Doodle Illustration */}
+              <View style={styles.footerDoodleWrapper}>
+                <LegendaryDoodleSvg />
+              </View>
+            </View>
+          </View>
+        </View>
       </ScrollView>
     </View>
   );
@@ -662,8 +694,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
+    paddingBottom: 0,
+  },
+  topSectionWrapper: {
     paddingHorizontal: 10,
-    paddingTop: 10,
   },
   greetingSection: {
     marginBottom: 10,
@@ -698,27 +732,34 @@ const styles = StyleSheet.create({
   },
   flowSection: {
     backgroundColor: Colors.SoftCream,
-    borderRadius: 24,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
     borderWidth: 1.5,
     borderTopColor: '#FAF6EE',
     borderLeftColor: '#EFE9DE',
     borderRightColor: '#EFE9DE',
-    borderBottomColor: '#DDD6C6',
+    borderBottomWidth: 0,
     paddingHorizontal: 8,
-    paddingBottom: 8,
     paddingTop: 40,
-    marginTop: 24,
-    marginBottom: 60,
-    shadowColor: '#5C5441',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    elevation: 2,
+    marginTop: 26,
+    flex: 1,
     position: 'relative',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#1B1C19',
+        shadowOffset: { width: 0, height: -4 },
+        shadowOpacity: 0.12,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
   flowSectionBgWrapper: {
     ...StyleSheet.absoluteFill,
-    borderRadius: 24,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
     overflow: 'hidden',
   },
   flowHeaderBadge: {
@@ -836,6 +877,49 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.medium,
     fontSize: 13,
     color: '#8E8D92',
+  },
+
+  // Swiggy-Inspired Watermark Footer
+  footerWatermarkWrapper: {
+    paddingLeft: ResponsivePixels.size10,
+    paddingRight: ResponsivePixels.size16,
+    marginTop: ResponsivePixels.size36,
+    marginBottom: ResponsivePixels.size20,
+  },
+  footerWatermarkRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+  },
+  footerTextBlock: {
+    flex: 1,
+    justifyContent: 'flex-start',
+  },
+  footerWatermarkText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 34,
+    lineHeight: 42,
+    color: '#8E95A5',
+    letterSpacing: -1.2,
+  },
+  craftedWithRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 18,
+  },
+  craftedWithText: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 14,
+    color: '#8E95A5',
+  },
+  craftedWithHeart: {
+    fontSize: 13.5,
+  },
+  footerDoodleWrapper: {
+    marginLeft: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 6,
   },
 });
 

@@ -169,6 +169,12 @@ When creating or updating UI elements:
    - Use `<CustomButton />` from `src/Common/CustomButton.tsx`.
 5. **Category Consistency**:
    - When introducing category cards, define all 4 facets: `bgColor`, `borderColor`, `accentColor`, and `shadowColor` (see [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md#23-category-trios--semantic-accents)).
+6. **Hero Bento Cards (`DailyBriefingCard`, `TaskProductivityBento`, `HabitConsistencyBento`)**:
+   - **Never render thin 1px borders or subtle flat elevation on hero cards.**
+   - MUST use the signature 2-layer wrapper pattern (`cardShadowWrapper` without `overflow: 'hidden'` + inner `card` with `overflow: 'hidden'`).
+   - Inner card MUST have `borderWidth: 4`, `borderColor: 'rgba(255, 255, 255, 0.9)'`, `borderRadius: 24`, and `backgroundColor: Colors.NeroBlack`.
+   - Shadow wrapper MUST have deep volumetric shadow: `shadowColor: '#000000'`, `shadowOffset: { width: 0, height: 10 }`, `shadowOpacity: 0.28`, `shadowRadius: 18`, `elevation: 8-10`.
+   - Parent wrapper MUST use `paddingHorizontal: 10` for consistent 10px screen margin across all tabs.
 
 ---
 

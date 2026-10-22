@@ -35,7 +35,7 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
       width: number;
       height: number;
     }>({
-      width: propWidth || SCREEN_WIDTH - 32,
+      width: propWidth || SCREEN_WIDTH,
       height: propHeight || 600,
     });
 
@@ -417,15 +417,13 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
             </>
           )}
 
-          {/* ── Inner Beveled Highlight Rim ── */}
-          <Rect
-            x={1}
-            y={1}
-            width={W - 2}
-            height={H - 2}
-            rx={23}
+          {/* ── Inner Beveled Highlight Rim (Top-rounded 32px, open at bottom) ── */}
+          <Path
+            d={`M 1.5 ${H} L 1.5 32 Q 1.5 1.5 32 1.5 L ${W - 32} 1.5 Q ${
+              W - 1.5
+            } 1.5 ${W - 1.5} 32 L ${W - 1.5} ${H}`}
             stroke="url(#flowRimHighlight)"
-            strokeWidth={1}
+            strokeWidth={1.5}
             fill="none"
           />
         </Svg>

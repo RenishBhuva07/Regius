@@ -212,6 +212,71 @@ metricCard: {
 
 ---
 
+### 4.3.1 Signature Luxury Dark Hero Bento Cards (`DailyBriefingCard`, `TaskProductivityBento`, `HabitConsistencyBento`, `ReminderScheduleBento`)
+
+The flagship focal point of each primary screen (`DashboardScreen`, `TasksScreen`, `HabitsScreen`, `RemindersScreen`) is the **Signature Luxury Dark Hero Bento Card**. Every agent modifying or creating a hero card MUST implement this exact 2-layer pattern:
+
+```tsx
+// 1. Two-Layer Shadow Wrapper Architecture (Prevents iOS Shadow Clipping with overflow: 'hidden')
+<View style={styles.cardShadowWrapper}>
+  <View style={styles.card}>
+    <CardBackgroundSvg />
+    <View style={styles.content}>{/* Hero content */}</View>
+  </View>
+</View>;
+
+const styles = StyleSheet.create({
+  cardShadowWrapper: {
+    borderRadius: 24,
+    backgroundColor: Colors.NeroBlack,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.28,
+        shadowRadius: 18,
+      },
+      android: {
+        elevation: 8, // or 10
+      },
+    }),
+  },
+  card: {
+    backgroundColor: Colors.NeroBlack, // #1C1D22
+    borderRadius: 24,
+    borderWidth: 4, // Mandatory bold luxury specular border
+    borderColor: 'rgba(255, 255, 255, 0.9)', // 90% white crisp ceramic rim
+    overflow: 'hidden',
+    position: 'relative',
+  },
+});
+```
+
+#### Mandatory Hero Card Rules:
+
+1. **Bold 4px Ceramic White Border**: `borderWidth: 4`, `borderColor: 'rgba(255, 255, 255, 0.9)'`. **Never use thin 1px or 1.5px borders on hero cards.**
+2. **Deep Volumetric Elevation Shadow**: `shadowOffset: { width: 0, height: 10 }`, `shadowOpacity: 0.28`, `shadowRadius: 18`, `elevation: 8–10`. Never use flat subtle elevation.
+3. **Obsidian Surface**: `backgroundColor: Colors.NeroBlack` (`#1C1D22`).
+4. **Unified Outer Screen Gutter**: Positioned with `paddingHorizontal: 10` on parent wrapper (`bentoCardWrapper` or `topSectionWrapper`) for symmetrical 10px screen edge spacing across all tabs.
+5. **Two-Layer Architecture**: The outer `cardShadowWrapper` handles shadow and elevation (without `overflow: 'hidden'`); the inner `card` handles `overflow: 'hidden'`, background SVGs, and the `4px` border.
+6. **Unique Bordered Percentage Badge & Frosted Glass Pills**: Progress is cleanly tracked via the center linear bar indicator, while the percentage metric is housed in a unique squircle frame with dual-layer specular gold borders (`TaskPercentBadge`), paired with frosted glass stat capsules (`glassStatPill` with glowing dots and high-contrast typography).
+
+---
+
+### 4.3.2 Minimal & Unique Segmented Tabs (`TasksScreen.tsx`)
+
+Replacing brutalist black toggles with an artisanal, warm luxury minimal segmented control:
+
+- **Base Track**: Soft ivory/stone pill (`backgroundColor: '#F3EFE6'`, `borderColor: '#E8E2D5'`, `borderWidth: 1`, `borderRadius: 50`).
+- **Active Floating Tab**: Pure white card pill (`backgroundColor: '#FFFFFF'`, `shadowColor: '#000000'`, `shadowOffset: { width: 0, height: 2 }`, `shadowOpacity: 0.08`, `shadowRadius: 5`).
+- **Tactile Icons**: Left icon (`CheckSquare` for active tasks, `CheckCircle2` for completed).
+- **Semantic Micro-Counter Badges**:
+  - Active Tasks: Solar gold badge (`backgroundColor: '#FFF4C4'`, `borderColor: '#F5C518'`, text `#B48216`).
+  - Active Completed: Fresh mint badge (`backgroundColor: '#E8FDF0'`, `borderColor: '#52D22E'`, text `#1B9A72`).
+  - Inactive: Muted stone whisper badge (`rgba(0,0,0,0.05)`).
+
+---
+
 ### 4.4 Clean Elevated Task & Curated Flow Cards
 
 Used for list items in `HomeScreen`, `TasksScreen`, `RemindersScreen`, and `DashboardScreen` (`TimelineItemCard.tsx`):

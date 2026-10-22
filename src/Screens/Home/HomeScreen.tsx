@@ -251,7 +251,7 @@ const HomeScreen: React.FC = () => {
 
           <View style={styles.taskListCards}>
             {tasks.map(task => {
-              const isChecked = task.done || selectedTasks.has(task.id);
+              const isChecked = task.done;
               return (
                 <TouchableOpacity
                   key={task.id}
@@ -290,7 +290,7 @@ const HomeScreen: React.FC = () => {
           {/* ── Select All Task ── */}
           <TouchableOpacity
             activeOpacity={0.85}
-            onPress={selectAllTasks}
+            onPress={() => selectAllTasks()}
             style={styles.selectAllBtn}
           >
             <Text style={styles.selectAllText}>Select All Task</Text>

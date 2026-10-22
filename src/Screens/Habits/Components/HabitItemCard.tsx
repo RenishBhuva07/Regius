@@ -94,7 +94,7 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const config = CATEGORY_MAP[habit.category] || DEFAULT_CONFIG;
 
-  const initialW = Dimensions.get('window').width - 32;
+  const initialW = Dimensions.get('window').width - 16;
   const [cardSize, setCardSize] = useState({
     width: Math.max(initialW, 200),
     height: 120,
@@ -335,7 +335,7 @@ const styles = StyleSheet.create({
         elevation: 3,
       },
     }),
-    marginHorizontal: 16,
+    marginHorizontal: 0,
   },
   cardSvgBackground: {
     position: 'absolute',

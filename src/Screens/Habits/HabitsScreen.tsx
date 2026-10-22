@@ -282,6 +282,7 @@ const styles = StyleSheet.create({
     borderLeftColor: '#EFE9DE',
     borderRightColor: '#EFE9DE',
     borderBottomColor: '#DDD6C6',
+    paddingHorizontal: 8,
     paddingTop: 40,
     marginTop: 26,
     flex: 1,
@@ -381,7 +382,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: '#ECE7DC',
     gap: 8,
-    marginHorizontal: 16,
+    marginHorizontal: 0,
   },
   emptyTitle: {
     fontFamily: Fonts.poppins.semiBold,
@@ -414,7 +415,8 @@ const styles = StyleSheet.create({
 
   // Swiggy-Inspired Watermark Footer
   footerWatermarkWrapper: {
-    paddingHorizontal: ResponsivePixels.size24,
+    paddingLeft: ResponsivePixels.size10,
+    paddingRight: ResponsivePixels.size16,
     marginTop: ResponsivePixels.size16,
     marginBottom: ResponsivePixels.size20,
   },

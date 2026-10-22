@@ -288,10 +288,10 @@ sequenceDiagram
 - **Purpose**: Full task lifecycle organization by category, priority, and completion status.
 - **Status**: `Implemented` (In-memory Context)
 - **Source Files**:
-  - `src/Screens/Tasks/TasksScreen.tsx` (Reactive scroll header with voice orb, productivity bento card, segmented tab control with dynamic counts, centered crest badge, floating half-outside New Task button, and safe bottom clearance for floating tab bar)
-  - `src/Screens/Tasks/Components/TaskProductivityBento.tsx` (Luxury dark ambient bento card with solar gold auras, completion percentage, live focus indicator, and pending/completed/total metric capsules)
+  - `src/Screens/Tasks/TasksScreen.tsx` (Reactive scroll header with voice orb, signature Regius obsidian tactile segmented capsule tabs with high-contrast active/inactive typography and extruded 3D gold/emerald badges, centered crest badge, floating half-outside New Task button, and safe bottom clearance for floating tab bar)
+  - `src/Screens/Tasks/Components/TaskProductivityBento.tsx` (Signature luxury dark hero bento card matching DailyBriefingCard: bold 4px ceramic white border, deep 18px volumetric shadow elevation, unique dual-rim bordered percentage badge, linear focus indicator bar, frosted glass visible left/done stat pills with glowing dots, solar gold auras, and live focus indicator)
   - `src/Screens/Tasks/Components/TaskCategoryCarousel.tsx` (Signature asymmetric category cards with real-time dynamic task counts and category filtering)
-  - `src/Screens/Tasks/Components/TaskCardItem.tsx` (Luxury tactile task card with category icon, title, note snippet, time tag, 3D priority badges, voice nudge badge, and animated checkbox)
+  - `src/Screens/Tasks/Components/TaskCardItem.tsx` (Luxury tactile task card with category icon, clean readable typography without strikethrough cross lines, note snippet, time tag, subtask indicators, 3D priority badges, voice nudge badge, and animated tactile checkbox)
   - `src/Screens/Tasks/Components/TaskSectionBackgroundSvg.tsx` (Dynamic luxury aesthetic background with focus chronometer rings, solar gold focus auras, and starlight diamond nodes)
   - `src/Screens/Tasks/AddTaskScreen.tsx`
   - `src/Components/AddTaskModal.tsx`
@@ -301,7 +301,8 @@ sequenceDiagram
   - Switch between "Task List" and "Completed" segmented tabs with live counts.
   - View real-time completion percentage and motivational progress in the Task Productivity Bento.
   - Filter tasks dynamically by tapping Category cards or "Show All".
-  - Tap tactile checkbox to toggle done state with spring bounce and toast confirmation.
+  - Tap tactile checkbox to toggle done state with smooth tactile feedback, clean non-strikethrough typography, and toast confirmation.
+  - "Complete All" / "Restore All" actions dynamically synchronized across active views.
   - Add task via floating corner CTA button or bento card quick action.
 - **Test Coverage**: Tested in `__tests__/TasksRedesign.test.tsx`.
 - **Known Limitation**: Data resets on full app reload because persistence to `AsyncStorage` is **Partial** (see Section 3).
@@ -310,17 +311,25 @@ sequenceDiagram
 
 ### 2.6 Reminders & Scheduling
 
-- **Purpose**: View upcoming and completed time-anchored reminders.
+- **Purpose**: View upcoming and completed time-anchored reminders with luxury bento analytics, dynamic category progress, neural Kokoro TTS audio vocalization, and full design system parity with Tasks and Habits.
 - **Status**: `Implemented` (UI & Context) / `Planned` (Native Alarms)
 - **Source Files**:
-  - `src/Screens/Reminders/RemindersScreen.tsx`
+  - `src/Screens/Reminders/RemindersScreen.tsx` (Reactive scroll header with Holographic voice orb, signature 2-layer `ReminderScheduleBento`, tactile segmented tabs, `ReminderCategoryCarousel`, curved flow sheet with `FlowBadgePatternSvg` crest badge, and floating `+` button)
+  - `src/Screens/Reminders/Components/ReminderScheduleBento.tsx` (2-layer hero bento with 4px border, obsidian canvas, progress percentage frame, live pulsation, next chime countdown, and glass stat pills)
+  - `src/Screens/Reminders/Components/ReminderCategoryCarousel.tsx` (Horizontal categories with live alert counts, circular completion progress meters, filter toggle, and "+ Add" button)
+  - `src/Screens/Reminders/Components/ReminderCardItem.tsx` (Tactile card with category icon badge, Kokoro TTS speaker trigger, repeat tags, time tags, strikethrough styling, and spring-animated checkbox)
+  - `src/Screens/Reminders/Components/ReminderSectionBackgroundSvg.tsx` (Responsive luxury curved backdrop with acoustic chime rings and starlight nodes)
+  - `src/Screens/Reminders/Components/ReminderEmptyDoodleSvg.tsx` (Custom hand-drawn chime bell and acoustic vibration vector doodle)
   - `src/Screens/Reminders/AddReminderScreen.tsx`
   - `src/Components/AddReminderModal.tsx`
   - `src/Context/TaskReminderContext.tsx`
 - **User-Facing Workflow**:
-  - Switch between Upcoming and Completed tabs.
-  - Spoken audio preview via Kokoro TTS speaker button.
+  - Switch between `Upcoming` and `Completed` tabs with dynamic count badges.
+  - Filter across `Daily`, `Work`, `Health`, and `Events` categories with real-time progress indicators.
+  - Spoken audio preview via Kokoro TTS speaker button on each reminder.
   - Add reminder with time, date, recurrence (`Daily`, `Once`), and sound preferences.
+  - Batch "Select All / Deselect All" reminders.
+- **Test Coverage**: Tested in `__tests__/RemindersRedesign.test.tsx` (5 unit tests).
 - **Known Limitation**: Reminders are stored in React state. Native push/local notifications require a native notification library (see Section 3).
 
 ---
@@ -345,7 +354,7 @@ sequenceDiagram
   - Category filters (`All`, `Morning`, `Mindful`, `Evening`) show dynamic habit counts per ritual flow.
   - Habits section features Today's Flow crest badge centered on top border and floating plus button on top-right.
   - Top-right floating edit button on habit cards launches `AddHabitModal` pre-filled for customization and deletion.
-  - Swiggy-inspired watermark brand footer at the bottom of the rituals flow with bold editorial typography: _"Your future self is taking notes!"_, sign-off _"Crafted with ❤️ in Ahmedabad, India"_, and extraordinary 3D habit notes doodle illustration.
+  - Swiggy-inspired watermark brand footer at the bottom of the rituals flow with bold editorial typography: _"Your future self is taking notes!"_, sign-off _"Crafted with ❤️ in Ahmedabad, India"_, and extraordinary 3D habit notes doodle illustration, with items and footer typography unified to the exact same 8px horizontal screen edge alignment as `DashboardScreen`.
 
 ---
 
@@ -392,13 +401,17 @@ sequenceDiagram
   - `src/Screens/Dashboard/Components/DailyBalanceGrid.tsx`
   - `src/Screens/Dashboard/Components/TimelineItemCard.tsx`
   - `src/Screens/Dashboard/Components/DailyBriefingCard.tsx`
+  - `src/Screens/Dashboard/Components/FlowBadgePatternSvg.tsx`
+  - `src/Screens/Dashboard/Components/FlowSectionBackgroundSvg.tsx`
+  - `src/Screens/Dashboard/Components/HeaderPatternSvg.tsx`
+  - `src/Screens/Dashboard/Components/LegendaryDoodleSvg.tsx`
 - **Standardized Core Pillars (Bento Grid)**:
   - **1. Tasks Card**: Displays completed/total tasks and circular progress percentage graph (`CheckCircle2`, yellow palette `#FFFCEB` / `#FFF5B8` / `#F5C518`). Tapping navigates to `TasksScreen`.
   - **2. Reminders Card**: Displays completed/total reminders and circular progress percentage graph (`Bell`, green palette `#EDFDF5` / `#C6FFDD` / `#52D22E`). Tapping navigates to `RemindersScreen`.
   - **3. Habits Card**: Displays completed/total habits and circular progress percentage graph (`Flame`, purple palette `#EFF2FE` / `#D8DBFF` / `#8383D6`). Tapping navigates to `HabitsScreen`.
 - **Chronological Flow Timeline**:
   - Unified timeline automatically sorts scheduled tasks, reminders, and habits in chronological order by time from midnight.
-  - **Unified Card Box Container**: The entire Flow section (header, filter pills, and timeline list) is enclosed in an elevated, rounded luxury card container (`backgroundColor: '#FFFFFF'`, `borderRadius: 24`, `borderWidth: 1.5`, `borderColor: '#ECE8DF'`, `padding: 16`), framing the timeline within a clean cohesive widget on the dashboard.
+  - **Full-Width Bottom-Extended Section**: The entire Today's Flow section (header badge, filter pills, timeline list, and brand watermark footer) spans full screen width edge-to-edge, extending continuously down to the bottom screen edge (`borderTopLeftRadius: 32`, `borderTopRightRadius: 32`, `borderBottomWidth: 0`, `paddingBottom: insets.bottom + 130`) matching the architectural paradigm of `HabitsScreen` and `TasksScreen`.
   - **Simplified Section Header**: Streamlined to "Today’s Flow" with subtitle "Your day at a glance".
   - **Horizontal Filter Capsule Row**: Smooth horizontal scroll support prevents chip wrapping across diverse screen dimensions (`All Flow`, `Tasks`, `Reminders`, `Habits`).
   - **Signature Inverted Scooped Corner Cutout**: Employs an inverted concave notch (`44×44`) at the top-right corner with smooth quadratic fillets (`R_outer: 12`, `R_inner: 14`) rendered dynamically via SVG.
@@ -411,6 +424,7 @@ sequenceDiagram
     - Smoothly transitions from flush `#FBF9F3` cream canvas to primary `LavenderPurple` (`#8383D6`) via `Animated.event`.
     - Features rounded bottom corners (`borderBottomLeftRadius: 24`, `borderBottomRightRadius: 24`) and deep purple floating shadow (`#4A3E8A`), creating a distinct luxury layer overlaying the scroll viewport.
     - Synchronously adapts `<RegiusLogo variant="light" />` (pure white `#FFFFFF`), toggles `StatusBar` to `light-content`, and elevates action buttons into white circular cards while preserving signature icon colors (`#7059C8` for voice mic, `#1B1C19` for settings gear, `#FFFFFF` ring for avatar).
+  - **Swiggy-Inspired Brand Watermark Footer & Legendary Doodles**: Positioned gracefully at the bottom of Today's Flow section. Features bold editorial typography (_"Make today a\nlittle legendary!"_, Poppins Bold 38pt, `#8E95A5`, -1.5 letter spacing) and attribution line (_"Crafted with ❤️ in Ahmedabad, India"_), paired alongside `LegendaryDoodleSvg`—an extraordinary 3D tilted Imperial Regius Crown of Triumph with velvet violet cushion dome, faceted emerald diamond, amethyst cabochons, ruby teardrops, classical golden victory laurel wreath, floating 3D crystalline diamond gemstone, electric ambition lightning bolt, celestial 4-point starbursts, and hand-drawn energy doodle arcs.
 
 ---
 
@@ -427,10 +441,11 @@ sequenceDiagram
   - `src/Screens/Tasks/Components/TaskCompleteDoodleSvg.tsx`
 - **Technical Implementation**:
   - **Compact Productivity Focus Bar**: 84px single-card bento with circular progress meter, percentage badge, and quick action.
+  - **Tactile Segmented Capsule Tabs**: Signature Regius Nero obsidian capsule (`#181A20`) with 3D extruded bevel (`borderBottomWidth: 3`, `#0E1015`), high-contrast bright silver inactive labels (`#E5E7EB`), crisp elevated white active pill, and signature 3D amber/emerald counter badges.
   - **Dynamic Category Carousel**: Horizontal category selector with live task count pills.
   - **Tactile Task Cards**: High-contrast white surfaces, semantic badges, interactive checkboxes, and time pills.
   - **Centered Crest Badge & Section Extension**: Crest header badge (`Today's Tasks`) and top-right floating plus button extending to the bottom screen edge (`paddingBottom: insets.bottom + 130`).
-  - **Swiggy-Inspired Footer Watermark & Task Complete Doodles**: Giant, ultra-bold, tight-leading geometric sans typography (`Live\nit up!`, Poppins Bold 60pt, `#8E95A5`, -2 letter spacing) with attribution subline (`Crafted with ❤️ in Ahmedabad, India`), paired alongside the handcrafted `TaskCompleteDoodleSvg` (tilted completed checklist clipboard with green/gold checks, orbital 100% seal, and celebratory starbursts) and non-occluding background watermark auras.
+  - **Swiggy-Inspired Footer Watermark & Task Complete Doodles**: Giant, ultra-bold, tight-leading geometric sans typography (`Live\nit up!`, Poppins Bold 60pt, `#8E95A5`, -2 letter spacing) with attribution subline (`Crafted with ❤️ in Ahmedabad, India`), paired alongside the handcrafted `TaskCompleteDoodleSvg` (tilted completed checklist clipboard with green/gold checks, orbital 100% seal, and celebratory starbursts) and non-occluding background watermark auras, with `TaskCardItem` and footer typography unified to the exact same 8px horizontal screen edge alignment as `DashboardScreen`.
 
 ---
 

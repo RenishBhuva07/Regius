@@ -1,4 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+  useRef,
+} from 'react';
 import {
   View,
   Text,
@@ -8,117 +14,40 @@ import {
   FlatList,
   StatusBar,
   Platform,
+  Animated,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import {
-  Bell,
-  Clock,
-  Filter,
-  Check,
-  Plus,
-  CalendarCheck,
-  Volume2,
-  VolumeX,
-} from 'lucide-react-native';
-import Svg, { Path } from 'react-native-svg';
-import { Typography } from '../../Theme/Typographys';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Plus, Bell, CheckCircle2 } from 'lucide-react-native';
+import Toast from 'react-native-toast-message';
+
 import { Fonts } from '../../Theme/fonts';
+import { Typography } from '../../Theme/Typographys';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
-import { SVGS } from '../../Assets/Images';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
-import { useTaskReminder } from '../../Context/TaskReminderContext';
+import { useTaskReminder, Reminder } from '../../Context/TaskReminderContext';
+import { ScreenHeader, SCREEN_HEADER_HEIGHT } from '../../Common/ScreenHeader';
 import { KokoroTTSService } from '../../Services/Kokoro/KokoroTTSService';
 import { AudioPlayerService } from '../../Services/AudioPlayerService';
+import FlowBadgePatternSvg from '../Dashboard/Components/FlowBadgePatternSvg';
 
-// ─── Inline SVG for Office Bag ────────────────────────────────────────────────
-const OfficeBagIcon: React.FC<{ width?: number; height?: number }> = ({
-  width = 24,
-  height = 24,
-}) => (
-  <Svg width={width} height={height} viewBox="23 19 24 24" fill="none">
-    <Path
-      opacity={0.4}
-      d="M25.0002 30.0785C25.0502 32.4165 25.1902 36.4155 25.2102 36.8565C25.2812 37.7995 25.6422 38.7525 26.2042 39.4245C26.9862 40.3675 27.9492 40.7885 29.2922 40.7885C31.1482 40.7985 33.1942 40.7985 35.1812 40.7985C37.1762 40.7985 39.1122 40.7985 40.7472 40.7885C42.0712 40.7885 43.0642 40.3565 43.8362 39.4245C44.3982 38.7525 44.7592 37.7895 44.8102 36.8565C44.8302 36.4855 44.9302 32.1445 44.9902 30.0785H25.0002Z"
-      fill="#8383D6"
-    />
-    <Path
-      d="M34.2454 34.3842V35.6782C34.2454 36.0922 34.5814 36.4282 34.9954 36.4282C35.4094 36.4282 35.7454 36.0922 35.7454 35.6782V34.3842C35.7454 33.9702 35.4094 33.6342 34.9954 33.6342C35.4094 33.6342 34.2454 33.9702 34.2454 34.3842Z"
-      fill="#8383D6"
-    />
-    <Path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M33.2113 33.5564C33.1113 33.9194 32.7623 34.1514 32.3843 34.1014C29.8333 33.7454 27.3953 32.8404 25.3373 31.4814C25.1263 31.3434 25.0003 31.1074 25.0003 30.8554V27.3894C25.0003 25.2894 26.7123 23.5814 28.8173 23.5814H30.7843C30.9723 22.1294 32.2023 21.0004 33.7043 21.0004H36.2863C37.7873 21.0004 39.0183 22.1294 39.2063 23.5814H41.1833C43.2823 23.5814 44.9903 25.2894 44.9903 27.3894V30.8554C44.9903 31.1074 44.8633 31.3424 44.6543 31.4814C42.5923 32.8464 40.1443 33.7554 37.5763 34.1104C37.5413 34.1154 37.5073 34.1174 37.4733 34.1174C37.1343 34.1174 36.8313 33.8884 36.7463 33.5524C36.5443 32.7564 35.8213 32.1994 34.9903 32.1994C34.1483 32.1994 33.4333 32.7444 33.2113 33.5564ZM36.2863 22.5004H33.7043C33.0313 22.5004 32.4693 22.9604 32.3013 23.5814H37.6883C37.5203 22.9604 36.9583 22.5004 36.2863 22.5004Z"
-      fill="#8383D6"
-    />
-  </Svg>
-);
-
-// ─── Types ───────────────────────────────────────────────────────────────────
+import ReminderScheduleBento from './Components/ReminderScheduleBento';
+import ReminderCategoryCarousel from './Components/ReminderCategoryCarousel';
+import ReminderCardItem from './Components/ReminderCardItem';
+import ReminderSectionBackgroundSvg from './Components/ReminderSectionBackgroundSvg';
+import ReminderEmptyDoodleSvg from './Components/ReminderEmptyDoodleSvg';
+import ReminderWatermarkDoodleSvg from './Components/ReminderWatermarkDoodleSvg';
 
 type TabKey = 'upcoming' | 'completed';
 
-interface Category {
-  id: string;
-  label: string;
-  count: number;
-  bgColor: string;
-  borderColor: string;
-  shadowColor: string;
-  Icon: React.ComponentType<any>;
-  accentColor: string;
-}
-
-// ─── Initial Data ────────────────────────────────────────────────────────────
-
-const INITIAL_CATEGORIES: Category[] = [
-  {
-    id: 'daily',
-    label: 'Daily',
-    count: 3,
-    bgColor: '#FFFCEB',
-    borderColor: '#FFF5B8',
-    shadowColor: '#F5C518',
-    Icon: SVGS.FloatHeart,
-    accentColor: '#FDD835',
-  },
-  {
-    id: 'work',
-    label: 'Work',
-    count: 2,
-    bgColor: '#EFF2FE',
-    borderColor: '#D8DBFF',
-    shadowColor: '#8383D6',
-    Icon: OfficeBagIcon,
-    accentColor: '#8383D6',
-  },
-  {
-    id: 'health',
-    label: 'Health',
-    count: 4,
-    bgColor: '#EDFDF5',
-    borderColor: '#C6FFDD',
-    shadowColor: '#52D22E',
-    Icon: SVGS.FloatPicture,
-    accentColor: '#52D22E',
-  },
-  {
-    id: 'events',
-    label: 'Events',
-    count: 1,
-    bgColor: '#FFF3E0',
-    borderColor: '#FFE0B2',
-    shadowColor: '#FF9800',
-    Icon: CalendarCheck,
-    accentColor: '#FF9800',
-  },
-];
-
-// ─── Component ───────────────────────────────────────────────────────────────
-
-const RemindersScreen: React.FC<any> = ({ route }) => {
+export const RemindersScreen: React.FC<any> = ({ route }) => {
+  const insets = useSafeAreaInsets();
   const [activeTab, setActiveTab] = useState<TabKey>('upcoming');
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(
+    'daily',
+  );
+
   const {
     reminders,
     toggleReminder,
@@ -127,23 +56,31 @@ const RemindersScreen: React.FC<any> = ({ route }) => {
     openReminderModal,
   } = useTaskReminder();
 
-  const [speakingReminderId, setSpeakingReminderId] = useState<string | null>(null);
+  const [speakingReminderId, setSpeakingReminderId] = useState<string | null>(
+    null,
+  );
 
-  const handleSpeakReminder = async (rem: any, e: any) => {
-    e.stopPropagation?.();
-    if (speakingReminderId === rem.id) {
-      await KokoroTTSService.stop();
-      setSpeakingReminderId(null);
-    } else {
-      setSpeakingReminderId(rem.id);
-      const textToSpeak = `Reminder: ${rem.title}. Scheduled for ${rem.time}.`;
-      await KokoroTTSService.speak(textToSpeak);
-      const unsub = AudioPlayerService.onPlaybackFinished(() => {
-        setSpeakingReminderId(null);
-        unsub();
-      });
-    }
-  };
+  // Scroll tracking matching DashboardScreen and TasksScreen reactive headers
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const isScrolledRef = useRef(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    {
+      useNativeDriver: false,
+      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const offsetY = event?.nativeEvent?.contentOffset?.y ?? 0;
+        if (offsetY > 15 && !isScrolledRef.current) {
+          isScrolledRef.current = true;
+          setIsScrolled(true);
+        } else if (offsetY <= 15 && isScrolledRef.current) {
+          isScrolledRef.current = false;
+          setIsScrolled(false);
+        }
+      },
+    },
+  );
 
   // Trigger from navigation params (e.g. from PlusActionSheet or other routes)
   useEffect(() => {
@@ -152,8 +89,71 @@ const RemindersScreen: React.FC<any> = ({ route }) => {
     }
   }, [route?.params, openReminderModal]);
 
+  // Compute live reminder counts
+  const completedRemindersCount = useMemo(
+    () => reminders.filter(r => r.done).length,
+    [reminders],
+  );
+  const pendingRemindersCount = useMemo(
+    () => reminders.filter(r => !r.done).length,
+    [reminders],
+  );
+
+  // Filter reminders based on activeTab ('upcoming' vs 'completed') and selectedCategory
+  const filteredReminders = useMemo(() => {
+    return reminders.filter(reminder => {
+      // 1. Tab filtering
+      if (activeTab === 'upcoming' && reminder.done) return false;
+      if (activeTab === 'completed' && !reminder.done) return false;
+
+      // 2. Category filtering
+      if (selectedCategory) {
+        return reminder.category === selectedCategory;
+      }
+
+      return true;
+    });
+  }, [reminders, activeTab, selectedCategory]);
+
+  const handleToggleReminder = useCallback(
+    (id: string) => {
+      const updated = toggleReminder(id);
+      if (updated) {
+        Toast.show({
+          type: 'success',
+          text1: updated.done
+            ? 'Reminder Acknowledged! 🔔'
+            : 'Reminder Restored',
+          text2: updated.done
+            ? 'Marked as completed for today.'
+            : 'Returned to upcoming alerts queue.',
+        });
+      }
+    },
+    [toggleReminder],
+  );
+
+  const handleSpeakReminder = useCallback(
+    async (rem: Reminder, e: any) => {
+      e?.stopPropagation?.();
+      if (speakingReminderId === rem.id) {
+        await KokoroTTSService.stop();
+        setSpeakingReminderId(null);
+      } else {
+        setSpeakingReminderId(rem.id);
+        const textToSpeak = `Reminder: ${rem.title}. Scheduled for ${rem.time}.`;
+        await KokoroTTSService.speak(textToSpeak);
+        const unsub = AudioPlayerService.onPlaybackFinished(() => {
+          setSpeakingReminderId(null);
+          unsub();
+        });
+      }
+    },
+    [speakingReminderId],
+  );
+
   const selectAll = () => {
-    const currentList = displayedReminders;
+    const currentList = filteredReminders;
     const allSelected = currentList.every(r => selectedReminders.has(r.id));
     if (allSelected) {
       setSelectedReminders(prev => {
@@ -170,30 +170,74 @@ const RemindersScreen: React.FC<any> = ({ route }) => {
     }
   };
 
-  // Filter reminders based on active tab and category
-  const displayedReminders = reminders.filter(r => {
-    const isCompleted = r.done || selectedReminders.has(r.id);
-    const matchesTab = activeTab === 'completed' ? isCompleted : !isCompleted;
-    const matchesCat =
-      selectedCategory === 'all' || r.category === selectedCategory;
-    return matchesTab && matchesCat;
-  });
+  // Section title matching TasksScreen & HabitsScreen header badges
+  const sectionTitle = useMemo(() => {
+    if (activeTab === 'completed') {
+      return 'Completed Alerts';
+    }
+    if (selectedCategory === 'daily') {
+      return 'Today’s Daily Alerts';
+    }
+    if (selectedCategory) {
+      return `Today’s ${
+        selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)
+      }`;
+    }
+    return 'Today’s Alerts';
+  }, [activeTab, selectedCategory]);
+
+  // Section subtitle: "X of Y completed"
+  const sectionSubtitle = useMemo(() => {
+    const total = filteredReminders.length;
+    const completed = filteredReminders.filter(r => r.done).length;
+    if (activeTab === 'completed') {
+      return `${completedRemindersCount} finished alerts`;
+    }
+    return `${completed} of ${total} completed`;
+  }, [filteredReminders, activeTab, completedRemindersCount]);
 
   return (
-    <SafeAreaView style={styles.safeArea} edges={['top']}>
+    <View style={styles.safeArea}>
       <StatusBar
-        barStyle="dark-content"
+        barStyle={isScrolled ? 'light-content' : 'dark-content'}
         {...(Platform.OS === 'android'
-          ? { backgroundColor: '#FFFFFF', translucent: true }
+          ? {
+              backgroundColor: isScrolled ? Colors.LavenderPurple : '#FBF9F3',
+              translucent: true,
+            }
           : {})}
+      />
+
+      {/* Reusable reactive Screen Header with voice orb and avatar */}
+      <ScreenHeader
+        title="Reminders"
+        subtitle="Scheduled Alerts & Horizons"
+        scrollY={scrollY}
+        isScrolled={isScrolled}
       />
 
       <ScrollView
         style={styles.scroll}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[
+          styles.scrollContent,
+          {
+            paddingTop: insets.top + SCREEN_HEADER_HEIGHT + 6,
+            paddingBottom: 0,
+          },
+        ]}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
       >
-        {/* ── Toggle Tabs (Upcoming / Completed) ── */}
+        {/* Compact Schedule Bar matching DailyBriefingCard & TaskProductivityBento */}
+        <View style={styles.bentoCardWrapper}>
+          <ReminderScheduleBento
+            reminders={reminders}
+            onAddReminder={openReminderModal}
+          />
+        </View>
+
+        {/* Signature Regius Tactile Segmented Tabs */}
         <View style={styles.toggleContainer}>
           <TouchableOpacity
             activeOpacity={0.85}
@@ -202,7 +246,14 @@ const RemindersScreen: React.FC<any> = ({ route }) => {
               styles.toggleTab,
               activeTab === 'upcoming' && styles.toggleTabActive,
             ]}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: activeTab === 'upcoming' }}
           >
+            <Bell
+              size={14}
+              color={activeTab === 'upcoming' ? '#D97706' : '#9EA3B0'}
+              strokeWidth={activeTab === 'upcoming' ? 2.4 : 2}
+            />
             <Text
               style={[
                 styles.toggleText,
@@ -213,7 +264,27 @@ const RemindersScreen: React.FC<any> = ({ route }) => {
             >
               Upcoming
             </Text>
+            <View
+              style={[
+                styles.tabCountPill,
+                activeTab === 'upcoming'
+                  ? styles.tabCountPillActiveUpcoming
+                  : styles.tabCountPillInactive,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.tabCountText,
+                  activeTab === 'upcoming'
+                    ? styles.tabCountTextActiveUpcoming
+                    : styles.tabCountTextInactive,
+                ]}
+              >
+                {pendingRemindersCount}
+              </Text>
+            </View>
           </TouchableOpacity>
+
           <TouchableOpacity
             activeOpacity={0.85}
             onPress={() => setActiveTab('completed')}
@@ -221,7 +292,14 @@ const RemindersScreen: React.FC<any> = ({ route }) => {
               styles.toggleTab,
               activeTab === 'completed' && styles.toggleTabActive,
             ]}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: activeTab === 'completed' }}
           >
+            <CheckCircle2
+              size={14}
+              color={activeTab === 'completed' ? '#10B981' : '#9EA3B0'}
+              strokeWidth={activeTab === 'completed' ? 2.4 : 2}
+            />
             <Text
               style={[
                 styles.toggleText,
@@ -232,120 +310,74 @@ const RemindersScreen: React.FC<any> = ({ route }) => {
             >
               Completed
             </Text>
+            <View
+              style={[
+                styles.tabCountPill,
+                activeTab === 'completed'
+                  ? styles.tabCountPillActiveCompleted
+                  : styles.tabCountPillInactive,
+              ]}
+            >
+              <Text
+                style={[
+                  styles.tabCountText,
+                  activeTab === 'completed'
+                    ? styles.tabCountTextActiveCompleted
+                    : styles.tabCountTextInactive,
+                ]}
+              >
+                {completedRemindersCount}
+              </Text>
+            </View>
           </TouchableOpacity>
         </View>
 
-        {/* ── Categories Section ── */}
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Categories</Text>
-          <View style={styles.sectionActions}>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={[
-                styles.filterBtn,
-                selectedCategory !== 'all' && styles.filterBtnActive,
-              ]}
-              onPress={() => setSelectedCategory('all')}
-            >
-              <Filter size={16} color="#1F2228" strokeWidth={2.2} />
-            </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.85}
-              style={styles.addBtn}
-              onPress={openReminderModal}
-            >
-              <Text style={styles.addBtnText}>Add</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <FlatList
-          horizontal
-          data={INITIAL_CATEGORIES}
-          keyExtractor={item => item.id}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.categoriesRow}
-          style={styles.categoriesScroll}
-          renderItem={({ item: cat }) => {
-            const isSelected = selectedCategory === cat.id;
-            const count = reminders.filter(r => r.category === cat.id).length;
-            return (
-              <TouchableOpacity
-                key={cat.id}
-                activeOpacity={0.85}
-                onPress={() =>
-                  setSelectedCategory(prev =>
-                    prev === cat.id ? 'all' : cat.id,
-                  )
-                }
-                style={[
-                  styles.categoryCard,
-                  { backgroundColor: cat.bgColor },
-                  isSelected && [
-                    styles.categoryCardSelected,
-                    { shadowColor: cat.shadowColor },
-                  ],
-                ]}
-              >
-                <View
-                  style={[
-                    styles.categoryIconWrap,
-                    {
-                      borderColor: cat.borderColor,
-                      shadowColor: cat.shadowColor,
-                    },
-                  ]}
-                >
-                  <cat.Icon width={24} height={24} color={cat.accentColor} />
-                </View>
-                <Text style={styles.categoryLabel}>{cat.label}</Text>
-                <Text style={styles.categoryCount}>
-                  +{count < 10 ? `0${count}` : count} alerts
-                </Text>
-                {isSelected && cat.accentColor ? (
-                  <View style={styles.categoryAccentWrap}>
-                    <View
-                      style={[
-                        styles.categoryAccent,
-                        { backgroundColor: cat.accentColor },
-                      ]}
-                    />
-                  </View>
-                ) : null}
-              </TouchableOpacity>
-            );
-          }}
+        {/* Categories Carousel */}
+        <ReminderCategoryCarousel
+          reminders={reminders}
+          selectedCategory={selectedCategory}
+          onSelectCategory={setSelectedCategory}
+          onAddPress={openReminderModal}
         />
 
-        {/* ── Reminders List Section (#FAFAFA background) ── */}
-        <View style={styles.reminderSection}>
-          <View style={styles.reminderSectionHeader}>
-            <View>
-              <Text style={styles.reminderSectionTitle}>
-                {activeTab === 'upcoming' ? 'Upcoming Alerts' : 'Done History'}
-              </Text>
-              <Text style={styles.reminderSectionSubtitle}>
-                {displayedReminders.length} reminder
-                {displayedReminders.length === 1 ? '' : 's'} scheduled
-              </Text>
-            </View>
-            <TouchableOpacity
-              activeOpacity={0.85}
-              style={styles.addReminderBtn}
-              onPress={openReminderModal}
-            >
-              <Plus size={14} color="#FFFFFF" strokeWidth={2.5} />
-              <Text style={styles.addReminderBtnText}>Add Reminder</Text>
-            </TouchableOpacity>
+        {/* Reminders Main Section with centered crest badge & floating plus button */}
+        <View
+          style={[
+            styles.reminderSection,
+            { paddingBottom: insets.bottom + 130 },
+          ]}
+        >
+          <View style={styles.reminderSectionBgWrapper} pointerEvents="none">
+            <ReminderSectionBackgroundSvg />
           </View>
 
-          {displayedReminders.length === 0 ? (
+          {/* Header crest badge centered on top border - half outside, half inside */}
+          <View style={styles.flowHeaderBadge}>
+            <FlowBadgePatternSvg />
+            <Text style={styles.flowTitle}>{sectionTitle}</Text>
+            <Text style={styles.flowSubtitle}>{sectionSubtitle}</Text>
+          </View>
+
+          {/* Floating plus button at top-right corner matching TasksScreen */}
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={openReminderModal}
+            style={styles.addReminderFloatingBtn}
+            accessibilityRole="button"
+            accessibilityLabel="Add Reminder"
+          >
+            <Plus size={18} color="#FFFFFF" strokeWidth={2.6} />
+          </TouchableOpacity>
+
+          {/* Reminders List or Empty State */}
+          {filteredReminders.length === 0 ? (
             <View style={styles.emptyContainer}>
-              <Bell size={40} color="#D1D5DB" strokeWidth={1.5} />
+              <ReminderEmptyDoodleSvg />
               <Text style={styles.emptyTitle}>No reminders here</Text>
               <Text style={styles.emptySubtitle}>
-                Tap &ldquo;Add Reminder&rdquo; to set a timely alert for your
-                routines.
+                {activeTab === 'completed'
+                  ? 'No completed alerts in this category yet.'
+                  : 'Tap “+” or the button below to schedule an alert.'}
               </Text>
               <TouchableOpacity
                 activeOpacity={0.85}
@@ -357,475 +389,337 @@ const RemindersScreen: React.FC<any> = ({ route }) => {
               </TouchableOpacity>
             </View>
           ) : (
-            <View style={styles.reminderListCards}>
-              {displayedReminders.map(rem => {
-                const isChecked = rem.done || selectedReminders.has(rem.id);
-                const catObj = INITIAL_CATEGORIES.find(
-                  c => c.id === rem.category,
-                );
-                return (
-                  <TouchableOpacity
-                    key={rem.id}
-                    activeOpacity={0.85}
-                    style={styles.reminderCard}
-                    onPress={() => toggleReminder(rem.id)}
-                  >
-                    <View style={styles.reminderCardLeft}>
-                      <View
-                        style={[
-                          styles.reminderIconWrap,
-                          {
-                            backgroundColor: catObj?.bgColor || '#F3F4F6',
-                          },
-                        ]}
-                      >
-                        <Bell
-                          size={18}
-                          color={catObj?.accentColor || '#1F2228'}
-                          strokeWidth={2.2}
-                        />
-                      </View>
-                      <View style={styles.reminderTextWrap}>
-                        <Text
-                          style={[
-                            styles.reminderTitle,
-                            isChecked && styles.reminderTitleDone,
-                          ]}
-                          numberOfLines={1}
-                        >
-                          {rem.title}
-                        </Text>
-                        <View style={styles.metaRow}>
-                          <Clock size={12} color="#8A9099" strokeWidth={2} />
-                          <Text style={styles.reminderTime}>{rem.time}</Text>
-                          <Text style={styles.metaDot}>•</Text>
-                          <Text style={styles.reminderDate}>{rem.date}</Text>
-                          {rem.repeat ? (
-                            <>
-                              <Text style={styles.metaDot}>•</Text>
-                              <Text style={styles.reminderRepeat}>
-                                {rem.repeat}
-                              </Text>
-                            </>
-                          ) : null}
-                        </View>
-                      </View>
-                    </View>
+            <View style={styles.reminderListWrapper}>
+              <FlatList
+                data={filteredReminders}
+                keyExtractor={item => item.id}
+                scrollEnabled={false}
+                renderItem={({ item: rem }) => {
+                  const isChecked = rem.done || selectedReminders.has(rem.id);
+                  return (
+                    <ReminderCardItem
+                      reminder={rem}
+                      isChecked={isChecked}
+                      onToggle={handleToggleReminder}
+                      isSpeaking={speakingReminderId === rem.id}
+                      onSpeak={handleSpeakReminder}
+                    />
+                  );
+                }}
+                contentContainerStyle={styles.listContent}
+              />
 
-                    <View style={styles.cardRightActions}>
-                      <TouchableOpacity
-                        activeOpacity={0.7}
-                        style={[
-                          styles.speakBtn,
-                          speakingReminderId === rem.id && styles.speakBtnActive,
-                        ]}
-                        onPress={e => handleSpeakReminder(rem, e)}
-                        hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                      >
-                        {speakingReminderId === rem.id ? (
-                          <VolumeX size={16} color="#8383D6" />
-                        ) : (
-                          <Volume2 size={16} color="#8A9099" />
-                        )}
-                      </TouchableOpacity>
-
-                      <View
-                        style={[
-                          styles.reminderCheckbox,
-                          isChecked
-                            ? styles.reminderCheckboxChecked
-                            : styles.reminderCheckboxUnchecked,
-                        ]}
-                      >
-                        {isChecked ? (
-                          <Check size={14} color="#52D22E" strokeWidth={3} />
-                        ) : null}
-                      </View>
-                    </View>
-                  </TouchableOpacity>
-                );
-              })}
+              {/* Complete / Restore All Reminder Button */}
+              <TouchableOpacity
+                activeOpacity={0.85}
+                onPress={() => {
+                  const markDone = activeTab === 'upcoming';
+                  selectAll();
+                  Toast.show({
+                    type: 'success',
+                    text1: markDone
+                      ? 'All Reminders Acknowledged! 🔔'
+                      : 'Reminders Restored to Active List',
+                    text2: markDone
+                      ? 'Great momentum on conquering your daily schedule!'
+                      : 'Items are now back in your upcoming alerts queue.',
+                  });
+                }}
+                style={styles.selectAllBtn}
+              >
+                <Text style={styles.selectAllText}>
+                  {activeTab === 'upcoming'
+                    ? selectedCategory
+                      ? `Complete All ${
+                          selectedCategory.charAt(0).toUpperCase() +
+                          selectedCategory.slice(1)
+                        }`
+                      : 'Complete All Reminders'
+                    : 'Restore All to Active'}
+                </Text>
+              </TouchableOpacity>
             </View>
           )}
 
-          {/* ── Select All / Mark Action ── */}
-          {displayedReminders.length > 0 && (
-            <TouchableOpacity
-              activeOpacity={0.85}
-              onPress={selectAll}
-              style={styles.selectAllBtn}
-            >
-              <Text style={styles.selectAllText}>
-                {displayedReminders.every(r => selectedReminders.has(r.id))
-                  ? 'Deselect All'
-                  : 'Select All Reminders'}
-              </Text>
-            </TouchableOpacity>
-          )}
+          {/* Swiggy-Inspired Brand Watermark Footer */}
+          <View style={styles.footerWatermarkWrapper} pointerEvents="none">
+            <View style={styles.footerWatermarkRow}>
+              {/* Left Column: Bold Typography & Sign-off */}
+              <View style={styles.liveItUpBlock}>
+                <Text style={styles.liveItUpText}>
+                  Because your{'\n'}best ideas{'\n'}shouldn’t{'\n'}slip away!
+                </Text>
+                <View style={styles.craftedWithRow}>
+                  <Text style={styles.craftedWithText}>Crafted with </Text>
+                  <Text style={styles.craftedWithHeart}>❤️</Text>
+                  <Text style={styles.craftedWithText}>
+                    {' '}
+                    in Ahmedabad, India
+                  </Text>
+                </View>
+              </View>
+
+              {/* Right Column: Extraordinary Reminder Doodle Illustration */}
+              <View style={styles.footerDoodleWrapper}>
+                <ReminderWatermarkDoodleSvg />
+              </View>
+            </View>
+          </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
-
-// ─── Styles ──────────────────────────────────────────────────────────────────
 
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.DefaultWhite,
   },
   scroll: {
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 120,
+    // padding applied dynamically with safe insets
+  },
+  bentoCardWrapper: {
+    paddingTop: 5,
+    paddingHorizontal: 10,
+    marginBottom: 4,
   },
 
-  // Header
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: ResponsivePixels.size20,
-    paddingTop: ResponsivePixels.size16,
-    paddingBottom: ResponsivePixels.size8,
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: ResponsivePixels.size14,
-  },
-  menuIcon: {
-    gap: 4.5,
-    justifyContent: 'center',
-    paddingVertical: 4,
-  },
-  menuLine: {
-    width: 18,
-    height: 2.2,
-    backgroundColor: '#1F2228',
-    borderRadius: 2,
-  },
-  headerTitle: {
-    ...Typography.h1RanadeBold,
-    color: '#000000',
-    fontSize: 26,
-  },
-  avatarRing: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 2,
-    borderColor: Colors.RingBorder,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-  },
-
-  // Toggle
+  // Signature Regius Tactile Segmented Tabs matching TasksScreen
   toggleContainer: {
     flexDirection: 'row',
-    marginHorizontal: ResponsivePixels.size20,
-    marginTop: ResponsivePixels.size16,
-    backgroundColor: '#1F2228',
+    marginHorizontal: 10,
+    marginTop: 10,
+    marginBottom: 6,
+    backgroundColor: '#181A20',
     borderRadius: 50,
-    padding: 4,
-  },
-  toggleTab: {
-    flex: 1,
-    paddingVertical: ResponsivePixels.size10,
-    borderRadius: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  toggleTabActive: {
-    backgroundColor: '#FFFFFF',
-  },
-  toggleText: {
-    ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 14,
-  },
-  toggleTextActive: {
-    color: '#1F2228',
-  },
-  toggleTextInactive: {
-    color: '#FFFFFF',
-  },
-
-  // Section Header
-  sectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: ResponsivePixels.size20,
-    marginTop: ResponsivePixels.size24,
-    marginBottom: ResponsivePixels.size14,
-  },
-  sectionTitle: {
-    ...Typography.h6Bold,
-    color: '#000000',
-    fontSize: 18,
-  },
-  sectionActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: ResponsivePixels.size10,
-  },
-  filterBtn: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
-    backgroundColor: '#F5F6F8',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  filterBtnActive: {
-    backgroundColor: '#E5E7EB',
-  },
-  addBtn: {
-    backgroundColor: '#1F2228',
-    paddingHorizontal: ResponsivePixels.size16,
-    paddingVertical: ResponsivePixels.size8,
-    borderRadius: 50,
-  },
-  addBtnText: {
-    ...Typography.bodySmallPoppinsSemiBold,
-    color: '#FFFFFF',
-    fontSize: 12,
-  },
-
-  // Categories
-  categoriesScroll: {
-    overflow: 'visible',
-    marginBottom: ResponsivePixels.size4,
-  },
-  categoriesRow: {
-    paddingHorizontal: ResponsivePixels.size20,
-    paddingTop: ResponsivePixels.size10,
-    paddingBottom: ResponsivePixels.size30,
-    gap: ResponsivePixels.size14,
-  },
-  categoryCard: {
-    width: 124,
-    borderRadius: 23,
-    borderTopRightRadius: 63,
-    padding: ResponsivePixels.size16,
-    paddingBottom: ResponsivePixels.size18,
-    gap: ResponsivePixels.size6,
-    position: 'relative',
-    borderWidth: 2,
-    borderColor: 'transparent',
-  },
-  categoryCardSelected: {
-    borderColor: '#FFFFFF',
+    padding: 4.5,
+    borderWidth: 1.5,
+    borderTopColor: '#363A48',
+    borderLeftColor: '#282B35',
+    borderRightColor: '#282B35',
+    borderBottomWidth: 3,
+    borderBottomColor: '#0E1015',
     ...Platform.select({
       ios: {
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.38,
-        shadowRadius: 14,
+        shadowColor: '#0B0D11',
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.25,
+        shadowRadius: 10,
       },
       android: {
         elevation: 6,
       },
     }),
   },
-  categoryIconWrap: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1.5,
+  toggleTab: {
+    flex: 1,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: ResponsivePixels.size8,
+    paddingVertical: 4,
+    borderRadius: 50,
+    gap: 7,
+  },
+  toggleTabActive: {
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.95)',
     ...Platform.select({
       ios: {
-        shadowOffset: { width: 0, height: 6 },
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.22,
-        shadowRadius: 8,
+        shadowRadius: 6,
       },
       android: {
-        elevation: 3,
+        elevation: 4,
       },
     }),
   },
-  categoryLabel: {
-    ...Typography.bodyMediumPoppinsSemiBold,
-    color: '#000000',
-    fontSize: 15,
+  toggleText: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 13,
+    letterSpacing: -0.2,
   },
-  categoryCount: {
-    ...Typography.bodySmallPoppinsRegular,
-    color: Colors.SubtitleGray,
-    fontSize: 12,
+  toggleTextActive: {
+    fontFamily: Fonts.poppins.bold,
+    color: '#121417',
   },
-  categoryAccentWrap: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
+  toggleTextInactive: {
+    fontFamily: Fonts.poppins.semiBold,
+    color: '#E5E7EB',
+  },
+  tabCountPill: {
+    paddingHorizontal: 8,
+    paddingVertical: 1.5,
+    borderRadius: 12,
+    minWidth: 22,
     alignItems: 'center',
+    justifyContent: 'center',
   },
-  categoryAccent: {
-    height: 4,
-    width: 48,
-    borderTopLeftRadius: 3,
-    borderTopRightRadius: 3,
+  tabCountPillActiveUpcoming: {
+    backgroundColor: '#FFF8D0',
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    borderBottomWidth: 2,
+    borderBottomColor: '#DEAA14',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#D97706',
+        shadowOffset: { width: 0, height: 1.5 },
+        shadowOpacity: 0.25,
+        shadowRadius: 2.5,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  tabCountPillActiveCompleted: {
+    backgroundColor: '#E8FDF0',
+    borderWidth: 1,
+    borderColor: '#FFFFFF',
+    borderBottomWidth: 2,
+    borderBottomColor: '#82E8A6',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#52D22E',
+        shadowOffset: { width: 0, height: 1.5 },
+        shadowOpacity: 0.25,
+        shadowRadius: 2.5,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  tabCountPillInactive: {
+    backgroundColor: 'rgba(255, 255, 255, 0.14)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  tabCountText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 10.5,
+  },
+  tabCountTextActiveUpcoming: {
+    color: '#B47804',
+  },
+  tabCountTextActiveCompleted: {
+    color: '#1B9A72',
+  },
+  tabCountTextInactive: {
+    color: '#FFFFFF',
   },
 
-  // Reminder Section (#FAFAFA background matching design)
+  // Reminders Section Container matching TasksScreen & HabitsScreen
   reminderSection: {
-    backgroundColor: '#FAFAFA',
+    backgroundColor: Colors.SoftCream,
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
-    paddingHorizontal: ResponsivePixels.size20,
-    paddingTop: ResponsivePixels.size24,
-    paddingBottom: ResponsivePixels.size32,
+    borderWidth: 1.5,
+    borderTopColor: '#FAF6EE',
+    borderLeftColor: '#EFE9DE',
+    borderRightColor: '#EFE9DE',
+    borderBottomWidth: 0,
+    paddingHorizontal: 8,
+    paddingTop: 40,
+    marginTop: 26,
     flex: 1,
-  },
-  reminderSectionHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: ResponsivePixels.size18,
-  },
-  reminderSectionTitle: {
-    ...Typography.h6Bold,
-    color: '#000000',
-    fontSize: 18,
-  },
-  reminderSectionSubtitle: {
-    ...Typography.bodySmallPoppinsRegular,
-    color: '#8A9099',
-    fontSize: 12,
-    marginTop: 2,
-  },
-  addReminderBtn: {
-    backgroundColor: '#1F2228',
-    paddingHorizontal: ResponsivePixels.size14,
-    paddingVertical: ResponsivePixels.size8,
-    borderRadius: 50,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  addReminderBtnText: {
-    ...Typography.bodySmallPoppinsSemiBold,
-    color: '#FFFFFF',
-    fontSize: 12,
-  },
-
-  // Reminder Cards
-  reminderListCards: {
-    gap: ResponsivePixels.size12,
-  },
-  reminderCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 18,
-    paddingHorizontal: ResponsivePixels.size16,
-    paddingVertical: ResponsivePixels.size16,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    position: 'relative',
     ...Platform.select({
       ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.04,
-        shadowRadius: 8,
+        shadowColor: '#1B1C19',
+        shadowOffset: { width: 0, height: -4 },
+        shadowOpacity: 0.12,
+        shadowRadius: 12,
       },
       android: {
-        elevation: 1.5,
+        elevation: 4,
       },
     }),
   },
-  reminderCardLeft: {
-    flexDirection: 'row',
+  reminderSectionBgWrapper: {
+    ...StyleSheet.absoluteFill,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+    overflow: 'hidden',
+  },
+  flowHeaderBadge: {
+    position: 'absolute',
+    top: -24,
+    alignSelf: 'center',
+    backgroundColor: Colors.NeroBlack,
+    paddingHorizontal: 22,
+    paddingVertical: 7,
+    borderRadius: 22,
+    borderWidth: 1.5,
+    borderTopColor: '#4A4E5C',
+    borderLeftColor: '#363944',
+    borderRightColor: '#363944',
+    borderBottomWidth: 4,
+    borderBottomColor: '#090A0D',
     alignItems: 'center',
-    gap: ResponsivePixels.size14,
+    justifyContent: 'center',
+    shadowColor: '#0B0D11',
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.32,
+    shadowRadius: 8,
+    elevation: 6,
+    zIndex: 20,
+    overflow: 'hidden',
+  },
+  flowTitle: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 14.5,
+    color: Colors.DefaultWhite,
+    letterSpacing: -0.1,
+    textAlign: 'center',
+  },
+  flowSubtitle: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 10.5,
+    color: '#B6B9C3',
+    marginTop: 1,
+    textAlign: 'center',
+  },
+  addReminderFloatingBtn: {
+    position: 'absolute',
+    top: -21,
+    right: 18,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
+    backgroundColor: Colors.NeroBlack,
+    borderWidth: 1.5,
+    borderTopColor: '#4A4E5C',
+    borderLeftColor: '#363944',
+    borderRightColor: '#363944',
+    borderBottomWidth: 3.5,
+    borderBottomColor: '#090A0D',
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#0B0D11',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.32,
+    shadowRadius: 6,
+    elevation: 6,
+    zIndex: 20,
+  },
+
+  // List & Cards
+  reminderListWrapper: {
     flex: 1,
-    paddingRight: 10,
   },
-  reminderIconWrap: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    alignItems: 'center',
-    justifyContent: 'center',
+  listContent: {
+    gap: 12,
+    paddingTop: 10,
+    paddingHorizontal: 0,
   },
-  reminderTextWrap: {
-    flex: 1,
-  },
-  reminderTitle: {
-    ...Typography.bodyMediumPoppinsMedium,
-    color: '#000000',
-    fontSize: 15,
-  },
-  reminderTitleDone: {
-    textDecorationLine: 'line-through',
-    color: '#9CA3AF',
-  },
-  metaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: 4,
-    gap: 4,
-  },
-  reminderTime: {
-    ...Typography.bodySmallPoppinsMedium,
-    fontSize: 12,
-    color: '#555A63',
-  },
-  metaDot: {
-    fontSize: 11,
-    color: '#B0B5BD',
-  },
-  reminderDate: {
-    ...Typography.bodySmallPoppinsRegular,
-    fontSize: 12,
-    color: '#8A9099',
-  },
-  reminderRepeat: {
-    ...Typography.bodySmallPoppinsRegular,
-    fontSize: 11,
-    color: '#8383D6',
-  },
-
-  // Card Right Actions & Speaker Button
-  cardRightActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: ResponsivePixels.size8,
-  },
-  speakBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#F3F4F6',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  speakBtnActive: {
-    backgroundColor: '#EFF2FE',
-  },
-
-  // Checkbox
-  reminderCheckbox: {
-    width: 24,
-    height: 24,
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  reminderCheckboxChecked: {
-    backgroundColor: '#E8FDF0',
-  },
-  reminderCheckboxUnchecked: {
-    backgroundColor: '#EFF1F4',
-  },
-
-  // Select All
   selectAllBtn: {
     backgroundColor: '#1F2228',
     borderRadius: 50,
@@ -834,12 +728,67 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-    marginTop: ResponsivePixels.size24,
+    marginTop: ResponsivePixels.size18,
+    marginBottom: ResponsivePixels.size24,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   selectAllText: {
     ...Typography.bodyMediumPoppinsSemiBold,
     color: '#FFFFFF',
+    fontSize: 13.5,
+  },
+
+  // Swiggy-Inspired Brand Watermark Footer
+  footerWatermarkWrapper: {
+    paddingLeft: ResponsivePixels.size10,
+    paddingRight: ResponsivePixels.size16,
+    marginTop: ResponsivePixels.size16,
+    marginBottom: ResponsivePixels.size20,
+  },
+  footerWatermarkRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+  },
+  liveItUpBlock: {
+    flex: 1,
+    justifyContent: 'flex-start',
+  },
+  liveItUpText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 38,
+    lineHeight: 46,
+    color: '#8E95A5',
+    letterSpacing: -1.5,
+  },
+  craftedWithRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 18,
+  },
+  craftedWithText: {
+    fontFamily: Fonts.poppins.medium,
     fontSize: 14,
+    color: '#8E95A5',
+  },
+  craftedWithHeart: {
+    fontSize: 13.5,
+  },
+  footerDoodleWrapper: {
+    marginLeft: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 6,
   },
 
   // Empty State
@@ -847,19 +796,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 40,
+    paddingHorizontal: 20,
     gap: 8,
   },
   emptyTitle: {
     ...Typography.bodyMediumPoppinsSemiBold,
     color: '#374151',
-    fontSize: 16,
+    fontSize: 15,
     marginTop: 6,
   },
   emptySubtitle: {
     ...Typography.bodySmallPoppinsRegular,
     color: '#9CA3AF',
     textAlign: 'center',
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
     lineHeight: 18,
   },
   addEmptyBtn: {
@@ -870,211 +820,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: ResponsivePixels.size20,
     paddingVertical: ResponsivePixels.size10,
     borderRadius: 50,
-    marginTop: 10,
+    marginTop: 12,
   },
   addEmptyBtnText: {
     ...Typography.bodySmallPoppinsSemiBold,
     color: '#FFFFFF',
-    fontSize: 13,
-  },
-
-  // Full-screen Sheet Styles
-  sheetContainer: {
-    flex: 1,
-    backgroundColor: '#FAF8F5',
-  },
-  sheetHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: ResponsivePixels.size20,
-    paddingTop: Platform.OS === 'ios' ? 8 : 14,
-    paddingBottom: 14,
-    borderBottomWidth: 1,
-    borderBottomColor: '#EDE8DF',
-    backgroundColor: '#FFFFFF',
-  },
-  sheetCloseBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: '#F3F0EA',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sheetHeaderCenter: {
-    alignItems: 'center',
-  },
-  sheetTitle: {
-    fontFamily: Fonts.ranade.bold,
-    fontSize: 18,
-    color: '#1F2228',
-  },
-  sheetSubtitle: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
-    color: '#7E838F',
-    marginTop: 2,
-  },
-  sheetKeyboardAvoid: {
-    flex: 1,
-  },
-  sheetScroll: {
-    flex: 1,
-  },
-  sheetScrollContent: {
-    paddingHorizontal: ResponsivePixels.size20,
-    paddingTop: 18,
-    paddingBottom: 36,
-  },
-  sheetSection: {
-    marginBottom: 20,
-  },
-  sheetLabel: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
-    color: '#1F2228',
-    marginBottom: 8,
-    letterSpacing: 0.2,
-  },
-  inputCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    borderWidth: 1.5,
-    borderColor: '#E8E2D5',
-    paddingHorizontal: 16,
-    paddingVertical: Platform.OS === 'ios' ? 14 : 10,
-  },
-  titleInput: {
-    flex: 1,
-    fontSize: 15,
-    fontFamily: Fonts.poppins.medium,
-    color: '#1F2228',
-    padding: 0,
-  },
-  clearBtn: {
-    padding: 4,
-    marginLeft: 6,
-  },
-  noteInputCard: {
-    minHeight: 84,
-    alignItems: 'flex-start',
-    paddingVertical: 12,
-  },
-  noteInput: {
-    flex: 1,
-    fontSize: 14,
-    fontFamily: Fonts.poppins.regular,
-    color: '#1F2228',
-    minHeight: 64,
-    padding: 0,
-  },
-  categoryCardGrid: {
-    flexDirection: 'row',
-    gap: 10,
-  },
-  catSelectCard: {
-    flex: 1,
-    minHeight: 90,
-    borderRadius: 18,
-    borderWidth: 1.5,
-    paddingVertical: 12,
-    paddingHorizontal: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  catSelectCardActive: {
-    borderWidth: 2,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-  catIconCircle: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 6,
-  },
-  catSelectLabel: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
-    color: '#1F2228',
-  },
-  catSelectedBadge: {
-    position: 'absolute',
-    top: 6,
-    right: 6,
-    width: 18,
-    height: 18,
-    borderRadius: 9,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  chipsRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  sheetPill: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    borderRadius: 24,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1.2,
-    borderColor: '#E8E2D5',
-  },
-  sheetPillActive: {
-    backgroundColor: '#1F2228',
-    borderColor: '#1F2228',
-  },
-  sheetPillText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 13,
-    color: '#454A53',
-  },
-  sheetPillTextActive: {
-    color: '#FFFFFF',
-    fontFamily: Fonts.poppins.semiBold,
-  },
-  sheetFooter: {
-    paddingHorizontal: ResponsivePixels.size20,
-    paddingTop: 12,
-    paddingBottom: Platform.OS === 'ios' ? 18 : 20,
-    backgroundColor: '#FFFFFF',
-    borderTopWidth: 1,
-    borderTopColor: '#EDE8DF',
-  },
-  createModalBtn: {
-    backgroundColor: '#1F2228',
-    borderRadius: 50,
-    height: 52,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  createModalBtnDisabled: {
-    backgroundColor: '#B5BAC2',
-  },
-  createModalBtnText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 15,
-    color: '#FFFFFF',
+    fontSize: 12.5,
   },
 });
 
