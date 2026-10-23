@@ -16,6 +16,7 @@ import {
   Dimensions,
   Keyboard,
   FlatList,
+  Pressable,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
@@ -48,12 +49,12 @@ import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../Theme/fonts';
 import { Colors } from '../Assets/StyleUtilities/Colors';
-import { SVGS } from '../Assets/Images';
 import { Badge } from '../Common/Badge';
 import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 import { useOptionalVoiceWakeWord } from '../Context/VoiceWakeWordContext';
 import FlowBadgePatternSvg from '../Screens/Dashboard/Components/FlowBadgePatternSvg';
 import TaskCardAestheticBg from './TaskCardAestheticBg';
+import PickerAestheticBg from './PickerAestheticBg';
 
 // ─── Inline 2-Tone Filled Emblem SVGs ──────────────────────────────────────────
 
@@ -521,6 +522,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
 
   // Animations
   const createAnim = useRef(new Animated.Value(1)).current;
+  const noteInputRef = useRef<React.ComponentRef<typeof TextInput>>(null);
 
   const resetForm = () => {
     const today = new Date();
@@ -852,11 +854,16 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                 />
 
                 {/* Vertically Centered Memo / Context Row (Symmetric 48px Band) */}
-                <View style={styles.contextRow}>
+                <Pressable
+                  style={styles.contextRow}
+                  onPress={() => noteInputRef.current?.focus()}
+                  accessible={false}
+                >
                   <View style={styles.contextIconWrap}>
                     <FileText size={16} color="#7E838F" strokeWidth={2} />
                   </View>
                   <TextInput
+                    ref={noteInputRef}
                     style={styles.contextInput}
                     placeholder="Add gentle context or personal memo..."
                     placeholderTextColor="#A3A8B1"
@@ -867,7 +874,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                     cursorColor={Colors.MidnightCharcoal}
                     selectionColor="rgba(31, 34, 40, 0.25)"
                   />
-                </View>
+                </Pressable>
 
                 {/* ─── Integrated Subtasks Section ─── */}
                 <View style={styles.subtasksIntegratedContainer}>
@@ -1319,31 +1326,62 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
           <Modal
             visible={showDatePicker}
             transparent
-            animationType="fade"
+            animationType="slide"
             onRequestClose={() => setShowDatePicker(false)}
           >
             <TouchableWithoutFeedback onPress={() => setShowDatePicker(false)}>
               <View style={styles.pickerModalOverlay}>
                 <TouchableWithoutFeedback>
                   <View style={styles.pickerModalCard}>
+                    {/* Pull Drag Indicator */}
+                    <View style={styles.pickerDragHandle} />
+
+                    {/* Solar Calendar Celestial Background */}
+                    <PickerAestheticBg type="date" />
+
                     <View style={styles.pickerModalHeader}>
-                      <Text style={styles.pickerModalTitle}>Schedule Date</Text>
+                      <View style={styles.pickerHeaderTitleWrap}>
+                        <View
+                          style={[
+                            styles.pickerHeaderBadge,
+                            styles.pickerHeaderBadgeDate,
+                          ]}
+                        >
+                          <Calendar
+                            size={12}
+                            color="#B48216"
+                            strokeWidth={2.5}
+                          />
+                          <Text style={styles.pickerHeaderBadgeTextDate}>
+                            SOLAR CALENDAR
+                          </Text>
+                        </View>
+                        <Text style={styles.pickerModalTitle}>
+                          Schedule Date
+                        </Text>
+                      </View>
+
                       <TouchableOpacity
-                        activeOpacity={0.8}
+                        activeOpacity={0.82}
                         onPress={() => setShowDatePicker(false)}
                         style={styles.pickerDoneBtn}
+                        accessibilityRole="button"
+                        accessibilityLabel="Confirm date selection"
                       >
                         <Text style={styles.pickerDoneBtnText}>Done</Text>
                       </TouchableOpacity>
                     </View>
-                    <DateTimePicker
-                      value={dateValue}
-                      mode="date"
-                      display="spinner"
-                      onChange={onDateChange}
-                      textColor={Colors.MidnightCharcoal}
-                      themeVariant="light"
-                    />
+
+                    <View style={styles.pickerWheelContainer}>
+                      <DateTimePicker
+                        value={dateValue}
+                        mode="date"
+                        display="spinner"
+                        onChange={onDateChange}
+                        textColor={Colors.MidnightCharcoal}
+                        themeVariant="light"
+                      />
+                    </View>
                   </View>
                 </TouchableWithoutFeedback>
               </View>
@@ -1365,31 +1403,56 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
           <Modal
             visible={showTimePicker}
             transparent
-            animationType="fade"
+            animationType="slide"
             onRequestClose={() => setShowTimePicker(false)}
           >
             <TouchableWithoutFeedback onPress={() => setShowTimePicker(false)}>
               <View style={styles.pickerModalOverlay}>
                 <TouchableWithoutFeedback>
                   <View style={styles.pickerModalCard}>
+                    {/* Pull Drag Indicator */}
+                    <View style={styles.pickerDragHandle} />
+
+                    {/* Lunar Horology Celestial Background */}
+                    <PickerAestheticBg type="time" />
+
                     <View style={styles.pickerModalHeader}>
-                      <Text style={styles.pickerModalTitle}>Due Time</Text>
+                      <View style={styles.pickerHeaderTitleWrap}>
+                        <View
+                          style={[
+                            styles.pickerHeaderBadge,
+                            styles.pickerHeaderBadgeTime,
+                          ]}
+                        >
+                          <Clock size={12} color="#7059C8" strokeWidth={2.5} />
+                          <Text style={styles.pickerHeaderBadgeTextTime}>
+                            LUNAR CHRONO
+                          </Text>
+                        </View>
+                        <Text style={styles.pickerModalTitle}>Due Time</Text>
+                      </View>
+
                       <TouchableOpacity
-                        activeOpacity={0.8}
+                        activeOpacity={0.82}
                         onPress={() => setShowTimePicker(false)}
                         style={styles.pickerDoneBtn}
+                        accessibilityRole="button"
+                        accessibilityLabel="Confirm time selection"
                       >
                         <Text style={styles.pickerDoneBtnText}>Done</Text>
                       </TouchableOpacity>
                     </View>
-                    <DateTimePicker
-                      value={timeValue}
-                      mode="time"
-                      display="spinner"
-                      onChange={onTimeChange}
-                      textColor={Colors.MidnightCharcoal}
-                      themeVariant="light"
-                    />
+
+                    <View style={styles.pickerWheelContainer}>
+                      <DateTimePicker
+                        value={timeValue}
+                        mode="time"
+                        display="spinner"
+                        onChange={onTimeChange}
+                        textColor={Colors.MidnightCharcoal}
+                        themeVariant="light"
+                      />
+                    </View>
                   </View>
                 </TouchableWithoutFeedback>
               </View>
@@ -1669,7 +1732,7 @@ const styles = StyleSheet.create({
   // ─── Header Crest Badge (Half Inside, Half Outside Top Border) ───
   flowHeaderBadge: {
     position: 'absolute',
-    top: -24,
+    top: -ResponsivePixels.size24,
     alignSelf: 'center',
     backgroundColor: Colors.NeroBlack,
     paddingHorizontal: 22,
@@ -1693,7 +1756,7 @@ const styles = StyleSheet.create({
   },
   flowTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 14.5,
+    fontSize: ResponsivePixels.size18,
     color: Colors.DefaultWhite,
     letterSpacing: -0.1,
     textAlign: 'center',
@@ -1748,7 +1811,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 6,
+    marginTop: ResponsivePixels.size10,
+    marginBottom: ResponsivePixels.size6,
   },
   cardSectionLabel: {
     fontFamily: Fonts.poppins.bold,
@@ -1780,13 +1844,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 0,
   },
   contextIconWrap: {
-    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
   },
   contextInput: {
     flex: 1,
-    height: '100%',
     fontFamily: Fonts.poppins.regular,
     fontSize: 13.5,
     color: '#3F454D',
@@ -2482,42 +2544,115 @@ const styles = StyleSheet.create({
   // ─── Native Picker Bottom Sheet (iOS) ───
   pickerModalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.4)',
+    backgroundColor: 'rgba(14, 16, 21, 0.65)',
     justifyContent: 'flex-end',
   },
   pickerModalCard: {
-    backgroundColor: '#FFFFFF',
-    borderTopLeftRadius: 26,
-    borderTopRightRadius: 26,
+    backgroundColor: '#FAF8F5',
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
     paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: Platform.OS === 'ios' ? 36 : 20,
-    borderTopWidth: 1,
+    paddingTop: 12,
+    paddingBottom: Platform.OS === 'ios' ? 36 : 24,
+    borderTopWidth: 2,
     borderColor: '#E8E2D5',
+    position: 'relative',
+    overflow: 'hidden',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: -6 },
+        shadowOpacity: 0.16,
+        shadowRadius: 18,
+      },
+      android: {
+        elevation: 12,
+      },
+    }),
+  },
+  pickerDragHandle: {
+    width: 36,
+    height: 4.5,
+    borderRadius: 2.5,
+    backgroundColor: '#D5D0C5',
+    alignSelf: 'center',
+    marginBottom: 12,
   },
   pickerModalHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingBottom: 10,
+    paddingBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: '#F0ECE3',
+    borderBottomColor: 'rgba(0, 0, 0, 0.06)',
+  },
+  pickerHeaderTitleWrap: {
+    gap: 4,
+  },
+  pickerHeaderBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 12,
+    borderWidth: 1,
+    alignSelf: 'flex-start',
+  },
+  pickerHeaderBadgeDate: {
+    backgroundColor: '#FDF7E7',
+    borderColor: '#F3E5BE',
+  },
+  pickerHeaderBadgeTime: {
+    backgroundColor: '#F3F2FD',
+    borderColor: '#E0DEFA',
+  },
+  pickerHeaderBadgeTextDate: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 9.5,
+    letterSpacing: 0.8,
+    color: '#B48216',
+  },
+  pickerHeaderBadgeTextTime: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 9.5,
+    letterSpacing: 0.8,
+    color: '#7059C8',
   },
   pickerModalTitle: {
-    fontFamily: Fonts.poppins.bold,
-    fontSize: 16,
+    fontFamily: Fonts.ranade.bold,
+    fontSize: 20,
     color: Colors.MidnightCharcoal,
+    letterSpacing: -0.3,
   },
   pickerDoneBtn: {
     backgroundColor: Colors.MidnightCharcoal,
     borderRadius: 50,
-    paddingHorizontal: 16,
-    paddingVertical: 6,
+    paddingHorizontal: 18,
+    paddingVertical: 7,
+    borderWidth: 1.2,
+    borderColor: '#3A3F48',
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.MidnightCharcoal,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: 0.25,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
   pickerDoneBtnText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 13,
     color: '#FFFFFF',
+  },
+  pickerWheelContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 6,
   },
 
   // ─── Modal Architecture & Common Bottom Sheet ───

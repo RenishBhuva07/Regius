@@ -271,12 +271,12 @@ sequenceDiagram
 - **Source Files**:
   - `src/Services/VoiceSettingsService.ts`
   - `src/Screens/Settings/SettingsScreen.tsx`
-  - `src/Screens/Profile/ProfileScreen.tsx` (Dedicated Profile & Account identity screen with avatar hero, verified Pro status badges, completed tasks counter, streak metrics, and credential editor)
-  - `src/Screens/Settings/VoiceStudioScreen.tsx` (Dedicated Voice Studio screen with Kokoro-82M neural TTS playground, interactive sentence synthesis, live waveform audio visualizers, and catalog audition)
-  - `src/Screens/Settings/WakeWordStudioScreen.tsx` (Dedicated Wake Word Studio screen with hands-free master switch, acoustic recognition simulator, curated preset cards, and custom phrase validator)
-  - `src/Screens/Language/LanguageScreen.tsx` (Dedicated App Language screen with regional locales, neural voice badges, device language auto-detect, and real-time search)
-  - `src/Screens/HelpFaq/HelpFaqScreen.tsx` (Dedicated Help & FAQs screen with category filters, smooth expandable accordion Q&As, and direct Concierge Support desk)
-  - `src/Screens/PrivacySecurity/PrivacySecurityScreen.tsx` (Dedicated Privacy & Data Security screen with AES-256 cryptographic overview, granular toggles, and data export/purge controls)
+  - `src/Screens/Profile/ProfileScreen.tsx` (Redesigned with 2-layer obsidian Sovereign Identity hero bento, 4px ceramic rim, golden solar halo, unified 40x40 3D back button, discipline stats matrix, and floating frosted action dock)
+  - `src/Screens/Settings/VoiceStudioScreen.tsx` (Redesigned with 2-layer obsidian Acoustic Console hero bento, 4px ceramic rim, 7-band multi-frequency waveform visualizer, Kokoro-82M neural TTS playground, voice speed dial, and curated persona cards)
+  - `src/Screens/Settings/WakeWordStudioScreen.tsx` (Redesigned with 2-layer obsidian Acoustic Radar hero bento, 4px ceramic rim, concentric resonance ring visualizer, hands-free toggle, curated preset variations, custom architect validator, and acoustic simulator)
+  - `src/Screens/Language/LanguageScreen.tsx` (Redesigned with signature 2-layer obsidian hero bento, 4px ceramic rim, scroll-reactive layer header with HeaderPatternSvg, dialect filter chips, speech auditioning, elevated 4-facet cards, and sticky frosted action dock)
+  - `src/Screens/HelpFaq/HelpFaqScreen.tsx` (Redesigned with 2-layer obsidian VIP Concierge hero bento, 4px ceramic rim, scroll-reactive layer header with HeaderPatternSvg, 4-facet category domain grid, and spring-animated accordion cards with Pro Tips)
+  - `src/Screens/PrivacySecurity/PrivacySecurityScreen.tsx` (Redesigned with 2-layer obsidian Zero-Knowledge Vault hero bento, 4px ceramic rim, 3-pillar cryptographic metrics, scroll-reactive header, and data sovereignty controls)
   - `src/Screens/Settings/Components/SettingsHeader.tsx` (Fixed reactive header fixed at top with scroll interpolation, luxury LavenderPurple/deep purple theme transitions, HeaderPatternSvg background aura, and back navigation)
   - `src/Screens/Settings/Components/ProfileCard.tsx` (Signature luxury dark hero bento card matching Rule 5: 4px ceramic white border, deep 18px volumetric shadow, solar gold dawn auras, PRO badge, and bio/metrics display)
   - `src/Screens/Settings/Components/ProfileCardBackgroundSvg.tsx` (Specular dark obsidian bento canvas with celestial stardust & concentric orbits)
@@ -311,7 +311,8 @@ sequenceDiagram
   - `src/Screens/Tasks/Components/TaskCardItem.tsx` (Luxury tactile task card with signature top-right cutout notch, floating corner round checkbox matching DashboardScreen, category icon, clean readable typography without strikethrough cross lines, note snippet, time tag, subtask indicators, 3D priority badges, and voice nudge badge)
   - `src/Screens/Tasks/Components/TaskSectionBackgroundSvg.tsx` (Dynamic luxury aesthetic background with focus chronometer rings, solar gold focus auras, and starlight diamond nodes)
   - `src/Screens/Tasks/AddTaskScreen.tsx`
-  - `src/Components/AddTaskModal.tsx` (Half-inside/half-outside black crest badge ('Craft Your Task') matching DashboardScreen; 2-layer volumetric shadow wrapper with TaskCardAestheticBg; vertically centered personal memo context and subtask quick input; DashboardScreen-style floating category checkbox with card accent checkmark; Add New Category creation flow with custom luxury color presets and live preview; Magic Black schedule date/time buttons with celestial orbital background inside restored white container card wrapper; balanced section spacing; and transparent floating bottom bar with back button situated left of the Create Task CTA)
+  - `src/Components/AddTaskModal.tsx` (Half-inside/half-outside black crest badge ('Craft Your Task') matching DashboardScreen; 2-layer volumetric shadow wrapper with TaskCardAestheticBg; vertically centered personal memo context and subtask quick input; DashboardScreen-style floating category checkbox with card accent checkmark; Add New Category creation flow with custom luxury color presets and live preview; Magic Black schedule date/time buttons with celestial orbital background inside restored white container card wrapper; celestial Solar Calendar and Lunar Horology background designs via `PickerAestheticBg.tsx` for native date/time bottom sheets; balanced section spacing; and transparent floating bottom bar with back button situated left of the Create Task CTA)
+  - `src/Components/PickerAestheticBg.tsx` (Unique luxury celestial SVG backgrounds: Solar Calendar solstice orbits for Date Picker and Lunar Horology chronometer dials for Time Picker)
   - `src/Context/TaskReminderContext.tsx`
 - **Categories**: Works (`#FFFCEB`), Sport (`#EDFDF5`), Habits (`#EFF2FE`), Events (`#FFF3E0`).
 - **User-Facing Workflow**:
@@ -338,7 +339,7 @@ sequenceDiagram
   - `src/Screens/Reminders/Components/ReminderSectionBackgroundSvg.tsx` (Responsive luxury curved backdrop with acoustic chime rings and starlight nodes)
   - `src/Screens/Reminders/Components/ReminderEmptyDoodleSvg.tsx` (Custom hand-drawn chime bell and acoustic vibration vector doodle)
   - `src/Screens/Reminders/AddReminderScreen.tsx`
-  - `src/Components/AddReminderModal.tsx`
+  - `src/Components/AddReminderModal.tsx` (Full luxury design parity with `AddTaskModal`: Centered NeroBlack crest badge with `FlowBadgePatternSvg`, 2-layer volumetric shadow hero card with `TaskCardAestheticBg` starlight lattice, TasksScreen asymmetric category cards with floating checkboxes, 3D tactile quick date chips, wrapped Magic Black schedule buttons, iOS bottom-sheet native pickers with celestial backgrounds, segmented repeat cycle pills, 2x2 alert chips, voice nudge, and floating hero CTA)
   - `src/Context/TaskReminderContext.tsx`
 - **User-Facing Workflow**:
   - Switch between `Upcoming` and `Completed` tabs with dynamic count badges.
@@ -362,7 +363,7 @@ sequenceDiagram
   - `src/Screens/Habits/Components/HabitConsistencyBento.tsx` (Dynamic longest streak calculation, dual 3D badges, 7-day consistency strip)
   - `src/Screens/Habits/Components/HabitItemCard.tsx` (Category accent strip, tactile animated checkmark, 7-day mini history dots, top-right floating circular edit button)
   - `src/Screens/Habits/Components/HabitCategoryFilters.tsx` (Category pills with dynamic item count badges)
-  - `src/Components/AddHabitModal.tsx` (Create & Edit habit bottom sheet modal with time presets and delete confirmation)
+  - `src/Components/AddHabitModal.tsx` (Full luxury design parity with `AddTaskModal` and `AddReminderModal`: Centered NeroBlack crest badge with `FlowBadgePatternSvg`, `top: -ResponsivePixels.size24`, `fontSize: ResponsivePixels.size18`, 2-layer volumetric shadow hero card with `TaskCardAestheticBg` starlight lattice, TasksScreen asymmetric category cards for Morning/Mindful/Evening with floating checkboxes, 3D tactile frequency chips, wrapped Magic Black time picker with iOS celestial bottom sheet, spoken voice nudge with assistant AI badge, and floating hero CTA)
   - `src/Context/TaskReminderContext.tsx` (`addHabit`, `toggleHabit`, `updateHabit`, `deleteHabit`)
 - **User-Facing Workflow**:
   - Checking habit increments streak count (`streak + 1`) and shows celebratory toast with haptic feedback.
@@ -523,7 +524,8 @@ sequenceDiagram
 - **Purpose**: Progression and gamification engine unlocking bespoke luxury themes and Pro capabilities through daily task completion, reminder clearance, and habit consistency.
 - **Status**: `Implemented`
 - **Source Files**:
-  - `src/Screens/Milestones/MilestoneFullScreenSheet.tsx`
+  - `src/Screens/Milestones/MilestonesScreen.tsx` (Redesigned with 2-layer obsidian Prestige Rank hero bento, 4px ceramic rim, 40x40 3D back button, SettingsBackgroundSvg, and 5-tier roadmap)
+  - `src/Screens/Milestones/MilestoneFullScreenSheet.tsx` (Redesigned with 2-layer obsidian bento hero card, 4px ceramic rim, HeaderPatternSvg stardust art, and sculpted roadmap)
   - `src/Services/Milestone/MilestoneService.ts`
   - `src/Context/MilestoneContext.tsx`
   - `src/Theme/ThemeContext.tsx`
@@ -552,7 +554,7 @@ sequenceDiagram
 
 - **Purpose**: Full-screen luxury theme showroom displaying all bespoke color palettes, 4 round color swatches with hex color codes in a single horizontal row, live interactive UI preview, milestone unlock tiers, and active status indicators.
 - **Files Owned**:
-  - `src/Screens/Theme/ThemeScreen.tsx` (Dedicated whole theme screen)
+  - `src/Screens/Theme/ThemeScreen.tsx` (Redesigned with 2-layer obsidian Live Mockup hero bento, 4px ceramic rim, SettingsBackgroundSvg, scroll-reactive header with HeaderPatternSvg, single-line 4-color round swatches with uppercase hex codes, and milestone gating modal)
   - `src/Screens/Theme/index.ts` (Theme screen barrel export)
   - `src/Theme/ThemeContext.tsx` (Theme palettes metadata, 4-color definitions, and `@regius_active_theme_id` persistence)
   - `src/Screens/Settings/Components/AppearanceSection.tsx` (Interactive header navigation to `ThemeScreen`)
@@ -576,7 +578,7 @@ sequenceDiagram
 - **Purpose**: High-converting, mindful luxury subscription flow allowing users to unlock unlimited Kokoro AI voices, all 8 luxury themes, custom wake words, 2x XP boost, and cloud backup.
 - **Status**: `Implemented`
 - **Source Files**:
-  - `src/Screens/Subscription/SubscriptionScreen.tsx`
+  - `src/Screens/Subscription/SubscriptionScreen.tsx` (Redesigned with 2-layer obsidian Imperial Monarch hero bento, 4px ceramic rim, 6-benefit category-themed bento matrix, scroll-reactive header with HeaderPatternSvg, and sticky dawn action dock)
   - `src/Screens/Subscription/index.ts`
   - `src/Screens/Settings/Components/SubscriptionSection.tsx`
   - `src/Context/PremiumContext.tsx`

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,11 @@ import {
   StatusBar,
   Linking,
   Platform,
+  Animated,
+  Vibration,
+  Dimensions,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -25,6 +30,9 @@ import {
   Shield,
   Mic,
   CheckSquare,
+  Flame,
+  X,
+  Compass,
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
@@ -34,13 +42,19 @@ import { Colors } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../Common/Badge';
 import { ProBadge } from '../../Common/ProBadge';
+import CustomButton from '../../Common/CustomButton';
 import { useTheme } from '../../Theme/ThemeContext';
+import HeaderPatternSvg from '../Dashboard/Components/HeaderPatternSvg';
+import { SettingsBackgroundSvg } from '../Settings/Components/SettingsBackgroundSvg';
+
+const HEADER_HEIGHT = 54;
 
 interface FaqItem {
   id: string;
   category: 'Voice' | 'Tasks' | 'Gestures' | 'Privacy';
   question: string;
   answer: string;
+  tip?: string;
 }
 
 const FAQS: FaqItem[] = [
@@ -50,13 +64,15 @@ const FAQS: FaqItem[] = [
     question: 'How do I activate the hands-free voice assistant?',
     answer:
       "Simply speak your configured wake phrase (default: 'Hey Regius') at any time while the app is active. The holographic ambient orb will illuminate and begin listening for your commands.",
+    tip: 'You can customize your wake phrase in Wake Word Studio.',
   },
   {
     id: '2',
     category: 'Voice',
     question: 'Can I add tasks and reminders purely using voice?',
     answer:
-      "Yes! Say 'Hey Regius, add a task to prepare the executive slide deck by 3 PM' or 'Remind me to hydrate in 45 minutes'. Regius intelligently parses natural language dates, priority, and categories.",
+      "Yes! Say 'Hey Regius, add a task to prepare the executive slide deck by 3 PM' or 'Remind me to hydrate in 45 minutes'. Regius intelligently parses natural language dates, priorities, and categories.",
+    tip: 'Voice commands automatically sync with your Daily Balance score.',
   },
   {
     id: '3',
@@ -64,6 +80,7 @@ const FAQS: FaqItem[] = [
     question: 'What is Kokoro-82M neural TTS?',
     answer:
       'Regius features Kokoro-82M, a state-of-the-art neural speech model with 82 million parameters that generates warm, human-like cadence, natural intonation, and luxury acoustics.',
+    tip: 'Audition different accents and speeds in Voice Studio.',
   },
   {
     id: '4',
@@ -71,6 +88,7 @@ const FAQS: FaqItem[] = [
     question: 'How does the Task & Habit productivity score work?',
     answer:
       'Your Daily Balance Grid aggregates completed works, mindful habit streaks, and active alerts into a unified productivity metric designed to encourage sustained focus without burnout.',
+    tip: 'Complete morning rituals early to boost your daily momentum score.',
   },
   {
     id: '5',
@@ -78,6 +96,7 @@ const FAQS: FaqItem[] = [
     question: 'What gestures are supported across screens?',
     answer:
       'You can swipe cards horizontally to toggle completion or delete, pull down to refresh the AI daily briefing, and tap the floating glowing plus button from any screen to quick-add items.',
+    tip: 'Long-press the glowing center (+) button for 320ms to activate Voice instantly.',
   },
   {
     id: '6',
@@ -85,6 +104,7 @@ const FAQS: FaqItem[] = [
     question: 'Are my voice audio clips stored or sold to third parties?',
     answer:
       'Never. Regius enforces a strict zero data selling architecture. Speech recognition is evaluated locally on device, and cloud sync operates with end-to-end 256-bit AES encryption.',
+    tip: 'Inspect your full privacy audit in Privacy & Security settings.',
   },
 ];
 
@@ -94,10 +114,73 @@ export const HelpFaqScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
   const { isDarkMode } = useTheme();
+  const { width: screenWidth } = Dimensions.get('window');
 
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>('All');
   const [expandedId, setExpandedId] = useState<string | null>('1');
+
+  // Scroll tracking for reactive header layer
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const isScrolledRef = useRef(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    {
+      useNativeDriver: false,
+      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const offsetY = event?.nativeEvent?.contentOffset?.y ?? 0;
+        if (offsetY > 15 && !isScrolledRef.current) {
+          isScrolledRef.current = true;
+          setIsScrolled(true);
+        } else if (offsetY <= 15 && isScrolledRef.current) {
+          isScrolledRef.current = false;
+          setIsScrolled(false);
+        }
+      },
+    },
+  );
+
+  // Interpolate header visual styles based on scroll position (0 to 30px)
+  const headerBgColor = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [
+      isDarkMode ? 'rgba(18, 20, 23, 0)' : 'rgba(255, 252, 227, 0)',
+      isDarkMode ? '#282048' : Colors.LavenderPurple,
+    ],
+    extrapolate: 'clamp',
+  });
+
+  const headerRadius = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 24],
+    extrapolate: 'clamp',
+  });
+
+  const headerShadowOpacity = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 0.32],
+    extrapolate: 'clamp',
+  });
+
+  const headerElevation = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 8],
+    extrapolate: 'clamp',
+  });
+
+  const headerPaddingBottom = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 8],
+    extrapolate: 'clamp',
+  });
+
+  const headerPatternOpacity = scrollY.interpolate({
+    inputRange: [0, 25],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
 
   const categories: CategoryFilter[] = [
     'All',
@@ -107,28 +190,42 @@ export const HelpFaqScreen: React.FC = () => {
     'Privacy',
   ];
 
-  const filteredFaqs = FAQS.filter(item => {
-    const matchesCategory =
-      activeCategory === 'All' || item.category === activeCategory;
-    const matchesQuery =
-      item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.answer.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesCategory && matchesQuery;
-  });
+  const filteredFaqs = useMemo(() => {
+    return FAQS.filter(item => {
+      const matchesCategory =
+        activeCategory === 'All' || item.category === activeCategory;
+      const matchesQuery =
+        !searchQuery.trim() ||
+        item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.answer.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesQuery;
+    });
+  }, [activeCategory, searchQuery]);
 
   const toggleExpand = (id: string) => {
+    Vibration.vibrate(15);
     setExpandedId(prev => (prev === id ? null : id));
   };
 
   const handleContactConcierge = () => {
+    Vibration.vibrate(25);
     Linking.openURL(
-      'mailto:concierge@regius.ai?subject=Regius%20Inquiry',
+      'mailto:concierge@regius.ai?subject=Regius%20Executive%20Concierge%20Inquiry',
     ).catch(() => {
       Toast.show({
         type: 'info',
-        text1: 'Concierge Email',
+        text1: 'Concierge Desk',
         text2: 'Reach our team directly at concierge@regius.ai',
       });
+    });
+  };
+
+  const handleOpenVoiceHelp = () => {
+    Vibration.vibrate(25);
+    Toast.show({
+      type: 'info',
+      text1: 'Voice Assistant Active 🎙️',
+      text2: 'Say "Hey Regius" at any time or hold the center plus button.',
     });
   };
 
@@ -139,66 +236,172 @@ export const HelpFaqScreen: React.FC = () => {
     : Colors.MidnightInkText;
   const textSecondary = isDarkMode ? '#A3A8B1' : Colors.SubtitleGray;
   const borderLight = isDarkMode ? '#2C3035' : '#E8E2D5';
-  const surfaceAlt = isDarkMode ? '#171A1F' : '#FAF8F5';
 
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>
       <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        {...(Platform.OS === 'android' ? { backgroundColor: bgMain } : {})}
+        barStyle={isScrolled ? 'light-content' : isDarkMode ? 'light-content' : 'dark-content'}
+        {...(Platform.OS === 'android'
+          ? {
+              backgroundColor: isScrolled
+                ? isDarkMode
+                  ? '#282048'
+                  : Colors.LavenderPurple
+                : bgMain,
+              translucent: true,
+            }
+          : {})}
       />
 
-      {/* Screen Header */}
-      <View
+      {/* Luxury Background Artwork */}
+      <SettingsBackgroundSvg />
+
+      {/* Scroll-Reactive Header */}
+      <Animated.View
         style={[
-          styles.headerRow,
+          styles.headerContainer,
           {
-            paddingTop: insets.top + 8,
-            borderBottomColor: borderLight,
+            paddingTop: insets.top,
+            paddingBottom: headerPaddingBottom,
+            backgroundColor: headerBgColor,
+            borderBottomLeftRadius: headerRadius,
+            borderBottomRightRadius: headerRadius,
+            shadowOpacity: headerShadowOpacity,
+            elevation: headerElevation,
           },
         ]}
       >
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => navigation.goBack()}
+        <Animated.View
+          pointerEvents="none"
           style={[
-            styles.backButton,
+            StyleSheet.absoluteFill,
             {
-              backgroundColor: cardBg,
-              borderColor: borderLight,
+              opacity: headerPatternOpacity,
+              borderBottomLeftRadius: headerRadius,
+              borderBottomRightRadius: headerRadius,
+              overflow: 'hidden',
             },
           ]}
-          accessibilityRole="button"
-          accessibilityLabel="Back to Settings"
         >
-          <ChevronLeft size={20} color={textPrimary} strokeWidth={2.4} />
-        </TouchableOpacity>
+          <HeaderPatternSvg width={screenWidth} insetsTop={insets.top} />
+        </Animated.View>
 
-        <View style={styles.headerTitleWrap}>
-          <Text style={[styles.headerTitle, { color: textPrimary }]}>
-            Help & FAQs
-          </Text>
-          <Text style={[styles.headerSubtitle, { color: textSecondary }]}>
-            Guides & Concierge Support
-          </Text>
+        <View style={[styles.headerRow, { height: HEADER_HEIGHT }]}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => navigation.goBack()}
+            style={[
+              styles.backButton,
+              isScrolled
+                ? styles.backButtonScrolled
+                : {
+                    backgroundColor: cardBg,
+                    borderColor: borderLight,
+                  },
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Back to Settings"
+          >
+            <ChevronLeft
+              size={22}
+              color={isScrolled ? Colors.DefaultWhite : textPrimary}
+              strokeWidth={2.4}
+            />
+          </TouchableOpacity>
+
+          <View style={styles.headerTitleWrap}>
+            <Text
+              style={[
+                styles.headerTitle,
+                isScrolled ? styles.headerTitleScrolled : { color: textPrimary },
+              ]}
+              numberOfLines={1}
+            >
+              Help & FAQs
+            </Text>
+            <Text
+              style={[
+                styles.headerSubtitle,
+                isScrolled
+                  ? styles.headerSubtitleScrolled
+                  : { color: textSecondary },
+              ]}
+              numberOfLines={1}
+            >
+              Guides & Dedicated Desk
+            </Text>
+          </View>
+
+          <Badge label="SUPPORT" variant="green" size="sm" />
         </View>
+      </Animated.View>
 
-        <Badge label="SUPPORT" variant="green" size="sm" />
-      </View>
-
+      {/* Scrollable Body Content */}
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingBottom: insets.bottom + 40 },
+          {
+            paddingTop: insets.top + HEADER_HEIGHT + 14,
+            paddingBottom: insets.bottom + 48,
+          },
         ]}
         showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
       >
-        {/* Search Bar */}
+        {/* ─── Flagship 2-Layer Hero Bento: VIP Concierge ─── */}
+        <View style={styles.heroCardShadowWrapper}>
+          <View style={styles.heroCard}>
+            <View style={styles.heroHeaderRow}>
+              <View style={styles.heroTagRow}>
+                <Sparkles size={13} color="#F5C518" strokeWidth={2.4} />
+                <Text style={styles.heroTagText}>VIP CONCIERGE & DIAGNOSTICS</Text>
+              </View>
+              <ProBadge size="sm" />
+            </View>
+
+            <Text style={styles.heroTitle}>Direct Executive Support</Text>
+            <Text style={styles.heroSubtitle}>
+              Direct priority access to our senior engineering and product team.
+              Average response time under 2 hours.
+            </Text>
+
+            {/* Instant Action Button Row */}
+            <View style={styles.heroActionsRow}>
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={handleOpenVoiceHelp}
+                style={styles.heroVoiceBtn}
+                accessibilityRole="button"
+                accessibilityLabel="Ask Voice Assistant"
+              >
+                <Mic size={15} color="#8383D6" strokeWidth={2.4} />
+                <Text style={styles.heroVoiceBtnText}>Ask Sia</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={handleContactConcierge}
+                style={styles.heroEmailBtn}
+                accessibilityRole="button"
+                accessibilityLabel="Contact Concierge Desk"
+              >
+                <Mail size={15} color="#F5C518" strokeWidth={2.4} />
+                <Text style={styles.heroEmailBtnText}>Email Concierge</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+
+        {/* ─── Search Input Bar ─── */}
         <View
           style={[
             styles.searchWrap,
-            { backgroundColor: surfaceAlt, borderColor: borderLight },
+            {
+              backgroundColor: cardBg,
+              borderColor: isDarkMode ? '#2C3035' : borderLight,
+            },
           ]}
         >
           <Search size={18} color={textSecondary} strokeWidth={2.2} />
@@ -208,160 +411,292 @@ export const HelpFaqScreen: React.FC = () => {
             onChangeText={setSearchQuery}
             placeholder="Search guides, gestures, commands..."
             placeholderTextColor={textSecondary}
+            autoCorrect={false}
           />
+          {searchQuery.length > 0 && (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => setSearchQuery('')}
+              style={styles.searchClearBtn}
+            >
+              <X size={15} color={textSecondary} strokeWidth={2.4} />
+            </TouchableOpacity>
+          )}
         </View>
 
-        {/* Category Pills */}
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={styles.categoryPillsRow}
-        >
-          {categories.map(cat => {
-            const isActive = activeCategory === cat;
-            return (
-              <TouchableOpacity
-                key={cat}
-                activeOpacity={0.8}
-                style={[
-                  styles.categoryPill,
-                  {
-                    backgroundColor: isActive ? Colors.LavenderPurple : cardBg,
-                    borderColor: isActive ? '#FFFFFF' : borderLight,
-                  },
-                ]}
-                onPress={() => setActiveCategory(cat)}
-              >
-                <Text
+        {/* ─── 4-Facet Knowledge Domains ─── */}
+        <View style={styles.domainsSection}>
+          <Text style={[styles.sectionHeading, { color: textSecondary }]}>
+            KNOWLEDGE DOMAINS
+          </Text>
+
+          <View style={styles.domainsGrid}>
+            {[
+              {
+                id: 'Voice' as const,
+                label: 'Voice Assistant',
+                count: '3 Guides',
+                icon: Mic,
+                accent: '#8383D6',
+                bg: isDarkMode ? '#23273A' : '#EFF2FE',
+                border: isDarkMode ? '#484E70' : '#D8DBFF',
+              },
+              {
+                id: 'Tasks' as const,
+                label: 'Works & Tasks',
+                count: '2 Guides',
+                icon: CheckSquare,
+                accent: '#D97706',
+                bg: isDarkMode ? '#332918' : '#FFFCEB',
+                border: isDarkMode ? '#665126' : '#FFF5B8',
+              },
+              {
+                id: 'Gestures' as const,
+                label: 'Ritual Gestures',
+                count: '2 Guides',
+                icon: Flame,
+                accent: '#1B9A72',
+                bg: isDarkMode ? '#172B22' : '#EDFDF5',
+                border: isDarkMode ? '#2E5B47' : '#C6FFDD',
+              },
+              {
+                id: 'Privacy' as const,
+                label: 'Vault & Privacy',
+                count: '1 Guide',
+                icon: Shield,
+                accent: '#E65100',
+                bg: isDarkMode ? '#331F18' : '#FFF0DE',
+                border: isDarkMode ? '#663B26' : '#FFB86B',
+              },
+            ].map(domain => {
+              const isSelected = activeCategory === domain.id;
+              const IconComp = domain.icon;
+
+              return (
+                <TouchableOpacity
+                  key={domain.id}
+                  activeOpacity={0.8}
+                  onPress={() => {
+                    Vibration.vibrate(15);
+                    setActiveCategory(prev =>
+                      prev === domain.id ? 'All' : domain.id,
+                    );
+                  }}
                   style={[
-                    styles.categoryPillText,
-                    { color: isActive ? '#FFFFFF' : textPrimary },
+                    styles.domainCard,
+                    {
+                      backgroundColor: domain.bg,
+                      borderColor: isSelected
+                        ? domain.accent
+                        : domain.border,
+                      borderWidth: isSelected ? 2 : 1.5,
+                      shadowColor: domain.accent,
+                    },
                   ]}
                 >
-                  {cat}
-                </Text>
-              </TouchableOpacity>
-            );
-          })}
-        </ScrollView>
-
-        {/* FAQ Accordion Section */}
-        <Text style={[styles.sectionHeading, { color: textSecondary }]}>
-          FREQUENTLY ASKED QUESTIONS ({filteredFaqs.length})
-        </Text>
-
-        <View style={styles.faqList}>
-          {filteredFaqs.map(item => {
-            const isExpanded = expandedId === item.id;
-
-            return (
-              <View
-                key={item.id}
-                style={[
-                  styles.faqCard,
-                  {
-                    backgroundColor: cardBg,
-                    borderColor: isExpanded
-                      ? Colors.LavenderPurple
-                      : isDarkMode
-                      ? 'rgba(255, 255, 255, 0.12)'
-                      : '#FFFFFF',
-                    borderBottomColor: isExpanded
-                      ? '#4D4DB8'
-                      : isDarkMode
-                      ? '#171A20'
-                      : '#E2DCD0',
-                    shadowColor: isExpanded
-                      ? Colors.LavenderPurple
-                      : isDarkMode
-                      ? '#000000'
-                      : 'rgba(131, 131, 214, 0.12)',
-                  },
-                ]}
-              >
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={styles.faqHeaderBtn}
-                  onPress={() => toggleExpand(item.id)}
-                >
-                  <View style={styles.faqHeaderLeft}>
-                    <Badge
-                      label={item.category.toUpperCase()}
-                      variant={
-                        item.category === 'Voice'
-                          ? 'purple'
-                          : item.category === 'Tasks'
-                          ? 'yellow'
-                          : item.category === 'Gestures'
-                          ? 'green'
-                          : 'orange'
-                      }
-                      size="sm"
-                    />
-                    <Text
-                      style={[styles.faqQuestionText, { color: textPrimary }]}
-                    >
-                      {item.question}
-                    </Text>
-                  </View>
-
                   <View
                     style={[
-                      styles.chevronWrap,
-                      { backgroundColor: surfaceAlt, borderColor: borderLight },
+                      styles.domainIconCircle,
+                      {
+                        backgroundColor: '#FFFFFF',
+                        borderColor: domain.border,
+                      },
                     ]}
                   >
-                    {isExpanded ? (
-                      <ChevronUp
-                        size={16}
-                        color={Colors.LavenderPurple}
-                        strokeWidth={2.4}
-                      />
-                    ) : (
-                      <ChevronDown
-                        size={16}
-                        color={textSecondary}
-                        strokeWidth={2.4}
-                      />
-                    )}
+                    <IconComp size={16} color={domain.accent} strokeWidth={2.4} />
                   </View>
+
+                  <Text style={[styles.domainLabel, { color: textPrimary }]}>
+                    {domain.label}
+                  </Text>
+                  <Text style={[styles.domainCount, { color: domain.accent }]}>
+                    {domain.count}
+                  </Text>
                 </TouchableOpacity>
-
-                {isExpanded && (
-                  <View
-                    style={[
-                      styles.faqAnswerWrap,
-                      { borderTopColor: borderLight },
-                    ]}
-                  >
-                    <Text
-                      style={[styles.faqAnswerText, { color: textSecondary }]}
-                    >
-                      {item.answer}
-                    </Text>
-                  </View>
-                )}
-              </View>
-            );
-          })}
+              );
+            })}
+          </View>
         </View>
 
-        {/* Concierge Support Bento */}
+        {/* ─── Frequently Asked Questions Accordion ─── */}
+        <View style={styles.faqSection}>
+          <View style={styles.faqHeaderBar}>
+            <Text style={[styles.sectionHeading, { color: textSecondary }]}>
+              FREQUENTLY ASKED QUESTIONS ({filteredFaqs.length})
+            </Text>
+            {activeCategory !== 'All' && (
+              <TouchableOpacity
+                activeOpacity={0.7}
+                onPress={() => setActiveCategory('All')}
+              >
+                <Text style={styles.clearFilterText}>Show All</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+
+          <View style={styles.faqList}>
+            {filteredFaqs.map(item => {
+              const isExpanded = expandedId === item.id;
+              const accentColor =
+                item.category === 'Voice'
+                  ? '#8383D6'
+                  : item.category === 'Tasks'
+                  ? '#F5C518'
+                  : item.category === 'Gestures'
+                  ? '#1B9A72'
+                  : '#FF9800';
+
+              return (
+                <View
+                  key={item.id}
+                  style={[
+                    styles.faqCard,
+                    {
+                      backgroundColor: cardBg,
+                      borderColor: isExpanded
+                        ? accentColor
+                        : borderLight,
+                      shadowColor: isExpanded ? accentColor : '#000000',
+                    },
+                  ]}
+                >
+                  {/* Leading category accent strip */}
+                  <View
+                    style={[
+                      styles.faqLeadingSliver,
+                      { backgroundColor: accentColor },
+                    ]}
+                  />
+
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    style={styles.faqHeaderBtn}
+                    onPress={() => toggleExpand(item.id)}
+                  >
+                    <View style={styles.faqHeaderLeft}>
+                      <Badge
+                        label={item.category.toUpperCase()}
+                        variant={
+                          item.category === 'Voice'
+                            ? 'purple'
+                            : item.category === 'Tasks'
+                            ? 'yellow'
+                            : item.category === 'Gestures'
+                            ? 'green'
+                            : 'orange'
+                        }
+                        size="sm"
+                      />
+
+                      <Text
+                        style={[
+                          styles.faqQuestionText,
+                          { color: textPrimary },
+                        ]}
+                      >
+                        {item.question}
+                      </Text>
+                    </View>
+
+                    <View
+                      style={[
+                        styles.chevronWrap,
+                        {
+                          backgroundColor: isExpanded
+                            ? isDarkMode
+                              ? '#272935'
+                              : '#EFF2FE'
+                            : isDarkMode
+                            ? '#242830'
+                            : '#F5EFE0',
+                          borderColor: borderLight,
+                        },
+                      ]}
+                    >
+                      {isExpanded ? (
+                        <ChevronUp
+                          size={15}
+                          color={accentColor}
+                          strokeWidth={2.4}
+                        />
+                      ) : (
+                        <ChevronDown
+                          size={15}
+                          color={textSecondary}
+                          strokeWidth={2.4}
+                        />
+                      )}
+                    </View>
+                  </TouchableOpacity>
+
+                  {isExpanded && (
+                    <View
+                      style={[
+                        styles.faqAnswerWrap,
+                        { borderTopColor: borderLight },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.faqAnswerText,
+                          { color: textSecondary },
+                        ]}
+                      >
+                        {item.answer}
+                      </Text>
+
+                      {item.tip && (
+                        <View
+                          style={[
+                            styles.tipCard,
+                            {
+                              backgroundColor: isDarkMode
+                                ? '#22283A'
+                                : '#FAF8F5',
+                              borderColor: isDarkMode
+                                ? '#394060'
+                                : '#ECE8DF',
+                            },
+                          ]}
+                        >
+                          <Sparkles
+                            size={14}
+                            color="#8383D6"
+                            strokeWidth={2.4}
+                          />
+                          <Text
+                            style={[
+                              styles.tipText,
+                              { color: textPrimary },
+                            ]}
+                          >
+                            <Text style={styles.tipBold}>Regius Tip: </Text>
+                            {item.tip}
+                          </Text>
+                        </View>
+                      )}
+                    </View>
+                  )}
+                </View>
+              );
+            })}
+          </View>
+        </View>
+
+        {/* ─── Bottom Concierge Direct Contact Desk ─── */}
         <View
           style={[
-            styles.conciergeCard,
+            styles.conciergeDeskCard,
             {
               backgroundColor: cardBg,
-              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#FFFFFF',
-              borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
-              shadowColor: isDarkMode ? '#000000' : 'rgba(131, 131, 214, 0.14)',
+              borderColor: borderLight,
             },
           ]}
         >
-          <View style={styles.conciergeTopRow}>
+          <View style={styles.deskTopRow}>
             <View
               style={[
-                styles.conciergeIconWrap,
+                styles.deskIconCircle,
                 { backgroundColor: isDarkMode ? '#2C3035' : '#EFF2FE' },
               ]}
             >
@@ -371,31 +706,23 @@ export const HelpFaqScreen: React.FC = () => {
                 strokeWidth={2.2}
               />
             </View>
-            <View style={styles.conciergeMeta}>
-              <View style={styles.conciergeTitleRow}>
-                <Text style={[styles.conciergeTitle, { color: textPrimary }]}>
-                  Regius Concierge Support
-                </Text>
-                <ProBadge size="sm" />
-              </View>
-              <Text style={[styles.conciergeDesc, { color: textSecondary }]}>
-                Direct access to our senior engineering & product team. Average
-                response time under 2 hours.
+            <View style={styles.deskMeta}>
+              <Text style={[styles.deskTitle, { color: textPrimary }]}>
+                Regius Concierge Support
+              </Text>
+              <Text style={[styles.deskDesc, { color: textSecondary }]}>
+                Our concierge service is dedicated to crafting your flawless
+                executive flow. Reach us directly anytime.
               </Text>
             </View>
           </View>
 
-          <TouchableOpacity
-            activeOpacity={0.8}
-            style={[
-              styles.contactBtn,
-              { backgroundColor: Colors.MidnightCharcoal },
-            ]}
+          <CustomButton
+            title="Contact Concierge Desk"
             onPress={handleContactConcierge}
-          >
-            <Mail size={16} color="#FFFFFF" strokeWidth={2.2} />
-            <Text style={styles.contactBtnText}>Contact Concierge Desk</Text>
-          </TouchableOpacity>
+            variant="dark"
+            style={styles.deskButton}
+          />
         </View>
       </ScrollView>
     </View>
@@ -408,51 +735,178 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headerContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 100,
+    shadowColor: '#201646',
+    shadowOffset: { width: 0, height: 6 },
+    shadowRadius: 7,
+  },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: ResponsivePixels.size16,
-    paddingBottom: ResponsivePixels.size12,
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    paddingHorizontal: 20,
   },
   backButton: {
     width: 38,
     height: 38,
     borderRadius: 19,
-    borderWidth: 1,
+    borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  backButtonScrolled: {
+    backgroundColor: 'rgba(255, 255, 255, 0.22)',
+    borderColor: 'rgba(255, 255, 255, 0.45)',
   },
   headerTitleWrap: {
     alignItems: 'center',
+    flex: 1,
+    marginHorizontal: 10,
   },
   headerTitle: {
-    ...Typography.h5SemiBold,
     fontFamily: Fonts.ranade.bold,
     fontSize: 18,
+    letterSpacing: -0.3,
+    lineHeight: 22,
+  },
+  headerTitleScrolled: {
+    color: Colors.DefaultWhite,
   },
   headerSubtitle: {
-    ...Typography.bodySuperSmallPoppinsRegularLoose,
+    fontFamily: Fonts.poppins.regular,
     fontSize: 11,
-    marginTop: 2,
+    marginTop: 1,
+  },
+  headerSubtitleScrolled: {
+    color: 'rgba(255, 255, 255, 0.82)',
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: ResponsivePixels.size16,
-    paddingTop: ResponsivePixels.size16,
+    paddingHorizontal: 16,
   },
+  /* 2-Layer Hero Bento */
+  heroCardShadowWrapper: {
+    borderRadius: 24,
+    backgroundColor: Colors.NeroBlack,
+    marginBottom: 16,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.28,
+        shadowRadius: 18,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
+  },
+  heroCard: {
+    backgroundColor: Colors.NeroBlack,
+    borderRadius: 24,
+    borderWidth: 4,
+    borderColor: 'rgba(255, 255, 255, 0.9)',
+    overflow: 'hidden',
+    padding: 18,
+  },
+  heroHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+  },
+  heroTagRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  heroTagText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 10,
+    color: '#F5C518',
+    letterSpacing: 1,
+  },
+  heroTitle: {
+    fontFamily: Fonts.ranade.bold,
+    fontSize: 21,
+    color: '#FFFFFF',
+    letterSpacing: -0.4,
+    lineHeight: 26,
+    marginBottom: 6,
+  },
+  heroSubtitle: {
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 12,
+    color: '#A3A8B1',
+    lineHeight: 18,
+    marginBottom: 16,
+  },
+  heroActionsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  heroVoiceBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#272935',
+    borderWidth: 1,
+    borderColor: 'rgba(131, 131, 214, 0.35)',
+    borderRadius: 20,
+    paddingVertical: 10,
+  },
+  heroVoiceBtnText: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 12.5,
+    color: '#FFFFFF',
+  },
+  heroEmailBtn: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#272935',
+    borderWidth: 1,
+    borderColor: 'rgba(245, 197, 24, 0.35)',
+    borderRadius: 20,
+    paddingVertical: 10,
+  },
+  heroEmailBtnText: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 12.5,
+    color: '#FFFFFF',
+  },
+  /* Search input */
   searchWrap: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 14,
+    borderRadius: 16,
     borderWidth: 1.5,
-    paddingHorizontal: 12,
-    height: 46,
-    gap: 8,
-    marginBottom: ResponsivePixels.size14,
+    paddingHorizontal: 14,
+    height: 48,
+    gap: 10,
+    marginBottom: 16,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.04,
+    shadowRadius: 5,
+    elevation: 2,
   },
   searchInput: {
     flex: 1,
@@ -460,56 +914,107 @@ const styles = StyleSheet.create({
     fontSize: 13,
     padding: 0,
   },
-  categoryPillsRow: {
-    gap: 8,
-    paddingBottom: ResponsivePixels.size16,
+  searchClearBtn: {
+    padding: 4,
   },
-  categoryPill: {
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-    borderRadius: 18,
-    borderWidth: 1,
-  },
-  categoryPillText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
+  /* Knowledge domains 4-facet grid */
+  domainsSection: {
+    marginBottom: 20,
   },
   sectionHeading: {
-    ...Typography.bodySuperSmallPoppinsRegularLoose,
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 11,
-    letterSpacing: 1,
-    marginBottom: ResponsivePixels.size10,
-    marginLeft: 4,
+    letterSpacing: 0.8,
+    marginBottom: 10,
+    marginLeft: 2,
+  },
+  domainsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+  },
+  domainCard: {
+    width: '48.5%',
+    borderRadius: 18,
+    padding: 12,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.08,
+    shadowRadius: 5,
+    elevation: 2,
+  },
+  domainIconCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 8,
+  },
+  domainLabel: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 12.5,
+    marginBottom: 2,
+  },
+  domainCount: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 11,
+  },
+  /* FAQ list */
+  faqSection: {
+    marginBottom: 20,
+  },
+  faqHeaderBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+    paddingHorizontal: 2,
+  },
+  clearFilterText: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 11.5,
+    color: Colors.LavenderPurple,
   },
   faqList: {
-    gap: 12,
-    marginBottom: ResponsivePixels.size24,
+    gap: 10,
   },
   faqCard: {
     borderRadius: 18,
     borderWidth: 1.5,
-    borderBottomWidth: 3.5,
-    padding: ResponsivePixels.size14,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 3,
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    paddingLeft: 20,
+    position: 'relative',
+    overflow: 'hidden',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.06,
+    shadowRadius: 6,
+    elevation: 2,
+  },
+  faqLeadingSliver: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    width: 4,
+    borderTopLeftRadius: 18,
+    borderBottomLeftRadius: 18,
   },
   faqHeaderBtn: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
-    gap: 12,
+    gap: 10,
   },
   faqHeaderLeft: {
     flex: 1,
+    gap: 6,
   },
   faqQuestionText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 14,
     lineHeight: 20,
-    marginTop: 6,
   },
   chevronWrap: {
     width: 30,
@@ -518,70 +1023,74 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 2,
   },
   faqAnswerWrap: {
     marginTop: 12,
     paddingTop: 10,
     borderTopWidth: StyleSheet.hairlineWidth,
+    gap: 10,
   },
   faqAnswerText: {
-    ...Typography.bodySmallPoppinsRegular,
-    fontSize: 13,
-    lineHeight: 20,
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 12.5,
+    lineHeight: 19,
   },
-  conciergeCard: {
-    borderRadius: 20,
+  tipCard: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 8,
+    borderRadius: 12,
     borderWidth: 1,
-    borderBottomWidth: 3,
-    padding: ResponsivePixels.size16,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 3,
-    marginBottom: ResponsivePixels.size24,
+    padding: 10,
   },
-  conciergeTopRow: {
+  tipText: {
+    flex: 1,
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 11.5,
+    lineHeight: 16,
+  },
+  tipBold: {
+    fontFamily: Fonts.poppins.bold,
+  },
+  /* Bottom concierge desk */
+  conciergeDeskCard: {
+    borderRadius: 20,
+    borderWidth: 1.5,
+    padding: 16,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  deskTopRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 12,
-    marginBottom: ResponsivePixels.size16,
+    marginBottom: 14,
   },
-  conciergeIconWrap: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+  deskIconCircle: {
+    width: 42,
+    height: 42,
+    borderRadius: 21,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  conciergeMeta: {
+  deskMeta: {
     flex: 1,
   },
-  conciergeTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 4,
-  },
-  conciergeTitle: {
+  deskTitle: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 15,
+    fontSize: 14.5,
+    marginBottom: 2,
   },
-  conciergeDesc: {
-    ...Typography.bodySuperSmallPoppinsRegularLoose,
-    fontSize: 11,
+  deskDesc: {
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 11.5,
     lineHeight: 16,
   },
-  contactBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: 44,
-    borderRadius: 22,
-    gap: 8,
-  },
-  contactBtnText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
-    color: '#FFFFFF',
+  deskButton: {
+    width: '100%',
   },
 });
