@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,10 @@ import {
   StatusBar,
   Platform,
   KeyboardAvoidingView,
+  Animated,
+  Dimensions,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -19,7 +23,6 @@ import {
   Mail,
   FileText,
   ShieldCheck,
-  CheckCircle2,
   Calendar,
   Flame,
   CheckSquare,
@@ -38,7 +41,11 @@ import { ProBadge } from '../../Common/ProBadge';
 import CustomButton from '../../Common/CustomButton';
 import { useTheme } from '../../Theme/ThemeContext';
 import { useTaskReminder } from '../../Context/TaskReminderContext';
+import { SettingsBackgroundSvg } from '../Settings/Components/SettingsBackgroundSvg';
+import { HeaderPatternSvg } from '../Dashboard/Components/HeaderPatternSvg';
 
+const { width: screenWidth } = Dimensions.get('window');
+const HEADER_HEIGHT = 52;
 const PROFILE_STORAGE_KEY = '@regius_profile_data';
 
 export const ProfileScreen: React.FC = () => {
@@ -53,8 +60,66 @@ export const ProfileScreen: React.FC = () => {
   const [role, setRole] = useState('Regius Pro Member');
   const [isSaving, setIsSaving] = useState(false);
 
-  // Focus states for luxury input borders
   const [focusedInput, setFocusedInput] = useState<string | null>(null);
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const isScrolledRef = useRef(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    {
+      useNativeDriver: false,
+      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const offsetY = event?.nativeEvent?.contentOffset?.y ?? 0;
+        if (offsetY > 15 && !isScrolledRef.current) {
+          isScrolledRef.current = true;
+          setIsScrolled(true);
+        } else if (offsetY <= 15 && isScrolledRef.current) {
+          isScrolledRef.current = false;
+          setIsScrolled(false);
+        }
+      },
+    },
+  );
+
+  const headerBgColor = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [
+      isDarkMode ? 'rgba(18, 20, 23, 0)' : 'rgba(255, 252, 227, 0)',
+      isDarkMode ? '#282048' : Colors.LavenderPurple,
+    ],
+    extrapolate: 'clamp',
+  });
+
+  const headerRadius = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 24],
+    extrapolate: 'clamp',
+  });
+
+  const headerShadowOpacity = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 0.32],
+    extrapolate: 'clamp',
+  });
+
+  const headerElevation = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 8],
+    extrapolate: 'clamp',
+  });
+
+  const headerPaddingBottom = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 8],
+    extrapolate: 'clamp',
+  });
+
+  const headerPatternOpacity = scrollY.interpolate({
+    inputRange: [0, 25],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
 
   const completedTasksCount = tasks.filter(t => t.done).length;
   const activeHabitsStreak = habits.reduce(
@@ -134,120 +199,191 @@ export const ProfileScreen: React.FC = () => {
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>
       <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        {...(Platform.OS === 'android' ? { backgroundColor: bgMain } : {})}
+        barStyle={
+          isScrolled
+            ? 'light-content'
+            : isDarkMode
+            ? 'light-content'
+            : 'dark-content'
+        }
+        {...(Platform.OS === 'android'
+          ? {
+              backgroundColor: isScrolled
+                ? isDarkMode
+                  ? '#282048'
+                  : Colors.LavenderPurple
+                : bgMain,
+              translucent: true,
+            }
+          : {})}
       />
 
-      {/* Header */}
-      <View
+      <SettingsBackgroundSvg />
+
+      {/* Scroll-Reactive Header */}
+      <Animated.View
         style={[
-          styles.headerRow,
+          styles.headerContainer,
           {
-            paddingTop: insets.top + 8,
-            borderBottomColor: borderLight,
+            paddingTop: insets.top,
+            paddingBottom: headerPaddingBottom,
+            backgroundColor: headerBgColor,
+            borderBottomLeftRadius: headerRadius,
+            borderBottomRightRadius: headerRadius,
+            shadowOpacity: headerShadowOpacity,
+            elevation: headerElevation,
           },
         ]}
       >
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => navigation.goBack()}
+        <Animated.View
+          pointerEvents="none"
           style={[
-            styles.backButton,
+            StyleSheet.absoluteFill,
             {
-              backgroundColor: cardBg,
-              borderColor: borderLight,
+              opacity: headerPatternOpacity,
+              borderBottomLeftRadius: headerRadius,
+              borderBottomRightRadius: headerRadius,
+              overflow: 'hidden',
             },
           ]}
-          accessibilityRole="button"
-          accessibilityLabel="Back to Settings"
         >
-          <ChevronLeft size={20} color={textPrimary} strokeWidth={2.4} />
-        </TouchableOpacity>
+          <HeaderPatternSvg width={screenWidth} insetsTop={insets.top} />
+        </Animated.View>
 
-        <View style={styles.headerTitleWrap}>
-          <Text style={[styles.headerTitle, { color: textPrimary }]}>
-            Profile & Account
-          </Text>
-          <Text style={[styles.headerSubtitle, { color: textSecondary }]}>
-            Identity & Persona
-          </Text>
+        <View style={[styles.headerRow, { height: HEADER_HEIGHT }]}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => navigation.goBack()}
+            style={[
+              styles.backButton,
+              isScrolled
+                ? styles.backButtonScrolled
+                : {
+                    backgroundColor: cardBg,
+                    borderColor: isDarkMode
+                      ? 'rgba(255, 255, 255, 0.12)'
+                      : '#FFFFFF',
+                    borderBottomColor: isDarkMode ? '#14161A' : '#DCD6CA',
+                    shadowColor: isDarkMode ? '#000000' : 'rgba(0, 0, 0, 0.08)',
+                  },
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Back to Settings"
+          >
+            <ChevronLeft
+              size={20}
+              color={isScrolled ? Colors.DefaultWhite : textPrimary}
+              strokeWidth={2.4}
+            />
+          </TouchableOpacity>
+
+          <View style={styles.headerTitleWrap}>
+            <Text
+              style={[
+                styles.headerTitle,
+                isScrolled
+                  ? styles.headerTitleScrolled
+                  : { color: textPrimary },
+              ]}
+              numberOfLines={1}
+            >
+              Profile & Account
+            </Text>
+            <Text
+              style={[
+                styles.headerSubtitle,
+                isScrolled
+                  ? styles.headerSubtitleScrolled
+                  : { color: textSecondary },
+              ]}
+              numberOfLines={1}
+            >
+              Identity & Persona
+            </Text>
+          </View>
+
+          <ProBadge size="sm" />
         </View>
-
-        <ProBadge size="sm" />
-      </View>
+      </Animated.View>
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
         style={styles.keyboardView}
       >
-        <ScrollView
+        <Animated.ScrollView
           style={styles.scrollView}
           contentContainerStyle={[
             styles.scrollContent,
-            { paddingBottom: insets.bottom + 40 },
+            { paddingBottom: insets.bottom + 100 },
           ]}
           showsVerticalScrollIndicator={false}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
         >
-          {/* Avatar Hero Bento */}
-          <View
-            style={[
-              styles.avatarCard,
-              {
-                backgroundColor: cardBg,
-                borderColor: isDarkMode
-                  ? 'rgba(255, 255, 255, 0.12)'
-                  : '#FFFFFF',
-                borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
-                shadowColor: isDarkMode
-                  ? '#000000'
-                  : 'rgba(131, 131, 214, 0.14)',
-              },
-            ]}
-          >
-            <View style={styles.avatarWrapper}>
-              <View
-                style={[
-                  styles.avatarRing,
-                  { borderColor: Colors.LavenderPurple },
-                ]}
-              >
-                <SVGS.RegiusAvatar
-                  width={ResponsivePixels.size80}
-                  height={ResponsivePixels.size80}
-                />
+          {/* Avatar Hero Bento (Signature 2-Layer Obsidian Bento with 4px Ceramic Rim) */}
+          <View style={styles.heroOuterWrapper}>
+            <View style={styles.cardShadowWrapper}>
+              <View style={styles.card}>
+                <HeaderPatternSvg width={screenWidth} insetsTop={insets.top} />
+
+                <View style={styles.heroContent}>
+                  {/* Aura Status Pill */}
+                  <View style={styles.heroStatusRow}>
+                    <View style={styles.heroStatusLeft}>
+                      <Sparkles size={14} color="#F5C518" strokeWidth={2.4} />
+                      <Text style={styles.heroStatusLabel}>
+                        SOVEREIGN IDENTITY
+                      </Text>
+                    </View>
+                    <Badge label="TIER 5 VERIFIED" variant="yellow" size="sm" />
+                  </View>
+
+                  {/* Avatar Centerpiece with Solar Halo */}
+                  <View style={styles.avatarWrapper}>
+                    <View style={styles.avatarGlowHalo}>
+                      <View style={styles.avatarRing}>
+                        <SVGS.RegiusAvatar
+                          width={ResponsivePixels.size80}
+                          height={ResponsivePixels.size80}
+                        />
+                      </View>
+                    </View>
+                    <TouchableOpacity
+                      activeOpacity={0.8}
+                      style={styles.cameraBadge}
+                      onPress={() => {
+                        Toast.show({
+                          type: 'info',
+                          text1: 'Avatar Photo',
+                          text2:
+                            'Photo upload available in upcoming cloud release.',
+                        });
+                      }}
+                      accessibilityRole="button"
+                      accessibilityLabel="Change avatar image"
+                    >
+                      <Camera size={14} color="#FFFFFF" strokeWidth={2.4} />
+                    </TouchableOpacity>
+                  </View>
+
+                  {/* Identity Readout */}
+                  <Text style={styles.heroName}>{name || 'Alex Mercer'}</Text>
+                  <Text style={styles.heroEmail}>
+                    {email || 'alex.mercer@regius.ai'}
+                  </Text>
+
+                  {/* Role Badges */}
+                  <View style={styles.roleBadgeRow}>
+                    <Badge label="VERIFIED PRO" variant="purple" size="sm" />
+                    <View style={styles.badgeGap} />
+                    <Badge label="CONCIERGE TIER" variant="yellow" size="sm" />
+                  </View>
+                </View>
               </View>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.cameraBadge}
-                onPress={() => {
-                  Toast.show({
-                    type: 'info',
-                    text1: 'Avatar Photo',
-                    text2: 'Photo upload available in upcoming cloud release.',
-                  });
-                }}
-                accessibilityRole="button"
-                accessibilityLabel="Change avatar image"
-              >
-                <Camera size={14} color="#FFFFFF" strokeWidth={2.4} />
-              </TouchableOpacity>
-            </View>
-
-            <Text style={[styles.heroName, { color: textPrimary }]}>
-              {name || 'Alex Mercer'}
-            </Text>
-            <Text style={[styles.heroEmail, { color: textSecondary }]}>
-              {email || 'alex.mercer@regius.ai'}
-            </Text>
-
-            <View style={styles.roleBadgeRow}>
-              <Badge label="VERIFIED PRO" variant="purple" size="sm" />
-              <View style={styles.badgeGap} />
-              <Badge label="CONCIERGE TIER" variant="yellow" size="sm" />
             </View>
           </View>
 
-          {/* Activity & Stats Bento */}
+          {/* Activity & Discipline Matrix Bento */}
           <View
             style={[
               styles.statsGridCard,
@@ -512,18 +648,29 @@ export const ProfileScreen: React.FC = () => {
               </View>
             </View>
           </View>
-
-          {/* Action Button */}
-          <View style={styles.buttonContainer}>
-            <CustomButton
-              title={isSaving ? 'Saving Changes...' : 'Save Profile Changes'}
-              onPress={handleSave}
-              disabled={isSaving}
-              variant="dark"
-            />
-          </View>
-        </ScrollView>
+        </Animated.ScrollView>
       </KeyboardAvoidingView>
+
+      {/* Floating Action Dock */}
+      <View
+        style={[
+          styles.floatingActionDock,
+          {
+            paddingBottom: Math.max(insets.bottom, 16),
+            backgroundColor: isDarkMode
+              ? 'rgba(18, 20, 23, 0.92)'
+              : 'rgba(255, 252, 227, 0.94)',
+            borderTopColor: borderLight,
+          },
+        ]}
+      >
+        <CustomButton
+          title={isSaving ? 'Saving Changes...' : 'Save Profile Changes'}
+          onPress={handleSave}
+          disabled={isSaving}
+          variant="dark"
+        />
+      </View>
     </View>
   );
 };
@@ -534,21 +681,35 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headerContainer: {
+    shadowColor: Colors.LavenderPurple,
+    shadowOffset: { width: 0, height: 6 },
+    shadowRadius: 12,
+    zIndex: 10,
+  },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: ResponsivePixels.size16,
-    paddingBottom: ResponsivePixels.size12,
-    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   backButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    borderWidth: 1,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderBottomWidth: 3,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  backButtonScrolled: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderBottomColor: 'rgba(255, 255, 255, 0.3)',
   },
   headerTitleWrap: {
     alignItems: 'center',
@@ -558,10 +719,16 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.ranade.bold,
     fontSize: 18,
   },
+  headerTitleScrolled: {
+    color: Colors.DefaultWhite,
+  },
   headerSubtitle: {
     ...Typography.bodySuperSmallPoppinsRegularLoose,
     fontSize: 11,
     marginTop: 2,
+  },
+  headerSubtitleScrolled: {
+    color: 'rgba(255, 255, 255, 0.85)',
   },
   keyboardView: {
     flex: 1,
@@ -570,31 +737,66 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: ResponsivePixels.size16,
     paddingTop: ResponsivePixels.size16,
   },
-  avatarCard: {
-    borderRadius: 20,
-    borderWidth: 1,
-    borderBottomWidth: 3,
-    paddingVertical: ResponsivePixels.size24,
-    paddingHorizontal: ResponsivePixels.size16,
+  heroOuterWrapper: {
+    paddingHorizontal: 10,
+    marginBottom: ResponsivePixels.size20,
+  },
+  cardShadowWrapper: {
+    backgroundColor: Colors.NeroBlack,
+    borderRadius: 24,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.28,
+    shadowRadius: 18,
+    elevation: 8,
+  },
+  card: {
+    backgroundColor: Colors.NeroBlack,
+    borderRadius: 24,
+    borderWidth: 4,
+    borderColor: 'rgba(255, 255, 255, 0.9)',
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  heroContent: {
+    padding: ResponsivePixels.size20,
     alignItems: 'center',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
-    elevation: 3,
-    marginBottom: ResponsivePixels.size16,
+  },
+  heroStatusRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: ResponsivePixels.size14,
+  },
+  heroStatusLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  heroStatusLabel: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 11,
+    color: '#F5C518',
+    letterSpacing: 1.2,
   },
   avatarWrapper: {
     position: 'relative',
     marginBottom: ResponsivePixels.size12,
+  },
+  avatarGlowHalo: {
+    padding: 3,
+    borderRadius: 50,
+    backgroundColor: 'rgba(245, 197, 24, 0.25)',
   },
   avatarRing: {
     width: ResponsivePixels.size90,
     height: ResponsivePixels.size90,
     borderRadius: ResponsivePixels.size45,
     borderWidth: 3,
+    borderColor: '#F5C518',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#FAF8F5',
@@ -611,14 +813,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderWidth: 2,
     borderColor: '#FFFFFF',
+    elevation: 4,
   },
   heroName: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 20,
+    fontSize: 22,
+    color: '#FFFCE3',
     marginBottom: 4,
   },
   heroEmail: {
     ...Typography.bodySmallPoppinsRegular,
+    color: 'rgba(255, 255, 255, 0.7)',
     fontSize: 13,
     marginBottom: ResponsivePixels.size12,
   },
@@ -631,86 +836,87 @@ const styles = StyleSheet.create({
   },
   statsGridCard: {
     flexDirection: 'row',
-    borderRadius: 18,
-    borderWidth: 1,
-    borderBottomWidth: 3,
+    marginHorizontal: ResponsivePixels.size16,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderBottomWidth: 3.5,
     paddingVertical: ResponsivePixels.size16,
     paddingHorizontal: ResponsivePixels.size12,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.08,
     shadowRadius: 10,
     elevation: 2,
-    marginBottom: ResponsivePixels.size20,
+    marginBottom: ResponsivePixels.size24,
   },
   statCol: {
     flex: 1,
     alignItems: 'center',
   },
   statIconWrap: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 6,
   },
   statValue: {
-    fontFamily: Fonts.poppins.bold,
-    fontSize: 16,
+    fontFamily: Fonts.ranade.bold,
+    fontSize: 18,
     marginBottom: 2,
   },
   statLabel: {
     ...Typography.bodySuperSmallPoppinsRegularLoose,
-    fontSize: 10,
-    textAlign: 'center',
+    fontSize: 11,
   },
   statDivider: {
     width: 1,
-    height: '70%',
+    height: '75%',
     alignSelf: 'center',
   },
   sectionHeading: {
     ...Typography.bodySuperSmallPoppinsRegularLoose,
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 11,
-    letterSpacing: 1,
+    letterSpacing: 1.1,
+    marginHorizontal: ResponsivePixels.size16,
     marginBottom: ResponsivePixels.size8,
-    marginLeft: 4,
   },
   formCard: {
-    borderRadius: 20,
-    borderWidth: 1,
-    borderBottomWidth: 3,
+    marginHorizontal: ResponsivePixels.size16,
+    borderRadius: 22,
+    borderWidth: 1.5,
+    borderBottomWidth: 3.5,
     padding: ResponsivePixels.size16,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.1,
     shadowRadius: 12,
     elevation: 3,
-    marginBottom: ResponsivePixels.size20,
+    marginBottom: ResponsivePixels.size24,
   },
   inputGroup: {
-    paddingVertical: ResponsivePixels.size6,
+    marginVertical: 4,
   },
   inputLabelRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: ResponsivePixels.size6,
-    gap: 6,
+    gap: 8,
+    marginBottom: 8,
   },
   inputLabel: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 13,
   },
   inputWrap: {
-    borderRadius: 12,
+    borderRadius: 14,
     borderWidth: 1.5,
-    paddingHorizontal: ResponsivePixels.size12,
-    height: 46,
+    paddingHorizontal: 14,
+    height: 48,
     justifyContent: 'center',
   },
   textAreaWrap: {
     height: 80,
-    paddingTop: ResponsivePixels.size8,
+    paddingVertical: 10,
   },
   input: {
     fontFamily: Fonts.poppins.regular,
@@ -718,14 +924,25 @@ const styles = StyleSheet.create({
     padding: 0,
   },
   textArea: {
+    height: 60,
     textAlignVertical: 'top',
-    height: '100%',
   },
   fieldDivider: {
-    height: 1,
-    marginVertical: ResponsivePixels.size10,
+    height: StyleSheet.hairlineWidth,
+    marginVertical: 12,
   },
-  buttonContainer: {
-    marginTop: ResponsivePixels.size8,
+  floatingActionDock: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    paddingHorizontal: ResponsivePixels.size16,
+    paddingTop: 12,
+    borderTopWidth: StyleSheet.hairlineWidth,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 10,
   },
 });

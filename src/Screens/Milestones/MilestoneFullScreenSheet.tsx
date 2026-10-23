@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Modal,
   View,
@@ -7,6 +7,12 @@ import {
   TouchableOpacity,
   ScrollView,
   StatusBar,
+  Vibration,
+  Dimensions,
+  Animated,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+  Platform,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
@@ -25,16 +31,23 @@ import Toast from 'react-native-toast-message';
 
 import { Typography } from '../../Theme/Typographys';
 import { Fonts } from '../../Theme/fonts';
-import { Colors as StaticColors } from '../../Assets/StyleUtilities/Colors';
+import {
+  Colors as StaticColors,
+  Colors,
+} from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../Common/Badge';
 import { ProBadge } from '../../Common/ProBadge';
 import { useTheme } from '../../Theme/ThemeContext';
 import { useMilestones } from '../../Context/MilestoneContext';
+import { HeaderPatternSvg } from '../Dashboard/Components/HeaderPatternSvg';
 import {
   MILESTONE_TIERS,
   XP_RULES,
 } from '../../Services/Milestone/MilestoneService';
+
+const { width: screenWidth } = Dimensions.get('window');
+const HEADER_HEIGHT = 52;
 
 export const MilestoneFullScreenSheet: React.FC = () => {
   const insets = useSafeAreaInsets();
@@ -54,6 +67,66 @@ export const MilestoneFullScreenSheet: React.FC = () => {
     habitsFollowedCount,
   } = useMilestones();
 
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const isScrolledRef = useRef(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    {
+      useNativeDriver: false,
+      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const offsetY = event?.nativeEvent?.contentOffset?.y ?? 0;
+        if (offsetY > 15 && !isScrolledRef.current) {
+          isScrolledRef.current = true;
+          setIsScrolled(true);
+        } else if (offsetY <= 15 && isScrolledRef.current) {
+          isScrolledRef.current = false;
+          setIsScrolled(false);
+        }
+      },
+    },
+  );
+
+  const headerBgColor = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [
+      isDarkMode ? 'rgba(18, 20, 23, 0)' : 'rgba(255, 252, 227, 0)',
+      isDarkMode ? '#282048' : Colors.LavenderPurple,
+    ],
+    extrapolate: 'clamp',
+  });
+
+  const headerRadius = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 24],
+    extrapolate: 'clamp',
+  });
+
+  const headerShadowOpacity = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 0.32],
+    extrapolate: 'clamp',
+  });
+
+  const headerElevation = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 8],
+    extrapolate: 'clamp',
+  });
+
+  const headerPaddingBottom = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 8],
+    extrapolate: 'clamp',
+  });
+
+  const headerPatternOpacity = scrollY.interpolate({
+    inputRange: [0, 25],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
+
   // Dynamic light/dark theme tokens
   const sheetBg = isDarkMode ? '#121417' : StaticColors.CreamBackground;
   const cardBg = isDarkMode ? '#1E2228' : '#FFFFFF';
@@ -63,10 +136,12 @@ export const MilestoneFullScreenSheet: React.FC = () => {
   const dividerColor = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : '#ECE6DA';
 
   const handleApplyTheme = (themeId: string, themeName: string) => {
+    Vibration.vibrate(25);
     setActiveThemeId(themeId as any);
     Toast.show({
-      type: 'info',
-      text2: `Theme switched to ${themeName}`,
+      type: 'success',
+      text1: 'Theme Applied',
+      text2: `Switched to ${themeName} palette.`,
     });
   };
 
@@ -82,27 +157,98 @@ export const MilestoneFullScreenSheet: React.FC = () => {
           styles.fullScreenContainer,
           {
             backgroundColor: sheetBg,
-            paddingTop: insets.top,
             paddingBottom: Math.max(insets.bottom, 16),
           },
         ]}
       >
-        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+        <StatusBar
+          barStyle={
+            isScrolled
+              ? 'light-content'
+              : isDarkMode
+              ? 'light-content'
+              : 'dark-content'
+          }
+          {...(Platform.OS === 'android'
+            ? {
+                backgroundColor: isScrolled
+                  ? isDarkMode
+                    ? '#282048'
+                    : Colors.LavenderPurple
+                  : sheetBg,
+                translucent: true,
+              }
+            : {})}
+        />
 
-        {/* Sticky Sheet Header */}
-        <View style={[styles.headerRow, { borderBottomColor: dividerColor }]}>
+        {/* Scroll-Reactive Sheet Header */}
+        <Animated.View
+          style={[
+            styles.headerContainer,
+            {
+              paddingTop: insets.top,
+              paddingBottom: headerPaddingBottom,
+              backgroundColor: headerBgColor,
+              borderBottomLeftRadius: headerRadius,
+              borderBottomRightRadius: headerRadius,
+              shadowOpacity: headerShadowOpacity,
+              elevation: headerElevation,
+            },
+          ]}
+        >
+          <Animated.View
+            pointerEvents="none"
+            style={[
+              StyleSheet.absoluteFill,
+              {
+                opacity: headerPatternOpacity,
+                borderBottomLeftRadius: headerRadius,
+                borderBottomRightRadius: headerRadius,
+                overflow: 'hidden',
+              },
+            ]}
+          >
+            <HeaderPatternSvg width={screenWidth} insetsTop={insets.top} />
+          </Animated.View>
+
+          <View style={[styles.headerRow, { height: HEADER_HEIGHT }]}>
             <View style={styles.headerTitleWrap}>
-              <View style={styles.headerIconBadge}>
-                <Crown size={18} color="#D97706" strokeWidth={2.4} />
+              <View
+                style={[
+                  styles.headerIconBadge,
+                  isScrolled && { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
+                ]}
+              >
+                <Crown
+                  size={18}
+                  color={isScrolled ? '#F5C518' : '#D97706'}
+                  strokeWidth={2.4}
+                />
               </View>
-              <View>
+              <View style={styles.headerTextCol}>
                 <View style={styles.titleRow}>
-                  <Text style={[styles.headerTitle, { color: textPrimary }]}>
+                  <Text
+                    style={[
+                      styles.headerTitle,
+                      isScrolled
+                        ? styles.headerTitleScrolled
+                        : { color: textPrimary },
+                    ]}
+                    numberOfLines={1}
+                  >
                     Milestones & Pro Unlocks
                   </Text>
                   <ProBadge size="sm" />
                 </View>
-                <Text style={[styles.headerSubtitle, { color: textSecondary }]}>
+                <Text
+                  style={[
+                    styles.headerSubtitle,
+                    isScrolled
+                      ? styles.headerSubtitleScrolled
+                      : { color: textSecondary },
+                  ]}
+                  numberOfLines={1}
+                >
                   Earn bespoke themes & privileges via discipline
                 </Text>
               </View>
@@ -111,208 +257,194 @@ export const MilestoneFullScreenSheet: React.FC = () => {
             <TouchableOpacity
               style={[
                 styles.closeBtn,
-                {
-                  backgroundColor: isDarkMode
-                    ? 'rgba(255, 255, 255, 0.1)'
-                    : '#EDE7DC',
-                  borderColor: isDarkMode
-                    ? 'rgba(255, 255, 255, 0.15)'
-                    : '#DCD6CA',
-                },
+                isScrolled
+                  ? styles.closeBtnScrolled
+                  : {
+                      backgroundColor: cardBg,
+                      borderColor: isDarkMode
+                        ? 'rgba(255, 255, 255, 0.12)'
+                        : '#FFFFFF',
+                      borderBottomColor: isDarkMode ? '#14161A' : '#DCD6CA',
+                      shadowColor: isDarkMode
+                        ? '#000000'
+                        : 'rgba(0, 0, 0, 0.08)',
+                    },
               ]}
               onPress={closeMilestoneModal}
               activeOpacity={0.8}
               accessibilityRole="button"
               accessibilityLabel="Close milestones sheet"
             >
-              <X size={18} color={textPrimary} strokeWidth={2.4} />
+              <X
+                size={18}
+                color={isScrolled ? Colors.DefaultWhite : textPrimary}
+                strokeWidth={2.4}
+              />
             </TouchableOpacity>
           </View>
+        </Animated.View>
 
-          <ScrollView
-            style={styles.scrollArea}
-            contentContainerStyle={styles.scrollContent}
-            showsVerticalScrollIndicator={false}
+        <Animated.ScrollView
+          style={styles.scrollArea}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+        >
+          {/* Hero Prestige Rank Status Card (2-Layer Obsidian Bento) */}
+          <View style={styles.heroOuterWrapper}>
+            <View style={styles.cardShadowWrapper}>
+              <View style={styles.card}>
+                <HeaderPatternSvg width={screenWidth} insetsTop={insets.top} />
+
+                <View style={styles.heroContent}>
+                  <View style={styles.heroTopRow}>
+                    <View style={styles.heroLeft}>
+                      <View style={styles.tierBadgeRow}>
+                        <Badge
+                          label={`Tier ${currentTier.level}`}
+                          variant={currentTier.badgeVariant}
+                          size="sm"
+                        />
+                        <Text style={styles.heroTierTitle}>
+                          {currentTier.title}
+                        </Text>
+                      </View>
+                      <Text style={styles.heroSubtitle}>
+                        {currentTier.subtitle}
+                      </Text>
+                    </View>
+
+                    <View style={styles.xpCircleBadge}>
+                      <Text style={styles.xpAmountText}>{totalXp}</Text>
+                      <Text style={styles.xpUnitText}>Total XP</Text>
+                    </View>
+                  </View>
+
+                  {/* Progress bar to next tier */}
+                  {nextTier ? (
+                    <View style={styles.progressSection}>
+                      <View style={styles.progressLabelRow}>
+                        <Text style={styles.progressLabelLeft}>
+                          Next Rank: {nextTier.title} (Tier {nextTier.level})
+                        </Text>
+                        <Text style={styles.progressLabelRight}>
+                          {currentInTier} / {requiredForTier} XP
+                        </Text>
+                      </View>
+                      <View style={styles.progressBarTrack}>
+                        <View
+                          style={[
+                            styles.progressBarFill,
+                            {
+                              width: `${Math.round(tierProgress * 100)}%`,
+                              backgroundColor:
+                                currentTier.accentColor || '#F5C518',
+                            },
+                          ]}
+                        />
+                      </View>
+                    </View>
+                  ) : (
+                    <View style={styles.maxTierSection}>
+                      <Sparkles size={16} color="#F5C518" strokeWidth={2} />
+                      <Text style={styles.maxTierText}>
+                        Supreme Sovereign Rank Achieved
+                      </Text>
+                    </View>
+                  )}
+
+                  {/* Productivity Accomplishments Grid */}
+                  <View style={styles.statsSummaryGrid}>
+                    <View style={styles.statSummaryItem}>
+                      <CheckSquare
+                        size={16}
+                        color="#F5C518"
+                        strokeWidth={2.4}
+                      />
+                      <Text style={styles.statSummaryVal}>
+                        {completedTasksCount}
+                      </Text>
+                      <Text style={styles.statSummaryLbl}>Tasks Done</Text>
+                    </View>
+                    <View style={styles.statDivider} />
+                    <View style={styles.statSummaryItem}>
+                      <Bell size={16} color="#52D22E" strokeWidth={2.4} />
+                      <Text style={styles.statSummaryVal}>
+                        {completedRemindersCount}
+                      </Text>
+                      <Text style={styles.statSummaryLbl}>Reminders</Text>
+                    </View>
+                    <View style={styles.statDivider} />
+                    <View style={styles.statSummaryItem}>
+                      <Activity size={16} color="#8383D6" strokeWidth={2.4} />
+                      <Text style={styles.statSummaryVal}>
+                        {habitsFollowedCount}
+                      </Text>
+                      <Text style={styles.statSummaryLbl}>Habits Kept</Text>
+                    </View>
+                  </View>
+                </View>
+              </View>
+            </View>
+          </View>
+
+          {/* How to Earn XP Info Box */}
+          <View
+            style={[
+              styles.xpGuideBox,
+              {
+                backgroundColor: cardBg,
+                borderColor: cardBorder,
+                borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
+                shadowColor: isDarkMode
+                  ? '#000000'
+                  : 'rgba(131, 131, 214, 0.1)',
+              },
+            ]}
           >
-            {/* Hero Prestige Rank Status Card */}
-            <View
-              style={[
-                styles.heroCard,
-                {
-                  backgroundColor: cardBg,
-                  borderColor: cardBorder,
-                  borderBottomColor: isDarkMode ? '#15181C' : '#D8D1C4',
-                  shadowColor: isDarkMode
-                    ? '#000000'
-                    : 'rgba(131, 131, 214, 0.12)',
-                },
-              ]}
-            >
-              <View style={styles.heroTopRow}>
-                <View style={styles.heroLeft}>
-                  <View style={styles.tierBadgeRow}>
-                    <Badge
-                      label={`Tier ${currentTier.level}`}
-                      variant={currentTier.badgeVariant}
-                      size="sm"
-                    />
-                    <Text style={[styles.heroTierTitle, { color: textPrimary }]}>
-                      {currentTier.title}
-                    </Text>
-                  </View>
-                  <Text style={[styles.heroSubtitle, { color: textSecondary }]}>
-                    {currentTier.subtitle}
-                  </Text>
-                </View>
-
-                <View style={styles.xpCircleBadge}>
-                  <Text style={styles.xpAmountText}>{totalXp}</Text>
-                  <Text style={styles.xpUnitText}>Total XP</Text>
-                </View>
-              </View>
-
-              {/* Progress bar to next tier */}
-              {nextTier ? (
-                <View style={styles.progressSection}>
-                  <View style={styles.progressLabelRow}>
-                    <Text
-                      style={[styles.progressLabelLeft, { color: textSecondary }]}
-                    >
-                      Next Rank: {nextTier.title} (Tier {nextTier.level})
-                    </Text>
-                    <Text
-                      style={[
-                        styles.progressLabelRight,
-                        { color: currentTier.accentColor },
-                      ]}
-                    >
-                      {currentInTier} / {requiredForTier} XP
-                    </Text>
-                  </View>
-                  <View
-                    style={[
-                      styles.progressBarTrack,
-                      {
-                        backgroundColor: isDarkMode
-                          ? 'rgba(255, 255, 255, 0.1)'
-                          : '#E6E0D2',
-                      },
-                    ]}
-                  >
-                    <View
-                      style={[
-                        styles.progressBarFill,
-                        {
-                          width: `${Math.round(tierProgress * 100)}%`,
-                          backgroundColor: currentTier.accentColor,
-                        },
-                      ]}
-                    />
-                  </View>
-                </View>
-              ) : (
-                <View style={styles.maxTierSection}>
-                  <Sparkles size={16} color="#F5C518" strokeWidth={2} />
-                  <Text style={styles.maxTierText}>
-                    Supreme Sovereign Rank Achieved
-                  </Text>
-                </View>
-              )}
-
-              {/* Productivity Accomplishments Grid */}
-              <View
-                style={[
-                  styles.statsSummaryGrid,
-                  { borderTopColor: dividerColor },
-                ]}
-              >
-                <View style={styles.statSummaryItem}>
-                  <CheckSquare size={14} color="#F5C518" strokeWidth={2.3} />
-                  <Text style={[styles.statSummaryVal, { color: textPrimary }]}>
-                    {completedTasksCount}
-                  </Text>
-                  <Text style={[styles.statSummaryLbl, { color: textSecondary }]}>
-                    Tasks Done
-                  </Text>
-                </View>
-                <View
-                  style={[styles.statDivider, { backgroundColor: dividerColor }]}
-                />
-                <View style={styles.statSummaryItem}>
-                  <Bell size={14} color="#52D22E" strokeWidth={2.3} />
-                  <Text style={[styles.statSummaryVal, { color: textPrimary }]}>
-                    {completedRemindersCount}
-                  </Text>
-                  <Text style={[styles.statSummaryLbl, { color: textSecondary }]}>
-                    Reminders
-                  </Text>
-                </View>
-                <View
-                  style={[styles.statDivider, { backgroundColor: dividerColor }]}
-                />
-                <View style={styles.statSummaryItem}>
-                  <Activity size={14} color="#8383D6" strokeWidth={2.3} />
-                  <Text style={[styles.statSummaryVal, { color: textPrimary }]}>
-                    {habitsFollowedCount}
-                  </Text>
-                  <Text style={[styles.statSummaryLbl, { color: textSecondary }]}>
-                    Habits Kept
-                  </Text>
-                </View>
-              </View>
+            <View style={styles.xpGuideHeader}>
+              <Zap size={15} color="#D97706" strokeWidth={2.4} />
+              <Text style={[styles.xpGuideTitle, { color: textPrimary }]}>
+                How to Earn Discipline XP
+              </Text>
             </View>
-
-            {/* How to Earn XP Info Box */}
-            <View
-              style={[
-                styles.xpGuideBox,
-                {
-                  backgroundColor: isDarkMode
-                    ? 'rgba(245, 197, 24, 0.08)'
-                    : '#FFFBEB',
-                  borderColor: 'rgba(245, 197, 24, 0.3)',
-                },
-              ]}
-            >
-              <View style={styles.xpGuideHeader}>
-                <Zap size={15} color="#D97706" strokeWidth={2.4} />
-                <Text style={styles.xpGuideTitle}>How to Earn XP</Text>
-              </View>
-              <View style={styles.xpGuideRow}>
-                <Text style={[styles.xpGuideItem, { color: textSecondary }]}>
-                  • Task Done:{' '}
-                  <Text style={[styles.xpHighlight, { color: textPrimary }]}>
-                    +{XP_RULES.TASK_COMPLETION} XP
-                  </Text>
+            <View style={styles.xpGuideRow}>
+              <Text style={[styles.xpGuideItem, { color: textSecondary }]}>
+                • Task Completed:{' '}
+                <Text style={[styles.xpHighlight, { color: textPrimary }]}>
+                  +{XP_RULES.TASK_COMPLETION} XP
                 </Text>
-                <Text style={[styles.xpGuideItem, { color: textSecondary }]}>
-                  • Reminder Done:{' '}
-                  <Text style={[styles.xpHighlight, { color: textPrimary }]}>
-                    +{XP_RULES.REMINDER_COMPLETION} XP
-                  </Text>
+              </Text>
+              <Text style={[styles.xpGuideItem, { color: textSecondary }]}>
+                • Reminder Done:{' '}
+                <Text style={[styles.xpHighlight, { color: textPrimary }]}>
+                  +{XP_RULES.REMINDER_COMPLETION} XP
                 </Text>
-              </View>
-              <View style={styles.xpGuideRow}>
-                <Text style={[styles.xpGuideItem, { color: textSecondary }]}>
-                  • Habit Kept:{' '}
-                  <Text style={[styles.xpHighlight, { color: textPrimary }]}>
-                    +{XP_RULES.HABIT_CHECKIN} XP
-                  </Text>
-                </Text>
-                <Text style={[styles.xpGuideItem, { color: textSecondary }]}>
-                  • Streak Bonus:{' '}
-                  <Text style={[styles.xpHighlight, { color: textPrimary }]}>
-                    +{XP_RULES.HABIT_STREAK_BONUS_PER_DAY} XP / Day
-                  </Text>
-                </Text>
-              </View>
+              </Text>
             </View>
+            <View style={styles.xpGuideRow}>
+              <Text style={[styles.xpGuideItem, { color: textSecondary }]}>
+                • Habit Kept:{' '}
+                <Text style={[styles.xpHighlight, { color: textPrimary }]}>
+                  +{XP_RULES.HABIT_CHECKIN} XP
+                </Text>
+              </Text>
+              <Text style={[styles.xpGuideItem, { color: textSecondary }]}>
+                • Streak Bonus:{' '}
+                <Text style={[styles.xpHighlight, { color: textPrimary }]}>
+                  +{XP_RULES.HABIT_STREAK_BONUS_PER_DAY} XP / Day
+                </Text>
+              </Text>
+            </View>
+          </View>
 
-            {/* 5-Tier Prestige Roadmap */}
-            <Text style={[styles.roadmapHeading, { color: textPrimary }]}>
-              Prestige Tier Roadmap
-            </Text>
+          {/* 5-Tier Prestige Roadmap */}
+          <Text style={[styles.roadmapHeading, { color: textSecondary }]}>
+            PRESTIGE TIER ROADMAP
+          </Text>
 
+          <View style={styles.tiersContainer}>
             {MILESTONE_TIERS.map(tier => {
               const isCurrent = tier.level === currentTier.level;
               const isUnlocked = currentTier.level >= tier.level;
@@ -328,14 +460,20 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                       borderColor: isCurrent
                         ? currentTier.accentColor
                         : cardBorder,
-                      borderBottomColor: isDarkMode ? '#15181C' : '#D8D1C4',
-                      shadowColor: isDarkMode
+                      borderBottomColor: isCurrent
+                        ? currentTier.accentColor
+                        : isDarkMode
+                        ? '#171A20'
+                        : '#E2DCD0',
+                      shadowColor: isCurrent
+                        ? currentTier.accentColor
+                        : isDarkMode
                         ? '#000000'
                         : 'rgba(131, 131, 214, 0.08)',
                     },
                     isCurrent && {
-                      borderWidth: 1.8,
-                      borderBottomWidth: 3.5,
+                      borderWidth: 2,
+                      borderBottomWidth: 4,
                     },
                   ]}
                 >
@@ -419,7 +557,11 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                           },
                         ]}
                       >
-                        <Lock size={13} color={textSecondary} strokeWidth={2.2} />
+                        <Lock
+                          size={13}
+                          color={textSecondary}
+                          strokeWidth={2.2}
+                        />
                         <Text
                           style={[
                             styles.statusLockedText,
@@ -446,8 +588,8 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                           { color: textSecondary },
                         ]}
                       >
-                        <Palette size={12} color={textSecondary} /> Luxury Bespoke
-                        Themes:
+                        <Palette size={12} color={textSecondary} /> Luxury
+                        Bespoke Themes:
                       </Text>
                       <View style={styles.themeChipsRow}>
                         {tier.unlockedThemes.map(t => {
@@ -533,8 +675,8 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                           { color: textSecondary },
                         ]}
                       >
-                        <Sparkles size={12} color={textSecondary} /> Pro Privileges
-                        Unlocked:
+                        <Sparkles size={12} color={textSecondary} /> Pro
+                        Privileges Unlocked:
                       </Text>
                       {tier.unlockedFeatures.map(f => (
                         <View key={f.id} style={styles.featureItemRow}>
@@ -573,39 +715,45 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                 </View>
               );
             })}
-          </ScrollView>
-        </View>
-      </Modal>
-    );
+          </View>
+        </Animated.ScrollView>
+      </View>
+    </Modal>
+  );
 };
+
+export default MilestoneFullScreenSheet;
 
 const styles = StyleSheet.create({
   fullScreenContainer: {
     flex: 1,
+  },
+  headerContainer: {
+    shadowColor: Colors.LavenderPurple,
+    shadowOffset: { width: 0, height: 6 },
+    shadowRadius: 12,
+    zIndex: 10,
   },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: ResponsivePixels.size16,
-    paddingTop: ResponsivePixels.size10,
-    paddingBottom: ResponsivePixels.size14,
-    borderBottomWidth: 1,
   },
   headerTitleWrap: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
     flex: 1,
-    marginRight: 8,
+  },
+  headerTextCol: {
+    flex: 1,
   },
   headerIconBadge: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: 'rgba(245, 197, 24, 0.15)',
-    borderWidth: 1,
-    borderColor: 'rgba(245, 197, 24, 0.35)',
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#FEF3C7',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -616,66 +764,99 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 16.5,
+    fontSize: 16,
+  },
+  headerTitleScrolled: {
+    color: Colors.DefaultWhite,
   },
   headerSubtitle: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 11,
     marginTop: 1,
   },
+  headerSubtitleScrolled: {
+    color: 'rgba(255, 255, 255, 0.85)',
+  },
   closeBtn: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    borderWidth: 1.5,
+    borderBottomWidth: 3,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  closeBtnScrolled: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderBottomColor: 'rgba(255, 255, 255, 0.3)',
   },
   scrollArea: {
     flex: 1,
   },
   scrollContent: {
-    padding: ResponsivePixels.size16,
-    paddingBottom: ResponsivePixels.size36,
+    paddingTop: ResponsivePixels.size16,
+    paddingBottom: ResponsivePixels.size24,
   },
-  heroCard: {
-    borderRadius: 20,
-    padding: ResponsivePixels.size16,
-    borderWidth: 1.5,
-    borderBottomWidth: 3.5,
-    marginBottom: ResponsivePixels.size16,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.12,
-    shadowRadius: 10,
-    elevation: 3,
+  heroOuterWrapper: {
+    paddingHorizontal: 10,
+    marginBottom: ResponsivePixels.size20,
+  },
+  cardShadowWrapper: {
+    backgroundColor: StaticColors.NeroBlack,
+    borderRadius: 24,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.28,
+    shadowRadius: 18,
+    elevation: 8,
+  },
+  card: {
+    backgroundColor: StaticColors.NeroBlack,
+    borderRadius: 24,
+    borderWidth: 4,
+    borderColor: 'rgba(255, 255, 255, 0.9)',
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  heroContent: {
+    padding: ResponsivePixels.size20,
   },
   heroTopRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    marginBottom: ResponsivePixels.size16,
   },
   heroLeft: {
     flex: 1,
-    marginRight: 12,
+    paddingRight: 12,
   },
   tierBadgeRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+    marginBottom: 4,
   },
   heroTierTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 16,
+    fontSize: 20,
+    color: '#FFFCE3',
   },
   heroSubtitle: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 12,
-    marginTop: 4,
+    color: 'rgba(255, 255, 255, 0.7)',
+    lineHeight: 16,
   },
   xpCircleBadge: {
-    width: 62,
-    height: 62,
-    borderRadius: 31,
+    width: 68,
+    height: 68,
+    borderRadius: 34,
     backgroundColor: 'rgba(245, 197, 24, 0.15)',
     borderWidth: 2,
     borderColor: '#F5C518',
@@ -683,17 +864,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   xpAmountText: {
-    fontFamily: Fonts.poppins.bold,
-    fontSize: 15.5,
-    color: '#D97706',
+    fontFamily: Fonts.ranade.bold,
+    fontSize: 18,
+    color: '#F5C518',
   },
   xpUnitText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 9.5,
-    color: '#8E95A5',
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 10,
+    color: 'rgba(255, 255, 255, 0.7)',
   },
   progressSection: {
-    marginTop: 14,
+    marginBottom: ResponsivePixels.size16,
   },
   progressLabelRow: {
     flexDirection: 'row',
@@ -702,26 +883,29 @@ const styles = StyleSheet.create({
   },
   progressLabelLeft: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
+    fontSize: 11,
+    color: 'rgba(255, 255, 255, 0.75)',
   },
   progressLabelRight: {
-    fontFamily: Fonts.poppins.bold,
-    fontSize: 11.5,
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 11,
+    color: '#F5C518',
   },
   progressBarTrack: {
-    height: 7,
-    borderRadius: 4,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
     overflow: 'hidden',
   },
   progressBarFill: {
     height: '100%',
-    borderRadius: 4,
+    borderRadius: 3,
   },
   maxTierSection: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    marginTop: 12,
+    marginBottom: ResponsivePixels.size16,
   },
   maxTierText: {
     fontFamily: Fonts.poppins.semiBold,
@@ -731,44 +915,53 @@ const styles = StyleSheet.create({
   statsSummaryGrid: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
-    marginTop: 14,
-    paddingTop: 12,
+    justifyContent: 'space-between',
+    paddingTop: ResponsivePixels.size14,
     borderTopWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.12)',
   },
   statSummaryItem: {
-    flexDirection: 'row',
+    flex: 1,
     alignItems: 'center',
-    gap: 6,
   },
   statSummaryVal: {
-    fontFamily: Fonts.poppins.bold,
-    fontSize: 13.5,
+    fontFamily: Fonts.ranade.bold,
+    fontSize: 16,
+    color: '#FFFFFF',
+    marginTop: 4,
+    marginBottom: 1,
   },
   statSummaryLbl: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
+    fontSize: 10,
+    color: 'rgba(255, 255, 255, 0.65)',
   },
   statDivider: {
     width: 1,
-    height: 16,
+    height: 24,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
   },
   xpGuideBox: {
-    borderRadius: 16,
-    padding: 12,
-    borderWidth: 1,
-    marginBottom: ResponsivePixels.size20,
+    marginHorizontal: ResponsivePixels.size16,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderBottomWidth: 3.5,
+    padding: ResponsivePixels.size16,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 2,
+    marginBottom: ResponsivePixels.size24,
   },
   xpGuideHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    marginBottom: 6,
+    gap: 8,
+    marginBottom: 8,
   },
   xpGuideTitle: {
-    fontFamily: Fonts.poppins.bold,
-    fontSize: 12.5,
-    color: '#D97706',
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 13,
   },
   xpGuideRow: {
     flexDirection: 'row',
@@ -777,48 +970,53 @@ const styles = StyleSheet.create({
   },
   xpGuideItem: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
+    fontSize: 11,
   },
   xpHighlight: {
-    fontFamily: Fonts.poppins.bold,
+    fontFamily: Fonts.poppins.semiBold,
   },
   roadmapHeading: {
-    fontFamily: Fonts.ranade.bold,
-    fontSize: 16,
-    marginBottom: 12,
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 11,
+    letterSpacing: 1.1,
+    marginHorizontal: ResponsivePixels.size16,
+    marginBottom: ResponsivePixels.size10,
+  },
+  tiersContainer: {
+    paddingHorizontal: ResponsivePixels.size16,
+    gap: 14,
   },
   tierCard: {
-    borderRadius: 18,
-    padding: 15,
-    borderWidth: 1,
-    borderBottomWidth: 3,
-    marginBottom: 12,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderBottomWidth: 3.5,
+    padding: ResponsivePixels.size16,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
     elevation: 2,
   },
   tierCardHeader: {
     flexDirection: 'row',
-    alignItems: 'center',
     justifyContent: 'space-between',
+    alignItems: 'flex-start',
   },
   tierCardHeaderLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 12,
     flex: 1,
   },
   tierLevelBadge: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
     alignItems: 'center',
     justifyContent: 'center',
   },
   tierLevelBadgeText: {
-    fontFamily: Fonts.poppins.bold,
-    fontSize: 13.5,
+    fontFamily: Fonts.ranade.bold,
+    fontSize: 14,
   },
   tierTitleInline: {
     flexDirection: 'row',
@@ -826,8 +1024,8 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   tierTitleText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14,
+    fontFamily: Fonts.ranade.bold,
+    fontSize: 15,
   },
   tierRequiredXp: {
     fontFamily: Fonts.poppins.regular,
@@ -838,13 +1036,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(82, 210, 46, 0.12)',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 8,
   },
   statusUnlockedText: {
-    fontFamily: Fonts.poppins.medium,
+    fontFamily: Fonts.poppins.semiBold,
     fontSize: 11,
     color: '#52D22E',
   },
@@ -853,21 +1047,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 4,
     paddingHorizontal: 8,
-    paddingVertical: 4,
+    paddingVertical: 3,
     borderRadius: 8,
   },
   statusLockedText: {
-    fontFamily: Fonts.poppins.medium,
+    fontFamily: Fonts.poppins.regular,
     fontSize: 11,
   },
   rewardsSection: {
     marginTop: 12,
     paddingTop: 10,
-    borderTopWidth: 1,
+    borderTopWidth: StyleSheet.hairlineWidth,
   },
   rewardsSubheading: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
+    fontSize: 11,
     marginBottom: 8,
   },
   themeChipsRow: {
@@ -879,8 +1073,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    paddingHorizontal: 11,
-    paddingVertical: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
     borderRadius: 12,
     borderWidth: 1,
   },
@@ -888,24 +1082,23 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
   },
   themeColorDot: {
-    width: 11,
-    height: 11,
-    borderRadius: 5.5,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
   },
   themeChipText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 11,
   },
   applyHintText: {
-    fontFamily: Fonts.poppins.bold,
-    fontSize: 10.5,
-    marginLeft: 2,
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 10,
   },
   featureItemRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 8,
-    marginTop: 6,
+    marginBottom: 6,
   },
   featureBullet: {
     width: 5,
@@ -923,7 +1116,6 @@ const styles = StyleSheet.create({
   featureDesc: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 10.5,
+    lineHeight: 14,
   },
 });
-
-export default MilestoneFullScreenSheet;

@@ -6,8 +6,6 @@ import Splash from '../Screens/Splash/Splash';
 import Intro from '../Screens/Intro/Intro';
 import { LoginScreen } from '../Screens/Login';
 import BottomTabNavigator from './BottomTabNavigator';
-import { AddTaskScreen } from '../Screens/Tasks';
-import { AddReminderScreen } from '../Screens/Reminders';
 import { DashboardScreen } from '../Screens/Dashboard';
 import SettingsScreen from '../Screens/Settings/SettingsScreen';
 import { VoiceStudioScreen } from '../Screens/Settings/VoiceStudioScreen';
@@ -104,16 +102,6 @@ export default function AppNavigator() {
           <Stack.Screen
             name="SubscriptionScreen"
             component={SubscriptionScreen}
-            options={{ animation: 'slide_from_bottom' }}
-          />
-          <Stack.Screen
-            name="AddTaskScreen"
-            component={AddTaskScreen}
-            options={{ animation: 'slide_from_bottom' }}
-          />
-          <Stack.Screen
-            name="AddReminderScreen"
-            component={AddReminderScreen}
             options={{ animation: 'slide_from_bottom' }}
           />
           <Stack.Screen name="Dashboard" component={DashboardScreen} />

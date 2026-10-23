@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,11 @@ import {
   Switch,
   Alert,
   Platform,
+  Animated,
+  Vibration,
+  Dimensions,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -25,6 +30,8 @@ import {
   HardDrive,
   Key,
   AlertTriangle,
+  Sparkles,
+  ShieldCheck,
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
@@ -34,28 +41,98 @@ import { Colors } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../Common/Badge';
 import { ProBadge } from '../../Common/ProBadge';
+import CustomButton from '../../Common/CustomButton';
 import { useTheme } from '../../Theme/ThemeContext';
 import { VoiceSettingsService } from '../../Services/VoiceSettingsService';
+import HeaderPatternSvg from '../Dashboard/Components/HeaderPatternSvg';
+import { SettingsBackgroundSvg } from '../Settings/Components/SettingsBackgroundSvg';
+
+const HEADER_HEIGHT = 54;
 
 export const PrivacySecurityScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
   const { isDarkMode } = useTheme();
+  const { width: screenWidth } = Dimensions.get('window');
 
   const [onDeviceSpeech, setOnDeviceSpeech] = useState(true);
   const [cloudSync, setCloudSync] = useState(true);
-  const [anonymousTelemetry, setAnonymousTelemetry] = useState(false);
   const [personalizedContext, setPersonalizedContext] = useState(true);
+  const [anonymousTelemetry, setAnonymousTelemetry] = useState(false);
+
+  // Scroll tracking for reactive header layer
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const isScrolledRef = useRef(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    {
+      useNativeDriver: false,
+      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const offsetY = event?.nativeEvent?.contentOffset?.y ?? 0;
+        if (offsetY > 15 && !isScrolledRef.current) {
+          isScrolledRef.current = true;
+          setIsScrolled(true);
+        } else if (offsetY <= 15 && isScrolledRef.current) {
+          isScrolledRef.current = false;
+          setIsScrolled(false);
+        }
+      },
+    },
+  );
+
+  // Interpolate header visual styles based on scroll position (0 to 30px)
+  const headerBgColor = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [
+      isDarkMode ? 'rgba(18, 20, 23, 0)' : 'rgba(255, 252, 227, 0)',
+      isDarkMode ? '#282048' : Colors.LavenderPurple,
+    ],
+    extrapolate: 'clamp',
+  });
+
+  const headerRadius = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 24],
+    extrapolate: 'clamp',
+  });
+
+  const headerShadowOpacity = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 0.32],
+    extrapolate: 'clamp',
+  });
+
+  const headerElevation = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 8],
+    extrapolate: 'clamp',
+  });
+
+  const headerPaddingBottom = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 8],
+    extrapolate: 'clamp',
+  });
+
+  const headerPatternOpacity = scrollY.interpolate({
+    inputRange: [0, 25],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
 
   const handleExportData = () => {
+    Vibration.vibrate(25);
     Toast.show({
       type: 'success',
       text1: 'Archive Generated',
-      text2: 'Encrypted backup ready for export.',
+      text2: 'Encrypted JSON & SQLite backup ready for export.',
     });
   };
 
   const handleClearCache = async () => {
+    Vibration.vibrate(25);
     Alert.alert(
       'Clear Voice & Audio Cache',
       'This will remove all locally cached TTS audio buffers and phonetic calibrations. Your tasks and reminders will not be deleted.',
@@ -78,6 +155,7 @@ export const PrivacySecurityScreen: React.FC = () => {
   };
 
   const handleDeleteData = () => {
+    Vibration.vibrate([0, 40, 80, 50]);
     Alert.alert(
       'Delete All Personal Data',
       'This action is irreversible. All tasks, reminders, habit streaks, and voice records will be permanently erased.',
@@ -110,123 +188,176 @@ export const PrivacySecurityScreen: React.FC = () => {
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>
       <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        {...(Platform.OS === 'android' ? { backgroundColor: bgMain } : {})}
+        barStyle={isScrolled ? 'light-content' : isDarkMode ? 'light-content' : 'dark-content'}
+        {...(Platform.OS === 'android'
+          ? {
+              backgroundColor: isScrolled
+                ? isDarkMode
+                  ? '#282048'
+                  : Colors.LavenderPurple
+                : bgMain,
+              translucent: true,
+            }
+          : {})}
       />
 
-      {/* Screen Header */}
-      <View
+      {/* Luxury Background Artwork */}
+      <SettingsBackgroundSvg />
+
+      {/* Scroll-Reactive Header */}
+      <Animated.View
         style={[
-          styles.headerRow,
+          styles.headerContainer,
           {
-            paddingTop: insets.top + 8,
-            borderBottomColor: borderLight,
+            paddingTop: insets.top,
+            paddingBottom: headerPaddingBottom,
+            backgroundColor: headerBgColor,
+            borderBottomLeftRadius: headerRadius,
+            borderBottomRightRadius: headerRadius,
+            shadowOpacity: headerShadowOpacity,
+            elevation: headerElevation,
           },
         ]}
       >
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => navigation.goBack()}
+        <Animated.View
+          pointerEvents="none"
           style={[
-            styles.backButton,
+            StyleSheet.absoluteFill,
             {
-              backgroundColor: cardBg,
-              borderColor: borderLight,
+              opacity: headerPatternOpacity,
+              borderBottomLeftRadius: headerRadius,
+              borderBottomRightRadius: headerRadius,
+              overflow: 'hidden',
             },
           ]}
-          accessibilityRole="button"
-          accessibilityLabel="Back to Settings"
         >
-          <ChevronLeft size={20} color={textPrimary} strokeWidth={2.4} />
-        </TouchableOpacity>
+          <HeaderPatternSvg width={screenWidth} insetsTop={insets.top} />
+        </Animated.View>
 
-        <View style={styles.headerTitleWrap}>
-          <Text style={[styles.headerTitle, { color: textPrimary }]}>
-            Privacy & Security
-          </Text>
-          <Text style={[styles.headerSubtitle, { color: textSecondary }]}>
-            End-to-End Encryption & Ethics
-          </Text>
+        <View style={[styles.headerRow, { height: HEADER_HEIGHT }]}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => navigation.goBack()}
+            style={[
+              styles.backButton,
+              isScrolled
+                ? styles.backButtonScrolled
+                : {
+                    backgroundColor: cardBg,
+                    borderColor: borderLight,
+                  },
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Back to Settings"
+          >
+            <ChevronLeft
+              size={22}
+              color={isScrolled ? Colors.DefaultWhite : textPrimary}
+              strokeWidth={2.4}
+            />
+          </TouchableOpacity>
+
+          <View style={styles.headerTitleWrap}>
+            <Text
+              style={[
+                styles.headerTitle,
+                isScrolled ? styles.headerTitleScrolled : { color: textPrimary },
+              ]}
+              numberOfLines={1}
+            >
+              Privacy & Security
+            </Text>
+            <Text
+              style={[
+                styles.headerSubtitle,
+                isScrolled
+                  ? styles.headerSubtitleScrolled
+                  : { color: textSecondary },
+              ]}
+              numberOfLines={1}
+            >
+              End-to-End Cryptographic Vault
+            </Text>
+          </View>
+
+          <Badge label="ENCRYPTED" variant="green" size="sm" />
         </View>
+      </Animated.View>
 
-        <Badge label="ENCRYPTED" variant="green" size="sm" />
-      </View>
-
+      {/* Main Scrollable Content */}
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingBottom: insets.bottom + 40 },
+          {
+            paddingTop: insets.top + HEADER_HEIGHT + 14,
+            paddingBottom: insets.bottom + 48,
+          },
         ]}
         showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
       >
-        {/* Security Overview Bento */}
-        <View
-          style={[
-            styles.heroSecurityCard,
-            {
-              backgroundColor: cardBg,
-              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#FFFFFF',
-              borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
-              shadowColor: isDarkMode ? '#000000' : 'rgba(131, 131, 214, 0.14)',
-            },
-          ]}
-        >
-          <View style={styles.heroTopRow}>
-            <View
-              style={[
-                styles.heroShieldIcon,
-                { backgroundColor: isDarkMode ? '#1A2922' : '#EDFDF5' },
-              ]}
-            >
-              <Shield size={24} color="#21AF85" strokeWidth={2.4} />
+        {/* ─── Flagship 2-Layer Hero Bento: Cryptographic Vault ─── */}
+        <View style={styles.heroCardShadowWrapper}>
+          <View style={styles.heroCard}>
+            <View style={styles.heroHeaderRow}>
+              <View style={styles.heroTagRow}>
+                <Sparkles size={13} color="#21AF85" strokeWidth={2.4} />
+                <Text style={styles.heroTagText}>ZERO-COMPROMISE VAULT</Text>
+              </View>
+              <Badge label="VERIFIED" variant="green" size="sm" />
             </View>
-            <View style={styles.heroMeta}>
-              <Text style={[styles.heroTitle, { color: textPrimary }]}>
-                Regius Zero-Compromise Security
-              </Text>
-              <Text style={[styles.heroSubtitle, { color: textSecondary }]}>
-                Your productivity data, voice commands, and personal notes are
-                private by design.
-              </Text>
-            </View>
-          </View>
 
-          <View style={[styles.divider, { backgroundColor: borderLight }]} />
+            <View style={styles.heroMainRow}>
+              <View style={styles.heroShieldCircle}>
+                <ShieldCheck size={28} color="#21AF85" strokeWidth={2.4} />
+              </View>
+              <View style={styles.heroDetails}>
+                <Text style={styles.heroTitle}>Zero-Knowledge Architecture</Text>
+                <Text style={styles.heroSubtitle}>
+                  All voice commands and personal notes remain confidential on
+                  your device. We never sell, monetize, or profile your data.
+                </Text>
+              </View>
+            </View>
 
-          <View style={styles.badgesTripleRow}>
-            <View style={styles.badgeCol}>
-              <Key size={14} color="#21AF85" strokeWidth={2.2} />
-              <Text style={[styles.badgeColLabel, { color: textPrimary }]}>
-                AES-256 Bit
-              </Text>
-            </View>
-            <View
-              style={[styles.vertDivider, { backgroundColor: borderLight }]}
-            />
-            <View style={styles.badgeCol}>
-              <EyeOff
-                size={14}
-                color={Colors.LavenderPurple}
-                strokeWidth={2.2}
-              />
-              <Text style={[styles.badgeColLabel, { color: textPrimary }]}>
-                Zero Ad Tracking
-              </Text>
-            </View>
-            <View
-              style={[styles.vertDivider, { backgroundColor: borderLight }]}
-            />
-            <View style={styles.badgeCol}>
-              <Lock size={14} color="#F5C518" strokeWidth={2.2} />
-              <Text style={[styles.badgeColLabel, { color: textPrimary }]}>
-                On-Device Speech
-              </Text>
+            <View style={styles.heroDivider} />
+
+            {/* 3-Column Security Metrics */}
+            <View style={styles.heroPillarsRow}>
+              <View style={styles.pillarItem}>
+                <View style={styles.pillarIconCircle}>
+                  <Key size={14} color="#21AF85" strokeWidth={2.2} />
+                </View>
+                <Text style={styles.pillarTitle}>AES-256 Bit</Text>
+                <Text style={styles.pillarSub}>Client Vault</Text>
+              </View>
+
+              <View style={styles.pillarSeparator} />
+
+              <View style={styles.pillarItem}>
+                <View style={styles.pillarIconCircle}>
+                  <EyeOff size={14} color={Colors.LavenderPurple} strokeWidth={2.2} />
+                </View>
+                <Text style={styles.pillarTitle}>Zero Ad Tracking</Text>
+                <Text style={styles.pillarSub}>No Profiling</Text>
+              </View>
+
+              <View style={styles.pillarSeparator} />
+
+              <View style={styles.pillarItem}>
+                <View style={styles.pillarIconCircle}>
+                  <Lock size={14} color="#F5C518" strokeWidth={2.2} />
+                </View>
+                <Text style={styles.pillarTitle}>On-Device Speech</Text>
+                <Text style={styles.pillarSub}>Local STT</Text>
+              </View>
             </View>
           </View>
         </View>
 
-        {/* Granular Privacy Toggles */}
+        {/* ─── Data Handling & Privacy Preferences ─── */}
         <Text style={[styles.sectionHeading, { color: textSecondary }]}>
           DATA HANDLING & PRIVACY PREFERENCES
         </Text>
@@ -236,19 +367,17 @@ export const PrivacySecurityScreen: React.FC = () => {
             styles.settingsGroupCard,
             {
               backgroundColor: cardBg,
-              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#FFFFFF',
-              borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
-              shadowColor: isDarkMode ? '#000000' : 'rgba(131, 131, 214, 0.14)',
+              borderColor: borderLight,
             },
           ]}
         >
-          {/* On-Device Speech */}
+          {/* Local Speech Processing */}
           <View style={styles.settingItemRow}>
             <View style={styles.settingItemLeft}>
               <View
                 style={[
                   styles.iconSquare,
-                  { backgroundColor: isDarkMode ? '#2C3035' : '#EDFDF5' },
+                  { backgroundColor: isDarkMode ? '#1E2C24' : '#EDFDF5' },
                 ]}
               >
                 <Lock size={18} color="#21AF85" strokeWidth={2.2} />
@@ -260,29 +389,33 @@ export const PrivacySecurityScreen: React.FC = () => {
                 <Text
                   style={[styles.settingItemDesc, { color: textSecondary }]}
                 >
-                  Process wake word & transcripts on phone hardware
+                  Process wake word & transcripts strictly on phone hardware
                 </Text>
               </View>
             </View>
             <Switch
               value={onDeviceSpeech}
-              onValueChange={setOnDeviceSpeech}
-              trackColor={{ false: '#D9D9D9', true: '#21AF85' }}
+              onValueChange={val => {
+                Vibration.vibrate(20);
+                setOnDeviceSpeech(val);
+              }}
+              trackColor={{
+                false: isDarkMode ? '#3A3F46' : '#D9D9D9',
+                true: '#21AF85',
+              }}
               thumbColor="#FFFFFF"
             />
           </View>
 
-          <View
-            style={[styles.itemDivider, { backgroundColor: borderLight }]}
-          />
+          <View style={[styles.itemDivider, { backgroundColor: borderLight }]} />
 
-          {/* Cloud Sync */}
+          {/* Encrypted Cloud Backup */}
           <View style={styles.settingItemRow}>
             <View style={styles.settingItemLeft}>
               <View
                 style={[
                   styles.iconSquare,
-                  { backgroundColor: isDarkMode ? '#2C3035' : '#EFF2FE' },
+                  { backgroundColor: isDarkMode ? '#23273A' : '#EFF2FE' },
                 ]}
               >
                 <Server
@@ -298,32 +431,33 @@ export const PrivacySecurityScreen: React.FC = () => {
                 <Text
                   style={[styles.settingItemDesc, { color: textSecondary }]}
                 >
-                  Sync items across devices with client-side keys
+                  Sync items across devices with client-side cryptographic keys
                 </Text>
               </View>
             </View>
             <Switch
               value={cloudSync}
-              onValueChange={setCloudSync}
+              onValueChange={val => {
+                Vibration.vibrate(20);
+                setCloudSync(val);
+              }}
               trackColor={{
-                false: '#D9D9D9',
+                false: isDarkMode ? '#3A3F46' : '#D9D9D9',
                 true: Colors.LavenderPurple,
               }}
               thumbColor="#FFFFFF"
             />
           </View>
 
-          <View
-            style={[styles.itemDivider, { backgroundColor: borderLight }]}
-          />
+          <View style={[styles.itemDivider, { backgroundColor: borderLight }]} />
 
-          {/* Personalized Learning */}
+          {/* Personalized AI Context */}
           <View style={styles.settingItemRow}>
             <View style={styles.settingItemLeft}>
               <View
                 style={[
                   styles.iconSquare,
-                  { backgroundColor: isDarkMode ? '#2C3035' : '#FFFCEB' },
+                  { backgroundColor: isDarkMode ? '#332918' : '#FFFCEB' },
                 ]}
               >
                 <CheckCircle2 size={18} color="#F5C518" strokeWidth={2.2} />
@@ -341,15 +475,19 @@ export const PrivacySecurityScreen: React.FC = () => {
             </View>
             <Switch
               value={personalizedContext}
-              onValueChange={setPersonalizedContext}
-              trackColor={{ false: '#D9D9D9', true: '#F5C518' }}
+              onValueChange={val => {
+                Vibration.vibrate(20);
+                setPersonalizedContext(val);
+              }}
+              trackColor={{
+                false: isDarkMode ? '#3A3F46' : '#D9D9D9',
+                true: '#F5C518',
+              }}
               thumbColor="#FFFFFF"
             />
           </View>
 
-          <View
-            style={[styles.itemDivider, { backgroundColor: borderLight }]}
-          />
+          <View style={[styles.itemDivider, { backgroundColor: borderLight }]} />
 
           {/* Anonymous Telemetry */}
           <View style={styles.settingItemRow}>
@@ -357,7 +495,7 @@ export const PrivacySecurityScreen: React.FC = () => {
               <View
                 style={[
                   styles.iconSquare,
-                  { backgroundColor: isDarkMode ? '#2C3035' : '#FAF8F5' },
+                  { backgroundColor: isDarkMode ? '#282C35' : '#FAF8F5' },
                 ]}
               >
                 <EyeOff size={18} color={textSecondary} strokeWidth={2.2} />
@@ -375,9 +513,12 @@ export const PrivacySecurityScreen: React.FC = () => {
             </View>
             <Switch
               value={anonymousTelemetry}
-              onValueChange={setAnonymousTelemetry}
+              onValueChange={val => {
+                Vibration.vibrate(20);
+                setAnonymousTelemetry(val);
+              }}
               trackColor={{
-                false: '#D9D9D9',
+                false: isDarkMode ? '#3A3F46' : '#D9D9D9',
                 true: Colors.LavenderPurple,
               }}
               thumbColor="#FFFFFF"
@@ -385,7 +526,7 @@ export const PrivacySecurityScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* Data Governance & Export */}
+        {/* ─── Data Governance & Sovereignty ─── */}
         <Text style={[styles.sectionHeading, { color: textSecondary }]}>
           DATA GOVERNANCE & SOVEREIGNTY
         </Text>
@@ -395,9 +536,7 @@ export const PrivacySecurityScreen: React.FC = () => {
             styles.settingsGroupCard,
             {
               backgroundColor: cardBg,
-              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#FFFFFF',
-              borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
-              shadowColor: isDarkMode ? '#000000' : 'rgba(131, 131, 214, 0.14)',
+              borderColor: borderLight,
             },
           ]}
         >
@@ -411,7 +550,7 @@ export const PrivacySecurityScreen: React.FC = () => {
               <View
                 style={[
                   styles.iconSquare,
-                  { backgroundColor: isDarkMode ? '#2C3035' : '#EFF2FE' },
+                  { backgroundColor: isDarkMode ? '#23273A' : '#EFF2FE' },
                 ]}
               >
                 <Download
@@ -432,9 +571,7 @@ export const PrivacySecurityScreen: React.FC = () => {
             <Badge label="JSON / ZIP" variant="purple" size="sm" />
           </TouchableOpacity>
 
-          <View
-            style={[styles.itemDivider, { backgroundColor: borderLight }]}
-          />
+          <View style={[styles.itemDivider, { backgroundColor: borderLight }]} />
 
           {/* Clear Cache */}
           <TouchableOpacity
@@ -446,7 +583,7 @@ export const PrivacySecurityScreen: React.FC = () => {
               <View
                 style={[
                   styles.iconSquare,
-                  { backgroundColor: isDarkMode ? '#2C3035' : '#FFF0F0' },
+                  { backgroundColor: isDarkMode ? '#33241A' : '#FFF0DE' },
                 ]}
               >
                 <HardDrive size={18} color="#FF9800" strokeWidth={2.2} />
@@ -463,9 +600,7 @@ export const PrivacySecurityScreen: React.FC = () => {
             <Badge label="CLEAN" variant="orange" size="sm" />
           </TouchableOpacity>
 
-          <View
-            style={[styles.itemDivider, { backgroundColor: borderLight }]}
-          />
+          <View style={[styles.itemDivider, { backgroundColor: borderLight }]} />
 
           {/* Delete Account */}
           <TouchableOpacity
@@ -477,7 +612,7 @@ export const PrivacySecurityScreen: React.FC = () => {
               <View
                 style={[
                   styles.iconSquare,
-                  { backgroundColor: isDarkMode ? '#2C3035' : '#FFF0F0' },
+                  { backgroundColor: isDarkMode ? '#331D1D' : '#FEEFEF' },
                 ]}
               >
                 <Trash2 size={18} color="#FF3B30" strokeWidth={2.2} />
@@ -495,7 +630,7 @@ export const PrivacySecurityScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        {/* Legal & Compliance Footer Card */}
+        {/* ─── Legal & Compliance Footer ─── */}
         <View
           style={[
             styles.legalCard,
@@ -505,11 +640,11 @@ export const PrivacySecurityScreen: React.FC = () => {
             },
           ]}
         >
-          <FileText size={16} color={textSecondary} strokeWidth={2} />
+          <FileText size={18} color={textSecondary} strokeWidth={2} />
           <Text style={[styles.legalText, { color: textSecondary }]}>
-            Regius is compliant with GDPR, CCPA, and Apple App Store Privacy
-            Guidelines. We do not sell your personal data or store unencrypted
-            voice recordings.
+            Regius is strictly compliant with GDPR, CCPA, and Apple App Store
+            Privacy Guidelines. We do not sell your personal data or store
+            unencrypted voice recordings.
           </Text>
         </View>
       </ScrollView>
@@ -523,124 +658,207 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headerContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 100,
+    shadowColor: '#201646',
+    shadowOffset: { width: 0, height: 6 },
+    shadowRadius: 7,
+  },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: ResponsivePixels.size16,
-    paddingBottom: ResponsivePixels.size12,
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    paddingHorizontal: 20,
   },
   backButton: {
     width: 38,
     height: 38,
     borderRadius: 19,
-    borderWidth: 1,
+    borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  backButtonScrolled: {
+    backgroundColor: 'rgba(255, 255, 255, 0.22)',
+    borderColor: 'rgba(255, 255, 255, 0.45)',
   },
   headerTitleWrap: {
     alignItems: 'center',
+    flex: 1,
+    marginHorizontal: 10,
   },
   headerTitle: {
-    ...Typography.h5SemiBold,
     fontFamily: Fonts.ranade.bold,
     fontSize: 18,
+    letterSpacing: -0.3,
+    lineHeight: 22,
+  },
+  headerTitleScrolled: {
+    color: Colors.DefaultWhite,
   },
   headerSubtitle: {
-    ...Typography.bodySuperSmallPoppinsRegularLoose,
+    fontFamily: Fonts.poppins.regular,
     fontSize: 11,
-    marginTop: 2,
+    marginTop: 1,
+  },
+  headerSubtitleScrolled: {
+    color: 'rgba(255, 255, 255, 0.82)',
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: ResponsivePixels.size16,
-    paddingTop: ResponsivePixels.size16,
+    paddingHorizontal: 16,
   },
-  heroSecurityCard: {
-    borderRadius: 20,
-    borderWidth: 1,
-    borderBottomWidth: 3,
-    padding: ResponsivePixels.size16,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 3,
-    marginBottom: ResponsivePixels.size20,
+  /* 2-Layer Hero Bento */
+  heroCardShadowWrapper: {
+    borderRadius: 24,
+    backgroundColor: Colors.NeroBlack,
+    marginBottom: 16,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.28,
+        shadowRadius: 18,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
   },
-  heroTopRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: 12,
+  heroCard: {
+    backgroundColor: Colors.NeroBlack,
+    borderRadius: 24,
+    borderWidth: 4,
+    borderColor: 'rgba(255, 255, 255, 0.9)',
+    overflow: 'hidden',
+    padding: 18,
   },
-  heroShieldIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  heroMeta: {
-    flex: 1,
-  },
-  heroTitle: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 15,
-    marginBottom: 4,
-  },
-  heroSubtitle: {
-    ...Typography.bodySuperSmallPoppinsRegularLoose,
-    fontSize: 11,
-    lineHeight: 16,
-  },
-  divider: {
-    height: 1,
-    marginVertical: ResponsivePixels.size14,
-  },
-  badgesTripleRow: {
+  heroHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
+    marginBottom: 12,
   },
-  badgeCol: {
+  heroTagRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
   },
-  badgeColLabel: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
+  heroTagText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 10,
+    color: '#21AF85',
+    letterSpacing: 1,
   },
-  vertDivider: {
+  heroMainRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 14,
+    marginBottom: 14,
+  },
+  heroShieldCircle: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#1E2C24',
+    borderWidth: 1.5,
+    borderColor: 'rgba(33, 175, 133, 0.4)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  heroDetails: {
+    flex: 1,
+  },
+  heroTitle: {
+    fontFamily: Fonts.ranade.bold,
+    fontSize: 19,
+    color: '#FFFFFF',
+    letterSpacing: -0.4,
+    lineHeight: 24,
+    marginBottom: 4,
+  },
+  heroSubtitle: {
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 11.5,
+    color: '#A3A8B1',
+    lineHeight: 17,
+  },
+  heroDivider: {
+    height: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    marginBottom: 14,
+  },
+  heroPillarsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  pillarItem: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  pillarIconCircle: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: '#262933',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 6,
+  },
+  pillarTitle: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 11.5,
+    color: '#FFFFFF',
+    marginBottom: 1,
+    textAlign: 'center',
+  },
+  pillarSub: {
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 10,
+    color: '#A3A8B1',
+    textAlign: 'center',
+  },
+  pillarSeparator: {
     width: 1,
-    height: 18,
+    height: 32,
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
   },
   sectionHeading: {
-    ...Typography.bodySuperSmallPoppinsRegularLoose,
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 11,
-    letterSpacing: 1,
-    marginBottom: ResponsivePixels.size8,
-    marginLeft: 4,
+    letterSpacing: 0.8,
+    marginBottom: 10,
+    marginLeft: 2,
   },
+  /* Settings group card */
   settingsGroupCard: {
     borderRadius: 20,
-    borderWidth: 1,
-    borderBottomWidth: 3,
-    padding: ResponsivePixels.size14,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 3,
-    marginBottom: ResponsivePixels.size20,
+    borderWidth: 1.5,
+    padding: 14,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+    marginBottom: 20,
   },
   settingItemRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: ResponsivePixels.size10,
+    paddingVertical: 6,
   },
   settingItemLeft: {
     flexDirection: 'row',
@@ -650,9 +868,9 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   iconSquare: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: 42,
+    height: 42,
+    borderRadius: 21,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -660,24 +878,25 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   settingItemTitle: {
-    fontFamily: Fonts.poppins.medium,
+    fontFamily: Fonts.poppins.semiBold,
     fontSize: 14,
     marginBottom: 2,
   },
   settingItemDesc: {
-    ...Typography.bodySuperSmallPoppinsRegularLoose,
+    fontFamily: Fonts.poppins.regular,
     fontSize: 11,
     lineHeight: 15,
   },
   itemDivider: {
     height: 1,
-    marginVertical: 4,
+    marginVertical: 10,
   },
+  /* Action row */
   actionRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: ResponsivePixels.size10,
+    paddingVertical: 6,
   },
   actionLeft: {
     flexDirection: 'row',
@@ -690,28 +909,29 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   actionTitle: {
-    fontFamily: Fonts.poppins.medium,
+    fontFamily: Fonts.poppins.semiBold,
     fontSize: 14,
     marginBottom: 2,
   },
   actionDesc: {
-    ...Typography.bodySuperSmallPoppinsRegularLoose,
+    fontFamily: Fonts.poppins.regular,
     fontSize: 11,
     lineHeight: 15,
   },
+  /* Legal footer */
   legalCard: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 10,
-    borderRadius: 14,
+    borderRadius: 16,
     borderWidth: 1,
-    padding: ResponsivePixels.size14,
-    marginBottom: ResponsivePixels.size24,
+    padding: 14,
+    marginBottom: 10,
   },
   legalText: {
-    ...Typography.bodySuperSmallPoppinsRegularLoose,
-    fontSize: 11,
-    lineHeight: 16,
     flex: 1,
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 11.5,
+    lineHeight: 17,
   },
 });
