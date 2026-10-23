@@ -9,7 +9,13 @@ import {
   Dimensions,
   LayoutChangeEvent,
 } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import Svg, {
+  Path,
+  Defs,
+  RadialGradient,
+  Stop,
+  Circle,
+} from 'react-native-svg';
 import {
   Mail,
   Users,
@@ -134,13 +140,38 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
     );
   };
 
-  const getCategoryShadowColor = () => {
-    if (task.category === 'sport') return '#52D22E';
-    if (task.category === 'habits') return '#8383D6';
-    if (task.priority === 'high') return '#FF3B30';
-    return '#F5C518';
+  const getCategoryStyles = () => {
+    if (task.category === 'sport') {
+      return {
+        bg: '#F5FDF9',
+        border: '#C6FFDD',
+        accent: '#52D22E',
+        shadow: '#52D22E',
+        iconBg: '#EDFDF5',
+        auraColor: '#52D22E',
+      };
+    }
+    if (task.category === 'habits') {
+      return {
+        bg: '#F7F8FE',
+        border: '#D8DBFF',
+        accent: '#8383D6',
+        shadow: '#8383D6',
+        iconBg: '#EFF2FE',
+        auraColor: '#8383D6',
+      };
+    }
+    return {
+      bg: '#FFFDF7',
+      border: '#FFF5B8',
+      accent: '#F5C518',
+      shadow: task.priority === 'high' ? '#FF3B30' : '#F5C518',
+      iconBg: '#FFFCEB',
+      auraColor: '#F5C518',
+    };
   };
 
+  const catStyle = getCategoryStyles();
   const hasSubtasks = !!(task.subtasks && task.subtasks.length > 0);
   const hasFooter = !!(
     task.time ||
@@ -154,26 +185,76 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
       <TouchableOpacity
         activeOpacity={0.88}
         onLayout={handleCardLayout}
-        style={[styles.card, { shadowColor: getCategoryShadowColor() }]}
+        style={[
+          styles.card,
+          { shadowColor: localChecked ? '#D1D5DB' : catStyle.shadow },
+        ]}
         onPress={handlePress}
         accessibilityRole="checkbox"
         accessibilityState={{ checked: localChecked }}
         accessibilityLabel={task.label}
       >
-        {/* Dynamic Cutout Notch Background SVG matching Dashboard TimelineItemCard */}
+        {/* Dynamic Cutout Notch Background SVG with Theme Colors & Aesthetic Radiance */}
         <Svg
           width={cardSize.width}
           height={cardSize.height}
           style={styles.cardSvgBackground}
           pointerEvents="none"
         >
+          <Defs>
+            {!localChecked && (
+              <RadialGradient
+                id={`taskCardAura-${task.id}`}
+                cx={cardSize.width - 55}
+                cy={25}
+                r={110}
+                gradientUnits="userSpaceOnUse"
+              >
+                <Stop
+                  offset="0%"
+                  stopColor={catStyle.auraColor}
+                  stopOpacity={0.16}
+                />
+                <Stop
+                  offset="65%"
+                  stopColor={catStyle.auraColor}
+                  stopOpacity={0.03}
+                />
+                <Stop offset="100%" stopColor={catStyle.bg} stopOpacity={0} />
+              </RadialGradient>
+            )}
+          </Defs>
           <Path
             d={getCutoutCardPath(cardSize.width, cardSize.height)}
-            fill={localChecked ? '#FBFDFB' : '#FFFFFF'}
-            stroke={localChecked ? '#E2F4E9' : '#F0ECE4'}
+            fill={localChecked ? '#FAFAF8' : catStyle.bg}
+            stroke={localChecked ? '#ECEAE4' : catStyle.border}
             strokeWidth={1.5}
             strokeLinejoin="round"
           />
+          {!localChecked && (
+            <>
+              {/* Soft ambient radiance under top-right cutout */}
+              <Path
+                d={getCutoutCardPath(cardSize.width, cardSize.height)}
+                fill={`url(#taskCardAura-${task.id})`}
+              />
+              {/* Delicate starlight nodes */}
+              <Circle
+                cx={cardSize.width - 66}
+                cy={16}
+                r={1.6}
+                fill={catStyle.accent}
+                opacity={0.4}
+              />
+              <Circle
+                cx={cardSize.width - 80}
+                cy={30}
+                r={1.3}
+                fill={catStyle.accent}
+                opacity={0.3}
+              />
+            </>
+          )}
         </Svg>
 
         {/* Floating Checkbox in Top-Right Cutout */}
@@ -188,7 +269,10 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
             styles.floatingCheckbox,
             localChecked
               ? styles.floatingCheckboxChecked
-              : styles.floatingCheckboxUnchecked,
+              : [
+                  styles.floatingCheckboxUnchecked,
+                  { borderColor: catStyle.border },
+                ],
           ]}
           accessibilityRole="checkbox"
           accessibilityState={{ checked: localChecked }}
@@ -204,7 +288,13 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
             <View
               style={[
                 styles.iconContainer,
-                localChecked && styles.iconContainerChecked,
+                localChecked
+                  ? styles.iconContainerChecked
+                  : {
+                      backgroundColor: catStyle.iconBg,
+                      borderColor: catStyle.border,
+                      borderWidth: 1,
+                    },
               ]}
             >
               {renderIcon()}

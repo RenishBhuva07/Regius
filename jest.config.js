@@ -7,6 +7,8 @@ module.exports = {
   moduleNameMapper: {
     '^lucide-react-native$':
       '<rootDir>/node_modules/lucide-react-native/dist/cjs/lucide-react-native.js',
+    '^@react-native-community/datetimepicker$':
+      '<rootDir>/__tests__/__mocks__/dateTimePickerMock.js',
     '\\.(wav|mp3|png|jpg|jpeg|gif)$':
       '<rootDir>/__tests__/__mocks__/fileMock.js',
   },

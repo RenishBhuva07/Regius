@@ -366,7 +366,7 @@ Used for list items in `HomeScreen`, `TasksScreen` (`TaskCardItem.tsx`), `Remind
 
 ---
 
-### 4.5 Dynamic Scroll-Reactive Layer Header (`src/Screens/Dashboard/DashboardScreen.tsx`)
+### 4.5 Dynamic Scroll-Reactive Layer Header (`src/Screens/Dashboard/DashboardScreen.tsx`, `src/Common/ScreenHeader.tsx`, `src/Components/AddTaskModal.tsx`)
 
 A signature luxury header architecture where scrolling elevates the header from a seamless canvas into a distinct floating brand layer:
 

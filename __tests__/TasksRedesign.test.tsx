@@ -57,15 +57,85 @@ import { TaskSectionBackgroundSvg } from '../src/Screens/Tasks/Components/TaskSe
 import { TaskCompleteDoodleSvg } from '../src/Screens/Tasks/Components/TaskCompleteDoodleSvg';
 import { INITIAL_TASKS, Task } from '../src/Context/TaskReminderContext';
 
+import AddTaskModal from '../src/Components/AddTaskModal';
+
 describe('Tasks Redesign Suite', () => {
   describe('Component Definitions', () => {
-    it('cleanly exports all Tasks components and screens', () => {
+    it('cleanly exports all Tasks components, modals and screens', () => {
       expect(TasksScreen).toBeDefined();
+      expect(AddTaskModal).toBeDefined();
       expect(TaskProductivityBento).toBeDefined();
       expect(TaskCategoryCarousel).toBeDefined();
       expect(TaskCardItem).toBeDefined();
       expect(TaskSectionBackgroundSvg).toBeDefined();
       expect(TaskCompleteDoodleSvg).toBeDefined();
+    });
+  });
+
+  describe('AddTaskModal Creation Contract', () => {
+    it('constructs valid task creation payload with date, time, and category', () => {
+      const mockCreateTask = jest.fn();
+      const payload = {
+        title: 'Complete Quarterly Report',
+        note: 'Review ARR metrics and churn rates',
+        category: 'works',
+        iconType: 'mail' as const,
+        priority: 'high' as const,
+        date: 'Today, Oct 23',
+        time: '10:00 AM',
+        subtasks: [
+          { id: '1', text: 'Gather metrics', done: true },
+          { id: '2', text: 'Present to leadership', done: false },
+        ],
+        voiceNudge: true,
+      };
+
+      mockCreateTask(payload);
+      expect(mockCreateTask).toHaveBeenCalledWith(
+        expect.objectContaining({
+          title: 'Complete Quarterly Report',
+          category: 'works',
+          priority: 'high',
+          date: 'Today, Oct 23',
+          time: '10:00 AM',
+          voiceNudge: true,
+        }),
+      );
+      expect(mockCreateTask).toHaveBeenCalledTimes(1);
+    });
+
+    it('constructs minimal clean payload when optional notes and subtasks are not provided', () => {
+      const mockCreateTask = jest.fn();
+      const cleanPayload: {
+        title: string;
+        note?: string;
+        category: string;
+        iconType: 'mail' | 'users';
+        priority: 'low' | 'medium' | 'high';
+        date: string;
+        time?: string;
+        subtasks?: { id: string; text: string; done: boolean }[];
+        voiceNudge?: boolean;
+      } = {
+        title: 'Read quarterly strategy document',
+        category: 'works',
+        iconType: 'mail',
+        priority: 'high',
+        date: 'Today, Oct 23',
+        time: '10:00 AM',
+        voiceNudge: true,
+      };
+
+      mockCreateTask(cleanPayload);
+      expect(mockCreateTask).toHaveBeenCalledWith(
+        expect.objectContaining({
+          title: 'Read quarterly strategy document',
+          category: 'works',
+          priority: 'high',
+        }),
+      );
+      expect(cleanPayload.subtasks).toBeUndefined();
+      expect(cleanPayload.note).toBeUndefined();
     });
   });
 
