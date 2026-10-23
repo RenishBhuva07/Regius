@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import {
   View,
   Text,
@@ -11,6 +11,11 @@ import {
   Animated,
   Easing,
   Platform,
+  Vibration,
+  Dimensions,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+  Switch,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -24,6 +29,9 @@ import {
   StopCircle,
   Sliders,
   Check,
+  Radio,
+  RadioTower,
+  MessageSquare,
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
@@ -39,6 +47,10 @@ import { VoiceSettingsService } from '../../Services/VoiceSettingsService';
 import { AudioPlayerService } from '../../Services/AudioPlayerService';
 import { RegiusSpeechService } from '../../Services/RegiusSpeechService';
 import { KokoroTTSService } from '../../Services/Kokoro/KokoroTTSService';
+import HeaderPatternSvg from '../Dashboard/Components/HeaderPatternSvg';
+import { SettingsBackgroundSvg } from './Components/SettingsBackgroundSvg';
+
+const HEADER_HEIGHT = 54;
 
 const PRESET_SENTENCES = [
   'Hey Regius, ready when you are.',
@@ -51,6 +63,7 @@ export const VoiceStudioScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
   const { isDarkMode } = useTheme();
+  const { width: screenWidth } = Dimensions.get('window');
 
   const [selectedVoiceId, setSelectedVoiceId] = useState('af_bella');
   const [speechSpeed, setSpeechSpeed] = useState<number>(1.0);
@@ -69,12 +82,29 @@ export const VoiceStudioScreen: React.FC = () => {
   >('idle');
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
-  // Animated wave visualizers
+  // Scroll tracking for reactive header layer
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const isScrolledRef = useRef(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // 7-Band Animated Wave Visualizers
   const waveAnim1 = useRef(new Animated.Value(0.3)).current;
   const waveAnim2 = useRef(new Animated.Value(0.7)).current;
   const waveAnim3 = useRef(new Animated.Value(0.4)).current;
   const waveAnim4 = useRef(new Animated.Value(0.9)).current;
   const waveAnim5 = useRef(new Animated.Value(0.5)).current;
+  const waveAnim6 = useRef(new Animated.Value(0.8)).current;
+  const waveAnim7 = useRef(new Animated.Value(0.35)).current;
+
+  const waveAnims = [
+    { anim: waveAnim1, color: '#8383D6' },
+    { anim: waveAnim2, color: '#F5C518' },
+    { anim: waveAnim3, color: '#FF8772' },
+    { anim: waveAnim4, color: '#10B981' },
+    { anim: waveAnim5, color: '#8383D6' },
+    { anim: waveAnim6, color: '#F5C518' },
+    { anim: waveAnim7, color: '#FF8772' },
+  ];
 
   useEffect(() => {
     VoiceSettingsService.getSettings().then(saved => {
@@ -96,6 +126,63 @@ export const VoiceStudioScreen: React.FC = () => {
     };
   }, []);
 
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    {
+      useNativeDriver: false,
+      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const offsetY = event?.nativeEvent?.contentOffset?.y ?? 0;
+        if (offsetY > 15 && !isScrolledRef.current) {
+          isScrolledRef.current = true;
+          setIsScrolled(true);
+        } else if (offsetY <= 15 && isScrolledRef.current) {
+          isScrolledRef.current = false;
+          setIsScrolled(false);
+        }
+      },
+    },
+  );
+
+  // Interpolate header visual styles based on scroll position (0 to 30px)
+  const headerBgColor = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [
+      isDarkMode ? 'rgba(18, 20, 23, 0)' : 'rgba(255, 252, 227, 0)',
+      isDarkMode ? '#282048' : Colors.LavenderPurple,
+    ],
+    extrapolate: 'clamp',
+  });
+
+  const headerRadius = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 24],
+    extrapolate: 'clamp',
+  });
+
+  const headerShadowOpacity = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 0.32],
+    extrapolate: 'clamp',
+  });
+
+  const headerElevation = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 8],
+    extrapolate: 'clamp',
+  });
+
+  const headerPaddingBottom = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 8],
+    extrapolate: 'clamp',
+  });
+
+  const headerPatternOpacity = scrollY.interpolate({
+    inputRange: [0, 25],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
+
   useEffect(() => {
     let animLoop: Animated.CompositeAnimation | null = null;
     if (isPlayingPreview || synthesisState === 'speaking') {
@@ -104,13 +191,13 @@ export const VoiceStudioScreen: React.FC = () => {
           Animated.sequence([
             Animated.timing(waveAnim1, {
               toValue: 1,
-              duration: 350,
+              duration: 320,
               easing: Easing.ease,
               useNativeDriver: true,
             }),
             Animated.timing(waveAnim1, {
               toValue: 0.2,
-              duration: 350,
+              duration: 320,
               easing: Easing.ease,
               useNativeDriver: true,
             }),
@@ -118,55 +205,83 @@ export const VoiceStudioScreen: React.FC = () => {
           Animated.sequence([
             Animated.timing(waveAnim2, {
               toValue: 0.2,
-              duration: 280,
+              duration: 260,
               easing: Easing.ease,
               useNativeDriver: true,
             }),
             Animated.timing(waveAnim2, {
               toValue: 1,
+              duration: 260,
+              easing: Easing.ease,
+              useNativeDriver: true,
+            }),
+          ]),
+          Animated.sequence([
+            Animated.timing(waveAnim3, {
+              toValue: 1,
+              duration: 380,
+              easing: Easing.ease,
+              useNativeDriver: true,
+            }),
+            Animated.timing(waveAnim3, {
+              toValue: 0.3,
+              duration: 380,
+              easing: Easing.ease,
+              useNativeDriver: true,
+            }),
+          ]),
+          Animated.sequence([
+            Animated.timing(waveAnim4, {
+              toValue: 0.25,
+              duration: 280,
+              easing: Easing.ease,
+              useNativeDriver: true,
+            }),
+            Animated.timing(waveAnim4, {
+              toValue: 1,
               duration: 280,
               easing: Easing.ease,
               useNativeDriver: true,
             }),
           ]),
           Animated.sequence([
-            Animated.timing(waveAnim3, {
+            Animated.timing(waveAnim5, {
               toValue: 1,
-              duration: 400,
-              easing: Easing.ease,
-              useNativeDriver: true,
-            }),
-            Animated.timing(waveAnim3, {
-              toValue: 0.3,
-              duration: 400,
-              easing: Easing.ease,
-              useNativeDriver: true,
-            }),
-          ]),
-          Animated.sequence([
-            Animated.timing(waveAnim4, {
-              toValue: 0.3,
               duration: 300,
               easing: Easing.ease,
               useNativeDriver: true,
             }),
-            Animated.timing(waveAnim4, {
-              toValue: 1,
+            Animated.timing(waveAnim5, {
+              toValue: 0.2,
               duration: 300,
               easing: Easing.ease,
               useNativeDriver: true,
             }),
           ]),
           Animated.sequence([
-            Animated.timing(waveAnim5, {
-              toValue: 1,
-              duration: 320,
+            Animated.timing(waveAnim6, {
+              toValue: 0.3,
+              duration: 340,
               easing: Easing.ease,
               useNativeDriver: true,
             }),
-            Animated.timing(waveAnim5, {
-              toValue: 0.25,
-              duration: 320,
+            Animated.timing(waveAnim6, {
+              toValue: 0.95,
+              duration: 340,
+              easing: Easing.ease,
+              useNativeDriver: true,
+            }),
+          ]),
+          Animated.sequence([
+            Animated.timing(waveAnim7, {
+              toValue: 0.9,
+              duration: 290,
+              easing: Easing.ease,
+              useNativeDriver: true,
+            }),
+            Animated.timing(waveAnim7, {
+              toValue: 0.2,
+              duration: 290,
               easing: Easing.ease,
               useNativeDriver: true,
             }),
@@ -180,6 +295,8 @@ export const VoiceStudioScreen: React.FC = () => {
       waveAnim3.setValue(0.4);
       waveAnim4.setValue(0.9);
       waveAnim5.setValue(0.5);
+      waveAnim6.setValue(0.75);
+      waveAnim7.setValue(0.35);
     }
 
     return () => {
@@ -190,6 +307,7 @@ export const VoiceStudioScreen: React.FC = () => {
   const selectedVoice = VOICES.find(v => v.id === selectedVoiceId) || VOICES[0];
 
   const handleSelectVoice = (voice: VoiceOption) => {
+    Vibration.vibrate(20);
     setSelectedVoiceId(voice.id);
     VoiceSettingsService.setSelectedVoice(voice.id);
     RegiusSpeechService.warmupVoice(voice.id).catch(() => {});
@@ -201,6 +319,7 @@ export const VoiceStudioScreen: React.FC = () => {
   };
 
   const handleTogglePreview = async (voiceId: string) => {
+    Vibration.vibrate(20);
     if (isPlayingPreview && playingVoiceId === voiceId) {
       await AudioPlayerService.stop();
       setIsPlayingPreview(false);
@@ -233,6 +352,7 @@ export const VoiceStudioScreen: React.FC = () => {
 
   const handleGenerateAndSpeak = async () => {
     if (!testText.trim()) return;
+    Vibration.vibrate(30);
 
     try {
       setSynthesisState('synthesizing');
@@ -273,12 +393,14 @@ export const VoiceStudioScreen: React.FC = () => {
   };
 
   const handleStopSpeech = async () => {
+    Vibration.vibrate(20);
     await KokoroTTSService.stop();
     setSynthesisState('idle');
     setStatusMessage(null);
   };
 
   const handleChangeSpeed = (speed: number) => {
+    Vibration.vibrate(20);
     setSpeechSpeed(speed);
     VoiceSettingsService.setSpeechSpeed(speed);
     Toast.show({
@@ -286,6 +408,12 @@ export const VoiceStudioScreen: React.FC = () => {
       text1: 'Speed Updated',
       text2: `Speech playback rate set to ${speed}x`,
     });
+  };
+
+  const handleToggleAutoSpeak = (enabled: boolean) => {
+    Vibration.vibrate(20);
+    setAutoSpeakReplies(enabled);
+    VoiceSettingsService.setAutoSpeakReplies(enabled);
   };
 
   const bgMain = isDarkMode ? '#121417' : Colors.CreamBackground;
@@ -300,142 +428,267 @@ export const VoiceStudioScreen: React.FC = () => {
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>
       <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        {...(Platform.OS === 'android' ? { backgroundColor: bgMain } : {})}
+        barStyle={isScrolled ? 'light-content' : isDarkMode ? 'light-content' : 'dark-content'}
+        {...(Platform.OS === 'android'
+          ? {
+              backgroundColor: isScrolled
+                ? isDarkMode
+                  ? '#282048'
+                  : Colors.LavenderPurple
+                : bgMain,
+              translucent: true,
+            }
+          : {})}
       />
 
-      {/* Screen Header */}
-      <View
+      {/* Luxury Background Artwork */}
+      <SettingsBackgroundSvg />
+
+      {/* Scroll-Reactive Header */}
+      <Animated.View
         style={[
-          styles.headerRow,
+          styles.headerContainer,
           {
-            paddingTop: insets.top + 8,
-            borderBottomColor: borderLight,
+            paddingTop: insets.top,
+            paddingBottom: headerPaddingBottom,
+            backgroundColor: headerBgColor,
+            borderBottomLeftRadius: headerRadius,
+            borderBottomRightRadius: headerRadius,
+            shadowOpacity: headerShadowOpacity,
+            elevation: headerElevation,
           },
         ]}
       >
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => navigation.goBack()}
+        <Animated.View
+          pointerEvents="none"
           style={[
-            styles.backButton,
+            StyleSheet.absoluteFill,
             {
-              backgroundColor: cardBg,
-              borderColor: borderLight,
+              opacity: headerPatternOpacity,
+              borderBottomLeftRadius: headerRadius,
+              borderBottomRightRadius: headerRadius,
+              overflow: 'hidden',
             },
           ]}
-          accessibilityRole="button"
-          accessibilityLabel="Back to Settings"
         >
-          <ChevronLeft size={20} color={textPrimary} strokeWidth={2.4} />
-        </TouchableOpacity>
+          <HeaderPatternSvg width={screenWidth} insetsTop={insets.top} />
+        </Animated.View>
 
-        <View style={styles.headerTitleWrap}>
-          <Text style={[styles.headerTitle, { color: textPrimary }]}>
-            Voice Studio
-          </Text>
-          <Text style={[styles.headerSubtitle, { color: textSecondary }]}>
-            Neural TTS & Kokoro Engine
-          </Text>
+        <View style={[styles.headerRow, { height: HEADER_HEIGHT }]}>
+          <TouchableOpacity
+            activeOpacity={0.7}
+            onPress={() => navigation.goBack()}
+            style={[
+              styles.backButton,
+              isScrolled
+                ? styles.backButtonScrolled
+                : {
+                    backgroundColor: cardBg,
+                    borderColor: borderLight,
+                  },
+            ]}
+            accessibilityRole="button"
+            accessibilityLabel="Back to Settings"
+          >
+            <ChevronLeft
+              size={22}
+              color={isScrolled ? Colors.DefaultWhite : textPrimary}
+              strokeWidth={2.4}
+            />
+          </TouchableOpacity>
+
+          <View style={styles.headerTitleWrap}>
+            <Text
+              style={[
+                styles.headerTitle,
+                isScrolled ? styles.headerTitleScrolled : { color: textPrimary },
+              ]}
+              numberOfLines={1}
+            >
+              Voice Studio
+            </Text>
+            <Text
+              style={[
+                styles.headerSubtitle,
+                isScrolled
+                  ? styles.headerSubtitleScrolled
+                  : { color: textSecondary },
+              ]}
+              numberOfLines={1}
+            >
+              Neural TTS & Kokoro Engine
+            </Text>
+          </View>
+
+          <Badge label="KOKORO 82M" variant="purple" size="sm" />
         </View>
-
-        <Badge label="KOKORO 82M" variant="purple" size="sm" />
-      </View>
+      </Animated.View>
 
       <ScrollView
         style={styles.scrollView}
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingBottom: insets.bottom + 40 },
+          {
+            paddingTop: insets.top + HEADER_HEIGHT + 14,
+            paddingBottom: insets.bottom + 48,
+          },
         ]}
         showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
       >
-        {/* Active Voice Showcase Bento */}
-        <View
-          style={[
-            styles.heroVoiceCard,
-            {
-              backgroundColor: cardBg,
-              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#FFFFFF',
-              borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
-              shadowColor: isDarkMode ? '#000000' : 'rgba(131, 131, 214, 0.16)',
-            },
-          ]}
-        >
-          <View style={styles.heroVoiceTopRow}>
-            <View style={styles.heroVoiceInfo}>
-              <Text style={[styles.heroVoiceName, { color: textPrimary }]}>
-                {selectedVoice.name}
-              </Text>
-              <Text
-                style={[styles.heroVoiceDescription, { color: textSecondary }]}
-              >
-                {selectedVoice.personality} • {selectedVoice.accent}
-              </Text>
+        {/* ─── Flagship 2-Layer Hero Bento: Acoustic Master Console ─── */}
+        <View style={styles.heroCardShadowWrapper}>
+          <View style={styles.heroCard}>
+            <View style={styles.heroHeaderRow}>
+              <View style={styles.heroTagRow}>
+                <RadioTower size={13} color="#8383D6" strokeWidth={2.4} />
+                <Text style={styles.heroTagText}>ACOUSTIC MASTER CONSOLE</Text>
+              </View>
+              <Badge label="ACTIVE PERSONA" variant="green" size="sm" />
             </View>
 
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => handleTogglePreview(selectedVoice.id)}
-              style={[
-                styles.heroPreviewPlayBtn,
-                { backgroundColor: Colors.LavenderPurple },
-              ]}
-              accessibilityRole="button"
-              accessibilityLabel={`Play preview for ${selectedVoice.name}`}
-            >
-              {isPlayingPreview && playingVoiceId === selectedVoice.id ? (
-                <Square size={16} color="#FFFFFF" fill="#FFFFFF" />
-              ) : (
-                <Play size={16} color="#FFFFFF" fill="#FFFFFF" />
-              )}
-            </TouchableOpacity>
-          </View>
+            <View style={styles.heroTopRow}>
+              <View style={styles.personaAvatarBox}>
+                <Mic size={22} color="#8383D6" strokeWidth={2.4} />
+              </View>
 
-          {/* Sound Wave Animation Visualizer */}
-          <View
-            style={[
-              styles.waveVisualizerContainer,
-              { backgroundColor: surfaceAlt, borderColor: borderLight },
-            ]}
-          >
-            <View style={styles.waveBarsRow}>
-              {[waveAnim1, waveAnim2, waveAnim3, waveAnim4, waveAnim5].map(
-                (anim, idx) => (
+              <View style={styles.heroVoiceInfo}>
+                <Text style={styles.heroVoiceName}>{selectedVoice.name}</Text>
+                <Text style={styles.heroVoiceDescription}>
+                  {selectedVoice.personality} • {selectedVoice.accent}
+                </Text>
+              </View>
+
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => handleTogglePreview(selectedVoice.id)}
+                style={styles.heroPreviewPlayBtn}
+                accessibilityRole="button"
+                accessibilityLabel={`Play preview for ${selectedVoice.name}`}
+              >
+                {isPlayingPreview && playingVoiceId === selectedVoice.id ? (
+                  <Square size={16} color="#FFFFFF" fill="#FFFFFF" />
+                ) : (
+                  <Play size={16} color="#FFFFFF" fill="#FFFFFF" />
+                )}
+              </TouchableOpacity>
+            </View>
+
+            {/* 7-Band Dynamic Spectrum Visualizer */}
+            <View style={styles.waveVisualizerContainer}>
+              <View style={styles.waveBarsRow}>
+                {waveAnims.map((item, idx) => (
                   <Animated.View
                     key={idx}
                     style={[
                       styles.waveBar,
                       {
-                        backgroundColor: Colors.LavenderPurple,
-                        transform: [{ scaleY: anim }],
+                        backgroundColor: item.color,
+                        transform: [{ scaleY: item.anim }],
                       },
                     ]}
                   />
-                ),
-              )}
+                ))}
+              </View>
+              <Text style={styles.waveStatusLabel}>
+                {isPlayingPreview || synthesisState === 'speaking'
+                  ? 'Streaming Kokoro-82M Neural Audio'
+                  : 'Kokoro Acoustic Buffer Primed & Ready'}
+              </Text>
             </View>
-            <Text style={[styles.waveStatusLabel, { color: textSecondary }]}>
-              {isPlayingPreview || synthesisState === 'speaking'
-                ? 'Streaming Neural Audio'
-                : 'Kokoro Real-Time Audio Buffer Ready'}
-            </Text>
-          </View>
 
-          <View style={styles.heroTagsRow}>
-            <Badge label={selectedVoice.tag} variant="purple" size="sm" />
-            <View style={styles.badgeGap} />
-            <Badge
-              label={selectedVoice.gender.toUpperCase()}
-              variant="neutral"
-              size="sm"
-            />
-            <View style={styles.badgeGap} />
-            <Badge label="82M PARAMS" variant="yellow" size="sm" />
+            {/* Persona Metas */}
+            <View style={styles.heroTagsRow}>
+              <Badge label={selectedVoice.tag} variant="purple" size="sm" />
+              <Badge
+                label={selectedVoice.gender.toUpperCase()}
+                variant="neutral"
+                size="sm"
+              />
+              <Badge label="82M PARAMS" variant="yellow" size="sm" />
+            </View>
           </View>
         </View>
 
-        {/* Kokoro Interactive Speech Playground */}
+        {/* ─── Speech Controls & Pacing Bento ─── */}
+        <Text style={[styles.sectionHeading, { color: textSecondary }]}>
+          SPEECH CONTROLS & PACING
+        </Text>
+
+        <View
+          style={[
+            styles.settingsBentoCard,
+            {
+              backgroundColor: cardBg,
+              borderColor: borderLight,
+            },
+          ]}
+        >
+          <View style={styles.controlHeaderRow}>
+            <Sliders size={16} color={Colors.LavenderPurple} strokeWidth={2.2} />
+            <Text style={[styles.controlHeaderTitle, { color: textPrimary }]}>
+              Playback Speed ({speechSpeed}x)
+            </Text>
+          </View>
+
+          <View style={styles.speedPillsRow}>
+            {[0.75, 1.0, 1.25, 1.5].map(speed => {
+              const isActive = speechSpeed === speed;
+              return (
+                <TouchableOpacity
+                  key={speed}
+                  activeOpacity={0.8}
+                  style={[
+                    styles.speedPill,
+                    {
+                      backgroundColor: isActive
+                        ? Colors.LavenderPurple
+                        : surfaceAlt,
+                      borderColor: isActive ? '#FFFFFF' : borderLight,
+                    },
+                  ]}
+                  onPress={() => handleChangeSpeed(speed)}
+                >
+                  <Text
+                    style={[
+                      styles.speedPillText,
+                      { color: isActive ? '#FFFFFF' : textPrimary },
+                    ]}
+                  >
+                    {speed}x
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+
+          <View style={[styles.innerDivider, { backgroundColor: borderLight }]} />
+
+          {/* Conversational Auto-Speak */}
+          <View style={styles.toggleRow}>
+            <View style={styles.toggleMeta}>
+              <Text style={[styles.toggleTitle, { color: textPrimary }]}>
+                Auto-Speak Assistant Replies
+              </Text>
+              <Text style={[styles.toggleSub, { color: textSecondary }]}>
+                Spoken audio playback during conversational workflows
+              </Text>
+            </View>
+
+            <Switch
+              value={autoSpeakReplies}
+              onValueChange={handleToggleAutoSpeak}
+              trackColor={{
+                false: isDarkMode ? '#3A3F46' : '#D9D9D9',
+                true: Colors.LavenderPurple,
+              }}
+              thumbColor="#FFFFFF"
+            />
+          </View>
+        </View>
+
+        {/* ─── Neural Speech Playground ─── */}
         <Text style={[styles.sectionHeading, { color: textSecondary }]}>
           NEURAL SPEECH PLAYGROUND
         </Text>
@@ -445,22 +698,14 @@ export const VoiceStudioScreen: React.FC = () => {
             styles.playgroundCard,
             {
               backgroundColor: cardBg,
-              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#FFFFFF',
-              borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
-              shadowColor: isDarkMode ? '#000000' : 'rgba(131, 131, 214, 0.14)',
+              borderColor: borderLight,
             },
           ]}
         >
           <View style={styles.playgroundHeader}>
-            <Sparkles
-              size={16}
-              color={Colors.LavenderPurple}
-              strokeWidth={2.4}
-            />
-            <Text
-              style={[styles.playgroundHeaderTitle, { color: textPrimary }]}
-            >
-              Test Kokoro-82M Synthesis
+            <Sparkles size={16} color={Colors.LavenderPurple} strokeWidth={2.4} />
+            <Text style={[styles.playgroundHeaderTitle, { color: textPrimary }]}>
+              Real-Time Kokoro-82M Sandbox
             </Text>
           </View>
 
@@ -481,10 +726,10 @@ export const VoiceStudioScreen: React.FC = () => {
             />
           </View>
 
-          {/* Quick preset sentence chips */}
           <Text style={[styles.presetChipsLabel, { color: textSecondary }]}>
-            Quick Presets:
+            Quick Preset Prompts:
           </Text>
+
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -498,7 +743,10 @@ export const VoiceStudioScreen: React.FC = () => {
                   styles.presetChip,
                   { backgroundColor: surfaceAlt, borderColor: borderLight },
                 ]}
-                onPress={() => setTestText(preset)}
+                onPress={() => {
+                  Vibration.vibrate(15);
+                  setTestText(preset);
+                }}
               >
                 <Text
                   style={[styles.presetChipText, { color: textPrimary }]}
@@ -560,75 +808,16 @@ export const VoiceStudioScreen: React.FC = () => {
                 <Text style={styles.actionBtnText}>
                   {synthesisState === 'synthesizing'
                     ? 'Synthesizing...'
-                    : 'Synthesize & Speak'}
+                    : 'Synthesize & Speak with Kokoro ✦'}
                 </Text>
               </TouchableOpacity>
             )}
           </View>
         </View>
 
-        {/* Speed & Audio Tuning Bento */}
+        {/* ─── Kokoro Voice Catalog ─── */}
         <Text style={[styles.sectionHeading, { color: textSecondary }]}>
-          SPEECH CONTROLS & PACING
-        </Text>
-
-        <View
-          style={[
-            styles.settingsBentoCard,
-            {
-              backgroundColor: cardBg,
-              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#FFFFFF',
-              borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
-              shadowColor: isDarkMode ? '#000000' : 'rgba(131, 131, 214, 0.14)',
-            },
-          ]}
-        >
-          <View style={styles.controlHeaderRow}>
-            <Sliders
-              size={16}
-              color={Colors.LavenderPurple}
-              strokeWidth={2.2}
-            />
-            <Text style={[styles.controlHeaderTitle, { color: textPrimary }]}>
-              Playback Speed ({speechSpeed}x)
-            </Text>
-          </View>
-
-          <View style={styles.speedPillsRow}>
-            {[0.75, 1.0, 1.25, 1.5].map(speed => {
-              const isActive = speechSpeed === speed;
-              return (
-                <TouchableOpacity
-                  key={speed}
-                  activeOpacity={0.8}
-                  style={[
-                    styles.speedPill,
-                    {
-                      backgroundColor: isActive
-                        ? Colors.LavenderPurple
-                        : surfaceAlt,
-                      borderColor: isActive ? '#FFFFFF' : borderLight,
-                    },
-                  ]}
-                  onPress={() => handleChangeSpeed(speed)}
-                >
-                  <Text
-                    style={[
-                      styles.speedPillText,
-                      { color: isActive ? '#FFFFFF' : textPrimary },
-                    ]}
-                  >
-                    {speed}x
-                  </Text>
-                </TouchableOpacity>
-              );
-            })}
-          </View>
-        </View>
-
-        {/* Kokoro Voice Library Selection */}
-        <Text style={[styles.sectionHeading, { color: textSecondary }]}>
-          KOKORO VOICE CATALOG
+          KOKORO VOICE CATALOG ({VOICES.length})
         </Text>
 
         <View
@@ -636,20 +825,24 @@ export const VoiceStudioScreen: React.FC = () => {
             styles.voiceListCard,
             {
               backgroundColor: cardBg,
-              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#FFFFFF',
-              borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
-              shadowColor: isDarkMode ? '#000000' : 'rgba(131, 131, 214, 0.14)',
+              borderColor: borderLight,
             },
           ]}
         >
           {VOICES.map((voice, idx) => {
             const isSelected = selectedVoiceId === voice.id;
-            const isPreviewing =
-              isPlayingPreview && playingVoiceId === voice.id;
+            const isPreviewing = isPlayingPreview && playingVoiceId === voice.id;
 
             return (
               <React.Fragment key={voice.id}>
-                <View style={styles.voiceItemRow}>
+                <View
+                  style={[
+                    styles.voiceItemRow,
+                    isSelected && {
+                      backgroundColor: isDarkMode ? '#22283A' : '#EFF2FE',
+                    },
+                  ]}
+                >
                   <TouchableOpacity
                     activeOpacity={0.7}
                     style={styles.voiceInfoClickable}
@@ -737,10 +930,7 @@ export const VoiceStudioScreen: React.FC = () => {
 
                 {idx < VOICES.length - 1 && (
                   <View
-                    style={[
-                      styles.itemDivider,
-                      { backgroundColor: borderLight },
-                    ]}
+                    style={[styles.itemDivider, { backgroundColor: borderLight }]}
                   />
                 )}
               </React.Fragment>
@@ -758,140 +948,273 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headerContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    zIndex: 100,
+    shadowColor: '#201646',
+    shadowOffset: { width: 0, height: 6 },
+    shadowRadius: 7,
+  },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: ResponsivePixels.size16,
-    paddingBottom: ResponsivePixels.size12,
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    paddingHorizontal: 20,
   },
   backButton: {
     width: 38,
     height: 38,
     borderRadius: 19,
-    borderWidth: 1,
+    borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  backButtonScrolled: {
+    backgroundColor: 'rgba(255, 255, 255, 0.22)',
+    borderColor: 'rgba(255, 255, 255, 0.45)',
   },
   headerTitleWrap: {
     alignItems: 'center',
+    flex: 1,
+    marginHorizontal: 10,
   },
   headerTitle: {
-    ...Typography.h5SemiBold,
     fontFamily: Fonts.ranade.bold,
     fontSize: 18,
+    letterSpacing: -0.3,
+    lineHeight: 22,
+  },
+  headerTitleScrolled: {
+    color: Colors.DefaultWhite,
   },
   headerSubtitle: {
-    ...Typography.bodySuperSmallPoppinsRegularLoose,
+    fontFamily: Fonts.poppins.regular,
     fontSize: 11,
-    marginTop: 2,
+    marginTop: 1,
+  },
+  headerSubtitleScrolled: {
+    color: 'rgba(255, 255, 255, 0.82)',
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: ResponsivePixels.size16,
-    paddingTop: ResponsivePixels.size16,
+    paddingHorizontal: 16,
   },
-  heroVoiceCard: {
-    borderRadius: 20,
-    borderWidth: 1,
-    borderBottomWidth: 3,
-    padding: ResponsivePixels.size16,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.12,
-    shadowRadius: 12,
-    elevation: 3,
-    marginBottom: ResponsivePixels.size20,
+  /* 2-Layer Hero Bento */
+  heroCardShadowWrapper: {
+    borderRadius: 24,
+    backgroundColor: Colors.NeroBlack,
+    marginBottom: 16,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 10 },
+        shadowOpacity: 0.28,
+        shadowRadius: 18,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
   },
-  heroVoiceTopRow: {
+  heroCard: {
+    backgroundColor: Colors.NeroBlack,
+    borderRadius: 24,
+    borderWidth: 4,
+    borderColor: 'rgba(255, 255, 255, 0.9)',
+    overflow: 'hidden',
+    padding: 18,
+  },
+  heroHeaderRow: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: ResponsivePixels.size12,
+    marginBottom: 12,
   },
-  heroVoiceInfo: {
-    flex: 1,
-    paddingRight: 12,
+  heroTagRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
-  heroVoiceName: {
-    fontFamily: Fonts.ranade.bold,
-    fontSize: 22,
-    marginBottom: 4,
+  heroTagText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 10,
+    color: '#8383D6',
+    letterSpacing: 1,
   },
-  heroVoiceDescription: {
-    ...Typography.bodySmallPoppinsRegular,
-    fontSize: 13,
+  heroTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 14,
+    gap: 12,
   },
-  heroPreviewPlayBtn: {
+  personaAvatarBox: {
     width: 44,
     height: 44,
     borderRadius: 22,
+    backgroundColor: '#272935',
+    borderWidth: 1.5,
+    borderColor: 'rgba(131, 131, 214, 0.4)',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  heroVoiceInfo: {
+    flex: 1,
+  },
+  heroVoiceName: {
+    fontFamily: Fonts.ranade.bold,
+    fontSize: 20,
+    color: '#FFFFFF',
+    letterSpacing: -0.4,
+    lineHeight: 24,
+    marginBottom: 2,
+  },
+  heroVoiceDescription: {
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 12,
+    color: '#A3A8B1',
+  },
+  heroPreviewPlayBtn: {
+    width: 38,
+    height: 38,
+    borderRadius: 19,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.LavenderPurple,
     shadowColor: Colors.LavenderPurple,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.4,
+    shadowRadius: 6,
     elevation: 4,
   },
   waveVisualizerContainer: {
-    borderRadius: 12,
+    borderRadius: 16,
+    backgroundColor: '#16171E',
     borderWidth: 1,
-    paddingVertical: ResponsivePixels.size12,
-    paddingHorizontal: ResponsivePixels.size16,
+    borderColor: 'rgba(255, 255, 255, 0.12)',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
     alignItems: 'center',
-    marginBottom: ResponsivePixels.size12,
+    justifyContent: 'center',
+    marginBottom: 14,
   },
   waveBarsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 28,
-    gap: 8,
+    justifyContent: 'center',
+    height: 34,
+    gap: 6,
     marginBottom: 6,
   },
   waveBar: {
     width: 5,
-    height: 24,
-    borderRadius: 2.5,
+    height: 30,
+    borderRadius: 3,
   },
   waveStatusLabel: {
-    ...Typography.bodySuperSmallPoppinsRegularLoose,
-    fontSize: 11,
     fontFamily: Fonts.poppins.medium,
+    fontSize: 11,
+    color: '#A3A8B1',
   },
   heroTagsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  badgeGap: {
-    width: 8,
+    gap: 8,
   },
   sectionHeading: {
-    ...Typography.bodySuperSmallPoppinsRegularLoose,
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 11,
-    letterSpacing: 1,
-    marginBottom: ResponsivePixels.size8,
-    marginLeft: 4,
+    letterSpacing: 0.8,
+    marginBottom: 10,
+    marginLeft: 2,
+  },
+  settingsBentoCard: {
+    borderRadius: 20,
+    borderWidth: 1.5,
+    padding: 16,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+    marginBottom: 20,
+  },
+  controlHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    marginBottom: 12,
+  },
+  controlHeaderTitle: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 14,
+  },
+  speedPillsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    gap: 8,
+  },
+  speedPill: {
+    flex: 1,
+    paddingVertical: 8,
+    borderRadius: 14,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  speedPillText: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 12.5,
+  },
+  innerDivider: {
+    height: 1,
+    marginVertical: 14,
+  },
+  toggleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  toggleMeta: {
+    flex: 1,
+    paddingRight: 10,
+  },
+  toggleTitle: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 13.5,
+    marginBottom: 2,
+  },
+  toggleSub: {
+    fontFamily: Fonts.poppins.regular,
+    fontSize: 11,
   },
   playgroundCard: {
     borderRadius: 20,
-    borderWidth: 1,
-    borderBottomWidth: 3,
-    padding: ResponsivePixels.size16,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 3,
-    marginBottom: ResponsivePixels.size20,
+    borderWidth: 1.5,
+    padding: 16,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+    marginBottom: 20,
   },
   playgroundHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    marginBottom: ResponsivePixels.size12,
+    marginBottom: 12,
   },
   playgroundHeaderTitle: {
     fontFamily: Fonts.poppins.semiBold,
@@ -899,61 +1222,61 @@ const styles = StyleSheet.create({
   },
   textInputBox: {
     borderRadius: 14,
-    borderWidth: 1.5,
-    padding: ResponsivePixels.size12,
-    minHeight: 76,
-    marginBottom: ResponsivePixels.size12,
+    borderWidth: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 12,
   },
   textInputField: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 13,
+    minHeight: 60,
     textAlignVertical: 'top',
     padding: 0,
   },
   presetChipsLabel: {
-    ...Typography.bodySuperSmallPoppinsRegularLoose,
+    fontFamily: Fonts.poppins.medium,
     fontSize: 11,
-    marginBottom: 6,
+    marginBottom: 8,
   },
   presetChipsScroll: {
     gap: 8,
-    paddingBottom: 6,
+    paddingBottom: 14,
   },
   presetChip: {
-    paddingHorizontal: 12,
-    paddingVertical: 7,
     borderRadius: 14,
     borderWidth: 1,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
     maxWidth: 220,
   },
   presetChipText: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 11,
   },
   statusBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 8,
     gap: 8,
+    marginBottom: 12,
   },
   statusSpinner: {
     marginRight: 4,
   },
   statusText: {
-    ...Typography.bodySmallPoppinsRegular,
-    fontSize: 12,
     fontFamily: Fonts.poppins.medium,
+    fontSize: 11.5,
   },
   playgroundActionsRow: {
-    marginTop: ResponsivePixels.size10,
+    marginTop: 2,
   },
   actionBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 46,
-    borderRadius: 23,
     gap: 8,
+    borderRadius: 24,
+    paddingVertical: 13,
   },
   stopBtn: {
     backgroundColor: '#FF3B30',
@@ -962,64 +1285,27 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   actionBtnText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14,
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 13.5,
     color: '#FFFFFF',
-  },
-  settingsBentoCard: {
-    borderRadius: 20,
-    borderWidth: 1,
-    borderBottomWidth: 3,
-    padding: ResponsivePixels.size16,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 3,
-    marginBottom: ResponsivePixels.size20,
-  },
-  controlHeaderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-    marginBottom: ResponsivePixels.size12,
-  },
-  controlHeaderTitle: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14,
-  },
-  speedPillsRow: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-  speedPill: {
-    flex: 1,
-    height: 38,
-    borderRadius: 19,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  speedPillText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
   },
   voiceListCard: {
     borderRadius: 20,
-    borderWidth: 1,
-    borderBottomWidth: 3,
-    padding: ResponsivePixels.size12,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 3,
-    marginBottom: ResponsivePixels.size24,
+    borderWidth: 1.5,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+    overflow: 'hidden',
+    marginBottom: 20,
   },
   voiceItemRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: ResponsivePixels.size10,
-    paddingHorizontal: ResponsivePixels.size4,
+    paddingVertical: 12,
+    paddingHorizontal: 14,
   },
   voiceInfoClickable: {
     flexDirection: 'row',
@@ -1045,14 +1331,14 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   voiceName: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14,
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 14.5,
   },
   voiceNameSelected: {
     fontFamily: Fonts.poppins.bold,
   },
   voiceItemDesc: {
-    ...Typography.bodySuperSmallPoppinsRegularLoose,
+    fontFamily: Fonts.poppins.regular,
     fontSize: 11,
   },
   voiceItemActions: {
@@ -1069,15 +1355,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   activeCheckBadge: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
+    width: 22,
+    height: 22,
+    borderRadius: 11,
     backgroundColor: Colors.LavenderPurple,
     alignItems: 'center',
     justifyContent: 'center',
   },
   itemDivider: {
     height: 1,
-    marginVertical: 4,
   },
 });

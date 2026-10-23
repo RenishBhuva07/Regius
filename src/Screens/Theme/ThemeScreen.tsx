@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useRef } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,10 @@ import {
   Platform,
   Vibration,
   Modal,
+  Dimensions,
+  Animated,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -25,6 +29,7 @@ import {
   Sun,
   Moon,
   Crown,
+  Layers,
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
@@ -33,7 +38,6 @@ import { Fonts } from '../../Theme/fonts';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../Common/Badge';
-import { ProBadge } from '../../Common/ProBadge';
 import CustomButton from '../../Common/CustomButton';
 import {
   useTheme,
@@ -43,6 +47,11 @@ import {
   isLightColor,
 } from '../../Theme/ThemeContext';
 import { useMilestones } from '../../Context/MilestoneContext';
+import { SettingsBackgroundSvg } from '../Settings/Components/SettingsBackgroundSvg';
+import { HeaderPatternSvg } from '../Dashboard/Components/HeaderPatternSvg';
+
+const { width: screenWidth } = Dimensions.get('window');
+const HEADER_HEIGHT = 52;
 
 type FilterTab = 'all' | 'unlocked' | 'locked';
 
@@ -64,6 +73,66 @@ export const ThemeScreen: React.FC = () => {
   const [lockedModalTheme, setLockedModalTheme] = useState<ThemeOption | null>(
     null,
   );
+
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const isScrolledRef = useRef(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  const handleScroll = Animated.event(
+    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+    {
+      useNativeDriver: false,
+      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+        const offsetY = event?.nativeEvent?.contentOffset?.y ?? 0;
+        if (offsetY > 15 && !isScrolledRef.current) {
+          isScrolledRef.current = true;
+          setIsScrolled(true);
+        } else if (offsetY <= 15 && isScrolledRef.current) {
+          isScrolledRef.current = false;
+          setIsScrolled(false);
+        }
+      },
+    },
+  );
+
+  const headerBgColor = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [
+      isDarkMode ? 'rgba(18, 20, 23, 0)' : 'rgba(255, 252, 227, 0)',
+      isDarkMode ? '#282048' : Colors.LavenderPurple,
+    ],
+    extrapolate: 'clamp',
+  });
+
+  const headerRadius = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 24],
+    extrapolate: 'clamp',
+  });
+
+  const headerShadowOpacity = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 0.32],
+    extrapolate: 'clamp',
+  });
+
+  const headerElevation = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 8],
+    extrapolate: 'clamp',
+  });
+
+  const headerPaddingBottom = scrollY.interpolate({
+    inputRange: [0, 30],
+    outputRange: [0, 8],
+    extrapolate: 'clamp',
+  });
+
+  const headerPatternOpacity = scrollY.interpolate({
+    inputRange: [0, 25],
+    outputRange: [0, 1],
+    extrapolate: 'clamp',
+  });
 
   // Active theme object
   const activeTheme = useMemo(
@@ -143,81 +212,162 @@ export const ThemeScreen: React.FC = () => {
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>
       <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        {...(Platform.OS === 'android' ? { backgroundColor: bgMain } : {})}
+        barStyle={
+          isScrolled
+            ? 'light-content'
+            : isDarkMode
+            ? 'light-content'
+            : 'dark-content'
+        }
+        {...(Platform.OS === 'android'
+          ? {
+              backgroundColor: isScrolled
+                ? isDarkMode
+                  ? '#282048'
+                  : Colors.LavenderPurple
+                : bgMain,
+              translucent: true,
+            }
+          : {})}
       />
 
-      {/* Screen Header */}
-      <View
+      <SettingsBackgroundSvg />
+
+      {/* Scroll-Reactive Header */}
+      <Animated.View
         style={[
-          styles.headerRow,
+          styles.headerContainer,
           {
-            paddingTop: insets.top + 8,
-            borderBottomColor: borderLight,
+            paddingTop: insets.top,
+            paddingBottom: headerPaddingBottom,
+            backgroundColor: headerBgColor,
+            borderBottomLeftRadius: headerRadius,
+            borderBottomRightRadius: headerRadius,
+            shadowOpacity: headerShadowOpacity,
+            elevation: headerElevation,
           },
         ]}
       >
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => navigation.goBack()}
+        <Animated.View
+          pointerEvents="none"
           style={[
-            styles.backButton,
+            StyleSheet.absoluteFill,
             {
-              backgroundColor: cardBg,
-              borderColor: borderLight,
+              opacity: headerPatternOpacity,
+              borderBottomLeftRadius: headerRadius,
+              borderBottomRightRadius: headerRadius,
+              overflow: 'hidden',
             },
           ]}
-          accessibilityRole="button"
-          accessibilityLabel="Back to Settings"
         >
-          <ChevronLeft size={20} color={textPrimary} strokeWidth={2.4} />
-        </TouchableOpacity>
+          <HeaderPatternSvg width={screenWidth} insetsTop={insets.top} />
+        </Animated.View>
 
-        <View style={styles.headerTitleWrap}>
-          <Text style={[styles.headerTitle, { color: textPrimary }]}>
-            Prestige Themes
-          </Text>
-          <Text style={[styles.headerSubtitle, { color: textSecondary }]}>
-            Bespoke Luxury Color Systems
-          </Text>
-        </View>
-
-        <View style={styles.headerRightActions}>
+        <View style={[styles.headerRow, { height: HEADER_HEIGHT }]}>
           <TouchableOpacity
-            activeOpacity={0.75}
-            onPress={toggleTheme}
+            activeOpacity={0.7}
+            onPress={() => navigation.goBack()}
             style={[
-              styles.modeToggleBtn,
-              {
-                backgroundColor: cardBg,
-                borderColor: borderLight,
-              },
+              styles.backButton,
+              isScrolled
+                ? styles.backButtonScrolled
+                : {
+                    backgroundColor: cardBg,
+                    borderColor: isDarkMode
+                      ? 'rgba(255, 255, 255, 0.12)'
+                      : '#FFFFFF',
+                    borderBottomColor: isDarkMode ? '#14161A' : '#DCD6CA',
+                    shadowColor: isDarkMode ? '#000000' : 'rgba(0, 0, 0, 0.08)',
+                  },
             ]}
             accessibilityRole="button"
-            accessibilityLabel={
-              isDarkMode ? 'Switch to Light Theme' : 'Switch to Dark Theme'
-            }
+            accessibilityLabel="Back to Settings"
           >
-            {isDarkMode ? (
-              <Sun size={17} color="#F5C518" strokeWidth={2.4} />
-            ) : (
-              <Moon size={17} color={Colors.LavenderPurple} strokeWidth={2.4} />
-            )}
+            <ChevronLeft
+              size={20}
+              color={isScrolled ? Colors.DefaultWhite : textPrimary}
+              strokeWidth={2.4}
+            />
           </TouchableOpacity>
 
-          <Badge label="6 PALETTES" variant="yellow" size="sm" />
-        </View>
-      </View>
+          <View style={styles.headerTitleWrap}>
+            <Text
+              style={[
+                styles.headerTitle,
+                isScrolled
+                  ? styles.headerTitleScrolled
+                  : { color: textPrimary },
+              ]}
+              numberOfLines={1}
+            >
+              Prestige Themes
+            </Text>
+            <Text
+              style={[
+                styles.headerSubtitle,
+                isScrolled
+                  ? styles.headerSubtitleScrolled
+                  : { color: textSecondary },
+              ]}
+              numberOfLines={1}
+            >
+              Bespoke Luxury Color Systems
+            </Text>
+          </View>
 
-      <ScrollView
+          <View style={styles.headerRightActions}>
+            <TouchableOpacity
+              activeOpacity={0.75}
+              onPress={toggleTheme}
+              style={[
+                styles.modeToggleBtn,
+                isScrolled
+                  ? styles.backButtonScrolled
+                  : {
+                      backgroundColor: cardBg,
+                      borderColor: isDarkMode
+                        ? 'rgba(255, 255, 255, 0.12)'
+                        : '#FFFFFF',
+                      borderBottomColor: isDarkMode ? '#14161A' : '#DCD6CA',
+                      shadowColor: isDarkMode
+                        ? '#000000'
+                        : 'rgba(0, 0, 0, 0.08)',
+                    },
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel={
+                isDarkMode ? 'Switch to Light Theme' : 'Switch to Dark Theme'
+              }
+            >
+              {isDarkMode ? (
+                <Sun size={17} color="#F5C518" strokeWidth={2.4} />
+              ) : (
+                <Moon
+                  size={17}
+                  color={
+                    isScrolled ? Colors.DefaultWhite : Colors.LavenderPurple
+                  }
+                  strokeWidth={2.4}
+                />
+              )}
+            </TouchableOpacity>
+
+            <Badge label="6 PALETTES" variant="yellow" size="sm" />
+          </View>
+        </View>
+      </Animated.View>
+
+      <Animated.ScrollView
         style={styles.scrollView}
         contentContainerStyle={[
           styles.scrollContent,
           { paddingBottom: insets.bottom + 40 },
         ]}
         showsVerticalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
       >
-        {/* Hero Active Theme Bento Card (2-Layer Wrapper Pattern) */}
+        {/* Hero Active Theme Bento Card (2-Layer Signature Wrapper Pattern) */}
         <View style={styles.heroWrapper}>
           <View style={styles.cardShadowWrapper}>
             <View
@@ -231,6 +381,8 @@ export const ThemeScreen: React.FC = () => {
                 },
               ]}
             >
+              <HeaderPatternSvg width={screenWidth} insetsTop={insets.top} />
+
               <View style={styles.heroTopRow}>
                 <View style={styles.heroTitleGroup}>
                   <Badge label="CURRENTLY ACTIVE" variant="yellow" size="sm" />
@@ -688,7 +840,7 @@ export const ThemeScreen: React.FC = () => {
             );
           })}
         </View>
-      </ScrollView>
+      </Animated.ScrollView>
 
       {/* Locked Theme Milestone Requirement Modal */}
       <Modal
@@ -893,21 +1045,35 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headerContainer: {
+    shadowColor: Colors.LavenderPurple,
+    shadowOffset: { width: 0, height: 6 },
+    shadowRadius: 12,
+    zIndex: 10,
+  },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: ResponsivePixels.size16,
-    paddingBottom: ResponsivePixels.size12,
-    borderBottomWidth: StyleSheet.hairlineWidth,
   },
   backButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    borderWidth: 1,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderBottomWidth: 3,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  backButtonScrolled: {
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderBottomColor: 'rgba(255, 255, 255, 0.3)',
   },
   headerTitleWrap: {
     alignItems: 'center',
@@ -918,22 +1084,33 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   modeToggleBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    borderWidth: 1,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    borderWidth: 1.5,
+    borderBottomWidth: 3,
     alignItems: 'center',
     justifyContent: 'center',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   headerTitle: {
     ...Typography.h5SemiBold,
     fontFamily: Fonts.ranade.bold,
     fontSize: 18,
   },
+  headerTitleScrolled: {
+    color: Colors.DefaultWhite,
+  },
   headerSubtitle: {
     ...Typography.bodySuperSmallPoppinsRegularLoose,
     fontSize: 11,
     marginTop: 2,
+  },
+  headerSubtitleScrolled: {
+    color: 'rgba(255, 255, 255, 0.85)',
   },
   scrollView: {
     flex: 1,
@@ -946,6 +1123,8 @@ const styles = StyleSheet.create({
     marginBottom: ResponsivePixels.size20,
   },
   cardShadowWrapper: {
+    backgroundColor: Colors.NeroBlack,
+    borderRadius: 24,
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.28,
@@ -958,6 +1137,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.9)',
     padding: ResponsivePixels.size16,
     overflow: 'hidden',
+    position: 'relative',
   },
   heroTopRow: {
     flexDirection: 'row',
