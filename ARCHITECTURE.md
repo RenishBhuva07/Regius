@@ -272,7 +272,13 @@ graph LR
 3. **`VoiceSettingsService`**:
    - Persists user preferences (`selectedVoiceId`, `speechSpeed`, `autoSpeakReplies`, `wakeWordPhrase`, `wakeWordEnabled`) to `AsyncStorage`.
 4. **`AuthContext` & `PremiumContext`**:
-   - Maintain authentication status, user profile, and subscription gating. (Currently operating as local in-memory providers).
+   - `AuthContext`: Maintains authentication status and session state.
+   - `PremiumContext`: Manages Regius Royal subscription state (`isPremium`, `currentPlan`, `subscribedAt`, `expiresAt`, `isTrialActive`, `trialDaysRemaining`), persists to `@regius_subscription_data`, provides `purchasePlan`, `restorePurchases`, and `cancelSubscription` APIs, and powers `SubscriptionScreen` and `SubscriptionSection`.
+5. **`MilestoneContext` & `MilestoneService`**:
+   - Manages gamification progression and Pro feature entitlements earned via daily task completion, reminder clearance, and habit streaks.
+   - Calculates total XP (+15 Task, +10 Reminder, +20 Habit, +2/day Habit Streak) and evaluates current rank across 5 Royalty Prestige Tiers.
+   - Manages dual-gate Pro access: users unlock bespoke luxury themes (_Champagne Gold_, _Emerald Velvet_, _Celestial Azure_, _Obsidian Sovereign_) and Pro privileges (Haptic intensity, Wake word studio, Priority TTS) either by leveling up through discipline or via `isPremium: true`.
+   - Persists historical metrics to `AsyncStorage` (`@regius_milestone_progression`).
 
 ---
 

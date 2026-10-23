@@ -33,7 +33,9 @@ Use this lookup table to identify exactly which files, components, hooks, and se
 | **OS Reminder Notifications** | `Planned`     | In-memory `time` & `date` strings                                                                                                  | Needs `@notifee/react-native` or native alarms                                                                                            | [RemindersScreen.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Screens/Reminders/RemindersScreen.tsx)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | **On-Device ONNX TTS**        | `Partial`     | `KokoroTTSService.ts`                                                                                                              | `onnxruntime-react-native` (patched, model pending)                                                                                       | [KokoroTTSService.ts](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Services/Kokoro/KokoroTTSService.ts)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
 | **Cloud Backend Sync**        | `Planned`     | `src/api/` folders (controllers/helpers)                                                                                           | Remote REST / GraphQL sync (empty scaffolding)                                                                                            | [src/api/](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/api)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            |
-| **Subscription Payments**     | `Partial`     | `PremiumContext.tsx`                                                                                                               | In-memory mock boolean (`isPremium`)                                                                                                      | [PremiumContext.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Context/PremiumContext.tsx)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| **Subscription Payments**     | `Implemented` | `SubscriptionScreen.tsx`, `SubscriptionSection.tsx`                                                                              | `PremiumContext.tsx` with persistence, 3 plans, 14-day trial & restore APIs                                                              | [SubscriptionScreen.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Screens/Subscription/SubscriptionScreen.tsx), [SubscriptionSection.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Screens/Settings/Components/SubscriptionSection.tsx), [PremiumContext.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Context/PremiumContext.tsx) |
+| **Milestone & Pro Unlocks**   | `Implemented` | `MilestoneFullScreenSheet.tsx`, `MilestoneSection.tsx`, `ProfileCard.tsx`, `AppearanceSection.tsx`                  | `MilestoneContext.tsx`, `MilestoneService.ts`, `ThemeContext.tsx`                                                                         | [MilestoneFullScreenSheet.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Screens/Milestones/MilestoneFullScreenSheet.tsx), [MilestoneService.ts](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Services/Milestone/MilestoneService.ts), [MilestoneContext.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Context/MilestoneContext.tsx), [MilestoneSection.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Screens/Settings/Components/MilestoneSection.tsx) |
+| **Prestige Themes Screen**    | `Implemented` | `ThemeScreen.tsx`, `ThemeContext.tsx`, `AppearanceSection.tsx`                                                      | `THEME_PRESETS` 4-color palettes, `AsyncStorage` theme persistence, Milestone tier gates, 3D status badges                               | [ThemeScreen.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Screens/Theme/ThemeScreen.tsx), [ThemeContext.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Theme/ThemeContext.tsx), [AppearanceSection.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Screens/Settings/Components/AppearanceSection.tsx) |
 
 ---
 
@@ -516,16 +518,91 @@ sequenceDiagram
   - **Theme Lavender Brand Typography & Inline Version Footer**: `SettingsWatermarkDoodleSvg` renders a hand-drawn Royal Regius Crown with neural starbursts and acoustic wave arcs. "Regius" spell styled in theme lavender (`Colors.LavenderPurple` / `#8383D6` and `#9C9CE3`) with increased font size (44pt). The "Production" environment badge is guaranteed strictly inline with version details across all screen widths.
 - **Test Coverage**: Tested in `__tests__/SettingsRedesignSuite.test.tsx` (9 unit tests).
 
+### 2.15 Milestone Progression & Pro Feature Unlocking Engine
+
+- **Purpose**: Progression and gamification engine unlocking bespoke luxury themes and Pro capabilities through daily task completion, reminder clearance, and habit consistency.
+- **Status**: `Implemented`
+- **Source Files**:
+  - `src/Screens/Milestones/MilestoneFullScreenSheet.tsx`
+  - `src/Services/Milestone/MilestoneService.ts`
+  - `src/Context/MilestoneContext.tsx`
+  - `src/Theme/ThemeContext.tsx`
+  - `src/Screens/Settings/Components/MilestoneSection.tsx`
+  - `src/Screens/Settings/Components/MilestoneJourneyModal.tsx`
+  - `src/Screens/Settings/Components/ProfileCard.tsx`
+  - `src/Screens/Settings/Components/AppearanceSection.tsx`
+  - `src/Screens/Settings/SettingsScreen.tsx`
+- **Core Mechanics & Rules**:
+  - **XP Formula**: +15 XP per Task completed, +10 XP per Reminder completed, +20 XP per Habit kept, +2 XP per day of habit streak.
+  - **5-Tier Royalty Ladder**:
+    - **Tier 1: Novice Initiate (0 XP)**: Core tasks, standard Kokoro voice.
+    - **Tier 2: Focused Vanguard (100 XP)**: Unlocks _Champagne Gold Theme_, Haptic Intensity selector, Wake Word quick presets.
+    - **Tier 3: Habitual Artisan (300 XP)**: Unlocks _Emerald Velvet Theme_, Priority Kokoro Neural Voice Synthesis, Smart Audio cache flush tools.
+    - **Tier 4: Productive Master (600 XP)**: Unlocks _Celestial Azure Theme_, Custom Wake Word Studio privileges, Smart AI workflow categorization.
+    - **Tier 5: Regius Sovereign (1000+ XP)**: Unlocks _Obsidian Sovereign Theme_, Imperial Crown Profile Accent, all Pro features permanently unlocked.
+  - **Dual-Gate Entitlement Engine**: Checks whether a user has reached the required tier level or is a paid Pro member (`isPremium: true`).
+  - **Global Full-Screen Sheet Architecture ("Open from Anywhere")**:
+    - `MilestoneFullScreenSheet`: Mounted globally at `App.tsx` root. Opens from any screen, modal, or component via `useMilestones().openMilestoneModal()`. Provides a full-screen executive sheet presentation (`animationType="slide"`), top drag notch, sticky header with close `X`, full adaptive Light (`#FFFCE3`) and Dark (`#121417`) mode styling, interactive tier roadmap, and direct 1-tap theme unlocking & application.
+    - `ProfileCard`: Displays live Milestone Tier level badge, golden XP progress bar, and tap handler opening `MilestoneFullScreenSheet`.
+    - `MilestoneSection`: 3D tactile bento card highlighting current prestige tier, XP points, and CTA opening `MilestoneFullScreenSheet`.
+    - `AppearanceSection`: Bespoke luxury theme selector with live switching and tier-locked badges.
+- **Test Coverage**: Tested in `__tests__/MilestoneProgressionEngine.test.tsx` (12 unit tests).
+
+### 2.16 Prestige Themes & Color System Screen
+
+- **Purpose**: Full-screen luxury theme showroom displaying all bespoke color palettes, 4 round color swatches with hex color codes in a single horizontal row, live interactive UI preview, milestone unlock tiers, and active status indicators.
+- **Files Owned**:
+  - `src/Screens/Theme/ThemeScreen.tsx` (Dedicated whole theme screen)
+  - `src/Screens/Theme/index.ts` (Theme screen barrel export)
+  - `src/Theme/ThemeContext.tsx` (Theme palettes metadata, 4-color definitions, and `@regius_active_theme_id` persistence)
+  - `src/Screens/Settings/Components/AppearanceSection.tsx` (Interactive header navigation to `ThemeScreen`)
+  - `src/Navigators/AppNavigator.tsx` (Stack screen registration)
+- **Key Capabilities**:
+  - **Single-Line 4-Color Round Swatches**: Each theme card features exactly 4 round circular color swatches (`width: 38`, `height: 38`, `borderRadius: 19`, 1.5px border, subtle specular depth) aligned horizontally in one row. Each swatch displays its uppercase hexadecimal color code (e.g. `#121417`, `#FFFCE3`, `#D4AF37`) and semantic role label (`Canvas`, `Surface`, `Accent`, `Foreground`). Tapping any swatch emits tactile haptic feedback and displays a toast with color details.
+  - **Status Indications**:
+    - **Selected Theme**: Highlighted with a luminous accent border, 3D `<Badge label="CURRENT THEME" variant="green" size="sm" />`, and "Active Palette Applied" banner.
+    - **Unlocked Theme**: Displayed with 3D `<Badge label="UNLOCKED" variant="neutral" size="sm" />` and 1-tap "Apply Theme" button with tactile vibration.
+    - **Locked Theme**: Displayed with 3D `<Badge label="TIER X REQUIRED" variant="purple" size="sm" />`, lock icon, required milestone tier label, and unlock details button.
+  - **2-Layer Signature Hero Bento Card**: Compliant with Rule 5. Shows currently active theme, Ranade bold typography, sparkles orb, live interactive mini UI mockup (surface, chip, title, progress bar) rendered dynamically with active theme colors, and milestone progress.
+  - **Segmented Filter Tabs**: Filter by "All (6)", "Unlocked", and "Rewards".
+  - **Milestone Unlock Modal**: Tapping a locked theme opens a dedicated modal with remaining XP progress bar, required tier title, and a direct CTA to open all Milestones.
+  - **AsyncStorage Persistence**: Theme selection is stored under `@regius_active_theme_id` and persists across app restarts.
+- **Test Coverage**: Tested in `__tests__/ThemeScreen.test.tsx` (6 unit tests).
+
+---
+
+### 2.17 Regius Royal Subscription & Paywall Flow
+
+- **Purpose**: High-converting, mindful luxury subscription flow allowing users to unlock unlimited Kokoro AI voices, all 8 luxury themes, custom wake words, 2x XP boost, and cloud backup.
+- **Status**: `Implemented`
+- **Source Files**:
+  - `src/Screens/Subscription/SubscriptionScreen.tsx`
+  - `src/Screens/Subscription/index.ts`
+  - `src/Screens/Settings/Components/SubscriptionSection.tsx`
+  - `src/Context/PremiumContext.tsx`
+  - `src/Screens/Settings/SettingsScreen.tsx`
+  - `src/Screens/Theme/ThemeScreen.tsx`
+  - `src/Navigators/AppNavigator.tsx`
+- **Key Capabilities**:
+  - **Signature Hero Bento Card**: Adheres strictly to the 2-layer wrapper rule with volumetric shadow and inner ceramic border. Displays dynamic royal state and perks pills.
+  - **Interactive Plan Selector**: 3 plans (Annual with 14-day trial & 50% savings, Monthly with 7-day trial, Monarch Lifetime one-time license). Tactile selection with haptic feedback.
+  - **Feature Matrix**: 6 category-themed cards displaying full Royal benefits.
+  - **Sticky Bottom Action Dock**: Dynamic CTA button with loading feedback, celebratory toast, and store compliance microcopy.
+  - **Settings Integration**: Dedicated `SubscriptionSection` placed right below `ProfileCard` showing current tier, status, and direct upgrade link; also accessible via `AccountSupportSection` and `ProfileCard`'s `ProBadge`.
+  - **Locked Themes Gating**: ThemeScreen locked modal provides a 1-tap "Unlock Instantly with Royal 👑" button navigating straight to the paywall.
+  - **AsyncStorage Persistence**: Hydrates from and saves to `@regius_subscription_data` with support for purchasing, restoring, and canceling subscriptions.
+- **Test Coverage**: Tested in `__tests__/SubscriptionFlow.test.tsx` (6 unit tests).
+
 ---
 
 ## 3. Partially Implemented & Planned Features Registry
 
-| Feature Name                    | Status    | Current Reality                                                                         | Required Next Steps                                                               |
-| :------------------------------ | :-------- | :-------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------- |
-| **Task / Reminder Persistence** | `Partial` | In-memory `useState` in `TaskReminderContext.tsx`.                                      | Add `useEffect` to hydrate from and save to `AsyncStorage`.                       |
-| **OS-Level Reminder Alarms**    | `Planned` | In-memory time strings (`"04:30 PM"`).                                                  | Install and configure `@notifee/react-native` for native scheduling.              |
-| **On-Device Kokoro Inference**  | `Partial` | `onnxruntime-react-native` installed and JSI patched; remote Gradio client active.      | Bundle `kokoro-v0_19.onnx` model weights and wire on-device inference session.    |
-| **Remote Backend Sync**         | `Planned` | `src/api/controllers` and `src/api/helpers` exist as empty folders.                     | Implement REST/GraphQL client with JWT authentication.                            |
-| **Authentication Flow**         | `Partial` | `LoginScreen.tsx` has complete UI; `AuthContext.tsx` uses mock state.                   | Wire authentication endpoints and secure token storage (`react-native-keychain`). |
-| **In-App Subscription**         | `Partial` | `PremiumContext.tsx` has mock state (`isPremium: false`).                               | Integrate `react-native-purchases` (RevenueCat) or StoreKit/Google Play Billing.  |
-| **Sub-screen Routes**           | `Planned` | `src/Screens/Language`, `Premium`, `PrivacySecurity`, `Profile`, `VerifyOTP` are empty. | Implement dedicated screen components when user requirements are finalized.       |
+| Feature Name                    | Status        | Current Reality                                                                         | Required Next Steps                                                               |
+| :------------------------------ | :------------ | :-------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------- |
+| **Task / Reminder Persistence** | `Partial`     | In-memory `useState` in `TaskReminderContext.tsx`.                                      | Add `useEffect` to hydrate from and save to `AsyncStorage`.                       |
+| **OS-Level Reminder Alarms**    | `Planned`     | In-memory time strings (`"04:30 PM"`).                                                  | Install and configure `@notifee/react-native` for native scheduling.              |
+| **On-Device Kokoro Inference**  | `Partial`     | `onnxruntime-react-native` installed and JSI patched; remote Gradio client active.      | Bundle `kokoro-v0_19.onnx` model weights and wire on-device inference session.    |
+| **Remote Backend Sync**         | `Planned`     | `src/api/controllers` and `src/api/helpers` exist as empty folders.                     | Implement REST/GraphQL client with JWT authentication.                            |
+| **Authentication Flow**         | `Partial`     | `LoginScreen.tsx` has complete UI; `AuthContext.tsx` uses mock state.                   | Wire authentication endpoints and secure token storage (`react-native-keychain`). |
+| **In-App Subscription Flow**    | `Implemented` | `SubscriptionScreen`, `SubscriptionSection`, `PremiumContext` with persistence & plans. | Ready for StoreKit / Google Play Billing native bridge in store release phase.     |
+| **Sub-screen Routes**           | `Implemented` | `Language`, `HelpFaq`, `PrivacySecurity`, `Profile`, `Theme`, `Subscription` completed. | Add any additional sub-screens when requested.                                    |

@@ -7,6 +7,7 @@ import {
   Switch,
   Vibration,
   Platform,
+  ScrollView,
 } from 'react-native';
 import {
   Moon,
@@ -15,6 +16,9 @@ import {
   Globe,
   ChevronRight,
   Sliders,
+  Palette,
+  Lock,
+  CheckCircle2,
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 import { Typography } from '../../../Theme/Typographys';
@@ -22,6 +26,8 @@ import { Fonts } from '../../../Theme/fonts';
 import { Colors as StaticColors } from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { useSettingsTheme } from './types';
+import { useTheme, isLightColor } from '../../../Theme/ThemeContext';
+import { useMilestones } from '../../../Context/MilestoneContext';
 
 export type HapticIntensity = 'subtle' | 'medium' | 'crisp';
 
@@ -31,6 +37,8 @@ interface AppearanceSectionProps {
   hapticIntensity?: HapticIntensity;
   onChangeHapticIntensity?: (intensity: HapticIntensity) => void;
   onOpenLanguage?: () => void;
+  onOpenMilestones?: () => void;
+  onOpenTheme?: () => void;
 }
 
 export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
@@ -39,6 +47,8 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
   hapticIntensity: controlledIntensity,
   onChangeHapticIntensity,
   onOpenLanguage,
+  onOpenMilestones,
+  onOpenTheme,
 }) => {
   const {
     isDarkMode,
@@ -49,6 +59,8 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
     borderLight,
     surfaceAlt,
   } = useSettingsTheme();
+  const { activeThemeId, setActiveThemeId, themePresets } = useTheme();
+  const { isThemeUnlocked } = useMilestones();
 
   const [localIntensity, setLocalIntensity] =
     useState<HapticIntensity>('medium');
@@ -140,6 +152,133 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
             trackColor={{ false: '#D9D9D9', true: '#F5C518' }}
             thumbColor="#FFFFFF"
           />
+        </View>
+
+        {/* Bespoke Luxury Themes (Unlocked via Milestones) */}
+        <View
+          style={[
+            styles.themesContainer,
+            { backgroundColor: surfaceAlt, borderColor: borderLight },
+          ]}
+        >
+          <TouchableOpacity
+            activeOpacity={0.7}
+            style={styles.themesHeader}
+            onPress={onOpenTheme}
+            accessibilityRole="button"
+            accessibilityLabel="Open all prestige themes"
+          >
+            <View style={styles.themesHeaderLeft}>
+              <Palette size={14} color="#F5C518" strokeWidth={2.2} />
+              <Text
+                style={[styles.themesHeaderTitle, { color: textSecondary }]}
+              >
+                Prestige Themes ({themePresets.length}):
+              </Text>
+            </View>
+            <View style={styles.themesHeaderRight}>
+              <Text style={styles.viewAllThemesText}>View All & Colors</Text>
+              <ChevronRight size={14} color="#F5C518" strokeWidth={2.4} />
+            </View>
+          </TouchableOpacity>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.themesScrollContent}
+          >
+            {themePresets.map(theme => {
+              const unlocked = isThemeUnlocked(theme.id);
+              const isSelected = activeThemeId === theme.id;
+              const isLightPill = isLightColor(theme.previewBg);
+              return (
+                <TouchableOpacity
+                  key={theme.id}
+                  activeOpacity={0.8}
+                  style={[
+                    styles.themePill,
+                    isSelected && styles.themePillSelected,
+                    {
+                      backgroundColor: theme.previewBg,
+                      borderColor: isSelected
+                        ? theme.accent
+                        : isLightPill
+                        ? 'rgba(0, 0, 0, 0.16)'
+                        : 'rgba(255, 255, 255, 0.16)',
+                    },
+                  ]}
+                  onPress={() => {
+                    if (unlocked) {
+                      setActiveThemeId(theme.id);
+                      Toast.show({
+                        type: 'info',
+                        text2: `Theme switched to ${theme.name}`,
+                      });
+                    } else {
+                      Toast.show({
+                        type: 'info',
+                        text2: `🔒 Unlocks at Tier ${theme.requiredTierLevel}! Complete more tasks, reminders & habits.`,
+                      });
+                      onOpenMilestones?.();
+                    }
+                  }}
+                  accessibilityRole="button"
+                  accessibilityLabel={`${theme.name} theme, ${
+                    unlocked
+                      ? 'Unlocked'
+                      : `Locked, requires Tier ${theme.requiredTierLevel}`
+                  }`}
+                >
+                  <View
+                    style={[
+                      styles.themeAccentDot,
+                      { backgroundColor: theme.accent },
+                    ]}
+                  />
+                  <Text
+                    style={[
+                      styles.themePillText,
+                      { color: isLightPill ? '#121417' : '#FFFFFF' },
+                    ]}
+                    numberOfLines={1}
+                  >
+                    {theme.name}
+                  </Text>
+                  {unlocked ? (
+                    isSelected && (
+                      <CheckCircle2
+                        size={12}
+                        color={theme.accent}
+                        strokeWidth={2.4}
+                      />
+                    )
+                  ) : (
+                    <View
+                      style={[
+                        styles.themeLockBadge,
+                        isLightPill && {
+                          backgroundColor: 'rgba(0, 0, 0, 0.08)',
+                        },
+                      ]}
+                    >
+                      <Lock
+                        size={9}
+                        color={isLightPill ? '#555B66' : '#8E95A5'}
+                      />
+                      <Text
+                        style={[
+                          styles.themeTierReqText,
+                          isLightPill && { color: '#555B66' },
+                        ]}
+                      >
+                        T{theme.requiredTierLevel}
+                      </Text>
+                    </View>
+                  )}
+                </TouchableOpacity>
+              );
+            })}
+          </ScrollView>
         </View>
 
         <View style={[styles.itemDivider, { backgroundColor: borderLight }]} />
@@ -409,6 +548,82 @@ const styles = StyleSheet.create({
   intensityPillText: {
     fontSize: 12,
     letterSpacing: 0.3,
+  },
+  themesContainer: {
+    borderRadius: 14,
+    borderWidth: 1,
+    padding: 10,
+    marginTop: 10,
+    marginBottom: 4,
+  },
+  themesHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  themesHeaderLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  themesHeaderRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 3,
+  },
+  viewAllThemesText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 11,
+    color: '#F5C518',
+  },
+  themesHeaderTitle: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: 11.5,
+  },
+  themesScrollContent: {
+    flexDirection: 'row',
+    gap: 8,
+    paddingVertical: 2,
+  },
+  themePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 16,
+    borderWidth: 1.5,
+  },
+  themePillSelected: {
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  themeAccentDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
+  themePillText: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 12,
+    color: '#FFFFFF',
+  },
+  themeLockBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 2,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    paddingHorizontal: 4,
+    paddingVertical: 1.5,
+    borderRadius: 6,
+  },
+  themeTierReqText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 9,
+    color: '#8E95A5',
   },
 });
 

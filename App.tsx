@@ -6,6 +6,8 @@ import { ThemeProvider } from './src/Theme/ThemeContext';
 import { PremiumProvider } from './src/Context/PremiumContext';
 import { AuthProvider } from './src/Context/AuthContext';
 import { TaskReminderProvider } from './src/Context/TaskReminderContext';
+import { MilestoneProvider } from './src/Context/MilestoneContext';
+import { MilestoneFullScreenSheet } from './src/Screens/Milestones';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from './src/Common/ToastConfig';
 
@@ -19,11 +21,14 @@ function App() {
       <PremiumProvider>
         <AuthProvider>
           <TaskReminderProvider>
-            <SafeAreaProvider>
-              <StatusBar barStyle="dark-content" />
-              <AppNavigator />
-              <Toast config={toastConfig} />
-            </SafeAreaProvider>
+            <MilestoneProvider>
+              <SafeAreaProvider>
+                <StatusBar barStyle="dark-content" />
+                <AppNavigator />
+                <MilestoneFullScreenSheet />
+                <Toast config={toastConfig} />
+              </SafeAreaProvider>
+            </MilestoneProvider>
           </TaskReminderProvider>
         </AuthProvider>
       </PremiumProvider>

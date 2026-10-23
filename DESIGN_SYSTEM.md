@@ -70,6 +70,36 @@ Every major category or card type pairs 4 harmonized color values, structured ac
 | `SubtitleGray` / `MutedSteelText` | `#666665` / `#7E838F` | Secondary descriptions, task counts, metadata stamps.         |
 | `PureWhiteText`                   | `#FFFFFF`             | Text on dark buttons, active tab indicators, floating badges. |
 
+### 2.5 Prestige Theme Palettes (Dual Light & Dark Harmonic Systems)
+
+Every theme preset in Regius is constructed with dedicated, bespoke **Light Mode** and **Dark Mode** 4-color palettes. In `ThemeScreen.tsx`, swatches and previews dynamically adapt based on `isDarkMode`:
+
+#### Light Mode Palettes (`isDarkMode: false`)
+
+| Theme Preset & Tier Level       | 1. Canvas (`Background`) | 2. Surface / Card | 3. Brand Accent | 4. Foreground / Text |
+| :------------------------------ | :----------------------- | :---------------- | :-------------- | :------------------- |
+| **Warm Cream** (Tier 1)         | `#FFFCE3`                | `#FFFFFF`         | `#8383D6`       | `#121417`            |
+| **Obsidian Night** (Tier 1)     | `#FFFCE3`                | `#FFFFFF`         | `#8383D6`       | `#121417`            |
+| **Champagne Gold** (Tier 2)     | `#FAF6EE`                | `#FFFFFF`         | `#C5A059`       | `#241E15`            |
+| **Emerald Velvet** (Tier 3)     | `#F0F7F4`                | `#FFFFFF`         | `#1B9A72`       | `#0E231B`            |
+| **Celestial Azure** (Tier 4)    | `#F0F4FC`                | `#FFFFFF`         | `#3B82F6`       | `#0E1A33`            |
+| **Obsidian Sovereign** (Tier 5) | `#F7F7F8`                | `#FFFFFF`         | `#D4AF37`       | `#111113`            |
+
+#### Dark Mode Palettes (`isDarkMode: true`)
+
+| Theme Preset & Tier Level       | 1. Canvas (`Background`) | 2. Surface / Card | 3. Brand Accent | 4. Foreground / Text |
+| :------------------------------ | :----------------------- | :---------------- | :-------------- | :------------------- |
+| **Obsidian Night** (Tier 1)     | `#121417`                | `#1E2228`         | `#F5C518`       | `#FFFFFF`            |
+| **Warm Cream** (Tier 1)         | `#121417`                | `#1E2228`         | `#F5C518`       | `#FFFFFF`            |
+| **Champagne Gold** (Tier 2)     | `#161410`                | `#221F18`         | `#D4AF37`       | `#F7E7CE`            |
+| **Emerald Velvet** (Tier 3)     | `#0F1A15`                | `#162720`         | `#2ECC71`       | `#E3F7EE`            |
+| **Celestial Azure** (Tier 4)    | `#0D1424`                | `#141D34`         | `#60A5FA`       | `#E6EEFA`            |
+| **Obsidian Sovereign** (Tier 5) | `#08080A`                | `#121217`         | `#FFD700`       | `#FFFDF0`            |
+
+- **Circular Swatch Geometry**: `width: 38`, `height: 38`, `borderRadius: 19`, `borderWidth: 1.5`, elevation shadow.
+- **Dynamic Perceived Luminance (`isLightColor`)**: Guarantees high-contrast borders and text across all light canvas and card combinations.
+- **Single-Line Layout**: All 4 swatches rendered in one row with uppercase hex labels and role subtitles.
+
 ---
 
 ## 3. Typography Scale & Font Hierarchy
@@ -556,3 +586,24 @@ When creating a new screen in Regius:
 3. **Badges**: Import and use `<Badge />` from `src/Common/Badge.tsx`. Do not write custom inline tag views.
 4. **Buttons**: Use `<CustomButton />` from `src/Common/CustomButton.tsx` or apply full-pill geometry (`borderRadius: 28+`).
 5. **Cards**: Adhere to either the Signature Asymmetric Card specification or the Clean Elevated Card specification.
+
+---
+
+## 9. Subscription & Royal Paywall Architecture (`src/Screens/Subscription`)
+
+The Regius Royal subscription flow embodies mindful luxury:
+
+1. **Brand Identity**:
+   - Title: `Regius Royal`
+   - Badge: `<ProBadge size="sm" />` paired with 24K Gold Crown icon (`#F5C518`).
+2. **Hero Showcase Bento**:
+   - Signature 2-layer wrapper (`cardShadowWrapper` with volumetric shadow + inner ceramic rim `card`).
+   - Radial golden light orb, editorial Ranade title, and 3 high-contrast micro-pills for core perks.
+3. **Value Proposition Grid**:
+   - 6 category-themed benefit cards featuring Lavender Purple (Unlimited TTS), 24K Gold (8 Artisan Themes), Tangerine Amber (Custom Wake Words), Indigo Violet (2x XP Boost), Emerald Mint (Encrypted Cloud Backup), and Coral Rose (Executive Daily Briefing).
+4. **Interactive Plan Selector**:
+   - High-contrast tactile plan cards: Annual (Best Value / Save 50%), Monthly (Flexible), and Monarch Lifetime (One-time).
+   - Dynamic selection ring and haptic vibration feedback (`Vibration.vibrate(20)`).
+5. **Sticky Action Dock**:
+   - Full-pill golden CTA button with dual-state messaging: "Start 14-Day Free Trial" or "Royal Access Active".
+   - Compliant microcopy for App Store and Google Play subscription transparency.

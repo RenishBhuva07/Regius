@@ -19,3 +19,6 @@ export { default as EditProfileModal } from './EditProfileModal';
 export { default as ClearCacheModal } from './ClearCacheModal';
 export { default as LogoutConfirmModal } from './LogoutConfirmModal';
 export { default as WakeWordConfigModal } from './WakeWordConfigModal';
+export { default as MilestoneSection } from './MilestoneSection';
+export { default as MilestoneJourneyModal } from './MilestoneJourneyModal';
+export { default as SubscriptionSection } from './SubscriptionSection';

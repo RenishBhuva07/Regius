@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Edit3 } from 'lucide-react-native';
+import { Edit3, Award, ChevronRight } from 'lucide-react-native';
 import { Typography } from '../../../Theme/Typographys';
 import { Fonts } from '../../../Theme/fonts';
 import Colors, {
@@ -11,6 +11,7 @@ import { Badge } from '../../../Common/Badge';
 import { ProBadge } from '../../../Common/ProBadge';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import ProfileCardBackgroundSvg from './ProfileCardBackgroundSvg';
+import { MilestoneTier } from '../../../Services/Milestone/MilestoneService';
 
 interface ProfileCardProps {
   name: string;
@@ -19,6 +20,14 @@ interface ProfileCardProps {
   role: string;
   selectedVoiceName: string;
   onEditPress: () => void;
+  milestoneTier?: MilestoneTier;
+  milestoneXp?: number;
+  milestoneProgress?: number;
+  tasksDoneCount?: number;
+  habitsFollowedCount?: number;
+  onMilestonePress?: () => void;
+  isPremium?: boolean;
+  onProPress?: () => void;
 }
 
 export const ProfileCard: React.FC<ProfileCardProps> = ({
@@ -28,6 +37,14 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   role,
   selectedVoiceName,
   onEditPress,
+  milestoneTier,
+  milestoneXp = 0,
+  milestoneProgress = 0,
+  tasksDoneCount = 142,
+  habitsFollowedCount = 8,
+  onMilestonePress,
+  isPremium = false,
+  onProPress,
 }) => {
   return (
     <View style={styles.cardShadowWrapper}>
@@ -49,13 +66,20 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
                 <Text style={styles.profileName} numberOfLines={1}>
                   {name}
                 </Text>
-                <ProBadge size="sm" />
+                <ProBadge size="sm" onPress={onProPress} />
               </View>
               <Text style={styles.profileEmail} numberOfLines={1}>
                 {email}
               </Text>
               <View style={styles.roleBadgeWrapper}>
-                <Badge label={role} variant="yellow" size="sm" />
+                {/* <Badge label={role} variant="yellow" size="sm" /> */}
+                {milestoneTier && (
+                  <Badge
+                    label={`Tier ${milestoneTier.level} ${milestoneTier.title}`}
+                    variant={milestoneTier.badgeVariant}
+                    size="sm"
+                  />
+                )}
               </View>
             </View>
 
@@ -80,16 +104,68 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
             </View>
           ) : null}
 
-          {/* Metrics Row: Tasks Done, Active Alerts, AI Voice */}
+          {/* Milestone Level & XP Progress Banner */}
+          {milestoneTier && (
+            <TouchableOpacity
+              activeOpacity={0.85}
+              style={styles.milestoneBanner}
+              onPress={onMilestonePress}
+              accessibilityRole="button"
+              accessibilityLabel={`Milestone tier ${milestoneTier.level}, ${milestoneTier.title}, ${milestoneXp} XP. Tap to view rewards.`}
+            >
+              <View style={styles.milestoneTopRow}>
+                <View style={styles.milestoneLeftInfo}>
+                  <Award
+                    size={15}
+                    color={milestoneTier.accentColor || '#F5C518'}
+                    strokeWidth={2.4}
+                  />
+                  <Text style={styles.milestoneLevelText}>
+                    Milestone Level: Tier {milestoneTier.level} •{' '}
+                    {milestoneTier.title}
+                  </Text>
+                </View>
+                <View style={styles.milestoneXpWrapper}>
+                  <Text style={styles.milestoneXpText}>{milestoneXp} XP</Text>
+                  <ChevronRight size={13} color="#D4D2D6" strokeWidth={2} />
+                </View>
+              </View>
+
+              {/* Golden Volumetric Progress Bar */}
+              <View style={styles.milestoneBarTrack}>
+                <View
+                  style={[
+                    styles.milestoneBarFill,
+                    {
+                      width: `${Math.max(
+                        6,
+                        Math.min(100, Math.round(milestoneProgress * 100)),
+                      )}%`,
+                      backgroundColor: milestoneTier.accentColor || '#F5C518',
+                    },
+                  ]}
+                />
+              </View>
+            </TouchableOpacity>
+          )}
+
+          {/* Metrics Row: Tasks Done, Active Alerts / Rank, AI Voice */}
           <View style={styles.profileMetricsRow}>
             <View style={styles.metricItem}>
-              <Text style={styles.metricValue}>142</Text>
+              <Text style={styles.metricValue}>{tasksDoneCount}</Text>
               <Text style={styles.metricLabel}>Tasks Done</Text>
             </View>
             <View style={styles.metricDivider} />
             <View style={styles.metricItem}>
-              <Text style={styles.metricValue}>8</Text>
-              <Text style={styles.metricLabel}>Active Alerts</Text>
+              <Text
+                style={[
+                  styles.metricValue,
+                  milestoneTier && { color: milestoneTier.accentColor },
+                ]}
+              >
+                {milestoneTier ? `Tier ${milestoneTier.level}` : 'Tier 1'}
+              </Text>
+              <Text style={styles.metricLabel}>Milestone Rank</Text>
             </View>
             <View style={styles.metricDivider} />
             <View style={styles.metricItem}>
@@ -122,7 +198,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: Colors.NeroBlack,
     borderRadius: 24,
-    padding: ResponsivePixels.size18,
+    padding: ResponsivePixels.size14,
     position: 'relative',
     overflow: 'hidden',
     borderWidth: 4,
@@ -208,6 +284,52 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 17,
     color: '#D4D2D6',
+  },
+  milestoneBanner: {
+    marginTop: 12,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  milestoneTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  milestoneLeftInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    flex: 1,
+  },
+  milestoneLevelText: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 11.5,
+    color: Colors.DefaultWhite,
+  },
+  milestoneXpWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  milestoneXpText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 11.5,
+    color: '#F5C518',
+  },
+  milestoneBarTrack: {
+    height: 5,
+    borderRadius: 2.5,
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    overflow: 'hidden',
+  },
+  milestoneBarFill: {
+    height: '100%',
+    borderRadius: 2.5,
   },
   profileMetricsRow: {
     flexDirection: 'row',

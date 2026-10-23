@@ -176,18 +176,18 @@ stateDiagram-v2
 
 ## 5. Feature Prioritization Matrix
 
-| Priority | Feature Area                                   | Description                                                                                                       | Implementation Status                                    |
-| :------- | :--------------------------------------------- | :---------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------- |
-| **P0**   | **Voice Assistant Core**                       | Wake word detection, state machine, STT listening, command interpretation, slot filling, task/reminder execution. | **Implemented**                                          |
-| **P0**   | **Neural TTS & Audio**                         | Kokoro-82M cloud synthesis, audio caching, bundled fallback WAV playback, TrackPlayer integration.                | **Implemented**                                          |
-| **P0**   | **Core UI & Theming**                          | Cream canvas, asymmetric cards, 3D badges, curved SVG tab bar, dark mode tokens.                                  | **Implemented**                                          |
-| **P0**   | **Tasks & Reminders Context**                  | In-memory CRUD, category filtering, toggle completion, modal creators.                                            | **Implemented**                                          |
-| **P0**   | **Voice Settings Persistence**                 | AsyncStorage storage for selected voice, speech speed, wake word phrase, and auto-speak flags.                    | **Implemented**                                          |
-| **P1**   | **Offline Local Persistence for Tasks/Habits** | Hydrating `TaskReminderContext` state to/from `@react-native-async-storage/async-storage`.                        | **Partial** (Settings persisted, Tasks/Habits in-memory) |
-| **P1**   | **OS-Level Scheduled Notifications**           | Native alarm/notification scheduling using local notification library.                                            | **Planned** (No notification lib installed yet)          |
-| **P1**   | **On-Device ONNX Kokoro TTS**                  | Truly offline neural TTS using bundled `.onnx` model via `onnxruntime-react-native`.                              | **Partial** (JSI bridge patched, requires model bundle)  |
-| **P2**   | **Remote Backend Cloud Sync**                  | User authentication, cloud sync for tasks/reminders/habits via REST API.                                          | **Planned** (`src/api` folders created as scaffolding)   |
-| **P2**   | **Subscription & In-App Purchases**            | Premium plan gating (Unlimited AI Voice, Custom Wake Words, Cloud Backup).                                        | **Partial** (`PremiumContext` exists in mock state)      |
+| Priority | Feature Area                                   | Description                                                                                                       | Implementation Status                                                           |
+| :------- | :--------------------------------------------- | :---------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------ |
+| **P0**   | **Voice Assistant Core**                       | Wake word detection, state machine, STT listening, command interpretation, slot filling, task/reminder execution. | **Implemented**                                                                 |
+| **P0**   | **Neural TTS & Audio**                         | Kokoro-82M cloud synthesis, audio caching, bundled fallback WAV playback, TrackPlayer integration.                | **Implemented**                                                                 |
+| **P0**   | **Core UI & Theming**                          | Cream canvas, asymmetric cards, 3D badges, curved SVG tab bar, dark mode tokens.                                  | **Implemented**                                                                 |
+| **P0**   | **Tasks & Reminders Context**                  | In-memory CRUD, category filtering, toggle completion, modal creators.                                            | **Implemented**                                                                 |
+| **P0**   | **Voice Settings Persistence**                 | AsyncStorage storage for selected voice, speech speed, wake word phrase, and auto-speak flags.                    | **Implemented**                                                                 |
+| **P1**   | **Offline Local Persistence for Tasks/Habits** | Hydrating `TaskReminderContext` state to/from `@react-native-async-storage/async-storage`.                        | **Partial** (Settings persisted, Tasks/Habits in-memory)                        |
+| **P1**   | **OS-Level Scheduled Notifications**           | Native alarm/notification scheduling using local notification library.                                            | **Planned** (No notification lib installed yet)                                 |
+| **P1**   | **On-Device ONNX Kokoro TTS**                  | Truly offline neural TTS using bundled `.onnx` model via `onnxruntime-react-native`.                              | **Partial** (JSI bridge patched, requires model bundle)                         |
+| **P2**   | **Remote Backend Cloud Sync**                  | User authentication, cloud sync for tasks/reminders/habits via REST API.                                          | **Planned** (`src/api` folders created as scaffolding)                          |
+| **P2**   | **Subscription & In-App Purchases**            | Regius Royal membership (Unlimited AI Voice, Custom Wake Words, All 8 Luxury Themes, 2x XP boost, Cloud Sync).    | **Implemented** (`PremiumContext`, `SubscriptionScreen`, `SubscriptionSection`) |
 
 ---
 

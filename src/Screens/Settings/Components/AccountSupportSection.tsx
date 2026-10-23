@@ -1,6 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { Shield, HelpCircle, LogOut, ChevronRight } from 'lucide-react-native';
+import {
+  Shield,
+  HelpCircle,
+  LogOut,
+  ChevronRight,
+  Crown,
+} from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 import { Typography } from '../../../Theme/Typographys';
 import { Colors as StaticColors } from '../../../Assets/StyleUtilities/Colors';
@@ -12,6 +18,7 @@ interface AccountSupportSectionProps {
   onSignOutPress: () => void;
   onHelpFaqPress?: () => void;
   onPrivacySecurityPress?: () => void;
+  onSubscriptionPress?: () => void;
 }
 
 export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
@@ -19,6 +26,7 @@ export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
   onSignOutPress,
   onHelpFaqPress,
   onPrivacySecurityPress,
+  onSubscriptionPress,
 }) => {
   const { isDarkMode, cardBg, textPrimary, textSecondary, borderLight } =
     useSettingsTheme();
@@ -119,6 +127,43 @@ export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
               </Text>
               <Text style={[styles.settingItemDesc, { color: textSecondary }]}>
                 End-to-end encrypted AI storage
+              </Text>
+            </View>
+          </View>
+          <ChevronRight size={16} color={textSecondary} strokeWidth={2} />
+        </TouchableOpacity>
+
+        <View style={[styles.itemDivider, { backgroundColor: borderLight }]} />
+
+        <TouchableOpacity
+          activeOpacity={0.7}
+          style={styles.settingItemRow}
+          onPress={() => {
+            if (onSubscriptionPress) {
+              onSubscriptionPress();
+            } else {
+              Toast.show({
+                type: 'info',
+                text2: 'Regius Royal Membership',
+              });
+            }
+          }}
+        >
+          <View style={styles.settingItemLeft}>
+            <View
+              style={[
+                styles.iconSquare,
+                { backgroundColor: isDarkMode ? '#2C3035' : '#FFFCEB' },
+              ]}
+            >
+              <Crown size={18} color="#F5C518" strokeWidth={2.2} />
+            </View>
+            <View style={styles.settingItemMeta}>
+              <Text style={[styles.settingItemTitle, { color: textPrimary }]}>
+                Subscription & Plans
+              </Text>
+              <Text style={[styles.settingItemDesc, { color: textSecondary }]}>
+                Manage your Regius Royal membership
               </Text>
             </View>
           </View>

@@ -32,6 +32,9 @@ import { AudioPlayerService } from '../../Services/AudioPlayerService';
 import { RegiusSpeechService } from '../../Services/RegiusSpeechService';
 import type { VoiceOption } from './Components';
 import { useVoiceWakeWord } from '../../Context/VoiceWakeWordContext';
+import { useMilestones } from '../../Context/MilestoneContext';
+import { usePremium } from '../../Context/PremiumContext';
+import { useTheme } from '../../Theme/ThemeContext';
 import {
   VOICES,
   useSettingsTheme,
@@ -48,6 +51,8 @@ import {
   ClearCacheModal,
   LogoutConfirmModal,
   WakeWordSection,
+  MilestoneSection,
+  SubscriptionSection,
 } from './Components';
 
 export type { VoiceOption };
@@ -65,6 +70,23 @@ const SettingsScreen: React.FC = () => {
   const [profileEmail, setProfileEmail] = useState('alex.mercer@regius.ai');
   const [profileBio, setProfileBio] = useState('Architect & Product Designer');
   const [profileRole, setProfileRole] = useState('Regius Pro Member');
+
+  const {
+    totalXp,
+    currentTier,
+    nextTier,
+    tierProgress,
+    currentInTier,
+    requiredForTier,
+    completedTasksCount,
+    completedRemindersCount,
+    habitsFollowedCount,
+    isMilestoneModalVisible,
+    openMilestoneModal,
+    closeMilestoneModal,
+  } = useMilestones();
+  const { setActiveThemeId } = useTheme();
+  const { isPremium } = usePremium();
 
   const {
     wakeWordPhrase,
@@ -365,9 +387,31 @@ const SettingsScreen: React.FC = () => {
           name={profileName}
           email={profileEmail}
           bio={profileBio}
-          role={profileRole}
+          role={isPremium ? 'Regius Royal Member' : profileRole}
           selectedVoiceName={selectedVoice.name}
           onEditPress={() => navigation.navigate('ProfileScreen')}
+          milestoneTier={currentTier}
+          milestoneXp={totalXp}
+          milestoneProgress={tierProgress}
+          tasksDoneCount={completedTasksCount}
+          habitsFollowedCount={habitsFollowedCount}
+          onMilestonePress={openMilestoneModal}
+          isPremium={isPremium}
+          onProPress={() => navigation.navigate('SubscriptionScreen')}
+        />
+
+        <SubscriptionSection
+          onUpgradePress={() => navigation.navigate('SubscriptionScreen')}
+        />
+
+        <MilestoneSection
+          currentTier={currentTier}
+          nextTier={nextTier}
+          totalXp={totalXp}
+          tierProgress={tierProgress}
+          currentInTier={currentInTier}
+          requiredForTier={requiredForTier}
+          onOpenMilestoneJourney={openMilestoneModal}
         />
 
         <DefaultVoiceSection
@@ -403,6 +447,8 @@ const SettingsScreen: React.FC = () => {
           hapticIntensity={hapticIntensity}
           onChangeHapticIntensity={setHapticIntensity}
           onOpenLanguage={() => navigation.navigate('LanguageScreen')}
+          onOpenMilestones={openMilestoneModal}
+          onOpenTheme={() => navigation.navigate('ThemeScreen')}
         />
 
         <AiWorkflowSection
@@ -428,6 +474,7 @@ const SettingsScreen: React.FC = () => {
           onPrivacySecurityPress={() =>
             navigation.navigate('PrivacySecurityScreen')
           }
+          onSubscriptionPress={() => navigation.navigate('SubscriptionScreen')}
         />
 
         <SettingsFooter />

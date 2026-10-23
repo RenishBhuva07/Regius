@@ -16,6 +16,8 @@ import { ProfileScreen } from '../Screens/Profile';
 import { LanguageScreen } from '../Screens/Language';
 import { HelpFaqScreen } from '../Screens/HelpFaq';
 import { PrivacySecurityScreen } from '../Screens/PrivacySecurity';
+import { ThemeScreen } from '../Screens/Theme';
+import { SubscriptionScreen } from '../Screens/Subscription';
 import { AuthContext } from '../Context/AuthContext';
 import { VoiceWakeWordProvider } from '../Context/VoiceWakeWordContext';
 
@@ -87,6 +89,16 @@ export default function AppNavigator() {
             name="PrivacySecurityScreen"
             component={PrivacySecurityScreen}
             options={{ animation: 'slide_from_right' }}
+          />
+          <Stack.Screen
+            name="ThemeScreen"
+            component={ThemeScreen}
+            options={{ animation: 'slide_from_right' }}
+          />
+          <Stack.Screen
+            name="SubscriptionScreen"
+            component={SubscriptionScreen}
+            options={{ animation: 'slide_from_bottom' }}
           />
           <Stack.Screen
             name="AddTaskScreen"
