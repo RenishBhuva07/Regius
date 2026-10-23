@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useContext,
+  useCallback,
+} from 'react';
 import {
   View,
   StyleSheet,
@@ -11,7 +17,9 @@ import {
   NativeScrollEvent,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { AuthContext } from '../../Context/AuthContext';
@@ -37,21 +45,21 @@ import {
   AccountSupportSection,
   SettingsFooter,
   SettingsBackgroundSvg,
-  VoiceStudioModal,
-  EditProfileModal,
   ClearCacheModal,
   LogoutConfirmModal,
-  WakeWordConfigModal,
   WakeWordSection,
 } from './Components';
 
 export type { VoiceOption };
 export { VOICES };
 
+const PROFILE_STORAGE_KEY = '@regius_profile_data';
+
 const SettingsScreen: React.FC = () => {
   const { bgMain, isDarkMode } = useSettingsTheme();
   const { logout } = useContext(AuthContext);
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation<any>();
 
   const [profileName, setProfileName] = useState('Alex Mercer');
   const [profileEmail, setProfileEmail] = useState('alex.mercer@regius.ai');
@@ -80,14 +88,39 @@ const SettingsScreen: React.FC = () => {
   const [cloudSync, setCloudSync] = useState(true);
   const [cacheSize, setCacheSize] = useState('14.8 MB');
 
-  const [voiceModalVisible, setVoiceModalVisible] = useState(false);
-  const [wakeWordModalVisible, setWakeWordModalVisible] = useState(false);
-  const [profileModalVisible, setProfileModalVisible] = useState(false);
   const [cacheConfirmVisible, setCacheConfirmVisible] = useState(false);
   const [logoutConfirmVisible, setLogoutConfirmVisible] = useState(false);
 
   const [isPlayingPreview, setIsPlayingPreview] = useState(false);
   const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
+
+  // Sync profile data and voice settings whenever screen regains focus
+  useFocusEffect(
+    useCallback(() => {
+      AsyncStorage.getItem(PROFILE_STORAGE_KEY)
+        .then(stored => {
+          if (stored) {
+            try {
+              const data = JSON.parse(stored);
+              if (data.name) setProfileName(data.name);
+              if (data.email) setProfileEmail(data.email);
+              if (data.bio) setProfileBio(data.bio);
+              if (data.role) setProfileRole(data.role);
+            } catch {
+              // Ignore
+            }
+          }
+        })
+        .catch(() => {});
+
+      VoiceSettingsService.getSettings().then(saved => {
+        if (saved.selectedVoiceId) setSelectedVoiceId(saved.selectedVoiceId);
+        if (saved.speechSpeed) setSpeechSpeed(saved.speechSpeed);
+        if (saved.autoSpeakReplies !== undefined)
+          setAutoSpeakReplies(saved.autoSpeakReplies);
+      });
+    }, []),
+  );
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const isScrolledRef = useRef(false);
@@ -116,17 +149,8 @@ const SettingsScreen: React.FC = () => {
   const waveAnim4 = useRef(new Animated.Value(0.9)).current;
   const waveAnim5 = useRef(new Animated.Value(0.5)).current;
 
-  // Load saved voice settings from AsyncStorage
+  // Setup audio preview finished listener
   useEffect(() => {
-    VoiceSettingsService.getSettings().then(saved => {
-      if (saved.selectedVoiceId) setSelectedVoiceId(saved.selectedVoiceId);
-      if (saved.speechSpeed) setSpeechSpeed(saved.speechSpeed);
-      if (saved.autoSpeakReplies !== undefined)
-        setAutoSpeakReplies(saved.autoSpeakReplies);
-      if (saved.wakeWordEnabled !== undefined)
-        setWakeWordEnabled(saved.wakeWordEnabled);
-    });
-
     const unsubFinished = AudioPlayerService.onPlaybackFinished(() => {
       setIsPlayingPreview(false);
       setPlayingVoiceId(null);
@@ -277,23 +301,6 @@ const SettingsScreen: React.FC = () => {
     setWakeWordPhrase(phrase);
   };
 
-  const handleSaveProfile = (data: {
-    name: string;
-    email: string;
-    bio: string;
-    role: string;
-  }) => {
-    setProfileName(data.name);
-    setProfileEmail(data.email);
-    setProfileBio(data.bio);
-    setProfileRole(data.role);
-    setProfileModalVisible(false);
-    Toast.show({
-      type: 'success',
-      text2: 'Profile updated successfully!',
-    });
-  };
-
   const handleResetVoiceDefaults = async () => {
     await resetToDefaults();
     setSelectedVoiceId(DEFAULT_VOICE_SETTINGS.selectedVoiceId);
@@ -360,14 +367,14 @@ const SettingsScreen: React.FC = () => {
           bio={profileBio}
           role={profileRole}
           selectedVoiceName={selectedVoice.name}
-          onEditPress={() => setProfileModalVisible(true)}
+          onEditPress={() => navigation.navigate('ProfileScreen')}
         />
 
         <DefaultVoiceSection
           selectedVoice={selectedVoice}
           voices={VOICES}
           onSelectVoice={handleSelectVoice}
-          onOpenVoiceStudio={() => setVoiceModalVisible(true)}
+          onOpenVoiceStudio={() => navigation.navigate('VoiceStudioScreen')}
           isPlayingPreview={isPlayingPreview}
           playingVoiceId={playingVoiceId}
           onTogglePreview={handleTogglePreview}
@@ -383,7 +390,9 @@ const SettingsScreen: React.FC = () => {
           wakeWordEnabled={isWakeWordEnabled}
           onToggleWakeWord={handleToggleWakeWord}
           wakeWordPhrase={wakeWordPhrase}
-          onConfigureWakeWord={() => setWakeWordModalVisible(true)}
+          onConfigureWakeWord={() =>
+            navigation.navigate('WakeWordStudioScreen')
+          }
           onSelectPresetPhrase={handleSelectWakePreset}
           onResetDefaults={handleResetVoiceDefaults}
         />
@@ -393,6 +402,7 @@ const SettingsScreen: React.FC = () => {
           onToggleHapticFeedback={setHapticFeedback}
           hapticIntensity={hapticIntensity}
           onChangeHapticIntensity={setHapticIntensity}
+          onOpenLanguage={() => navigation.navigate('LanguageScreen')}
         />
 
         <AiWorkflowSection
@@ -414,38 +424,14 @@ const SettingsScreen: React.FC = () => {
         <AccountSupportSection
           profileEmail={profileEmail}
           onSignOutPress={() => setLogoutConfirmVisible(true)}
+          onHelpFaqPress={() => navigation.navigate('HelpFaqScreen')}
+          onPrivacySecurityPress={() =>
+            navigation.navigate('PrivacySecurityScreen')
+          }
         />
 
         <SettingsFooter />
       </ScrollView>
-
-      <VoiceStudioModal
-        visible={voiceModalVisible}
-        onClose={() => setVoiceModalVisible(false)}
-        voices={VOICES}
-        selectedVoiceId={selectedVoiceId}
-        onSelectVoice={handleSelectVoice}
-        isPlayingPreview={isPlayingPreview}
-        playingVoiceId={playingVoiceId}
-        onTogglePreview={handleTogglePreview}
-      />
-
-      <WakeWordConfigModal
-        visible={wakeWordModalVisible}
-        onClose={() => setWakeWordModalVisible(false)}
-        currentPhrase={wakeWordPhrase}
-        onSaveWakeWord={setWakeWordPhrase}
-      />
-
-      <EditProfileModal
-        visible={profileModalVisible}
-        onClose={() => setProfileModalVisible(false)}
-        initialName={profileName}
-        initialEmail={profileEmail}
-        initialBio={profileBio}
-        initialRole={profileRole}
-        onSave={handleSaveProfile}
-      />
 
       <ClearCacheModal
         visible={cacheConfirmVisible}

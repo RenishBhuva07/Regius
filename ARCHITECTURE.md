@@ -233,6 +233,12 @@ graph LR
         Reminders[RemindersScreen]
         Habits[HabitsScreen]
         Settings[SettingsScreen]
+        Profile[ProfileScreen]
+        VoiceStudio[VoiceStudioScreen]
+        WakeWordStudio[WakeWordStudioScreen]
+        Lang[LanguageScreen]
+        Help[HelpFaqScreen]
+        Privacy[PrivacySecurityScreen]
         Assistant[VoiceAssistantSheet]
     end
 
@@ -241,8 +247,15 @@ graph LR
     TRC -->|reminders, addReminder| Reminders
     TRC -->|habits, toggleHabit, updateHabit, addHabit, deleteHabit| Habits
     VWC -->|assistantState, liveTranscript| Assistant
-    VWC -->|triggerWakeWord| Dash
+    VWC -->|triggerWakeWord, toastOnLogin| Dash
+    VWC -->|wakeWordPhrase, isWakeWordEnabled| WakeWordStudio
     AC -->|user, logout| Settings
+    Settings --> Profile
+    Settings --> VoiceStudio
+    Settings --> WakeWordStudio
+    Settings --> Lang
+    Settings --> Help
+    Settings --> Privacy
 ```
 
 ### 5.1 Context Roles & Scopes

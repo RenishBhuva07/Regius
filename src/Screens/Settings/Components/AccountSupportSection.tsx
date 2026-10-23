@@ -10,11 +10,15 @@ import { useSettingsTheme } from './types';
 interface AccountSupportSectionProps {
   profileEmail: string;
   onSignOutPress: () => void;
+  onHelpFaqPress?: () => void;
+  onPrivacySecurityPress?: () => void;
 }
 
 export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
   profileEmail,
   onSignOutPress,
+  onHelpFaqPress,
+  onPrivacySecurityPress,
 }) => {
   const { isDarkMode, cardBg, textPrimary, textSecondary, borderLight } =
     useSettingsTheme();
@@ -49,10 +53,14 @@ export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
           activeOpacity={0.7}
           style={styles.settingItemRow}
           onPress={() => {
-            Toast.show({
-              type: 'info',
-              text2: 'Regius Help Center & Documentation',
-            });
+            if (onHelpFaqPress) {
+              onHelpFaqPress();
+            } else {
+              Toast.show({
+                type: 'info',
+                text2: 'Regius Help Center & Documentation',
+              });
+            }
           }}
         >
           <View style={styles.settingItemLeft}>
@@ -86,10 +94,14 @@ export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
           activeOpacity={0.7}
           style={styles.settingItemRow}
           onPress={() => {
-            Toast.show({
-              type: 'info',
-              text2: 'Regius Privacy Policy & Terms of Service',
-            });
+            if (onPrivacySecurityPress) {
+              onPrivacySecurityPress();
+            } else {
+              Toast.show({
+                type: 'info',
+                text2: 'Regius Privacy Policy & Terms of Service',
+              });
+            }
           }}
         >
           <View style={styles.settingItemLeft}>

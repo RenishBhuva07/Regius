@@ -269,16 +269,22 @@ sequenceDiagram
 - **Source Files**:
   - `src/Services/VoiceSettingsService.ts`
   - `src/Screens/Settings/SettingsScreen.tsx`
+  - `src/Screens/Profile/ProfileScreen.tsx` (Dedicated Profile & Account identity screen with avatar hero, verified Pro status badges, completed tasks counter, streak metrics, and credential editor)
+  - `src/Screens/Settings/VoiceStudioScreen.tsx` (Dedicated Voice Studio screen with Kokoro-82M neural TTS playground, interactive sentence synthesis, live waveform audio visualizers, and catalog audition)
+  - `src/Screens/Settings/WakeWordStudioScreen.tsx` (Dedicated Wake Word Studio screen with hands-free master switch, acoustic recognition simulator, curated preset cards, and custom phrase validator)
+  - `src/Screens/Language/LanguageScreen.tsx` (Dedicated App Language screen with regional locales, neural voice badges, device language auto-detect, and real-time search)
+  - `src/Screens/HelpFaq/HelpFaqScreen.tsx` (Dedicated Help & FAQs screen with category filters, smooth expandable accordion Q&As, and direct Concierge Support desk)
+  - `src/Screens/PrivacySecurity/PrivacySecurityScreen.tsx` (Dedicated Privacy & Data Security screen with AES-256 cryptographic overview, granular toggles, and data export/purge controls)
   - `src/Screens/Settings/Components/SettingsHeader.tsx` (Fixed reactive header fixed at top with scroll interpolation, luxury LavenderPurple/deep purple theme transitions, HeaderPatternSvg background aura, and back navigation)
   - `src/Screens/Settings/Components/ProfileCard.tsx` (Signature luxury dark hero bento card matching Rule 5: 4px ceramic white border, deep 18px volumetric shadow, solar gold dawn auras, PRO badge, and bio/metrics display)
   - `src/Screens/Settings/Components/ProfileCardBackgroundSvg.tsx` (Specular dark obsidian bento canvas with celestial stardust & concentric orbits)
   - `src/Screens/Settings/Components/DefaultVoiceSection.tsx` (Cleaned voice preset selector, waveform audio preview, and speech speed pills without overlapping text)
   - `src/Screens/Settings/Components/WakeWordSection.tsx` (Dedicated Wake Word engine section with hands-free trigger toggle, live listening status badge, preset phrase chips, and hardware sensitivity config)
+  - `src/Screens/Settings/Components/AppearanceSection.tsx` (Appearance, theme, haptic selector, and App Language navigation)
+  - `src/Screens/Settings/Components/AccountSupportSection.tsx` (Support & Account section with Help & FAQs, Privacy & Security navigation, and sign out)
   - `src/Screens/Settings/Components/SettingsBackgroundSvg.tsx` (Extraordinary luxury adaptive ambient background with calibration dials, acoustic wave ribbons, and starlight constellation)
   - `src/Screens/Settings/Components/SettingsFooter.tsx` (Swiggy-inspired brand watermark footer featuring bold "Regius • Crafted with AI & Precision" typography and artisan doodle creativity)
   - `src/Screens/Settings/Components/SettingsWatermarkDoodleSvg.tsx` (Hand-drawn precision cogwheel, AI neural spark, drafting caliper, and acoustic wave doodle illustration)
-  - `src/Screens/Settings/Components/VoiceStudioModal.tsx`
-  - `src/Screens/Settings/Components/WakeWordConfigModal.tsx`
   - `src/Screens/Settings/Components/types.ts`
 - **Persisted Attributes**:
   - `selectedVoiceId`: (Default: `af_bella` • Bella)
@@ -286,8 +292,9 @@ sequenceDiagram
   - `autoSpeakReplies`: Boolean (Default: `true`)
   - `wakeWordEnabled`: Boolean (Default: `true`)
   - `wakeWordPhrase`: (Default: `Hey Sia`)
-- **Storage Backend**: `@react-native-async-storage/async-storage` under key `@regius_voice_settings`.
-- **Test Coverage**: Verified in `VoiceAssistantRefactorSuite.test.tsx`.
+- **Storage Backend**: `@react-native-async-storage/async-storage` under keys `@regius_voice_settings`, `@regius_profile_data`, `@regius_app_language`.
+- **Session Wake Word Notification**: Wake word enabled status toast is displayed on initial login arrival at Dashboard (`justLoggedIn: true`) rather than during settings navigation.
+- **Test Coverage**: Verified in `SettingsRedesignSuite.test.tsx` and `VoiceAssistantRefactorSuite.test.tsx`.
 
 ---
 

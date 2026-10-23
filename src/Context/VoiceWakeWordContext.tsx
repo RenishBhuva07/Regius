@@ -55,7 +55,7 @@ import {
 export interface VoiceWakeWordContextType {
   assistantName: string;
   isWakeWordEnabled: boolean;
-  setWakeWordEnabled: (enabled: boolean) => Promise<void>;
+  setWakeWordEnabled: (enabled: boolean, silent?: boolean) => Promise<void>;
   wakeWordPhrase: string;
   setWakeWordPhrase: (phrase: string) => Promise<boolean>;
   supportedWakeWords: WakeWordPreset[];
@@ -1616,28 +1616,35 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
     [],
   );
 
-  const setWakeWordEnabled = useCallback(async (enabled: boolean) => {
-    setIsWakeWordEnabledState(enabled);
-    isWakeWordEnabledRef.current = enabled;
-    await VoiceSettingsService.saveSettings({ wakeWordEnabled: enabled });
-    if (enabled) {
-      if (assistantStateRef.current === 'idle') {
-        startWakeWordEngineRef.current();
+  const setWakeWordEnabled = useCallback(
+    async (enabled: boolean, silent: boolean = false) => {
+      setIsWakeWordEnabledState(enabled);
+      isWakeWordEnabledRef.current = enabled;
+      await VoiceSettingsService.saveSettings({ wakeWordEnabled: enabled });
+      if (enabled) {
+        if (assistantStateRef.current === 'idle') {
+          startWakeWordEngineRef.current();
+        }
+        if (!silent) {
+          Toast.show({
+            type: 'success',
+            text1: 'Wake Word Enabled',
+            text2: `Say "${wakeWordPhraseRef.current}" at any time while the app is open.`,
+          });
+        }
+      } else {
+        stopVoiceEngineRef.current();
+        if (!silent) {
+          Toast.show({
+            type: 'info',
+            text1: 'Wake Word Disabled',
+            text2: `Hands-free "${wakeWordPhraseRef.current}" listening is turned off.`,
+          });
+        }
       }
-      Toast.show({
-        type: 'success',
-        text1: 'Wake Word Enabled',
-        text2: `Say "${wakeWordPhraseRef.current}" at any time while the app is open.`,
-      });
-    } else {
-      stopVoiceEngineRef.current();
-      Toast.show({
-        type: 'info',
-        text1: 'Wake Word Disabled',
-        text2: `Hands-free "${wakeWordPhraseRef.current}" listening is turned off.`,
-      });
-    }
-  }, []);
+    },
+    [],
+  );
 
   const resetToDefaults = useCallback(async () => {
     const defaults = await VoiceSettingsService.clearSettings();

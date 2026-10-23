@@ -10,6 +10,12 @@ import { AddTaskScreen } from '../Screens/Tasks';
 import { AddReminderScreen } from '../Screens/Reminders';
 import { DashboardScreen } from '../Screens/Dashboard';
 import SettingsScreen from '../Screens/Settings/SettingsScreen';
+import { VoiceStudioScreen } from '../Screens/Settings/VoiceStudioScreen';
+import { WakeWordStudioScreen } from '../Screens/Settings/WakeWordStudioScreen';
+import { ProfileScreen } from '../Screens/Profile';
+import { LanguageScreen } from '../Screens/Language';
+import { HelpFaqScreen } from '../Screens/HelpFaq';
+import { PrivacySecurityScreen } from '../Screens/PrivacySecurity';
 import { AuthContext } from '../Context/AuthContext';
 import { VoiceWakeWordProvider } from '../Context/VoiceWakeWordContext';
 
@@ -50,6 +56,36 @@ export default function AppNavigator() {
           <Stack.Screen
             name="Settings"
             component={SettingsScreen}
+            options={{ animation: 'slide_from_right' }}
+          />
+          <Stack.Screen
+            name="ProfileScreen"
+            component={ProfileScreen}
+            options={{ animation: 'slide_from_right' }}
+          />
+          <Stack.Screen
+            name="VoiceStudioScreen"
+            component={VoiceStudioScreen}
+            options={{ animation: 'slide_from_right' }}
+          />
+          <Stack.Screen
+            name="WakeWordStudioScreen"
+            component={WakeWordStudioScreen}
+            options={{ animation: 'slide_from_right' }}
+          />
+          <Stack.Screen
+            name="LanguageScreen"
+            component={LanguageScreen}
+            options={{ animation: 'slide_from_right' }}
+          />
+          <Stack.Screen
+            name="HelpFaqScreen"
+            component={HelpFaqScreen}
+            options={{ animation: 'slide_from_right' }}
+          />
+          <Stack.Screen
+            name="PrivacySecurityScreen"
+            component={PrivacySecurityScreen}
             options={{ animation: 'slide_from_right' }}
           />
           <Stack.Screen

@@ -19,6 +19,14 @@ jest.mock('react-native-toast-message', () => ({
   show: jest.fn(),
 }));
 
+jest.mock('react-native-safe-area-context', () => {
+  const actual = jest.requireActual('react-native-safe-area-context');
+  return {
+    ...actual,
+    useSafeAreaInsets: () => ({ top: 47, bottom: 34, left: 0, right: 0 }),
+  };
+});
+
 import { ProBadge } from '../src/Common/ProBadge';
 import { SettingsHeader } from '../src/Screens/Settings/Components/SettingsHeader';
 import { ProfileCard } from '../src/Screens/Settings/Components/ProfileCard';
@@ -27,7 +35,11 @@ import { AppearanceSection } from '../src/Screens/Settings/Components/Appearance
 import { DefaultVoiceSection } from '../src/Screens/Settings/Components/DefaultVoiceSection';
 import WakeWordSection from '../src/Screens/Settings/Components/WakeWordSection';
 import { SettingsFooter } from '../src/Screens/Settings/Components/SettingsFooter';
+import { AccountSupportSection } from '../src/Screens/Settings/Components/AccountSupportSection';
 import { VOICES } from '../src/Screens/Settings/Components/types';
+import { LanguageScreen } from '../src/Screens/Language';
+import { HelpFaqScreen } from '../src/Screens/HelpFaq';
+import { PrivacySecurityScreen } from '../src/Screens/PrivacySecurity';
 
 describe('Settings Redesign & Fixes Suite', () => {
   beforeEach(() => {
@@ -296,6 +308,66 @@ describe('Settings Redesign & Fixes Suite', () => {
       expect(str).toContain('with AI & Precision');
       expect(str).toContain('Ahmedabad, India');
       expect(str).toContain('Version 2.4.0 (Build 2408) • Production');
+    });
+  });
+
+  describe('AccountSupportSection Navigation', () => {
+    it('triggers onHelpFaqPress and onPrivacySecurityPress when provided', () => {
+      const onHelpMock = jest.fn();
+      const onPrivacyMock = jest.fn();
+      let tree: any;
+      act(() => {
+        tree = ReactTestRenderer.create(
+          <AccountSupportSection
+            profileEmail="alex@regius.ai"
+            onSignOutPress={jest.fn()}
+            onHelpFaqPress={onHelpMock}
+            onPrivacySecurityPress={onPrivacyMock}
+          />,
+        );
+      });
+
+      const str = JSON.stringify(tree.toJSON());
+      expect(str).toContain('Help & FAQs');
+      expect(str).toContain('Privacy & Data Security');
+    });
+  });
+
+  describe('New Dedicated Settings Screens', () => {
+    it('renders LanguageScreen with curated locales', () => {
+      let tree: any;
+      act(() => {
+        tree = ReactTestRenderer.create(<LanguageScreen />);
+      });
+      const str = JSON.stringify(tree.toJSON());
+      expect(str).toContain('App Language');
+      expect(str).toContain('English (US)');
+      expect(str).toContain('Español');
+    });
+
+    it('renders HelpFaqScreen with interactive FAQs', () => {
+      let tree: any;
+      act(() => {
+        tree = ReactTestRenderer.create(<HelpFaqScreen />);
+      });
+      const str = JSON.stringify(tree.toJSON());
+      expect(str).toContain('Help & FAQs');
+      expect(str).toContain(
+        'How do I activate the hands-free voice assistant?',
+      );
+      expect(str).toContain('Regius Concierge Support');
+    });
+
+    it('renders PrivacySecurityScreen with cryptographic bento', () => {
+      let tree: any;
+      act(() => {
+        tree = ReactTestRenderer.create(<PrivacySecurityScreen />);
+      });
+      const str = JSON.stringify(tree.toJSON());
+      expect(str).toContain('Privacy & Security');
+      expect(str).toContain('AES-256 Bit');
+      expect(str).toContain('Local Speech Processing');
+      expect(str).toContain('Export Workspace Archive');
     });
   });
 });

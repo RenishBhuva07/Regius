@@ -1,4 +1,10 @@
-import React, { useState, useMemo, useCallback, useRef } from 'react';
+import React, {
+  useState,
+  useMemo,
+  useCallback,
+  useRef,
+  useEffect,
+} from 'react';
 import {
   View,
   Text,
@@ -15,7 +21,11 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Sun, Settings, Calendar } from 'lucide-react-native';
-import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import {
+  useNavigation,
+  useFocusEffect,
+  useRoute,
+} from '@react-navigation/native';
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../../Theme/fonts';
@@ -67,6 +77,7 @@ function parseTimeToMinutes(timeStr?: string): number {
 export const DashboardScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
+  const route = useRoute<any>();
   const dailyQuote = useDailyQuote('dashboard');
   const { tasks, toggleTask, reminders, toggleReminder, habits, toggleHabit } =
     useTaskReminder();
@@ -76,7 +87,27 @@ export const DashboardScreen: React.FC = () => {
     openAssistant,
     triggerWakeWord,
     startWakeWordListening,
+    isWakeWordEnabled,
+    wakeWordPhrase,
   } = useVoiceWakeWord();
+
+  const hasShownLoginWakeWordRef = useRef(false);
+
+  useEffect(() => {
+    if (route.params?.justLoggedIn && !hasShownLoginWakeWordRef.current) {
+      hasShownLoginWakeWordRef.current = true;
+      if (isWakeWordEnabled) {
+        const timer = setTimeout(() => {
+          Toast.show({
+            type: 'success',
+            text1: 'Wake Word Enabled',
+            text2: `Say "${wakeWordPhrase}" at any time while the app is open.`,
+          });
+        }, 1200);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [route.params?.justLoggedIn, isWakeWordEnabled, wakeWordPhrase]);
 
   useFocusEffect(
     useCallback(() => {

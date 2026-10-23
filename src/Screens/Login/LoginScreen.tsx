@@ -154,7 +154,10 @@ export const LoginScreen: React.FC = () => {
         'Access Granted',
       );
 
-      navigation.replace('MainTabs');
+      navigation.replace('MainTabs', {
+        screen: 'Dashboard',
+        params: { justLoggedIn: true },
+      });
     }, 1100);
   };
 
@@ -174,13 +177,19 @@ export const LoginScreen: React.FC = () => {
         false,
       );
       ToastHelper.success(`Signed in with ${provider}`, 'Welcome to Regius');
-      navigation.replace('MainTabs');
+      navigation.replace('MainTabs', {
+        screen: 'Dashboard',
+        params: { justLoggedIn: true },
+      });
     }, 900);
   };
 
   const handleGuestAccess = () => {
     ToastHelper.info('Continuing as guest with local storage', 'Guest Access');
-    navigation.replace('MainTabs');
+    navigation.replace('MainTabs', {
+      screen: 'Dashboard',
+      params: { justLoggedIn: true },
+    });
   };
 
   return (

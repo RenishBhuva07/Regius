@@ -30,6 +30,7 @@ interface AppearanceSectionProps {
   onToggleHapticFeedback: (val: boolean) => void;
   hapticIntensity?: HapticIntensity;
   onChangeHapticIntensity?: (intensity: HapticIntensity) => void;
+  onOpenLanguage?: () => void;
 }
 
 export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
@@ -37,6 +38,7 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
   onToggleHapticFeedback,
   hapticIntensity: controlledIntensity,
   onChangeHapticIntensity,
+  onOpenLanguage,
 }) => {
   const {
     isDarkMode,
@@ -254,10 +256,14 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
           activeOpacity={0.7}
           style={styles.settingItemRow}
           onPress={() => {
-            Toast.show({
-              type: 'info',
-              text2: 'Currently set to English (US)',
-            });
+            if (onOpenLanguage) {
+              onOpenLanguage();
+            } else {
+              Toast.show({
+                type: 'info',
+                text2: 'Currently set to English (US)',
+              });
+            }
           }}
         >
           <View style={styles.settingItemLeft}>
