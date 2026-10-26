@@ -30,7 +30,13 @@ import {
   MILESTONE_TIERS,
 } from '../src/Services/Milestone/MilestoneService';
 import { MilestoneSection } from '../src/Screens/Settings/Components/MilestoneSection';
-import { MilestoneFullScreenSheet } from '../src/Screens/Milestones';
+import {
+  MilestoneFullScreenSheet,
+  ThreeDStatusBadge,
+  GameRoadCheckpoint,
+  ZigzagGameRoad,
+  MilestoneLevelDetailModal,
+} from '../src/Screens/Milestones';
 
 describe('Milestone Progression & Pro Unlocking Engine', () => {
   describe('Mathematical Tier Calculations', () => {
@@ -138,6 +144,89 @@ describe('Milestone Progression & Pro Unlocking Engine', () => {
       });
 
       expect(tree).toBeDefined();
+    });
+
+    it('renders 3D status badge with 3D unlocked right sign', () => {
+      let unlockedTree: any;
+      act(() => {
+        unlockedTree = ReactTestRenderer.create(
+          <ThreeDStatusBadge state="unlocked" />,
+        );
+      });
+      const unlockedJson = JSON.stringify(unlockedTree.toJSON());
+      expect(unlockedJson).toContain('UNLOCKED');
+
+      let currentTree: any;
+      act(() => {
+        currentTree = ReactTestRenderer.create(
+          <ThreeDStatusBadge state="current" />,
+        );
+      });
+      const currentJson = JSON.stringify(currentTree.toJSON());
+      expect(currentJson).toContain('CURRENT');
+
+      let lockedTree: any;
+      act(() => {
+        lockedTree = ReactTestRenderer.create(
+          <ThreeDStatusBadge state="locked" requiredXp={300} />,
+        );
+      });
+      const lockedJson = JSON.stringify(lockedTree.toJSON());
+      expect(lockedJson).toContain('LOCKED');
+    });
+
+    it('renders ZigzagGameRoad with 5 game level checkpoints', () => {
+      let tree: any;
+      const onSelectMock = jest.fn();
+      act(() => {
+        tree = ReactTestRenderer.create(
+          <ZigzagGameRoad
+            tiers={MILESTONE_TIERS}
+            currentTier={MILESTONE_TIERS[1]}
+            nextTier={MILESTONE_TIERS[2]}
+            totalXp={141}
+            onSelectTier={onSelectMock}
+            isDarkMode={false}
+          />,
+        );
+      });
+      expect(tree).toBeDefined();
+      const json = JSON.stringify(tree.toJSON());
+      expect(json).toContain('Novice Initiate');
+      expect(json).toContain('Focused Vanguard');
+      expect(json).toContain('Habitual Artisan');
+      expect(json).toContain('Productive Master');
+      expect(json).toContain('Regius Sovereign');
+    });
+
+    it('renders MilestoneLevelDetailModal with themes and perks', () => {
+      let tree: any;
+      const onCloseMock = jest.fn();
+      const onApplyMock = jest.fn();
+      act(() => {
+        tree = ReactTestRenderer.create(
+          <MilestoneLevelDetailModal
+            tier={MILESTONE_TIERS[1]}
+            visible={true}
+            onClose={onCloseMock}
+            totalXp={141}
+            currentTierLevel={2}
+            nextTier={MILESTONE_TIERS[2]}
+            tierProgress={0.2}
+            currentInTier={41}
+            requiredForTier={200}
+            activeThemeId="champagne_gold"
+            onApplyTheme={onApplyMock}
+            isDarkMode={false}
+          />,
+        );
+      });
+      expect(tree).toBeDefined();
+      const json = JSON.stringify(tree.toJSON());
+      expect(json).toContain('Focused Vanguard');
+      expect(json).toContain('Luxury Bespoke Themes');
+      expect(json).toContain('Champagne Gold');
+      expect(json).toContain('Haptic Intensity Curves');
     });
   });
 });

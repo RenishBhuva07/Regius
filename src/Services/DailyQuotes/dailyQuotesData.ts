@@ -1,4 +1,9 @@
-export type ScreenQuoteKey = 'dashboard' | 'tasks' | 'reminders' | 'habits';
+export type ScreenQuoteKey =
+  | 'dashboard'
+  | 'tasks'
+  | 'reminders'
+  | 'habits'
+  | 'milestones';
 
 export const DAILY_QUOTES: Record<ScreenQuoteKey, readonly string[]> = {
   dashboard: [
@@ -38,5 +43,14 @@ export const DAILY_QUOTES: Record<ScreenQuoteKey, readonly string[]> = {
     'Show up today. Thank yourself tomorrow.',
     'One good habit at a time.',
     "You're building a version of you that lasts!",
+  ],
+  milestones: [
+    'Every summit begins with a single step!',
+    'Level by level, you claim your throne!',
+    'Your journey has no speed limit, only milestones!',
+    'Climb steady. The view is legendary!',
+    'Little victories pave the highway to greatness!',
+    'Unlock the potential waiting at the next tier!',
+    'From humble beginnings to sovereign heights!',
   ],
 } as const;

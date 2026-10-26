@@ -12,6 +12,7 @@ describe('DailyQuotesService', () => {
     'tasks',
     'reminders',
     'habits',
+    'milestones',
   ];
 
   describe('Quote Pools Definition', () => {
@@ -50,6 +51,16 @@ describe('DailyQuotesService', () => {
       );
       expect(DAILY_QUOTES.habits).toContain(
         "You're building a version of you that lasts!",
+      );
+    });
+
+    it('defines exactly 7 quotes for Milestones', () => {
+      expect(DAILY_QUOTES.milestones).toHaveLength(7);
+      expect(DAILY_QUOTES.milestones).toContain(
+        'Every summit begins with a single step!',
+      );
+      expect(DAILY_QUOTES.milestones).toContain(
+        'From humble beginnings to sovereign heights!',
       );
     });
   });

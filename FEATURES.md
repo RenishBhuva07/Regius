@@ -469,7 +469,7 @@ sequenceDiagram
 
 ### 2.13 Daily Footer Quotes Service & Midnight Rollover System
 
-- **Purpose**: Deliver randomized, non-repeating daily editorial quotes at the bottom watermark footer of each primary screen (`Dashboard`, `Tasks`, `Reminders`, `Habits`), rolling over dynamically at 12:00 AM midnight.
+- **Purpose**: Deliver randomized, non-repeating daily editorial quotes at the bottom watermark footer of each primary screen (`Dashboard`, `Tasks`, `Reminders`, `Habits`, `Milestones`), rolling over dynamically at 12:00 AM midnight.
 - **Status**: `Implemented`
 - **Source Files**:
   - `src/Services/DailyQuotes/dailyQuotesData.ts`
@@ -480,12 +480,14 @@ sequenceDiagram
   - `src/Screens/Tasks/TasksScreen.tsx`
   - `src/Screens/Reminders/RemindersScreen.tsx`
   - `src/Screens/Habits/HabitsScreen.tsx`
+  - `src/Screens/Milestones/MilestoneFullScreenSheet.tsx`
+  - `src/Screens/Milestones/Components/MilestoneWatermarkDoodleSvg.tsx`
 - **Technical Implementation**:
-  - **Screen-Specific Quote Pools**: Dedicated curated pools for each screen (Dashboard: 7 quotes, Tasks: 8 quotes, Reminders: 8 quotes, Habits: 7 quotes).
+  - **Screen-Specific Quote Pools**: Dedicated curated pools for each screen (Dashboard: 7 quotes, Tasks: 8 quotes, Reminders: 8 quotes, Habits: 7 quotes, Milestones: 7 quotes).
   - **Deterministic Weekly PRNG Shuffle**: Mulberry32 PRNG seeded with week Sunday date ensures deterministic, non-repeating permutation across all 7 days of any week without async loading flash or storage corruption risk.
   - **Consecutive-Day Collision Prevention**: Enforces cross-week boundary check so Saturday night into Sunday morning midnight transitions never repeat the same quote.
   - **12:00 AM Midnight Rollover**: Reactive hook `useDailyQuote` schedules high-precision timer for upcoming midnight and listens to `AppState` foreground resume events to guarantee instantaneous rollover when date changes.
-  - **Design System Typography**: Rendered in Poppins Bold 34pt (`#8E95A5`, `letterSpacing: -1.2`, `lineHeight: 42`), gracefully wrapping naturally across all iOS and Android device widths.
+  - **Design System Typography**: Rendered in Poppins Bold 34pt (`#8E95A5`, dark mode `#5E6472`, `letterSpacing: -1.2`, `lineHeight: 42`), gracefully wrapping naturally across all iOS and Android device widths.
 
 ---
 
@@ -524,7 +526,11 @@ sequenceDiagram
 - **Purpose**: Progression and gamification engine unlocking bespoke luxury themes and Pro capabilities through daily task completion, reminder clearance, and habit consistency.
 - **Status**: `Implemented`
 - **Source Files**:
-  - `src/Screens/Milestones/MilestoneFullScreenSheet.tsx` (Redesigned with 2-layer obsidian bento hero card, 4px ceramic rim, HeaderPatternSvg stardust art, and sculpted roadmap)
+  - `src/Screens/Milestones/MilestoneFullScreenSheet.tsx` (Redesigned with full-screen center zigzag game road, 3D cylindrical level checkpoint tokens, floating 3D unlocked right sign badges, and level inspection modal)
+  - `src/Screens/Milestones/Components/ZigzagGameRoad.tsx` (Serpentine SVG road winding through 5 level checkpoints with painted highway dashes, road mile markers, and 3D level tokens)
+  - `src/Screens/Milestones/Components/MilestoneLevelDetailModal.tsx` (2-layer executive bento level inspection dialog with 1-tap theme unlocking & application, XP progress gauge, and privilege perks)
+  - `src/Screens/Milestones/Components/ThreeDStatusBadge.tsx` (3D embossed right-sign checkmark badge with dual-tone extrusion, top gloss highlight, and tactile depth)
+  - `src/Screens/Milestones/Components/GameRoadCheckpoint.tsx` (Asphalt road bed with painted dashed highway stripes, connecting ramps, and 3D level tokens)
   - `src/Services/Milestone/MilestoneService.ts`
   - `src/Context/MilestoneContext.tsx`
   - `src/Theme/ThemeContext.tsx`
@@ -542,11 +548,11 @@ sequenceDiagram
     - **Tier 5: Regius Sovereign (1000+ XP)**: Unlocks _Obsidian Sovereign Theme_, Imperial Crown Profile Accent, all Pro features permanently unlocked.
   - **Dual-Gate Entitlement Engine**: Checks whether a user has reached the required tier level or is a paid Pro member (`isPremium: true`).
   - **Global Full-Screen Sheet Architecture ("Open from Anywhere")**:
-    - `MilestoneFullScreenSheet`: Mounted globally at `App.tsx` root. Opens from any screen, modal, or component via `useMilestones().openMilestoneModal()`. Provides a full-screen executive sheet presentation (`animationType="slide"`), top drag notch, sticky header with close `X`, full adaptive Light (`#FFFCE3`) and Dark (`#121417`) mode styling, interactive tier roadmap, and direct 1-tap theme unlocking & application.
+    - `MilestoneFullScreenSheet`: Mounted globally at `App.tsx` root. Opens from any screen, modal, or component via `useMilestones().openMilestoneModal()`. Provides a full-screen executive sheet presentation (`animationType="slide"`), top drag notch, sticky header with close `X`, full adaptive Light (`#FFFCE3`) and Dark (`#121417`) mode styling, game-style highway roadmap with 3D checkpoint tokens, 3D embossed unlocked right signs, and direct 1-tap theme unlocking & application.
     - `ProfileCard`: Displays live Milestone Tier level badge, golden XP progress bar, and tap handler opening `MilestoneFullScreenSheet`.
     - `MilestoneSection`: 3D tactile bento card highlighting current prestige tier, XP points, and CTA opening `MilestoneFullScreenSheet`.
     - `AppearanceSection`: Bespoke luxury theme selector with live switching and tier-locked badges.
-- **Test Coverage**: Tested in `__tests__/MilestoneProgressionEngine.test.tsx` (12 unit tests).
+- **Test Coverage**: Tested in `__tests__/MilestoneProgressionEngine.test.tsx` (14 unit tests).
 
 ### 2.16 Prestige Themes & Color System Screen
 

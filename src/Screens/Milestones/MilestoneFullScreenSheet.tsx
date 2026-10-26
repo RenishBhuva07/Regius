@@ -44,7 +44,16 @@ import { HeaderPatternSvg } from '../Dashboard/Components/HeaderPatternSvg';
 import {
   MILESTONE_TIERS,
   XP_RULES,
+  MilestoneTier,
 } from '../../Services/Milestone/MilestoneService';
+import { useDailyQuote } from '../../Services/DailyQuotes';
+import {
+  ThreeDStatusBadge,
+  GameRoadCheckpoint,
+  ZigzagGameRoad,
+  MilestoneLevelDetailModal,
+  MilestoneWatermarkDoodleSvg,
+} from './Components';
 
 const { width: screenWidth } = Dimensions.get('window');
 const HEADER_HEIGHT = 52;
@@ -52,6 +61,7 @@ const HEADER_HEIGHT = 52;
 export const MilestoneFullScreenSheet: React.FC = () => {
   const insets = useSafeAreaInsets();
   const { isDarkMode, activeThemeId, setActiveThemeId } = useTheme();
+  const dailyQuote = useDailyQuote('milestones');
 
   const {
     isMilestoneModalVisible,
@@ -66,6 +76,9 @@ export const MilestoneFullScreenSheet: React.FC = () => {
     completedRemindersCount,
     habitsFollowedCount,
   } = useMilestones();
+
+  const [selectedTierForDetail, setSelectedTierForDetail] =
+    useState<MilestoneTier | null>(null);
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const isScrolledRef = useRef(false);
@@ -157,7 +170,6 @@ export const MilestoneFullScreenSheet: React.FC = () => {
           styles.fullScreenContainer,
           {
             backgroundColor: sheetBg,
-            paddingBottom: Math.max(insets.bottom, 16),
           },
         ]}
       >
@@ -286,7 +298,10 @@ export const MilestoneFullScreenSheet: React.FC = () => {
 
         <Animated.ScrollView
           style={styles.scrollArea}
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={[
+            styles.scrollContent,
+            { paddingBottom: Math.max(insets.bottom, 24) + 16 },
+          ]}
           showsVerticalScrollIndicator={false}
           onScroll={handleScroll}
           scrollEventThrottle={16}
@@ -439,284 +454,102 @@ export const MilestoneFullScreenSheet: React.FC = () => {
             </View>
           </View>
 
-          {/* 5-Tier Prestige Roadmap */}
-          <Text style={[styles.roadmapHeading, { color: textSecondary }]}>
-            PRESTIGE TIER ROADMAP
-          </Text>
+          {/* 5-Tier Prestige Roadmap with Highway & 3D Level Locks */}
+          <View style={styles.roadmapHeaderRow}>
+            <View>
+              <Text style={[styles.roadmapHeading, { color: textSecondary }]}>
+                PRESTIGE TIER ROADMAP
+              </Text>
+              <Text
+                style={[styles.roadmapSubheading, { color: textSecondary }]}
+              >
+                Real game levels • Tap any checkpoint to inspect
+              </Text>
+            </View>
+            <View
+              style={[
+                styles.totalXpPill,
+                {
+                  backgroundColor: isDarkMode ? '#1E232A' : '#EDE8DC',
+                  borderColor: isDarkMode ? '#2D3440' : '#DDD6C7',
+                },
+              ]}
+            >
+              <Zap size={11} color="#F5C518" strokeWidth={2.6} />
+              <Text style={[styles.totalXpPillText, { color: textPrimary }]}>
+                {totalXp} XP
+              </Text>
+            </View>
+          </View>
 
-          <View style={styles.tiersContainer}>
-            {MILESTONE_TIERS.map(tier => {
-              const isCurrent = tier.level === currentTier.level;
-              const isUnlocked = currentTier.level >= tier.level;
-              const isNext = nextTier?.level === tier.level;
+          {/* Full-Screen Center Zigzag Game Road */}
+          <ZigzagGameRoad
+            tiers={MILESTONE_TIERS}
+            currentTier={currentTier}
+            nextTier={nextTier}
+            totalXp={totalXp}
+            onSelectTier={tier => setSelectedTierForDetail(tier)}
+            isDarkMode={isDarkMode}
+          />
 
-              return (
-                <View
-                  key={tier.level}
+          {/* Swiggy-Inspired Brand Watermark Footer */}
+          <View style={styles.footerWatermarkWrapper} pointerEvents="none">
+            <View style={styles.footerWatermarkRow}>
+              {/* Left Column: Bold Typography & Sign-off */}
+              <View style={styles.footerTextBlock}>
+                <Text
                   style={[
-                    styles.tierCard,
-                    {
-                      backgroundColor: cardBg,
-                      borderColor: isCurrent
-                        ? currentTier.accentColor
-                        : cardBorder,
-                      borderBottomColor: isCurrent
-                        ? currentTier.accentColor
-                        : isDarkMode
-                        ? '#171A20'
-                        : '#E2DCD0',
-                      shadowColor: isCurrent
-                        ? currentTier.accentColor
-                        : isDarkMode
-                        ? '#000000'
-                        : 'rgba(131, 131, 214, 0.08)',
-                    },
-                    isCurrent && {
-                      borderWidth: 2,
-                      borderBottomWidth: 4,
-                    },
+                    styles.footerWatermarkText,
+                    { color: isDarkMode ? '#5E6472' : '#8E95A5' },
                   ]}
                 >
-                  <View style={styles.tierCardHeader}>
-                    <View style={styles.tierCardHeaderLeft}>
-                      <View
-                        style={[
-                          styles.tierLevelBadge,
-                          {
-                            backgroundColor: isUnlocked
-                              ? tier.accentColor
-                              : isDarkMode
-                              ? '#2C3038'
-                              : '#E6E0D2',
-                          },
-                        ]}
-                      >
-                        <Text
-                          style={[
-                            styles.tierLevelBadgeText,
-                            {
-                              color: isUnlocked
-                                ? '#000000'
-                                : isDarkMode
-                                ? '#8E95A5'
-                                : '#727782',
-                            },
-                          ]}
-                        >
-                          {tier.level}
-                        </Text>
-                      </View>
-                      <View>
-                        <View style={styles.tierTitleInline}>
-                          <Text
-                            style={[
-                              styles.tierTitleText,
-                              { color: textPrimary },
-                            ]}
-                          >
-                            {tier.title}
-                          </Text>
-                          {isCurrent && (
-                            <Badge
-                              label="Current"
-                              variant={tier.badgeVariant}
-                              size="sm"
-                            />
-                          )}
-                        </View>
-                        <Text
-                          style={[
-                            styles.tierRequiredXp,
-                            { color: textSecondary },
-                          ]}
-                        >
-                          {tier.minXp === 0
-                            ? 'Starter Rank (0 XP)'
-                            : `${tier.minXp} XP required to unlock`}
-                        </Text>
-                      </View>
-                    </View>
-
-                    {isUnlocked ? (
-                      <View style={styles.statusUnlocked}>
-                        <CheckCircle2
-                          size={15}
-                          color="#52D22E"
-                          strokeWidth={2.4}
-                        />
-                        <Text style={styles.statusUnlockedText}>Unlocked</Text>
-                      </View>
-                    ) : (
-                      <View
-                        style={[
-                          styles.statusLocked,
-                          {
-                            backgroundColor: isDarkMode
-                              ? 'rgba(255, 255, 255, 0.06)'
-                              : '#EDE7DC',
-                          },
-                        ]}
-                      >
-                        <Lock
-                          size={13}
-                          color={textSecondary}
-                          strokeWidth={2.2}
-                        />
-                        <Text
-                          style={[
-                            styles.statusLockedText,
-                            { color: textSecondary },
-                          ]}
-                        >
-                          {isNext ? 'Next Goal' : 'Locked'}
-                        </Text>
-                      </View>
-                    )}
-                  </View>
-
-                  {/* Unlocked Themes in this Tier */}
-                  {tier.unlockedThemes.length > 0 && (
-                    <View
-                      style={[
-                        styles.rewardsSection,
-                        { borderTopColor: dividerColor },
-                      ]}
-                    >
-                      <Text
-                        style={[
-                          styles.rewardsSubheading,
-                          { color: textSecondary },
-                        ]}
-                      >
-                        <Palette size={12} color={textSecondary} /> Luxury
-                        Bespoke Themes:
-                      </Text>
-                      <View style={styles.themeChipsRow}>
-                        {tier.unlockedThemes.map(t => {
-                          const isThemeActive = activeThemeId === t.id;
-                          return (
-                            <TouchableOpacity
-                              key={t.id}
-                              style={[
-                                styles.themeChip,
-                                {
-                                  backgroundColor: isDarkMode
-                                    ? 'rgba(255, 255, 255, 0.06)'
-                                    : '#F7F4EC',
-                                  borderColor: isThemeActive
-                                    ? tier.accentColor
-                                    : isUnlocked
-                                    ? cardBorder
-                                    : 'transparent',
-                                },
-                                isThemeActive && styles.themeChipActive,
-                              ]}
-                              disabled={!isUnlocked}
-                              onPress={() => handleApplyTheme(t.id, t.name)}
-                              activeOpacity={0.7}
-                              accessibilityRole="button"
-                              accessibilityLabel={`Apply ${t.name} theme`}
-                            >
-                              <View
-                                style={[
-                                  styles.themeColorDot,
-                                  { backgroundColor: t.hex },
-                                ]}
-                              />
-                              <Text
-                                style={[
-                                  styles.themeChipText,
-                                  { color: textPrimary },
-                                  isThemeActive && {
-                                    fontFamily: Fonts.poppins.bold,
-                                  },
-                                ]}
-                              >
-                                {t.name}
-                              </Text>
-                              {isUnlocked ? (
-                                isThemeActive ? (
-                                  <CheckCircle2
-                                    size={12}
-                                    color={tier.accentColor}
-                                    strokeWidth={2.5}
-                                  />
-                                ) : (
-                                  <Text
-                                    style={[
-                                      styles.applyHintText,
-                                      { color: tier.accentColor },
-                                    ]}
-                                  >
-                                    Apply
-                                  </Text>
-                                )
-                              ) : (
-                                <Lock size={10} color={textSecondary} />
-                              )}
-                            </TouchableOpacity>
-                          );
-                        })}
-                      </View>
-                    </View>
-                  )}
-
-                  {/* Unlocked Pro Features in this Tier */}
-                  {tier.unlockedFeatures.length > 0 && (
-                    <View
-                      style={[
-                        styles.rewardsSection,
-                        { borderTopColor: dividerColor },
-                      ]}
-                    >
-                      <Text
-                        style={[
-                          styles.rewardsSubheading,
-                          { color: textSecondary },
-                        ]}
-                      >
-                        <Sparkles size={12} color={textSecondary} /> Pro
-                        Privileges Unlocked:
-                      </Text>
-                      {tier.unlockedFeatures.map(f => (
-                        <View key={f.id} style={styles.featureItemRow}>
-                          <View
-                            style={[
-                              styles.featureBullet,
-                              {
-                                backgroundColor: isUnlocked
-                                  ? tier.accentColor
-                                  : textSecondary,
-                              },
-                            ]}
-                          />
-                          <View style={styles.featureInfo}>
-                            <Text
-                              style={[
-                                styles.featureName,
-                                { color: textPrimary },
-                              ]}
-                            >
-                              {f.name}
-                            </Text>
-                            <Text
-                              style={[
-                                styles.featureDesc,
-                                { color: textSecondary },
-                              ]}
-                            >
-                              {f.desc}
-                            </Text>
-                          </View>
-                        </View>
-                      ))}
-                    </View>
-                  )}
+                  {dailyQuote}
+                </Text>
+                <View style={styles.craftedWithRow}>
+                  <Text
+                    style={[
+                      styles.craftedWithText,
+                      { color: isDarkMode ? '#828896' : '#8E95A5' },
+                    ]}
+                  >
+                    Crafted with{' '}
+                  </Text>
+                  <Text style={styles.craftedWithHeart}>❤️</Text>
+                  <Text
+                    style={[
+                      styles.craftedWithText,
+                      { color: isDarkMode ? '#828896' : '#8E95A5' },
+                    ]}
+                  >
+                    {' '}
+                    in Ahmedabad, India
+                  </Text>
                 </View>
-              );
-            })}
+              </View>
+
+              {/* Right Column: Milestone Summit & Prestige Trophy Doodle Illustration */}
+              <View style={styles.footerDoodleWrapper}>
+                <MilestoneWatermarkDoodleSvg isDarkMode={isDarkMode} />
+              </View>
+            </View>
           </View>
         </Animated.ScrollView>
+
+        {/* Luxury Level Details Modal */}
+        <MilestoneLevelDetailModal
+          tier={selectedTierForDetail}
+          visible={!!selectedTierForDetail}
+          onClose={() => setSelectedTierForDetail(null)}
+          totalXp={totalXp}
+          currentTierLevel={currentTier.level}
+          nextTier={nextTier}
+          tierProgress={tierProgress}
+          currentInTier={currentInTier}
+          requiredForTier={requiredForTier}
+          activeThemeId={activeThemeId}
+          onApplyTheme={handleApplyTheme}
+          isDarkMode={isDarkMode}
+        />
       </View>
     </Modal>
   );
@@ -800,7 +633,7 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingTop: ResponsivePixels.size16,
-    paddingBottom: ResponsivePixels.size24,
+    paddingBottom: 60,
   },
   heroOuterWrapper: {
     paddingHorizontal: 10,
@@ -975,147 +808,75 @@ const styles = StyleSheet.create({
   xpHighlight: {
     fontFamily: Fonts.poppins.semiBold,
   },
+  roadmapHeaderRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginHorizontal: ResponsivePixels.size16,
+    marginBottom: ResponsivePixels.size12,
+  },
   roadmapHeading: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 11,
     letterSpacing: 1.1,
-    marginHorizontal: ResponsivePixels.size16,
-    marginBottom: ResponsivePixels.size10,
   },
-  tiersContainer: {
-    paddingHorizontal: ResponsivePixels.size16,
-    gap: 14,
-  },
-  tierCard: {
-    borderRadius: 20,
-    borderWidth: 1.5,
-    borderBottomWidth: 3.5,
-    padding: ResponsivePixels.size16,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    elevation: 2,
-  },
-  tierCardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  tierCardHeaderLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    flex: 1,
-  },
-  tierLevelBadge: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tierLevelBadgeText: {
-    fontFamily: Fonts.ranade.bold,
-    fontSize: 14,
-  },
-  tierTitleInline: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  tierTitleText: {
-    fontFamily: Fonts.ranade.bold,
-    fontSize: 15,
-  },
-  tierRequiredXp: {
+  roadmapSubheading: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
+    fontSize: 10,
     marginTop: 1,
   },
-  statusUnlocked: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-  },
-  statusUnlockedText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
-    color: '#52D22E',
-  },
-  statusLocked: {
+  totalXpPill: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
     paddingHorizontal: 8,
     paddingVertical: 3,
-    borderRadius: 8,
-  },
-  statusLockedText: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
-  },
-  rewardsSection: {
-    marginTop: 12,
-    paddingTop: 10,
-    borderTopWidth: StyleSheet.hairlineWidth,
-  },
-  rewardsSubheading: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
-    marginBottom: 8,
-  },
-  themeChipsRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  themeChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
     borderRadius: 12,
     borderWidth: 1,
   },
-  themeChipActive: {
-    borderWidth: 1.5,
+  totalXpPillText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 10.5,
   },
-  themeColorDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+
+  // Swiggy-Inspired Watermark Footer
+  footerWatermarkWrapper: {
+    paddingLeft: ResponsivePixels.size16,
+    paddingRight: ResponsivePixels.size16,
+    marginTop: ResponsivePixels.size28,
+    marginBottom: ResponsivePixels.size24,
   },
-  themeChipText: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
-  },
-  applyHintText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 10,
-  },
-  featureItemRow: {
+  footerWatermarkRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 8,
-    marginBottom: 6,
+    justifyContent: 'space-between',
   },
-  featureBullet: {
-    width: 5,
-    height: 5,
-    borderRadius: 2.5,
-    marginTop: 6,
-  },
-  featureInfo: {
+  footerTextBlock: {
     flex: 1,
+    justifyContent: 'flex-start',
   },
-  featureName: {
+  footerWatermarkText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 34,
+    lineHeight: 42,
+    letterSpacing: -1.2,
+  },
+  craftedWithRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 18,
+  },
+  craftedWithText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
+    fontSize: 14,
   },
-  featureDesc: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 10.5,
-    lineHeight: 14,
+  craftedWithHeart: {
+    fontSize: 13.5,
+  },
+  footerDoodleWrapper: {
+    marginLeft: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 6,
   },
 });
