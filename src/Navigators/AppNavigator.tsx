@@ -11,7 +11,6 @@ import SettingsScreen from '../Screens/Settings/SettingsScreen';
 import { VoiceStudioScreen } from '../Screens/Settings/VoiceStudioScreen';
 import { WakeWordStudioScreen } from '../Screens/Settings/WakeWordStudioScreen';
 import { ProfileScreen } from '../Screens/Profile';
-import { MilestonesScreen } from '../Screens/Milestones';
 import { LanguageScreen } from '../Screens/Language';
 import { HelpFaqScreen } from '../Screens/HelpFaq';
 import { PrivacySecurityScreen } from '../Screens/PrivacySecurity';
@@ -62,11 +61,6 @@ export default function AppNavigator() {
           <Stack.Screen
             name="ProfileScreen"
             component={ProfileScreen}
-            options={{ animation: 'slide_from_right' }}
-          />
-          <Stack.Screen
-            name="MilestonesScreen"
-            component={MilestonesScreen}
             options={{ animation: 'slide_from_right' }}
           />
           <Stack.Screen

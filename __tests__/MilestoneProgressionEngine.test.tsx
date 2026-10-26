@@ -30,7 +30,6 @@ import {
   MILESTONE_TIERS,
 } from '../src/Services/Milestone/MilestoneService';
 import { MilestoneSection } from '../src/Screens/Settings/Components/MilestoneSection';
-import { MilestoneJourneyModal } from '../src/Screens/Settings/Components/MilestoneJourneyModal';
 import { MilestoneFullScreenSheet } from '../src/Screens/Milestones';
 
 describe('Milestone Progression & Pro Unlocking Engine', () => {
@@ -132,36 +131,6 @@ describe('Milestone Progression & Pro Unlocking Engine', () => {
       expect(jsonStr).toContain('180 XP');
     });
 
-    it('renders MilestoneJourneyModal as bottom sheet without crashing', () => {
-      const onCloseMock = jest.fn();
-      const currentTier = MILESTONE_TIERS[1];
-      const nextTier = MILESTONE_TIERS[2];
-
-      let tree: any;
-      act(() => {
-        tree = ReactTestRenderer.create(
-          <MilestoneJourneyModal
-            visible={true}
-            onClose={onCloseMock}
-            currentTier={currentTier}
-            nextTier={nextTier}
-            totalXp={180}
-            tierProgress={0.4}
-            currentInTier={80}
-            requiredForTier={200}
-            completedTasksCount={12}
-            completedRemindersCount={4}
-            habitsFollowedCount={6}
-          />,
-        );
-      });
-
-      const jsonStr = JSON.stringify(tree.toJSON());
-      expect(jsonStr).toContain('Milestone Journey');
-      expect(jsonStr).toContain('Prestige Tier Roadmap');
-      expect(jsonStr).toContain('Novice Initiate');
-    });
-
     it('renders MilestoneFullScreenSheet globally without crashing', () => {
       let tree: any;
       act(() => {
@@ -172,4 +141,3 @@ describe('Milestone Progression & Pro Unlocking Engine', () => {
     });
   });
 });
-
