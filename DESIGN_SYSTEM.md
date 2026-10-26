@@ -459,6 +459,28 @@ Dynamic container background for the timeline list in `DashboardScreen.tsx`:
 
 ---
 
+### 4.9 Tactile Floating Toast & System Notifications (`src/Common/ToastConfig.tsx`, `ToastAestheticPatternSvg.tsx`)
+
+Regius notifications operate as high-contrast floating 3D cards engineered to maintain maximum legibility against any background, including colored scroller headers (e.g. `Colors.LavenderPurple` `#8383D6` or `#282048`):
+
+- **Category-Harmonized Gradient Surfaces**:
+  - **`success`**: Soft emerald-mint gradient (`#F0FDF5` → `#E6FAF0` → `#DCFCE7`), border `#A7F3D0` with 3D bottom bevel `#34D399` (`#0F241A` → `#142E22` in dark mode).
+  - **`warning`**: Solar honey-gold gradient (`#FFFDF2` → `#FFF8D0` → `#FEF08A`), border `#FDE047` with 3D bottom bevel `#DEAA14` (`#2A1F08` → `#33270B` in dark mode).
+  - **`error`**: Delicate rose-coral gradient (`#FFF1F2` → `#FEEFEF` → `#FECDD3`), border `#FECACA` with 3D bottom bevel `#F87171` (`#2D1013` → `#3A1519` in dark mode).
+  - **`info`**: Royal lavender-periwinkle gradient (`#F4F5FE` → `#EEF0FD` → `#E2E5FC`), border `#C7D2FE` with 3D bottom bevel `#8383D6` (`#18162E` → `#201D3D` in dark mode).
+- **Aesthetic SVG Watermark Pattern (`ToastAestheticPatternSvg.tsx`)**:
+  - **Concentric Acoustic Orbital Rings**: Radiating soundwave ripples behind the icon seal (`r=18`, dashed `r=32`, `r=48`).
+  - **Harmonic Flow Waves**: Smooth bezier acoustic sound ribbons traversing across the card.
+  - **Regius Signature 4-Pointed Gold Diamond Starbursts (`✦`)**: Imperial gold starbursts (`M 0 -4.5 Q 0 0 4.5 0 Q 0 0 0 4.5 Q 0 0 -4.5 0 Q 0 0 0 -4.5 Z`) with central stardust core points in the corners.
+  - **Top Specular Light Rim**: Subtle light chamfer along the upper edge.
+- **3D Tactile Icon Seal**: Circular `38x38` extruded badge with specular border (`borderWidth: 1.2`, `borderBottomWidth: 2.4`) and saturated category bevel.
+- **Dynamic Safe Area Offset**: `topOffset` dynamically computed via `useSafeAreaInsets()` (`Math.max(insets.top + 8, 54)` on iOS) to float cleanly beneath the Dynamic Island and camera notch.
+- **Adaptive Typography & Frosted Dismiss Capsule**:
+  - Deep high-contrast title (`Fonts.poppins.bold`, 13.5px) and secondary copy (`Fonts.poppins.medium`, 12px) with auto-centering for single-string toasts.
+  - Frosted circular dismiss capsule (`26x26`, `rgba(0, 0, 0, 0.05)` light / `rgba(255, 255, 255, 0.12)` dark) with `X` icon.
+
+---
+
 ## 5. Voice Assistant UI Specification (`VoiceAssistantSheet.tsx`)
 
 The voice assistant presents as an immersive bottom-anchored modal sheet with rich visual and motion feedback:
