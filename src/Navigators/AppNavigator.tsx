@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
+import { Colors } from '../Assets/StyleUtilities/Colors';
 import { navigationRef } from './Navigator';
 import Splash from '../Screens/Splash/Splash';
 import Intro from '../Screens/Intro/Intro';
@@ -21,6 +22,14 @@ import { VoiceWakeWordProvider } from '../Context/VoiceWakeWordContext';
 
 const Stack = createNativeStackNavigator();
 
+const appTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: Colors.CreamBackground,
+  },
+};
+
 export default function AppNavigator() {
   const { isLoading } = useContext(AuthContext);
   const [minTimePassed, setMinTimePassed] = React.useState(false);
@@ -34,7 +43,7 @@ export default function AppNavigator() {
 
   if (isLoading || !minTimePassed) {
     return (
-      <NavigationContainer ref={navigationRef}>
+      <NavigationContainer ref={navigationRef} theme={appTheme}>
         <Stack.Navigator
           screenOptions={{ headerShown: false, animation: 'fade' }}
         >
@@ -46,7 +55,7 @@ export default function AppNavigator() {
 
   return (
     <VoiceWakeWordProvider>
-      <NavigationContainer ref={navigationRef}>
+      <NavigationContainer ref={navigationRef} theme={appTheme}>
         <Stack.Navigator
           screenOptions={{ headerShown: false, animation: 'fade' }}
         >

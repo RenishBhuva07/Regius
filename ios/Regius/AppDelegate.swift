@@ -23,11 +23,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     window = UIWindow(frame: UIScreen.main.bounds)
 
+    let creamColor = UIColor(red: 1.0, green: 252.0 / 255.0, blue: 227.0 / 255.0, alpha: 1.0)
+    window?.backgroundColor = creamColor
+
     factory.startReactNative(
       withModuleName: "Regius",
       in: window,
       launchOptions: launchOptions
     )
+
+    window?.rootViewController?.view.backgroundColor = creamColor
 
     return true
   }
