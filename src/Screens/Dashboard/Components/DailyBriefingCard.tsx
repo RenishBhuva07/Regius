@@ -30,14 +30,7 @@ import Svg, {
   Stop,
 } from 'react-native-svg';
 
-/**
- * Aesthetic luxury background for DailyBriefingCard featuring:
- * - Ambient radial glowing auras (Lavender, Golden dawn, Mint acoustic)
- * - Concentric acoustic orbital rings
- * - Flowing harmonic resonance sound ribbons
- * - Subtle studio equalizer watermark bars
- * - Regius signature 4-pointed luxury starbursts and stardust constellations
- */
+// Background vector pattern for DailyBriefingCard.
 const DailyBriefingBackgroundSvg: React.FC = React.memo(() => (
   <View style={StyleSheet.absoluteFill} pointerEvents="none">
     <Svg
@@ -48,49 +41,36 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => (
       fill="none"
     >
       <Defs>
-        {/* Soft Multi-Layer Background Gradients */}
         <LinearGradient id="cardBgSheen" x1="0%" y1="0%" x2="100%" y2="100%">
           <Stop offset="0%" stopColor="#252733" stopOpacity={0.65} />
           <Stop offset="50%" stopColor={Colors.NeroBlack} stopOpacity={0.15} />
           <Stop offset="100%" stopColor="#15161A" stopOpacity={0.7} />
         </LinearGradient>
-
-        {/* Top-Right Lavender / Purple Aura */}
         <RadialGradient id="lavenderAura" cx="86%" cy="14%" rx="68%" ry="68%">
           <Stop offset="0%" stopColor="#9C9CE3" stopOpacity={0.42} />
           <Stop offset="35%" stopColor="#8383D6" stopOpacity={0.22} />
           <Stop offset="70%" stopColor="#554E9B" stopOpacity={0.06} />
           <Stop offset="100%" stopColor={Colors.NeroBlack} stopOpacity={0} />
         </RadialGradient>
-
-        {/* Bottom-Left Golden Dawn Aura (Morning Brief Theme) */}
         <RadialGradient id="goldDawnGlow" cx="12%" cy="88%" rx="52%" ry="52%">
           <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.16} />
           <Stop offset="45%" stopColor="#B48216" stopOpacity={0.06} />
           <Stop offset="100%" stopColor={Colors.NeroBlack} stopOpacity={0} />
         </RadialGradient>
-
-        {/* Mid-Right Mint Acoustic Glow */}
         <RadialGradient id="mintGlow" cx="62%" cy="68%" rx="40%" ry="40%">
           <Stop offset="0%" stopColor="#52D22E" stopOpacity={0.09} />
           <Stop offset="60%" stopColor="#1B9A72" stopOpacity={0.02} />
           <Stop offset="100%" stopColor={Colors.NeroBlack} stopOpacity={0} />
         </RadialGradient>
-
-        {/* Gold Shine for Stars */}
         <LinearGradient id="goldStar" x1="0%" y1="0%" x2="100%" y2="100%">
           <Stop offset="0%" stopColor="#FFFCE3" stopOpacity={0.95} />
           <Stop offset="100%" stopColor="#F5C518" stopOpacity={0.8} />
         </LinearGradient>
       </Defs>
-
-      {/* ── Base Ambient Glow Volumes ── */}
       <Rect width="100%" height="100%" fill="url(#cardBgSheen)" />
       <Rect width="100%" height="100%" fill="url(#lavenderAura)" />
       <Rect width="100%" height="100%" fill="url(#goldDawnGlow)" />
       <Rect width="100%" height="100%" fill="url(#mintGlow)" />
-
-      {/* ── Top-Right Acoustic Orbital Rings (Behind Ready Badge) ── */}
       <Circle
         cx={305}
         cy={24}
@@ -125,8 +105,6 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => (
         strokeDasharray="5 7"
         fill="none"
       />
-
-      {/* ── Top-Left Micro Orbit (Behind Audio Waveform Icon) ── */}
       <Circle
         cx={42}
         cy={38}
@@ -144,9 +122,6 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => (
         strokeDasharray="3 4"
         fill="none"
       />
-
-      {/* ── Flowing Acoustic Wave Ribbons (Harmonic Resonance) ── */}
-      {/* Wave 1: Lavender Flow */}
       <Path
         d="M -20 62 C 75 22, 155 92, 255 46 S 355 82, 420 52"
         stroke="rgba(156, 156, 227, 0.22)"
@@ -154,7 +129,6 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => (
         strokeLinecap="round"
         fill="none"
       />
-      {/* Wave 2: Rhythmic Dashed Mint Flow */}
       <Path
         d="M -20 88 C 68 124, 148 44, 248 104 S 348 44, 420 84"
         stroke="rgba(204, 230, 208, 0.14)"
@@ -163,7 +137,6 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => (
         strokeLinecap="round"
         fill="none"
       />
-      {/* Wave 3: Subtle Gold Dawn Ripple */}
       <Path
         d="M -10 148 C 88 108, 178 168, 288 128 S 378 158, 420 138"
         stroke="rgba(245, 197, 24, 0.11)"
@@ -171,8 +144,6 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => (
         strokeLinecap="round"
         fill="none"
       />
-
-      {/* ── Subtle Audio Equalizer Watermark Bars (Bottom Right) ── */}
       <G opacity={0.06}>
         <Rect x={278} y={150} width={2.5} height={24} rx={1.2} fill="#FFFFFF" />
         <Rect x={286} y={142} width={2.5} height={32} rx={1.2} fill="#CCE6D0" />
@@ -183,41 +154,30 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => (
         <Rect x={326} y={140} width={2.5} height={34} rx={1.2} fill="#8383D6" />
         <Rect x={334} y={152} width={2.5} height={22} rx={1.2} fill="#FFFFFF" />
       </G>
-
-      {/* ── Regius Luxury 4-Pointed Starbursts ── */}
-      {/* Starburst 1: Primary Gold Accent near top orbit */}
       <G transform="translate(245, 18) scale(0.85)">
         <Path
           d="M6 0L7.5 4.5L12 6L7.5 7.5L6 12L4.5 7.5L0 6L4.5 4.5Z"
           fill="url(#goldStar)"
         />
       </G>
-
-      {/* Starburst 2: Soft Cream Star near quote opening */}
       <G transform="translate(32, 142) scale(0.65)" opacity={0.6}>
         <Path
           d="M6 0L7.5 4.5L12 6L7.5 7.5L6 12L4.5 7.5L0 6L4.5 4.5Z"
           fill="#FFFCE3"
         />
       </G>
-
-      {/* Starburst 3: Lavender Star near mid right */}
       <G transform="translate(326, 86) scale(0.55)" opacity={0.5}>
         <Path
           d="M6 0L7.5 4.5L12 6L7.5 7.5L6 12L4.5 7.5L0 6L4.5 4.5Z"
           fill="#D8DBFF"
         />
       </G>
-
-      {/* Starburst 4: Micro Dawn Sparkle */}
       <G transform="translate(142, 28) scale(0.48)" opacity={0.45}>
         <Path
           d="M6 0L7.5 4.5L12 6L7.5 7.5L6 12L4.5 7.5L0 6L4.5 4.5Z"
           fill="#F5C518"
         />
       </G>
-
-      {/* ── Constellation Stardust Micro-Dots ── */}
       <Circle cx={118} cy={34} r={1.3} fill="#FFFCE3" opacity={0.5} />
       <Circle cx={192} cy={22} r={1.1} fill="#F5C518" opacity={0.55} />
       <Circle cx={272} cy={52} r={1.4} fill="#FFFCE3" opacity={0.45} />
@@ -483,7 +443,7 @@ export const DailyBriefingCard: React.FC<DailyBriefingCardProps> = ({
   return (
     <View style={styles.cardShadowWrapper}>
       <View style={styles.card}>
-        {/* Aesthetic luxury ambient background with harmonic soundwaves & celestial orbits */}
+        
         <DailyBriefingBackgroundSvg />
 
         <View style={styles.content}>

@@ -49,11 +49,11 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   return (
     <View style={styles.cardShadowWrapper}>
       <View style={styles.card}>
-        {/* Specular dark luxury obsidian bento background */}
+        {/* Background pattern */}
         <ProfileCardBackgroundSvg />
 
         <View style={styles.cardContent}>
-          {/* Top Row: Avatar, Info (Name + Pro Badge), and Edit Button */}
+          {/* Profile info */}
           <View style={styles.profileCardTop}>
             <View style={styles.avatarWrapper}>
               <View style={styles.avatarRing}>
@@ -72,7 +72,6 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
                 {email}
               </Text>
               <View style={styles.roleBadgeWrapper}>
-                {/* <Badge label={role} variant="yellow" size="sm" /> */}
                 {milestoneTier && (
                   <Badge
                     label={`Tier ${milestoneTier.level} ${milestoneTier.title}`}
@@ -95,7 +94,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
             </TouchableOpacity>
           </View>
 
-          {/* User Designation Snippet (Clean without quotation marks) */}
+          {/* Role snippet */}
           {bio ? (
             <View style={styles.bioSnippet}>
               <Text style={styles.bioSnippetText} numberOfLines={2}>
@@ -104,7 +103,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
             </View>
           ) : null}
 
-          {/* Milestone Level & XP Progress Banner */}
+          {/* Milestone progress */}
           {milestoneTier && (
             <TouchableOpacity
               activeOpacity={0.85}
@@ -131,7 +130,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
                 </View>
               </View>
 
-              {/* Golden Volumetric Progress Bar */}
+              {/* Progress bar */}
               <View style={styles.milestoneBarTrack}>
                 <View
                   style={[
@@ -149,7 +148,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
             </TouchableOpacity>
           )}
 
-          {/* Metrics Row: Tasks Done, Active Alerts / Rank, AI Voice */}
+          {/* Metrics row */}
           <View style={styles.profileMetricsRow}>
             <View style={styles.metricItem}>
               <Text style={styles.metricValue}>{tasksDoneCount}</Text>

@@ -162,14 +162,11 @@ export const ToastAestheticPatternSvg: React.FC<ToastAestheticPatternSvgProps> =
           fill="none"
         >
           <Defs>
-            {/* Background Multi-Stop Gradient */}
             <LinearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
               <Stop offset="0%" stopColor={palette.gradStart} stopOpacity={1} />
               <Stop offset="50%" stopColor={palette.gradMid} stopOpacity={1} />
               <Stop offset="100%" stopColor={palette.gradEnd} stopOpacity={1} />
             </LinearGradient>
-
-            {/* Left Atmospheric Ambient Aura */}
             <RadialGradient id={auraId} cx="12%" cy="50%" rx="45%" ry="75%">
               <Stop
                 offset="0%"
@@ -182,8 +179,6 @@ export const ToastAestheticPatternSvg: React.FC<ToastAestheticPatternSvgProps> =
                 stopOpacity={0}
               />
             </RadialGradient>
-
-            {/* Specular Highlight Rim */}
             <LinearGradient id={rimId} x1="0%" y1="0%" x2="100%" y2="0%">
               <Stop
                 offset="0%"
@@ -206,8 +201,6 @@ export const ToastAestheticPatternSvg: React.FC<ToastAestheticPatternSvgProps> =
                 stopOpacity={0.05}
               />
             </LinearGradient>
-
-            {/* Imperial 4-Point Gold Star Gradient */}
             <LinearGradient
               id="toastGoldStar"
               x1="0%"
@@ -219,22 +212,14 @@ export const ToastAestheticPatternSvg: React.FC<ToastAestheticPatternSvgProps> =
               <Stop offset="100%" stopColor="#F5C518" stopOpacity={0.8} />
             </LinearGradient>
           </Defs>
-
-          {/* ── Base Surface Fill ── */}
           <Rect width="100%" height="100%" fill={`url(#${gradId})`} />
-
-          {/* ── Left Atmospheric Aura ── */}
           <Rect width="100%" height="100%" fill={`url(#${auraId})`} />
-
-          {/* ── Specular Top Chamfer Light Rim ── */}
           <Path
             d="M 20 1 L 340 1"
             stroke={`url(#${rimId})`}
             strokeWidth={1.2}
             strokeLinecap="round"
           />
-
-          {/* ── Concentric Acoustic Orbital Flow Rings (Centred Behind Icon Seal) ── */}
           <Circle
             cx={34}
             cy={34}
@@ -263,8 +248,6 @@ export const ToastAestheticPatternSvg: React.FC<ToastAestheticPatternSvgProps> =
             strokeOpacity={palette.ringOpacity * 0.5}
             fill="none"
           />
-
-          {/* ── Subtle Harmonic Acoustic Soundwaves Across the Toast ── */}
           <Path
             d="M 60 48 Q 140 20, 220 42 T 345 32"
             stroke={palette.waveColor}
@@ -282,9 +265,6 @@ export const ToastAestheticPatternSvg: React.FC<ToastAestheticPatternSvgProps> =
             strokeLinecap="round"
             fill="none"
           />
-
-          {/* ── Regius Signature 4-Pointed Gold Diamond Starbursts ── */}
-          {/* Top-Right Corner Starburst */}
           <G transform="translate(305, 16)">
             <Path
               d="M 0 -4.5 Q 0 0 4.5 0 Q 0 0 0 4.5 Q 0 0 -4.5 0 Q 0 0 0 -4.5 Z"
@@ -292,8 +272,6 @@ export const ToastAestheticPatternSvg: React.FC<ToastAestheticPatternSvgProps> =
             />
             <Circle cx={0} cy={0} r={0.7} fill="#FFFFFF" />
           </G>
-
-          {/* Bottom-Right Satellite Starburst */}
           <G transform="translate(338, 50)">
             <Path
               d="M 0 -3 Q 0 0 3 0 Q 0 0 0 3 Q 0 0 -3 0 Q 0 0 0 -3 Z"
@@ -301,8 +279,6 @@ export const ToastAestheticPatternSvg: React.FC<ToastAestheticPatternSvgProps> =
             />
             <Circle cx={0} cy={0} r={0.5} fill="#FFFFFF" />
           </G>
-
-          {/* Delicate Stardust Points */}
           <Circle
             cx={285}
             cy={22}

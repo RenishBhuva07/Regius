@@ -18,7 +18,7 @@ import { SVGS } from '../../Assets/Images';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { useTaskReminder } from '../../Context/TaskReminderContext';
 
-// ─── Inline SVGs ─────────────────────────────────────────────────────────────
+// Inline SVGs
 
 const OfficeBagIcon: React.FC<{ width?: number; height?: number }> = ({
   width = 24,
@@ -43,7 +43,7 @@ const OfficeBagIcon: React.FC<{ width?: number; height?: number }> = ({
   </Svg>
 );
 
-// ─── Types ───────────────────────────────────────────────────────────────────
+// Types
 
 type TabKey = 'taskList' | 'completed';
 
@@ -58,7 +58,7 @@ interface Category {
   accentColor?: string;
 }
 
-// ─── Data ────────────────────────────────────────────────────────────────────
+// Data
 
 const CATEGORIES: Category[] = [
   {
@@ -93,7 +93,7 @@ const CATEGORIES: Category[] = [
   },
 ];
 
-// ─── Component ───────────────────────────────────────────────────────────────
+// Component
 
 const HomeScreen: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabKey>('taskList');
@@ -301,7 +301,7 @@ const HomeScreen: React.FC = () => {
   );
 };
 
-// ─── Styles ──────────────────────────────────────────────────────────────────
+// Styles
 
 const styles = StyleSheet.create({
   safeArea: {

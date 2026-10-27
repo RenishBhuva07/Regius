@@ -20,15 +20,7 @@ export interface TaskSectionBackgroundSvgProps {
   height?: number;
 }
 
-/**
- * Dynamic luxury aesthetic background for Tasks Section:
- * - Ambient gold/amber focus chronometer radiating from top crest badge
- * - Geometric focus lattice and delicate diamond starlight nodes
- * - Left flank task progression ribbon with milestone nodes
- * - Paper plane glider & checklist doodles
- * - Bottom-right focus target & checkmark watermark doodle
- * - Dynamically adapts to any container dimensions via layout measurement
- */
+// Background pattern for the Tasks section.
 export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
   React.memo(({ width: propWidth, height: propHeight }) => {
     const [dimensions, setDimensions] = useState<{
@@ -71,7 +63,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
       >
         <Svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} fill="none">
           <Defs>
-            {/* Base warm luxury parchment sheen */}
             <LinearGradient
               id="taskBgSheen"
               x1="0"
@@ -85,8 +76,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               <Stop offset="68%" stopColor="#F5EFE3" stopOpacity={0.96} />
               <Stop offset="100%" stopColor="#ECE4D4" stopOpacity={0.98} />
             </LinearGradient>
-
-            {/* Gold Focus Dawn Aura under center crest badge */}
             <RadialGradient
               id="taskCrestAura"
               cx={centerX}
@@ -98,8 +87,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               <Stop offset="45%" stopColor="#DEAA14" stopOpacity={0.08} />
               <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Golden radiance under top-right floating plus button */}
             <RadialGradient
               id="taskPlusAura"
               cx={W - 37}
@@ -111,8 +98,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               <Stop offset="50%" stopColor="#D99B0F" stopOpacity={0.07} />
               <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Lavender focus aura on upper-left */}
             <RadialGradient
               id="taskLavenderAura"
               cx={24}
@@ -124,8 +109,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               <Stop offset="50%" stopColor="#9C9CE3" stopOpacity={0.04} />
               <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Fresh mint vitality aura on center-right */}
             <RadialGradient
               id="taskMintAura"
               cx={W - 15}
@@ -137,8 +120,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               <Stop offset="55%" stopColor="#1B9A72" stopOpacity={0.03} />
               <Stop offset="100%" stopColor="#F5EFE3" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Bottom footer radiance aura behind "Live it up!" and task complete doodles */}
             <RadialGradient
               id="taskFooterAura"
               cx={centerX}
@@ -150,8 +131,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               <Stop offset="48%" stopColor="#E2A612" stopOpacity={0.05} />
               <Stop offset="100%" stopColor="#ECE4D4" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Bottom-right warm amber target aura */}
             <RadialGradient
               id="taskTargetAura"
               cx={W - 40}
@@ -163,8 +142,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               <Stop offset="50%" stopColor="#DEAA14" stopOpacity={0.05} />
               <Stop offset="100%" stopColor="#ECE4D4" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Gold node gradient */}
             <LinearGradient
               id="taskGoldNode"
               x1="0%"
@@ -176,8 +153,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               <Stop offset="50%" stopColor="#F5C518" stopOpacity={0.85} />
               <Stop offset="100%" stopColor="#B48216" stopOpacity={0.65} />
             </LinearGradient>
-
-            {/* Delicate top specular light rim */}
             <LinearGradient
               id="taskRimLight"
               x1="0"
@@ -191,11 +166,7 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               <Stop offset="100%" stopColor="#DACFBE" stopOpacity={0.4} />
             </LinearGradient>
           </Defs>
-
-          {/* 1. Base Gradient Canvas */}
           <Rect x={0} y={0} width={W} height={H} fill="url(#taskBgSheen)" />
-
-          {/* 2. Ambient Color Auras */}
           <Rect x={0} y={0} width={W} height={H} fill="url(#taskCrestAura)" />
           <Rect x={0} y={0} width={W} height={H} fill="url(#taskPlusAura)" />
           <Rect
@@ -208,8 +179,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
           <Rect x={0} y={0} width={W} height={H} fill="url(#taskMintAura)" />
           <Rect x={0} y={0} width={W} height={H} fill="url(#taskFooterAura)" />
           <Rect x={0} y={0} width={W} height={H} fill="url(#taskTargetAura)" />
-
-          {/* 3. Concentric Focus Chronometer Rings radiating from center crest badge */}
           <G opacity={0.65}>
             <Circle
               cx={centerX}
@@ -259,8 +228,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               fill="none"
               opacity={0.18}
             />
-
-            {/* Radial Focus Hour Ticks radiating from crest */}
             {[-60, -45, -30, -15, 0, 15, 30, 45, 60].map((deg, i) => {
               const rad = (deg * Math.PI) / 180;
               const r1 = 80;
@@ -284,8 +251,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               );
             })}
           </G>
-
-          {/* 4. Subtle Diamond Focus Grid */}
           <G opacity={0.32}>
             <Line
               x1={0}
@@ -324,8 +289,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               strokeDasharray="3 5"
             />
           </G>
-
-          {/* 5. Botanical Task Progression Ribbon on Left Flank */}
           <Path
             d={`M 0 160 Q 28 230 16 320 T 30 460 T 14 600 T 26 ${H - 35}`}
             stroke="#F5C518"
@@ -369,10 +332,7 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
             fill="url(#taskGoldNode)"
             opacity={0.6}
           />
-
-          {/* 6. Paper Plane / Inbox Zero Glider Doodle (Middle-Right) */}
           <G transform={`translate(${W - 68}, 235)`} opacity={0.22}>
-            {/* Dashed flight trail */}
             <Path
               d="M -30 35 Q -10 32 0 16"
               stroke="#F5C518"
@@ -380,7 +340,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               strokeDasharray="2 3"
               fill="none"
             />
-            {/* Origami Paper Plane Body */}
             <Path
               d="M 24 0 L 2 14 L 11 16 L 24 0 Z"
               stroke="#F5C518"
@@ -402,13 +361,10 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               fill="none"
             />
           </G>
-
-          {/* 7. Parchment Task Checklist Doodle (Mid-Left) */}
           <G
             transform={`translate(28, ${Math.min(390, H * 0.48)})`}
             opacity={0.18}
           >
-            {/* Mini notepad outline */}
             <Rect
               x={0}
               y={0}
@@ -419,7 +375,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               strokeWidth={1}
               fill="none"
             />
-            {/* Top binder clip / tab */}
             <Rect
               x={9}
               y={-3}
@@ -430,7 +385,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               strokeWidth={1}
               fill="none"
             />
-            {/* Checklist row 1 */}
             <Rect
               x={5}
               y={8}
@@ -450,7 +404,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               strokeWidth={1}
               strokeLinecap="round"
             />
-            {/* Checklist row 2 */}
             <Rect
               x={5}
               y={19}
@@ -470,7 +423,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               strokeWidth={1}
               strokeLinecap="round"
             />
-            {/* Checklist row 3 */}
             <Rect
               x={5}
               y={30}
@@ -491,10 +443,7 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               strokeLinecap="round"
             />
           </G>
-
-          {/* 8. Calligraphic Fountain Pen Flourish Checkmark Doodle (Positioned gracefully above footer) */}
           <G transform={`translate(22, ${H - 225})`} opacity={0.2}>
-            {/* Continuous flourish check stroke */}
             <Path
               d="M 6 34 Q 16 48 24 54 Q 38 30 56 8"
               stroke="#F5C518"
@@ -503,15 +452,10 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               strokeLinejoin="round"
               fill="none"
             />
-            {/* Ink flourish drop */}
             <Circle cx={58} cy={7} r={2.2} fill="#F5C518" />
-            {/* Subtle start taper loop */}
             <Circle cx={6} cy={34} r={1.6} fill="#F5C518" />
           </G>
-
-          {/* 9. Sacred Focus Compass & Celebratory Checkmark Watermark Doodle on Bottom-Right */}
           <G transform={`translate(${W - 88}, ${H - 140})`} opacity={0.24}>
-            {/* Outer focus orbital ring */}
             <Circle
               cx={40}
               cy={40}
@@ -520,7 +464,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               strokeWidth={1.3}
               fill="none"
             />
-            {/* Inner dashed calibration ring */}
             <Circle
               cx={40}
               cy={40}
@@ -531,7 +474,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               fill="none"
               opacity={0.8}
             />
-            {/* Compass axis ticks */}
             <Line
               x1={40}
               y1={2}
@@ -568,8 +510,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               strokeWidth={1.4}
               strokeLinecap="round"
             />
-
-            {/* Continuous-line dynamic checkmark doodle inside focus ring */}
             <Path
               d="M 24 38 L 35 49 L 58 24"
               stroke="#F5C518"
@@ -578,12 +518,8 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               strokeLinejoin="round"
               fill="none"
             />
-
-            {/* Radiant core spark */}
             <Circle cx={40} cy={40} r={2.5} fill="#F5C518" opacity={0.9} />
           </G>
-
-          {/* 10. Golden Diamond Stars & Constellation Nodes */}
           <Path
             d={taskDiamond(40, 115, 6)}
             fill="url(#taskGoldNode)"
@@ -609,8 +545,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
             fill="url(#taskGoldNode)"
             opacity={0.45}
           />
-
-          {/* Bottom constellation milestone points */}
           <Path
             d={taskDiamond(W - 45, H - 75, 6)}
             fill="url(#taskGoldNode)"
@@ -626,8 +560,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
             fill="url(#taskGoldNode)"
             opacity={0.4}
           />
-
-          {/* Starlight micro nodes */}
           <Circle cx={W * 0.22} cy={88} r={1.6} fill="#F5C518" opacity={0.45} />
           <Circle cx={W * 0.78} cy={92} r={1.6} fill="#F5C518" opacity={0.45} />
           <Circle cx={W * 0.15} cy={270} r={1.8} fill="#8383D6" opacity={0.4} />
@@ -646,8 +578,6 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
             fill="#F5C518"
             opacity={0.45}
           />
-
-          {/* 12. Top Specular Bevel Rim (1.5px) */}
           <Path
             d={`M 1.5 ${H - 1.5} L 1.5 32 Q 1.5 1.5 32 1.5 L ${W - 32} 1.5 Q ${
               W - 1.5

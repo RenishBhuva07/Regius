@@ -74,8 +74,6 @@ export const FocusedTabPatternSvg: React.FC<FocusedTabPatternSvgProps> =
               <Stop offset="100%" stopColor="#F5C518" stopOpacity={0.8} />
             </LinearGradient>
           </Defs>
-
-          {/* Base gradient fill & glowing auras */}
           <Rect width="100%" height="100%" rx={16} fill="url(#focusedTabBg)" />
           <Rect
             width="100%"
@@ -84,16 +82,12 @@ export const FocusedTabPatternSvg: React.FC<FocusedTabPatternSvgProps> =
             fill="url(#tabLavenderGlow)"
           />
           <Rect width="100%" height="100%" rx={16} fill="url(#tabGoldCorner)" />
-
-          {/* Top highlight rim */}
           <Path
             d={`M 12 1 L ${width - 12} 1`}
             stroke="url(#tabTopRim)"
             strokeWidth={1}
             strokeLinecap="round"
           />
-
-          {/* Bottom-left orbital micro rings */}
           <Circle
             cx={6}
             cy={height - 6}
@@ -111,8 +105,6 @@ export const FocusedTabPatternSvg: React.FC<FocusedTabPatternSvgProps> =
             strokeDasharray="3 3"
             fill="none"
           />
-
-          {/* Top-right celestial arcs */}
           <Circle
             cx={width - 6}
             cy={6}
@@ -130,8 +122,6 @@ export const FocusedTabPatternSvg: React.FC<FocusedTabPatternSvgProps> =
             strokeDasharray="3 3"
             fill="none"
           />
-
-          {/* Harmonic flow wave across lower section */}
           <Path
             d={`M -5 ${height - 12} Q ${width * 0.5} ${height - 4}, ${
               width + 5
@@ -141,8 +131,6 @@ export const FocusedTabPatternSvg: React.FC<FocusedTabPatternSvgProps> =
             strokeLinecap="round"
             fill="none"
           />
-
-          {/* Royal 4-pointed micro starburst */}
           <G transform={`translate(${width - 13}, 11)`}>
             <Path
               d="M 0 -4 Q 0 0 4 0 Q 0 0 0 4 Q 0 0 -4 0 Q 0 0 0 -4 Z"
@@ -150,8 +138,6 @@ export const FocusedTabPatternSvg: React.FC<FocusedTabPatternSvgProps> =
             />
             <Circle cx={0} cy={0} r={0.7} fill="#FFFFFF" />
           </G>
-
-          {/* Stardust dots */}
           <Circle cx={12} cy={12} r={0.8} fill="#FFFCE3" opacity={0.35} />
           <Circle
             cx={width - 18}
@@ -167,8 +153,6 @@ export const FocusedTabPatternSvg: React.FC<FocusedTabPatternSvgProps> =
             fill="#9C9CE3"
             opacity={0.4}
           />
-
-          {/* Precision beveled inner border */}
           <Rect
             x={0.75}
             y={0.75}

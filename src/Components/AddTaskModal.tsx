@@ -56,7 +56,7 @@ import FlowBadgePatternSvg from '../Screens/Dashboard/Components/FlowBadgePatter
 import TaskCardAestheticBg from './TaskCardAestheticBg';
 import PickerAestheticBg from './PickerAestheticBg';
 
-// ─── Inline 2-Tone Filled Emblem SVGs ──────────────────────────────────────────
+// Inline 2-Tone Filled Emblem SVGs
 
 const PictureEmblemIcon: React.FC<SvgProps & { size?: number }> = ({
   width,
@@ -195,7 +195,7 @@ const FlameEmblemIcon: React.FC<SvgProps & { size?: number }> = ({
   );
 };
 
-// ─── Magic Black Schedule Button Aesthetic Background SVG ──────────────────────
+// Schedule button background
 
 const ScheduleButtonBackgroundSvg: React.FC<{
   type: 'date' | 'time';
@@ -241,8 +241,6 @@ const ScheduleButtonBackgroundSvg: React.FC<{
 
         <Rect width="100%" height="100%" fill={`url(#bgGrad-${type})`} />
         <Rect width="100%" height="100%" fill={`url(#aura-${type})`} />
-
-        {/* Delicate decorative celestial orbit ring */}
         <Circle
           cx={145}
           cy={18}
@@ -264,8 +262,6 @@ const ScheduleButtonBackgroundSvg: React.FC<{
           strokeDasharray="3 4"
           fill="none"
         />
-
-        {/* Micro star glints */}
         <Circle
           cx={130}
           cy={10}
@@ -285,7 +281,7 @@ const ScheduleButtonBackgroundSvg: React.FC<{
   );
 });
 
-// ─── Categories Setup & Presets ───────────────────────────────────────────────
+// Categories Setup & Presets
 
 export interface CategoryItem {
   id: string;
@@ -801,14 +797,14 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
             )}
             scrollEventThrottle={16}
           >
-            {/* ─── Unified Primary Task Flow Card with 2-Layer Volumetric Shadow & Dynamic Theme ─── */}
+            {/* Unified Primary Task Flow Card with 2-Layer Task Card */}
             <View
               style={[
                 styles.primaryTaskCardWrapper,
                 { shadowColor: activeCategory.shadowColor },
               ]}
             >
-              {/* Header crest badge centered on top border - half outside, half inside (matching DashboardScreen) */}
+              {/* Crest badge */}
               <View style={styles.flowHeaderBadge}>
                 <FlowBadgePatternSvg />
                 <Text style={styles.flowTitle}>Craft Your Task</Text>
@@ -825,7 +821,6 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                   },
                 ]}
               >
-                {/* Dynamic Category Theme & Starlight Lattice Background */}
                 <TaskCardAestheticBg category={selectedCategory} />
 
                 <View style={styles.primaryTaskCardHeader}>
@@ -833,8 +828,6 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                     TITLE OF YOUR ENDEAVOR
                   </Text>
                 </View>
-
-                {/* Natural multiline auto-growing text input */}
                 <TextInput
                   style={[
                     styles.titleInput,
@@ -853,7 +846,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                   selectionColor="rgba(31, 34, 40, 0.25)"
                 />
 
-                {/* Vertically Centered Memo / Context Row (Symmetric 48px Band) */}
+                {/* Memo input */}
                 <Pressable
                   style={styles.contextRow}
                   onPress={() => noteInputRef.current?.focus()}
@@ -876,7 +869,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                   />
                 </Pressable>
 
-                {/* ─── Integrated Subtasks Section ─── */}
+                {/* Integrated Subtasks Section */}
                 <View style={styles.subtasksIntegratedContainer}>
                   <View style={styles.subtasksSectionHeader}>
                     <View style={styles.subtasksCountRow}>
@@ -904,8 +897,6 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                       </TouchableOpacity>
                     )}
                   </View>
-
-                  {/* Quick Add Subtask Input Card (Vertically Centered Placeholder & Input) */}
                   <View style={styles.addSubtaskCard}>
                     <View style={styles.addSubtaskIconCircle}>
                       <Plus size={15} color="#1B1C19" strokeWidth={2.6} />
@@ -934,8 +925,6 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                       <Text style={styles.addSubtaskBtnText}>Add</Text>
                     </TouchableOpacity>
                   </View>
-
-                  {/* Subtask Items List as Actionable Planned Steps */}
                   <View style={styles.subtasksList}>
                     {subtasks.map((item, index) => (
                       <View key={item.id} style={styles.subtaskItemRow}>
@@ -965,7 +954,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
               </View>
             </View>
 
-            {/* ─── Category Selector (Dashboard Checkbox Style & Add Category Flow) ─── */}
+            {/* Category Selector (Category selection) */}
             <View style={styles.sectionBlock}>
               <View style={styles.sectionHeaderRow}>
                 <Text style={styles.sectionHeading}>Category</Text>
@@ -1030,8 +1019,6 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                         >
                           <CatIcon width={16} height={16} />
                         </View>
-
-                        {/* Dashboard-style Floating Checkbox with Card Accent Color */}
                         {isSelected ? (
                           <View
                             style={[
@@ -1088,7 +1075,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
               />
             </View>
 
-            {/* ─── When to do it (Schedule Block with Quick Chips & Wrapped Magic Black Pickers) ─── */}
+            {/* Schedule */}
             <View style={styles.sectionBlock}>
               <View style={styles.sectionHeaderRow}>
                 <Text style={styles.sectionHeading}>When to do it</Text>
@@ -1132,8 +1119,6 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                   );
                 })}
               </View>
-
-              {/* Schedule Buttons Wrapped inside scheduleContainerCard */}
               <View style={styles.scheduleContainerCard}>
                 {/* Date Trigger */}
                 <View style={styles.magicScheduleBtnWrapper}>
@@ -1191,7 +1176,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
               </View>
             </View>
 
-            {/* ─── Priority Weight (Exact Height Match to TasksScreen Segmented Tabs) ── */}
+            {/* ─── Priority Weight () ── */}
             <View style={styles.sectionBlock}>
               <View style={styles.sectionHeaderRow}>
                 <Text style={styles.sectionHeading}>Priority Weight</Text>
@@ -1243,7 +1228,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
               </View>
             </View>
 
-            {/* ─── Spoken Voice Nudge (Sleek 3D Card with Fixed Layout) ─── */}
+            {/* Spoken Voice Nudge (Voice nudge) */}
             <View style={styles.voiceNudgeCard}>
               <View style={styles.voiceNudgeLeft}>
                 <View style={styles.voiceIconBox}>
@@ -1281,7 +1266,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
             </View>
           </Animated.ScrollView>
 
-          {/* ─── Bottom Floating Hero CTA Row (Back Button on Left + Create Task Button) ────── */}
+          {/* Bottom actions */}
           <View
             pointerEvents="box-none"
             style={[
@@ -1321,7 +1306,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
           </View>
         </KeyboardAvoidingView>
 
-        {/* ─── Standard Native DatePicker Modal (iOS Bottom Sheet) ─── */}
+        {/* Date picker modal */}
         {Platform.OS === 'ios' ? (
           <Modal
             visible={showDatePicker}
@@ -1333,10 +1318,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
               <View style={styles.pickerModalOverlay}>
                 <TouchableWithoutFeedback>
                   <View style={styles.pickerModalCard}>
-                    {/* Pull Drag Indicator */}
                     <View style={styles.pickerDragHandle} />
-
-                    {/* Solar Calendar Celestial Background */}
                     <PickerAestheticBg type="date" />
 
                     <View style={styles.pickerModalHeader}>
@@ -1398,7 +1380,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
           )
         )}
 
-        {/* ─── Standard Native TimePicker Modal (iOS Bottom Sheet) ─── */}
+        {/* Time picker modal */}
         {Platform.OS === 'ios' ? (
           <Modal
             visible={showTimePicker}
@@ -1410,10 +1392,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
               <View style={styles.pickerModalOverlay}>
                 <TouchableWithoutFeedback>
                   <View style={styles.pickerModalCard}>
-                    {/* Pull Drag Indicator */}
                     <View style={styles.pickerDragHandle} />
-
-                    {/* Lunar Horology Celestial Background */}
                     <PickerAestheticBg type="time" />
 
                     <View style={styles.pickerModalHeader}>
@@ -1469,7 +1448,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
           )
         )}
 
-        {/* ─── Add New Category Modal Flow (Extraordinary Category Studio Redesign) ───── */}
+        {/* Add category modal */}
         <Modal
           visible={showAddCategoryModal}
           transparent
@@ -1501,7 +1480,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                     </View>
                   </View>
 
-                  {/* ─── Category Live Preview Card ─── */}
+                  {/* Category Live Preview Card */}
                   <View style={styles.showcaseOuterWrap}>
                     <View
                       style={[
@@ -1575,8 +1554,6 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                           {newCatName.trim() || 'Category'}
                         </Text>
                       </View>
-
-                      {/* Signature Bottom Lip Accent Pill */}
                       <View style={styles.categoryAccentWrap}>
                         <View
                           style={[
@@ -1721,7 +1698,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
   );
 };
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
+// Styles
 
 const styles = StyleSheet.create({
   canvasContainer: {
@@ -1729,7 +1706,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FAF8F5',
   },
 
-  // ─── Header Crest Badge (Half Inside, Half Outside Top Border) ───
+  // Header Crest Badge (Half Inside, Half Outside Top Border)
   flowHeaderBadge: {
     position: 'absolute',
     top: -ResponsivePixels.size24,
@@ -1770,7 +1747,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  // ─── Scroll Area ───
+  // Scroll Area
   scrollArea: {
     flex: 1,
   },
@@ -1778,7 +1755,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: ResponsivePixels.size20,
   },
 
-  // ─── Primary Task Name Card (2-Layer Volumetric Shadow Wrapper Pattern) ───
+  // Primary Task Name Card (2-Layer Card Wrapper Pattern)
   primaryTaskCardWrapper: {
     borderRadius: 22,
     backgroundColor: '#FFFFFF',
@@ -1859,7 +1836,7 @@ const styles = StyleSheet.create({
     includeFontPadding: false,
   },
 
-  // ─── Integrated Subtasks Flow Inside Main Task Card ───
+  // Integrated Subtasks Flow Inside Main Task Card
   subtasksIntegratedContainer: {
     paddingTop: 16,
   },
@@ -1998,7 +1975,7 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
 
-  // ─── General Section Block ───
+  // General Section Block
   sectionBlock: {
     marginBottom: 24,
     overflow: 'visible',
@@ -2064,7 +2041,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.1,
   },
 
-  // ─── Category Cards (Exact TasksScreen Asymmetric Top-Right Corner Design) ───
+  // Category Cards (Category cards)
   categoryFlatList: {
     overflow: 'visible',
   },
@@ -2182,7 +2159,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 2.5,
   },
 
-  // ─── Quick Date Chips (3D Tactile Capsules matching DashboardScreen Today's Flow) ───
+  // Quick Date Chips (Date chips)
   quickDateRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -2244,7 +2221,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.bold,
   },
 
-  // ─── Magic Black Schedule Buttons (Aesthetic Celestial Design) ───
+  // Schedule buttons
   scheduleContainerCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 22,
@@ -2328,7 +2305,7 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
 
-  // ─── Priority Weight ───
+  // Priority Weight
   priorityBarContainer: {
     flexDirection: 'row',
     backgroundColor: '#181A20',
@@ -2393,7 +2370,7 @@ const styles = StyleSheet.create({
     color: '#E5E7EB',
   },
 
-  // ─── Voice Nudge Card ───
+  // Voice Nudge Card
   voiceNudgeCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
@@ -2464,7 +2441,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 
-  // ─── Bottom Floating Hero CTA (Transparent Background) ───
+  // Bottom Floating Hero CTA (Transparent Background)
   bottomStickyCta: {
     position: 'absolute',
     bottom: 0,
@@ -2541,7 +2518,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  // ─── Native Picker Bottom Sheet (iOS) ───
+  // Native Picker Bottom Sheet (iOS)
   pickerModalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(14, 16, 21, 0.65)',
@@ -2655,7 +2632,7 @@ const styles = StyleSheet.create({
     paddingTop: 6,
   },
 
-  // ─── Modal Architecture & Common Bottom Sheet ───
+  // Modal Architecture & Common Bottom Sheet
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(14, 16, 21, 0.65)',
@@ -2712,7 +2689,7 @@ const styles = StyleSheet.create({
     color: '#7E838F',
   },
 
-  // ─── Category Studio Bento Showcase ───
+  // Category preview
   showcaseOuterWrap: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -2720,7 +2697,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
 
-  // ─── Add Category Flow Input Styles ───
+  // Add Category Flow Input Styles
   newCatInputWrapper: {
     marginBottom: 14,
   },
@@ -2753,7 +2730,7 @@ const styles = StyleSheet.create({
     color: Colors.MidnightCharcoal,
   },
 
-  // ─── Emblem Selector Styles ───
+  // Emblem Selector Styles
   iconSelectSection: {
     marginBottom: 14,
   },
@@ -2790,7 +2767,7 @@ const styles = StyleSheet.create({
     }),
   },
 
-  // ─── Color Preset Styles ───
+  // Color Preset Styles
   paletteSection: {
     marginBottom: 18,
   },
@@ -2828,7 +2805,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
   },
 
-  // ─── Bottom CTA Row ───
+  // Bottom CTA Row
   createCatCtaRow: {
     flexDirection: 'row',
     alignItems: 'center',

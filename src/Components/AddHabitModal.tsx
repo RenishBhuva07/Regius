@@ -61,7 +61,7 @@ import FlowBadgePatternSvg from '../Screens/Dashboard/Components/FlowBadgePatter
 import TaskCardAestheticBg from './TaskCardAestheticBg';
 import PickerAestheticBg from './PickerAestheticBg';
 
-// ─── Magic Black Schedule Button Aesthetic Background SVG ──────────────────────
+// Schedule button background
 
 const ScheduleButtonBackgroundSvg: React.FC<{
   type: 'date' | 'time';
@@ -132,7 +132,7 @@ const ScheduleButtonBackgroundSvg: React.FC<{
   );
 });
 
-// ─── Habit Categories Setup ───────────────────────────────────────────────────
+// Habit Categories Setup
 
 export interface HabitCategoryDefinition {
   id: 'morning' | 'mindful' | 'evening';
@@ -454,14 +454,14 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
             )}
             scrollEventThrottle={16}
           >
-            {/* ─── Unified Primary Habit Card with 2-Layer Volumetric Shadow ─── */}
+            {/* Unified Primary Habit Card with 2-Layer Card */}
             <View
               style={[
                 styles.primaryCardWrapper,
                 { shadowColor: activeCategory.shadowColor },
               ]}
             >
-              {/* Header crest badge centered on top border */}
+              {/* Crest badge */}
               <View style={styles.flowHeaderBadge}>
                 <FlowBadgePatternSvg />
                 <Text style={styles.flowTitle}>
@@ -480,7 +480,6 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                   },
                 ]}
               >
-                {/* Dynamic Category Theme & Starlight Lattice Background */}
                 <TaskCardAestheticBg
                   category={
                     category === 'morning'
@@ -504,8 +503,6 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                     />
                   )}
                 </View>
-
-                {/* Natural multiline auto-growing text input */}
                 <TextInput
                   style={[
                     styles.titleInput,
@@ -524,7 +521,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                   selectionColor="rgba(31, 34, 40, 0.25)"
                 />
 
-                {/* Vertically Centered Intention / Context Row */}
+                {/* Intention input */}
                 <Pressable
                   style={styles.contextRow}
                   onPress={() => noteInputRef.current?.focus()}
@@ -549,7 +546,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
               </View>
             </View>
 
-            {/* ─── Category Flow Selector (Morning, Mindful, Evening) ─── */}
+            {/* Category Flow Selector (Morning, Mindful, Evening) */}
             <View style={styles.sectionBlock}>
               <View style={styles.sectionHeaderRow}>
                 <Text style={styles.sectionHeading}>
@@ -607,8 +604,6 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                             strokeWidth={2.4}
                           />
                         </View>
-
-                        {/* Floating Checkbox with Card Accent Color */}
                         {isSelected ? (
                           <View
                             style={[
@@ -665,7 +660,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
               />
             </View>
 
-            {/* ─── Frequency & Cadence Selector ─── */}
+            {/* Frequency & Cadence Selector */}
             <View style={styles.sectionBlock}>
               <View style={styles.sectionHeaderRow}>
                 <Text style={styles.sectionHeading}>Ritual Frequency</Text>
@@ -704,7 +699,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
               </View>
             </View>
 
-            {/* ─── Ideal Time of Day ─── */}
+            {/* Ideal Time of Day */}
             <View style={styles.sectionBlock}>
               <View style={styles.sectionHeaderRow}>
                 <Text style={styles.sectionHeading}>Ideal Time of Day</Text>
@@ -769,7 +764,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
               </View>
             </View>
 
-            {/* ─── Spoken Voice Nudge (Sleek 3D Card with Assistant Badge) ─── */}
+            {/* Spoken Voice Nudge (Voice nudge) */}
             <View style={styles.voiceNudgeCard}>
               <View style={styles.voiceNudgeLeft}>
                 <View style={styles.voiceIconBox}>
@@ -806,7 +801,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
               />
             </View>
 
-            {/* ─── Delete Habit Action (Only when editing) ─── */}
+            {/* Delete Habit Action (Only when editing) */}
             {isEditing && onDeleteHabit && (
               <View style={styles.deleteSection}>
                 <TouchableOpacity
@@ -825,7 +820,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
             )}
           </Animated.ScrollView>
 
-          {/* ─── Bottom Floating Hero CTA Row ────── */}
+          {/* Bottom actions */}
           <View
             pointerEvents="box-none"
             style={[
@@ -867,7 +862,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
           </View>
         </KeyboardAvoidingView>
 
-        {/* ─── Standard Native TimePicker Modal (iOS Bottom Sheet) ─── */}
+        {/* Time picker modal */}
         {Platform.OS === 'ios' ? (
           <Modal
             visible={showTimePicker}
@@ -940,7 +935,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
   );
 };
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
+// Styles
 
 const styles = StyleSheet.create({
   canvasContainer: {
@@ -948,7 +943,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FAF8F5',
   },
 
-  // ─── Header Crest Badge (Centered on Top Border) ───
+  // Header Crest Badge (Centered on Top Border)
   flowHeaderBadge: {
     position: 'absolute',
     top: -ResponsivePixels.size24,
@@ -989,7 +984,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  // ─── Scroll Area ───
+  // Scroll Area
   scrollArea: {
     flex: 1,
   },
@@ -997,7 +992,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: ResponsivePixels.size20,
   },
 
-  // ─── Primary Card (2-Layer Volumetric Shadow Wrapper Pattern) ───
+  // Primary Card (2-Layer Card Wrapper Pattern)
   primaryCardWrapper: {
     borderRadius: 22,
     backgroundColor: '#FFFFFF',
@@ -1078,7 +1073,7 @@ const styles = StyleSheet.create({
     includeFontPadding: false,
   },
 
-  // ─── General Section Block ───
+  // General Section Block
   sectionBlock: {
     marginBottom: 24,
     overflow: 'visible',
@@ -1101,7 +1096,7 @@ const styles = StyleSheet.create({
     color: '#7E838F',
   },
 
-  // ─── Category Cards (TasksScreen Asymmetric Top-Right Design) ───
+  // Category Cards (Category cards)
   categoryFlatList: {
     overflow: 'visible',
   },
@@ -1219,7 +1214,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 2.5,
   },
 
-  // ─── Frequency Chips ───
+  // Frequency Chips
   frequencyRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -1277,7 +1272,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.bold,
   },
 
-  // ─── Quick Time Presets ───
+  // Quick Time Presets
   quickTimeRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -1309,7 +1304,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.bold,
   },
 
-  // ─── Magic Black Schedule Pickers ───
+  // Schedule pickers
   scheduleContainerCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 22,
@@ -1382,7 +1377,7 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
 
-  // ─── Voice Nudge Card ───
+  // Voice Nudge Card
   voiceNudgeCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
@@ -1453,7 +1448,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 
-  // ─── Delete Button Section ───
+  // Delete Button Section
   deleteSection: {
     marginBottom: 24,
   },
@@ -1485,7 +1480,7 @@ const styles = StyleSheet.create({
     color: '#EF4444',
   },
 
-  // ─── Bottom Floating Hero CTA ───
+  // Bottom Floating Hero CTA
   bottomStickyCta: {
     position: 'absolute',
     bottom: 0,
@@ -1558,7 +1553,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  // ─── Native Picker Bottom Sheet (iOS) ───
+  // Native Picker Bottom Sheet (iOS)
   pickerModalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(14, 16, 21, 0.65)',

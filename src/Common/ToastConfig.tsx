@@ -190,10 +190,10 @@ export const RegiusToast: React.FC<RegiusToastProps> = ({
         },
       ]}
     >
-      {/* ── Luxury Atmospheric Aesthetic SVG Background (Acoustic ripples, harmonic waves & 4-pt gold stars) ── */}
+      {/* Toast background */}
       <ToastAestheticPatternSvg variant={variant} isDarkMode={isDarkMode} />
 
-      {/* ── 3D Tactile Icon Seal ── */}
+      {/* Icon badge */}
       <View
         style={[
           styles.iconBadge,
@@ -207,7 +207,7 @@ export const RegiusToast: React.FC<RegiusToastProps> = ({
         <Icon size={19} color={config.iconColor} strokeWidth={2.4} />
       </View>
 
-      {/* ── Text Content ── */}
+      {/* Text content */}
       <View style={styles.textContainer}>
         {singleText ? (
           <Text

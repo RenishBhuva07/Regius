@@ -342,7 +342,7 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
           onAddPress={openReminderModal}
         />
 
-        {/* Reminders Main Section with centered crest badge & floating plus button */}
+        {/* Reminders section */}
         <View
           style={[
             styles.reminderSection,
@@ -353,7 +353,7 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
             <ReminderSectionBackgroundSvg />
           </View>
 
-          {/* Header crest badge centered on top border - half outside, half inside */}
+          {/* Section header crest badge */}
           <View style={styles.flowHeaderBadge}>
             <FlowBadgePatternSvg />
             <Text style={styles.flowTitle}>{sectionTitle}</Text>
@@ -444,7 +444,7 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
             </View>
           )}
 
-          {/* Swiggy-Inspired Brand Watermark Footer */}
+          {/* Footer brand watermark */}
           <View style={styles.footerWatermarkWrapper} pointerEvents="none">
             <View style={styles.footerWatermarkRow}>
               {/* Left Column: Bold Typography & Sign-off */}
@@ -460,7 +460,7 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
                 </View>
               </View>
 
-              {/* Right Column: Extraordinary Reminder Doodle Illustration */}
+              {/* Footer doodle */}
               <View style={styles.footerDoodleWrapper}>
                 <ReminderWatermarkDoodleSvg />
               </View>
@@ -754,7 +754,7 @@ const styles = StyleSheet.create({
     fontSize: 13.5,
   },
 
-  // Swiggy-Inspired Brand Watermark Footer
+  // Footer watermark styles
   footerWatermarkWrapper: {
     paddingLeft: ResponsivePixels.size10,
     paddingRight: ResponsivePixels.size16,

@@ -19,16 +19,7 @@ export interface FlowSectionBackgroundSvgProps {
   height?: number;
 }
 
-/**
- * Dynamic aesthetic luxury background for Today's Flow section:
- * - Adapts dynamically to any container height without stretching or distorting circles/stars
- * - Measured via layout events in 1:1 pixel coordinate space
- * - Pearlescent warm cream gradient base
- * - Circular acoustic ripples under the Today's Flow crest badge
- * - Fixed-geometry Regius signature 4-pointed diamond starbursts & stardust
- * - Subtle harmonic wave ribbons along the flanks
- * - Beveled inner rim highlight adapting to container bounds
- */
+// Background pattern for Today's Flow section.
 export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
   React.memo(({ width: propWidth, height: propHeight }) => {
     const [dimensions, setDimensions] = useState<{
@@ -72,7 +63,6 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
       >
         <Svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} fill="none">
           <Defs>
-            {/* Base warm cream gradation matching screen surface */}
             <LinearGradient
               id="flowBgSheen"
               x1="0"
@@ -86,8 +76,6 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               <Stop offset="75%" stopColor="#F5EFE3" stopOpacity={0.96} />
               <Stop offset="100%" stopColor="#EDE5D6" stopOpacity={0.98} />
             </LinearGradient>
-
-            {/* Circular golden dawn halo under crest badge (non-stretched) */}
             <RadialGradient
               id="crestDawnAura"
               cx={centerX}
@@ -99,8 +87,6 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               <Stop offset="45%" stopColor="#E2A612" stopOpacity={0.06} />
               <Stop offset="100%" stopColor="#FAF6ED" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Top-right velvet lavender aura (non-stretched circular radius) */}
             <RadialGradient
               id="flowLavenderAura"
               cx={W - 10}
@@ -112,8 +98,6 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               <Stop offset="55%" stopColor="#8383D6" stopOpacity={0.06} />
               <Stop offset="100%" stopColor="#FAF6ED" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Top-left golden accent aura */}
             <RadialGradient
               id="flowAmberTopAura"
               cx={10}
@@ -125,8 +109,6 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               <Stop offset="50%" stopColor="#E2A612" stopOpacity={0.04} />
               <Stop offset="100%" stopColor="#FAF6ED" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Bottom-left mint clarity aura */}
             <RadialGradient
               id="flowMintAura"
               cx={20}
@@ -138,8 +120,6 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               <Stop offset="50%" stopColor="#1B9A72" stopOpacity={0.03} />
               <Stop offset="100%" stopColor="#EDE5D6" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Bottom-right peach aura */}
             <RadialGradient
               id="flowPeachAura"
               cx={W - 20}
@@ -151,8 +131,6 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               <Stop offset="55%" stopColor="#D96E52" stopOpacity={0.02} />
               <Stop offset="100%" stopColor="#EDE5D6" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Gold shine for micro diamond starbursts */}
             <LinearGradient
               id="flowGoldStar"
               x1="0%"
@@ -164,8 +142,6 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               <Stop offset="50%" stopColor="#F5C518" stopOpacity={0.88} />
               <Stop offset="100%" stopColor="#B48216" stopOpacity={0.7} />
             </LinearGradient>
-
-            {/* Delicate border highlight rim */}
             <LinearGradient
               id="flowRimHighlight"
               x1="0"
@@ -179,16 +155,12 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               <Stop offset="100%" stopColor="#DDD4C4" stopOpacity={0.4} />
             </LinearGradient>
           </Defs>
-
-          {/* ── Base Ambient Glow Volumes ── */}
           <Rect width={W} height={H} fill="url(#flowBgSheen)" />
           <Rect width={W} height={H} fill="url(#crestDawnAura)" />
           <Rect width={W} height={H} fill="url(#flowLavenderAura)" />
           <Rect width={W} height={H} fill="url(#flowAmberTopAura)" />
           <Rect width={W} height={H} fill="url(#flowMintAura)" />
           <Rect width={W} height={H} fill="url(#flowPeachAura)" />
-
-          {/* ── Acoustic Concentric Ripples under Crest (100% True Circles) ── */}
           <Circle
             cx={centerX}
             cy={0}
@@ -223,8 +195,6 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
             strokeDasharray="5 6"
             fill="none"
           />
-
-          {/* ── Top-Left & Top-Right Orbital Arcs ── */}
           <Circle
             cx={W - 24}
             cy={32}
@@ -259,8 +229,6 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
             strokeDasharray="3 4"
             fill="none"
           />
-
-          {/* ── Bottom Micro-Orbitals ── */}
           {H > 200 && (
             <>
               <Circle
@@ -283,9 +251,6 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               />
             </>
           )}
-
-          {/* ── Flank Wave Ribbons & Vertical Micro-Guides ── */}
-          {/* Top flank waves */}
           <Path
             d="M -4 70 Q 22 130, 6 200 T 12 280"
             stroke="rgba(131, 131, 214, 0.07)"
@@ -300,8 +265,6 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
             strokeLinecap="round"
             fill="none"
           />
-
-          {/* Bottom flank waves */}
           {H > 400 && (
             <>
               <Path
@@ -324,8 +287,6 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               />
             </>
           )}
-
-          {/* Vertical dashed timeline guide tracks along borders */}
           {H > 240 && (
             <>
               <Line
@@ -348,16 +309,10 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               />
             </>
           )}
-
-          {/* ── Regius Signature Diamond Starbursts (Symmetrical 4-point diamonds) ── */}
-          {/* Top stars */}
           <Path d={star(32, 42, 3.8)} fill="url(#flowGoldStar)" />
           <Path d={star(W - 32, 42, 3.8)} fill="url(#flowGoldStar)" />
-          {/* Crest flanking micro-stars */}
           <Path d={star(centerX - 108, 14, 2.6)} fill="url(#flowGoldStar)" />
           <Path d={star(centerX + 108, 14, 2.6)} fill="url(#flowGoldStar)" />
-
-          {/* Mid-flank stars */}
           {H > 350 && (
             <>
               <Path
@@ -370,16 +325,12 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               />
             </>
           )}
-
-          {/* Bottom stars */}
           {H > 220 && (
             <>
               <Path d={star(34, H - 36, 3.6)} fill="url(#flowGoldStar)" />
               <Path d={star(W - 34, H - 36, 3.6)} fill="url(#flowGoldStar)" />
             </>
           )}
-
-          {/* ── Stardust micro-dots ── */}
           <Circle cx={44} cy={30} r={1.2} fill="rgba(180, 130, 22, 0.28)" />
           <Circle cx={22} cy={68} r={1} fill="rgba(180, 130, 22, 0.2)" />
           <Circle cx={W - 44} cy={30} r={1.2} fill="rgba(131, 131, 214, 0.3)" />
@@ -416,8 +367,6 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               />
             </>
           )}
-
-          {/* ── Inner Beveled Highlight Rim (Top-rounded 32px, open at bottom) ── */}
           <Path
             d={`M 1.5 ${H} L 1.5 32 Q 1.5 1.5 32 1.5 L ${W - 32} 1.5 Q ${
               W - 1.5

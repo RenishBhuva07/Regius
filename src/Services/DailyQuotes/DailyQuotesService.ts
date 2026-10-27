@@ -1,8 +1,6 @@
 import { DAILY_QUOTES, ScreenQuoteKey } from './dailyQuotesData';
 
-/**
- * 32-bit FNV-1a string hash algorithm.
- */
+// 32-bit FNV-1a hash algorithm
 function hashString(str: string): number {
   let hash = 0x811c9dc5;
   for (let i = 0; i < str.length; i++) {
@@ -12,9 +10,7 @@ function hashString(str: string): number {
   return hash >>> 0;
 }
 
-/**
- * Mulberry32 32-bit pseudo-random number generator.
- */
+// Mulberry32 32-bit pseudo-random generator
 function createMulberry32(seed: number): () => number {
   let current = seed;
   return function (): number {
@@ -25,9 +21,7 @@ function createMulberry32(seed: number): () => number {
   };
 }
 
-/**
- * Shuffles an array of strings deterministically using a seed.
- */
+// Deterministic array shuffle using seed
 function shuffleQuotes(quotes: readonly string[], seed: number): string[] {
   const result = [...quotes];
   const rng = createMulberry32(seed);
@@ -40,9 +34,7 @@ function shuffleQuotes(quotes: readonly string[], seed: number): string[] {
   return result;
 }
 
-/**
- * Returns the local date string in YYYY-MM-DD format.
- */
+// Local date key (YYYY-MM-DD)
 export function getLocalDateKey(date: Date = new Date()): string {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, '0');
@@ -50,9 +42,7 @@ export function getLocalDateKey(date: Date = new Date()): string {
   return `${y}-${m}-${d}`;
 }
 
-/**
- * Computes milliseconds remaining until the upcoming 12:00:00 AM midnight.
- */
+// Milliseconds remaining until midnight
 export function getMsUntilNextMidnight(now: Date = new Date()): number {
   const nextMidnight = new Date(
     now.getFullYear(),
@@ -66,9 +56,7 @@ export function getMsUntilNextMidnight(now: Date = new Date()): number {
   return Math.max(1000, nextMidnight.getTime() - now.getTime());
 }
 
-/**
- * Computes the weekly randomized quote schedule for a screen and week Sunday.
- */
+// Computes weekly randomized quote schedule starting on Sunday
 function getWeekSchedule(screen: ScreenQuoteKey, sundayDate: Date): string[] {
   const sundayKey = getLocalDateKey(sundayDate);
   const seed = hashString(`${screen}:${sundayKey}`);
@@ -100,11 +88,7 @@ function getWeekSchedule(screen: ScreenQuoteKey, sundayDate: Date): string[] {
   return shuffled;
 }
 
-/**
- * Retrieves the daily quote for a given screen and date.
- * - Changes deterministically every calendar day at 12:00 AM midnight.
- * - Provides non-repeating randomized distribution across the week.
- */
+// Retrieves daily quote for a given screen and date
 export function getDailyQuote(
   screen: ScreenQuoteKey,
   targetDate: Date = new Date(),

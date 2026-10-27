@@ -298,7 +298,7 @@ export const PrivacySecurityScreen: React.FC = () => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
-        {/* ─── Flagship 2-Layer Hero Bento: Cryptographic Vault ─── */}
+        {/* Cryptographic Vault */}
         <View style={styles.heroCardShadowWrapper}>
           <View style={styles.heroCard}>
             <View style={styles.heroHeaderRow}>
@@ -357,7 +357,7 @@ export const PrivacySecurityScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* ─── Data Handling & Privacy Preferences ─── */}
+        {/* Data Handling & Privacy Preferences */}
         <Text style={[styles.sectionHeading, { color: textSecondary }]}>
           DATA HANDLING & PRIVACY PREFERENCES
         </Text>
@@ -526,7 +526,7 @@ export const PrivacySecurityScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* ─── Data Governance & Sovereignty ─── */}
+        {/* Data Governance & Sovereignty */}
         <Text style={[styles.sectionHeading, { color: textSecondary }]}>
           DATA GOVERNANCE & SOVEREIGNTY
         </Text>
@@ -630,7 +630,7 @@ export const PrivacySecurityScreen: React.FC = () => {
           </TouchableOpacity>
         </View>
 
-        {/* ─── Legal & Compliance Footer ─── */}
+        {/* Legal & Compliance Footer */}
         <View
           style={[
             styles.legalCard,

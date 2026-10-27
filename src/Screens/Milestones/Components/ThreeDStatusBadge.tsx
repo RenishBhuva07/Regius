@@ -11,13 +11,10 @@ interface ThreeDStatusBadgeProps {
   requiredXp?: number;
 }
 
-/**
- * 3D Embossed Checkmark ("Right Sign") SVG with dual-tone extrusion and bevel highlight
- */
+// Embossed checkmark icon for completed status.
 const ThreeDRightSignSvg: React.FC<{ size?: number }> = ({ size = 16 }) => {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
-      {/* 3D Depth Shadow under checkmark */}
       <Path
         d="M20 7.5L9.5 18L4 12.5"
         stroke="#064E3B"
@@ -25,7 +22,6 @@ const ThreeDRightSignSvg: React.FC<{ size?: number }> = ({ size = 16 }) => {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      {/* Mid extruded bevel */}
       <Path
         d="M20 6.8L9.5 17.3L4 11.8"
         stroke="#059669"
@@ -33,7 +29,6 @@ const ThreeDRightSignSvg: React.FC<{ size?: number }> = ({ size = 16 }) => {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      {/* Top Gloss Highlight */}
       <Path
         d="M20 6L9.5 16.5L4 11"
         stroke="#FFFFFF"

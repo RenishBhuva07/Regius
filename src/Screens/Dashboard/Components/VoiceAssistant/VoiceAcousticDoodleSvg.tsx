@@ -22,17 +22,7 @@ export interface VoiceAcousticDoodleSvgProps {
   state?: VoiceAssistantState;
 }
 
-/**
- * Extraordinary Voice Acoustic Doodle & Celestial Neural Atmosphere:
- * - Concentric dashed acoustic resonance orbits encircling the holographic orb
- * - Sonic reverberation wave arcs emanating dynamically (chime resonance)
- * - Regius Signature 4-Point Diamond Celestial Stars in 24K Gold, Lavender & Emerald Mint
- * - Hand-drawn acoustic music note doodle (♫) with soundwave rings
- * - Imperial Regius micro-crown doodle of triumph & luxury
- * - Electric ambition lightning spark & speed burst flourishes
- * - Swirling stardust dashed loops & ambient cosmic micro-particles
- * - Warm ambient radial glow aura adapting seamlessly to Light/Dark mode
- */
+// Vector illustration for the voice assistant background.
 export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
   width = SCREEN_WIDTH,
   height = SCREEN_HEIGHT * 0.85,
@@ -61,7 +51,6 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
         fill="none"
       >
         <Defs>
-          {/* 1. Ambient Warm Radial Luminous Aura behind Orb */}
           <RadialGradient id="voiceOrbAura" cx="50%" cy="50%" r="50%">
             <Stop
               offset="0%"
@@ -79,46 +68,33 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
               stopOpacity={0}
             />
           </RadialGradient>
-
-          {/* 2. Imperial 24K Gold Starlight Gradient */}
           <LinearGradient id="vadGold" x1="0%" y1="0%" x2="100%" y2="100%">
             <Stop offset="0%" stopColor="#FFFCE3" />
             <Stop offset="45%" stopColor="#F5C518" />
             <Stop offset="100%" stopColor="#D97706" />
           </LinearGradient>
-
-          {/* 3. Royal Lavender Gem Gradient */}
           <LinearGradient id="vadLavender" x1="0%" y1="0%" x2="100%" y2="100%">
             <Stop offset="0%" stopColor="#EEF0FD" />
             <Stop offset="50%" stopColor="#8383D6" />
             <Stop offset="100%" stopColor="#5B58E6" />
           </LinearGradient>
-
-          {/* 4. Fresh Mint Gradient */}
           <LinearGradient id="vadMint" x1="0%" y1="0%" x2="100%" y2="100%">
             <Stop offset="0%" stopColor="#D1FAE5" />
             <Stop offset="50%" stopColor="#10B981" />
             <Stop offset="100%" stopColor="#047857" />
           </LinearGradient>
-
-          {/* 5. Electric Coral Gradient */}
           <LinearGradient id="vadCoral" x1="0%" y1="0%" x2="100%" y2="100%">
             <Stop offset="0%" stopColor="#FFE4E6" />
             <Stop offset="50%" stopColor="#FF8772" />
             <Stop offset="100%" stopColor="#E11D48" />
           </LinearGradient>
         </Defs>
-
-        {/* ─── Layer 1: Ambient Luminous Aura ─── */}
         <Circle
           cx={orbCenterX}
           cy={orbCenterY}
           r={Math.min(width * 0.46, 175)}
           fill="url(#voiceOrbAura)"
         />
-
-        {/* ─── Layer 2: Hand-Drawn Cosmic Speed & Acoustic Orbits ─── */}
-        {/* Inner concentric dashed acoustic orbit */}
         <Circle
           cx={orbCenterX}
           cy={orbCenterY}
@@ -128,8 +104,6 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
           strokeDasharray="4 6"
           opacity={0.65}
         />
-
-        {/* Outer tilted elliptical orbit */}
         <Path
           d={`M ${orbCenterX - 165} ${orbCenterY - 20} C ${orbCenterX - 140} ${
             orbCenterY - 110
@@ -143,8 +117,6 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
           strokeDasharray="3 5"
           opacity={0.5}
         />
-
-        {/* Wide sweeping planetary acoustic arc (bottom-left to upper-right) */}
         <Path
           d={`M 18 ${orbCenterY + 95} C 40 ${orbCenterY - 80}, ${width - 60} ${
             orbCenterY - 130
@@ -155,9 +127,6 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
           opacity={0.55}
           strokeLinecap="round"
         />
-
-        {/* ─── Layer 3: Acoustic Reverberation Sound Waves ─── */}
-        {/* Left acoustic soundwaves ))) */}
         <G opacity={0.75}>
           <Path
             d={`M ${orbCenterX - 150} ${orbCenterY - 32} C ${
@@ -191,8 +160,6 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
             strokeLinecap="round"
           />
         </G>
-
-        {/* Right acoustic soundwaves ((( */}
         <G opacity={0.75}>
           <Path
             d={`M ${orbCenterX + 150} ${orbCenterY - 32} C ${
@@ -226,9 +193,6 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
             strokeLinecap="round"
           />
         </G>
-
-        {/* ─── Layer 4: Regius Signature 4-Point Celestial Diamond Stars ─── */}
-        {/* Top-Left Grand 24K Gold Celestial Diamond Star */}
         <G
           transform={`translate(28, ${Math.max(orbCenterY - 180, 24)})`}
           opacity={0.92}
@@ -239,8 +203,6 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
           />
           <Circle cx={10} cy={10} r={1.8} fill="#FFFFFF" />
         </G>
-
-        {/* Top-Right Royal Lavender Celestial Diamond Star */}
         <G
           transform={`translate(${width - 48}, ${Math.max(
             orbCenterY - 175,
@@ -254,8 +216,6 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
           />
           <Circle cx={9} cy={9} r={1.6} fill="#FFFFFF" />
         </G>
-
-        {/* Mid-Left Mint Diamond Sparkle */}
         <G transform={`translate(22, ${orbCenterY + 70})`} opacity={0.85}>
           <Path
             d="M 6.5 0 Q 6.5 6.5, 13 6.5 Q 6.5 6.5, 6.5 13 Q 6.5 6.5, 0 6.5 Q 6.5 6.5, 6.5 0 Z"
@@ -263,8 +223,6 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
           />
           <Circle cx={6.5} cy={6.5} r={1.2} fill="#FFFFFF" />
         </G>
-
-        {/* Mid-Right Coral Diamond Sparkle */}
         <G
           transform={`translate(${width - 42}, ${orbCenterY + 65})`}
           opacity={0.88}
@@ -275,8 +233,6 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
           />
           <Circle cx={6} cy={6} r={1.2} fill="#FFFFFF" />
         </G>
-
-        {/* Upper-Center Delicate Mini Gold Star */}
         <G
           transform={`translate(${orbCenterX + 70}, ${Math.max(
             orbCenterY - 190,
@@ -289,9 +245,6 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
             fill="url(#vadGold)"
           />
         </G>
-
-        {/* ─── Layer 5: Extraordinary Hand-Drawn Feature Doodles ─── */}
-        {/* DOODLE A: Regius Tilted Micro-Crown of Luxury (Top-Left) */}
         <G
           transform={`translate(48, ${Math.max(
             orbCenterY - 145,
@@ -299,14 +252,12 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
           )}) rotate(-8)`}
           opacity={0.92}
         >
-          {/* Crown base velvet cushion dome */}
           <Path
             d="M 4 20 C 8 10, 24 10, 28 20 Z"
             fill={isDarkMode ? '#311068' : '#EEF0FD'}
             stroke={lavenderColor}
             strokeWidth={0.8}
           />
-          {/* Crown 3-point gold filigree peaks */}
           <Path
             d="M 2 20 L 5 8 L 11 14 L 16 5 L 21 14 L 27 8 L 30 20 Z"
             fill="url(#vadGold)"
@@ -314,20 +265,16 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
             strokeWidth={0.8}
             strokeLinejoin="round"
           />
-          {/* Pearl finials on the 3 peaks */}
           <Circle cx={5} cy={8} r={1.5} fill="#FFFCE3" />
           <Circle cx={16} cy={5} r={1.8} fill="#FFFCE3" />
           <Circle cx={27} cy={8} r={1.5} fill="#FFFCE3" />
-          {/* Crown headband rim */}
           <Path
             d="M 1 20 C 10 23, 22 23, 31 20 L 31 23 C 22 26, 10 26, 1 23 Z"
             fill="url(#vadGold)"
             stroke="#78350F"
             strokeWidth={0.7}
           />
-          {/* Tiny center jewel */}
           <Circle cx={16} cy={22} r={1.2} fill="url(#vadCoral)" />
-          {/* Crown sparkle beam */}
           <Line
             x1={16}
             y1={1}
@@ -338,8 +285,6 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
             strokeLinecap="round"
           />
         </G>
-
-        {/* DOODLE B: Acoustic Melody Note & Chime Rings (Top-Right) */}
         <G
           transform={`translate(${width - 76}, ${Math.max(
             orbCenterY - 148,
@@ -347,7 +292,6 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
           )}) rotate(12)`}
           opacity={0.92}
         >
-          {/* Hand-drawn Musical Eighth Note */}
           <Circle cx={8} cy={18} r={4} fill="url(#vadLavender)" />
           <Path
             d="M 12 18 L 12 4 C 18 2, 22 7, 24 10"
@@ -356,7 +300,6 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
             strokeLinecap="round"
             fill="none"
           />
-          {/* Melody sound chime rings */}
           <Path
             d="M 20 2 C 24 4, 26 8, 26 12"
             stroke={goldColor}
@@ -373,8 +316,6 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
             fill="none"
           />
         </G>
-
-        {/* DOODLE C: Electric Ambition Lightning Bolt (Mid-Right) */}
         <G
           transform={`translate(${width - 48}, ${orbCenterY - 20}) rotate(14)`}
           opacity={0.9}
@@ -387,8 +328,6 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
             strokeLinejoin="round"
           />
         </G>
-
-        {/* DOODLE D: Playful Flourish Loop-de-loop (Mid-Left) */}
         <G transform={`translate(28, ${orbCenterY - 24})`} opacity={0.75}>
           <Path
             d="M 2 18 C 14 2, 26 2, 22 18 C 18 30, 6 22, 14 12 C 20 4, 32 10, 36 24"
@@ -398,8 +337,6 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
             fill="none"
           />
         </G>
-
-        {/* ─── Layer 6: Ambient Celestial Stardust Micro-Dots ─── */}
         <Circle
           cx={orbCenterX - 85}
           cy={orbCenterY - 155}

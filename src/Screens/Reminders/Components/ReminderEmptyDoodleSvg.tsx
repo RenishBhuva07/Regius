@@ -45,8 +45,6 @@ export const ReminderEmptyDoodleSvg: React.FC<ReminderEmptyDoodleSvgProps> = ({
             <Stop offset="100%" stopColor="#5E5EB2" />
           </LinearGradient>
         </Defs>
-
-        {/* Ambient Ring Wave */}
         <Circle
           cx={65}
           cy={70}
@@ -55,10 +53,7 @@ export const ReminderEmptyDoodleSvg: React.FC<ReminderEmptyDoodleSvgProps> = ({
           strokeWidth={1.5}
           strokeDasharray="4 4"
         />
-
-        {/* Golden Alarm Bell Body */}
         <G transform="translate(40, 42)">
-          {/* Bell Top Handle */}
           <Path
             d="M 20 6 C 20 2, 30 2, 30 6"
             stroke="url(#remDoodleGold)"
@@ -66,25 +61,17 @@ export const ReminderEmptyDoodleSvg: React.FC<ReminderEmptyDoodleSvgProps> = ({
             strokeLinecap="round"
             fill="none"
           />
-
-          {/* Bell Main Flare */}
           <Path
             d="M 25 8 C 15 8, 10 24, 6 36 C 4 40, 2 44, 2 46 L 48 46 C 48 44, 46 40, 44 36 C 40 24, 35 8, 25 8 Z"
             fill="url(#remDoodleGold)"
             opacity={0.88}
           />
-
-          {/* Bell Base Lip */}
           <Path
             d="M 0 46 C 0 44, 50 44, 50 46 C 50 49, 0 49, 0 46 Z"
             fill="#D99B0F"
           />
-
-          {/* Bell Clapper */}
           <Circle cx={25} cy={52} r={4.5} fill="#8383D6" />
         </G>
-
-        {/* Acoustic Chime Vibration Arcs */}
         <Path
           d="M 24 55 C 20 62, 20 78, 24 85"
           stroke="url(#remDoodlePurple)"
@@ -115,8 +102,6 @@ export const ReminderEmptyDoodleSvg: React.FC<ReminderEmptyDoodleSvgProps> = ({
           strokeDasharray="3 3"
           fill="none"
         />
-
-        {/* Floating Sparkle Stars */}
         <Path
           d="M 92 24 L 94 30 L 100 32 L 94 34 L 92 40 L 90 34 L 84 32 L 90 30 Z"
           fill="#F5C518"

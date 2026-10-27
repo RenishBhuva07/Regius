@@ -46,11 +46,7 @@ interface SheetBackgroundAestheticSvgProps {
   width: number;
 }
 
-/**
- * Handcrafted precision luxury background for PlusActionSheet.
- * Clean, warm ivory surface with delicate champagne celestial guilloché arcs,
- * registration crosshairs, and fine micro-sparkles.
- */
+// Vector background pattern for PlusActionSheet.
 const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
   React.memo(({ width }) => {
     const starPath = (cx: number, cy: number, r: number) =>
@@ -70,14 +66,11 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
           fill="none"
         >
           <Defs>
-            {/* Pristine warm luxury parchment sheen */}
             <LinearGradient id="sheetBgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
               <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={1} />
               <Stop offset="50%" stopColor="#FFFDF9" stopOpacity={0.99} />
               <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={1} />
             </LinearGradient>
-
-            {/* Champagne gold sheen for celestial stars */}
             <LinearGradient
               id="champagneGold"
               x1="0%"
@@ -89,11 +82,7 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
               <Stop offset="100%" stopColor="#C5A059" stopOpacity={0.85} />
             </LinearGradient>
           </Defs>
-
-          {/* Clean luxury canvas */}
           <Rect width="100%" height="100%" fill="url(#sheetBgGrad)" />
-
-          {/* Subtle perimeter registration frame */}
           <Rect
             x={6}
             y={6}
@@ -104,8 +93,6 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
             strokeWidth={0.8}
             fill="none"
           />
-
-          {/* Central celestial guilloché arc motif */}
           <Circle
             cx={cx}
             cy={-14}
@@ -131,8 +118,6 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
             strokeWidth={0.7}
             fill="none"
           />
-
-          {/* Subtle champagne star sparkles & registration crosshairs */}
           <Path d={starPath(width - 24, 18, 4.5)} fill="url(#champagneGold)" />
           <Circle
             cx={width - 38}
@@ -147,8 +132,6 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
             opacity={0.7}
           />
           <Circle cx={34} cy={16} r={1} fill="#C5A059" opacity={0.35} />
-
-          {/* Subtle bottom anchor tick */}
           <Circle cx={cx} cy={218} r={1.5} fill="#D5CEBE" opacity={0.6} />
         </Svg>
       </View>

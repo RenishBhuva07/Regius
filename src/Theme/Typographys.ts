@@ -1,9 +1,7 @@
 import { Fonts } from './fonts';
 
 export const Typography = {
-  // ─────────────────────────────────────────────────────────────────────────
-  // 🔷 RANADE
-  // ─────────────────────────────────────────────────────────────────────────
+  // Ranade fonts
 
   // Display Large · 36 (Splash Brand)
   displayLargeRanadeBold: {
@@ -57,8 +55,7 @@ export const Typography = {
     lineHeight: 25,
   },
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // 🔶 POPPINS
+  // Poppins fonts
   // H5 · 20
   h5SemiBold: {
     fontFamily: Fonts.poppins.semiBold,
@@ -178,9 +175,7 @@ export const Typography = {
     lineHeight: 16.5,
   },
 
-  // ─────────────────────────────────────────────────────────────────────────
-  // 🔷 TRANSCITY (Brand Logo & Luxury Display)
-  // ─────────────────────────────────────────────────────────────────────────
+  // Transcity (Brand logo font)
   brandLogoTranscity: {
     fontFamily: Fonts.transcity,
   },

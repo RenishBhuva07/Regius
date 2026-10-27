@@ -537,7 +537,7 @@ export const VoiceStudioScreen: React.FC = () => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
-        {/* ─── Flagship 2-Layer Hero Bento: Acoustic Master Console ─── */}
+        {/* Acoustic Master Console */}
         <View style={styles.heroCardShadowWrapper}>
           <View style={styles.heroCard}>
             <View style={styles.heroHeaderRow}>
@@ -611,7 +611,7 @@ export const VoiceStudioScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* ─── Speech Controls & Pacing Bento ─── */}
+        {/* Speech Controls & Pacing Bento */}
         <Text style={[styles.sectionHeading, { color: textSecondary }]}>
           SPEECH CONTROLS & PACING
         </Text>
@@ -688,7 +688,7 @@ export const VoiceStudioScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* ─── Neural Speech Playground ─── */}
+        {/* Neural Speech Playground */}
         <Text style={[styles.sectionHeading, { color: textSecondary }]}>
           NEURAL SPEECH PLAYGROUND
         </Text>
@@ -815,7 +815,7 @@ export const VoiceStudioScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* ─── Kokoro Voice Catalog ─── */}
+        {/* Kokoro Voice Catalog */}
         <Text style={[styles.sectionHeading, { color: textSecondary }]}>
           KOKORO VOICE CATALOG ({VOICES.length})
         </Text>

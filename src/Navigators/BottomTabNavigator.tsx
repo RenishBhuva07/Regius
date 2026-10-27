@@ -30,7 +30,7 @@ import AddTaskModal from '../Components/AddTaskModal';
 import AddReminderModal from '../Components/AddReminderModal';
 import AddHabitModal from '../Components/AddHabitModal';
 
-// ─── Dimensions ───────────────────────────────────────────────────────────────
+// Dimensions
 
 const { width: SW } = Dimensions.get('window');
 
@@ -70,7 +70,7 @@ const CurvedBar: React.FC = () => {
   );
 };
 
-// ─── Tab definitions ──────────────────────────────────────────────────────────
+// Tab definitions
 
 const LEFT_TABS = [
   { name: 'Dashboard', label: 'Dashboard', Icon: House },
@@ -92,7 +92,7 @@ const TAB_SLOTS: Record<string, number> = {
 const getTabX = (slot: number): number =>
   SIDE_PADDING + slot * TAB_SLOT_W + (TAB_SLOT_W - TAB_INNER_W) / 2;
 
-// ─── Custom tab bar ───────────────────────────────────────────────────────────
+// Custom tab bar
 
 const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
   const insets = useSafeAreaInsets();
@@ -392,7 +392,7 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
   );
 };
 
-// ─── Navigator ────────────────────────────────────────────────────────────────
+// Navigator
 
 const Tab = createBottomTabNavigator();
 
@@ -458,7 +458,7 @@ export default function BottomTabNavigator() {
   );
 }
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
+// Styles
 
 const styles = StyleSheet.create({
   // Absolute wrapper — floats over screen content

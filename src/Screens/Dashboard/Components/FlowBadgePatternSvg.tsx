@@ -81,22 +81,16 @@ export const FlowBadgePatternSvg: React.FC = React.memo(() => {
             <Stop offset="100%" stopColor="#F5C518" stopOpacity={0.8} />
           </LinearGradient>
         </Defs>
-
-        {/* Base multi-layer obsidian & glowing volumes */}
         <Rect width="100%" height="100%" fill="url(#flowBadgeBg)" />
         <Rect width="100%" height="100%" fill="url(#flowBadgeLavenderGlow)" />
         <Rect width="100%" height="100%" fill="url(#flowBadgeGoldDawn)" />
         <Rect width="100%" height="100%" fill="url(#flowBadgeMintAura)" />
-
-        {/* Top highlight rim */}
         <Path
           d="M 28 1 L 162 1"
           stroke="url(#flowBadgeRim)"
           strokeWidth={1}
           strokeLinecap="round"
         />
-
-        {/* Left acoustic orbital flow rings */}
         <Circle
           cx={24}
           cy={26}
@@ -122,8 +116,6 @@ export const FlowBadgePatternSvg: React.FC = React.memo(() => {
           strokeWidth={1}
           fill="none"
         />
-
-        {/* Right acoustic orbital flow rings */}
         <Circle
           cx={166}
           cy={26}
@@ -149,8 +141,6 @@ export const FlowBadgePatternSvg: React.FC = React.memo(() => {
           strokeWidth={1}
           fill="none"
         />
-
-        {/* Flow waves across the badge */}
         <Path
           d="M -5 34 Q 50 16, 95 32 T 195 24"
           stroke="rgba(255, 255, 255, 0.09)"
@@ -166,8 +156,6 @@ export const FlowBadgePatternSvg: React.FC = React.memo(() => {
           strokeLinecap="round"
           fill="none"
         />
-
-        {/* Royal 4-pointed micro sparkles positioned in the outer wings (clear of text) */}
         <G transform="translate(18, 24)">
           <Path
             d="M 0 -4 Q 0 0 4 0 Q 0 0 0 4 Q 0 0 -4 0 Q 0 0 0 -4 Z"
@@ -183,8 +171,6 @@ export const FlowBadgePatternSvg: React.FC = React.memo(() => {
           />
           <Circle cx={0} cy={0} r={0.65} fill="#FFFFFF" />
         </G>
-
-        {/* Stardust dots positioned safely in the lateral wings */}
         <Circle cx={12} cy={14} r={0.8} fill="#FFFCE3" opacity={0.4} />
         <Circle cx={24} cy={38} r={0.7} fill="#9C9CE3" opacity={0.35} />
         <Circle cx={178} cy={14} r={0.8} fill="#FFFCE3" opacity={0.4} />

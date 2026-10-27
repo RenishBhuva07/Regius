@@ -350,7 +350,7 @@ export const HelpFaqScreen: React.FC = () => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
-        {/* ─── Flagship 2-Layer Hero Bento: VIP Concierge ─── */}
+        {/* VIP Concierge */}
         <View style={styles.heroCardShadowWrapper}>
           <View style={styles.heroCard}>
             <View style={styles.heroHeaderRow}>
@@ -394,7 +394,7 @@ export const HelpFaqScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* ─── Search Input Bar ─── */}
+        {/* Search Input Bar */}
         <View
           style={[
             styles.searchWrap,
@@ -424,7 +424,7 @@ export const HelpFaqScreen: React.FC = () => {
           )}
         </View>
 
-        {/* ─── 4-Facet Knowledge Domains ─── */}
+        {/* 4-Facet Knowledge Domains */}
         <View style={styles.domainsSection}>
           <Text style={[styles.sectionHeading, { color: textSecondary }]}>
             KNOWLEDGE DOMAINS
@@ -518,7 +518,7 @@ export const HelpFaqScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* ─── Frequently Asked Questions Accordion ─── */}
+        {/* Frequently Asked Questions Accordion */}
         <View style={styles.faqSection}>
           <View style={styles.faqHeaderBar}>
             <Text style={[styles.sectionHeading, { color: textSecondary }]}>
@@ -683,7 +683,7 @@ export const HelpFaqScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* ─── Bottom Concierge Direct Contact Desk ─── */}
+        {/* Bottom Concierge Direct Contact Desk */}
         <View
           style={[
             styles.conciergeDeskCard,

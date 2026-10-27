@@ -16,12 +16,12 @@ export const SettingsFooter: React.FC = () => {
   return (
     <View style={styles.footerWatermarkWrapper} pointerEvents="none">
       <View style={styles.watermarkContainer}>
-        {/* Right Column: Hand-Drawn Royal Crown positioned a little above */}
+        {/* Doodle illustration */}
         <View style={styles.footerDoodleWrapper}>
           <SettingsWatermarkDoodleSvg width={130} height={130} />
         </View>
 
-        {/* Brand Watermark Typography matching other screens (fontSize 34) */}
+        {/* Watermark text */}
         <View style={styles.footerTextBlock}>
           <Text style={[styles.footerWatermarkText, { color: watermarkColor }]}>
             <Text
@@ -34,7 +34,7 @@ export const SettingsFooter: React.FC = () => {
         </View>
       </View>
 
-      {/* Centered Sign-off: Crafted with ❤️ in Ahmedabad, India */}
+      {/* Attribution */}
       <View style={styles.craftedWithRow}>
         <Text style={[styles.craftedWithText, { color: subtextColor }]}>
           Crafted with{' '}
@@ -46,7 +46,7 @@ export const SettingsFooter: React.FC = () => {
         </Text>
       </View>
 
-      {/* Centered Version & Environment Details */}
+      {/* Version info */}
       <Text
         style={[styles.versionText, { color: subtextColor }]}
         numberOfLines={1}

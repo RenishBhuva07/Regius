@@ -59,7 +59,7 @@ import FlowBadgePatternSvg from '../Screens/Dashboard/Components/FlowBadgePatter
 import TaskCardAestheticBg from './TaskCardAestheticBg';
 import PickerAestheticBg from './PickerAestheticBg';
 
-// ─── Inline 2-Tone Filled Emblem SVGs ──────────────────────────────────────────
+// Inline 2-Tone Filled Emblem SVGs
 
 const PictureEmblemIcon: React.FC<SvgProps & { size?: number }> = ({
   width,
@@ -198,7 +198,7 @@ const FlameEmblemIcon: React.FC<SvgProps & { size?: number }> = ({
   );
 };
 
-// ─── Magic Black Schedule Button Aesthetic Background SVG ──────────────────────
+// Schedule button background
 
 const ScheduleButtonBackgroundSvg: React.FC<{
   type: 'date' | 'time';
@@ -290,7 +290,7 @@ const ScheduleButtonBackgroundSvg: React.FC<{
   );
 });
 
-// ─── Categories Setup & Presets ───────────────────────────────────────────────
+// Categories Setup & Presets
 
 export interface ReminderCategoryItem {
   id: string;
@@ -800,14 +800,14 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
             )}
             scrollEventThrottle={16}
           >
-            {/* ─── Unified Primary Reminder Card with 2-Layer Volumetric Shadow & Dynamic Theme ─── */}
+            {/* Unified Primary Reminder Card with 2-Layer Task Card */}
             <View
               style={[
                 styles.primaryCardWrapper,
                 { shadowColor: activeCategory.shadowColor },
               ]}
             >
-              {/* Header crest badge centered on top border */}
+              {/* Crest badge */}
               <View style={styles.flowHeaderBadge}>
                 <FlowBadgePatternSvg />
                 <Text style={styles.flowTitle}>Craft Your Reminder</Text>
@@ -824,7 +824,6 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
                   },
                 ]}
               >
-                {/* Dynamic Category Theme & Starlight Lattice Background */}
                 <TaskCardAestheticBg category={selectedCategory} />
 
                 <View style={styles.primaryCardHeader}>
@@ -832,8 +831,6 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
                     WHAT WOULD YOU LIKE TO BE REMINDED OF?
                   </Text>
                 </View>
-
-                {/* Natural multiline auto-growing text input */}
                 <TextInput
                   style={[
                     styles.titleInput,
@@ -852,7 +849,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
                   selectionColor="rgba(31, 34, 40, 0.25)"
                 />
 
-                {/* Vertically Centered Memo / Context Row (Symmetric 48px Band) */}
+                {/* Memo input */}
                 <Pressable
                   style={styles.contextRow}
                   onPress={() => noteInputRef.current?.focus()}
@@ -877,7 +874,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
               </View>
             </View>
 
-            {/* ─── Category Selector (Dashboard Checkbox Style & Add Category Flow) ─── */}
+            {/* Category Selector (Category selection) */}
             <View style={styles.sectionBlock}>
               <View style={styles.sectionHeaderRow}>
                 <Text style={styles.sectionHeading}>Category Focus</Text>
@@ -942,8 +939,6 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
                         >
                           <CatIcon width={16} height={16} />
                         </View>
-
-                        {/* Floating Checkbox with Card Accent Color */}
                         {isSelected ? (
                           <View
                             style={[
@@ -1000,7 +995,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
               />
             </View>
 
-            {/* ─── When to Remind (Schedule Block with Quick Chips & Wrapped Magic Black Pickers) ─── */}
+            {/* Schedule */}
             <View style={styles.sectionBlock}>
               <View style={styles.sectionHeaderRow}>
                 <Text style={styles.sectionHeading}>When to Remind</Text>
@@ -1050,8 +1045,6 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
                   );
                 })}
               </View>
-
-              {/* Schedule Buttons Wrapped inside scheduleContainerCard */}
               <View style={styles.scheduleContainerCard}>
                 {/* Date Trigger */}
                 <View style={styles.magicScheduleBtnWrapper}>
@@ -1109,7 +1102,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
               </View>
             </View>
 
-            {/* ─── Repeat Cycle (Exact Height Match to Priority Bar Segmented Tabs) ── */}
+            {/* ─── Repeat Cycle () ── */}
             <View style={styles.sectionBlock}>
               <View style={styles.sectionHeaderRow}>
                 <Text style={styles.sectionHeading}>Repeat Cycle</Text>
@@ -1147,7 +1140,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
               </View>
             </View>
 
-            {/* ─── Remind Me Before (2x2 Tactile Capsule Grid) ─────────── */}
+            {/* Remind Me Before (2x2 Tactile Capsule Grid) */}
             <View style={styles.sectionBlock}>
               <View style={styles.sectionHeaderRow}>
                 <Text style={styles.sectionHeading}>Remind Me Before</Text>
@@ -1192,7 +1185,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
               </View>
             </View>
 
-            {/* ─── Sound & Haptics Preview Card ────────────────────────── */}
+            {/* Sound & Haptics Preview Card */}
             <View style={styles.soundCard}>
               <View style={styles.soundLeftGroup}>
                 <View style={styles.soundIconTile}>
@@ -1220,7 +1213,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
               </TouchableOpacity>
             </View>
 
-            {/* ─── Spoken Voice Nudge (Sleek 3D Card with Assistant Badge) ─── */}
+            {/* Spoken Voice Nudge (Voice nudge) */}
             <View style={styles.voiceNudgeCard}>
               <View style={styles.voiceNudgeLeft}>
                 <View style={styles.voiceIconBox}>
@@ -1257,7 +1250,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
               />
             </View>
 
-            {/* ─── Urgent Alarm (Critical Override) ────────────────────── */}
+            {/* Urgent Alarm (Critical Override) */}
             <View style={styles.urgentAlarmCard}>
               <View style={styles.urgentAlarmLeft}>
                 <View style={styles.urgentIconTile}>
@@ -1290,7 +1283,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
             </View>
           </Animated.ScrollView>
 
-          {/* ─── Bottom Floating Hero CTA Row (Back Button on Left + Create Reminder Button) ────── */}
+          {/* Bottom actions */}
           <View
             pointerEvents="box-none"
             style={[
@@ -1332,7 +1325,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
           </View>
         </KeyboardAvoidingView>
 
-        {/* ─── Standard Native DatePicker Modal (iOS Bottom Sheet) ─── */}
+        {/* Date picker modal */}
         {Platform.OS === 'ios' ? (
           <Modal
             visible={showDatePicker}
@@ -1407,7 +1400,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
           )
         )}
 
-        {/* ─── Standard Native TimePicker Modal (iOS Bottom Sheet) ─── */}
+        {/* Time picker modal */}
         {Platform.OS === 'ios' ? (
           <Modal
             visible={showTimePicker}
@@ -1476,7 +1469,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
           )
         )}
 
-        {/* ─── Add Custom Category Modal (iOS Bottom Sheet) ───────── */}
+        {/* Add category modal */}
         <Modal
           visible={showAddCategoryModal}
           transparent
@@ -1585,8 +1578,6 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
                           {newCatName.trim() || 'Category'}
                         </Text>
                       </View>
-
-                      {/* Signature Bottom Lip Accent Pill */}
                       <View style={styles.categoryAccentWrap}>
                         <View
                           style={[
@@ -1731,7 +1722,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
   );
 };
 
-// ─── Styles ───────────────────────────────────────────────────────────────────
+// Styles
 
 const styles = StyleSheet.create({
   canvasContainer: {
@@ -1739,7 +1730,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FAF8F5',
   },
 
-  // ─── Header Crest Badge (Centered on Top Border) ───
+  // Header Crest Badge (Centered on Top Border)
   flowHeaderBadge: {
     position: 'absolute',
     top: -ResponsivePixels.size24,
@@ -1780,7 +1771,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 
-  // ─── Scroll Area ───
+  // Scroll Area
   scrollArea: {
     flex: 1,
   },
@@ -1788,7 +1779,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: ResponsivePixels.size20,
   },
 
-  // ─── Primary Card (2-Layer Volumetric Shadow Wrapper Pattern) ───
+  // Primary Card (2-Layer Card Wrapper Pattern)
   primaryCardWrapper: {
     borderRadius: 22,
     backgroundColor: '#FFFFFF',
@@ -1869,7 +1860,7 @@ const styles = StyleSheet.create({
     includeFontPadding: false,
   },
 
-  // ─── General Section Block ───
+  // General Section Block
   sectionBlock: {
     marginBottom: 24,
     overflow: 'visible',
@@ -1935,7 +1926,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.1,
   },
 
-  // ─── Category Cards (TasksScreen Asymmetric Top-Right Design) ───
+  // Category Cards (Category cards)
   categoryFlatList: {
     overflow: 'visible',
   },
@@ -2053,7 +2044,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 2.5,
   },
 
-  // ─── Quick Date Chips (3D Tactile Capsules) ───
+  // Quick Date Chips (Date chips)
   quickDateRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -2115,7 +2106,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.bold,
   },
 
-  // ─── Magic Black Schedule Pickers ───
+  // Schedule pickers
   scheduleContainerCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 22,
@@ -2195,7 +2186,7 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
 
-  // ─── Segmented Cadence (Repeat Options) ───
+  // Segmented Cadence (Repeat Options)
   segmentedContainer: {
     flexDirection: 'row',
     backgroundColor: '#181A20',
@@ -2254,7 +2245,7 @@ const styles = StyleSheet.create({
     color: '#E5E7EB',
   },
 
-  // ─── Remind Me Before 2x2 Grid ───
+  // Remind Me Before 2x2 Grid
   remindBeforeGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -2322,7 +2313,7 @@ const styles = StyleSheet.create({
     color: Colors.DefaultWhite,
   },
 
-  // ─── Sound Preview Card ───
+  // Sound Preview Card
   soundCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
@@ -2396,7 +2387,7 @@ const styles = StyleSheet.create({
     color: '#1B9A72',
   },
 
-  // ─── Voice Nudge Card ───
+  // Voice Nudge Card
   voiceNudgeCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
@@ -2467,7 +2458,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 
-  // ─── Urgent Alarm Card ───
+  // Urgent Alarm Card
   urgentAlarmCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
@@ -2527,7 +2518,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
 
-  // ─── Bottom Floating Hero CTA (Transparent Background) ───
+  // Bottom Floating Hero CTA (Transparent Background)
   bottomStickyCta: {
     position: 'absolute',
     bottom: 0,
@@ -2600,7 +2591,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 
-  // ─── Native Picker Bottom Sheet (iOS) ───
+  // Native Picker Bottom Sheet (iOS)
   pickerModalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(14, 16, 21, 0.65)',
@@ -2714,7 +2705,7 @@ const styles = StyleSheet.create({
     paddingTop: 6,
   },
 
-  // ─── Add Category Bottom Sheet Modal ───
+  // Add Category Bottom Sheet Modal
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(14, 16, 21, 0.65)',

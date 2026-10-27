@@ -291,7 +291,7 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
           onAddPress={openTaskModal}
         />
 
-        {/* Tasks Section matching HabitsScreen with centered black crest badge & top-right floating plus button */}
+        {/* Tasks section */}
         <View
           style={[styles.taskSection, { paddingBottom: insets.bottom + 130 }]}
         >
@@ -299,14 +299,14 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
             <TaskSectionBackgroundSvg />
           </View>
 
-          {/* Header crest badge centered on top border - half outside, half inside (matching HabitsScreen) */}
+          {/* Section header crest badge */}
           <View style={styles.flowHeaderBadge}>
             <FlowBadgePatternSvg />
             <Text style={styles.flowTitle}>{sectionTitle}</Text>
             <Text style={styles.flowSubtitle}>{sectionSubtitle}</Text>
           </View>
 
-          {/* New Task floating button at right corner - half outside, half inside (matching HabitsScreen) */}
+          {/* Floating add button */}
           <TouchableOpacity
             activeOpacity={0.85}
             onPress={openTaskModal}
@@ -398,7 +398,7 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
             </TouchableOpacity>
           )}
 
-          {/* Swiggy-Inspired Brand Watermark Footer: "Dreams move when you do!" + "Crafted with ❤️ in Ahmedabad, India" + Task Complete Doodles */}
+          {/* Footer brand watermark */}
           <View style={styles.footerWatermarkWrapper} pointerEvents="none">
             <View style={styles.footerWatermarkRow}>
               {/* Left Column: Bold "Live it up!" Typography & Sign-off */}
@@ -605,7 +605,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
 
-  // Header crest badge centered on top border matching HabitsScreen Today's Rituals
+  // Section header crest badge
   flowHeaderBadge: {
     position: 'absolute',
     top: -24,
@@ -713,7 +713,7 @@ const styles = StyleSheet.create({
     fontSize: 13.5,
   },
 
-  // Swiggy-Inspired Watermark Footer
+  // Footer watermark styles
   footerWatermarkWrapper: {
     paddingLeft: ResponsivePixels.size10,
     paddingRight: ResponsivePixels.size16,

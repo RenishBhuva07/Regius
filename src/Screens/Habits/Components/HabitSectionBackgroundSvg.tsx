@@ -19,12 +19,7 @@ export interface HabitSectionBackgroundSvgProps {
   height?: number;
 }
 
-/**
- * Dynamic luxury aesthetic background for Habits Section:
- * - Differentiated from Today's Flow with sacred habit growth rings, solar chronometer ticks,
- *   emerald vitality auras, geometric habit lattice grid, and streak flame watermarks.
- * - Dynamically adapts to any container dimensions via layout measurement.
- */
+// Background pattern for the Habits section.
 export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps> =
   React.memo(({ width: propWidth, height: propHeight }) => {
     const [dimensions, setDimensions] = useState<{
@@ -68,7 +63,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
       >
         <Svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} fill="none">
           <Defs>
-            {/* Base warm luxury parchment sheen */}
             <LinearGradient
               id="habitBgSheen"
               x1="0"
@@ -82,8 +76,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               <Stop offset="65%" stopColor="#F5EFE3" stopOpacity={0.96} />
               <Stop offset="100%" stopColor="#ECE4D4" stopOpacity={0.98} />
             </LinearGradient>
-
-            {/* Solar Amber Dawn Aura under center crest badge */}
             <RadialGradient
               id="habitCrestAura"
               cx={centerX}
@@ -95,8 +87,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               <Stop offset="40%" stopColor="#E2A612" stopOpacity={0.08} />
               <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Golden radiance under top-right floating plus button */}
             <RadialGradient
               id="habitPlusAura"
               cx={W - 37}
@@ -108,8 +98,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               <Stop offset="50%" stopColor="#D99B0F" stopOpacity={0.06} />
               <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Emerald Vitality Aura on upper-left representing fresh habits & growth */}
             <RadialGradient
               id="habitEmeraldAura"
               cx={24}
@@ -121,8 +109,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               <Stop offset="50%" stopColor="#2EE29F" stopOpacity={0.05} />
               <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Mindful Lavender Twilight Aura in center-right */}
             <RadialGradient
               id="habitMindfulAura"
               cx={W - 15}
@@ -134,8 +120,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               <Stop offset="55%" stopColor="#9C9CE3" stopOpacity={0.04} />
               <Stop offset="100%" stopColor="#F5EFE3" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Flame streak warmth aura in bottom-right */}
             <RadialGradient
               id="habitStreakAura"
               cx={W - 30}
@@ -147,8 +131,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               <Stop offset="50%" stopColor="#FF9800" stopOpacity={0.04} />
               <Stop offset="100%" stopColor="#ECE4D4" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Bottom-left grounding sage aura */}
             <RadialGradient
               id="habitSageAura"
               cx={30}
@@ -160,8 +142,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               <Stop offset="55%" stopColor="#34D399" stopOpacity={0.03} />
               <Stop offset="100%" stopColor="#ECE4D4" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Bottom footer radiance aura behind "Your future self is taking notes!" and doodles */}
             <RadialGradient
               id="habitFooterAura"
               cx={centerX}
@@ -173,8 +153,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               <Stop offset="45%" stopColor="#F5C518" stopOpacity={0.06} />
               <Stop offset="100%" stopColor="#ECE4D4" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Gold gradient for spark nodes */}
             <LinearGradient
               id="habitGoldNode"
               x1="0%"
@@ -186,8 +164,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               <Stop offset="50%" stopColor="#F5C518" stopOpacity={0.85} />
               <Stop offset="100%" stopColor="#B48216" stopOpacity={0.65} />
             </LinearGradient>
-
-            {/* Emerald gradient for growth nodes */}
             <LinearGradient
               id="habitEmeraldNode"
               x1="0%"
@@ -199,8 +175,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               <Stop offset="50%" stopColor="#1B9A72" stopOpacity={0.85} />
               <Stop offset="100%" stopColor="#0E654A" stopOpacity={0.7} />
             </LinearGradient>
-
-            {/* Delicate top specular light rim */}
             <LinearGradient
               id="habitRimLight"
               x1="0"
@@ -214,11 +188,7 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               <Stop offset="100%" stopColor="#DACFBE" stopOpacity={0.4} />
             </LinearGradient>
           </Defs>
-
-          {/* 1. Base Gradient Canvas */}
           <Rect x={0} y={0} width={W} height={H} fill="url(#habitBgSheen)" />
-
-          {/* 2. Ambient Color Auras */}
           <Rect x={0} y={0} width={W} height={H} fill="url(#habitCrestAura)" />
           <Rect x={0} y={0} width={W} height={H} fill="url(#habitPlusAura)" />
           <Rect
@@ -238,10 +208,7 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
           <Rect x={0} y={0} width={W} height={H} fill="url(#habitStreakAura)" />
           <Rect x={0} y={0} width={W} height={H} fill="url(#habitSageAura)" />
           <Rect x={0} y={0} width={W} height={H} fill="url(#habitFooterAura)" />
-
-          {/* 3. Sacred Concentric Growth Rings radiating from center crest badge */}
           <G opacity={0.65}>
-            {/* Primary inner growth ring */}
             <Circle
               cx={centerX}
               cy={0}
@@ -252,7 +219,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               fill="none"
               opacity={0.4}
             />
-            {/* Solar golden mid-ring */}
             <Circle
               cx={centerX}
               cy={0}
@@ -262,7 +228,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               fill="none"
               opacity={0.32}
             />
-            {/* Vitality emerald ring */}
             <Circle
               cx={centerX}
               cy={0}
@@ -273,7 +238,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               fill="none"
               opacity={0.28}
             />
-            {/* Fine outer orbital ring */}
             <Circle
               cx={centerX}
               cy={0}
@@ -302,8 +266,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               fill="none"
               opacity={0.16}
             />
-
-            {/* Radial Solar Habit Chronometer Ticks radiating from crest */}
             {[-60, -45, -30, -15, 0, 15, 30, 45, 60].map((deg, i) => {
               const rad = (deg * Math.PI) / 180;
               const r1 = 80;
@@ -327,10 +289,7 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               );
             })}
           </G>
-
-          {/* 4. Geometric Sacred Habit Lattice (Subtle Diamond Grid) */}
           <G opacity={0.35}>
-            {/* Diagonal lattice diagonals running top-left to bottom-right */}
             <Line
               x1={0}
               y1={120}
@@ -349,7 +308,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               strokeWidth={0.9}
               strokeDasharray="3 5"
             />
-            {/* Diagonal lattice diagonals running top-right to bottom-left */}
             <Line
               x1={W}
               y1={120}
@@ -369,8 +327,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               strokeDasharray="3 5"
             />
           </G>
-
-          {/* 5. Botanical Habit Growth Vine Ribbon on Left Flank */}
           <Path
             d={`M 0 160 Q 30 220 18 300 T 32 440 T 12 580 T 24 ${H - 30}`}
             stroke="#1B9A72"
@@ -379,7 +335,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
             fill="none"
             opacity={0.16}
           />
-          {/* Micro leaf sprout nodes on the left vine */}
           <Circle
             cx={22}
             cy={210}
@@ -408,10 +363,7 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
             fill="url(#habitEmeraldNode)"
             opacity={0.4}
           />
-
-          {/* 6. 7-Day Habit Consistency Tracker Doodle (Mid-Right) */}
           <G transform={`translate(${W - 68}, 235)`} opacity={0.22}>
-            {/* Dashed trajectory arc */}
             <Path
               d="M -25 35 Q -8 32 4 16"
               stroke="#F5C518"
@@ -419,7 +371,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               strokeDasharray="2 3"
               fill="none"
             />
-            {/* Mini Calendar Tablet Outline */}
             <Rect
               x={0}
               y={0}
@@ -430,7 +381,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               strokeWidth={1}
               fill="none"
             />
-            {/* Top header bar */}
             <Line
               x1={0}
               y1={10}
@@ -439,7 +389,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               stroke="#F5C518"
               strokeWidth={1}
             />
-            {/* 7-Day streak nodes */}
             <Circle cx={8} cy={18} r={2} fill="#1B9A72" />
             <Circle cx={17} cy={18} r={2} fill="#1B9A72" />
             <Circle cx={26} cy={18} r={2} fill="#1B9A72" />
@@ -454,13 +403,10 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               fill="none"
             />
           </G>
-
-          {/* 7. Parchment Habit Journal Checklist Doodle (Mid-Left) */}
           <G
             transform={`translate(28, ${Math.min(390, H * 0.48)})`}
             opacity={0.18}
           >
-            {/* Mini notepad outline */}
             <Rect
               x={0}
               y={0}
@@ -471,7 +417,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               strokeWidth={1}
               fill="none"
             />
-            {/* Top wire spiral rings */}
             <Rect
               x={8}
               y={-3}
@@ -482,13 +427,11 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               strokeWidth={1}
               fill="none"
             />
-            {/* Emerald bookmark ribbon peek */}
             <Path
               d="M 22 -3 L 22 18 L 24 16 L 26 18 L 26 -3"
               fill="#1B9A72"
               opacity={0.7}
             />
-            {/* Checklist row 1 (Emerald check) */}
             <Rect
               x={5}
               y={8}
@@ -508,7 +451,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               strokeWidth={1}
               strokeLinecap="round"
             />
-            {/* Checklist row 2 (Flame streak check) */}
             <Rect
               x={5}
               y={19}
@@ -528,7 +470,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               strokeWidth={1}
               strokeLinecap="round"
             />
-            {/* Checklist row 3 (Active gold scribble) */}
             <Rect
               x={5}
               y={30}
@@ -549,10 +490,7 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               strokeLinecap="round"
             />
           </G>
-
-          {/* 8. Calligraphic Fountain Pen Flourish Checkmark Doodle (Above Footer) */}
           <G transform={`translate(22, ${H - 225})`} opacity={0.2}>
-            {/* Continuous flourish check stroke */}
             <Path
               d="M 6 34 Q 16 48 24 54 Q 38 30 56 8"
               stroke="#1B9A72"
@@ -561,14 +499,10 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               strokeLinejoin="round"
               fill="none"
             />
-            {/* Ink flourish drop */}
             <Circle cx={58} cy={7} r={2.2} fill="#1B9A72" />
             <Circle cx={6} cy={34} r={1.6} fill="#F5C518" />
           </G>
-
-          {/* 9. Sacred Streak Flame Watermark on Bottom-Right */}
           <G transform={`translate(${W - 74}, ${H - 145})`} opacity={0.16}>
-            {/* Elegant continuous-line streak flame silhouette */}
             <Path
               d="M 28 65 C 10 52 4 35 16 18 C 19 26 23 30 27 28 C 24 16 32 6 42 0 C 42 12 48 20 54 22 C 58 14 62 10 65 14 C 70 28 66 50 48 62 C 40 68 34 68 28 65 Z"
               stroke="#E65100"
@@ -576,7 +510,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               strokeLinejoin="round"
               fill="none"
             />
-            {/* Inner flame core */}
             <Path
               d="M 33 55 C 25 46 22 36 29 26 C 31 31 34 33 37 32 C 37 24 43 18 47 16 C 47 24 50 28 53 30 C 55 38 52 48 41 54 Z"
               stroke="#F5C518"
@@ -585,8 +518,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               opacity={0.7}
             />
           </G>
-
-          {/* 10. Golden Habit Diamond Stars & Constellation Nodes */}
           <Path
             d={habitDiamond(38, 115, 6)}
             fill="url(#habitGoldNode)"
@@ -612,8 +543,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
             fill="url(#habitGoldNode)"
             opacity={0.45}
           />
-
-          {/* Bottom constellation milestone points behind footer */}
           <Path
             d={habitDiamond(W - 45, H - 75, 6)}
             fill="url(#habitGoldNode)"
@@ -629,8 +558,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
             fill="url(#habitGoldNode)"
             opacity={0.4}
           />
-
-          {/* Starlight micro nodes */}
           <Circle cx={W * 0.22} cy={85} r={1.6} fill="#F5C518" opacity={0.45} />
           <Circle cx={W * 0.78} cy={90} r={1.6} fill="#F5C518" opacity={0.45} />
           <Circle cx={W * 0.15} cy={260} r={1.8} fill="#1B9A72" opacity={0.4} />
@@ -656,8 +583,6 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
             fill="#1B9A72"
             opacity={0.45}
           />
-
-          {/* 8. Crisp Top-Down Specular Light Rim (1.5px bevel edge) */}
           <Path
             d={`M 1.5 ${H - 1.5} L 1.5 32 Q 1.5 1.5 32 1.5 L ${W - 32} 1.5 Q ${
               W - 1.5

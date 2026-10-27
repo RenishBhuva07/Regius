@@ -109,7 +109,6 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
           preserveAspectRatio="none"
         >
           <Defs>
-            {/* 1. Base Silk Sheet Sheen */}
             <LinearGradient
               id={`pickerSheenGrad-${type}`}
               x1="0%"
@@ -129,8 +128,6 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                 stopOpacity={0.98}
               />
             </LinearGradient>
-
-            {/* 2. Top-Right Corner Ambient Aura */}
             <RadialGradient
               id={`pickerTopAura-${type}`}
               cx={W - 40}
@@ -154,8 +151,6 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                 stopOpacity={0}
               />
             </RadialGradient>
-
-            {/* 3. Bottom-Left Corner Ambient Aura */}
             <RadialGradient
               id={`pickerBottomAura-${type}`}
               cx={30}
@@ -180,8 +175,6 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
               />
             </RadialGradient>
           </Defs>
-
-          {/* Background Canvas Layer */}
           <Rect
             x="0"
             y="0"
@@ -203,11 +196,8 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
             height={H}
             fill={`url(#pickerBottomAura-${type})`}
           />
-
-          {/* ══════════ DATE PICKER UNIQUE ARTWORK: SOLAR CALENDAR ══════════ */}
           {isDate && (
             <>
-              {/* Concentric Solar Orbit Rings */}
               <G opacity={0.32}>
                 <Circle
                   cx={340}
@@ -244,11 +234,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   fill="none"
                 />
               </G>
-
-              {/* 8 Solar Solstice Dial Ticks */}
               <G opacity={0.38}>{solarTicks}</G>
-
-              {/* Astrolabe Horizon Arc in Bottom-Left */}
               <G opacity={0.3}>
                 <Circle
                   cx={40}
@@ -277,8 +263,6 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   fill="none"
                 />
               </G>
-
-              {/* Solar Star Constellations & Glints */}
               <Path d={diamondStar(320, 45, 5)} fill="#E89A14" opacity={0.55} />
               <Path
                 d={diamondStar(345, 135, 3.5)}
@@ -295,8 +279,6 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                 fill="#E89A14"
                 opacity={0.4}
               />
-
-              {/* Delicate Solar Coordinates Glints */}
               <Circle cx={285} cy={40} r={1.6} fill="#F5C518" opacity={0.6} />
               <Circle cx={365} cy={115} r={1.4} fill="#B48216" opacity={0.45} />
               <Circle
@@ -313,8 +295,6 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                 fill="#B48216"
                 opacity={0.4}
               />
-
-              {/* Precision Corner Flourish Lines */}
               <G opacity={0.25}>
                 <Line
                   x1={W - 48}
@@ -337,11 +317,8 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
               </G>
             </>
           )}
-
-          {/* ══════════ TIME PICKER UNIQUE ARTWORK: LUNAR HOROLOGY ══════════ */}
           {!isDate && (
             <>
-              {/* Horological 12-Hour Clock Dial */}
               <G opacity={0.34}>
                 <Circle
                   cx={330}
@@ -386,19 +363,13 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   fill="none"
                 />
               </G>
-
-              {/* 12 Clock Hour & 24 Minute Markers */}
               <G opacity={0.4}>{clockHourTicks}</G>
               <G opacity={0.35}>{clockMinuteTicks}</G>
-
-              {/* Celestial Crescent Moon Arc */}
               <Path
                 d="M 330 35 A 25 25 0 0 0 355 60 A 30 30 0 0 1 330 35 Z"
                 fill="#8383D6"
                 opacity={0.35}
               />
-
-              {/* Planetary Gear-Train in Bottom-Left */}
               <G opacity={0.32}>
                 <Circle
                   cx={50}
@@ -427,8 +398,6 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                 />
               </G>
               <G opacity={0.38}>{gearTicks}</G>
-
-              {/* Horological Diamond Stars & Lunar Dust */}
               <Path d={diamondStar(315, 50, 5)} fill="#7059C8" opacity={0.55} />
               <Path
                 d={diamondStar(340, 150, 3.5)}
@@ -445,8 +414,6 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                 fill="#7059C8"
                 opacity={0.4}
               />
-
-              {/* Fine Chrono Stellar Coordinates */}
               <Circle cx={275} cy={45} r={1.6} fill="#8383D6" opacity={0.6} />
               <Circle cx={360} cy={125} r={1.4} fill="#7059C8" opacity={0.45} />
               <Circle
@@ -463,8 +430,6 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                 fill="#7059C8"
                 opacity={0.4}
               />
-
-              {/* Precision Corner Flourish Lines */}
               <G opacity={0.25}>
                 <Line
                   x1={W - 48}

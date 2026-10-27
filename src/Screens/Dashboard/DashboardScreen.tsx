@@ -607,7 +607,7 @@ export const DashboardScreen: React.FC = () => {
             )}
           </View>
 
-          {/* Swiggy-Inspired Brand Watermark Footer: "Make today a little legendary!" + "Crafted with ❤️ in Ahmedabad, India" + Legendary Crown & Triumph Doodles */}
+          {/* Footer brand watermark */}
           <View style={styles.footerWatermarkWrapper} pointerEvents="none">
             <View style={styles.footerWatermarkRow}>
               {/* Left Column: Bold Typography & Sign-off */}
@@ -623,7 +623,7 @@ export const DashboardScreen: React.FC = () => {
                 </View>
               </View>
 
-              {/* Right Column: Extraordinary Legendary Crown & Triumph Doodle Illustration */}
+              {/* Footer doodle */}
               <View style={styles.footerDoodleWrapper}>
                 <LegendaryDoodleSvg />
               </View>
@@ -922,7 +922,7 @@ const styles = StyleSheet.create({
     color: '#8E8D92',
   },
 
-  // Swiggy-Inspired Watermark Footer
+  // Footer watermark styles
   footerWatermarkWrapper: {
     paddingLeft: ResponsivePixels.size10,
     paddingRight: ResponsivePixels.size16,

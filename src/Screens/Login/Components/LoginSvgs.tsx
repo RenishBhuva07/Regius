@@ -50,19 +50,11 @@ export const RegiusCrownCrestSvg: React.FC<
           <Stop offset="100%" stopColor="#F5C518" />
         </LinearGradient>
       </Defs>
-
-      {/* Outer Soft Halo Ring */}
       <Circle cx={48} cy={48} r={46} fill="#FFFFFF" fillOpacity={0.7} />
       <Circle cx={48} cy={48} r={45} stroke="#E8E2D5" strokeWidth={1.5} />
-
-      {/* Inner Elevated Shield */}
       <Circle cx={48} cy={48} r={38} fill="url(#crestGrad)" />
       <Circle cx={48} cy={48} r={38} stroke="#D8DBFF" strokeWidth={1.5} />
-
-      {/* Regius Signature Purple Core */}
       <Circle cx={48} cy={48} r={28} fill="url(#purpleGrad)" />
-
-      {/* Crown Motif */}
       <Path
         d="M36 56H60L58 45L52 50L48 40L44 50L38 45L36 56Z"
         fill="url(#goldGrad)"
@@ -70,21 +62,15 @@ export const RegiusCrownCrestSvg: React.FC<
         strokeWidth={1}
         strokeLinejoin="round"
       />
-
-      {/* Crown Jewels */}
       <Circle cx={38} cy={43} r={2} fill="#FFFFFF" />
       <Circle cx={48} cy={38} r={2.5} fill="#FFFFFF" />
       <Circle cx={58} cy={43} r={2} fill="#FFFFFF" />
-
-      {/* Base Ribbon Line */}
       <Path
         d="M35 58H61"
         stroke="#FFFFFF"
         strokeWidth={2}
         strokeLinecap="round"
       />
-
-      {/* Sparkles */}
       <Path
         d="M68 28L69.5 32.5L74 34L69.5 35.5L68 40L66.5 35.5L62 34L66.5 32.5L68 28Z"
         fill="#F5C518"
@@ -137,20 +123,14 @@ export const DecorativeHeaderWavesSvg: React.FC<
           <Stop offset="100%" stopColor={fillColor1} stopOpacity={0} />
         </LinearGradient>
       </Defs>
-
-      {/* Gentle organic wash */}
       <Path
         d="M0 0H375V135C310 170 260 115 190 150C120 185 60 155 0 175V0Z"
         fill="url(#waveGrad1)"
       />
-
-      {/* Layered pastel accent aura */}
       <Path
         d="M375 0H0V100C60 130 140 85 220 120C300 155 330 125 375 145V0Z"
         fill="url(#waveGrad2)"
       />
-
-      {/* Ambient glowing celestial orbs matching screen layout */}
       <Circle
         cx={315}
         cy={65}

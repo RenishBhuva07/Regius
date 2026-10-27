@@ -85,12 +85,9 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
             fill="none"
           >
             <Defs>
-              {/* Exact boundary clip of the notched curved bar */}
               <ClipPath id="curvedBarClip">
                 <Path d={d} />
               </ClipPath>
-
-              {/* Base rich velvet lavender gradient */}
               <LinearGradient
                 id="barBgGradient"
                 x1="0%"
@@ -102,8 +99,6 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 <Stop offset="35%" stopColor="#8383D6" stopOpacity={1} />
                 <Stop offset="100%" stopColor="#6C6CC4" stopOpacity={1} />
               </LinearGradient>
-
-              {/* Radiant dawn notch glow under floating FAB */}
               <RadialGradient
                 id="barNotchHalo"
                 cx="50%"
@@ -115,8 +110,6 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 <Stop offset="45%" stopColor="#F5C518" stopOpacity={0.12} />
                 <Stop offset="100%" stopColor="#8383D6" stopOpacity={0} />
               </RadialGradient>
-
-              {/* Left flank soft celestial violet aura */}
               <RadialGradient
                 id="barLeftAura"
                 cx="18%"
@@ -127,8 +120,6 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 <Stop offset="0%" stopColor="#B2B2FF" stopOpacity={0.25} />
                 <Stop offset="100%" stopColor="#8383D6" stopOpacity={0} />
               </RadialGradient>
-
-              {/* Right flank soft warm gold dawn aura */}
               <RadialGradient
                 id="barRightAura"
                 cx="82%"
@@ -139,15 +130,11 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.16} />
                 <Stop offset="100%" stopColor="#8383D6" stopOpacity={0} />
               </RadialGradient>
-
-              {/* Polished top rim chamfer highlight */}
               <LinearGradient id="barTopRim" x1="0%" y1="0%" x2="100%" y2="0%">
                 <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.06} />
                 <Stop offset="50%" stopColor="#FFFFFF" stopOpacity={0.42} />
                 <Stop offset="100%" stopColor="#FFFFFF" stopOpacity={0.06} />
               </LinearGradient>
-
-              {/* Gold diamond starlight gradient */}
               <LinearGradient
                 id="barGoldStar"
                 x1="0%"
@@ -159,10 +146,7 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 <Stop offset="100%" stopColor="#F5C518" stopOpacity={0.8} />
               </LinearGradient>
             </Defs>
-
-            {/* ── Content masked to the exact curved card boundary ── */}
             <G clipPath="url(#curvedBarClip)">
-              {/* Base rich gradient surface */}
               <Rect
                 x={0}
                 y={0}
@@ -170,8 +154,6 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 height={H}
                 fill="url(#barBgGradient)"
               />
-
-              {/* Glowing Auras */}
               <Rect
                 x={0}
                 y={0}
@@ -187,8 +169,6 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 height={H}
                 fill="url(#barRightAura)"
               />
-
-              {/* Left Acoustic Orbital Concentric Rings */}
               <Circle
                 cx={32}
                 cy={H * 0.52}
@@ -214,8 +194,6 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 strokeWidth={1}
                 fill="none"
               />
-
-              {/* Right Acoustic Orbital Concentric Rings */}
               <Circle
                 cx={W - 32}
                 cy={H * 0.52}
@@ -241,8 +219,6 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 strokeWidth={1}
                 fill="none"
               />
-
-              {/* Center Notch Acoustic Echo Waves (propagating downward) */}
               <Path
                 d={`M ${cx - 26} ${NOTCH_DEEP + 6} Q ${cx} ${
                   NOTCH_DEEP + 16
@@ -260,8 +236,6 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 strokeWidth={1}
                 fill="none"
               />
-
-              {/* Elegant Sweeping Harmonic Waves */}
               <Path
                 d={`M -15 ${H * 0.44} Q ${W * 0.22} ${H * 0.2}, ${
                   cx - NOTCH_W - 6
@@ -282,8 +256,6 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 strokeDasharray="4 5"
                 fill="none"
               />
-
-              {/* Top Chamfer Light Rim Lines */}
               <Path
                 d={`M ${R} 2 L ${cx - NOTCH_W} 2`}
                 stroke="url(#barTopRim)"
@@ -296,8 +268,6 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 strokeWidth={1.2}
                 strokeLinecap="round"
               />
-
-              {/* 4-Point Golden Diamonds / Stars */}
               <Path
                 d={starPath(W * 0.16, H * 0.3, 4.2)}
                 fill="url(#barGoldStar)"
@@ -314,8 +284,6 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 d={starPath(W * 0.84, H * 0.3, 4.2)}
                 fill="url(#barGoldStar)"
               />
-
-              {/* Delicate Starlight Micro-Dots */}
               <Circle
                 cx={W * 0.08}
                 cy={H * 0.34}
@@ -359,8 +327,6 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 opacity={0.65}
               />
             </G>
-
-            {/* ── Signature 4px Cream Outer Border Outline ── */}
             <Path
               d={d}
               fill="none"

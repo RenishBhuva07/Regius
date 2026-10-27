@@ -15,12 +15,7 @@ const BAR_PALETTE = [
   '#8383D6', // Lavender Purple
 ];
 
-/**
- * Animated dynamic acoustic waveform visualizer:
- * - 5 vertical pill bars with staggered organic height animations
- * - Harmonized with Regius category brand colors
- * - Activated dynamically during 'listening' and 'speaking' states
- */
+// Animated waveform visualizer for voice states.
 export const VoiceWaveVisualizer: React.FC<VoiceWaveVisualizerProps> = ({
   isActive = false,
   barCount = 5,

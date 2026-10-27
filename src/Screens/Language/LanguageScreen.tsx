@@ -436,7 +436,7 @@ export const LanguageScreen: React.FC = () => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
-        {/* ─── Flagship 2-Layer Hero Bento Card: Active Locale ─── */}
+        {/* Active Locale */}
         <View style={styles.heroCardShadowWrapper}>
           <View style={styles.heroCard}>
             {/* Header info row */}
@@ -520,7 +520,7 @@ export const LanguageScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* ─── Search Input Bar ─── */}
+        {/* Search Input Bar */}
         <View
           style={[
             styles.searchWrap,
@@ -551,7 +551,7 @@ export const LanguageScreen: React.FC = () => {
           )}
         </View>
 
-        {/* ─── Region Filter Chips ─── */}
+        {/* Region Filter Chips */}
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
@@ -603,7 +603,7 @@ export const LanguageScreen: React.FC = () => {
           })}
         </ScrollView>
 
-        {/* ─── Languages Section ─── */}
+        {/* Languages Section */}
         <View style={styles.sectionHeaderRow}>
           <Text style={[styles.sectionHeading, { color: textSecondary }]}>
             AVAILABLE REGIONAL DIALECTS ({filteredLanguages.length})
@@ -707,7 +707,7 @@ export const LanguageScreen: React.FC = () => {
         </View>
       </ScrollView>
 
-      {/* ─── Sticky Frosted Bottom Action Dock ─── */}
+      {/* Sticky Frosted Bottom Action Dock */}
       <View
         style={[
           styles.actionDock,

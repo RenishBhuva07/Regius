@@ -195,7 +195,7 @@ export const VoiceAssistantSheet: React.FC<VoiceAssistantSheetProps> = ({
           />
         </Animated.View>
 
-        {/* Full-Screen Immersive Voice Assistant Surface */}
+        {/* Sheet surface */}
         <Animated.View
           style={[
             styles.sheetContainer,
@@ -207,7 +207,7 @@ export const VoiceAssistantSheet: React.FC<VoiceAssistantSheetProps> = ({
             },
           ]}
         >
-          {/* Extraordinary Celestial Acoustic Doodles & Ambient Neural Atmosphere */}
+          {/* Background doodles */}
           <VoiceAcousticDoodleSvg
             isDarkMode={theme.isDarkMode}
             state={currentState}
@@ -222,7 +222,7 @@ export const VoiceAssistantSheet: React.FC<VoiceAssistantSheetProps> = ({
             onToggleSuggestions={toggleSuggestions}
           />
 
-          {/* Fixed Content Layout (Non-scrolling, tightly tuned spacing) */}
+          {/* Content layout */}
           <View style={styles.contentBody}>
             <View style={styles.orbWrapper}>
               <AssistantOrb

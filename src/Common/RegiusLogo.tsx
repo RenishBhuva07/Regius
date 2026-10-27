@@ -136,7 +136,6 @@ export const RegiusLogo: React.FC<RegiusLogoProps> = ({
       accessibilityRole="header"
       accessibilityLabel={accessibilityLabel}
     >
-      {/* ── Regal Architectural Crown Crest ── */}
       {showEmblem && (
         <View
           style={[styles.emblemWrap, { marginRight: sizeConfig.emblemGap }]}
@@ -147,7 +146,6 @@ export const RegiusLogo: React.FC<RegiusLogoProps> = ({
             viewBox="0 0 24 24"
             fill="none"
           >
-            {/* Architectural Crown Body */}
             <Path
               d="M3 18L4.6 9L9.2 13L12 5.5L14.8 13L19.4 9L21 18H3Z"
               fill={visualConfig.emblemColor}
@@ -155,19 +153,16 @@ export const RegiusLogo: React.FC<RegiusLogoProps> = ({
               strokeWidth={1}
               strokeLinejoin="round"
             />
-            {/* Center Faceted Diamond Core Cutout */}
             <Path
               d="M12 9.6L13.8 12.3L12 15L10.2 12.3Z"
               fill={visualConfig.diamondColor}
             />
-            {/* Royal Foundation Base Bar */}
             <Path
               d="M3 19.8H21"
               stroke={visualConfig.emblemColor}
               strokeWidth={2.2}
               strokeLinecap="round"
             />
-            {/* Center Star Diamond Peak Jewel */}
             <Circle cx={12} cy={3.8} r={1.6} fill={visualConfig.starTipColor} />
             <Circle cx={4.6} cy={7.8} r={1.2} fill={visualConfig.emblemColor} />
             <Circle
@@ -179,8 +174,6 @@ export const RegiusLogo: React.FC<RegiusLogoProps> = ({
           </Svg>
         </View>
       )}
-
-      {/* ── Stylized Wordmark with Royal Sparkle Accent ── */}
       <View style={styles.textWrap}>
         <Text
           style={[

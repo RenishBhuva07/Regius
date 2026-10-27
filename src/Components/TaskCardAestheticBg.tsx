@@ -74,7 +74,6 @@ export const TaskCardAestheticBg: React.FC<TaskCardAestheticBgProps> = ({
         preserveAspectRatio="none"
       >
         <Defs>
-          {/* Subtle soft gradient background */}
           <LinearGradient
             id="cardSheenGrad"
             x1="0%"
@@ -90,8 +89,6 @@ export const TaskCardAestheticBg: React.FC<TaskCardAestheticBgProps> = ({
             />
             <Stop offset="100%" stopColor={theme.sheenEnd} stopOpacity={0.97} />
           </LinearGradient>
-
-          {/* Top-Right Ambient Theme Aura */}
           <RadialGradient
             id="cornerAura"
             cx={W - 20}
@@ -103,8 +100,6 @@ export const TaskCardAestheticBg: React.FC<TaskCardAestheticBgProps> = ({
             <Stop offset="50%" stopColor={theme.auraColor} stopOpacity={0.06} />
             <Stop offset="100%" stopColor={theme.auraColor} stopOpacity={0} />
           </RadialGradient>
-
-          {/* Bottom-Left Ambient Glow */}
           <RadialGradient
             id="bottomAura"
             cx={15}
@@ -117,8 +112,6 @@ export const TaskCardAestheticBg: React.FC<TaskCardAestheticBgProps> = ({
             <Stop offset="100%" stopColor={theme.auraColor} stopOpacity={0} />
           </RadialGradient>
         </Defs>
-
-        {/* 1. Base Gradient Canvas */}
         <Rect
           x="0"
           y="0"
@@ -127,8 +120,6 @@ export const TaskCardAestheticBg: React.FC<TaskCardAestheticBgProps> = ({
           rx={22}
           fill="url(#cardSheenGrad)"
         />
-
-        {/* 2. Ambient Color Auras */}
         <Rect
           x="0"
           y="0"
@@ -145,8 +136,6 @@ export const TaskCardAestheticBg: React.FC<TaskCardAestheticBgProps> = ({
           rx={22}
           fill="url(#bottomAura)"
         />
-
-        {/* 3. Delicate Constellation & Geometric Arcs in Top-Right Corner */}
         <G opacity={0.35}>
           <Circle
             cx={W - 24}
@@ -166,8 +155,6 @@ export const TaskCardAestheticBg: React.FC<TaskCardAestheticBgProps> = ({
             fill="none"
           />
         </G>
-
-        {/* 4. Fine Diamond Starlight Sparkles */}
         <Path
           d={diamondStar(W - 48, 28, 4)}
           fill={theme.starColor}
@@ -204,8 +191,6 @@ export const TaskCardAestheticBg: React.FC<TaskCardAestheticBgProps> = ({
           fill={theme.sparkleColor}
           opacity={0.4}
         />
-
-        {/* 5. Minimal Corner Flourish Tick Marks */}
         <G opacity={0.25}>
           <Line
             x1={W - 40}

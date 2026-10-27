@@ -306,7 +306,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
           onScroll={handleScroll}
           scrollEventThrottle={16}
         >
-          {/* Hero Prestige Rank Status Card (2-Layer Obsidian Bento) */}
+          {/* Rank status card */}
           <View style={styles.heroOuterWrapper}>
             <View style={styles.cardShadowWrapper}>
               <View style={styles.card}>
@@ -454,7 +454,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
             </View>
           </View>
 
-          {/* 5-Tier Prestige Roadmap with Highway & 3D Level Locks */}
+          {/* Prestige roadmap */}
           <View style={styles.roadmapHeaderRow}>
             <View>
               <Text style={[styles.roadmapHeading, { color: textSecondary }]}>
@@ -492,7 +492,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
             isDarkMode={isDarkMode}
           />
 
-          {/* Swiggy-Inspired Brand Watermark Footer */}
+          {/* Footer brand watermark */}
           <View style={styles.footerWatermarkWrapper} pointerEvents="none">
             <View style={styles.footerWatermarkRow}>
               {/* Left Column: Bold Typography & Sign-off */}
@@ -527,7 +527,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                 </View>
               </View>
 
-              {/* Right Column: Milestone Summit & Prestige Trophy Doodle Illustration */}
+              {/* Trophy doodle */}
               <View style={styles.footerDoodleWrapper}>
                 <MilestoneWatermarkDoodleSvg isDarkMode={isDarkMode} />
               </View>
@@ -535,7 +535,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
           </View>
         </Animated.ScrollView>
 
-        {/* Luxury Level Details Modal */}
+        {/* Level details modal */}
         <MilestoneLevelDetailModal
           tier={selectedTierForDetail}
           visible={!!selectedTierForDetail}
@@ -839,7 +839,7 @@ const styles = StyleSheet.create({
     fontSize: 10.5,
   },
 
-  // Swiggy-Inspired Watermark Footer
+  // Footer watermark styles
   footerWatermarkWrapper: {
     paddingLeft: ResponsivePixels.size16,
     paddingRight: ResponsivePixels.size16,

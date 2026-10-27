@@ -19,17 +19,7 @@ export interface ReminderSectionBackgroundSvgProps {
   height?: number;
 }
 
-/**
- * Dynamic luxury aesthetic background for Reminders Section:
- * - Ambient gold/amber focus dawn aura radiating from top crest badge
- * - Golden radiance under top-right floating plus button
- * - Radiant lavender & mint acoustic horizon glows
- * - Concentric focus chronometer chime rings with radial hour ticks
- * - Subtle geometric diamond lattice & celestial starlight diamond nodes
- * - Left flank timeline progression ribbon with milestone nodes
- * - Hourglass & chime bell watermark doodles
- * - Warm luxury parchment sheen matching TasksScreen
- */
+// Background pattern for the Reminders section.
 export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvgProps> =
   React.memo(({ width: propWidth, height: propHeight }) => {
     const [dimensions, setDimensions] = useState<{
@@ -72,7 +62,6 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
       >
         <Svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} fill="none">
           <Defs>
-            {/* Base warm luxury parchment sheen matching TasksScreen */}
             <LinearGradient
               id="remBgSheen"
               x1="0"
@@ -86,8 +75,6 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               <Stop offset="68%" stopColor="#F5EFE3" stopOpacity={0.96} />
               <Stop offset="100%" stopColor="#ECE4D4" stopOpacity={0.98} />
             </LinearGradient>
-
-            {/* Gold Focus Dawn Aura under center crest badge */}
             <RadialGradient
               id="remCrestAura"
               cx={centerX}
@@ -99,8 +86,6 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               <Stop offset="45%" stopColor="#DEAA14" stopOpacity={0.08} />
               <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Golden radiance under top-right floating plus button */}
             <RadialGradient
               id="remPlusAura"
               cx={W - 37}
@@ -112,8 +97,6 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               <Stop offset="50%" stopColor="#D99B0F" stopOpacity={0.07} />
               <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Lavender focus aura on upper-left */}
             <RadialGradient
               id="remLavenderAura"
               cx={24}
@@ -125,8 +108,6 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               <Stop offset="50%" stopColor="#9C9CE3" stopOpacity={0.05} />
               <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Fresh mint vitality aura on center-right */}
             <RadialGradient
               id="remMintAura"
               cx={W - 15}
@@ -138,8 +119,6 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               <Stop offset="55%" stopColor="#1B9A72" stopOpacity={0.03} />
               <Stop offset="100%" stopColor="#F5EFE3" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Bottom footer radiance aura behind motivation footer and doodles */}
             <RadialGradient
               id="remFooterAura"
               cx={centerX}
@@ -151,8 +130,6 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               <Stop offset="48%" stopColor="#E2A612" stopOpacity={0.05} />
               <Stop offset="100%" stopColor="#ECE4D4" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Bottom-right warm amber acoustic target aura */}
             <RadialGradient
               id="remTargetAura"
               cx={W - 40}
@@ -164,8 +141,6 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               <Stop offset="50%" stopColor="#DEAA14" stopOpacity={0.05} />
               <Stop offset="100%" stopColor="#ECE4D4" stopOpacity={0} />
             </RadialGradient>
-
-            {/* Gold node gradient */}
             <LinearGradient
               id="remGoldNode"
               x1="0%"
@@ -178,19 +153,13 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               <Stop offset="100%" stopColor="#B48216" stopOpacity={0.65} />
             </LinearGradient>
           </Defs>
-
-          {/* 1. Base Gradient Canvas */}
           <Rect x={0} y={0} width={W} height={H} fill="url(#remBgSheen)" />
-
-          {/* 2. Ambient Color Auras */}
           <Rect x={0} y={0} width={W} height={H} fill="url(#remCrestAura)" />
           <Rect x={0} y={0} width={W} height={H} fill="url(#remPlusAura)" />
           <Rect x={0} y={0} width={W} height={H} fill="url(#remLavenderAura)" />
           <Rect x={0} y={0} width={W} height={H} fill="url(#remMintAura)" />
           <Rect x={0} y={0} width={W} height={H} fill="url(#remFooterAura)" />
           <Rect x={0} y={0} width={W} height={H} fill="url(#remTargetAura)" />
-
-          {/* 3. Concentric Focus Chronometer Rings radiating from center crest badge */}
           <G opacity={0.65}>
             <Circle
               cx={centerX}
@@ -240,8 +209,6 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               fill="none"
               opacity={0.18}
             />
-
-            {/* Radial Focus Hour Ticks radiating from crest */}
             {[-60, -45, -30, -15, 0, 15, 30, 45, 60].map((deg, i) => {
               const rad = (deg * Math.PI) / 180;
               const r1 = 80;
@@ -265,8 +232,6 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               );
             })}
           </G>
-
-          {/* 4. Subtle Diamond Focus Grid */}
           <G opacity={0.32}>
             <Line
               x1={0}
@@ -305,8 +270,6 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               strokeDasharray="3 5"
             />
           </G>
-
-          {/* 5. Timeline Progression Ribbon on Left Flank */}
           <Path
             d={`M 0 160 Q 28 230 16 320 T 30 460 T 14 600 T 26 ${H - 35}`}
             stroke="#F5C518"
@@ -350,8 +313,6 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
             fill="url(#remGoldNode)"
             opacity={0.6}
           />
-
-          {/* 6. Chime Bell Doodle (Middle-Right) */}
           <G transform={`translate(${W - 68}, 235)`} opacity={0.22}>
             <Path
               d="M 12 0 C 6 0, 3 8, 2 16 L 22 16 C 21 8, 18 0, 12 0 Z"
@@ -373,8 +334,6 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               fill="none"
             />
           </G>
-
-          {/* 7. Hourglass Doodle (Mid-Left) */}
           <G
             transform={`translate(28, ${Math.min(390, H * 0.48)})`}
             opacity={0.18}
@@ -403,8 +362,6 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               strokeWidth={1.2}
             />
           </G>
-
-          {/* 8. Constellation Starlight Diamonds */}
           <Path d={remDiamond(48, 100, 3.5)} fill="#F5C518" opacity={0.35} />
           <Path d={remDiamond(W - 42, 120, 4)} fill="#8383D6" opacity={0.32} />
           <Path d={remDiamond(W - 84, 180, 3)} fill="#52D22E" opacity={0.3} />

@@ -113,7 +113,7 @@ export const HabitsScreen: React.FC = () => {
           : {})}
       />
 
-      {/* Reusable Screen Header with title, subtitle, Holograph voice orb, and profile */}
+      {/* Screen header */}
       <ScreenHeader
         title="Habits"
         subtitle="Daily Rituals & Consistency"
@@ -146,7 +146,7 @@ export const HabitsScreen: React.FC = () => {
           habits={habits}
         />
 
-        {/* Habits Section with centered black crest badge & top-right floating plus button */}
+        {/* Habits section */}
         <View
           style={[styles.habitsSection, { paddingBottom: insets.bottom + 130 }]}
         >
@@ -155,7 +155,7 @@ export const HabitsScreen: React.FC = () => {
             <HabitSectionBackgroundSvg />
           </View>
 
-          {/* Header crest badge centered on top border - half outside, half inside */}
+          {/* Section header crest badge */}
           <View style={styles.flowHeaderBadge}>
             <FlowBadgePatternSvg />
             <Text style={styles.flowTitle}>Today’s Rituals</Text>
@@ -164,7 +164,7 @@ export const HabitsScreen: React.FC = () => {
             </Text>
           </View>
 
-          {/* New Habit floating button at right corner - half outside, half inside */}
+          {/* Floating add button */}
           <TouchableOpacity
             activeOpacity={0.85}
             onPress={openHabitModal}
@@ -208,7 +208,7 @@ export const HabitsScreen: React.FC = () => {
             }
           />
 
-          {/* Swiggy-Inspired Brand Watermark Footer: "Your future self is taking notes!" + "Crafted with ❤️ in Ahmedabad, India" + Habit Notes Doodles */}
+          {/* Footer brand watermark */}
           <View style={styles.footerWatermarkWrapper} pointerEvents="none">
             <View style={styles.footerWatermarkRow}>
               {/* Left Column: Bold Typography & Sign-off */}
@@ -224,7 +224,7 @@ export const HabitsScreen: React.FC = () => {
                 </View>
               </View>
 
-              {/* Right Column: Extraordinary Habit Notes Doodle Illustration */}
+              {/* Footer doodle */}
               <View style={styles.footerDoodleWrapper}>
                 <HabitNotesDoodleSvg />
               </View>
@@ -413,7 +413,7 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
 
-  // Swiggy-Inspired Watermark Footer
+  // Footer watermark styles
   footerWatermarkWrapper: {
     paddingLeft: ResponsivePixels.size10,
     paddingRight: ResponsivePixels.size16,

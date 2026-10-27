@@ -39,8 +39,6 @@ export const HeaderPatternSvg: React.FC<HeaderPatternSvgProps> = ({
             <Stop offset="100%" stopColor="#FFFFFF" stopOpacity={0.05} />
           </LinearGradient>
         </Defs>
-
-        {/* ── Left Ambient Halo around Logo Base ── */}
         <Circle
           cx={40}
           cy={insetsTop + 24}
@@ -58,8 +56,6 @@ export const HeaderPatternSvg: React.FC<HeaderPatternSvgProps> = ({
           strokeDasharray="3 4"
           fill="none"
         />
-
-        {/* ── Right Concentric Celestial Arcs (behind action buttons) ── */}
         <Circle
           cx={width - 55}
           cy={insetsTop + 14}
@@ -85,8 +81,6 @@ export const HeaderPatternSvg: React.FC<HeaderPatternSvgProps> = ({
           strokeWidth={1}
           fill="none"
         />
-
-        {/* ── Flowing Harmonic Wave (Theme: Curated Flow) ── */}
         <Path
           d={`M -20 ${insetsTop + 40} Q ${width * 0.28} ${insetsTop + 16}, ${
             width * 0.52
@@ -106,15 +100,12 @@ export const HeaderPatternSvg: React.FC<HeaderPatternSvgProps> = ({
           strokeLinecap="round"
           fill="none"
         />
-
-        {/* ── Regius Royal Crown Subtle Watermark Motif (Center Negative Space) ── */}
         <G
           transform={`translate(${width * 0.45 - 14}, ${
             insetsTop + 2
           }) scale(1.15)`}
           opacity={0.12}
         >
-          {/* Crown Base & Points */}
           <Path
             d="M3 18L4.6 9L9.2 13L12 5.5L14.8 13L19.4 9L21 18H3Z"
             stroke="#FFFCE3"
@@ -122,28 +113,22 @@ export const HeaderPatternSvg: React.FC<HeaderPatternSvgProps> = ({
             strokeLinejoin="round"
             fill="none"
           />
-          {/* Faceted Core Diamond Cut */}
           <Path
             d="M12 9.6L13.8 12.3L12 15L10.2 12.3Z"
             stroke="#FFFCE3"
             strokeWidth={0.9}
             fill="none"
           />
-          {/* Base Rim Line */}
           <Path
             d="M3 19.8H21"
             stroke="#FFFCE3"
             strokeWidth={1.4}
             strokeLinecap="round"
           />
-          {/* Crown Jewels */}
           <Circle cx={12} cy={4} r={1.3} fill="#FFFCE3" />
           <Circle cx={4.6} cy={8} r={1} fill="#FFFCE3" />
           <Circle cx={19.4} cy={8} r={1} fill="#FFFCE3" />
         </G>
-
-        {/* ── Luxury Royal Sparkles (4-Pointed Stars) ── */}
-        {/* Sparkle 1: Primary Gold Accent Sparkle in center-upper area */}
         <G
           transform={`translate(${width * 0.41}, ${
             insetsTop + 14
@@ -154,8 +139,6 @@ export const HeaderPatternSvg: React.FC<HeaderPatternSvgProps> = ({
             fill="url(#goldShine)"
           />
         </G>
-
-        {/* Sparkle 2: Delicate White Sparkle lower-center */}
         <G
           transform={`translate(${width * 0.54}, ${
             insetsTop + 34
@@ -167,8 +150,6 @@ export const HeaderPatternSvg: React.FC<HeaderPatternSvgProps> = ({
             fill="#FFFFFF"
           />
         </G>
-
-        {/* Sparkle 3: Micro Gold Sparkle near right cluster */}
         <G
           transform={`translate(${width * 0.64}, ${insetsTop + 8}) scale(0.6)`}
           opacity={0.7}
@@ -178,8 +159,6 @@ export const HeaderPatternSvg: React.FC<HeaderPatternSvgProps> = ({
             fill="#F5C518"
           />
         </G>
-
-        {/* Sparkle 4: Subtle Micro Star near left logo top */}
         <G
           transform={`translate(${width * 0.35}, ${insetsTop + 38}) scale(0.5)`}
           opacity={0.45}
@@ -189,8 +168,6 @@ export const HeaderPatternSvg: React.FC<HeaderPatternSvgProps> = ({
             fill="#FFFCE3"
           />
         </G>
-
-        {/* ── Constellation Accent Dots ── */}
         <Circle
           cx={width * 0.38}
           cy={insetsTop + 18}

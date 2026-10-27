@@ -20,16 +20,7 @@ export interface SettingsBackgroundSvgProps {
   height?: number;
 }
 
-/**
- * Purely Visible & Extraordinary Luxury Background for Settings Screen:
- * - Dynamic light/dark adaptive gradient canvas
- * - Rich, luminous Solar Gold dawn aura radiating from top crest (clearly visible)
- * - Royal Lavender acoustic resonance aura across upper right
- * - Mint precision energy radiance across lower left
- * - Crisp sacred concentric calibration rings & cosmic alignment lattice
- * - Fluid acoustic frequency harmonics & waveform ribbons
- * - Luxury 4-pointed Regius starbursts and celestial stardust constellation nodes
- */
+// Background pattern for Settings screen.
 export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
   React.memo(({ width: propWidth, height: propHeight }) => {
     const { isDarkMode } = useSettingsTheme();
@@ -69,7 +60,6 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
       >
         <Svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} fill="none">
           <Defs>
-            {/* Canvas Base Gradient */}
             <LinearGradient
               id="extraBgBase"
               x1="0"
@@ -99,8 +89,6 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
                 stopOpacity={1}
               />
             </LinearGradient>
-
-            {/* Rich Luminous Gold Dawn Aura */}
             <RadialGradient
               id="extraGoldAura"
               cx={centerX}
@@ -129,8 +117,6 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
                 stopOpacity={0}
               />
             </RadialGradient>
-
-            {/* Radiant Royal Lavender Acoustic Resonance Aura */}
             <RadialGradient
               id="extraLavenderAura"
               cx={W - 20}
@@ -154,8 +140,6 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
                 stopOpacity={0}
               />
             </RadialGradient>
-
-            {/* Fresh Mint Energy Aura */}
             <RadialGradient
               id="extraMintAura"
               cx={30}
@@ -179,8 +163,6 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
                 stopOpacity={0}
               />
             </RadialGradient>
-
-            {/* Starburst Rich Gold Gradient */}
             <LinearGradient
               id="extraStarGold"
               x1="0%"
@@ -193,14 +175,10 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
               <Stop offset="100%" stopColor="#F5C518" stopOpacity={0.8} />
             </LinearGradient>
           </Defs>
-
-          {/* 1. Base Canvas & Dynamic Luminous Volumes */}
           <Rect width={W} height={H} fill="url(#extraBgBase)" />
           <Rect width={W} height={H} fill="url(#extraGoldAura)" />
           <Rect width={W} height={H} fill="url(#extraLavenderAura)" />
           <Rect width={W} height={H} fill="url(#extraMintAura)" />
-
-          {/* 2. Purely Visible Concentric Celestial Rings (Top Center) */}
           <Circle
             cx={centerX}
             cy={60}
@@ -239,8 +217,6 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             strokeDasharray="3 9"
             fill="none"
           />
-
-          {/* 3. Radial Acoustic Alignment Rays (Top Center) */}
           <Line
             x1={centerX - 130}
             y1={-10}
@@ -267,8 +243,6 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             strokeWidth={1}
             strokeDasharray="4 8"
           />
-
-          {/* 4. Fluid Harmonic Acoustic Wave Ribbons across middle and lower canvas */}
           <Path
             d={`M -30 290 C ${W * 0.25} 230, ${W * 0.65} 350, ${W + 30} 270`}
             stroke={
@@ -303,8 +277,6 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             strokeLinecap="round"
             fill="none"
           />
-
-          {/* 5. Visible Geometric Constellation Lines & Lattice */}
           <Line
             x1={20}
             y1={500}
@@ -331,8 +303,6 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             strokeWidth={1}
             strokeDasharray="3 9"
           />
-
-          {/* 6. Sparkling Starbursts (Clearly Visible & Radiant) */}
           <G transform={`translate(${W - 54}, 110)`}>
             <Path
               d="M 8 0 Q 8 8, 16 8 Q 8 8, 8 16 Q 8 8, 0 8 Q 8 8, 8 0 Z"
@@ -359,8 +329,6 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
               opacity={0.8}
             />
           </G>
-
-          {/* 7. Luminous Constellation Nodes */}
           <Circle
             cx={44}
             cy={115}

@@ -25,11 +25,7 @@ interface TaskProductivityBentoProps {
   onAddTask?: () => void;
 }
 
-/**
- * Compact luxury focus bar matching Regius design language:
- * - Slim ~74px profile leaving ample vertical room for categories and tasks
- * - Solar gold focus auras and specular dark obsidian canvas
- */
+// Background vector pattern for the task focus bar.
 const FocusBarBackgroundSvg: React.FC = React.memo(() => (
   <View style={StyleSheet.absoluteFill} pointerEvents="none">
     <Svg
@@ -68,8 +64,6 @@ const FocusBarBackgroundSvg: React.FC = React.memo(() => (
       <Rect width="100%" height="100%" fill="url(#focusBarBg)" />
       <Rect width="100%" height="100%" fill="url(#focusGoldAura)" />
       <Rect width="100%" height="100%" fill="url(#focusLavenderGlow)" />
-
-      {/* Ambient right accent ring */}
       <Circle
         cx={330}
         cy={20}

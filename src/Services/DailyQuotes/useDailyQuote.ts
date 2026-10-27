@@ -3,10 +3,7 @@ import { AppState, AppStateStatus } from 'react-native';
 import { ScreenQuoteKey } from './dailyQuotesData';
 import * as DailyQuotesService from './DailyQuotesService';
 
-/**
- * React hook delivering the screen's random quote of the day.
- * Automatically updates at 12:00 AM midnight and on app resume.
- */
+// Screen daily quote hook (updates at midnight and on app resume)
 export function useDailyQuote(screen: ScreenQuoteKey): string {
   const [quote, setQuote] = useState<string>(() =>
     DailyQuotesService.getDailyQuote(screen),

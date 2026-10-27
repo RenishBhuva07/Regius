@@ -347,7 +347,7 @@ export const SubscriptionScreen: React.FC = () => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
       >
-        {/* ─── Flagship 2-Layer Hero Bento: Imperial Monarch ─── */}
+        {/* Imperial Monarch */}
         <View style={styles.heroOuterWrapper}>
           <View style={styles.cardShadowWrapper}>
             <View style={styles.card}>
@@ -413,7 +413,7 @@ export const SubscriptionScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* ─── Perks Bento Matrix (6 Category Trios) ─── */}
+        {/* Perks Bento Matrix (6 Category Trios) */}
         <View style={styles.sectionHeaderRow}>
           <Crown size={18} color="#F5C518" strokeWidth={2.4} />
           <Text style={[styles.sectionTitle, { color: textPrimary }]}>
@@ -508,7 +508,7 @@ export const SubscriptionScreen: React.FC = () => {
           })}
         </View>
 
-        {/* ─── Sculpted Plan Selector ─── */}
+        {/* Sculpted Plan Selector */}
         <View style={styles.sectionHeaderRow}>
           <Sparkles size={18} color="#F5C518" strokeWidth={2.4} />
           <Text style={[styles.sectionTitle, { color: textPrimary }]}>
@@ -611,7 +611,7 @@ export const SubscriptionScreen: React.FC = () => {
           })}
         </View>
 
-        {/* ─── Social Proof & Testimonial Card ─── */}
+        {/* Social Proof & Testimonial Card */}
         <View
           style={[
             styles.trustCard,
@@ -660,7 +660,7 @@ export const SubscriptionScreen: React.FC = () => {
         )}
       </ScrollView>
 
-      {/* ─── Sticky Dawn Bottom Action Dock ─── */}
+      {/* Sticky Dawn Bottom Action Dock */}
       <View
         style={[
           styles.bottomActionContainer,
