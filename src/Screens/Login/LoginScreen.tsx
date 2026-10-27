@@ -35,6 +35,7 @@ import {
   SparkleSvg,
 } from './Components/LoginSvgs';
 import { ForgotPasswordModal } from './Components/ForgotPasswordModal';
+import { TermsPrivacyModal } from './Components/TermsPrivacyModal';
 
 type AuthMode = 'signin' | 'signup';
 
@@ -52,22 +53,35 @@ export const LoginScreen: React.FC = () => {
   const [rememberMe, setRememberMe] = useState(true);
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Modals
   const [forgotModalVisible, setForgotModalVisible] = useState(false);
+  const [termsModalVisible, setTermsModalVisible] = useState(false);
+  const [termsModalTab, setTermsModalTab] = useState<'terms' | 'privacy'>(
+    'terms',
+  );
 
   // Field Focus States
   const [focusedField, setFocusedField] = useState<string | null>(null);
 
-  // Animations
+  // Segmented Switcher Dimensions & Animation
+  const [switcherWidth, setSwitcherWidth] = useState(0);
   const modeSwitchAnim = useRef(new Animated.Value(0)).current; // 0: signin, 1: signup
 
   const switchMode = (mode: AuthMode) => {
     setAuthMode(mode);
     Animated.spring(modeSwitchAnim, {
       toValue: mode === 'signin' ? 0 : 1,
-      tension: 60,
+      tension: 65,
       friction: 8,
-      useNativeDriver: false,
+      useNativeDriver: true,
     }).start();
+  };
+
+  // Open Terms / Privacy Modal
+  const handleOpenTerms = (tab: 'terms' | 'privacy') => {
+    setTermsModalTab(tab);
+    setTermsModalVisible(true);
   };
 
   // Color Tokens based on Theme
@@ -84,61 +98,53 @@ export const LoginScreen: React.FC = () => {
     ? Colors.MidnightInkText
     : Colors.PureWhiteText;
 
+  // Tab indicator slide calculation
+  const tabWidth = switcherWidth > 0 ? (switcherWidth - 8) / 2 : 0;
+  const indicatorTranslateX = modeSwitchAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, tabWidth],
+  });
+
   // Validation & Submit
   const handleAuthSubmit = () => {
     const trimmedEmail = email.trim();
-    // const trimmedPass = password.trim();
+    const trimmedPass = password.trim();
 
-    // if (!trimmedEmail) {
-    //   ToastHelper.error('Please enter your email', 'Missing Field');
-    //   return;
-    // }
+    if (trimmedEmail) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(trimmedEmail)) {
+        ToastHelper.error(
+          'Please enter a valid email address',
+          'Invalid Email',
+        );
+        return;
+      }
+    }
 
-    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // if (!emailRegex.test(trimmedEmail)) {
-    //   ToastHelper.error('Please enter a valid email address', 'Invalid Email');
-    //   return;
-    // }
-
-    // if (!trimmedPass) {
-    //   ToastHelper.error('Please enter your password', 'Missing Field');
-    //   return;
-    // }
-
-    // if (trimmedPass.length < 6) {
-    //   ToastHelper.error(
-    //     'Password must be at least 6 characters',
-    //     'Weak Password',
-    //   );
-    //   return;
-    // }
-
-    // if (authMode === 'signup') {
-    //   if (!name.trim()) {
-    //     ToastHelper.error('Please enter your full name', 'Missing Name');
-    //     return;
-    //   }
-    //   if (!agreeTerms) {
-    //     ToastHelper.error(
-    //       'Please accept the Terms of Service to continue',
-    //       'Terms Required',
-    //     );
-    //     return;
-    //   }
-    // }
+    if (authMode === 'signup' && agreeTerms === false && name.trim()) {
+      ToastHelper.info(
+        'Please agree to the Terms & Privacy Policy to continue',
+        'Terms Required',
+      );
+      return;
+    }
 
     setIsLoading(true);
 
     setTimeout(() => {
       setIsLoading(false);
+      const fallbackName = authMode === 'signup' ? 'Alex Mercer' : 'Member';
       const userName =
         authMode === 'signup'
-          ? name.trim()
-          : trimmedEmail.split('@')[0] || 'Member';
+          ? name.trim() || fallbackName
+          : trimmedEmail
+          ? trimmedEmail.split('@')[0]
+          : fallbackName;
+
       setAuthState(
         {
           id: `usr_${Date.now()}`,
-          email: trimmedEmail,
+          email: trimmedEmail || 'member@regius.ai',
           name: userName,
           avatarUrl: null,
           emailVerified: true,
@@ -158,7 +164,7 @@ export const LoginScreen: React.FC = () => {
         screen: 'Dashboard',
         params: { justLoggedIn: true },
       });
-    }, 1100);
+    }, 950);
   };
 
   const handleSocialAuth = (provider: 'Google' | 'Apple') => {
@@ -181,7 +187,7 @@ export const LoginScreen: React.FC = () => {
         screen: 'Dashboard',
         params: { justLoggedIn: true },
       });
-    }, 900);
+    }, 850);
   };
 
   const handleGuestAccess = () => {
@@ -216,7 +222,7 @@ export const LoginScreen: React.FC = () => {
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
-          {/* Header & Crest */}
+          {/* Header & Crest Section */}
           <View style={styles.headerSection}>
             <View style={styles.crestWrapper}>
               <RegiusCrownCrestSvg />
@@ -247,7 +253,7 @@ export const LoginScreen: React.FC = () => {
             </Text>
           </View>
 
-          {/* Mode Switcher Pill */}
+          {/* Minimalist Tactile Segmented Switcher Pill */}
           <View
             style={[
               styles.switchContainer,
@@ -256,16 +262,25 @@ export const LoginScreen: React.FC = () => {
                 borderColor: borderLight,
               },
             ]}
+            onLayout={e => setSwitcherWidth(e.nativeEvent.layout.width)}
           >
+            {/* Sliding Indicator Pill */}
+            {tabWidth > 0 && (
+              <Animated.View
+                style={[
+                  styles.switchIndicator,
+                  {
+                    width: tabWidth,
+                    transform: [{ translateX: indicatorTranslateX }],
+                    backgroundColor: surfaceCardBg,
+                  },
+                ]}
+              />
+            )}
+
             <TouchableOpacity
               activeOpacity={0.8}
-              style={[
-                styles.switchTab,
-                authMode === 'signin' && [
-                  styles.switchTabActive,
-                  { backgroundColor: surfaceCardBg },
-                ],
-              ]}
+              style={styles.switchTab}
               onPress={() => switchMode('signin')}
             >
               <Text
@@ -286,13 +301,7 @@ export const LoginScreen: React.FC = () => {
 
             <TouchableOpacity
               activeOpacity={0.8}
-              style={[
-                styles.switchTab,
-                authMode === 'signup' && [
-                  styles.switchTabActive,
-                  { backgroundColor: surfaceCardBg },
-                ],
-              ]}
+              style={styles.switchTab}
               onPress={() => switchMode('signup')}
             >
               <Text
@@ -470,7 +479,7 @@ export const LoginScreen: React.FC = () => {
               </View>
             </View>
 
-            {/* Signature Regius Tactile Checkbox Row */}
+            {/* Signature Tactile Checkbox Row */}
             {authMode === 'signin' ? (
               <TouchableOpacity
                 activeOpacity={0.8}
@@ -518,18 +527,32 @@ export const LoginScreen: React.FC = () => {
                   )}
                 </View>
                 <Text style={[styles.checkboxLabel, { color: textSecondary }]}>
-                  I agree to the <Text style={styles.linkText}>Terms</Text> &{' '}
-                  <Text style={styles.linkText}>Privacy Policy</Text>
+                  I agree to the{' '}
+                  <Text
+                    style={styles.linkText}
+                    onPress={() => handleOpenTerms('terms')}
+                  >
+                    Terms
+                  </Text>{' '}
+                  &{' '}
+                  <Text
+                    style={styles.linkText}
+                    onPress={() => handleOpenTerms('privacy')}
+                  >
+                    Privacy Policy
+                  </Text>
                 </Text>
               </TouchableOpacity>
             )}
 
-            {/* Primary Action Button (Signature Regius Pill Architecture) */}
+            {/* Primary Action Button (Pill Architecture) */}
             <TouchableOpacity
               activeOpacity={0.85}
               style={[styles.primaryCta, { backgroundColor: ctaBg }]}
               onPress={handleAuthSubmit}
               disabled={isLoading}
+              accessibilityRole="button"
+              accessibilityLabel="Primary auth submit"
             >
               {isLoading ? (
                 <ActivityIndicator size="small" color={ctaTextColor} />
@@ -630,6 +653,14 @@ export const LoginScreen: React.FC = () => {
         onClose={() => setForgotModalVisible(false)}
         isDarkMode={isDarkMode}
       />
+
+      {/* Terms & Privacy Covenant Modal */}
+      <TermsPrivacyModal
+        visible={termsModalVisible}
+        initialTab={termsModalTab}
+        onClose={() => setTermsModalVisible(false)}
+        isDarkMode={isDarkMode}
+      />
     </View>
   );
 };
@@ -680,6 +711,7 @@ const styles = StyleSheet.create({
   brandTitle: {
     ...Typography.h1RanadeBold,
     fontSize: 26,
+    lineHeight: 32,
     textAlign: 'center',
     letterSpacing: -0.3,
     marginBottom: ResponsivePixels.size6,
@@ -693,25 +725,32 @@ const styles = StyleSheet.create({
   },
   switchContainer: {
     flexDirection: 'row',
+    position: 'relative',
     width: '100%',
-    height: 48,
-    borderRadius: ResponsivePixels.size24,
+    height: 50,
+    borderRadius: ResponsivePixels.size26,
     borderWidth: 1.5,
-    padding: 3,
+    padding: 4,
     marginBottom: ResponsivePixels.size18,
   },
-  switchTab: {
-    flex: 1,
-    borderRadius: ResponsivePixels.size20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  switchTabActive: {
+  switchIndicator: {
+    position: 'absolute',
+    top: 4,
+    left: 4,
+    bottom: 4,
+    borderRadius: ResponsivePixels.size22,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
     shadowRadius: 5,
     elevation: 2,
+  },
+  switchTab: {
+    flex: 1,
+    borderRadius: ResponsivePixels.size22,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 2,
   },
   switchTabText: {
     fontSize: 13,
@@ -724,17 +763,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: ResponsivePixels.size20,
     paddingVertical: ResponsivePixels.size24,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.06,
-    shadowRadius: 16,
-    elevation: 3,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.07,
+    shadowRadius: 18,
+    elevation: 3.5,
   },
   fieldGroup: {
     marginBottom: ResponsivePixels.size16,
   },
   fieldLabel: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12.5,
+    fontSize: 13,
     marginBottom: ResponsivePixels.size6,
     letterSpacing: 0.1,
   },
@@ -745,14 +784,14 @@ const styles = StyleSheet.create({
   },
   forgotPasswordText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
+    fontSize: 12.5,
     color: Colors.LavenderPurple,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 50,
-    borderRadius: ResponsivePixels.size16,
+    height: 52,
+    borderRadius: ResponsivePixels.size18,
     paddingHorizontal: ResponsivePixels.size14,
   },
   fieldIcon: {
@@ -819,7 +858,7 @@ const styles = StyleSheet.create({
   },
   primaryCtaText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 15,
+    fontSize: 15.5,
     letterSpacing: 0.4,
   },
   ctaSparkle: {
@@ -836,7 +875,7 @@ const styles = StyleSheet.create({
   },
   dividerText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10.5,
+    fontSize: 11,
     letterSpacing: 0.8,
     paddingHorizontal: ResponsivePixels.size12,
   },

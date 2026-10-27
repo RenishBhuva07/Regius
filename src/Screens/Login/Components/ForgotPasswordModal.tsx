@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     height: 52,
-    borderRadius: ResponsivePixels.size16,
+    borderRadius: ResponsivePixels.size18,
     borderWidth: 1.5,
     paddingHorizontal: ResponsivePixels.size14,
     marginBottom: ResponsivePixels.size20,

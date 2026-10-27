@@ -100,9 +100,9 @@ export const RegiusCrownCrestSvg: React.FC<
 export const DecorativeHeaderWavesSvg: React.FC<
   SvgProps & { isDark?: boolean }
 > = ({ isDark = false, ...props }) => {
-  const fillColor1 = isDark ? '#1E2228' : '#FAF5E4';
-  const fillColor2 = isDark ? '#262B33' : '#EFF2FE';
-  const fillColor3 = isDark ? '#1C2026' : '#FFF9DA';
+  const fillColor1 = isDark ? '#1E2228' : '#FAF6E8';
+  const fillColor2 = isDark ? '#262B33' : '#EFF3FE';
+  const fillColor3 = isDark ? '#16191F' : '#FFFDEB';
 
   return (
     <Svg
@@ -122,55 +122,55 @@ export const DecorativeHeaderWavesSvg: React.FC<
           y2="220"
           gradientUnits="userSpaceOnUse"
         >
-          <Stop offset="0%" stopColor={fillColor1} stopOpacity={0.8} />
-          <Stop offset="100%" stopColor={fillColor3} stopOpacity={0.3} />
+          <Stop offset="0%" stopColor={fillColor1} stopOpacity={0.7} />
+          <Stop offset="100%" stopColor={fillColor3} stopOpacity={0.15} />
         </LinearGradient>
         <LinearGradient
           id="waveGrad2"
           x1="375"
           y1="0"
           x2="0"
-          y2="220"
+          y2="200"
           gradientUnits="userSpaceOnUse"
         >
-          <Stop offset="0%" stopColor={fillColor2} stopOpacity={0.65} />
+          <Stop offset="0%" stopColor={fillColor2} stopOpacity={0.5} />
           <Stop offset="100%" stopColor={fillColor1} stopOpacity={0} />
         </LinearGradient>
       </Defs>
 
-      {/* Subtle organic back wave */}
+      {/* Gentle organic wash */}
       <Path
-        d="M0 0H375V145C330 185 280 120 200 160C120 200 60 170 0 195V0Z"
+        d="M0 0H375V135C310 170 260 115 190 150C120 185 60 155 0 175V0Z"
         fill="url(#waveGrad1)"
       />
 
-      {/* Layered pastel accent wave */}
+      {/* Layered pastel accent aura */}
       <Path
-        d="M375 0H0V110C50 145 130 95 210 135C290 175 330 140 375 165V0Z"
+        d="M375 0H0V100C60 130 140 85 220 120C300 155 330 125 375 145V0Z"
         fill="url(#waveGrad2)"
       />
 
-      {/* Subtle floating ambient circles */}
+      {/* Ambient glowing celestial orbs matching screen layout */}
       <Circle
-        cx={310}
-        cy={55}
+        cx={315}
+        cy={65}
         r={28}
         fill={isDark ? '#2E3540' : '#EDFDF5'}
-        fillOpacity={0.7}
+        fillOpacity={0.55}
       />
       <Circle
         cx={55}
-        cy={110}
+        cy={125}
         r={18}
         fill={isDark ? '#2C3038' : '#FFFCEB'}
-        fillOpacity={0.9}
+        fillOpacity={0.8}
       />
       <Circle
-        cx={335}
-        cy={135}
+        cx={338}
+        cy={155}
         r={8}
         fill={isDark ? '#3A424F' : '#D8DBFF'}
-        fillOpacity={0.8}
+        fillOpacity={0.75}
       />
     </Svg>
   );

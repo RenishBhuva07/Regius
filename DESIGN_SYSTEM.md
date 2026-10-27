@@ -481,6 +481,31 @@ Regius notifications operate as high-contrast floating 3D cards engineered to ma
 
 ---
 
+### 4.10 Mindful Luxury Authentication Architecture (`src/Screens/Login/LoginScreen.tsx`)
+
+The authentication screen provides an artisanal, warm luxury gateway to Regius:
+
+1. **Atmospheric Canvas & Header**:
+   - Soft organic header waves with ambient pastel glowing orbs (`#EDFDF5` mint, `#FFFCEB` gold, `#D8DBFF` lavender) against `Colors.CreamBackground` (`#FFFCE3`).
+   - Central concentric Regius Royal Crown Crest (`RegiusCrownCrestSvg`) with outer specular halo, royal purple core, and floating 4-point gold star sparkle (`SparkleSvg`).
+   - Dynamic 3D Badges: `WELCOME BACK` (`purple` / Lavender) for Sign In; `JOIN THE REALM` (`yellow` / Amber Gold) for Account Creation.
+2. **Minimalist Sliding Segmented Tab Pill**:
+   - Warm stone track (`#FAF5E4` / `#F3EFE6` light, `#1E2228` dark) with `borderWidth: 1.5`, `borderColor: Colors.RingBorder` (`#E8E2D5`), and `borderRadius: 26`.
+   - Floating white pill indicator (`Animated.View`) smoothly sliding via `modeSwitchAnim` with spring physics (`tension: 65, friction: 8`, native driver).
+3. **Elevated Squircle Form Container**:
+   - Elevated card (`backgroundColor: Colors.DefaultWhite`, `borderRadius: 28`, `borderWidth: 1.5`, `borderColor: Colors.RingBorder`).
+   - Squircle input fields (`height: 52`, `borderRadius: 18`, `backgroundColor: #FAF8F5`, `borderWidth: 1.2`) highlighting with `Colors.LavenderPurple` (`#8383D6`) on focus.
+   - Vector field icons: `UserFieldSvg`, `MailFieldSvg`, `LockFieldSvg` with eye visibility toggle (`EyeOpenSvg` / `EyeClosedSvg`).
+4. **Mindful Checkbox & Covenant Architecture**:
+   - Tactile green rounded checkbox for 30-day device memory (`#E8FDF0` surface, `#C6FFDD` border, `#52D22E` checkmark).
+   - Interactive Terms & Privacy links launching the dedicated `TermsPrivacyModal` with tabbed mindful covenants.
+5. **Full-Pill Action & Social Architecture**:
+   - Primary CTA: Full-pill `borderRadius: 26` button in `Colors.MidnightCharcoal` (`#1F2228`) with pure white text, 4-point gold sparkle `✦`, and deep charcoal drop shadow.
+   - Social Logins: Equal-width side-by-side full pills for Google and Apple with official vector iconography.
+   - Bottom Guest Link: Centered `Continue as Guest →` link providing instant, local-only sandbox access.
+
+---
+
 ## 5. Voice Assistant UI Specification (`VoiceAssistantSheet.tsx`)
 
 The voice assistant presents as an immersive bottom-anchored modal sheet with rich visual and motion feedback:

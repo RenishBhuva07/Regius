@@ -602,14 +602,54 @@ sequenceDiagram
 
 ---
 
+### 2.18 Onboarding & 3-Step Product Intro Overhaul
+
+- **Purpose**: Elevate first-time app launch experience with brand-consistent typographic lockup, dark/light mode responsiveness, and a 3-step interactive product onboarding carousel covering the universal hierarchy: Tasks, Reminders, and Habits.
+- **Status**: `Implemented`
+- **Source Files**:
+  - `src/Screens/Splash/Splash.tsx`
+  - `src/Screens/Intro/Intro.tsx`
+  - `__tests__/IntroAndSplash.test.tsx`
+- **Key Enhancements**:
+  - **SplashScreen Brand Lockup**: Integrated official `RegiusLogo` (XL, crown crest emblem, royal sparkle) replacing raw text; added tagline _"Mindful Productivity & Flow"_; animated avatar entrance and floating badges (`FloatHeart` & `FloatPicture`); removed overlapping fake iOS home indicator bar and dynamically integrated `useTheme()` and `useSafeAreaInsets()`.
+  - **3-Step Universal Hierarchy Intro**:
+    1. **Step 1: Tasks & Focus** (Gold-Yellow accent `#F5C518`, 3D badge `"1. TASKS & FOCUS"`).
+    2. **Step 2: Smart Reminders** (Mint-Green accent `#1B9A72`, 3D badge `"2. SMART REMINDERS"`).
+    3. **Step 3: Mindful Habits** (Lavender-Purple accent `#8383D6`, 3D badge `"3. MINDFUL HABITS"`).
+  - **Hero SVG & Header Layout**: Preserved the signature full-bleed hero SVG (`SVGS.IntroHeroIllustration`) spanning flush from `top: 0, left: 0`; eliminated the Regius logo from the top-left; provided a floating top-right "Skip" button honoring safe area insets.
+  - **Gestures & Controls**: Paged `FlatList` with `getItemLayout` for fluid swiping, synchronized spring-animated pill indicators, circular next button (`SVGS.Btn`), and full-pill **"Get Started"** CTA on Step 3.
+  - **Safe Area & Responsive Layout**: Responsive bottom docking with `useSafeAreaInsets()`, top "Skip" button directly bypassing to `Login`, and zero placeholder text.
+- **Test Coverage**: Tested in `__tests__/IntroAndSplash.test.tsx` (4 unit tests passing).
+
+### 2.19 Mindful Luxury Authentication Suite (`LoginScreen.tsx`)
+
+- **Purpose**: Deliver an artisanal, warm luxury authentication experience matching `THEME.md` and `DESIGN_SYSTEM.md`, seamlessly handling Sign In, Account Creation, Social Auth, Forgot Password, and Mindful Terms & Privacy covenants.
+- **Status**: `Implemented`
+- **Source Files**:
+  - `src/Screens/Login/LoginScreen.tsx`
+  - `src/Screens/Login/Components/LoginSvgs.tsx`
+  - `src/Screens/Login/Components/ForgotPasswordModal.tsx`
+  - `src/Screens/Login/Components/TermsPrivacyModal.tsx`
+  - `__tests__/LoginScreen.test.tsx`
+- **Key Enhancements**:
+  - **Atmospheric Warm Luxury Background**: Integrated refined `DecorativeHeaderWavesSvg` with warm ambient washes, soft glowing pastel orbs (`#EDFDF5`, `#FFFCEB`, `#D8DBFF`), and organic celestial curves framing the status bar and header.
+  - **Royal Crown Crest & Dynamic 3D Badges**: Concentric shield crest with outer halo, royal purple core, golden crown, and 4-point gold sparkle (`✦`), paired with 3D tactile badges (`WELCOME BACK` in purple for Sign In, `JOIN THE REALM` in yellow for Sign Up).
+  - **Tactile Sliding Segmented Tab Control**: Replaced static toggle jumps with a spring-animated sliding indicator pill (`modeSwitchAnim`, `Animated.View`, `tension: 65, friction: 8`) smoothly gliding between "Sign In" and "Create Account".
+  - **Squircle Input Architecture**: Form inputs feature `borderRadius: 18`, height `52px`, warm ivory tint (`#FAF8F5`), focus glow with `Colors.LavenderPurple` (`#8383D6`), left vector icons (`UserFieldSvg`, `MailFieldSvg`, `LockFieldSvg`), and secure text password toggle (`EyeOpenSvg` / `EyeClosedSvg`).
+  - **Checkbox & Mindful Covenant Modals**: Interactive tactile checkbox with green checked state for Sign In ("Remember this device for 30 days"); interactive links for Sign Up ("I agree to the Terms & Privacy Policy") opening the dedicated `TermsPrivacyModal`.
+  - **Pill Primary CTA & Social Logins**: Full-pill `borderRadius: 26` CTA button in obsidian `Colors.MidnightCharcoal` with gold sparkle `✦` and charcoal elevation; side-by-side full-pill Google and Apple buttons; centered "Continue as Guest →" link.
+- **Test Coverage**: Verified in `__tests__/LoginScreen.test.tsx` (5 unit tests passing).
+
+---
+
 ## 3. Partially Implemented & Planned Features Registry
 
-| Feature Name                    | Status        | Current Reality                                                                         | Required Next Steps                                                               |
-| :------------------------------ | :------------ | :-------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------- |
-| **Task / Reminder Persistence** | `Partial`     | In-memory `useState` in `TaskReminderContext.tsx`.                                      | Add `useEffect` to hydrate from and save to `AsyncStorage`.                       |
-| **OS-Level Reminder Alarms**    | `Planned`     | In-memory time strings (`"04:30 PM"`).                                                  | Install and configure `@notifee/react-native` for native scheduling.              |
-| **On-Device Kokoro Inference**  | `Partial`     | `onnxruntime-react-native` installed and JSI patched; remote Gradio client active.      | Bundle `kokoro-v0_19.onnx` model weights and wire on-device inference session.    |
-| **Remote Backend Sync**         | `Planned`     | `src/api/controllers` and `src/api/helpers` exist as empty folders.                     | Implement REST/GraphQL client with JWT authentication.                            |
-| **Authentication Flow**         | `Partial`     | `LoginScreen.tsx` has complete UI; `AuthContext.tsx` uses mock state.                   | Wire authentication endpoints and secure token storage (`react-native-keychain`). |
-| **In-App Subscription Flow**    | `Implemented` | `SubscriptionScreen`, `SubscriptionSection`, `PremiumContext` with persistence & plans. | Ready for StoreKit / Google Play Billing native bridge in store release phase.    |
-| **Sub-screen Routes**           | `Implemented` | `Language`, `HelpFaq`, `PrivacySecurity`, `Profile`, `Theme`, `Subscription` completed. | Add any additional sub-screens when requested.                                    |
+| Feature Name                    | Status        | Current Reality                                                                         | Required Next Steps                                                            |
+| :------------------------------ | :------------ | :-------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------- |
+| **Task / Reminder Persistence** | `Partial`     | In-memory `useState` in `TaskReminderContext.tsx`.                                      | Add `useEffect` to hydrate from and save to `AsyncStorage`.                    |
+| **OS-Level Reminder Alarms**    | `Planned`     | In-memory time strings (`"04:30 PM"`).                                                  | Install and configure `@notifee/react-native` for native scheduling.           |
+| **On-Device Kokoro Inference**  | `Partial`     | `onnxruntime-react-native` installed and JSI patched; remote Gradio client active.      | Bundle `kokoro-v0_19.onnx` model weights and wire on-device inference session. |
+| **Remote Backend Sync**         | `Planned`     | `src/api/controllers` and `src/api/helpers` exist as empty folders.                     | Implement REST/GraphQL client with JWT authentication.                         |
+| **Authentication Flow**         | `Implemented` | `LoginScreen.tsx` with sliding pill tabs, squircle inputs, modals, and `AuthContext`.   | Ready for native OAuth tokens (Apple / Google SDKs) in store release phase.    |
+| **In-App Subscription Flow**    | `Implemented` | `SubscriptionScreen`, `SubscriptionSection`, `PremiumContext` with persistence & plans. | Ready for StoreKit / Google Play Billing native bridge in store release phase. |
+| **Sub-screen Routes**           | `Implemented` | `Language`, `HelpFaq`, `PrivacySecurity`, `Profile`, `Theme`, `Subscription` completed. | Add any additional sub-screens when requested.                                 |

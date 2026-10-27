@@ -366,7 +366,7 @@ interface ThemeContextType {
   themePresets: ThemeOption[];
 }
 
-const ThemeContext = createContext<ThemeContextType>({
+export const ThemeContext = createContext<ThemeContextType>({
   isDarkMode: false,
   Colors: lightColors,
   toggleTheme: () => {},

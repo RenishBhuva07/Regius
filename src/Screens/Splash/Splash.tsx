@@ -1,17 +1,25 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Dimensions, Animated } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MainContainer from '../../Common/MainContainer';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { Typography } from '../../Theme/Typographys';
+import { useTheme } from '../../Theme/ThemeContext';
 import { SVGS } from '../../Assets/Images';
+import { RegiusLogo } from '../../Common/RegiusLogo';
 
 const { width } = Dimensions.get('window');
 
 const SplashScreen: React.FC = () => {
+  const insets = useSafeAreaInsets();
+  const { isDarkMode, Colors: themeColors } = useTheme();
+
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.92)).current;
   const pulseAnim = useRef(new Animated.Value(1)).current;
+  const floatAnim = useRef(new Animated.Value(0)).current;
+  const taglineFadeAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.parallel([
@@ -26,33 +34,74 @@ const SplashScreen: React.FC = () => {
         tension: 40,
         useNativeDriver: true,
       }),
+      Animated.timing(taglineFadeAnim, {
+        toValue: 1,
+        duration: 1000,
+        delay: 350,
+        useNativeDriver: true,
+      }),
     ]).start();
 
+    // Gentle avatar breathing animation
     Animated.loop(
       Animated.sequence([
         Animated.timing(pulseAnim, {
-          toValue: 1.05,
-          duration: 1000,
+          toValue: 1.04,
+          duration: 1600,
           useNativeDriver: true,
         }),
         Animated.timing(pulseAnim, {
           toValue: 1,
-          duration: 1000,
+          duration: 1600,
           useNativeDriver: true,
         }),
       ]),
     ).start();
-  }, [fadeAnim, scaleAnim, pulseAnim]);
+
+    // Subtle floating bob for auxiliary badges
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim, {
+          toValue: -4,
+          duration: 1400,
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim, {
+          toValue: 4,
+          duration: 1400,
+          useNativeDriver: true,
+        }),
+      ]),
+    ).start();
+  }, [fadeAnim, scaleAnim, pulseAnim, floatAnim, taglineFadeAnim]);
+
+  const backgroundColor =
+    themeColors.Background ||
+    (isDarkMode ? Colors.NeroBlack : Colors.CreamBackground);
+  const cardBg =
+    themeColors.CardBackground ||
+    (isDarkMode ? Colors.MidnightCharcoal : Colors.DefaultWhite);
+  const ringColor =
+    themeColors.BorderLight ||
+    (isDarkMode ? Colors.CarbonSlate : Colors.RingBorder);
+  const blobColor = isDarkMode
+    ? 'rgba(255, 255, 255, 0.04)'
+    : 'rgba(255, 255, 255, 0.85)';
 
   return (
     <MainContainer
-      statusBarStyle="dark-content"
-      statusBarBackgroundColor={Colors.CreamBackground}
-      containerBackgroundColor={Colors.CreamBackground}
+      statusBarStyle={isDarkMode ? 'light-content' : 'dark-content'}
+      statusBarBackgroundColor={backgroundColor}
+      containerBackgroundColor={backgroundColor}
       showHeader={false}
     >
-      <View style={styles.container}>
-        <View style={styles.backgroundBlob} />
+      <View
+        style={[
+          styles.container,
+          { backgroundColor, paddingBottom: insets.bottom },
+        ]}
+      >
+        <View style={[styles.backgroundBlob, { backgroundColor: blobColor }]} />
 
         <Animated.View
           style={[
@@ -66,38 +115,84 @@ const SplashScreen: React.FC = () => {
           <Animated.View
             style={[
               styles.avatarContainer,
-              { transform: [{ scale: pulseAnim }] },
+              {
+                backgroundColor: cardBg,
+                borderColor: ringColor,
+                transform: [{ scale: pulseAnim }],
+              },
             ]}
           >
-            <View style={styles.avatarInner}>
+            <View style={[styles.avatarInner, { backgroundColor: cardBg }]}>
               <SVGS.RegiusAvatar
                 width={ResponsivePixels.size140}
                 height={ResponsivePixels.size140 * (414 / 331)}
               />
             </View>
 
-            <View style={styles.badgeHeart}>
+            {/* Floating Heart Badge with counter-float */}
+            <Animated.View
+              style={[
+                styles.badgeHeart,
+                {
+                  backgroundColor: cardBg,
+                  transform: [{ translateY: floatAnim }],
+                },
+              ]}
+            >
               <SVGS.FloatHeart
                 width={ResponsivePixels.size20}
                 height={ResponsivePixels.size20}
               />
-            </View>
-            <View style={styles.badgePicture}>
+            </Animated.View>
+
+            {/* Floating Picture Badge with inverted float */}
+            <Animated.View
+              style={[
+                styles.badgePicture,
+                {
+                  backgroundColor: cardBg,
+                  transform: [
+                    {
+                      translateY: floatAnim.interpolate({
+                        inputRange: [-4, 4],
+                        outputRange: [4, -4],
+                      }),
+                    },
+                  ],
+                },
+              ]}
+            >
               <SVGS.FloatPicture
                 width={ResponsivePixels.size20}
                 height={ResponsivePixels.size20}
               />
-            </View>
+            </Animated.View>
           </Animated.View>
 
+          {/* Luxury Typographic Wordmark & Crest */}
           <View style={styles.textContainer}>
-            <Text style={styles.appName}>Regius</Text>
+            <RegiusLogo
+              size="xl"
+              variant={isDarkMode ? 'light' : 'default'}
+              showEmblem={true}
+              showSparkle={true}
+            />
+
+            <Animated.Text
+              style={[
+                styles.tagline,
+                {
+                  opacity: taglineFadeAnim,
+                  color:
+                    themeColors.SecondaryText ||
+                    (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray),
+                },
+              ]}
+            >
+              Mindful Productivity & Flow
+            </Animated.Text>
           </View>
         </Animated.View>
-
-        <View style={styles.bottomBarWrapper}>
-          <View style={styles.homeIndicator} />
-        </View>
       </View>
     </MainContainer>
   );
@@ -106,7 +201,6 @@ const SplashScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.CreamBackground,
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
@@ -116,8 +210,7 @@ const styles = StyleSheet.create({
     width: width * 0.9,
     height: width * 0.9,
     borderRadius: (width * 0.9) / 2,
-    backgroundColor: Colors.DefaultWhite,
-    opacity: 0.8,
+    opacity: 0.9,
   },
   contentWrapper: {
     alignItems: 'center',
@@ -127,16 +220,14 @@ const styles = StyleSheet.create({
     width: ResponsivePixels.size160,
     height: ResponsivePixels.size160,
     borderRadius: ResponsivePixels.size80,
-    backgroundColor: Colors.DefaultWhite,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: Colors.DefaultBlack,
     shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    elevation: 6,
+    shadowOpacity: 0.1,
+    shadowRadius: 18,
+    elevation: 8,
     borderWidth: 3,
-    borderColor: Colors.RingBorder,
     position: 'relative',
     marginBottom: ResponsivePixels.size28,
   },
@@ -145,11 +236,6 @@ const styles = StyleSheet.create({
     height: ResponsivePixels.size140,
     borderRadius: ResponsivePixels.size70,
     overflow: 'hidden',
-    backgroundColor: Colors.DefaultWhite,
-  },
-  avatarImage: {
-    width: '100%',
-    height: '100%',
   },
   badgeHeart: {
     position: 'absolute',
@@ -158,7 +244,6 @@ const styles = StyleSheet.create({
     width: ResponsivePixels.size40,
     height: ResponsivePixels.size40,
     borderRadius: ResponsivePixels.size20,
-    backgroundColor: Colors.DefaultWhite,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: Colors.AccentGreen,
@@ -176,7 +261,6 @@ const styles = StyleSheet.create({
     width: ResponsivePixels.size38,
     height: ResponsivePixels.size38,
     borderRadius: ResponsivePixels.size19,
-    backgroundColor: Colors.DefaultWhite,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: Colors.LavenderPurple,
@@ -187,42 +271,14 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ECEBF8',
   },
-  badgeIcon: {
-    width: ResponsivePixels.size20,
-    height: ResponsivePixels.size20,
-  },
   textContainer: {
     alignItems: 'center',
-  },
-  appName: {
-    ...Typography.displayLargeRanadeBold,
-    color: Colors.MidnightInkText,
-    letterSpacing: 1.5,
-    fontWeight: '800',
-  },
-  taglineUnderline: {
-    width: ResponsivePixels.size36,
-    height: ResponsivePixels.size3,
-    backgroundColor: Colors.MidnightCharcoal,
-    borderRadius: ResponsivePixels.size2,
-    marginVertical: ResponsivePixels.size8,
+    marginTop: ResponsivePixels.size8,
   },
   tagline: {
     ...Typography.bodyMediumPoppinsMedium,
-    color: Colors.SubtitleGray,
-    letterSpacing: 0.3,
-  },
-  bottomBarWrapper: {
-    position: 'absolute',
-    bottom: ResponsivePixels.size16,
-    width: '100%',
-    alignItems: 'center',
-  },
-  homeIndicator: {
-    width: ResponsivePixels.size134,
-    height: ResponsivePixels.size5,
-    backgroundColor: Colors.HomeIndicator,
-    borderRadius: ResponsivePixels.size3,
+    marginTop: ResponsivePixels.size10,
+    letterSpacing: 0.6,
   },
 });
 
