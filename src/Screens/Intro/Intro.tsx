@@ -21,6 +21,7 @@ import { Typography } from '../../Theme/Typographys';
 import { useTheme } from '../../Theme/ThemeContext';
 import { SVGS } from '../../Assets/Images';
 import { Badge, BadgeVariant } from '../../Common/Badge';
+import { IntroAestheticBackgroundSvg } from './Components/IntroAestheticBackgroundSvg';
 
 const { width, height } = Dimensions.get('window');
 
@@ -119,35 +120,48 @@ const Intro: React.FC = () => {
   const renderStepItem = ({ item }: { item: IntroStep }) => {
     return (
       <View style={[styles.textSlide, { width }]}>
-        <View style={styles.badgeWrapper}>
-          <Badge
-            variant={item.badgeVariant}
-            label={item.badgeLabel}
-            size="md"
-          />
+        <View
+          style={[
+            styles.textCard,
+            {
+              backgroundColor: isDarkMode
+                ? 'rgba(30, 34, 40, 0.65)'
+                : 'rgba(255, 255, 255, 0.58)',
+              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : '#FFFFFF',
+              borderBottomColor: item.accentColor,
+            },
+          ]}
+        >
+          <View style={styles.badgeWrapper}>
+            <Badge
+              variant={item.badgeVariant}
+              label={item.badgeLabel}
+              size="md"
+            />
+          </View>
+
+          <Text
+            style={[
+              styles.title,
+              {
+                color: textColor,
+              },
+            ]}
+          >
+            {item.title}
+          </Text>
+
+          <Text
+            style={[
+              styles.subtitle,
+              {
+                color: subtitleColor,
+              },
+            ]}
+          >
+            {item.subtitle}
+          </Text>
         </View>
-
-        <Text
-          style={[
-            styles.title,
-            {
-              color: textColor,
-            },
-          ]}
-        >
-          {item.title}
-        </Text>
-
-        <Text
-          style={[
-            styles.subtitle,
-            {
-              color: subtitleColor,
-            },
-          ]}
-        >
-          {item.subtitle}
-        </Text>
       </View>
     );
   };
@@ -160,6 +174,14 @@ const Intro: React.FC = () => {
           ? { backgroundColor: 'transparent', translucent: true }
           : {})}
       />
+
+      {/* ── Signature Artisanal Dynamic Background Canvas ── */}
+      <View style={styles.backgroundSvgWrapper} pointerEvents="none">
+        <IntroAestheticBackgroundSvg
+          isDark={isDarkMode}
+          accentColor={currentStep.accentColor}
+        />
+      </View>
 
       {/* ── Signature Big Hero Illustration from Top Edge ── */}
       <View
@@ -180,7 +202,7 @@ const Intro: React.FC = () => {
         />
       </View>
 
-      {/* ── Top Skip Action (Regius brand name removed from top left) ── */}
+      {/* ── Top Skip Action (Tactile 3D Micro-Pill) ── */}
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={handleSkipPress}
@@ -188,6 +210,11 @@ const Intro: React.FC = () => {
           styles.skipButton,
           {
             top: Math.max(insets.top, ResponsivePixels.size16),
+            backgroundColor: isDarkMode
+              ? 'rgba(255, 255, 255, 0.08)'
+              : 'rgba(255, 255, 255, 0.75)',
+            borderColor: isDarkMode ? '#2C3035' : '#EAE4D6',
+            borderBottomColor: isDarkMode ? '#1E2228' : '#DED6C7',
           },
         ]}
         accessibilityRole="button"
@@ -244,7 +271,7 @@ const Intro: React.FC = () => {
           />
         </View>
 
-        {/* ── Tactile Step Indicator Pills ── */}
+        {/* ── Tactile 3D Step Indicator Pills ── */}
         <View style={styles.indicatorContainer}>
           {INTRO_STEPS.map((step, idx) => {
             const isActive = activeIndex === idx;
@@ -258,12 +285,13 @@ const Intro: React.FC = () => {
                         styles.indicatorActive,
                         {
                           backgroundColor: step.accentColor,
+                          shadowColor: step.accentColor,
                         },
                       ]
                     : {
                         backgroundColor: isDarkMode
                           ? Colors.CarbonSlate
-                          : Colors.RingBorder,
+                          : '#DDD6C6',
                       },
                 ]}
               />
@@ -301,7 +329,10 @@ const Intro: React.FC = () => {
             <TouchableOpacity
               activeOpacity={0.85}
               onPress={handleNextPress}
-              style={styles.actionButtonTouch}
+              style={[
+                styles.actionButtonTouch,
+                { shadowColor: currentStep.accentColor },
+              ]}
               accessibilityRole="button"
               accessibilityLabel="Next step"
             >
@@ -319,6 +350,14 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
   },
+  backgroundSvgWrapper: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 0,
+  },
   illustrationWrapper: {
     position: 'absolute',
     zIndex: 1,
@@ -326,12 +365,21 @@ const styles = StyleSheet.create({
   skipButton: {
     position: 'absolute',
     right: ResponsivePixels.size20,
-    paddingVertical: ResponsivePixels.size8,
-    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size6,
+    paddingHorizontal: ResponsivePixels.size14,
+    borderRadius: ResponsivePixels.size16,
+    borderWidth: 1,
+    borderBottomWidth: 2.2,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 2,
     zIndex: 10,
   },
   skipText: {
     ...Typography.bodyMediumPoppinsSemiBold,
+    fontSize: 13,
     letterSpacing: 0.4,
   },
   contentContainer: {
@@ -345,15 +393,30 @@ const styles = StyleSheet.create({
   },
   carouselContainer: {
     width: '100%',
-    minHeight: ResponsivePixels.size140,
+    minHeight: ResponsivePixels.size150,
     justifyContent: 'center',
   },
   textSlide: {
     alignItems: 'center',
-    paddingHorizontal: ResponsivePixels.size24,
+    paddingHorizontal: ResponsivePixels.size20,
+  },
+  textCard: {
+    width: '100%',
+    alignItems: 'center',
+    paddingHorizontal: ResponsivePixels.size18,
+    paddingVertical: ResponsivePixels.size14,
+    borderRadius: ResponsivePixels.size24,
+    borderWidth: 1.2,
+    borderTopColor: '#FFFFFF',
+    borderBottomWidth: 2.8,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.06,
+    shadowRadius: 14,
+    elevation: 3,
   },
   badgeWrapper: {
-    marginBottom: ResponsivePixels.size10,
+    marginBottom: ResponsivePixels.size8,
   },
   title: {
     ...Typography.h1RanadeBold,
@@ -367,15 +430,15 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     letterSpacing: 0.3,
     lineHeight: 22,
-    marginTop: ResponsivePixels.size10,
-    paddingHorizontal: ResponsivePixels.size12,
+    marginTop: ResponsivePixels.size8,
+    paddingHorizontal: ResponsivePixels.size8,
   },
   indicatorContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: ResponsivePixels.size18,
-    marginBottom: ResponsivePixels.size20,
+    marginTop: ResponsivePixels.size16,
+    marginBottom: ResponsivePixels.size18,
     gap: ResponsivePixels.size8,
   },
   indicatorDot: {
@@ -386,6 +449,12 @@ const styles = StyleSheet.create({
   indicatorActive: {
     width: ResponsivePixels.size28,
     borderRadius: ResponsivePixels.size4,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.45,
+    shadowRadius: 5,
+    elevation: 4,
+    borderTopWidth: 0.8,
+    borderTopColor: 'rgba(255, 255, 255, 0.6)',
   },
   buttonWrapper: {
     alignItems: 'center',
@@ -395,6 +464,10 @@ const styles = StyleSheet.create({
   actionButtonTouch: {
     alignItems: 'center',
     justifyContent: 'center',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.32,
+    shadowRadius: 14,
+    elevation: 8,
   },
   getStartedButton: {
     flexDirection: 'row',
@@ -404,10 +477,16 @@ const styles = StyleSheet.create({
     paddingLeft: ResponsivePixels.size28,
     paddingRight: ResponsivePixels.size12,
     borderRadius: ResponsivePixels.size29,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.3,
-    shadowRadius: 16,
-    elevation: 8,
+    borderWidth: 1,
+    borderTopWidth: 1.5,
+    borderTopColor: 'rgba(255, 255, 255, 0.45)',
+    borderColor: 'rgba(255, 255, 255, 0.15)',
+    borderBottomWidth: 4,
+    borderBottomColor: '#0E1013',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.38,
+    shadowRadius: 18,
+    elevation: 10,
   },
   getStartedText: {
     ...Typography.bodyLargePoppinsSemiBold,
@@ -421,6 +500,11 @@ const styles = StyleSheet.create({
     borderRadius: ResponsivePixels.size19,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 1,
+    borderTopColor: 'rgba(255, 255, 255, 0.5)',
+    borderColor: 'transparent',
+    borderBottomWidth: 2,
+    borderBottomColor: 'rgba(0, 0, 0, 0.2)',
   },
 });
 

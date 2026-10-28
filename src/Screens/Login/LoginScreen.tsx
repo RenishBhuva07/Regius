@@ -23,7 +23,6 @@ import { Badge } from '../../Common/Badge';
 import { ToastHelper } from '../../Common/ToastHelper';
 import {
   RegiusCrownCrestSvg,
-  DecorativeHeaderWavesSvg,
   MailFieldSvg,
   LockFieldSvg,
   UserFieldSvg,
@@ -34,6 +33,7 @@ import {
   AppleLogoSvg,
   SparkleSvg,
 } from './Components/LoginSvgs';
+import { LoginAestheticBackgroundSvg } from './Components/LoginAestheticBackgroundSvg';
 import { ForgotPasswordModal } from './Components/ForgotPasswordModal';
 import { TermsPrivacyModal } from './Components/TermsPrivacyModal';
 
@@ -207,9 +207,9 @@ export const LoginScreen: React.FC = () => {
           : {})}
       />
 
-      {/* Decorative Organic Wave Canvas */}
-      <View style={styles.topWavesWrapper} pointerEvents="none">
-        <DecorativeHeaderWavesSvg isDark={isDarkMode} />
+      {/* Signature Artisanal Aesthetic Background Canvas */}
+      <View style={styles.backgroundSvgWrapper} pointerEvents="none">
+        <LoginAestheticBackgroundSvg isDark={isDarkMode} />
       </View>
 
       <KeyboardAvoidingView
@@ -224,10 +224,12 @@ export const LoginScreen: React.FC = () => {
         >
           {/* Header & Crest Section */}
           <View style={styles.headerSection}>
-            <View style={styles.crestWrapper}>
-              <RegiusCrownCrestSvg />
-              <View style={styles.crestSparkle}>
-                <SparkleSvg size={16} color={Colors.AccentYellow} />
+            <View style={styles.crestShadowWrapper}>
+              <View style={styles.crestWrapper}>
+                <RegiusCrownCrestSvg />
+                <View style={styles.crestSparkle}>
+                  <SparkleSvg size={16} color={Colors.AccentYellow} />
+                </View>
               </View>
             </View>
 
@@ -260,6 +262,7 @@ export const LoginScreen: React.FC = () => {
               {
                 backgroundColor: isDarkMode ? '#1E2228' : '#FAF5E4',
                 borderColor: borderLight,
+                borderBottomColor: isDarkMode ? '#15181C' : '#DFD9CB',
               },
             ]}
             onLayout={e => setSwitcherWidth(e.nativeEvent.layout.width)}
@@ -273,6 +276,10 @@ export const LoginScreen: React.FC = () => {
                     width: tabWidth,
                     transform: [{ translateX: indicatorTranslateX }],
                     backgroundColor: surfaceCardBg,
+                    borderTopColor: isDarkMode
+                      ? 'rgba(255,255,255,0.1)'
+                      : '#FFFFFF',
+                    borderBottomColor: isDarkMode ? '#171A1F' : '#E8E2D5',
                   },
                 ]}
               />
@@ -321,21 +328,75 @@ export const LoginScreen: React.FC = () => {
             </TouchableOpacity>
           </View>
 
-          {/* Form Card */}
-          <View
-            style={[
-              styles.formCard,
-              {
-                backgroundColor: surfaceCardBg,
-                borderColor: borderLight,
-              },
-            ]}
-          >
-            {/* Full Name Field (Sign Up Only) */}
-            {authMode === 'signup' && (
+          {/* 3D Volumetric Form Card Shadow Wrapper */}
+          <View style={styles.formCardShadowWrapper}>
+            <View
+              style={[
+                styles.formCard,
+                {
+                  backgroundColor: surfaceCardBg,
+                  borderColor: borderLight,
+                  borderTopColor: isDarkMode
+                    ? 'rgba(255, 255, 255, 0.12)'
+                    : '#FFFFFF',
+                  borderBottomColor: isDarkMode ? '#16191F' : '#E2DCD0',
+                },
+              ]}
+            >
+              {/* Full Name Field (Sign Up Only) */}
+              {authMode === 'signup' && (
+                <View style={styles.fieldGroup}>
+                  <Text style={[styles.fieldLabel, { color: textPrimary }]}>
+                    Full Name
+                  </Text>
+                  <View
+                    style={[
+                      styles.inputWrapper,
+                      {
+                        backgroundColor: inputBg,
+                        borderColor:
+                          focusedField === 'name'
+                            ? Colors.LavenderPurple
+                            : borderLight,
+                        borderWidth: focusedField === 'name' ? 1.8 : 1.2,
+                        borderBottomColor:
+                          focusedField === 'name'
+                            ? Colors.LavenderPurple
+                            : isDarkMode
+                            ? '#20242B'
+                            : '#EAE4D7',
+                      },
+                      focusedField === 'name' && styles.inputWrapperFocused,
+                    ]}
+                  >
+                    <View style={styles.fieldIcon}>
+                      <UserFieldSvg
+                        color={
+                          focusedField === 'name'
+                            ? Colors.LavenderPurple
+                            : textSecondary
+                        }
+                      />
+                    </View>
+                    <TextInput
+                      style={[styles.input, { color: textPrimary }]}
+                      placeholder="Alex Mercer"
+                      placeholderTextColor={textSecondary}
+                      value={name}
+                      onChangeText={setName}
+                      onFocus={() => setFocusedField('name')}
+                      onBlur={() => setFocusedField(null)}
+                      autoCapitalize="words"
+                      autoCorrect={false}
+                    />
+                  </View>
+                </View>
+              )}
+
+              {/* Email Field */}
               <View style={styles.fieldGroup}>
                 <Text style={[styles.fieldLabel, { color: textPrimary }]}>
-                  Full Name
+                  Email Address
                 </Text>
                 <View
                   style={[
@@ -343,17 +404,24 @@ export const LoginScreen: React.FC = () => {
                     {
                       backgroundColor: inputBg,
                       borderColor:
-                        focusedField === 'name'
+                        focusedField === 'email'
                           ? Colors.LavenderPurple
                           : borderLight,
-                      borderWidth: focusedField === 'name' ? 1.8 : 1.2,
+                      borderWidth: focusedField === 'email' ? 1.8 : 1.2,
+                      borderBottomColor:
+                        focusedField === 'email'
+                          ? Colors.LavenderPurple
+                          : isDarkMode
+                          ? '#20242B'
+                          : '#EAE4D7',
                     },
+                    focusedField === 'email' && styles.inputWrapperFocused,
                   ]}
                 >
                   <View style={styles.fieldIcon}>
-                    <UserFieldSvg
+                    <MailFieldSvg
                       color={
-                        focusedField === 'name'
+                        focusedField === 'email'
                           ? Colors.LavenderPurple
                           : textSecondary
                       }
@@ -361,275 +429,245 @@ export const LoginScreen: React.FC = () => {
                   </View>
                   <TextInput
                     style={[styles.input, { color: textPrimary }]}
-                    placeholder="Alex Mercer"
+                    placeholder="name@regius.ai"
                     placeholderTextColor={textSecondary}
-                    value={name}
-                    onChangeText={setName}
-                    onFocus={() => setFocusedField('name')}
+                    value={email}
+                    onChangeText={setEmail}
+                    onFocus={() => setFocusedField('email')}
                     onBlur={() => setFocusedField(null)}
-                    autoCapitalize="words"
+                    keyboardType="email-address"
+                    autoCapitalize="none"
                     autoCorrect={false}
                   />
                 </View>
               </View>
-            )}
 
-            {/* Email Field */}
-            <View style={styles.fieldGroup}>
-              <Text style={[styles.fieldLabel, { color: textPrimary }]}>
-                Email Address
-              </Text>
-              <View
-                style={[
-                  styles.inputWrapper,
-                  {
-                    backgroundColor: inputBg,
-                    borderColor:
-                      focusedField === 'email'
-                        ? Colors.LavenderPurple
-                        : borderLight,
-                    borderWidth: focusedField === 'email' ? 1.8 : 1.2,
-                  },
-                ]}
-              >
-                <View style={styles.fieldIcon}>
-                  <MailFieldSvg
-                    color={
-                      focusedField === 'email'
-                        ? Colors.LavenderPurple
-                        : textSecondary
-                    }
-                  />
-                </View>
-                <TextInput
-                  style={[styles.input, { color: textPrimary }]}
-                  placeholder="name@regius.ai"
-                  placeholderTextColor={textSecondary}
-                  value={email}
-                  onChangeText={setEmail}
-                  onFocus={() => setFocusedField('email')}
-                  onBlur={() => setFocusedField(null)}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                  autoCorrect={false}
-                />
-              </View>
-            </View>
-
-            {/* Password Field */}
-            <View style={styles.fieldGroup}>
-              <View style={styles.passwordLabelRow}>
-                <Text style={[styles.fieldLabel, { color: textPrimary }]}>
-                  Password
-                </Text>
-                {authMode === 'signin' && (
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    onPress={() => setForgotModalVisible(true)}
-                  >
-                    <Text style={styles.forgotPasswordText}>Forgot?</Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-
-              <View
-                style={[
-                  styles.inputWrapper,
-                  {
-                    backgroundColor: inputBg,
-                    borderColor:
-                      focusedField === 'password'
-                        ? Colors.LavenderPurple
-                        : borderLight,
-                    borderWidth: focusedField === 'password' ? 1.8 : 1.2,
-                  },
-                ]}
-              >
-                <View style={styles.fieldIcon}>
-                  <LockFieldSvg
-                    color={
-                      focusedField === 'password'
-                        ? Colors.LavenderPurple
-                        : textSecondary
-                    }
-                  />
-                </View>
-                <TextInput
-                  style={[styles.input, { color: textPrimary }]}
-                  placeholder="••••••••"
-                  placeholderTextColor={textSecondary}
-                  value={password}
-                  onChangeText={setPassword}
-                  onFocus={() => setFocusedField('password')}
-                  onBlur={() => setFocusedField(null)}
-                  secureTextEntry={!showPassword}
-                  autoCapitalize="none"
-                />
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  style={styles.eyeBtn}
-                  onPress={() => setShowPassword(prev => !prev)}
-                >
-                  {showPassword ? (
-                    <EyeOpenSvg color={textSecondary} />
-                  ) : (
-                    <EyeClosedSvg color={textSecondary} />
+              {/* Password Field */}
+              <View style={styles.fieldGroup}>
+                <View style={styles.passwordLabelRow}>
+                  <Text style={[styles.fieldLabel, { color: textPrimary }]}>
+                    Password
+                  </Text>
+                  {authMode === 'signin' && (
+                    <TouchableOpacity
+                      activeOpacity={0.7}
+                      onPress={() => setForgotModalVisible(true)}
+                    >
+                      <Text style={styles.forgotPasswordText}>Forgot?</Text>
+                    </TouchableOpacity>
                   )}
-                </TouchableOpacity>
-              </View>
-            </View>
+                </View>
 
-            {/* Signature Tactile Checkbox Row */}
-            {authMode === 'signin' ? (
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.checkboxRow}
-                onPress={() => setRememberMe(prev => !prev)}
-              >
                 <View
                   style={[
-                    styles.tactileCheckbox,
-                    rememberMe
-                      ? styles.checkboxChecked
-                      : [
-                          styles.checkboxUnchecked,
-                          { borderColor: borderLight },
-                        ],
+                    styles.inputWrapper,
+                    {
+                      backgroundColor: inputBg,
+                      borderColor:
+                        focusedField === 'password'
+                          ? Colors.LavenderPurple
+                          : borderLight,
+                      borderWidth: focusedField === 'password' ? 1.8 : 1.2,
+                      borderBottomColor:
+                        focusedField === 'password'
+                          ? Colors.LavenderPurple
+                          : isDarkMode
+                          ? '#20242B'
+                          : '#EAE4D7',
+                    },
+                    focusedField === 'password' && styles.inputWrapperFocused,
                   ]}
                 >
-                  {rememberMe && (
-                    <TactileCheckmarkSvg color={Colors.AccentGreen} />
-                  )}
-                </View>
-                <Text style={[styles.checkboxLabel, { color: textSecondary }]}>
-                  Remember this device for 30 days
-                </Text>
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={styles.checkboxRow}
-                onPress={() => setAgreeTerms(prev => !prev)}
-              >
-                <View
-                  style={[
-                    styles.tactileCheckbox,
-                    agreeTerms
-                      ? styles.checkboxChecked
-                      : [
-                          styles.checkboxUnchecked,
-                          { borderColor: borderLight },
-                        ],
-                  ]}
-                >
-                  {agreeTerms && (
-                    <TactileCheckmarkSvg color={Colors.AccentGreen} />
-                  )}
-                </View>
-                <Text style={[styles.checkboxLabel, { color: textSecondary }]}>
-                  I agree to the{' '}
-                  <Text
-                    style={styles.linkText}
-                    onPress={() => handleOpenTerms('terms')}
-                  >
-                    Terms
-                  </Text>{' '}
-                  &{' '}
-                  <Text
-                    style={styles.linkText}
-                    onPress={() => handleOpenTerms('privacy')}
-                  >
-                    Privacy Policy
-                  </Text>
-                </Text>
-              </TouchableOpacity>
-            )}
-
-            {/* Primary Action Button (Pill Architecture) */}
-            <TouchableOpacity
-              activeOpacity={0.85}
-              style={[styles.primaryCta, { backgroundColor: ctaBg }]}
-              onPress={handleAuthSubmit}
-              disabled={isLoading}
-              accessibilityRole="button"
-              accessibilityLabel="Primary auth submit"
-            >
-              {isLoading ? (
-                <ActivityIndicator size="small" color={ctaTextColor} />
-              ) : (
-                <View style={styles.ctaContent}>
-                  <Text
-                    style={[styles.primaryCtaText, { color: ctaTextColor }]}
-                  >
-                    {authMode === 'signin' ? 'Sign In' : 'Create Account'}
-                  </Text>
-                  <View style={styles.ctaSparkle}>
-                    <SparkleSvg
-                      size={15}
+                  <View style={styles.fieldIcon}>
+                    <LockFieldSvg
                       color={
-                        isDarkMode
-                          ? Colors.MidnightCharcoal
-                          : Colors.AccentYellow
+                        focusedField === 'password'
+                          ? Colors.LavenderPurple
+                          : textSecondary
                       }
                     />
                   </View>
+                  <TextInput
+                    style={[styles.input, { color: textPrimary }]}
+                    placeholder="••••••••"
+                    placeholderTextColor={textSecondary}
+                    value={password}
+                    onChangeText={setPassword}
+                    onFocus={() => setFocusedField('password')}
+                    onBlur={() => setFocusedField(null)}
+                    secureTextEntry={!showPassword}
+                    autoCapitalize="none"
+                  />
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    style={styles.eyeBtn}
+                    onPress={() => setShowPassword(prev => !prev)}
+                  >
+                    {showPassword ? (
+                      <EyeOpenSvg color={textSecondary} />
+                    ) : (
+                      <EyeClosedSvg color={textSecondary} />
+                    )}
+                  </TouchableOpacity>
                 </View>
-              )}
-            </TouchableOpacity>
+              </View>
 
-            {/* Divider */}
-            <View style={styles.dividerRow}>
-              <View
-                style={[styles.dividerLine, { backgroundColor: borderLight }]}
-              />
-              <Text style={[styles.dividerText, { color: textSecondary }]}>
-                OR CONTINUE WITH
-              </Text>
-              <View
-                style={[styles.dividerLine, { backgroundColor: borderLight }]}
-              />
-            </View>
-
-            {/* Social Logins */}
-            <View style={styles.socialRow}>
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={[
-                  styles.socialBtn,
-                  {
-                    backgroundColor: isDarkMode ? '#242830' : '#FAF8F5',
-                    borderColor: borderLight,
-                  },
-                ]}
-                onPress={() => handleSocialAuth('Google')}
-              >
-                <GoogleLogoSvg size={20} />
-                <Text style={[styles.socialBtnText, { color: textPrimary }]}>
-                  Google
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                activeOpacity={0.8}
-                style={[
-                  styles.socialBtn,
-                  {
-                    backgroundColor: isDarkMode ? '#242830' : '#1F2228',
-                    borderColor: isDarkMode ? borderLight : '#1F2228',
-                  },
-                ]}
-                onPress={() => handleSocialAuth('Apple')}
-              >
-                <AppleLogoSvg size={20} color={Colors.PureWhiteText} />
-                <Text
-                  style={[
-                    styles.socialBtnText,
-                    { color: Colors.PureWhiteText },
-                  ]}
+              {/* Signature Tactile Checkbox Row */}
+              {authMode === 'signin' ? (
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.checkboxRow}
+                  onPress={() => setRememberMe(prev => !prev)}
                 >
-                  Apple
-                </Text>
+                  <View
+                    style={[
+                      styles.tactileCheckbox,
+                      rememberMe
+                        ? styles.checkboxChecked
+                        : [
+                            styles.checkboxUnchecked,
+                            { borderColor: borderLight },
+                          ],
+                    ]}
+                  >
+                    {rememberMe && (
+                      <TactileCheckmarkSvg color={Colors.AccentGreen} />
+                    )}
+                  </View>
+                  <Text
+                    style={[styles.checkboxLabel, { color: textSecondary }]}
+                  >
+                    Remember this device for 30 days
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={styles.checkboxRow}
+                  onPress={() => setAgreeTerms(prev => !prev)}
+                >
+                  <View
+                    style={[
+                      styles.tactileCheckbox,
+                      agreeTerms
+                        ? styles.checkboxChecked
+                        : [
+                            styles.checkboxUnchecked,
+                            { borderColor: borderLight },
+                          ],
+                    ]}
+                  >
+                    {agreeTerms && (
+                      <TactileCheckmarkSvg color={Colors.AccentGreen} />
+                    )}
+                  </View>
+                  <Text
+                    style={[styles.checkboxLabel, { color: textSecondary }]}
+                  >
+                    I agree to the{' '}
+                    <Text
+                      style={styles.linkText}
+                      onPress={() => handleOpenTerms('terms')}
+                    >
+                      Terms
+                    </Text>{' '}
+                    &{' '}
+                    <Text
+                      style={styles.linkText}
+                      onPress={() => handleOpenTerms('privacy')}
+                    >
+                      Privacy Policy
+                    </Text>
+                  </Text>
+                </TouchableOpacity>
+              )}
+
+              {/* Primary Action Button (3D Extruded Pill Architecture) */}
+              <TouchableOpacity
+                activeOpacity={0.85}
+                style={[styles.primaryCta, { backgroundColor: ctaBg }]}
+                onPress={handleAuthSubmit}
+                disabled={isLoading}
+                accessibilityRole="button"
+                accessibilityLabel="Primary auth submit"
+              >
+                {isLoading ? (
+                  <ActivityIndicator size="small" color={ctaTextColor} />
+                ) : (
+                  <View style={styles.ctaContent}>
+                    <Text
+                      style={[styles.primaryCtaText, { color: ctaTextColor }]}
+                    >
+                      {authMode === 'signin' ? 'Sign In' : 'Create Account'}
+                    </Text>
+                    <View style={styles.ctaSparkle}>
+                      <SparkleSvg
+                        size={15}
+                        color={
+                          isDarkMode
+                            ? Colors.MidnightCharcoal
+                            : Colors.AccentYellow
+                        }
+                      />
+                    </View>
+                  </View>
+                )}
               </TouchableOpacity>
+
+              {/* Divider */}
+              <View style={styles.dividerRow}>
+                <View
+                  style={[styles.dividerLine, { backgroundColor: borderLight }]}
+                />
+                <Text style={[styles.dividerText, { color: textSecondary }]}>
+                  OR CONTINUE WITH
+                </Text>
+                <View
+                  style={[styles.dividerLine, { backgroundColor: borderLight }]}
+                />
+              </View>
+
+              {/* Social Logins */}
+              <View style={styles.socialRow}>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={[
+                    styles.socialBtn,
+                    {
+                      backgroundColor: isDarkMode ? '#242830' : '#FAF8F5',
+                      borderColor: borderLight,
+                    },
+                  ]}
+                  onPress={() => handleSocialAuth('Google')}
+                >
+                  <GoogleLogoSvg size={20} />
+                  <Text style={[styles.socialBtnText, { color: textPrimary }]}>
+                    Google
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={[
+                    styles.socialBtn,
+                    {
+                      backgroundColor: isDarkMode ? '#242830' : '#1F2228',
+                      borderColor: isDarkMode ? borderLight : '#1F2228',
+                    },
+                  ]}
+                  onPress={() => handleSocialAuth('Apple')}
+                >
+                  <AppleLogoSvg size={20} color={Colors.PureWhiteText} />
+                  <Text
+                    style={[
+                      styles.socialBtnText,
+                      { color: Colors.PureWhiteText },
+                    ]}
+                  >
+                    Apple
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
 
@@ -670,12 +708,12 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
   },
-  topWavesWrapper: {
+  backgroundSvgWrapper: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: 220,
+    bottom: 0,
     zIndex: 1,
   },
   keyboardAvoid: {
@@ -695,6 +733,13 @@ const styles = StyleSheet.create({
   headerSection: {
     alignItems: 'center',
     marginBottom: ResponsivePixels.size20,
+  },
+  crestShadowWrapper: {
+    shadowColor: Colors.LavenderPurple,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.28,
+    shadowRadius: 16,
+    elevation: 8,
   },
   crestWrapper: {
     position: 'relative',
@@ -730,6 +775,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: ResponsivePixels.size26,
     borderWidth: 1.5,
+    borderBottomWidth: 3,
     padding: 4,
     marginBottom: ResponsivePixels.size18,
   },
@@ -739,11 +785,13 @@ const styles = StyleSheet.create({
     left: 4,
     bottom: 4,
     borderRadius: ResponsivePixels.size22,
+    borderTopWidth: 1,
+    borderBottomWidth: 2,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 5,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.12,
+    shadowRadius: 6,
+    elevation: 4,
   },
   switchTab: {
     flex: 1,
@@ -756,17 +804,23 @@ const styles = StyleSheet.create({
     fontSize: 13,
     letterSpacing: 0.2,
   },
+  formCardShadowWrapper: {
+    width: '100%',
+    borderRadius: ResponsivePixels.size28,
+    shadowColor: '#121417',
+    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.1,
+    shadowRadius: 24,
+    elevation: 8,
+  },
   formCard: {
     width: '100%',
     borderRadius: ResponsivePixels.size28,
     borderWidth: 1.5,
+    borderTopWidth: 1.5,
+    borderBottomWidth: 4,
     paddingHorizontal: ResponsivePixels.size20,
     paddingVertical: ResponsivePixels.size24,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.07,
-    shadowRadius: 18,
-    elevation: 3.5,
   },
   fieldGroup: {
     marginBottom: ResponsivePixels.size16,
@@ -793,6 +847,14 @@ const styles = StyleSheet.create({
     height: 52,
     borderRadius: ResponsivePixels.size18,
     paddingHorizontal: ResponsivePixels.size14,
+    borderBottomWidth: 2.2,
+  },
+  inputWrapperFocused: {
+    shadowColor: Colors.LavenderPurple,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.22,
+    shadowRadius: 8,
+    elevation: 3,
   },
   fieldIcon: {
     marginRight: ResponsivePixels.size10,
@@ -829,6 +891,13 @@ const styles = StyleSheet.create({
   checkboxChecked: {
     backgroundColor: '#E8FDF0',
     borderColor: '#C6FFDD',
+    borderBottomColor: '#82E8A6',
+    borderBottomWidth: 2.2,
+    shadowColor: Colors.AccentGreen,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.35,
+    shadowRadius: 5,
+    elevation: 3,
   },
   checkboxLabel: {
     fontFamily: Fonts.poppins.regular,
@@ -845,11 +914,15 @@ const styles = StyleSheet.create({
     borderRadius: ResponsivePixels.size26,
     alignItems: 'center',
     justifyContent: 'center',
+    borderTopWidth: 1.2,
+    borderTopColor: 'rgba(255, 255, 255, 0.3)',
+    borderBottomWidth: 4,
+    borderBottomColor: '#0E1013',
     shadowColor: Colors.MidnightCharcoal,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 10,
-    elevation: 4,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.35,
+    shadowRadius: 14,
+    elevation: 7,
     marginBottom: ResponsivePixels.size20,
   },
   ctaContent: {
@@ -888,15 +961,17 @@ const styles = StyleSheet.create({
     height: 48,
     borderRadius: ResponsivePixels.size24,
     borderWidth: 1.5,
+    borderTopWidth: 1,
+    borderBottomWidth: 2.8,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: ResponsivePixels.size8,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 4,
-    elevation: 1.5,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.08,
+    shadowRadius: 5,
+    elevation: 2.5,
   },
   socialBtnText: {
     fontFamily: Fonts.poppins.semiBold,
@@ -905,6 +980,8 @@ const styles = StyleSheet.create({
   guestLinkTouch: {
     marginTop: ResponsivePixels.size20,
     paddingVertical: ResponsivePixels.size8,
+    paddingHorizontal: ResponsivePixels.size16,
+    borderRadius: ResponsivePixels.size18,
   },
   guestLinkText: {
     fontFamily: Fonts.poppins.medium,

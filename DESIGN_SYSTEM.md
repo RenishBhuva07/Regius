@@ -481,28 +481,48 @@ Regius notifications operate as high-contrast floating 3D cards engineered to ma
 
 ---
 
-### 4.10 Mindful Luxury Authentication Architecture (`src/Screens/Login/LoginScreen.tsx`)
+### 4.10 Mindful Luxury Authentication Architecture (`src/Screens/Login/LoginScreen.tsx`, `LoginAestheticBackgroundSvg.tsx`)
 
 The authentication screen provides an artisanal, warm luxury gateway to Regius:
 
-1. **Atmospheric Canvas & Header**:
-   - Soft organic header waves with ambient pastel glowing orbs (`#EDFDF5` mint, `#FFFCEB` gold, `#D8DBFF` lavender) against `Colors.CreamBackground` (`#FFFCE3`).
-   - Central concentric Regius Royal Crown Crest (`RegiusCrownCrestSvg`) with outer specular halo, royal purple core, and floating 4-point gold star sparkle (`SparkleSvg`).
-   - Dynamic 3D Badges: `WELCOME BACK` (`purple` / Lavender) for Sign In; `JOIN THE REALM` (`yellow` / Amber Gold) for Account Creation.
-2. **Minimalist Sliding Segmented Tab Pill**:
-   - Warm stone track (`#FAF5E4` / `#F3EFE6` light, `#1E2228` dark) with `borderWidth: 1.5`, `borderColor: Colors.RingBorder` (`#E8E2D5`), and `borderRadius: 26`.
-   - Floating white pill indicator (`Animated.View`) smoothly sliding via `modeSwitchAnim` with spring physics (`tension: 65, friction: 8`, native driver).
-3. **Elevated Squircle Form Container**:
-   - Elevated card (`backgroundColor: Colors.DefaultWhite`, `borderRadius: 28`, `borderWidth: 1.5`, `borderColor: Colors.RingBorder`).
-   - Squircle input fields (`height: 52`, `borderRadius: 18`, `backgroundColor: #FAF8F5`, `borderWidth: 1.2`) highlighting with `Colors.LavenderPurple` (`#8383D6`) on focus.
-   - Vector field icons: `UserFieldSvg`, `MailFieldSvg`, `LockFieldSvg` with eye visibility toggle (`EyeOpenSvg` / `EyeClosedSvg`).
-4. **Mindful Checkbox & Covenant Architecture**:
-   - Tactile green rounded checkbox for 30-day device memory (`#E8FDF0` surface, `#C6FFDD` border, `#52D22E` checkmark).
-   - Interactive Terms & Privacy links launching the dedicated `TermsPrivacyModal` with tabbed mindful covenants.
-5. **Full-Pill Action & Social Architecture**:
-   - Primary CTA: Full-pill `borderRadius: 26` button in `Colors.MidnightCharcoal` (`#1F2228`) with pure white text, 4-point gold sparkle `✦`, and deep charcoal drop shadow.
-   - Social Logins: Equal-width side-by-side full pills for Google and Apple with official vector iconography.
-   - Bottom Guest Link: Centered `Continue as Guest →` link providing instant, local-only sandbox access.
+1. **Atmospheric Canvas & Aesthetic Background (`LoginAestheticBackgroundSvg.tsx`)**:
+   - Full-bleed responsive background combining organic header waves with a central radiant golden dawn crest halo (`#FFFCE3` / `#F5C518`), concentric acoustic resonance ripples, and flanking glowing auras (`#8383D6` lavender and `#52D22E` mint).
+   - Precision 4-point gold and lavender celestial diamond stars (`✦`) and micro-starlight points framing the screen.
+2. **3D Volumetric Drop Shadows & Tactile Extrusions**:
+   - **Regius Crown Crest**: Elevated with a floating drop shadow wrapper (`shadowColor: '#8383D6'`, `shadowOffset: { width: 0, height: 8 }`, `shadowOpacity: 0.28`, `shadowRadius: 16`, `elevation: 8`).
+   - **Two-Layer Form Card Architecture**: Outer `formCardShadowWrapper` (`shadowColor: '#121417'`, `shadowOffset: { width: 0, height: 14 }`, `shadowOpacity: 0.1`, `shadowRadius: 24`, `elevation: 8`) enclosing the inner card with specular top rim (`borderTopWidth: 1.5`, `borderTopColor: '#FFFFFF'`) and extruded 3D bottom bevel (`borderBottomWidth: 4`, `borderBottomColor: '#E2DCD0'` light / `#16191F` dark).
+   - **Segmented Mode Switcher Pill**: Outer track with inset bottom depth (`borderBottomWidth: 3`, `borderBottomColor: '#DFD9CB'`) and 3D floating active white pill with specular rim and bottom bevel.
+   - **Recessed Input Fields**: Inset 3D depth (`borderBottomWidth: 2.2`) with dynamic ambient lavender glow shadow on focus.
+   - **Primary CTA Button**: 3D extruded pill with specular top rim (`borderTopWidth: 1.2`), extruded bottom bevel (`borderBottomWidth: 4`), and volumetric drop shadow (`shadowOffset: { width: 0, height: 6 }`, `shadowOpacity: 0.35`, `shadowRadius: 14`, `elevation: 7`).
+   - **Social Logins**: 3D tactile buttons with specular top edge, extruded 3D bottom bevel (`borderBottomWidth: 2.8`), and tactile drop shadow.
+
+---
+
+### 4.11 Splash Screen 3D Touch & Artisanal Vector Canvas (`src/Screens/Splash/Splash.tsx`, `SplashAestheticBackgroundSvg.tsx`)
+
+1. **Artisanal Vector Background (`SplashAestheticBackgroundSvg.tsx`)**:
+   - Concentric acoustic resonance orbital rings (`r=98`, dashed `r=138`, `r=185`, dashed `r=235`) centered precisely behind the avatar vessel.
+   - Radiant golden dawn core halo (`#FFFCE3` / `#F5C518`), diagonal velvet lavender aura (`#8383D6`), and fresh mint aura (`#52D22E`).
+   - Flowing harmonic wave ribbons and signature Regius 4-point celestial diamond stars (`✦`) with micro-starlight points.
+2. **Two-Layer Avatar Vessel & 3D Tactile Badges**:
+   - Outer `avatarShadowWrapper` providing volumetric 3D drop shadow (`shadowOffset: { width: 0, height: 16 }`, `shadowOpacity: 0.18`, `shadowRadius: 26`, `elevation: 14`).
+   - Inner vessel with specular highlight rim (`borderWidth: 3.5`, `borderColor: '#FFFFFF'`) and extruded 3D bottom bevel (`borderBottomWidth: 5`, `borderBottomColor: '#DED6C7'`).
+   - Floating Heart and Picture badges upgraded into signature 3D tactile badges with category specular rims, extruded 3D bottom bevels (`borderBottomWidth: 3`), and saturated drop shadow glows (`#52D22E` and `#8383D6`).
+   - Tagline enclosed in an elegant 3D frosted micro-capsule with specular border and ambient elevation.
+
+---
+
+### 4.12 Intro Screen Artisanal Canvas & 3D Interactive Controls (`src/Screens/Intro/Intro.tsx`, `IntroAestheticBackgroundSvg.tsx`)
+
+1. **Dynamic Atmospheric Background (`IntroAestheticBackgroundSvg.tsx`)**:
+   - Background adapts dynamically to the active step's accent color (`#F5C518` Tasks, `#52D22E` Reminders, `#8383D6` Habits).
+   - Radiates concentric acoustic resonance rings behind the lower dock and guilloché wave ribbons across the card area.
+   - Regius signature 4-point diamond celestial stars and micro-sparkles.
+2. **3D Touch & Volumetric Controls**:
+   - **Content Pedestal**: Slide content grounded in an elevated translucent bento card with volumetric drop shadow, specular top edge, and category-accented bottom bevel.
+   - **Tactile 3D Step Indicators**: Active indicator pill with category glow shadow (`shadowOffset: { width: 0, height: 2 }`, `shadowOpacity: 0.45`, `shadowRadius: 5`, `elevation: 4`) and specular top reflection.
+   - **"Get Started" Button**: Volumetric 3D drop shadow (`shadowOffset: { width: 0, height: 10 }`, `shadowOpacity: 0.38`, `shadowRadius: 18`, `elevation: 10`), specular top rim (`borderTopWidth: 1.5`), and extruded 3D bottom bevel (`borderBottomWidth: 4`, `borderBottomColor: '#0E1013'`).
+   - **Skip Button**: Upgraded to a 3D tactile micro-pill with beveled bottom border and subtle floating shadow.
 
 ---
 

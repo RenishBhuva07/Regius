@@ -8,6 +8,7 @@ import { Typography } from '../../Theme/Typographys';
 import { useTheme } from '../../Theme/ThemeContext';
 import { SVGS } from '../../Assets/Images';
 import { RegiusLogo } from '../../Common/RegiusLogo';
+import { SplashAestheticBackgroundSvg } from './Components/SplashAestheticBackgroundSvg';
 
 const { width } = Dimensions.get('window');
 
@@ -81,12 +82,6 @@ const SplashScreen: React.FC = () => {
   const cardBg =
     themeColors.CardBackground ||
     (isDarkMode ? Colors.MidnightCharcoal : Colors.DefaultWhite);
-  const ringColor =
-    themeColors.BorderLight ||
-    (isDarkMode ? Colors.CarbonSlate : Colors.RingBorder);
-  const blobColor = isDarkMode
-    ? 'rgba(255, 255, 255, 0.04)'
-    : 'rgba(255, 255, 255, 0.85)';
 
   return (
     <MainContainer
@@ -101,7 +96,10 @@ const SplashScreen: React.FC = () => {
           { backgroundColor, paddingBottom: insets.bottom },
         ]}
       >
-        <View style={[styles.backgroundBlob, { backgroundColor: blobColor }]} />
+        {/* Signature Artisanal Aesthetic Background */}
+        <View style={styles.backgroundSvgWrapper} pointerEvents="none">
+          <SplashAestheticBackgroundSvg isDark={isDarkMode} />
+        </View>
 
         <Animated.View
           style={[
@@ -112,61 +110,90 @@ const SplashScreen: React.FC = () => {
             },
           ]}
         >
+          {/* 3D Volumetric Avatar Shadow Wrapper */}
           <Animated.View
             style={[
-              styles.avatarContainer,
+              styles.avatarShadowWrapper,
               {
-                backgroundColor: cardBg,
-                borderColor: ringColor,
+                shadowColor: isDarkMode ? '#000000' : '#2A1A4E',
                 transform: [{ scale: pulseAnim }],
               },
             ]}
           >
-            <View style={[styles.avatarInner, { backgroundColor: cardBg }]}>
-              <SVGS.RegiusAvatar
-                width={ResponsivePixels.size140}
-                height={ResponsivePixels.size140 * (414 / 331)}
-              />
-            </View>
-
-            {/* Floating Heart Badge with counter-float */}
-            <Animated.View
+            <View
               style={[
-                styles.badgeHeart,
+                styles.avatarContainer,
                 {
                   backgroundColor: cardBg,
-                  transform: [{ translateY: floatAnim }],
+                  borderColor: isDarkMode ? '#2C3038' : '#FFFFFF',
+                  borderBottomColor: isDarkMode ? '#171A21' : '#DED6C7',
                 },
               ]}
             >
-              <SVGS.FloatHeart
-                width={ResponsivePixels.size20}
-                height={ResponsivePixels.size20}
-              />
-            </Animated.View>
+              <View style={[styles.avatarInner, { backgroundColor: cardBg }]}>
+                <SVGS.RegiusAvatar
+                  width={ResponsivePixels.size140}
+                  height={ResponsivePixels.size140 * (414 / 331)}
+                />
+              </View>
 
-            {/* Floating Picture Badge with inverted float */}
-            <Animated.View
-              style={[
-                styles.badgePicture,
-                {
-                  backgroundColor: cardBg,
-                  transform: [
+              {/* 3D Floating Heart Badge with counter-float */}
+              <Animated.View
+                style={[
+                  styles.badgeHeartShadow,
+                  {
+                    transform: [{ translateY: floatAnim }],
+                  },
+                ]}
+              >
+                <View
+                  style={[
+                    styles.badgeHeart,
                     {
-                      translateY: floatAnim.interpolate({
-                        inputRange: [-4, 4],
-                        outputRange: [4, -4],
-                      }),
+                      backgroundColor: cardBg,
+                      borderBottomColor: isDarkMode ? '#1B9A72' : '#82E8A6',
                     },
-                  ],
-                },
-              ]}
-            >
-              <SVGS.FloatPicture
-                width={ResponsivePixels.size20}
-                height={ResponsivePixels.size20}
-              />
-            </Animated.View>
+                  ]}
+                >
+                  <SVGS.FloatHeart
+                    width={ResponsivePixels.size20}
+                    height={ResponsivePixels.size20}
+                  />
+                </View>
+              </Animated.View>
+
+              {/* 3D Floating Picture Badge with inverted float */}
+              <Animated.View
+                style={[
+                  styles.badgePictureShadow,
+                  {
+                    transform: [
+                      {
+                        translateY: floatAnim.interpolate({
+                          inputRange: [-4, 4],
+                          outputRange: [4, -4],
+                        }),
+                      },
+                    ],
+                  },
+                ]}
+              >
+                <View
+                  style={[
+                    styles.badgePicture,
+                    {
+                      backgroundColor: cardBg,
+                      borderBottomColor: isDarkMode ? '#8383D6' : '#B6BEF5',
+                    },
+                  ]}
+                >
+                  <SVGS.FloatPicture
+                    width={ResponsivePixels.size20}
+                    height={ResponsivePixels.size20}
+                  />
+                </View>
+              </Animated.View>
+            </View>
           </Animated.View>
 
           {/* Luxury Typographic Wordmark & Crest */}
@@ -178,19 +205,35 @@ const SplashScreen: React.FC = () => {
               showSparkle={true}
             />
 
-            <Animated.Text
+            {/* Tactile 3D Tagline Capsule */}
+            <Animated.View
               style={[
-                styles.tagline,
+                styles.taglineCapsule,
                 {
                   opacity: taglineFadeAnim,
-                  color:
-                    themeColors.SecondaryText ||
-                    (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray),
+                  backgroundColor: isDarkMode
+                    ? 'rgba(255, 255, 255, 0.05)'
+                    : 'rgba(255, 255, 255, 0.7)',
+                  borderColor: isDarkMode
+                    ? 'rgba(255, 255, 255, 0.08)'
+                    : '#EFE9DC',
+                  borderBottomColor: isDarkMode ? '#1E2228' : '#DED7C8',
                 },
               ]}
             >
-              Mindful Productivity & Flow
-            </Animated.Text>
+              <Text
+                style={[
+                  styles.tagline,
+                  {
+                    color:
+                      themeColors.SecondaryText ||
+                      (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray),
+                  },
+                ]}
+              >
+                Mindful Productivity & Flow
+              </Text>
+            </Animated.View>
           </View>
         </Animated.View>
       </View>
@@ -205,16 +248,28 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
   },
-  backgroundBlob: {
+  backgroundSvgWrapper: {
     position: 'absolute',
-    width: width * 0.9,
-    height: width * 0.9,
-    borderRadius: (width * 0.9) / 2,
-    opacity: 0.9,
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 0,
   },
   contentWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
+    zIndex: 1,
+  },
+  avatarShadowWrapper: {
+    width: ResponsivePixels.size160,
+    height: ResponsivePixels.size160,
+    borderRadius: ResponsivePixels.size80,
+    shadowOffset: { width: 0, height: 16 },
+    shadowOpacity: 0.18,
+    shadowRadius: 26,
+    elevation: 14,
+    marginBottom: ResponsivePixels.size28,
   },
   avatarContainer: {
     width: ResponsivePixels.size160,
@@ -222,14 +277,9 @@ const styles = StyleSheet.create({
     borderRadius: ResponsivePixels.size80,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: Colors.DefaultBlack,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.1,
-    shadowRadius: 18,
-    elevation: 8,
-    borderWidth: 3,
+    borderWidth: 3.5,
+    borderBottomWidth: 5,
     position: 'relative',
-    marginBottom: ResponsivePixels.size28,
   },
   avatarInner: {
     width: ResponsivePixels.size140,
@@ -237,47 +287,69 @@ const styles = StyleSheet.create({
     borderRadius: ResponsivePixels.size70,
     overflow: 'hidden',
   },
-  badgeHeart: {
+  badgeHeartShadow: {
     position: 'absolute',
     top: -ResponsivePixels.size8,
     left: -ResponsivePixels.size8,
+    shadowColor: Colors.AccentGreen,
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.35,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  badgeHeart: {
+    width: ResponsivePixels.size42,
+    height: ResponsivePixels.size42,
+    borderRadius: ResponsivePixels.size21,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1.5,
+    borderTopColor: '#FFFFFF',
+    borderLeftColor: '#E6F4EA',
+    borderRightColor: '#E6F4EA',
+    borderBottomWidth: 3,
+  },
+  badgePictureShadow: {
+    position: 'absolute',
+    bottom: -ResponsivePixels.size6,
+    right: -ResponsivePixels.size6,
+    shadowColor: Colors.LavenderPurple,
+    shadowOffset: { width: 0, height: 5 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  badgePicture: {
     width: ResponsivePixels.size40,
     height: ResponsivePixels.size40,
     borderRadius: ResponsivePixels.size20,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: Colors.AccentGreen,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.25,
-    shadowRadius: 6,
-    elevation: 4,
-    borderWidth: 1,
-    borderColor: '#E6F4EA',
-  },
-  badgePicture: {
-    position: 'absolute',
-    bottom: -ResponsivePixels.size6,
-    right: -ResponsivePixels.size6,
-    width: ResponsivePixels.size38,
-    height: ResponsivePixels.size38,
-    borderRadius: ResponsivePixels.size19,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: Colors.LavenderPurple,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.2,
-    shadowRadius: 6,
-    elevation: 4,
-    borderWidth: 1,
-    borderColor: '#ECEBF8',
+    borderWidth: 1.5,
+    borderTopColor: '#FFFFFF',
+    borderLeftColor: '#ECEBF8',
+    borderRightColor: '#ECEBF8',
+    borderBottomWidth: 3,
   },
   textContainer: {
     alignItems: 'center',
     marginTop: ResponsivePixels.size8,
   },
+  taglineCapsule: {
+    marginTop: ResponsivePixels.size14,
+    paddingHorizontal: ResponsivePixels.size16,
+    paddingVertical: ResponsivePixels.size6,
+    borderRadius: ResponsivePixels.size20,
+    borderWidth: 1,
+    borderBottomWidth: 2.2,
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 2,
+  },
   tagline: {
     ...Typography.bodyMediumPoppinsMedium,
-    marginTop: ResponsivePixels.size10,
     letterSpacing: 0.6,
   },
 });
