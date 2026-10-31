@@ -39,7 +39,11 @@ import { Fonts } from '../../Theme/fonts';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../Common/Badge';
-import { BackButton } from '../../Common/BackButton';
+import {
+  SubScreenHeader,
+  SUB_SCREEN_HEADER_HEIGHT,
+} from '../../Common/SubScreenHeader';
+import { useScrollReactiveHeader } from '../../Common/useScrollReactiveHeader';
 import { ProBadge } from '../../Common/ProBadge';
 import { useTheme } from '../../Theme/ThemeContext';
 import { VOICES, VoiceOption } from './Components/types';
@@ -47,10 +51,9 @@ import { VoiceSettingsService } from '../../Services/VoiceSettingsService';
 import { AudioPlayerService } from '../../Services/AudioPlayerService';
 import { RegiusSpeechService } from '../../Services/RegiusSpeechService';
 import { KokoroTTSService } from '../../Services/Kokoro/KokoroTTSService';
-import HeaderPatternSvg from '../Dashboard/Components/HeaderPatternSvg';
 import { SettingsBackgroundSvg } from './Components/SettingsBackgroundSvg';
 
-const HEADER_HEIGHT = 54;
+const HEADER_HEIGHT = SUB_SCREEN_HEADER_HEIGHT;
 
 const PRESET_SENTENCES = [
   'Hey Regius, ready when you are.',
@@ -83,9 +86,7 @@ export const VoiceStudioScreen: React.FC = () => {
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
   // Scroll tracking for reactive header layer
-  const scrollY = useRef(new Animated.Value(0)).current;
-  const isScrolledRef = useRef(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const { scrollY, isScrolled, handleScroll } = useScrollReactiveHeader();
 
   // 7-Band Animated Wave Visualizers
   const waveAnim1 = useRef(new Animated.Value(0.3)).current;
@@ -125,63 +126,6 @@ export const VoiceStudioScreen: React.FC = () => {
       KokoroTTSService.stop();
     };
   }, []);
-
-  const handleScroll = Animated.event(
-    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-    {
-      useNativeDriver: false,
-      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-        const offsetY = event?.nativeEvent?.contentOffset?.y ?? 0;
-        if (offsetY > 15 && !isScrolledRef.current) {
-          isScrolledRef.current = true;
-          setIsScrolled(true);
-        } else if (offsetY <= 15 && isScrolledRef.current) {
-          isScrolledRef.current = false;
-          setIsScrolled(false);
-        }
-      },
-    },
-  );
-
-  // Interpolate header visual styles based on scroll position (0 to 30px)
-  const headerBgColor = scrollY.interpolate({
-    inputRange: [0, 30],
-    outputRange: [
-      isDarkMode ? 'rgba(18, 20, 23, 0)' : 'rgba(255, 252, 227, 0)',
-      isDarkMode ? '#282048' : Colors.LavenderPurple,
-    ],
-    extrapolate: 'clamp',
-  });
-
-  const headerRadius = scrollY.interpolate({
-    inputRange: [0, 30],
-    outputRange: [0, 24],
-    extrapolate: 'clamp',
-  });
-
-  const headerShadowOpacity = scrollY.interpolate({
-    inputRange: [0, 30],
-    outputRange: [0, 0.32],
-    extrapolate: 'clamp',
-  });
-
-  const headerElevation = scrollY.interpolate({
-    inputRange: [0, 30],
-    outputRange: [0, 8],
-    extrapolate: 'clamp',
-  });
-
-  const headerPaddingBottom = scrollY.interpolate({
-    inputRange: [0, 30],
-    outputRange: [0, 8],
-    extrapolate: 'clamp',
-  });
-
-  const headerPatternOpacity = scrollY.interpolate({
-    inputRange: [0, 25],
-    outputRange: [0, 1],
-    extrapolate: 'clamp',
-  });
 
   useEffect(() => {
     let animLoop: Animated.CompositeAnimation | null = null;
@@ -427,85 +371,18 @@ export const VoiceStudioScreen: React.FC = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>
-      <StatusBar
-        barStyle={isScrolled ? 'light-content' : isDarkMode ? 'light-content' : 'dark-content'}
-        {...(Platform.OS === 'android'
-          ? {
-              backgroundColor: isScrolled
-                ? isDarkMode
-                  ? '#282048'
-                  : Colors.LavenderPurple
-                : bgMain,
-              translucent: true,
-            }
-          : {})}
-      />
-
       {/* Luxury Background Artwork */}
       <SettingsBackgroundSvg />
 
       {/* Scroll-Reactive Header */}
-      <Animated.View
-        style={[
-          styles.headerContainer,
-          {
-            paddingTop: insets.top,
-            paddingBottom: headerPaddingBottom,
-            backgroundColor: headerBgColor,
-            borderBottomLeftRadius: headerRadius,
-            borderBottomRightRadius: headerRadius,
-            shadowOpacity: headerShadowOpacity,
-            elevation: headerElevation,
-          },
-        ]}
-      >
-        <Animated.View
-          pointerEvents="none"
-          style={[
-            StyleSheet.absoluteFill,
-            {
-              opacity: headerPatternOpacity,
-              borderBottomLeftRadius: headerRadius,
-              borderBottomRightRadius: headerRadius,
-              overflow: 'hidden',
-            },
-          ]}
-        >
-          <HeaderPatternSvg width={screenWidth} insetsTop={insets.top} />
-        </Animated.View>
-
-        <View style={[styles.headerRow, { height: HEADER_HEIGHT }]}>
-          <BackButton
-            isScrolled={isScrolled}
-            accessibilityLabel="Back to Settings"
-          />
-
-          <View style={styles.headerTitleWrap}>
-            <Text
-              style={[
-                styles.headerTitle,
-                isScrolled ? styles.headerTitleScrolled : { color: textPrimary },
-              ]}
-              numberOfLines={1}
-            >
-              Voice Studio
-            </Text>
-            <Text
-              style={[
-                styles.headerSubtitle,
-                isScrolled
-                  ? styles.headerSubtitleScrolled
-                  : { color: textSecondary },
-              ]}
-              numberOfLines={1}
-            >
-              Neural TTS & Kokoro Engine
-            </Text>
-          </View>
-
-          <Badge label="KOKORO 82M" variant="purple" size="sm" />
-        </View>
-      </Animated.View>
+      <SubScreenHeader
+        title="Voice Studio"
+        subtitle="Neural TTS & Kokoro Engine"
+        scrollY={scrollY}
+        isScrolled={isScrolled}
+        badge={{ label: 'KOKORO 82M', variant: 'purple' }}
+        backAccessibilityLabel="Back to Settings"
+      />
 
       <ScrollView
         style={styles.scrollView}
@@ -930,44 +807,6 @@ export default VoiceStudioScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  headerContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 100,
-    shadowColor: '#201646',
-    shadowOffset: { width: 0, height: 6 },
-    shadowRadius: 7,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-  },
-  headerTitleWrap: {
-    alignItems: 'center',
-    flex: 1,
-    marginHorizontal: 10,
-  },
-  headerTitle: {
-    fontFamily: Fonts.ranade.bold,
-    fontSize: 18,
-    letterSpacing: -0.3,
-    lineHeight: 22,
-  },
-  headerTitleScrolled: {
-    color: Colors.DefaultWhite,
-  },
-  headerSubtitle: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
-    marginTop: 1,
-  },
-  headerSubtitleScrolled: {
-    color: 'rgba(255, 255, 255, 0.82)',
   },
   scrollView: {
     flex: 1,

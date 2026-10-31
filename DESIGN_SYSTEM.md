@@ -370,9 +370,22 @@ Used for list items in `HomeScreen`, `TasksScreen` (`TaskCardItem.tsx`), `Remind
 
 ---
 
-### 4.5 Dynamic Scroll-Reactive Layer Header (`src/Screens/Dashboard/DashboardScreen.tsx`, `src/Common/ScreenHeader.tsx`, `src/Components/AddTaskModal.tsx`)
+### 4.5 Dynamic Scroll-Reactive Layer Header (`src/Common/ScreenHeader.tsx`, `src/Common/SubScreenHeader.tsx`, `src/Common/useScrollReactiveHeader.ts`)
 
-A signature luxury header architecture where scrolling elevates the header from a seamless canvas into a distinct floating brand layer:
+Regius employs a signature dual-tier luxury header architecture where scrolling elevates the header from a seamless canvas into a distinct floating brand layer:
+
+1. **Primary Screen Header (`ScreenHeader.tsx`)**:
+   - Used across main bottom-tab screens (`DashboardScreen`, `TasksScreen`, `HabitsScreen`, `RemindersScreen`).
+   - Left: High-emphasis Ranade H1 screen title (`Typography.h1RanadeBold`, 24px) + Poppins subtitle.
+   - Right: Voice Holograph Orb assistant button + User Avatar Ring (`SVGS.RegiusAvatar`).
+
+2. **Sub-Screen Header (`SubScreenHeader.tsx`)**:
+   - Used across secondary & settings detail screens (`VoiceStudioScreen`, `WakeWordStudioScreen`, `PrivacySecurityScreen`, `LanguageScreen`, `HelpFaqScreen`, `ProfileScreen`, `SubscriptionScreen`, `ThemeScreen`).
+   - Driven by `useScrollReactiveHeader()` hook for threshold scroll offsets.
+   - Left: Tactile `<BackButton />` in pill geometry (`44x44`, `borderRadius: 22`).
+   - Center: Ranade Bold (18px) title with Poppins Regular (11px) subtitle or bespoke status pill.
+   - Right: Contextual 3D semantic `<Badge />`, `<ProBadge />`, or functional action button.
+   - Supports both `isAbsolute: true` (transparent under-scroll canvas bleed) and `isAbsolute: false` (in-flow relative positioning).
 
 - **Unscrolled Initial State (`scrollY <= 15px`)**:
 

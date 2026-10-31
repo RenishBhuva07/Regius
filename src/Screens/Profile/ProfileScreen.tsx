@@ -38,7 +38,11 @@ import { Colors } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { SVGS } from '../../Assets/Images';
 import { Badge } from '../../Common/Badge';
-import { BackButton } from '../../Common/BackButton';
+import {
+  SubScreenHeader,
+  SUB_SCREEN_HEADER_HEIGHT,
+} from '../../Common/SubScreenHeader';
+import { useScrollReactiveHeader } from '../../Common/useScrollReactiveHeader';
 import { ProBadge } from '../../Common/ProBadge';
 import { useTheme } from '../../Theme/ThemeContext';
 import { useTaskReminder } from '../../Context/TaskReminderContext';
@@ -46,7 +50,7 @@ import { SettingsBackgroundSvg } from '../Settings/Components/SettingsBackground
 import { HeaderPatternSvg } from '../Dashboard/Components/HeaderPatternSvg';
 
 const { width: screenWidth } = Dimensions.get('window');
-const HEADER_HEIGHT = 52;
+const HEADER_HEIGHT = SUB_SCREEN_HEADER_HEIGHT;
 const PROFILE_STORAGE_KEY = '@regius_profile_data';
 
 export const ProfileScreen: React.FC = () => {
@@ -62,65 +66,7 @@ export const ProfileScreen: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
 
   const [focusedInput, setFocusedInput] = useState<string | null>(null);
-  const scrollY = useRef(new Animated.Value(0)).current;
-  const isScrolledRef = useRef(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  const handleScroll = Animated.event(
-    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-    {
-      useNativeDriver: false,
-      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-        const offsetY = event?.nativeEvent?.contentOffset?.y ?? 0;
-        if (offsetY > 15 && !isScrolledRef.current) {
-          isScrolledRef.current = true;
-          setIsScrolled(true);
-        } else if (offsetY <= 15 && isScrolledRef.current) {
-          isScrolledRef.current = false;
-          setIsScrolled(false);
-        }
-      },
-    },
-  );
-
-  const headerBgColor = scrollY.interpolate({
-    inputRange: [0, 30],
-    outputRange: [
-      isDarkMode ? 'rgba(18, 20, 23, 0)' : 'rgba(255, 252, 227, 0)',
-      isDarkMode ? '#282048' : Colors.LavenderPurple,
-    ],
-    extrapolate: 'clamp',
-  });
-
-  const headerRadius = scrollY.interpolate({
-    inputRange: [0, 30],
-    outputRange: [0, 24],
-    extrapolate: 'clamp',
-  });
-
-  const headerShadowOpacity = scrollY.interpolate({
-    inputRange: [0, 30],
-    outputRange: [0, 0.32],
-    extrapolate: 'clamp',
-  });
-
-  const headerElevation = scrollY.interpolate({
-    inputRange: [0, 30],
-    outputRange: [0, 8],
-    extrapolate: 'clamp',
-  });
-
-  const headerPaddingBottom = scrollY.interpolate({
-    inputRange: [0, 30],
-    outputRange: [0, 8],
-    extrapolate: 'clamp',
-  });
-
-  const headerPatternOpacity = scrollY.interpolate({
-    inputRange: [0, 25],
-    outputRange: [0, 1],
-    extrapolate: 'clamp',
-  });
+  const { scrollY, isScrolled, handleScroll } = useScrollReactiveHeader();
 
   const completedTasksCount = tasks.filter(t => t.done).length;
   const activeHabitsStreak = habits.reduce(
@@ -199,92 +145,18 @@ export const ProfileScreen: React.FC = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>
-      <StatusBar
-        barStyle={
-          isScrolled
-            ? 'light-content'
-            : isDarkMode
-            ? 'light-content'
-            : 'dark-content'
-        }
-        {...(Platform.OS === 'android'
-          ? {
-              backgroundColor: isScrolled
-                ? isDarkMode
-                  ? '#282048'
-                  : Colors.LavenderPurple
-                : bgMain,
-              translucent: true,
-            }
-          : {})}
-      />
-
       <SettingsBackgroundSvg />
 
       {/* Scroll-Reactive Header */}
-      <Animated.View
-        style={[
-          styles.headerContainer,
-          {
-            paddingTop: insets.top,
-            paddingBottom: headerPaddingBottom,
-            backgroundColor: headerBgColor,
-            borderBottomLeftRadius: headerRadius,
-            borderBottomRightRadius: headerRadius,
-            shadowOpacity: headerShadowOpacity,
-            elevation: headerElevation,
-          },
-        ]}
-      >
-        <Animated.View
-          pointerEvents="none"
-          style={[
-            StyleSheet.absoluteFill,
-            {
-              opacity: headerPatternOpacity,
-              borderBottomLeftRadius: headerRadius,
-              borderBottomRightRadius: headerRadius,
-              overflow: 'hidden',
-            },
-          ]}
-        >
-          <HeaderPatternSvg width={screenWidth} insetsTop={insets.top} />
-        </Animated.View>
-
-        <View style={[styles.headerRow, { height: HEADER_HEIGHT }]}>
-          <BackButton
-            isScrolled={isScrolled}
-            accessibilityLabel="Back to Settings"
-          />
-
-          <View style={styles.headerTitleWrap}>
-            <Text
-              style={[
-                styles.headerTitle,
-                isScrolled
-                  ? styles.headerTitleScrolled
-                  : { color: textPrimary },
-              ]}
-              numberOfLines={1}
-            >
-              Profile & Account
-            </Text>
-            <Text
-              style={[
-                styles.headerSubtitle,
-                isScrolled
-                  ? styles.headerSubtitleScrolled
-                  : { color: textSecondary },
-              ]}
-              numberOfLines={1}
-            >
-              Identity & Persona
-            </Text>
-          </View>
-
-          <ProBadge size="sm" />
-        </View>
-      </Animated.View>
+      <SubScreenHeader
+        title="Profile & Account"
+        subtitle="Identity & Persona"
+        scrollY={scrollY}
+        isScrolled={isScrolled}
+        isAbsolute={false}
+        rightAction={<ProBadge size="sm" />}
+        backAccessibilityLabel="Back to Settings"
+      />
 
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -694,37 +566,6 @@ export default ProfileScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  headerContainer: {
-    shadowColor: Colors.LavenderPurple,
-    shadowOffset: { width: 0, height: 6 },
-    shadowRadius: 12,
-    zIndex: 10,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: ResponsivePixels.size16,
-  },
-  headerTitleWrap: {
-    alignItems: 'center',
-  },
-  headerTitle: {
-    ...Typography.h5SemiBold,
-    fontFamily: Fonts.ranade.bold,
-    fontSize: 18,
-  },
-  headerTitleScrolled: {
-    color: Colors.DefaultWhite,
-  },
-  headerSubtitle: {
-    ...Typography.bodySuperSmallPoppinsRegularLoose,
-    fontSize: 11,
-    marginTop: 2,
-  },
-  headerSubtitleScrolled: {
-    color: 'rgba(255, 255, 255, 0.85)',
   },
   keyboardView: {
     flex: 1,

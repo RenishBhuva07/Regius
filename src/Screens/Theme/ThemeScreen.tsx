@@ -37,7 +37,11 @@ import { Fonts } from '../../Theme/fonts';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../Common/Badge';
-import { BackButton } from '../../Common/BackButton';
+import {
+  SubScreenHeader,
+  SUB_SCREEN_HEADER_HEIGHT,
+} from '../../Common/SubScreenHeader';
+import { useScrollReactiveHeader } from '../../Common/useScrollReactiveHeader';
 import CustomButton from '../../Common/CustomButton';
 import {
   useTheme,
@@ -51,7 +55,7 @@ import { SettingsBackgroundSvg } from '../Settings/Components/SettingsBackground
 import { HeaderPatternSvg } from '../Dashboard/Components/HeaderPatternSvg';
 
 const { width: screenWidth } = Dimensions.get('window');
-const HEADER_HEIGHT = 52;
+const HEADER_HEIGHT = SUB_SCREEN_HEADER_HEIGHT;
 
 type FilterTab = 'all' | 'unlocked' | 'locked';
 
@@ -74,65 +78,7 @@ export const ThemeScreen: React.FC = () => {
     null,
   );
 
-  const scrollY = useRef(new Animated.Value(0)).current;
-  const isScrolledRef = useRef(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  const handleScroll = Animated.event(
-    [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-    {
-      useNativeDriver: false,
-      listener: (event: NativeSyntheticEvent<NativeScrollEvent>) => {
-        const offsetY = event?.nativeEvent?.contentOffset?.y ?? 0;
-        if (offsetY > 15 && !isScrolledRef.current) {
-          isScrolledRef.current = true;
-          setIsScrolled(true);
-        } else if (offsetY <= 15 && isScrolledRef.current) {
-          isScrolledRef.current = false;
-          setIsScrolled(false);
-        }
-      },
-    },
-  );
-
-  const headerBgColor = scrollY.interpolate({
-    inputRange: [0, 30],
-    outputRange: [
-      isDarkMode ? 'rgba(18, 20, 23, 0)' : 'rgba(255, 252, 227, 0)',
-      isDarkMode ? '#282048' : Colors.LavenderPurple,
-    ],
-    extrapolate: 'clamp',
-  });
-
-  const headerRadius = scrollY.interpolate({
-    inputRange: [0, 30],
-    outputRange: [0, 24],
-    extrapolate: 'clamp',
-  });
-
-  const headerShadowOpacity = scrollY.interpolate({
-    inputRange: [0, 30],
-    outputRange: [0, 0.32],
-    extrapolate: 'clamp',
-  });
-
-  const headerElevation = scrollY.interpolate({
-    inputRange: [0, 30],
-    outputRange: [0, 8],
-    extrapolate: 'clamp',
-  });
-
-  const headerPaddingBottom = scrollY.interpolate({
-    inputRange: [0, 30],
-    outputRange: [0, 8],
-    extrapolate: 'clamp',
-  });
-
-  const headerPatternOpacity = scrollY.interpolate({
-    inputRange: [0, 25],
-    outputRange: [0, 1],
-    extrapolate: 'clamp',
-  });
+  const { scrollY, isScrolled, handleScroll } = useScrollReactiveHeader();
 
   // Active theme object
   const activeTheme = useMemo(
@@ -211,96 +157,23 @@ export const ThemeScreen: React.FC = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>
-      <StatusBar
-        barStyle={
-          isScrolled
-            ? 'light-content'
-            : isDarkMode
-            ? 'light-content'
-            : 'dark-content'
-        }
-        {...(Platform.OS === 'android'
-          ? {
-              backgroundColor: isScrolled
-                ? isDarkMode
-                  ? '#282048'
-                  : Colors.LavenderPurple
-                : bgMain,
-              translucent: true,
-            }
-          : {})}
-      />
-
       <SettingsBackgroundSvg />
 
       {/* Scroll-Reactive Header */}
-      <Animated.View
-        style={[
-          styles.headerContainer,
-          {
-            paddingTop: insets.top,
-            paddingBottom: headerPaddingBottom,
-            backgroundColor: headerBgColor,
-            borderBottomLeftRadius: headerRadius,
-            borderBottomRightRadius: headerRadius,
-            shadowOpacity: headerShadowOpacity,
-            elevation: headerElevation,
-          },
-        ]}
-      >
-        <Animated.View
-          pointerEvents="none"
-          style={[
-            StyleSheet.absoluteFill,
-            {
-              opacity: headerPatternOpacity,
-              borderBottomLeftRadius: headerRadius,
-              borderBottomRightRadius: headerRadius,
-              overflow: 'hidden',
-            },
-          ]}
-        >
-          <HeaderPatternSvg width={screenWidth} insetsTop={insets.top} />
-        </Animated.View>
-
-        <View style={[styles.headerRow, { height: HEADER_HEIGHT }]}>
-          <BackButton
-            isScrolled={isScrolled}
-            accessibilityLabel="Back to Settings"
-          />
-
-          <View style={styles.headerTitleWrap}>
-            <Text
-              style={[
-                styles.headerTitle,
-                isScrolled
-                  ? styles.headerTitleScrolled
-                  : { color: textPrimary },
-              ]}
-              numberOfLines={1}
-            >
-              Prestige Themes
-            </Text>
-            <Text
-              style={[
-                styles.headerSubtitle,
-                isScrolled
-                  ? styles.headerSubtitleScrolled
-                  : { color: textSecondary },
-              ]}
-              numberOfLines={1}
-            >
-              Bespoke Luxury Color Systems
-            </Text>
-          </View>
-
+      <SubScreenHeader
+        title="Prestige Themes"
+        subtitle="Bespoke Luxury Color Systems"
+        scrollY={scrollY}
+        isScrolled={isScrolled}
+        isAbsolute={false}
+        rightAction={scrolled => (
           <View style={styles.headerRightActions}>
             <TouchableOpacity
               activeOpacity={0.75}
               onPress={toggleTheme}
               style={[
                 styles.modeToggleBtn,
-                isScrolled
+                scrolled
                   ? styles.modeToggleBtnScrolled
                   : {
                       backgroundColor: cardBg,
@@ -324,7 +197,7 @@ export const ThemeScreen: React.FC = () => {
                 <Moon
                   size={17}
                   color={
-                    isScrolled ? Colors.DefaultWhite : Colors.LavenderPurple
+                    scrolled ? Colors.DefaultWhite : Colors.LavenderPurple
                   }
                   strokeWidth={2.4}
                 />
@@ -333,8 +206,9 @@ export const ThemeScreen: React.FC = () => {
 
             <Badge label="6 PALETTES" variant="yellow" size="sm" />
           </View>
-        </View>
-      </Animated.View>
+        )}
+        backAccessibilityLabel="Back to Settings"
+      />
 
       <Animated.ScrollView
         style={styles.scrollView}
@@ -1024,25 +898,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  headerContainer: {
-    shadowColor: Colors.LavenderPurple,
-    shadowOffset: { width: 0, height: 6 },
-    shadowRadius: 12,
-    zIndex: 10,
-  },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: ResponsivePixels.size16,
-  },
   modeToggleBtnScrolled: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     borderColor: 'rgba(255, 255, 255, 0.4)',
     borderBottomColor: 'rgba(255, 255, 255, 0.3)',
-  },
-  headerTitleWrap: {
-    alignItems: 'center',
   },
   headerRightActions: {
     flexDirection: 'row',
@@ -1061,22 +920,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
-  },
-  headerTitle: {
-    ...Typography.h5SemiBold,
-    fontFamily: Fonts.ranade.bold,
-    fontSize: 18,
-  },
-  headerTitleScrolled: {
-    color: Colors.DefaultWhite,
-  },
-  headerSubtitle: {
-    ...Typography.bodySuperSmallPoppinsRegularLoose,
-    fontSize: 11,
-    marginTop: 2,
-  },
-  headerSubtitleScrolled: {
-    color: 'rgba(255, 255, 255, 0.85)',
   },
   scrollView: {
     flex: 1,
