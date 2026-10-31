@@ -228,7 +228,13 @@ export const SubscriptionScreen: React.FC = () => {
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>
       <StatusBar
-        barStyle={isScrolled ? 'light-content' : isDarkMode ? 'light-content' : 'dark-content'}
+        barStyle={
+          isScrolled
+            ? 'light-content'
+            : isDarkMode
+            ? 'light-content'
+            : 'dark-content'
+        }
         {...(Platform.OS === 'android'
           ? {
               backgroundColor: isScrolled
@@ -301,7 +307,9 @@ export const SubscriptionScreen: React.FC = () => {
             <Text
               style={[
                 styles.headerTitle,
-                isScrolled ? styles.headerTitleScrolled : { color: textPrimary },
+                isScrolled
+                  ? styles.headerTitleScrolled
+                  : { color: textPrimary },
               ]}
               numberOfLines={1}
             >
@@ -532,9 +540,7 @@ export const SubscriptionScreen: React.FC = () => {
                         ? '#26241D'
                         : '#FFFDF0'
                       : cardBg,
-                    borderColor: isSelected
-                      ? '#F5C518'
-                      : borderLight,
+                    borderColor: isSelected ? '#F5C518' : borderLight,
                     borderWidth: isSelected ? 2.5 : 1.5,
                   },
                   isSelected && styles.selectedPlanGlow,
@@ -1064,6 +1070,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.08,
     shadowRadius: 10,
     elevation: 10,
+    zIndex: 20,
   },
   ctaButton: {
     backgroundColor: '#F5C518',

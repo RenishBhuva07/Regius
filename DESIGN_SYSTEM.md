@@ -212,6 +212,10 @@ Primary buttons follow full-pill geometry (`borderRadius: 28`) and tactile debou
 - **Social Buttons**:
   - `google`: `backgroundColor: '#EEEEED'`, text `#000000` with official multi-color SVG Google logo.
   - `apple`: `backgroundColor: '#000000'`, text `#FFFFFF` with official Apple logo.
+- **Sticky Bottom Action Dock Buttons (`SubscriptionScreen`, `ProfileScreen`)**:
+  - Dock: `paddingHorizontal: 20`, `paddingTop: 12`, `paddingBottom: Math.max(insets.bottom, 16)`, `borderTopWidth: 1`, `shadowOffset: { width: 0, height: -4 }`, `shadowRadius: 10`, `elevation: 10`, `zIndex: 20`.
+  - Button: full-pill geometry (`borderRadius: 28`), standardized vertical padding rule (`paddingVertical: 15` without fixed height), `alignItems: 'center'`, `justifyContent: 'center'`, `shadowOffset: { width: 0, height: 4 }`, `shadowOpacity: 0.35`, `shadowRadius: 8`, `elevation: 4`.
+  - Content: Row with `gap: 8`, icon `size={18}` / `strokeWidth={2.4}`, `fontFamily: Fonts.poppins.bold`, `fontSize: 15`, `letterSpacing: 0.2`, and centered `ActivityIndicator` on loading.
 
 ---
 

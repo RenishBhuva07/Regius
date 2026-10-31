@@ -13,6 +13,7 @@ import {
   Dimensions,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  ActivityIndicator,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -27,6 +28,7 @@ import {
   Flame,
   CheckSquare,
   Sparkles,
+  Check,
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -38,7 +40,6 @@ import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { SVGS } from '../../Assets/Images';
 import { Badge } from '../../Common/Badge';
 import { ProBadge } from '../../Common/ProBadge';
-import CustomButton from '../../Common/CustomButton';
 import { useTheme } from '../../Theme/ThemeContext';
 import { useTaskReminder } from '../../Context/TaskReminderContext';
 import { SettingsBackgroundSvg } from '../Settings/Components/SettingsBackgroundSvg';
@@ -658,18 +659,52 @@ export const ProfileScreen: React.FC = () => {
           {
             paddingBottom: Math.max(insets.bottom, 16),
             backgroundColor: isDarkMode
-              ? 'rgba(18, 20, 23, 0.92)'
-              : 'rgba(255, 252, 227, 0.94)',
+              ? 'rgba(18, 20, 23, 0.94)'
+              : 'rgba(255, 252, 227, 0.95)',
             borderTopColor: borderLight,
           },
         ]}
       >
-        <CustomButton
-          title={isSaving ? 'Saving Changes...' : 'Save Profile Changes'}
+        <TouchableOpacity
+          activeOpacity={0.88}
+          style={[
+            styles.saveButton,
+            {
+              backgroundColor: isDarkMode
+                ? Colors.LavenderPurple
+                : Colors.MidnightCharcoal,
+              shadowColor: isDarkMode ? Colors.LavenderPurple : '#000000',
+            },
+            isSaving && { opacity: 0.8 },
+          ]}
           onPress={handleSave}
           disabled={isSaving}
-          variant="dark"
-        />
+          accessibilityRole="button"
+          accessibilityLabel="Save Profile Changes"
+        >
+          {isSaving ? (
+            <ActivityIndicator
+              size="small"
+              color={isDarkMode ? '#121417' : Colors.PureWhiteText}
+            />
+          ) : (
+            <View style={styles.buttonContentRow}>
+              <Check
+                size={18}
+                color={isDarkMode ? '#121417' : Colors.PureWhiteText}
+                strokeWidth={2.4}
+              />
+              <Text
+                style={[
+                  styles.saveButtonText,
+                  { color: isDarkMode ? '#121417' : Colors.PureWhiteText },
+                ]}
+              >
+                Save Profile Changes
+              </Text>
+            </View>
+          )}
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -936,13 +971,34 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    paddingHorizontal: ResponsivePixels.size16,
+    borderTopWidth: 1,
     paddingTop: 12,
-    borderTopWidth: StyleSheet.hairlineWidth,
+    paddingHorizontal: 20,
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.08,
-    shadowRadius: 12,
+    shadowRadius: 10,
     elevation: 10,
+    zIndex: 20,
+  },
+  saveButton: {
+    borderRadius: 28,
+    paddingVertical: 15,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.35,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  buttonContentRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  saveButtonText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 15,
+    letterSpacing: 0.2,
   },
 });
