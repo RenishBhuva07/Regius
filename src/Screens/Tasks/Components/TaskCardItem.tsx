@@ -28,8 +28,8 @@ import {
 import { Fonts } from '../../../Theme/fonts';
 import { Typography } from '../../../Theme/Typographys';
 import { Badge } from '../../../Common/Badge';
+import { getCutoutCardPath } from '../../../Common/CutoutCardSvg';
 import { Task } from '../../../Context/TaskReminderContext';
-import { getCutoutCardPath } from '../../Dashboard/Components/TimelineItemCard';
 
 interface TaskCardItemProps {
   task: Task;

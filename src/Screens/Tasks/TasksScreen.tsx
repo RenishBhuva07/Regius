@@ -28,7 +28,7 @@ import { Colors } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { useTaskReminder } from '../../Context/TaskReminderContext';
 import { ScreenHeader, SCREEN_HEADER_HEIGHT } from '../../Common/ScreenHeader';
-import FlowBadgePatternSvg from '../Dashboard/Components/FlowBadgePatternSvg';
+import { TactileSegmentedTabs, FlowSectionSheet } from '../../Common';
 
 import TaskSectionBackgroundSvg from './Components/TaskSectionBackgroundSvg';
 import TaskProductivityBento from './Components/TaskProductivityBento';
@@ -150,6 +150,27 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
     return `${completed} of ${total} completed`;
   }, [filteredTasks, activeTab, completedTasksCount]);
 
+  // Tabs configuration for TactileSegmentedTabs
+  const taskTabs = useMemo(
+    () => [
+      {
+        key: 'taskList' as TabKey,
+        label: 'Task List',
+        icon: CheckSquare,
+        count: pendingTasksCount,
+        countVariant: 'yellow' as const,
+      },
+      {
+        key: 'completed' as TabKey,
+        label: 'Completed',
+        icon: CheckCircle2,
+        count: completedTasksCount,
+        countVariant: 'green' as const,
+      },
+    ],
+    [pendingTasksCount, completedTasksCount],
+  );
+
   return (
     <View style={styles.safeArea}>
       <StatusBar
@@ -189,99 +210,11 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
         </View>
 
         {/* Signature Regius Tactile Segmented Tabs */}
-        <View style={styles.toggleContainer}>
-          <TouchableOpacity
-            activeOpacity={0.85}
-            onPress={() => setActiveTab('taskList')}
-            style={[
-              styles.toggleTab,
-              activeTab === 'taskList' && styles.toggleTabActive,
-            ]}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: activeTab === 'taskList' }}
-          >
-            <CheckSquare
-              size={14}
-              color={activeTab === 'taskList' ? '#D97706' : '#9EA3B0'}
-              strokeWidth={activeTab === 'taskList' ? 2.4 : 2}
-            />
-            <Text
-              style={[
-                styles.toggleText,
-                activeTab === 'taskList'
-                  ? styles.toggleTextActive
-                  : styles.toggleTextInactive,
-              ]}
-            >
-              Task List
-            </Text>
-            <View
-              style={[
-                styles.tabCountPill,
-                activeTab === 'taskList'
-                  ? styles.tabCountPillActiveTasks
-                  : styles.tabCountPillInactive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.tabCountText,
-                  activeTab === 'taskList'
-                    ? styles.tabCountTextActiveTasks
-                    : styles.tabCountTextInactive,
-                ]}
-              >
-                {pendingTasksCount}
-              </Text>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            activeOpacity={0.85}
-            onPress={() => setActiveTab('completed')}
-            style={[
-              styles.toggleTab,
-              activeTab === 'completed' && styles.toggleTabActive,
-            ]}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: activeTab === 'completed' }}
-          >
-            <CheckCircle2
-              size={14}
-              color={activeTab === 'completed' ? '#10B981' : '#9EA3B0'}
-              strokeWidth={activeTab === 'completed' ? 2.4 : 2}
-            />
-            <Text
-              style={[
-                styles.toggleText,
-                activeTab === 'completed'
-                  ? styles.toggleTextActive
-                  : styles.toggleTextInactive,
-              ]}
-            >
-              Completed
-            </Text>
-            <View
-              style={[
-                styles.tabCountPill,
-                activeTab === 'completed'
-                  ? styles.tabCountPillActiveCompleted
-                  : styles.tabCountPillInactive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.tabCountText,
-                  activeTab === 'completed'
-                    ? styles.tabCountTextActiveCompleted
-                    : styles.tabCountTextInactive,
-                ]}
-              >
-                {completedTasksCount}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+        <TactileSegmentedTabs
+          tabs={taskTabs}
+          activeTab={activeTab}
+          onChangeTab={setActiveTab}
+        />
 
         {/* Categories Carousel */}
         <TaskCategoryCarousel
@@ -292,31 +225,15 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
         />
 
         {/* Tasks section */}
-        <View
-          style={[styles.taskSection, { paddingBottom: insets.bottom + 130 }]}
+        <FlowSectionSheet
+          title={sectionTitle}
+          subtitle={sectionSubtitle}
+          backgroundSvg={<TaskSectionBackgroundSvg />}
+          onPressAdd={openTaskModal}
+          addAccessibilityLabel="Add new task"
+          bottomPadding={insets.bottom + 130}
+          containerStyle={styles.taskSection}
         >
-          <View style={styles.taskSectionBgWrapper} pointerEvents="none">
-            <TaskSectionBackgroundSvg />
-          </View>
-
-          {/* Section header crest badge */}
-          <View style={styles.flowHeaderBadge}>
-            <FlowBadgePatternSvg />
-            <Text style={styles.flowTitle}>{sectionTitle}</Text>
-            <Text style={styles.flowSubtitle}>{sectionSubtitle}</Text>
-          </View>
-
-          {/* Floating add button */}
-          <TouchableOpacity
-            activeOpacity={0.85}
-            onPress={openTaskModal}
-            style={styles.addTaskFloatingBtn}
-            accessibilityRole="button"
-            accessibilityLabel="Add new task"
-          >
-            <Plus size={18} color="#FFFFFF" strokeWidth={2.6} />
-          </TouchableOpacity>
-
           {/* Tasks List */}
           <FlatList
             data={filteredTasks}
@@ -420,7 +337,7 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
               </View>
             </View>
           </View>
-        </View>
+        </FlowSectionSheet>
       </ScrollView>
     </View>
   );
