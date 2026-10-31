@@ -17,7 +17,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import {
-  ChevronLeft,
   Palette,
   CheckCircle2,
   Lock,
@@ -38,6 +37,7 @@ import { Fonts } from '../../Theme/fonts';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../Common/Badge';
+import { BackButton } from '../../Common/BackButton';
 import CustomButton from '../../Common/CustomButton';
 import {
   useTheme,
@@ -264,31 +264,10 @@ export const ThemeScreen: React.FC = () => {
         </Animated.View>
 
         <View style={[styles.headerRow, { height: HEADER_HEIGHT }]}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            onPress={() => navigation.goBack()}
-            style={[
-              styles.backButton,
-              isScrolled
-                ? styles.backButtonScrolled
-                : {
-                    backgroundColor: cardBg,
-                    borderColor: isDarkMode
-                      ? 'rgba(255, 255, 255, 0.12)'
-                      : '#FFFFFF',
-                    borderBottomColor: isDarkMode ? '#14161A' : '#DCD6CA',
-                    shadowColor: isDarkMode ? '#000000' : 'rgba(0, 0, 0, 0.08)',
-                  },
-            ]}
-            accessibilityRole="button"
+          <BackButton
+            isScrolled={isScrolled}
             accessibilityLabel="Back to Settings"
-          >
-            <ChevronLeft
-              size={20}
-              color={isScrolled ? Colors.DefaultWhite : textPrimary}
-              strokeWidth={2.4}
-            />
-          </TouchableOpacity>
+          />
 
           <View style={styles.headerTitleWrap}>
             <Text
@@ -322,7 +301,7 @@ export const ThemeScreen: React.FC = () => {
               style={[
                 styles.modeToggleBtn,
                 isScrolled
-                  ? styles.backButtonScrolled
+                  ? styles.modeToggleBtnScrolled
                   : {
                       backgroundColor: cardBg,
                       borderColor: isDarkMode
@@ -1057,20 +1036,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: ResponsivePixels.size16,
   },
-  backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 1.5,
-    borderBottomWidth: 3,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  backButtonScrolled: {
+  modeToggleBtnScrolled: {
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     borderColor: 'rgba(255, 255, 255, 0.4)',
     borderBottomColor: 'rgba(255, 255, 255, 0.3)',

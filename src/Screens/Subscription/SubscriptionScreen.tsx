@@ -17,7 +17,6 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import {
-  ChevronLeft,
   Crown,
   Sparkles,
   Palette,
@@ -38,6 +37,7 @@ import { Fonts } from '../../Theme/fonts';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../Common/Badge';
+import { BackButton } from '../../Common/BackButton';
 import { ProBadge } from '../../Common/ProBadge';
 import { useTheme } from '../../Theme/ThemeContext';
 import {
@@ -281,27 +281,7 @@ export const SubscriptionScreen: React.FC = () => {
         </Animated.View>
 
         <View style={[styles.headerRow, { height: HEADER_HEIGHT }]}>
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={[
-              styles.backButton,
-              isScrolled
-                ? styles.backButtonScrolled
-                : {
-                    backgroundColor: cardBg,
-                    borderColor: borderLight,
-                  },
-            ]}
-            onPress={() => navigation.goBack()}
-            accessibilityRole="button"
-            accessibilityLabel="Go back"
-          >
-            <ChevronLeft
-              size={22}
-              color={isScrolled ? Colors.DefaultWhite : textPrimary}
-              strokeWidth={2.4}
-            />
-          </TouchableOpacity>
+          <BackButton isScrolled={isScrolled} />
 
           <View style={styles.headerTitleWrap}>
             <Text
@@ -745,23 +725,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
-  },
-  backButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    borderWidth: 1.5,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  backButtonScrolled: {
-    backgroundColor: 'rgba(255, 255, 255, 0.22)',
-    borderColor: 'rgba(255, 255, 255, 0.45)',
   },
   headerTitleWrap: {
     flexDirection: 'row',

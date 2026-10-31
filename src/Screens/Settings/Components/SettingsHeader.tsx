@@ -7,12 +7,12 @@ import {
   Animated,
   Dimensions,
 } from 'react-native';
-import { ChevronLeft } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaInsetsContext } from 'react-native-safe-area-context';
 import { Fonts } from '../../../Theme/fonts';
 import { Typography } from '../../../Theme/Typographys';
 import { ProBadge } from '../../../Common/ProBadge';
+import { BackButton } from '../../../Common/BackButton';
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import HeaderPatternSvg from '../../Dashboard/Components/HeaderPatternSvg';
 import { useSettingsTheme } from './types';
@@ -111,23 +111,7 @@ export const SettingsHeader: React.FC<SettingsHeaderProps> = ({
       <View style={[styles.header, { height: SETTINGS_HEADER_HEIGHT }]}>
         <View style={styles.leftContainer}>
           {navigation.canGoBack() && (
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => navigation.goBack()}
-              style={[
-                styles.backButton,
-                isScrolled
-                  ? styles.backButtonScrolled
-                  : { backgroundColor: isDarkMode ? '#2A2E36' : '#EFEAE0' },
-              ]}
-              accessibilityRole="button"
-              accessibilityLabel="Go back"
-            >
-              <ChevronLeft
-                size={22}
-                color={isScrolled ? Colors.DefaultWhite : textPrimary}
-              />
-            </TouchableOpacity>
+            <BackButton isScrolled={isScrolled} />
           )}
           <View style={styles.titleWrapper}>
             <Text
@@ -187,17 +171,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     marginRight: 8,
-  },
-  backButton: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexShrink: 0,
-  },
-  backButtonScrolled: {
-    backgroundColor: 'rgba(255, 255, 255, 0.22)',
   },
   titleWrapper: {
     flex: 1,

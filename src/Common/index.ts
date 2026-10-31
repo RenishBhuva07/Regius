@@ -1,5 +1,6 @@
 export * from './Badge';
 export * from './CustomButton';
+export * from './BackButton';
 export * from './MainContainer';
 export * from './CustomAnimation';
 export * from './ToastConfig';
