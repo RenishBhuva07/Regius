@@ -1,47 +1,25 @@
-import React, { useState, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-  TextInput,
   StatusBar,
   Platform,
   Switch,
   Animated,
   Dimensions,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import {
-  Mic,
-  MicOff,
-  Check,
-  AlertTriangle,
-  Sparkles,
-  Zap,
-  Activity,
-  ShieldCheck,
-  Radio,
-  Sliders,
-  Volume2,
-  Cpu,
-} from 'lucide-react-native';
+import { Sparkles, Zap, Activity, ShieldCheck } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
-import { Typography } from '../../Theme/Typographys';
 import { Fonts } from '../../Theme/fonts';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../Common/Badge';
 import CustomButton from '../../Common/CustomButton';
-import {
-  SubScreenHeader,
-  SUB_SCREEN_HEADER_HEIGHT,
-} from '../../Common/SubScreenHeader';
+import { SubScreenHeader } from '../../Common/SubScreenHeader';
 import { useScrollReactiveHeader } from '../../Common/useScrollReactiveHeader';
 import { useTheme } from '../../Theme/ThemeContext';
 import { useVoiceWakeWord } from '../../Context/VoiceWakeWordContext';
@@ -55,16 +33,14 @@ import {
   WakeWordValidationResult,
   WakeWordTestResult,
 } from '../../Services/WakeWord/WakeWordService';
+import {
+  WakeWordRadarPulse,
+  WakeWordPresetCard,
+  WakeWordCustomInput,
+  WakeWordTester,
+} from './WakeWordStudio/Components';
 
 const { width: screenWidth } = Dimensions.get('window');
-const HEADER_HEIGHT = 52;
-
-const SAMPLE_TEST_CHIPS = [
-  'Hey Regius add a task',
-  'Hey Regius morning brief',
-  'Sia what is on my calendar',
-  'Regius start focus session',
-];
 
 export const WakeWordStudioScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
@@ -84,50 +60,7 @@ export const WakeWordStudioScreen: React.FC = () => {
   const [testTranscript, setTestTranscript] = useState('Hey Regius add a task');
   const [isSaving, setIsSaving] = useState(false);
 
-  // Radar Pulse Animation
-  const pulseAnim = useRef(new Animated.Value(1)).current;
-  const pulseOpacity = useRef(new Animated.Value(0.6)).current;
   const { scrollY, isScrolled, handleScroll } = useScrollReactiveHeader();
-
-  useEffect(() => {
-    const pulse = Animated.loop(
-      Animated.parallel([
-        Animated.sequence([
-          Animated.timing(pulseAnim, {
-            toValue: 1.35,
-            duration: 1800,
-            useNativeDriver: true,
-          }),
-          Animated.timing(pulseAnim, {
-            toValue: 1,
-            duration: 1800,
-            useNativeDriver: true,
-          }),
-        ]),
-        Animated.sequence([
-          Animated.timing(pulseOpacity, {
-            toValue: 0.15,
-            duration: 1800,
-            useNativeDriver: true,
-          }),
-          Animated.timing(pulseOpacity, {
-            toValue: 0.6,
-            duration: 1800,
-            useNativeDriver: true,
-          }),
-        ]),
-      ]),
-    );
-
-    if (isWakeWordEnabled) {
-      pulse.start();
-    } else {
-      pulseAnim.setValue(1);
-      pulseOpacity.setValue(0.2);
-    }
-
-    return () => pulse.stop();
-  }, [isWakeWordEnabled, pulseAnim, pulseOpacity]);
 
   useEffect(() => {
     setSelectedPhrase(wakeWordPhrase);
@@ -278,42 +211,7 @@ export const WakeWordStudioScreen: React.FC = () => {
                 </View>
 
                 {/* Concentric Radar Centerpiece */}
-                <View style={styles.radarVisualizerContainer}>
-                  {isWakeWordEnabled && (
-                    <>
-                      <Animated.View
-                        style={[
-                          styles.radarRingOuter,
-                          {
-                            transform: [{ scale: pulseAnim }],
-                            opacity: pulseOpacity,
-                          },
-                        ]}
-                      />
-                      <View style={styles.radarRingMiddle} />
-                    </>
-                  )}
-
-                  <View
-                    style={[
-                      styles.micCoreOrb,
-                      {
-                        backgroundColor: isWakeWordEnabled
-                          ? '#21AF85'
-                          : '#2C3035',
-                        borderColor: isWakeWordEnabled
-                          ? 'rgba(33, 175, 133, 0.4)'
-                          : 'rgba(255, 255, 255, 0.1)',
-                      },
-                    ]}
-                  >
-                    {isWakeWordEnabled ? (
-                      <Mic size={28} color="#FFFFFF" strokeWidth={2.4} />
-                    ) : (
-                      <MicOff size={28} color="#A3A8B1" strokeWidth={2.4} />
-                    )}
-                  </View>
-                </View>
+                <WakeWordRadarPulse isWakeWordEnabled={isWakeWordEnabled} />
 
                 {/* Wake Word Phrase Display */}
                 <View style={styles.phraseReadoutWrap}>
@@ -380,130 +278,18 @@ export const WakeWordStudioScreen: React.FC = () => {
               selectedPhrase.toLowerCase() === preset.phrase.toLowerCase();
 
             return (
-              <TouchableOpacity
+              <WakeWordPresetCard
                 key={preset.id}
-                activeOpacity={0.85}
-                style={[
-                  styles.presetCard,
-                  {
-                    backgroundColor: cardBg,
-                    borderColor: isSelected
-                      ? Colors.LavenderPurple
-                      : isDarkMode
-                      ? 'rgba(255, 255, 255, 0.08)'
-                      : '#FFFFFF',
-                    borderBottomColor: isSelected
-                      ? '#4D4DB8'
-                      : isDarkMode
-                      ? '#171A20'
-                      : '#E2DCD0',
-                    shadowColor: isSelected
-                      ? Colors.LavenderPurple
-                      : isDarkMode
-                      ? '#000000'
-                      : 'rgba(131, 131, 214, 0.1)',
-                  },
-                ]}
-                onPress={() => handleSelectPreset(preset)}
-              >
-                <View style={styles.presetTopRow}>
-                  <View style={styles.presetNameCol}>
-                    <View style={styles.presetTitleWithBadge}>
-                      <Text
-                        style={[
-                          styles.presetPhraseText,
-                          { color: textPrimary },
-                        ]}
-                      >
-                        "{preset.phrase}"
-                      </Text>
-                      {preset.id === 'hey_regius' && (
-                        <Badge label="SIGNATURE" variant="yellow" size="sm" />
-                      )}
-                    </View>
-                    <Text
-                      style={[styles.presetNameText, { color: textSecondary }]}
-                    >
-                      {preset.name} • {preset.category.toUpperCase()}
-                    </Text>
-                  </View>
-
-                  <View
-                    style={[
-                      styles.radioCircle,
-                      isSelected && styles.radioCircleActive,
-                      {
-                        borderColor: isSelected
-                          ? Colors.LavenderPurple
-                          : borderLight,
-                      },
-                    ]}
-                  >
-                    {isSelected && (
-                      <View
-                        style={[
-                          styles.radioInner,
-                          { backgroundColor: Colors.LavenderPurple },
-                        ]}
-                      />
-                    )}
-                  </View>
-                </View>
-
-                <Text style={[styles.presetTipsText, { color: textSecondary }]}>
-                  {preset.description}
-                </Text>
-
-                {/* Aliases Preview Chips */}
-                {preset.aliases && preset.aliases.length > 0 && (
-                  <View style={styles.aliasesWrap}>
-                    <Text
-                      style={[styles.aliasesLabel, { color: textSecondary }]}
-                    >
-                      Recognized Variations:
-                    </Text>
-                    <View style={styles.aliasesChipsRow}>
-                      {preset.aliases.slice(0, 4).map(alias => (
-                        <View
-                          key={alias}
-                          style={[
-                            styles.aliasChip,
-                            {
-                              backgroundColor: surfaceAlt,
-                              borderColor: borderLight,
-                            },
-                          ]}
-                        >
-                          <Text
-                            style={[
-                              styles.aliasChipText,
-                              { color: textSecondary },
-                            ]}
-                          >
-                            {alias}
-                          </Text>
-                        </View>
-                      ))}
-                      {preset.aliases.length > 4 && (
-                        <Text
-                          style={[
-                            styles.aliasMoreText,
-                            { color: textSecondary },
-                          ]}
-                        >
-                          +{preset.aliases.length - 4} more
-                        </Text>
-                      )}
-                    </View>
-                  </View>
-                )}
-
-                <View style={styles.presetMetaPills}>
-                  <Badge label="STT OPTIMIZED" variant="green" size="sm" />
-                  <View style={styles.badgeGap} />
-                  <Badge label="&lt; 50ms DETECT" variant="neutral" size="sm" />
-                </View>
-              </TouchableOpacity>
+                preset={preset}
+                isSelected={isSelected}
+                onSelect={() => handleSelectPreset(preset)}
+                cardBg={cardBg}
+                isDarkMode={isDarkMode}
+                textPrimary={textPrimary}
+                textSecondary={textSecondary}
+                borderLight={borderLight}
+                surfaceAlt={surfaceAlt}
+              />
             );
           })}
         </View>
@@ -516,112 +302,19 @@ export const WakeWordStudioScreen: React.FC = () => {
           <Badge label="ADVANCED" variant="orange" size="sm" />
         </View>
 
-        <View
-          style={[
-            styles.customPhraseCard,
-            {
-              backgroundColor: cardBg,
-              borderColor: isCustomMode
-                ? Colors.LavenderPurple
-                : isDarkMode
-                ? 'rgba(255, 255, 255, 0.08)'
-                : '#FFFFFF',
-              borderBottomColor: isCustomMode
-                ? '#4D4DB8'
-                : isDarkMode
-                ? '#171A20'
-                : '#E2DCD0',
-              shadowColor: isDarkMode ? '#000000' : 'rgba(131, 131, 214, 0.1)',
-            },
-          ]}
-        >
-          <TouchableOpacity
-            activeOpacity={0.85}
-            style={styles.customToggleRow}
-            onPress={handleEnableCustomMode}
-          >
-            <View style={styles.customToggleMeta}>
-              <View style={styles.customTitleRow}>
-                <Sliders
-                  size={16}
-                  color={Colors.LavenderPurple}
-                  strokeWidth={2.2}
-                />
-                <Text style={[styles.customTitle, { color: textPrimary }]}>
-                  Design Bespoke Trigger Phrase
-                </Text>
-              </View>
-              <Text style={[styles.customSubtitle, { color: textSecondary }]}>
-                Acoustic rule: 2+ words, 3+ phonetic syllables for minimal false
-                positives
-              </Text>
-            </View>
-
-            <View
-              style={[
-                styles.radioCircle,
-                isCustomMode && styles.radioCircleActive,
-                {
-                  borderColor: isCustomMode
-                    ? Colors.LavenderPurple
-                    : borderLight,
-                },
-              ]}
-            >
-              {isCustomMode && (
-                <View
-                  style={[
-                    styles.radioInner,
-                    { backgroundColor: Colors.LavenderPurple },
-                  ]}
-                />
-              )}
-            </View>
-          </TouchableOpacity>
-
-          {isCustomMode && (
-            <View style={styles.customInputArea}>
-              <View
-                style={[
-                  styles.customInputWrap,
-                  { backgroundColor: surfaceAlt, borderColor: borderLight },
-                ]}
-              >
-                <TextInput
-                  style={[styles.customInputField, { color: textPrimary }]}
-                  value={customInput}
-                  onChangeText={setCustomInput}
-                  placeholder="e.g. Hey Assistant, Listen Regius"
-                  placeholderTextColor={textSecondary}
-                  autoCapitalize="words"
-                />
-              </View>
-
-              {/* Acoustic Validation Feedback Banner */}
-              <View style={styles.validationRow}>
-                {validation.isValid ? (
-                  <View style={styles.validStatus}>
-                    <ShieldCheck size={16} color="#21AF85" strokeWidth={2.4} />
-                    <Text style={styles.validText}>
-                      Acoustic criteria met (Syllables &amp; length optimal)
-                    </Text>
-                  </View>
-                ) : (
-                  <View style={styles.invalidStatus}>
-                    <AlertTriangle
-                      size={16}
-                      color="#FF3B30"
-                      strokeWidth={2.4}
-                    />
-                    <Text style={styles.invalidText}>
-                      {validation.error || 'Invalid candidate phrase'}
-                    </Text>
-                  </View>
-                )}
-              </View>
-            </View>
-          )}
-        </View>
+        <WakeWordCustomInput
+          isCustomMode={isCustomMode}
+          onEnableCustomMode={handleEnableCustomMode}
+          customInput={customInput}
+          onChangeCustomInput={setCustomInput}
+          validation={validation}
+          cardBg={cardBg}
+          isDarkMode={isDarkMode}
+          textPrimary={textPrimary}
+          textSecondary={textSecondary}
+          borderLight={borderLight}
+          surfaceAlt={surfaceAlt}
+        />
 
         {/* Section 3: Real-time Recognition Simulator */}
         <View style={styles.sectionHeaderRow}>
@@ -631,114 +324,18 @@ export const WakeWordStudioScreen: React.FC = () => {
           <Badge label="OFFLINE TEST" variant="neutral" size="sm" />
         </View>
 
-        <View
-          style={[
-            styles.simulatorCard,
-            {
-              backgroundColor: cardBg,
-              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : '#FFFFFF',
-              borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
-              shadowColor: isDarkMode ? '#000000' : 'rgba(131, 131, 214, 0.1)',
-            },
-          ]}
-        >
-          <Text style={[styles.simulatorLabel, { color: textSecondary }]}>
-            Test spoken input transcript:
-          </Text>
-
-          <View
-            style={[
-              styles.simulatorInputWrap,
-              { backgroundColor: surfaceAlt, borderColor: borderLight },
-            ]}
-          >
-            <TextInput
-              style={[styles.simulatorInput, { color: textPrimary }]}
-              value={testTranscript}
-              onChangeText={setTestTranscript}
-              placeholder="e.g. Hey Regius add a task"
-              placeholderTextColor={textSecondary}
-            />
-          </View>
-
-          {/* Quick Sample Chips */}
-          <View style={styles.sampleChipsContainer}>
-            {SAMPLE_TEST_CHIPS.map(chip => (
-              <TouchableOpacity
-                key={chip}
-                activeOpacity={0.7}
-                style={[
-                  styles.sampleChip,
-                  {
-                    backgroundColor:
-                      testTranscript === chip
-                        ? isDarkMode
-                          ? '#2C3038'
-                          : '#EEE7D9'
-                        : surfaceAlt,
-                    borderColor: borderLight,
-                  },
-                ]}
-                onPress={() => setTestTranscript(chip)}
-              >
-                <Text style={[styles.sampleChipText, { color: textPrimary }]}>
-                  "{chip}"
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-
-          {/* Test Match Result Box */}
-          <View
-            style={[
-              styles.testResultBox,
-              {
-                backgroundColor: testResult.detected
-                  ? isDarkMode
-                    ? 'rgba(33, 175, 133, 0.15)'
-                    : '#EDFDF5'
-                  : isDarkMode
-                  ? 'rgba(255, 59, 48, 0.12)'
-                  : '#FFF0F0',
-                borderColor: testResult.detected
-                  ? 'rgba(33, 175, 133, 0.4)'
-                  : 'rgba(255, 59, 48, 0.3)',
-              },
-            ]}
-          >
-            <View style={styles.resultHeader}>
-              <Badge
-                label={testResult.detected ? 'PHRASE DETECTED' : 'NOT DETECTED'}
-                variant={testResult.detected ? 'green' : 'red'}
-                size="sm"
-              />
-              <Text
-                style={[
-                  styles.confidenceScore,
-                  { color: testResult.detected ? '#21AF85' : '#FF3B30' },
-                ]}
-              >
-                Target: "{candidatePhrase}"
-              </Text>
-            </View>
-            <Text
-              style={[
-                styles.analysisText,
-                {
-                  color: testResult.detected
-                    ? isDarkMode
-                      ? '#A7F3D0'
-                      : '#1B9A72'
-                    : isDarkMode
-                    ? '#FCA5A5'
-                    : '#D92A0F',
-                },
-              ]}
-            >
-              {testResult.analysis}
-            </Text>
-          </View>
-        </View>
+        <WakeWordTester
+          testTranscript={testTranscript}
+          onChangeTestTranscript={setTestTranscript}
+          targetPhrase={candidatePhrase}
+          testResult={testResult}
+          cardBg={cardBg}
+          isDarkMode={isDarkMode}
+          textPrimary={textPrimary}
+          textSecondary={textSecondary}
+          borderLight={borderLight}
+          surfaceAlt={surfaceAlt}
+        />
       </Animated.ScrollView>
 
       {/* Floating Action Dock */}
@@ -746,26 +343,23 @@ export const WakeWordStudioScreen: React.FC = () => {
         style={[
           styles.floatingActionDock,
           {
-            paddingBottom: Math.max(insets.bottom, 16),
-            backgroundColor: isDarkMode
-              ? 'rgba(18, 20, 23, 0.92)'
-              : 'rgba(255, 252, 227, 0.94)',
+            backgroundColor: isDarkMode ? '#1E2228' : '#FFFFFF',
             borderTopColor: borderLight,
+            paddingBottom: insets.bottom + 12,
           },
         ]}
       >
         <CustomButton
-          title={isSaving ? 'Activating Acoustic Radar...' : 'Save Wake Phrase'}
+          title={isSaving ? 'Updating Radar...' : 'Confirm Wake Word'}
           onPress={handleSave}
-          disabled={isSaving || !validation.isValid}
-          variant="dark"
+          disabled={!validation.isValid || isSaving}
+          variant="primary"
+          style={styles.saveBtn}
         />
       </View>
     </View>
   );
 };
-
-export default WakeWordStudioScreen;
 
 const styles = StyleSheet.create({
   container: {
@@ -782,8 +376,8 @@ const styles = StyleSheet.create({
     marginBottom: ResponsivePixels.size24,
   },
   cardShadowWrapper: {
-    backgroundColor: Colors.NeroBlack,
     borderRadius: 24,
+    backgroundColor: '#000000',
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.28,
@@ -791,23 +385,23 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   card: {
-    backgroundColor: Colors.NeroBlack,
     borderRadius: 24,
     borderWidth: 4,
     borderColor: 'rgba(255, 255, 255, 0.9)',
+    backgroundColor: Colors.NeroBlack,
+    padding: ResponsivePixels.size20,
     overflow: 'hidden',
     position: 'relative',
   },
   heroContent: {
-    padding: ResponsivePixels.size20,
-    alignItems: 'center',
+    position: 'relative',
+    zIndex: 2,
   },
   heroStatusRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: '100%',
-    marginBottom: ResponsivePixels.size16,
+    marginBottom: 4,
   },
   heroStatusLeft: {
     flexDirection: 'row',
@@ -815,76 +409,37 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   heroStatusLabel: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 10.5,
+    letterSpacing: 0.8,
     color: '#F5C518',
-    letterSpacing: 1.2,
-  },
-  radarVisualizerContainer: {
-    width: 140,
-    height: 140,
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-    marginVertical: 6,
-  },
-  radarRingOuter: {
-    position: 'absolute',
-    width: 130,
-    height: 130,
-    borderRadius: 65,
-    borderWidth: 1.5,
-    borderColor: '#21AF85',
-  },
-  radarRingMiddle: {
-    position: 'absolute',
-    width: 96,
-    height: 96,
-    borderRadius: 48,
-    borderWidth: 1,
-    borderColor: 'rgba(33, 175, 133, 0.3)',
-  },
-  micCoreOrb: {
-    width: 68,
-    height: 68,
-    borderRadius: 34,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderWidth: 3,
-    shadowColor: '#21AF85',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 12,
-    elevation: 6,
   },
   phraseReadoutWrap: {
     alignItems: 'center',
-    marginTop: ResponsivePixels.size14,
-    marginBottom: ResponsivePixels.size14,
+    marginBottom: 16,
   },
   phraseLabel: {
-    fontFamily: Fonts.poppins.regular,
+    fontFamily: Fonts.poppins.medium,
     fontSize: 10,
-    color: 'rgba(255, 255, 255, 0.5)',
     letterSpacing: 1.2,
+    color: 'rgba(255, 255, 255, 0.45)',
     marginBottom: 4,
   },
   phraseDisplay: {
     fontFamily: Fonts.ranade.bold,
     fontSize: 22,
-    color: '#FFFCE3',
-    textAlign: 'center',
+    color: '#FFFFFF',
+    letterSpacing: -0.3,
   },
   radarMetricsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    justifyContent: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
     borderRadius: 14,
     paddingVertical: 8,
     paddingHorizontal: 12,
-    width: '100%',
-    marginBottom: ResponsivePixels.size16,
+    marginBottom: 16,
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.08)',
   },
@@ -895,38 +450,38 @@ const styles = StyleSheet.create({
   },
   metricText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.85)',
+    fontSize: 10.5,
+    color: 'rgba(255, 255, 255, 0.8)',
   },
   metricDivider: {
     width: 1,
-    height: 14,
+    height: 12,
     backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    marginHorizontal: 10,
   },
   heroMasterSwitch: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'rgba(0, 0, 0, 0.35)',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
     borderRadius: 16,
-    paddingVertical: 10,
     paddingHorizontal: 14,
-    width: '100%',
+    paddingVertical: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: 'rgba(255, 255, 255, 0.08)',
   },
   heroMasterSwitchMeta: {
     flex: 1,
-    paddingRight: 10,
+    marginRight: 10,
   },
   heroMasterSwitchTitle: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 14,
     color: '#FFFFFF',
   },
   heroMasterSwitchDesc: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 10,
+    fontSize: 11,
     color: 'rgba(255, 255, 255, 0.55)',
     marginTop: 1,
   },
@@ -947,239 +502,6 @@ const styles = StyleSheet.create({
     gap: 12,
     marginBottom: ResponsivePixels.size24,
   },
-  presetCard: {
-    borderRadius: 20,
-    borderWidth: 1.5,
-    borderBottomWidth: 3.5,
-    padding: ResponsivePixels.size16,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    elevation: 2,
-  },
-  presetTopRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-  },
-  presetNameCol: {
-    flex: 1,
-  },
-  presetTitleWithBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  presetPhraseText: {
-    fontFamily: Fonts.ranade.bold,
-    fontSize: 18,
-    marginBottom: 2,
-  },
-  presetNameText: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
-  },
-  radioCircle: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
-    borderWidth: 2,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  radioCircleActive: {
-    borderColor: Colors.LavenderPurple,
-  },
-  radioInner: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-  },
-  presetTipsText: {
-    ...Typography.bodySmallPoppinsRegular,
-    fontSize: 12,
-    marginBottom: 10,
-  },
-  aliasesWrap: {
-    marginBottom: 10,
-  },
-  aliasesLabel: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 10,
-    marginBottom: 4,
-  },
-  aliasesChipsRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: 6,
-  },
-  aliasChip: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
-    borderWidth: 1,
-  },
-  aliasChipText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 10,
-  },
-  aliasMoreText: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 10,
-    marginLeft: 2,
-  },
-  presetMetaPills: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  badgeGap: {
-    width: 8,
-  },
-  customPhraseCard: {
-    marginHorizontal: ResponsivePixels.size16,
-    borderRadius: 20,
-    borderWidth: 1.5,
-    borderBottomWidth: 3.5,
-    padding: ResponsivePixels.size16,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 3,
-    marginBottom: ResponsivePixels.size24,
-  },
-  customToggleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  customToggleMeta: {
-    flex: 1,
-    paddingRight: 10,
-  },
-  customTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    marginBottom: 2,
-  },
-  customTitle: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14,
-  },
-  customSubtitle: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
-    marginTop: 2,
-  },
-  customInputArea: {
-    marginTop: ResponsivePixels.size14,
-    paddingTop: ResponsivePixels.size12,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: '#E8E2D5',
-  },
-  customInputWrap: {
-    borderRadius: 14,
-    borderWidth: 1.5,
-    paddingHorizontal: 14,
-    height: 48,
-    justifyContent: 'center',
-    marginBottom: 10,
-  },
-  customInputField: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 14,
-    padding: 0,
-  },
-  validationRow: {
-    marginTop: 2,
-  },
-  validStatus: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  validText: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
-    color: '#21AF85',
-  },
-  invalidStatus: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-  },
-  invalidText: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
-    color: '#FF3B30',
-  },
-  simulatorCard: {
-    marginHorizontal: ResponsivePixels.size16,
-    borderRadius: 20,
-    borderWidth: 1.5,
-    borderBottomWidth: 3.5,
-    padding: ResponsivePixels.size16,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.1,
-    shadowRadius: 10,
-    elevation: 3,
-    marginBottom: ResponsivePixels.size24,
-  },
-  simulatorLabel: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
-    marginBottom: 8,
-  },
-  simulatorInputWrap: {
-    borderRadius: 14,
-    borderWidth: 1.5,
-    paddingHorizontal: 14,
-    height: 46,
-    justifyContent: 'center',
-    marginBottom: 10,
-  },
-  simulatorInput: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 13,
-    padding: 0,
-  },
-  sampleChipsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 6,
-    marginBottom: 12,
-  },
-  sampleChip: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 10,
-    borderWidth: 1,
-  },
-  sampleChipText: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
-  },
-  testResultBox: {
-    borderRadius: 14,
-    borderWidth: 1.5,
-    padding: 12,
-  },
-  resultHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginBottom: 6,
-  },
-  confidenceScore: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
-  },
-  analysisText: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
-  },
   floatingActionDock: {
     position: 'absolute',
     bottom: 0,
@@ -1194,4 +516,9 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 10,
   },
+  saveBtn: {
+    width: '100%',
+  },
 });
+
+export default WakeWordStudioScreen;

@@ -30,7 +30,7 @@ import { useTaskReminder, Reminder } from '../../Context/TaskReminderContext';
 import { ScreenHeader, SCREEN_HEADER_HEIGHT } from '../../Common/ScreenHeader';
 import { KokoroTTSService } from '../../Services/Kokoro/KokoroTTSService';
 import { AudioPlayerService } from '../../Services/AudioPlayerService';
-import FlowBadgePatternSvg from '../Dashboard/Components/FlowBadgePatternSvg';
+import { TactileSegmentedTabs, FlowSectionSheet } from '../../Common';
 
 import ReminderScheduleBento from './Components/ReminderScheduleBento';
 import ReminderCategoryCarousel from './Components/ReminderCategoryCarousel';
@@ -198,6 +198,27 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
     return `${completed} of ${total} completed`;
   }, [filteredReminders, activeTab, completedRemindersCount]);
 
+  // Tabs configuration for TactileSegmentedTabs
+  const reminderTabs = useMemo(
+    () => [
+      {
+        key: 'upcoming' as TabKey,
+        label: 'Upcoming',
+        icon: Bell,
+        count: pendingRemindersCount,
+        countVariant: 'yellow' as const,
+      },
+      {
+        key: 'completed' as TabKey,
+        label: 'Completed',
+        icon: CheckCircle2,
+        count: completedRemindersCount,
+        countVariant: 'green' as const,
+      },
+    ],
+    [pendingRemindersCount, completedRemindersCount],
+  );
+
   return (
     <View style={styles.safeArea}>
       <StatusBar
@@ -240,99 +261,11 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
         </View>
 
         {/* Signature Regius Tactile Segmented Tabs */}
-        <View style={styles.toggleContainer}>
-          <TouchableOpacity
-            activeOpacity={0.85}
-            onPress={() => setActiveTab('upcoming')}
-            style={[
-              styles.toggleTab,
-              activeTab === 'upcoming' && styles.toggleTabActive,
-            ]}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: activeTab === 'upcoming' }}
-          >
-            <Bell
-              size={14}
-              color={activeTab === 'upcoming' ? '#D97706' : '#9EA3B0'}
-              strokeWidth={activeTab === 'upcoming' ? 2.4 : 2}
-            />
-            <Text
-              style={[
-                styles.toggleText,
-                activeTab === 'upcoming'
-                  ? styles.toggleTextActive
-                  : styles.toggleTextInactive,
-              ]}
-            >
-              Upcoming
-            </Text>
-            <View
-              style={[
-                styles.tabCountPill,
-                activeTab === 'upcoming'
-                  ? styles.tabCountPillActiveUpcoming
-                  : styles.tabCountPillInactive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.tabCountText,
-                  activeTab === 'upcoming'
-                    ? styles.tabCountTextActiveUpcoming
-                    : styles.tabCountTextInactive,
-                ]}
-              >
-                {pendingRemindersCount}
-              </Text>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            activeOpacity={0.85}
-            onPress={() => setActiveTab('completed')}
-            style={[
-              styles.toggleTab,
-              activeTab === 'completed' && styles.toggleTabActive,
-            ]}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: activeTab === 'completed' }}
-          >
-            <CheckCircle2
-              size={14}
-              color={activeTab === 'completed' ? '#10B981' : '#9EA3B0'}
-              strokeWidth={activeTab === 'completed' ? 2.4 : 2}
-            />
-            <Text
-              style={[
-                styles.toggleText,
-                activeTab === 'completed'
-                  ? styles.toggleTextActive
-                  : styles.toggleTextInactive,
-              ]}
-            >
-              Completed
-            </Text>
-            <View
-              style={[
-                styles.tabCountPill,
-                activeTab === 'completed'
-                  ? styles.tabCountPillActiveCompleted
-                  : styles.tabCountPillInactive,
-              ]}
-            >
-              <Text
-                style={[
-                  styles.tabCountText,
-                  activeTab === 'completed'
-                    ? styles.tabCountTextActiveCompleted
-                    : styles.tabCountTextInactive,
-                ]}
-              >
-                {completedRemindersCount}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+        <TactileSegmentedTabs
+          tabs={reminderTabs}
+          activeTab={activeTab}
+          onChangeTab={setActiveTab}
+        />
 
         {/* Categories Carousel */}
         <ReminderCategoryCarousel
@@ -343,34 +276,15 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
         />
 
         {/* Reminders section */}
-        <View
-          style={[
-            styles.reminderSection,
-            { paddingBottom: insets.bottom + 130 },
-          ]}
+        <FlowSectionSheet
+          title={sectionTitle}
+          subtitle={sectionSubtitle}
+          backgroundSvg={<ReminderSectionBackgroundSvg />}
+          onPressAdd={openReminderModal}
+          addAccessibilityLabel="Add Reminder"
+          bottomPadding={insets.bottom + 130}
+          containerStyle={styles.reminderSection}
         >
-          <View style={styles.reminderSectionBgWrapper} pointerEvents="none">
-            <ReminderSectionBackgroundSvg />
-          </View>
-
-          {/* Section header crest badge */}
-          <View style={styles.flowHeaderBadge}>
-            <FlowBadgePatternSvg />
-            <Text style={styles.flowTitle}>{sectionTitle}</Text>
-            <Text style={styles.flowSubtitle}>{sectionSubtitle}</Text>
-          </View>
-
-          {/* Floating plus button at top-right corner matching TasksScreen */}
-          <TouchableOpacity
-            activeOpacity={0.85}
-            onPress={openReminderModal}
-            style={styles.addReminderFloatingBtn}
-            accessibilityRole="button"
-            accessibilityLabel="Add Reminder"
-          >
-            <Plus size={18} color="#FFFFFF" strokeWidth={2.6} />
-          </TouchableOpacity>
-
           {/* Reminders List or Empty State */}
           {filteredReminders.length === 0 ? (
             <View style={styles.emptyContainer}>
@@ -466,7 +380,7 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
               </View>
             </View>
           </View>
-        </View>
+        </FlowSectionSheet>
       </ScrollView>
     </View>
   );

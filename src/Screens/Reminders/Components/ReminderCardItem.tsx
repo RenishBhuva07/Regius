@@ -26,8 +26,8 @@ import {
 import { Fonts } from '../../../Theme/fonts';
 import { Typography } from '../../../Theme/Typographys';
 import { Badge } from '../../../Common/Badge';
+import { getCutoutCardPath } from '../../../Common/CutoutCardSvg';
 import { Reminder } from '../../../Context/TaskReminderContext';
-import { getCutoutCardPath } from '../../Dashboard/Components/TimelineItemCard';
 
 interface ReminderCardItemProps {
   reminder: Reminder;
