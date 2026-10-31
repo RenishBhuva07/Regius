@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useMemo,
+  useCallback,
+} from 'react';
 import {
   View,
   Text,
@@ -42,6 +48,8 @@ import {
 import { useScrollReactiveHeader } from '../../Common/useScrollReactiveHeader';
 import { ProBadge } from '../../Common/ProBadge';
 import CustomButton from '../../Common/CustomButton';
+import { SearchInputBar } from '../../Common/SearchInputBar';
+import { StickyActionDock } from '../../Common/StickyActionDock';
 import { useTheme } from '../../Theme/ThemeContext';
 import { SettingsBackgroundSvg } from '../Settings/Components/SettingsBackgroundSvg';
 
@@ -216,7 +224,9 @@ export const LanguageScreen: React.FC = () => {
     Vibration.vibrate(25);
     setIsAuditioning(true);
     try {
-      const { RegiusSpeechService } = require('../../Services/RegiusSpeechService');
+      const {
+        RegiusSpeechService,
+      } = require('../../Services/RegiusSpeechService');
       await RegiusSpeechService.speakResponse(currentLang.sampleGreeting);
     } catch {
       Toast.show({
@@ -242,7 +252,9 @@ export const LanguageScreen: React.FC = () => {
       Toast.show({
         type: 'success',
         text1: 'Language Updated',
-        text2: `App interface language set to ${chosen?.nativeName || 'English'}`,
+        text2: `App interface language set to ${
+          chosen?.nativeName || 'English'
+        }`,
       });
       setTimeout(() => {
         navigation.goBack();
@@ -343,7 +355,9 @@ export const LanguageScreen: React.FC = () => {
             >
               <Volume2 size={16} color="#8383D6" strokeWidth={2.4} />
               <Text style={styles.auditionPillText}>
-                {isAuditioning ? 'Auditioning Speech...' : 'Audition Dialect Cadence'}
+                {isAuditioning
+                  ? 'Auditioning Speech...'
+                  : 'Audition Dialect Cadence'}
               </Text>
             </TouchableOpacity>
 
@@ -381,35 +395,12 @@ export const LanguageScreen: React.FC = () => {
         </View>
 
         {/* Search Input Bar */}
-        <View
-          style={[
-            styles.searchWrap,
-            {
-              backgroundColor: cardBg,
-              borderColor: isDarkMode ? '#2C3035' : borderLight,
-            },
-          ]}
-        >
-          <Search size={18} color={textSecondary} strokeWidth={2.2} />
-          <TextInput
-            style={[styles.searchInput, { color: textPrimary }]}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            placeholder="Search language, country, or code..."
-            placeholderTextColor={textSecondary}
-            autoCorrect={false}
-          />
-          {searchQuery.length > 0 && (
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => setSearchQuery('')}
-              style={styles.searchClearBtn}
-              accessibilityLabel="Clear search"
-            >
-              <X size={15} color={textSecondary} strokeWidth={2.4} />
-            </TouchableOpacity>
-          )}
-        </View>
+        <SearchInputBar
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          placeholder="Search language, country, or code..."
+          containerStyle={{ marginBottom: 16 }}
+        />
 
         {/* Region Filter Chips */}
         <ScrollView
@@ -422,7 +413,9 @@ export const LanguageScreen: React.FC = () => {
               { key: 'all', label: `All (${LANGUAGES.length})` },
               {
                 key: 'neural',
-                label: `Neural Voice (${LANGUAGES.filter(l => l.hasNeuralVoice).length})`,
+                label: `Neural Voice (${
+                  LANGUAGES.filter(l => l.hasNeuralVoice).length
+                })`,
               },
               { key: 'Americas', label: 'Americas' },
               { key: 'Europe', label: 'Europe' },
@@ -525,11 +518,7 @@ export const LanguageScreen: React.FC = () => {
                         {lang.nativeName}
                       </Text>
                       {lang.hasNeuralVoice && (
-                        <Badge
-                          label="VOICE READY"
-                          variant="green"
-                          size="sm"
-                        />
+                        <Badge label="VOICE READY" variant="green" size="sm" />
                       )}
                     </View>
                     <Text
@@ -568,18 +557,7 @@ export const LanguageScreen: React.FC = () => {
       </ScrollView>
 
       {/* Sticky Frosted Bottom Action Dock */}
-      <View
-        style={[
-          styles.actionDock,
-          {
-            paddingBottom: Math.max(insets.bottom, 16),
-            backgroundColor: isDarkMode
-              ? 'rgba(18, 20, 23, 0.94)'
-              : 'rgba(255, 252, 227, 0.95)',
-            borderTopColor: borderLight,
-          },
-        ]}
-      >
+      <StickyActionDock>
         <CustomButton
           title={
             isSaving
@@ -591,7 +569,7 @@ export const LanguageScreen: React.FC = () => {
           variant="dark"
           style={styles.dockButton}
         />
-      </View>
+      </StickyActionDock>
     </View>
   );
 };

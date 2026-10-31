@@ -30,32 +30,19 @@ import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../../Theme/fonts';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
-import { SVGS } from '../../Assets/Images';
-import { RegiusLogo } from '../../Common/RegiusLogo';
-import { CustomAnimation } from '../../Common/CustomAnimation';
-import HolographAnimation from '../../Assets/JsonAnimations/Holograph.json';
 import { useTaskReminder } from '../../Context/TaskReminderContext';
 import { useVoiceWakeWord } from '../../Context/VoiceWakeWordContext';
 import DailyBriefingCard from './Components/DailyBriefingCard';
 import DailyBalanceGrid from './Components/DailyBalanceGrid';
 import TimelineItemCard, { TimelineItem } from './Components/TimelineItemCard';
-import HeaderPatternSvg from './Components/HeaderPatternSvg';
+import { FlowSectionSheet } from '../../Common/FlowSectionSheet';
 import FlowBadgePatternSvg from './Components/FlowBadgePatternSvg';
 import FlowSectionBackgroundSvg from './Components/FlowSectionBackgroundSvg';
 import LegendaryDoodleSvg from './Components/LegendaryDoodleSvg';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { useDailyQuote } from '../../Services/DailyQuotes';
-
-type FlowFilter = 'all' | 'tasks' | 'habits' | 'reminders' | 'voice';
-
-const FILTER_TABS = [
-  { key: 'all' as FlowFilter, label: 'All Flow' },
-  { key: 'tasks' as FlowFilter, label: 'Tasks' },
-  { key: 'reminders' as FlowFilter, label: 'Reminders' },
-  { key: 'habits' as FlowFilter, label: 'Habits' },
-] as const;
-
-const HEADER_HEIGHT = 52;
+import DashboardHeader, { HEADER_HEIGHT } from './Components/DashboardHeader';
+import FlowFilterTabs, { FlowFilter } from './Components/FlowFilterTabs';
 
 // Parse 12h/24h time string into minutes since midnight
 function parseTimeToMinutes(timeStr?: string): number {
@@ -347,96 +334,20 @@ export const DashboardScreen: React.FC = () => {
       />
 
       {/* Header */}
-      <Animated.View
-        style={[
-          styles.headerContainer,
-          {
-            paddingTop: insets.top,
-            paddingBottom: headerPaddingBottom,
-            backgroundColor: headerBgColor,
-            borderBottomLeftRadius: headerRadius,
-            borderBottomRightRadius: headerRadius,
-            shadowOpacity: headerShadowOpacity,
-            elevation: headerElevation,
-          },
-        ]}
-      >
-        {/* Background Theme SVG Designs for Scrolled State */}
-        <Animated.View
-          pointerEvents="none"
-          style={[
-            StyleSheet.absoluteFill,
-            {
-              opacity: headerPatternOpacity,
-              borderBottomLeftRadius: headerRadius,
-              borderBottomRightRadius: headerRadius,
-              overflow: 'hidden',
-            },
-          ]}
-        >
-          <HeaderPatternSvg width={screenWidth} insetsTop={insets.top} />
-        </Animated.View>
-
-        <View style={styles.header}>
-          <View style={styles.headerLeft}>
-            <RegiusLogo size="xl" variant={isScrolled ? 'light' : 'default'} />
-          </View>
-
-          <View style={styles.headerRight}>
-            <TouchableOpacity
-              activeOpacity={0.75}
-              onPress={() => openAssistant()}
-              style={styles.voiceHeaderBtn}
-              accessibilityRole="button"
-              accessibilityLabel={`Open ${assistantName} Voice Assistant`}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            >
-              <View pointerEvents="none">
-                <CustomAnimation
-                  animationFile={HolographAnimation}
-                  size={56}
-                  animationStyle={styles.voiceHeaderAnimation}
-                  autoPlay
-                  loop
-                  resizeMode="contain"
-                  pointerEvents="none"
-                />
-              </View>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              activeOpacity={0.75}
-              onPress={() => navigation.navigate('Settings')}
-              style={[
-                styles.settingsBtn,
-                isScrolled && styles.settingsBtnScrolled,
-              ]}
-              accessibilityRole="button"
-              accessibilityLabel="Open Settings"
-              hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
-            >
-              <Settings
-                size={24}
-                color={isScrolled ? Colors.MidnightCharcoal : '#1B1C19'}
-                strokeWidth={2}
-              />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={() => navigation.navigate('Settings')}
-              style={[
-                styles.avatarRing,
-                isScrolled && styles.avatarRingScrolled,
-              ]}
-              accessibilityRole="button"
-              accessibilityLabel="User Profile"
-            >
-              <SVGS.RegiusAvatar width={36} height={36} style={styles.avatar} />
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Animated.View>
+      <DashboardHeader
+        isScrolled={isScrolled}
+        insetsTop={insets.top}
+        screenWidth={screenWidth}
+        assistantName={assistantName}
+        headerBgColor={headerBgColor}
+        headerRadius={headerRadius}
+        headerShadowOpacity={headerShadowOpacity}
+        headerElevation={headerElevation}
+        headerPaddingBottom={headerPaddingBottom}
+        headerPatternOpacity={headerPatternOpacity}
+        onOpenVoiceAssistant={openAssistant}
+        onPressSettings={() => navigation.navigate('Settings')}
+      />
 
       <ScrollView
         style={styles.scroll}
@@ -493,55 +404,17 @@ export const DashboardScreen: React.FC = () => {
         </View>
 
         {/* Curated flow timeline - Full width and till bottom edge */}
-        <View
-          style={[styles.flowSection, { paddingBottom: insets.bottom + 130 }]}
+        <FlowSectionSheet
+          title="Today’s Flow"
+          subtitle="Your day at a glance"
+          backgroundSvg={<FlowSectionBackgroundSvg />}
+          bottomPadding={insets.bottom + 130}
+          containerStyle={styles.flowSection}
         >
-          {/* Aesthetic luxury background */}
-          <View style={styles.flowSectionBgWrapper} pointerEvents="none">
-            <FlowSectionBackgroundSvg />
-          </View>
-
-          {/* Header crest badge centered on top border */}
-          <View style={styles.flowHeaderBadge}>
-            <FlowBadgePatternSvg />
-            <Text style={styles.flowTitle}>Today’s Flow</Text>
-            <Text style={styles.flowSubtitle}>Your day at a glance</Text>
-          </View>
-
           {/* Filter pills */}
-          <FlatList
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            data={FILTER_TABS}
-            keyExtractor={item => item.key}
-            contentContainerStyle={styles.filterRow}
-            style={styles.filterScroll}
-            renderItem={({ item: f }) => {
-              const isActive = activeFilter === f.key;
-              return (
-                <TouchableOpacity
-                  key={f.key}
-                  activeOpacity={0.8}
-                  onPress={() => setActiveFilter(f.key)}
-                  style={[
-                    styles.filterPill,
-                    isActive && styles.filterPillActive,
-                  ]}
-                  accessibilityRole="tab"
-                  accessibilityState={{ selected: isActive }}
-                  accessibilityLabel={`Filter by ${f.label}`}
-                >
-                  <Text
-                    style={[
-                      styles.filterPillText,
-                      isActive && styles.filterPillTextActive,
-                    ]}
-                  >
-                    {f.label}
-                  </Text>
-                </TouchableOpacity>
-              );
-            }}
+          <FlowFilterTabs
+            activeFilter={activeFilter}
+            onSelectFilter={setActiveFilter}
           />
 
           {/* Timeline list */}
@@ -629,7 +502,7 @@ export const DashboardScreen: React.FC = () => {
               </View>
             </View>
           </View>
-        </View>
+        </FlowSectionSheet>
       </ScrollView>
     </View>
   );
@@ -639,91 +512,6 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: Colors.DefaultWhite,
-  },
-  headerContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    zIndex: 100,
-    shadowColor: '#201646',
-    shadowOffset: { width: 0, height: 6 },
-    shadowRadius: 7,
-  },
-  header: {
-    height: HEADER_HEIGHT,
-    paddingHorizontal: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  headerRight: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
-  },
-  voiceHeaderBtn: {
-    width: 36,
-    height: 36,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  voiceHeaderAnimation: {
-    width: 56,
-    height: 56,
-  },
-  settingsBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#ECE8DF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.04,
-    shadowRadius: 3,
-    elevation: 1,
-  },
-  settingsBtnScrolled: {
-    backgroundColor: '#FFFFFF',
-    borderColor: 'rgba(255, 255, 255, 0.85)',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  avatarRing: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
-    borderWidth: 2,
-    borderColor: Colors.RingBorder,
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflow: 'hidden',
-    backgroundColor: Colors.DefaultWhite,
-  },
-  avatarRingScrolled: {
-    borderColor: Colors.RingBorder,
-    borderWidth: 2,
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
-    shadowRadius: 4,
-    elevation: 3,
-    backgroundColor: Colors.DefaultWhite,
-  },
-  avatar: {
-    position: 'absolute',
-    bottom: 0,
   },
   scroll: {
     flex: 1,
@@ -834,56 +622,6 @@ const styles = StyleSheet.create({
     color: '#B6B9C3',
     marginTop: 1,
     textAlign: 'center',
-  },
-  filterScroll: {
-    marginHorizontal: -8,
-    marginBottom: 6,
-  },
-  filterRow: {
-    flexDirection: 'row',
-    gap: 8,
-    paddingHorizontal: 12,
-    paddingTop: 6,
-    paddingBottom: 16,
-  },
-  filterPill: {
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-    borderRadius: 22,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1.5,
-    borderColor: '#ECE7DB',
-    borderBottomWidth: 3.5,
-    borderBottomColor: '#D8D1C0',
-    shadowColor: '#5C5441',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.12,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  filterPillActive: {
-    backgroundColor: Colors.NeroBlack,
-    borderWidth: 1.5,
-    borderTopColor: '#454955',
-    borderLeftColor: '#333640',
-    borderRightColor: '#333640',
-    borderBottomWidth: 3.5,
-    borderBottomColor: '#0A0B0E',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.28,
-    shadowRadius: 5,
-    elevation: 5,
-  },
-  filterPillText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
-    color: '#555450',
-    letterSpacing: -0.1,
-  },
-  filterPillTextActive: {
-    color: Colors.DefaultWhite,
-    fontFamily: Fonts.poppins.bold,
   },
   timelineList: {
     position: 'relative',

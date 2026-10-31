@@ -15,6 +15,8 @@ import {
   MilestoneProgressData,
   DEFAULT_PROGRESS_DATA,
 } from '../Services/Milestone/MilestoneService';
+
+export type { MilestoneTier };
 import { useTaskReminder } from './TaskReminderContext';
 import { usePremium } from './PremiumContext';
 

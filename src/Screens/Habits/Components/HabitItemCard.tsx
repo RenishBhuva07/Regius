@@ -23,8 +23,8 @@ import {
 import { Fonts } from '../../../Theme/fonts';
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import { Badge, BadgeVariant } from '../../../Common/Badge';
+import { getCutoutCardPath } from '../../../Common/CutoutCardSvg';
 import { HabitItem } from '../../../Context/TaskReminderContext';
-import { getCutoutCardPath } from '../../Dashboard/Components/TimelineItemCard';
 
 interface HabitItemCardProps {
   habit: HabitItem;

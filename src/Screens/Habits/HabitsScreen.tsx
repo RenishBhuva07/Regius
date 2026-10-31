@@ -26,9 +26,9 @@ import HabitCategoryFilters, {
 } from './Components/HabitCategoryFilters';
 import HabitItemCard from './Components/HabitItemCard';
 import HabitSectionBackgroundSvg from './Components/HabitSectionBackgroundSvg';
-import FlowBadgePatternSvg from '../Dashboard/Components/FlowBadgePatternSvg';
 import AddHabitModal from '../../Components/AddHabitModal';
 import { ScreenHeader, SCREEN_HEADER_HEIGHT } from '../../Common/ScreenHeader';
+import { FlowSectionSheet } from '../../Common/FlowSectionSheet';
 import HabitNotesDoodleSvg from './Components/HabitNotesDoodleSvg';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { useDailyQuote } from '../../Services/DailyQuotes';
@@ -147,34 +147,15 @@ export const HabitsScreen: React.FC = () => {
         />
 
         {/* Habits section */}
-        <View
-          style={[styles.habitsSection, { paddingBottom: insets.bottom + 130 }]}
+        <FlowSectionSheet
+          title="Today’s Rituals"
+          subtitle={`${completedCount} of ${filteredHabits.length} completed`}
+          backgroundSvg={<HabitSectionBackgroundSvg />}
+          onPressAdd={openHabitModal}
+          addAccessibilityLabel="Add new habit"
+          bottomPadding={insets.bottom + 130}
+          containerStyle={styles.habitsSection}
         >
-          {/* Aesthetic luxury background */}
-          <View style={styles.habitsSectionBgWrapper} pointerEvents="none">
-            <HabitSectionBackgroundSvg />
-          </View>
-
-          {/* Section header crest badge */}
-          <View style={styles.flowHeaderBadge}>
-            <FlowBadgePatternSvg />
-            <Text style={styles.flowTitle}>Today’s Rituals</Text>
-            <Text style={styles.flowSubtitle}>
-              {completedCount} of {filteredHabits.length} completed
-            </Text>
-          </View>
-
-          {/* Floating add button */}
-          <TouchableOpacity
-            activeOpacity={0.85}
-            onPress={openHabitModal}
-            style={styles.addHabitFloatingBtn}
-            accessibilityRole="button"
-            accessibilityLabel="Add new habit"
-          >
-            <Plus size={18} color="#FFFFFF" strokeWidth={2.6} />
-          </TouchableOpacity>
-
           {/* All habits list using FlatList */}
           <FlatList
             data={filteredHabits}
@@ -230,7 +211,7 @@ export const HabitsScreen: React.FC = () => {
               </View>
             </View>
           </View>
-        </View>
+        </FlowSectionSheet>
       </ScrollView>
 
       {/* Add / Edit Habit Modal */}

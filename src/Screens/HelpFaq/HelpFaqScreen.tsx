@@ -47,6 +47,7 @@ import {
 import { useScrollReactiveHeader } from '../../Common/useScrollReactiveHeader';
 import { ProBadge } from '../../Common/ProBadge';
 import CustomButton from '../../Common/CustomButton';
+import { SearchInputBar } from '../../Common/SearchInputBar';
 import { useTheme } from '../../Theme/ThemeContext';
 import { SettingsBackgroundSvg } from '../Settings/Components/SettingsBackgroundSvg';
 
@@ -216,7 +217,9 @@ export const HelpFaqScreen: React.FC = () => {
             <View style={styles.heroHeaderRow}>
               <View style={styles.heroTagRow}>
                 <Sparkles size={13} color="#F5C518" strokeWidth={2.4} />
-                <Text style={styles.heroTagText}>VIP CONCIERGE & DIAGNOSTICS</Text>
+                <Text style={styles.heroTagText}>
+                  VIP CONCIERGE & DIAGNOSTICS
+                </Text>
               </View>
               <ProBadge size="sm" />
             </View>
@@ -255,34 +258,12 @@ export const HelpFaqScreen: React.FC = () => {
         </View>
 
         {/* Search Input Bar */}
-        <View
-          style={[
-            styles.searchWrap,
-            {
-              backgroundColor: cardBg,
-              borderColor: isDarkMode ? '#2C3035' : borderLight,
-            },
-          ]}
-        >
-          <Search size={18} color={textSecondary} strokeWidth={2.2} />
-          <TextInput
-            style={[styles.searchInput, { color: textPrimary }]}
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            placeholder="Search guides, gestures, commands..."
-            placeholderTextColor={textSecondary}
-            autoCorrect={false}
-          />
-          {searchQuery.length > 0 && (
-            <TouchableOpacity
-              activeOpacity={0.7}
-              onPress={() => setSearchQuery('')}
-              style={styles.searchClearBtn}
-            >
-              <X size={15} color={textSecondary} strokeWidth={2.4} />
-            </TouchableOpacity>
-          )}
-        </View>
+        <SearchInputBar
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          placeholder="Search guides, gestures, commands..."
+          containerStyle={{ marginBottom: 16 }}
+        />
 
         {/* 4-Facet Knowledge Domains */}
         <View style={styles.domainsSection}>
@@ -346,9 +327,7 @@ export const HelpFaqScreen: React.FC = () => {
                     styles.domainCard,
                     {
                       backgroundColor: domain.bg,
-                      borderColor: isSelected
-                        ? domain.accent
-                        : domain.border,
+                      borderColor: isSelected ? domain.accent : domain.border,
                       borderWidth: isSelected ? 2 : 1.5,
                       shadowColor: domain.accent,
                     },
@@ -363,7 +342,11 @@ export const HelpFaqScreen: React.FC = () => {
                       },
                     ]}
                   >
-                    <IconComp size={16} color={domain.accent} strokeWidth={2.4} />
+                    <IconComp
+                      size={16}
+                      color={domain.accent}
+                      strokeWidth={2.4}
+                    />
                   </View>
 
                   <Text style={[styles.domainLabel, { color: textPrimary }]}>
@@ -413,9 +396,7 @@ export const HelpFaqScreen: React.FC = () => {
                     styles.faqCard,
                     {
                       backgroundColor: cardBg,
-                      borderColor: isExpanded
-                        ? accentColor
-                        : borderLight,
+                      borderColor: isExpanded ? accentColor : borderLight,
                       shadowColor: isExpanded ? accentColor : '#000000',
                     },
                   ]}
@@ -449,10 +430,7 @@ export const HelpFaqScreen: React.FC = () => {
                       />
 
                       <Text
-                        style={[
-                          styles.faqQuestionText,
-                          { color: textPrimary },
-                        ]}
+                        style={[styles.faqQuestionText, { color: textPrimary }]}
                       >
                         {item.question}
                       </Text>
@@ -497,10 +475,7 @@ export const HelpFaqScreen: React.FC = () => {
                       ]}
                     >
                       <Text
-                        style={[
-                          styles.faqAnswerText,
-                          { color: textSecondary },
-                        ]}
+                        style={[styles.faqAnswerText, { color: textSecondary }]}
                       >
                         {item.answer}
                       </Text>
@@ -513,9 +488,7 @@ export const HelpFaqScreen: React.FC = () => {
                               backgroundColor: isDarkMode
                                 ? '#22283A'
                                 : '#FAF8F5',
-                              borderColor: isDarkMode
-                                ? '#394060'
-                                : '#ECE8DF',
+                              borderColor: isDarkMode ? '#394060' : '#ECE8DF',
                             },
                           ]}
                         >
@@ -525,10 +498,7 @@ export const HelpFaqScreen: React.FC = () => {
                             strokeWidth={2.4}
                           />
                           <Text
-                            style={[
-                              styles.tipText,
-                              { color: textPrimary },
-                            ]}
+                            style={[styles.tipText, { color: textPrimary }]}
                           >
                             <Text style={styles.tipBold}>Regius Tip: </Text>
                             {item.tip}

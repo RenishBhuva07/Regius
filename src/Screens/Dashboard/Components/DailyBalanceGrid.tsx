@@ -18,91 +18,13 @@ export interface DailyBalanceGridProps {
   onPressNudges?: () => void;
 }
 
-interface CircularProgressProps {
-  percent: number;
-  size?: number;
-  strokeWidth?: number;
-  trackColor: string;
-  progressColor: string;
-  textColor: string;
-  shadowColor?: string;
-}
+import {
+  CircularProgress,
+  CircularProgressProps,
+} from '../../../Common/CircularProgress';
 
-// Circular progress indicator showing percentage as a round graph line
-export const CircularProgress: React.FC<CircularProgressProps> = ({
-  percent,
-  size = 34,
-  strokeWidth = 2.8,
-  trackColor,
-  progressColor,
-  textColor,
-  shadowColor,
-}) => {
-  const clampedPercent = Math.min(100, Math.max(0, percent));
-  const radius = (size - strokeWidth) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset =
-    circumference - (circumference * clampedPercent) / 100;
-  const center = size / 2;
-
-  return (
-    <View
-      style={[
-        styles.progressContainer,
-        {
-          width: size,
-          height: size,
-          borderRadius: size / 2,
-          shadowColor: shadowColor || 'rgba(0, 0, 0, 0.1)',
-        },
-      ]}
-      accessibilityRole="image"
-      accessibilityLabel={`${clampedPercent}% completed`}
-    >
-      <View style={styles.svgRotator}>
-        <Svg width={size} height={size}>
-          {/* Background track circle */}
-          <Circle
-            cx={center}
-            cy={center}
-            r={radius}
-            stroke={trackColor}
-            strokeWidth={strokeWidth}
-            fill="#FFFFFF"
-          />
-          {/* Foreground progress arc indicating percentage */}
-          {clampedPercent > 0 && (
-            <Circle
-              cx={center}
-              cy={center}
-              r={radius}
-              stroke={progressColor}
-              strokeWidth={strokeWidth}
-              strokeDasharray={`${circumference} ${circumference}`}
-              strokeDashoffset={strokeDashoffset}
-              strokeLinecap="round"
-              fill="transparent"
-            />
-          )}
-        </Svg>
-      </View>
-      <View style={styles.percentTextContainer} pointerEvents="none">
-        <Text
-          style={[
-            styles.percentIndicatorText,
-            {
-              color: textColor,
-              fontSize: clampedPercent >= 100 ? 8.5 : 10,
-            },
-          ]}
-          numberOfLines={1}
-        >
-          {clampedPercent}%
-        </Text>
-      </View>
-    </View>
-  );
-};
+export { CircularProgress };
+export type { CircularProgressProps };
 
 export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
   tasksCompleted = 0,
