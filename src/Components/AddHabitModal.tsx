@@ -59,78 +59,8 @@ import { HabitItem } from '../Context/TaskReminderContext';
 import { useOptionalVoiceWakeWord } from '../Context/VoiceWakeWordContext';
 import FlowBadgePatternSvg from '../Screens/Dashboard/Components/FlowBadgePatternSvg';
 import TaskCardAestheticBg from './TaskCardAestheticBg';
-import PickerAestheticBg from './PickerAestheticBg';
-
-// Schedule button background
-
-const ScheduleButtonBackgroundSvg: React.FC<{
-  type: 'date' | 'time';
-}> = React.memo(({ type }) => {
-  const auraColor = type === 'date' ? '#F5C518' : '#9C9CE3';
-  const auraOpacity = type === 'date' ? 0.22 : 0.26;
-
-  return (
-    <View style={StyleSheet.absoluteFill} pointerEvents="none">
-      <Svg
-        width="100%"
-        height="100%"
-        viewBox="0 0 170 64"
-        preserveAspectRatio="none"
-        fill="none"
-      >
-        <Defs>
-          <LinearGradient
-            id={`bgGrad-habit-${type}`}
-            x1="0%"
-            y1="0%"
-            x2="100%"
-            y2="100%"
-          >
-            <Stop offset="0%" stopColor="#252733" stopOpacity={0.96} />
-            <Stop offset="50%" stopColor="#1B1D26" stopOpacity={0.92} />
-            <Stop offset="100%" stopColor="#131419" stopOpacity={0.98} />
-          </LinearGradient>
-
-          <RadialGradient
-            id={`aura-habit-${type}`}
-            cx="85%"
-            cy="25%"
-            rx="55%"
-            ry="75%"
-          >
-            <Stop offset="0%" stopColor={auraColor} stopOpacity={auraOpacity} />
-            <Stop offset="50%" stopColor={auraColor} stopOpacity={0.06} />
-            <Stop offset="100%" stopColor="#131419" stopOpacity={0} />
-          </RadialGradient>
-        </Defs>
-
-        <Rect width="100%" height="100%" fill={`url(#bgGrad-habit-${type})`} />
-        <Rect width="100%" height="100%" fill={`url(#aura-habit-${type})`} />
-
-        <Circle
-          cx={145}
-          cy={18}
-          r={28}
-          stroke="rgba(156, 156, 227, 0.18)"
-          strokeWidth={1}
-          fill="none"
-        />
-        <Circle
-          cx={145}
-          cy={18}
-          r={42}
-          stroke="rgba(156, 156, 227, 0.1)"
-          strokeWidth={0.8}
-          strokeDasharray="3 4"
-          fill="none"
-        />
-
-        <Circle cx={130} cy={10} r={1.2} fill="#E0E0FF" opacity={0.7} />
-        <Circle cx={155} cy={32} r={1} fill="#9C9CE3" opacity={0.55} />
-      </Svg>
-    </View>
-  );
-});
+import { ScheduleButtonBackgroundSvg } from '../Common/ScheduleButtonBackgroundSvg';
+import { UnifiedSchedulePickerModal } from '../Common/UnifiedSchedulePickerModal';
 
 // Habit Categories Setup
 
@@ -863,73 +793,14 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
         </KeyboardAvoidingView>
 
         {/* Time picker modal */}
-        {Platform.OS === 'ios' ? (
-          <Modal
-            visible={showTimePicker}
-            transparent
-            animationType="slide"
-            onRequestClose={() => setShowTimePicker(false)}
-          >
-            <TouchableWithoutFeedback onPress={() => setShowTimePicker(false)}>
-              <View style={styles.pickerModalOverlay}>
-                <TouchableWithoutFeedback>
-                  <View style={styles.pickerModalCard}>
-                    <View style={styles.pickerDragHandle} />
-
-                    <PickerAestheticBg type="time" />
-
-                    <View style={styles.pickerModalHeader}>
-                      <View style={styles.pickerHeaderTitleWrap}>
-                        <View
-                          style={[
-                            styles.pickerHeaderBadge,
-                            styles.pickerHeaderBadgeTime,
-                          ]}
-                        >
-                          <Clock size={12} color="#7059C8" strokeWidth={2.5} />
-                          <Text style={styles.pickerHeaderBadgeTextTime}>
-                            LUNAR CHRONO
-                          </Text>
-                        </View>
-                        <Text style={styles.pickerModalTitle}>Target Time</Text>
-                      </View>
-
-                      <TouchableOpacity
-                        activeOpacity={0.82}
-                        onPress={() => setShowTimePicker(false)}
-                        style={styles.pickerDoneBtn}
-                        accessibilityRole="button"
-                        accessibilityLabel="Confirm time selection"
-                      >
-                        <Text style={styles.pickerDoneBtnText}>Done</Text>
-                      </TouchableOpacity>
-                    </View>
-
-                    <View style={styles.pickerWheelContainer}>
-                      <DateTimePicker
-                        value={timeValue}
-                        mode="time"
-                        display="spinner"
-                        onChange={onTimeChange}
-                        textColor={Colors.MidnightCharcoal}
-                        themeVariant="light"
-                      />
-                    </View>
-                  </View>
-                </TouchableWithoutFeedback>
-              </View>
-            </TouchableWithoutFeedback>
-          </Modal>
-        ) : (
-          showTimePicker && (
-            <DateTimePicker
-              value={timeValue}
-              mode="time"
-              display="default"
-              onChange={onTimeChange}
-            />
-          )
-        )}
+        <UnifiedSchedulePickerModal
+          visible={showTimePicker}
+          mode="time"
+          value={timeValue}
+          onChange={onTimeChange}
+          onClose={() => setShowTimePicker(false)}
+          title="Target Time"
+        />
       </View>
     </Modal>
   );
@@ -1551,110 +1422,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.18)',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-
-  // Native Picker Bottom Sheet (iOS)
-  pickerModalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(14, 16, 21, 0.65)',
-    justifyContent: 'flex-end',
-  },
-  pickerModalCard: {
-    backgroundColor: '#FAF8F5',
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
-    paddingHorizontal: 20,
-    paddingTop: 12,
-    paddingBottom: Platform.OS === 'ios' ? 36 : 24,
-    borderTopWidth: 2,
-    borderColor: '#E8E2D5',
-    position: 'relative',
-    overflow: 'hidden',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000000',
-        shadowOffset: { width: 0, height: -6 },
-        shadowOpacity: 0.16,
-        shadowRadius: 18,
-      },
-      android: {
-        elevation: 12,
-      },
-    }),
-  },
-  pickerDragHandle: {
-    width: 36,
-    height: 4.5,
-    borderRadius: 2.5,
-    backgroundColor: '#D5D0C5',
-    alignSelf: 'center',
-    marginBottom: 12,
-  },
-  pickerModalHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingBottom: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0, 0, 0, 0.06)',
-  },
-  pickerHeaderTitleWrap: {
-    gap: 4,
-  },
-  pickerHeaderBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 5,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 12,
-    borderWidth: 1,
-    alignSelf: 'flex-start',
-  },
-  pickerHeaderBadgeTime: {
-    backgroundColor: '#F3F2FD',
-    borderColor: '#E0DEFA',
-  },
-  pickerHeaderBadgeTextTime: {
-    fontFamily: Fonts.poppins.bold,
-    fontSize: 9.5,
-    letterSpacing: 0.8,
-    color: '#7059C8',
-  },
-  pickerModalTitle: {
-    fontFamily: Fonts.ranade.bold,
-    fontSize: 20,
-    color: Colors.MidnightCharcoal,
-    letterSpacing: -0.3,
-  },
-  pickerDoneBtn: {
-    backgroundColor: Colors.MidnightCharcoal,
-    borderRadius: 50,
-    paddingHorizontal: 18,
-    paddingVertical: 7,
-    borderWidth: 1.2,
-    borderColor: '#3A3F48',
-    ...Platform.select({
-      ios: {
-        shadowColor: Colors.MidnightCharcoal,
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.25,
-        shadowRadius: 6,
-      },
-      android: {
-        elevation: 4,
-      },
-    }),
-  },
-  pickerDoneBtnText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
-    color: '#FFFFFF',
-  },
-  pickerWheelContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingTop: 6,
   },
 });
 

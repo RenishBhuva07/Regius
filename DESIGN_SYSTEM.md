@@ -375,6 +375,7 @@ Used for list items in `HomeScreen`, `TasksScreen` (`TaskCardItem.tsx`), `Remind
 Regius employs a signature dual-tier luxury header architecture where scrolling elevates the header from a seamless canvas into a distinct floating brand layer:
 
 1. **Primary Screen Header (`ScreenHeader.tsx`)**:
+
    - Used across main bottom-tab screens (`DashboardScreen`, `TasksScreen`, `HabitsScreen`, `RemindersScreen`).
    - Left: High-emphasis Ranade H1 screen title (`Typography.h1RanadeBold`, 24px) + Poppins subtitle.
    - Right: Voice Holograph Orb assistant button + User Avatar Ring (`SVGS.RegiusAvatar`).
@@ -691,3 +692,45 @@ The Regius Royal subscription flow embodies mindful luxury:
 5. **Sticky Action Dock**:
    - Full-pill golden CTA button with dual-state messaging: "Start 14-Day Free Trial" or "Royal Access Active".
    - Compliant microcopy for App Store and Google Play subscription transparency.
+
+---
+
+## 10. Reusable Global Primitives & Component Inventory (`src/Common/`)
+
+To prevent divergence and maintain strict aesthetic consistency across features, engineers and AI agents must consume the centralized primitives in `src/Common/`:
+
+### 10.1 `UnifiedSchedulePickerModal.tsx`
+
+- **Purpose**: Consolidated date & time schedule picker modal replacing disjointed platform picker sheets.
+- **Visuals**: Displays an interactive solar calendar grid with month navigation, day cells, lunar chrono time spinner, quick selection chips ('Today', 'Tomorrow', 'Next Week'), and a full-pill tactile confirmation CTA.
+- **Props**: `visible: boolean`, `initialDate?: Date`, `mode?: 'date' | 'time' | 'datetime'`, `onConfirm: (date: Date) => void`, `onCancel: () => void`.
+
+### 10.2 `TactileSegmentedTabs.tsx`
+
+- **Purpose**: Tactile sliding pill segmented control with haptic feedback and fluid indicator animation.
+- **Visuals**: High-contrast pill geometry, active indicator pill with subtle volumetric drop shadow, and crisp typography (`Fonts.poppins.semiBold`).
+- **Props**: `tabs: { key: string; label: string; count?: number }[]`, `activeTab: string`, `onTabChange: (key: string) => void`.
+
+### 10.3 `StickyActionDock.tsx`
+
+- **Purpose**: Universal bottom-anchored action dock for primary submit/confirm actions.
+- **Visuals**: Gradient dawn fade-up backdrop, dynamic safe area padding (`useSafeAreaInsets().bottom`), and full-bleed action buttons.
+
+### 10.4 `FlowSectionSheet.tsx`
+
+- **Purpose**: Standardized bottom sheet wrapper with rounded canopy geometry.
+- **Visuals**: Top drag handle pill (`width: 36, height: 4, borderRadius: 2`), header title row, and smooth slide entrance animation.
+
+### 10.5 `SearchInputBar.tsx`
+
+- **Purpose**: Luxury search input field with instant clear button and search emblem.
+- **Visuals**: Rounded pill container (`borderRadius: 16`), high-contrast placeholder, and focus glow rim.
+
+### 10.6 `EmptyStateView.tsx`
+
+- **Purpose**: Engaging empty state display for lists, search results, and filters.
+- **Visuals**: Centered emblem illustration, Ranade bold title, Poppins regular description, and optional full-pill CTA button.
+
+### 10.7 `EmblemIcons.tsx` & `CutoutCardSvg.tsx`
+
+- **Purpose**: Signature category emblems (`WorksVectorEmblem`, `SportVectorEmblem`, `HabitsVectorEmblem`) and asymmetric cutout card geometry (`CutoutCardSvg`, `borderRadius: 23, borderTopRightRadius: 63`).

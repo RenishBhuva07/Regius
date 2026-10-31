@@ -351,3 +351,49 @@ npm run lint
    _Proposed Improvement_: Bundle Kokoro-82M ONNX model weights and run offline inference via `onnxruntime-react-native`.
 4. **Backend API Scaffolding**: `src/api/` folders are currently empty placeholders.  
    _Proposed Improvement_: Implement REST/GraphQL client with JWT authentication and offline-first synchronization.
+
+---
+
+## 9. Modular Component Hierarchy & Codebase Decomposition Architecture
+
+To guarantee long-term maintainability, avoid monolithic multi-thousand-line files, and uphold strict architectural discipline, the Regius codebase follows a strict 3-tier component hierarchy:
+
+```mermaid
+graph TD
+    subgraph Global_Layer [Tier 1: Global Common Primitives (src/Common/)]
+        Emblems[EmblemIcons.tsx\nWorks, Sport, Habits]
+        Cutout[CutoutCardSvg.tsx\nAsymmetric Geometry]
+        CircProg[CircularProgress.tsx\nSVG Ring]
+        Tabs[TactileSegmentedTabs.tsx\nSliding Indicator]
+        Sheet[FlowSectionSheet.tsx\nCanopy Bottom Sheet]
+        Dock[StickyActionDock.tsx\nFloating Action Anchor]
+        Picker[UnifiedSchedulePickerModal.tsx\nSolar & Lunar Chrono]
+        Modal[CustomCategoryModal.tsx\nPalette & Emblem Creator]
+        Search[SearchInputBar.tsx\nDebounced Search]
+        Empty[EmptyStateView.tsx\nTactile Zero-State]
+    end
+
+    subgraph Feature_Layer [Tier 2: Cross-Feature Modular Modules (src/Components/)]
+        AddModal[AddModal/ Subcomponents\nCategoryChipSelector, ScheduleTriggerRow, PrioritySelector,\nSubtaskListSection, ReminderAlertSelector]
+    end
+
+    subgraph Screen_Layer [Tier 3: Screen-Specific Components (src/Screens/<Screen>/Components/)]
+        Dash[Dashboard/\nDashboardHeader, FlowFilterTabs]
+        Voice[VoiceStudio/\nVoiceWaveVisualizer, VoiceSpeedSelector, VoiceAutoSpeakCard, VoiceCardItem, VoicePlaygroundCard]
+        Wake[WakeWordStudio/\nWakeWordRadarPulse, WakeWordPresetCard, WakeWordCustomInput, WakeWordTester]
+        Theme[Theme/\nThemeHeroCard, ThemeFilterTabs, ThemePresetCard, ThemeLockedModal]
+        Sub[Subscription/\nRoyalHeroCard, RoyalPerksGrid, SubscriptionPlanItem, SocialProofCard]
+        Prof[Profile/\nProfileAvatarHero, ProfileStatsMatrix, ProfileCredentialsForm]
+    end
+
+    Screen_Layer --> Feature_Layer
+    Screen_Layer --> Global_Layer
+    Feature_Layer --> Global_Layer
+```
+
+### 9.1 Architecture Rules & Conventions
+
+1. **Leaf Direct Imports**: Leaf components and subcomponents must import primitives directly from specific module paths (e.g., `src/Common/Badge`, `src/Common/CustomButton`) rather than umbrella barrels that pull transitive contexts and native device bridges during unit testing.
+2. **Encapsulated Animation Loops**: Components featuring ambient or radar animations (`VoiceWaveVisualizer`, `WakeWordRadarPulse`) must encapsulate their own `Animated.loop` lifecycles keyed to an `isActive: boolean` prop, cleaning up on unmount.
+3. **Co-located Types & Strict Typing**: Every extracted component exports a typed interface (e.g. `ThemePresetCardProps`, `RoyalHeroCardProps`) with zero `any` types.
+4. **Clean Screen Orchestration**: Top-level screen components act purely as conductors: fetching state from contexts, binding callback handlers, and assembling composable UI sections.
