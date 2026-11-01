@@ -21,6 +21,7 @@ import { Typography } from '../../../Theme/Typographys';
 import { Fonts } from '../../../Theme/fonts';
 import { Colors as StaticColors } from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
+import { HeaderActionButton } from '../../../Common/HeaderActionButton';
 import { VoiceOption, useSettingsTheme } from './types';
 
 interface DefaultVoiceSectionProps {
@@ -83,23 +84,13 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
           </Text>
         </View>
 
-        <TouchableOpacity
-          activeOpacity={0.7}
-          style={[
-            styles.sectionHeaderAction,
-            { backgroundColor: surfaceAlt, borderColor: borderLight },
-          ]}
+        <HeaderActionButton
+          label="Voice Studio"
+          icon={ChevronRight}
+          iconPosition="right"
           onPress={onOpenVoiceStudio}
-          accessibilityRole="button"
           accessibilityLabel="Open Voice Studio"
-        >
-          <Text style={styles.sectionHeaderActionText}>Voice Studio</Text>
-          <ChevronRight
-            size={13}
-            color={StaticColors.LavenderPurple}
-            strokeWidth={2.4}
-          />
-        </TouchableOpacity>
+        />
       </View>
 
       {/* 3D Tactile Active Voice Bento Card */}
@@ -384,21 +375,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.ranade.bold,
     fontSize: 17,
     flexShrink: 1,
-  },
-  sectionHeaderAction: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 11,
-    paddingVertical: 5.5,
-    borderRadius: 14,
-    borderWidth: 1,
-    flexShrink: 0,
-  },
-  sectionHeaderActionText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
-    color: StaticColors.LavenderPurple,
   },
   activeVoiceCard: {
     borderRadius: 22,

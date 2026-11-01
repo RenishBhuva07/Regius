@@ -683,7 +683,11 @@ sequenceDiagram
   - `ThemeScreen.tsx`: Slashed from 1,395 lines to 240 lines (82.7% reduction).
   - `SubscriptionScreen.tsx`: Slashed from 939 lines to 350 lines (62.7% reduction).
   - `ProfileScreen.tsx`: Slashed from 796 lines to 235 lines (70.4% reduction).
-- **Test Coverage**: All 22 test suites and 246 tests passing with 0 TypeScript compiler errors.
+- **Test Coverage**: All 23 test suites and 254 tests passing with 0 TypeScript compiler errors.
+- **Section Header Action Standardization (`HeaderActionButton`)**:
+  - Reusable primitive in `src/Common/HeaderActionButton.tsx` replacing inconsistent and un-bordered buttons in section headers.
+  - Implemented in `CategoryChipSelector.tsx` ("Add Category"), `DefaultVoiceSection.tsx` ("Voice Studio"), and `WakeWordSection.tsx` ("Configure").
+  - Provides full pill (`borderRadius: 20`), Nero background (`#1E2028`), slate border (`#363944`), 14x14 icon disc with translucent aura, Poppins SemiBold 10.5 text (`#F5C518`), and configurable `iconPosition` (`'left' | 'right'`).
 
 ---
 

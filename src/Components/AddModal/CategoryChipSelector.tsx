@@ -11,6 +11,7 @@ import {
 import { Plus, Check } from 'lucide-react-native';
 import { Fonts } from '../../Theme/fonts';
 import { BadgeVariant } from '../../Common/Badge';
+import { HeaderActionButton } from '../../Common/HeaderActionButton';
 
 const { width: screenWidth } = Dimensions.get('window');
 const categoryCardWidth = Math.min((screenWidth - 48) / 3, 114);
@@ -48,18 +49,12 @@ export const CategoryChipSelector: React.FC<CategoryChipSelectorProps> =
         <View style={styles.sectionBlock}>
           <View style={styles.sectionHeaderRow}>
             <Text style={styles.sectionHeading}>{heading}</Text>
-            <TouchableOpacity
-              activeOpacity={0.8}
+            <HeaderActionButton
+              label="Add Category"
+              icon={Plus}
               onPress={onPressAddCategory}
-              style={styles.addCategoryHeaderBtn}
-              accessibilityRole="button"
               accessibilityLabel="Add new category"
-            >
-              <View style={styles.addCategoryIconWrap}>
-                <Plus size={11} color="#F5C518" strokeWidth={3} />
-              </View>
-              <Text style={styles.addCategoryHeaderBtnText}>Add Category</Text>
-            </TouchableOpacity>
+            />
           </View>
 
           <FlatList
@@ -189,31 +184,6 @@ const styles = StyleSheet.create({
     fontSize: 13.5,
     color: '#121417',
     letterSpacing: -0.2,
-  },
-  addCategoryHeaderBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 4.5,
-    borderRadius: 20,
-    backgroundColor: '#1E2028',
-    borderWidth: 1,
-    borderColor: '#363944',
-  },
-  addCategoryIconWrap: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
-    backgroundColor: 'rgba(245, 197, 24, 0.15)',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  addCategoryHeaderBtnText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 10.5,
-    color: '#F5C518',
-    letterSpacing: 0.2,
   },
   categoryFlatList: {
     marginHorizontal: -20,

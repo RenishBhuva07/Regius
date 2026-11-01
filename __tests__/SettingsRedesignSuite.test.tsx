@@ -252,9 +252,61 @@ describe('Settings Redesign & Fixes Suite', () => {
       });
       expect(onResetMock).toHaveBeenCalledTimes(1);
     });
+
+    it('triggers Voice Studio HeaderActionButton navigation when pressed', () => {
+      const onOpenVoiceStudioMock = jest.fn();
+      let tree: any;
+      act(() => {
+        tree = ReactTestRenderer.create(
+          <DefaultVoiceSection
+            selectedVoice={VOICES[0]}
+            voices={VOICES}
+            onSelectVoice={jest.fn()}
+            onOpenVoiceStudio={onOpenVoiceStudioMock}
+            isPlayingPreview={false}
+            playingVoiceId={null}
+            onTogglePreview={jest.fn()}
+            waveAnims={[]}
+            autoSpeakReplies={true}
+            onToggleAutoSpeakReplies={jest.fn()}
+          />,
+        );
+      });
+
+      const voiceStudioBtn = tree.root.findByProps({
+        accessibilityLabel: 'Open Voice Studio',
+      });
+      act(() => {
+        voiceStudioBtn.props.onPress();
+      });
+      expect(onOpenVoiceStudioMock).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('WakeWordSection', () => {
+    it('triggers Configure HeaderActionButton when pressed', () => {
+      const onConfigureMock = jest.fn();
+      let tree: any;
+      act(() => {
+        tree = ReactTestRenderer.create(
+          <WakeWordSection
+            wakeWordEnabled={false}
+            onToggleWakeWord={jest.fn()}
+            wakeWordPhrase="Hey Sia"
+            onConfigureWakeWord={onConfigureMock}
+          />,
+        );
+      });
+
+      const configBtn = tree.root.findByProps({
+        accessibilityLabel: 'Configure wake word sensitivity',
+      });
+      act(() => {
+        configBtn.props.onPress();
+      });
+      expect(onConfigureMock).toHaveBeenCalledTimes(1);
+    });
+
     it('renders contained microphone threshold callout and triggers reset defaults', () => {
       const onConfigureMock = jest.fn();
       const onResetMock = jest.fn();

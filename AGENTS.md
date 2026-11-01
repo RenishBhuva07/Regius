@@ -175,6 +175,11 @@ When creating or updating UI elements:
    - Inner card MUST have `borderWidth: 4`, `borderColor: 'rgba(255, 255, 255, 0.9)'`, `borderRadius: 24`, and `backgroundColor: Colors.NeroBlack`.
    - Shadow wrapper MUST have deep volumetric shadow: `shadowColor: '#000000'`, `shadowOffset: { width: 0, height: 10 }`, `shadowOpacity: 0.28`, `shadowRadius: 18`, `elevation: 8-10`.
    - Parent wrapper MUST use `paddingHorizontal: 10` for consistent 10px screen margin across all tabs.
+7. **Section Header Action & Navigation Buttons (`HeaderActionButton`)**:
+   - **Never render plain text, flat clickable labels, or un-bordered action buttons in section headers.**
+   - When a section has its title on the left and a CTA/navigation action on the right (e.g., "Add Category", "Voice Studio", "Configure"), MUST use `<HeaderActionButton />` from `src/Common/HeaderActionButton.tsx`.
+   - Must use signature luxury Nero pill styling: full pill (`borderRadius: 20`), dark Nero fill (`backgroundColor: '#1E2028'`), slate border (`borderColor: '#363944'`, `borderWidth: 1`), and a circular 14x14 accent aura disc (`borderRadius: 7`, `backgroundColor: 'rgba(245, 197, 24, 0.15)'`) encasing a sharp 11px icon (`strokeWidth: 3`) paired with Poppins SemiBold 10.5 text (`letterSpacing: 0.2`, `color: '#F5C518'`).
+   - Use `iconPosition: 'left'` for action verbs (`Add Category`, `Configure`) and `iconPosition: 'right'` for drill-down navigation chevrons (`Voice Studio`).
 
 ---
 

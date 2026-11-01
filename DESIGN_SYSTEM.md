@@ -217,6 +217,19 @@ Primary buttons follow full-pill geometry (`borderRadius: 28`) and tactile debou
   - Button: full-pill geometry (`borderRadius: 28`), standardized vertical padding rule (`paddingVertical: 15` without fixed height), `alignItems: 'center'`, `justifyContent: 'center'`, `shadowOffset: { width: 0, height: 4 }`, `shadowOpacity: 0.35`, `shadowRadius: 8`, `elevation: 4`.
   - Content: Row with `gap: 8`, icon `size={18}` / `strokeWidth={2.4}`, `fontFamily: Fonts.poppins.bold`, `fontSize: 15`, `letterSpacing: 0.2`, and centered `ActivityIndicator` on loading.
 
+#### 4.2.1 Section Header Action & Navigation Buttons (`src/Common/HeaderActionButton.tsx`)
+
+Used across screens wherever a section header places its title on the left and a CTA or navigation action button on the right (e.g. `Add Category` in `AddTaskModal` / `AddReminderModal`, `Voice Studio` and `Configure` in `SettingsScreen`):
+
+- **Core Anatomy & Design Tokens**:
+  - **Outer Pill**: `backgroundColor: '#1E2028'` (dark luxury Nero charcoal), `borderColor: '#363944'`, `borderWidth: 1`, `borderRadius: 20`, `paddingHorizontal: 10`, `paddingVertical: 4.5`, `gap: 6`.
+  - **Circular Icon Wrap Disc**: `width: 14, height: 14, borderRadius: 7`, `backgroundColor: 'rgba(245, 197, 24, 0.15)'` (or accent-derived 15% tint aura), `alignItems: 'center'`, `justifyContent: 'center'`.
+  - **Centered Icon**: `size: 11, strokeWidth: 3`, matching accent color (`#F5C518` by default).
+  - **Typography**: `fontFamily: Fonts.poppins.semiBold`, `fontSize: 10.5`, `color: '#F5C518'`, `letterSpacing: 0.2`.
+  - **Directional Icon Flow**:
+    - `iconPosition: 'left'` (default) for creation/action triggers (e.g. `+ Add Category`, `🎚️ Configure`).
+    - `iconPosition: 'right'` for forward drill-down sub-screen navigations (e.g. `Voice Studio >`).
+
 ---
 
 ### 4.3 Signature Asymmetric Category & Bento Cards
@@ -734,3 +747,8 @@ To prevent divergence and maintain strict aesthetic consistency across features,
 ### 10.7 `EmblemIcons.tsx` & `CutoutCardSvg.tsx`
 
 - **Purpose**: Signature category emblems (`WorksVectorEmblem`, `SportVectorEmblem`, `HabitsVectorEmblem`) and asymmetric cutout card geometry (`CutoutCardSvg`, `borderRadius: 23, borderTopRightRadius: 63`).
+
+### 10.8 `HeaderActionButton.tsx`
+
+- **Purpose**: Unified luxury section header action and navigation pill button with circular icon disc.
+- **Visuals**: Full pill (`borderRadius: 20`), Nero background (`#1E2028`), border (`#363944`), 14x14 icon disc with translucent aura, Poppins SemiBold 10.5 text (`#F5C518`), and configurable `iconPosition` (`'left' | 'right'`).

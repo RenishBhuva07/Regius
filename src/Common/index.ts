@@ -22,3 +22,4 @@ export * from './SearchInputBar';
 export * from './EmptyStateView';
 export * from './UnifiedSchedulePickerModal';
 export * from './CustomCategoryModal';
+export * from './HeaderActionButton';

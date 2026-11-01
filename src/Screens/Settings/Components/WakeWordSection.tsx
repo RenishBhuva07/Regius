@@ -11,6 +11,7 @@ import { Typography } from '../../../Theme/Typographys';
 import { Fonts } from '../../../Theme/fonts';
 import { Colors as StaticColors } from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
+import { HeaderActionButton } from '../../../Common/HeaderActionButton';
 import { useSettingsTheme } from './types';
 import {
   DEFAULT_WAKE_WORD_PHRASE,
@@ -60,23 +61,13 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
         </View>
 
         {onConfigureWakeWord && (
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={[
-              styles.sectionHeaderAction,
-              { backgroundColor: surfaceAlt, borderColor: borderLight },
-            ]}
+          <HeaderActionButton
+            label="Configure"
+            icon={SlidersHorizontal}
+            iconPosition="left"
             onPress={onConfigureWakeWord}
-            accessibilityRole="button"
             accessibilityLabel="Configure wake word sensitivity"
-          >
-            <SlidersHorizontal
-              size={12}
-              color={StaticColors.LavenderPurple}
-              strokeWidth={2.2}
-            />
-            <Text style={styles.sectionHeaderActionText}>Configure</Text>
-          </TouchableOpacity>
+          />
         )}
       </View>
 
@@ -314,20 +305,6 @@ const styles = StyleSheet.create({
   insideResetText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 11.5,
-    color: StaticColors.LavenderPurple,
-  },
-  sectionHeaderAction: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 14,
-    borderWidth: 1,
-  },
-  sectionHeaderActionText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
     color: StaticColors.LavenderPurple,
   },
   wakeWordCard: {
