@@ -12,7 +12,7 @@ As an AI coding agent working on **Regius**, your primary obligation is to maint
 
 Regius is a refined, production-grade codebase with active, finely-tuned native audio integrations, background speech recognition, real-time neural TTS, and custom gesture-driven navigation. **Casual modifications, careless refactors, or standard generic templates will break native audio pipelines and violate the luxury brand aesthetic.**
 
-### The 11 Mandatory Agent Directives
+### The 12 Mandatory Agent Directives
 
 1. **Inspect Before Modifying**: Never edit a file without reading its active implementation and understanding its callers.
 2. **Root-Cause Analysis First**: When fixing a bug, identify the root cause before writing code. Never apply superficial masking patches.
@@ -21,10 +21,11 @@ Regius is a refined, production-grade codebase with active, finely-tuned native 
 5. **No Test Mocking of Real Logic**: Never replace real application logic or native service bridges with mocks simply to make tests pass.
 6. **Zero Hallucination of APIs or Dependencies**: Never invent API contracts, credentials, environment variables, or completed backend features. Base all work on verifiable code.
 7. **Adhere to the Design System**: Every new or edited UI component must strictly follow [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md). Never use generic blue/grey colors, flat borderless tags, or clinical `#FFFFFF` canvases.
-8. **Run Available Verification Checks**: Always execute `npm test` and `npx tsc --noEmit` after making changes. Report actual test counts and compiler outputs.
-9. **Update Documentation Continuously**: Whenever a change impacts product requirements, architectural flow, design tokens, or feature status, immediately update [PRD.md](PRD.md), [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md), [ARCHITECTURE.md](ARCHITECTURE.md), or [FEATURES.md](FEATURES.md).
-10. **Explain Conflicts Transparently**: If instructions or specifications conflict with codebase realities, explain the conflict clearly rather than silently discarding existing behavior.
-11. **Concise, Human-Style Comments (No AI Fluff)**: Never write multi-paragraph block comments, redundant JSDocs repeating method names, or decorative emojis. Write brief human comments only when explaining tricky or non-obvious logic; remove obvious comments and dead commented-out code.
+8. **Always Use Responsive Pixels**: For all UI changes, always import and use `ResponsivePixels` from `src/Assets/StyleUtilities/ResponsivePixels.tsx` for layout spacing, margins, paddings, button geometry, offsets, and dimensions where scaling is needed across device screens. Avoid arbitrary hardcoded numeric pixel literals.
+9. **Run Available Verification Checks**: Always execute `npm test` and `npx tsc --noEmit` after making changes. Report actual test counts and compiler outputs.
+10. **Update Documentation Continuously**: Whenever a change impacts product requirements, architectural flow, design tokens, or feature status, immediately update [PRD.md](PRD.md), [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md), [ARCHITECTURE.md](ARCHITECTURE.md), or [FEATURES.md](FEATURES.md).
+11. **Explain Conflicts Transparently**: If instructions or specifications conflict with codebase realities, explain the conflict clearly rather than silently discarding existing behavior.
+12. **Concise, Human-Style Comments (No AI Fluff)**: Never write multi-paragraph block comments, redundant JSDocs repeating method names, or decorative emojis. Write brief human comments only when explaining tricky or non-obvious logic; remove obvious comments and dead commented-out code.
 
 ---
 
@@ -180,6 +181,9 @@ When creating or updating UI elements:
    - When a section has its title on the left and a CTA/navigation action on the right (e.g., "Add Category", "Voice Studio", "Configure"), MUST use `<HeaderActionButton />` from `src/Common/HeaderActionButton.tsx`.
    - Must use signature luxury Nero pill styling: full pill (`borderRadius: 20`), dark Nero fill (`backgroundColor: '#1E2028'`), slate border (`borderColor: '#363944'`, `borderWidth: 1`), and a circular 14x14 accent aura disc (`borderRadius: 7`, `backgroundColor: 'rgba(245, 197, 24, 0.15)'`) encasing a sharp 11px icon (`strokeWidth: 3`) paired with Poppins SemiBold 10.5 text (`letterSpacing: 0.2`, `color: '#F5C518'`).
    - Use `iconPosition: 'left'` for action verbs (`Add Category`, `Configure`) and `iconPosition: 'right'` for drill-down navigation chevrons (`Voice Studio`).
+8. **Mandatory Responsive Pixels Usage**:
+   - For all UI modifications and additions, always import `ResponsivePixels` from `src/Assets/StyleUtilities/ResponsivePixels.tsx` whenever sizing, padding, margin, icon dimensions, coordinate offsets (`top`, `bottom`, `left`, `right`), or component geometry are defined or adjusted.
+   - Never use arbitrary raw numbers when a corresponding `ResponsivePixels` token is appropriate.
 
 ---
 

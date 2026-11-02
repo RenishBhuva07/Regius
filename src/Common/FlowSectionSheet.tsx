@@ -11,6 +11,7 @@ import {
 import { Plus } from 'lucide-react-native';
 import { Fonts } from '../Theme/fonts';
 import { Colors } from '../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 import FlowBadgePatternSvg from '../Screens/Dashboard/Components/FlowBadgePatternSvg';
 
 export interface FlowSectionSheetProps {
@@ -70,7 +71,7 @@ export const FlowSectionSheet: React.FC<FlowSectionSheetProps> = React.memo(
             ))}
         </View>
 
-        {/* Optional floating '+' action button at top-right corner */}
+        {/* Floating '+' action button straddling top-right edge in symmetry with header crest */}
         {onPressAdd && (
           <TouchableOpacity
             activeOpacity={0.85}
@@ -78,8 +79,13 @@ export const FlowSectionSheet: React.FC<FlowSectionSheetProps> = React.memo(
             style={styles.floatingAddBtn}
             accessibilityRole="button"
             accessibilityLabel={addAccessibilityLabel}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
           >
-            <Plus size={18} color="#FFFFFF" strokeWidth={2.6} />
+            <Plus
+              size={ResponsivePixels.size18}
+              color={Colors.DefaultWhite}
+              strokeWidth={2.6}
+            />
           </TouchableOpacity>
         )}
 
@@ -124,12 +130,12 @@ const styles = StyleSheet.create({
   },
   flowHeaderBadge: {
     position: 'absolute',
-    top: -24,
+    top: -ResponsivePixels.size24,
     alignSelf: 'center',
     backgroundColor: Colors.NeroBlack,
-    paddingHorizontal: 22,
-    paddingVertical: 7,
-    borderRadius: 22,
+    paddingHorizontal: ResponsivePixels.size22,
+    paddingVertical: ResponsivePixels.size7,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
     borderTopColor: '#4A4E5C',
     borderLeftColor: '#363944',
@@ -162,30 +168,32 @@ const styles = StyleSheet.create({
   },
   floatingAddBtn: {
     position: 'absolute',
-    top: 18,
-    right: 18,
-    width: 38,
-    height: 38,
-    borderRadius: 19,
-    backgroundColor: '#1E2028',
+    top: -ResponsivePixels.size21,
+    right: ResponsivePixels.size18,
+    width: ResponsivePixels.size42,
+    height: ResponsivePixels.size42,
+    borderRadius: ResponsivePixels.size21,
+    backgroundColor: Colors.NeroBlack,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 1.2,
-    borderColor: '#4A4E5C',
-    borderBottomWidth: 3,
-    borderBottomColor: '#0E1015',
+    borderWidth: 1.5,
+    borderTopColor: '#4A4E5C',
+    borderLeftColor: '#363944',
+    borderRightColor: '#363944',
+    borderBottomWidth: 3.5,
+    borderBottomColor: '#090A0D',
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.28,
-        shadowRadius: 5,
+        shadowColor: '#0B0D11',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.32,
+        shadowRadius: 6,
       },
       android: {
-        elevation: 5,
+        elevation: 6,
       },
     }),
-    zIndex: 10,
+    zIndex: 20,
   },
 });
 

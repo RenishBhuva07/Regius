@@ -197,7 +197,7 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingTop: insets.top + SCREEN_HEADER_HEIGHT + 6,
+            paddingTop: insets.top + SCREEN_HEADER_HEIGHT + 10,
             paddingBottom: 0,
           },
         ]}

@@ -731,8 +731,8 @@ To prevent divergence and maintain strict aesthetic consistency across features,
 
 ### 10.4 `FlowSectionSheet.tsx`
 
-- **Purpose**: Standardized bottom sheet wrapper with rounded canopy geometry.
-- **Visuals**: Top drag handle pill (`width: 36, height: 4, borderRadius: 2`), header title row, and smooth slide entrance animation.
+- **Purpose**: Standardized bottom sheet wrapper with rounded canopy geometry and integrated crest badge.
+- **Visuals**: Centered black crest badge (`flowHeaderBadge`) straddling top border (`top: -ResponsivePixels.size24`), optional top-right floating plus action button (`floatingAddBtn`) straddling the top-right border edge in vertical symmetry with the header crest (`top: -ResponsivePixels.size21`, `right: ResponsivePixels.size18`, `width: ResponsivePixels.size42, height: ResponsivePixels.size42, borderRadius: ResponsivePixels.size21`, `backgroundColor: Colors.NeroBlack`, 3D beveled borders: `borderTopColor: '#4A4E5C', borderLeftColor: '#363944', borderRightColor: '#363944', borderBottomWidth: 3.5, borderBottomColor: '#090A0D'`, volumetric shadow: `shadowColor: '#0B0D11'`, `zIndex: 20`), smooth background SVG filigree support, and dynamic bottom padding. All geometry and offsets must use `ResponsivePixels`.
 
 ### 10.5 `SearchInputBar.tsx`
 

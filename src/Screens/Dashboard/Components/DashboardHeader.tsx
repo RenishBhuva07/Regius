@@ -9,7 +9,7 @@ import { CustomAnimation } from '../../../Common/CustomAnimation';
 import HolographAnimation from '../../../Assets/JsonAnimations/Holograph.json';
 import HeaderPatternSvg from './HeaderPatternSvg';
 
-export const HEADER_HEIGHT = 52;
+export const HEADER_HEIGHT = 54;
 
 export interface DashboardHeaderProps {
   isScrolled: boolean;
@@ -201,28 +201,26 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1.5,
-    borderColor: '#ECE8DF',
+    borderWidth: 2,
+    borderColor: Colors.RingBorder,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 3,
-    elevation: 1,
+    overflow: 'hidden',
+    backgroundColor: Colors.DefaultWhite,
   },
   avatarRingScrolled: {
-    backgroundColor: '#FFFFFF',
-    borderColor: 'rgba(255, 255, 255, 0.85)',
+    borderColor: Colors.RingBorder,
+    borderWidth: 2,
     shadowColor: '#000000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.12,
     shadowRadius: 4,
     elevation: 3,
+    backgroundColor: Colors.DefaultWhite,
   },
   avatar: {
-    borderRadius: 18,
+    position: 'absolute',
+    bottom: 0,
   },
 });
 
