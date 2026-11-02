@@ -14,7 +14,7 @@ import {
   Pressable,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { FileText, ArrowRight, ArrowDown } from 'lucide-react-native';
+import { FileText } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../Theme/fonts';
@@ -39,6 +39,7 @@ import {
   CategoryItem,
   ScheduleTriggerRow,
   ReminderAlertSelector,
+  ModalBottomBar,
 } from './AddModal';
 
 const DEFAULT_REMINDER_CATEGORIES: CategoryItem[] = [
@@ -498,49 +499,13 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
             />
           </Animated.ScrollView>
 
-          {/* Bottom actions dock */}
-          <View
-            pointerEvents="box-none"
-            style={[
-              styles.bottomStickyCta,
-              { paddingBottom: Math.max(insets.bottom, 16) + 6 },
-            ]}
-          >
-            <View style={styles.bottomCtaRow}>
-              {/* Back Button on Left */}
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={onClose}
-                style={styles.bottomBackBtn}
-                accessibilityRole="button"
-                accessibilityLabel="Go back"
-              >
-                <ArrowDown size={20} color="#FFFFFF" strokeWidth={2.4} />
-              </TouchableOpacity>
-
-              {/* Create Reminder Button on Right */}
-              <Animated.View
-                style={[
-                  styles.createBtnAnimWrap,
-                  { transform: [{ scale: createAnim }] },
-                ]}
-              >
-                <TouchableOpacity
-                  activeOpacity={0.9}
-                  onPress={handleSave}
-                  style={styles.createReminderHeroBtn}
-                >
-                  <Text style={styles.createReminderHeroBtnText}>
-                    Create Reminder
-                  </Text>
-
-                  <View style={styles.createReminderHeroCircle}>
-                    <ArrowRight size={18} color="#FFFFFF" strokeWidth={2.6} />
-                  </View>
-                </TouchableOpacity>
-              </Animated.View>
-            </View>
-          </View>
+          {/* Common theme-styled bottom dock */}
+          <ModalBottomBar
+            onClose={onClose}
+            onSubmit={handleSave}
+            submitText="Create Reminder"
+            createAnim={createAnim}
+          />
         </KeyboardAvoidingView>
 
         {/* Unified Date Picker Modal */}
@@ -703,80 +668,6 @@ const styles = StyleSheet.create({
     margin: 0,
     textAlignVertical: 'center',
     includeFontPadding: false,
-  },
-  bottomStickyCta: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: 'transparent',
-    paddingHorizontal: ResponsivePixels.size20,
-    paddingTop: 10,
-  },
-  bottomCtaRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-  },
-  bottomBackBtn: {
-    width: 54,
-    height: 54,
-    borderRadius: 27,
-    backgroundColor: Colors.MidnightCharcoal,
-    borderWidth: 1.2,
-    borderColor: '#3A3F48',
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...Platform.select({
-      ios: {
-        shadowColor: Colors.MidnightCharcoal,
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 0.35,
-        shadowRadius: 14,
-      },
-      android: {
-        elevation: 8,
-      },
-    }),
-  },
-  createBtnAnimWrap: {
-    flex: 1,
-  },
-  createReminderHeroBtn: {
-    backgroundColor: Colors.MidnightCharcoal,
-    borderRadius: 50,
-    height: 54,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: 10,
-    borderWidth: 1.2,
-    borderColor: '#3A3F48',
-    ...Platform.select({
-      ios: {
-        shadowColor: Colors.MidnightCharcoal,
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 0.35,
-        shadowRadius: 14,
-      },
-      android: {
-        elevation: 8,
-      },
-    }),
-  },
-  createReminderHeroBtnText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 16,
-    color: '#FFFFFF',
-    letterSpacing: -0.2,
-  },
-  createReminderHeroCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.18)',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
 

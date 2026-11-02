@@ -3,3 +3,5 @@ export * from './PrioritySelector';
 export * from './ScheduleTriggerRow';
 export * from './SubtaskListSection';
 export * from './ReminderAlertSelector';
+export * from './ModalBottomBar';
+export * from './ModalBottomPatternSvg';

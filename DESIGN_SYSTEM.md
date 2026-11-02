@@ -752,3 +752,8 @@ To prevent divergence and maintain strict aesthetic consistency across features,
 
 - **Purpose**: Unified luxury section header action and navigation pill button with circular icon disc.
 - **Visuals**: Full pill (`borderRadius: 20`), Nero background (`#1E2028`), border (`#363944`), 14x14 icon disc with translucent aura, Poppins SemiBold 10.5 text (`#F5C518`), and configurable `iconPosition` (`'left' | 'right'`).
+
+### 10.9 `ModalBottomBar.tsx` & `ModalBottomPatternSvg.tsx`
+
+- **Purpose**: Consolidated bottom sticky action dock for creation and edition modals (`AddTaskModal`, `AddReminderModal`, `AddHabitModal`).
+- **Visuals**: Replaces transparent backgrounds with a theme-adaptive backdrop matching the top header (`Colors.LavenderPurple` in Classic Light, `#282048` in Classic Dark, or active theme preset color), `borderTopLeftRadius: 24`, `borderTopRightRadius: 24`, deep volumetric upward shadow (`shadowRadius: 14, elevation: 10`), delicate top rim highlight border, and custom `ModalBottomPatternSvg` aesthetic background with concentric orbit rings, starlight diamonds, and Regius crown emblem. Hosts the circular tactile dismiss button on the left (`ArrowDown`) and the animated hero submit pill button on the right (`ArrowRight`).
