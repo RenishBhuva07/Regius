@@ -17,6 +17,7 @@ import { HelpFaqScreen } from '../Screens/HelpFaq';
 import { PrivacySecurityScreen } from '../Screens/PrivacySecurity';
 import { ThemeScreen } from '../Screens/Theme';
 import { SubscriptionScreen } from '../Screens/Subscription';
+import { HabitDetailsScreen } from '../Screens/Habits';
 import { AuthContext } from '../Context/AuthContext';
 import { VoiceWakeWordProvider } from '../Context/VoiceWakeWordContext';
 
@@ -106,6 +107,11 @@ export default function AppNavigator() {
             name="SubscriptionScreen"
             component={SubscriptionScreen}
             options={{ animation: 'slide_from_bottom' }}
+          />
+          <Stack.Screen
+            name="HabitDetailsScreen"
+            component={HabitDetailsScreen}
+            options={{ animation: 'slide_from_right' }}
           />
           <Stack.Screen name="Dashboard" component={DashboardScreen} />
         </Stack.Navigator>

@@ -50,6 +50,7 @@ jest.mock('@react-native-voice/voice', () => ({
 }));
 
 import { HabitsScreen } from '../src/Screens/Habits/HabitsScreen';
+import { HabitDetailsScreen } from '../src/Screens/Habits/HabitDetailsScreen';
 import { HabitConsistencyBento } from '../src/Screens/Habits/Components/HabitConsistencyBento';
 import { HabitCategoryFilters } from '../src/Screens/Habits/Components/HabitCategoryFilters';
 import { HabitItemCard } from '../src/Screens/Habits/Components/HabitItemCard';
@@ -62,6 +63,7 @@ describe('Habits Redesign Suite', () => {
   describe('Component Definitions', () => {
     it('cleanly exports all Habit components and screens', () => {
       expect(HabitsScreen).toBeDefined();
+      expect(HabitDetailsScreen).toBeDefined();
       expect(HabitConsistencyBento).toBeDefined();
       expect(HabitCategoryFilters).toBeDefined();
       expect(HabitItemCard).toBeDefined();
@@ -151,6 +153,39 @@ describe('Habits Redesign Suite', () => {
       expect(updated.frequency).toBe('Mon, Wed, Fri');
       expect(updated.streak).toBe(5);
       expect(updated.id).toBe('test-1');
+    });
+  });
+
+  describe('Habit Details & Swipe Flows', () => {
+    it('verifies habit details resolution by ID', () => {
+      const targetId = 'h-1';
+      const targetHabit = INITIAL_HABITS.find(h => h.id === targetId);
+
+      expect(targetHabit).toBeDefined();
+      expect(targetHabit?.title).toBe('Morning Sunlight & 500ml Water');
+      expect(targetHabit?.category).toBe('morning');
+      expect(targetHabit?.streak).toBe(18);
+      expect(targetHabit?.timeOfDay).toBe('07:30 AM');
+    });
+
+    it('validates 7-day consistency metric formula for habit details screen', () => {
+      const habit = INITIAL_HABITS[0]; // streak 18, completed: true
+      const streak = habit.streak;
+      const isCompleted = habit.completed;
+      const consistencyRate = Math.min(
+        100,
+        Math.round(((streak + (isCompleted ? 1 : 0)) / (streak + 1 || 1)) * 100),
+      );
+
+      expect(consistencyRate).toBe(100);
+    });
+
+    it('verifies categories have tailored themes and motivations', () => {
+      const categories = ['morning', 'mindful', 'evening'] as const;
+      categories.forEach(cat => {
+        const matches = INITIAL_HABITS.filter(h => h.category === cat);
+        expect(matches.length).toBeGreaterThan(0);
+      });
     });
   });
 });

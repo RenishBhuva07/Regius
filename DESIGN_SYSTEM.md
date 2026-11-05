@@ -175,7 +175,11 @@ The singular, unified streak indicator across all cards in the Regius applicatio
 ```tsx
 import { StreakBadge } from '../Common/StreakBadge';
 
-<StreakBadge streak={habit.streak} active={habit.completed || habit.streak > 0} size="sm" />;
+<StreakBadge
+  streak={habit.streak}
+  active={habit.completed || habit.streak > 0}
+  size="sm"
+/>;
 ```
 
 ### 4.2 Reusable Regius Brand Wordmark (`src/Common/RegiusLogo.tsx`)
@@ -395,6 +399,23 @@ Used for list item cards across `TasksScreen` (`TaskCardItem.tsx`), `RemindersSc
   - **No Strikethrough Typography**: Titles remain 100% visible, bold, and readable without line-through decoration when marked complete (`color: '#7E838F'`).
   - **Floating Circular Checkbox**: Positioned in the top-right cutout notch (26×26, r=13), with edit pencil button located in `topRowRightWithCutout`.
   - **7-Day Mini Consistency Dots**: Past completed days are filled with category accent (`#8383D6`); current day (7th dot) displays an outlined waiting ring when active and a filled accent dot upon completion.
+  - **Horizontal Card Swipe Interaction (Habits Flow)**:
+    - Native `PanResponder` driven by `useNativeDriver: true` spring physics (`translateX` translation down to `-138px`).
+    - Drag threshold logic (`Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 1.5`) preserves buttery vertical scrolling without gesture collision.
+    - **Cutout-Safe Vertical Anchor (`top: 58, bottom: 6, maxHeight: 56`)**: Action buttons are anchored strictly below the top-right cutout notch (`CH: 44, R_outer: 12`), ensuring background buttons never peek through or disrupt the signature scooped corner and floating circular checkbox.
+    - **Dynamic Reveal Opacity**: `actionsOpacity` interpolates smoothly from `0` to `1` as `translateX` moves from `0` to `-25px`, keeping buttons completely invisible at rest.
+    - Reveals right-side action tray with two tactile 3D buttons:
+      - **Details Button**: NeroBlack pill (`width: 60`, `borderTopColor: '#4A4E5C'`, `borderBottomWidth: 3`), warm amber circular icon aura with fiery streak flame (`#FF9800` `Flame` icon), and Poppins SemiBold text. Tapping opens `HabitDetailsScreen`.
+      - **Edit Button**: NeroBlack pill (`width: 60`), gold circular icon aura (`#F5C518` Pencil icon), and Poppins SemiBold text. Tapping opens `AddHabitModal`.
+    - Tap-to-close protection: Tapping an open card snaps it closed back to `0px` without accidentally triggering habit check-in.
+  - **Habit Details Screen Architecture (`HabitDetailsScreen.tsx`)**:
+    - **Header**: Unified `SubScreenHeader` with back navigation, scroll-reactive elevation, category 3D badge, and top-right `HeaderActionButton` ("Edit").
+    - **Hero Bento Card**: 2-layer structure conforming to § 4.3 (outer shadow wrapper, inner `NeroBlack` card with 4px specular white border, category aura, large fiery streak counter, and quick check-in toggle button).
+    - **7-Day Consistency Matrix**: Weekday initial pillars (M, T, W, T, F, S, S) with checkmarks and stats summary grid (Streak, Consistency %, Cadence).
+    - **Circadian Protocol**: Window pill, recurrence cadence, and ritual domain.
+    - **Sia Neural Motivation**: Assistant vocal guidance preview card.
+    - **Mindful Intention**: Editorial philosophy quote card.
+    - **Sticky Action Dock**: Bottom dock with primary tactile check-in button and secondary options.
 
 ---
 

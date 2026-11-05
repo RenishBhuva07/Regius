@@ -13,6 +13,7 @@ import {
   NativeScrollEvent,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import { Plus, Flame } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
@@ -35,6 +36,7 @@ import { useDailyQuote } from '../../Services/DailyQuotes';
 
 export const HabitsScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation<any>();
   const dailyQuote = useDailyQuote('habits');
 
   const {
@@ -87,6 +89,13 @@ export const HabitsScreen: React.FC = () => {
       }
     },
     [toggleHabit],
+  );
+
+  const handleViewDetails = useCallback(
+    (habit: HabitItem) => {
+      navigation.navigate('HabitDetailsScreen', { habitId: habit.id });
+    },
+    [navigation],
   );
 
   const filteredHabits = useMemo(() => {
@@ -167,6 +176,7 @@ export const HabitsScreen: React.FC = () => {
                 habit={item}
                 onToggle={handleToggleHabit}
                 onEdit={setEditingHabit}
+                onDetails={handleViewDetails}
               />
             )}
             ItemSeparatorComponent={() => <View style={styles.listSeparator} />}

@@ -16,7 +16,7 @@ Maintain Regius's stability, aesthetic quality and architectural integrity. This
 6. **Do not invent:** Verify API contracts, credentials, environment variables and backend capabilities in the codebase; never hallucinate them.
 7. **Follow the design system:** All UI changes must comply with `DESIGN_SYSTEM.md`. Never introduce generic blue/grey colors, flat borderless tags or clinical `#FFFFFF` canvases.
 8. **Scale UI correctly:** Use `ResponsivePixels` from `src/Assets/StyleUtilities/ResponsivePixels.tsx` for UI dimensions/geometry wherever scaling is appropriate; do not use arbitrary hardcoded pixel values when a corresponding token exists.
-9. **Verify changes:** Run `npm test` and `npx tsc --noEmit` after changes; report actual results, counts and compiler output.
+9. **Verify changes:** Run `npx tsc --noEmit` after changes. Do NOT run `npm test` for small tasks (to conserve tokens); only run `npm test` for big integrations or major architectural changes. Report actual compiler output and test results when tests are run.
 10. **Keep docs synchronized:** When requirements, architecture/data flow, design tokens or feature status change, update the applicable `PRD.md`, `DESIGN_SYSTEM.md`, `ARCHITECTURE.md` and/or `FEATURES.md`.
 11. **Surface conflicts:** Explain conflicts between instructions/specifications and code reality; do not silently discard existing behavior.
 12. **Write human comments:** Use brief comments only for non-obvious logic. No multi-paragraph block comments, redundant JSDoc, decorative emoji comments or dead commented-out code.
@@ -29,7 +29,7 @@ For every task, follow this order:
 2. **Inspect code:** Locate active files (using `FEATURES.md`); read relevant source with `view_file`/`grep_search`; trace exports, callers and consumers; inspect related contexts, audio/state-machine dependencies and tests in `__tests__/`.
 3. **Plan:** Identify dependencies and risks; choose the smallest reliable diff.
 4. **Implement:** Use targeted `replace_file_content`/`multi_replace_file_content` edits. Preserve existing comments, styling and platform-specific guards.
-5. **Verify:** Run `npx tsc --noEmit` and `npm test`. For native-layer changes, also inspect iOS `Info.plist` and Android `AndroidManifest.xml`.
+5. **Verify:** Run `npx tsc --noEmit`. Do NOT run `npm test` for small tasks (to avoid unnecessary token consumption); only run `npm test` for big integrations. For native-layer changes, also inspect iOS `Info.plist` and Android `AndroidManifest.xml`.
 6. **Update docs:** Register added features in `FEATURES.md`; update `ARCHITECTURE.md` for architecture/data-flow changes; update `DESIGN_SYSTEM.md` for design-token changes; update `PRD.md` when product requirements/behavior change. Keep all applicable core docs synchronized.
 7. **Report:** Use the completion format in §7.
 
@@ -129,14 +129,21 @@ When a section has a left title and right-side CTA/navigation action (e.g. Add C
 
 ## 6. Verification and failure handling
 
-Before completing development work, run and report:
+Before completing development work, verify TypeScript compilation:
 
 ```bash
 npx tsc --noEmit
+```
+
+> [!IMPORTANT] > **Token Preservation Rule:** Do NOT run `npm test` for small or incremental tasks—it consumes excessive tokens. Run `npm test` **only for big integrations**, cross-module architectural changes, or when explicitly requested.
+
+When tests are executed for big integrations:
+
+```bash
 npm test
 ```
 
-For failed tests: read the output; determine whether it exposes an application regression or an outdated assertion; fix the application root cause. Never change assertions merely to hide broken features or replace real logic/bridges with mocks. Report actual exit codes, compiler output/error count, Jest suites and test counts. For native changes, inspect `Info.plist` and `AndroidManifest.xml`.
+For failed tests: read the output; determine whether it exposes an application regression or an outdated assertion; fix the application root cause. Never change assertions merely to hide broken features or replace real logic/bridges with mocks. Report actual exit codes, compiler output/error count, Jest suites and test counts (or note if tests were skipped for small tasks). For native changes, inspect `Info.plist` and `AndroidManifest.xml`.
 
 ## 7. Required completion report
 
@@ -149,7 +156,7 @@ For failed tests: read the output; determine whether it exposes an application r
 ### Verification Results
 
 - **TypeScript:** `npx tsc --noEmit` — exit code and error count/output.
-- **Jest:** `npm test` — suites passed and total tests passed.
+- **Jest:** `npm test` — suites passed and total tests passed (or noted as skipped for small task to save tokens).
 
 ### Documentation Synchronized
 
