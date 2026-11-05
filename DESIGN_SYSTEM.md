@@ -409,13 +409,14 @@ Used for list item cards across `TasksScreen` (`TaskCardItem.tsx`), `RemindersSc
       - **Edit Button**: NeroBlack pill (`width: 60`), gold circular icon aura (`#F5C518` Pencil icon), and Poppins SemiBold text. Tapping opens `AddHabitModal`.
     - Tap-to-close protection: Tapping an open card snaps it closed back to `0px` without accidentally triggering habit check-in.
   - **Habit Details Screen Architecture (`HabitDetailsScreen.tsx`)**:
-    - **Header**: Unified `SubScreenHeader` with back navigation, scroll-reactive elevation, category 3D badge, and top-right `HeaderActionButton` ("Edit").
-    - **Hero Bento Card**: 2-layer structure conforming to § 4.3 (outer shadow wrapper, inner `NeroBlack` card with 4px specular white border, category aura, large fiery streak counter, and quick check-in toggle button).
-    - **7-Day Consistency Matrix**: Weekday initial pillars (M, T, W, T, F, S, S) with checkmarks and stats summary grid (Streak, Consistency %, Cadence).
-    - **Circadian Protocol**: Window pill, recurrence cadence, and ritual domain.
-    - **Sia Neural Motivation**: Assistant vocal guidance preview card.
-    - **Mindful Intention**: Editorial philosophy quote card.
-    - **Sticky Action Dock**: Bottom dock with primary tactile check-in button and secondary options.
+    - **Header**: Unified `SubScreenHeader` with back navigation, scroll-reactive elevation, right-side 3D category `<Badge />`, and `<HeaderActionButton label="Edit" />`.
+    - **Hero Bento Card**: 2-layer structure conforming to § 4.3 (outer shadow wrapper, inner `NeroBlack` card with 3.5px specular white border, category aura, Ranade editorial title, streamlined fiery amber streak counter, minimized and focused layout without redundant inline buttons).
+    - **7-Day Consistency Matrix (Tactile Desk Cupboard Architecture)**: 2-layer luxury Nero Black aesthetic casing (`cupboardShadowWrapper` + `cupboardCard` with 3.5px ceramic specular rim and `CupboardAestheticBg` ambient SVG gradients, amber/category auras, and orbit lines) housing 4 distinct, high-depth beveled porcelain window compartments: top showcase window (`streakWindowBox`) with micro-header and open airy day columns featuring creative day name chips (active 3D Focus Day Chip for today with amber halo, and zero dividing line), and 3 lower cubby boxes (`statCubbyBox`) featuring 3D specular badge discs, Ranade Bold typography with units, miniature progress meters, and official 3D `<Badge />` capsules with Lucide vector icons (`Flame` ACTIVE, `Zap` OPTIMAL, `Repeat` 7/7 DAYS).
+    - **Circadian Protocol**: Preferred schedule with category badge, recurrence cadence pill, and ritual domain.
+    - **Sia Neural Motivation**: Assistant vocal guidance preview card with interactive Kokoro-82M TTS audio playback, waveform indicator, and haptic feedback.
+    - **Mindful Intention**: Editorial philosophy quote card with dual light/dark mode adaptation.
+    - **Sticky Action Dock**: Bottom dock with full-width primary tactile check-in button calibrated to standard 44-48pt luxury button height with Poppins SemiBold typography.
+    - **Design System Tokens & Geometry**: Strictly scaled using calibrated `ResponsivePixels` tokens across all dimensions, margins, paddings, and border radiuses.
 
 ---
 
