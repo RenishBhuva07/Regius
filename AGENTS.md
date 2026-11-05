@@ -1,232 +1,161 @@
-# 🤖 Regius — AI Agent Operating Manual & Instructions
+# Regius — AI Agent Operating Manual
 
-> **Applies to**: Antigravity, Claude, Cursor, Copilot, and all autonomous AI coding agents  
-> **Repository**: `Regius` (React Native 0.87.1 / React 19 / TypeScript 6)  
-> **Source Documents**: [PRD.md](PRD.md) | [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) | [ARCHITECTURE.md](ARCHITECTURE.md) | [FEATURES.md](FEATURES.md)
+**Applies to:** Antigravity, Claude, Cursor, Copilot and other autonomous coding agents  
+**Repository:** Regius — React Native 0.87.1, React 19.2.3, TypeScript 6.0.3  
+**Authoritative docs:** `PRD.md` (product/behavior), `DESIGN_SYSTEM.md` (visual tokens/components), `ARCHITECTURE.md` (state machine/audio/lifecycle), `FEATURES.md` (feature ownership/active file map).
 
----
+## 1. Mission and non-negotiable directives
 
-## 1. Core Principles & Philosophy
+Maintain Regius's stability, aesthetic quality and architectural integrity. This is a production-grade app with finely tuned native audio, background speech recognition, neural TTS and gesture-driven navigation. Casual changes, careless refactors or generic templates can break native audio and the luxury brand experience.
 
-As an AI coding agent working on **Regius**, your primary obligation is to maintain the stability, aesthetic excellence, and architectural integrity of the application.
+1. **Inspect first:** Read each target file's active implementation and understand its callers/consumers before editing.
+2. **Find root causes:** Diagnose the underlying cause before fixing a bug; do not mask symptoms.
+3. **Minimize changes:** Make the smallest reliable, targeted diff; avoid wholesale rewrites when surgical edits suffice.
+4. **Preserve behavior:** Do not remove working features, dynamic behavior, user preferences or fallbacks (including bundled audio and phonetic regexes) without explicit authorization.
+5. **Keep tests real:** Never replace application logic or native service bridges with mocks merely to make tests pass.
+6. **Do not invent:** Verify API contracts, credentials, environment variables and backend capabilities in the codebase; never hallucinate them.
+7. **Follow the design system:** All UI changes must comply with `DESIGN_SYSTEM.md`. Never introduce generic blue/grey colors, flat borderless tags or clinical `#FFFFFF` canvases.
+8. **Scale UI correctly:** Use `ResponsivePixels` from `src/Assets/StyleUtilities/ResponsivePixels.tsx` for UI dimensions/geometry wherever scaling is appropriate; do not use arbitrary hardcoded pixel values when a corresponding token exists.
+9. **Verify changes:** Run `npm test` and `npx tsc --noEmit` after changes; report actual results, counts and compiler output.
+10. **Keep docs synchronized:** When requirements, architecture/data flow, design tokens or feature status change, update the applicable `PRD.md`, `DESIGN_SYSTEM.md`, `ARCHITECTURE.md` and/or `FEATURES.md`.
+11. **Surface conflicts:** Explain conflicts between instructions/specifications and code reality; do not silently discard existing behavior.
+12. **Write human comments:** Use brief comments only for non-obvious logic. No multi-paragraph block comments, redundant JSDoc, decorative emoji comments or dead commented-out code.
 
-Regius is a refined, production-grade codebase with active, finely-tuned native audio integrations, background speech recognition, real-time neural TTS, and custom gesture-driven navigation. **Casual modifications, careless refactors, or standard generic templates will break native audio pipelines and violate the luxury brand aesthetic.**
+## 2. Required workflow
 
-### The 12 Mandatory Agent Directives
+For every task, follow this order:
 
-1. **Inspect Before Modifying**: Never edit a file without reading its active implementation and understanding its callers.
-2. **Root-Cause Analysis First**: When fixing a bug, identify the root cause before writing code. Never apply superficial masking patches.
-3. **Smallest Reliable Change**: Make the minimal, most targeted change necessary to achieve the goal. Do not perform wholesale file rewrites when a surgical replacement suffices.
-4. **Preserve Dynamic Behavior & Fallbacks**: Never remove working features, existing dynamic behavior, user preferences, or fallback mechanisms (such as bundled audio fallbacks or phonetic regexes) without explicit authorization.
-5. **No Test Mocking of Real Logic**: Never replace real application logic or native service bridges with mocks simply to make tests pass.
-6. **Zero Hallucination of APIs or Dependencies**: Never invent API contracts, credentials, environment variables, or completed backend features. Base all work on verifiable code.
-7. **Adhere to the Design System**: Every new or edited UI component must strictly follow [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md). Never use generic blue/grey colors, flat borderless tags, or clinical `#FFFFFF` canvases.
-8. **Always Use Responsive Pixels**: For all UI changes, always import and use `ResponsivePixels` from `src/Assets/StyleUtilities/ResponsivePixels.tsx` for layout spacing, margins, paddings, button geometry, offsets, and dimensions where scaling is needed across device screens. Avoid arbitrary hardcoded numeric pixel literals.
-9. **Run Available Verification Checks**: Always execute `npm test` and `npx tsc --noEmit` after making changes. Report actual test counts and compiler outputs.
-10. **Update Documentation Continuously**: Whenever a change impacts product requirements, architectural flow, design tokens, or feature status, immediately update [PRD.md](PRD.md), [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md), [ARCHITECTURE.md](ARCHITECTURE.md), or [FEATURES.md](FEATURES.md).
-11. **Explain Conflicts Transparently**: If instructions or specifications conflict with codebase realities, explain the conflict clearly rather than silently discarding existing behavior.
-12. **Concise, Human-Style Comments (No AI Fluff)**: Never write multi-paragraph block comments, redundant JSDocs repeating method names, or decorative emojis. Write brief human comments only when explaining tricky or non-obvious logic; remove obvious comments and dead commented-out code.
+1. **Consult docs:** Read the relevant source docs: `PRD.md` for product behavior; `DESIGN_SYSTEM.md` for colors/fonts/badges/spacing; `ARCHITECTURE.md` for state machine/audio session/lifecycle; `FEATURES.md` for feature ownership and active file mappings.
+2. **Inspect code:** Locate active files (using `FEATURES.md`); read relevant source with `view_file`/`grep_search`; trace exports, callers and consumers; inspect related contexts, audio/state-machine dependencies and tests in `__tests__/`.
+3. **Plan:** Identify dependencies and risks; choose the smallest reliable diff.
+4. **Implement:** Use targeted `replace_file_content`/`multi_replace_file_content` edits. Preserve existing comments, styling and platform-specific guards.
+5. **Verify:** Run `npx tsc --noEmit` and `npm test`. For native-layer changes, also inspect iOS `Info.plist` and Android `AndroidManifest.xml`.
+6. **Update docs:** Register added features in `FEATURES.md`; update `ARCHITECTURE.md` for architecture/data-flow changes; update `DESIGN_SYSTEM.md` for design-token changes; update `PRD.md` when product requirements/behavior change. Keep all applicable core docs synchronized.
+7. **Report:** Use the completion format in §7.
 
----
+## 3. Stack and repository map
 
-## 2. Mandatory Agent Workflow
+### Stack (verify against project files before changing versions/dependencies)
 
-Before beginning any task, follow this exact sequence:
+- React Native `0.87.1`, New Architecture enabled (`RCTNewArchEnabled=true`); React `19.2.3`; TypeScript `6.0.3`, strict mode.
+- Speech-to-text: `@react-native-voice/voice` `3.2.4`.
+- Playback: `react-native-track-player` `4.1.2`.
+- Neural TTS: Kokoro-82M via Gradio SSE client, with local bundled fallback.
+- On-device ML: `onnxruntime-react-native` `1.24.3`, including custom JSI patch.
+- Navigation: React Navigation v7 (`native-stack`, `bottom-tabs`).
+- Storage: `@react-native-async-storage/async-storage` `3.1.1`.
+- Animation: `lottie-react-native` `7.5.0` and React Native Animated.
+- Graphics/icons: `react-native-svg` `15.15.5`, `lucide-react-native` `1.56.0`.
 
-```mermaid
-flowchart TD
-    A[Receive Task] --> B[Consult Documentation\nPRD / DESIGN / ARCH / FEATURES]
-    B --> C[Audit Codebase Files\nLocate active files in FEATURES.md]
-    C --> D[Identify Dependencies & Callers\nCheck Contexts, Audio & State Machine]
-    D --> E[Formulate Implementation Plan\nSmallest reliable diff]
-    E --> F[Execute Code Modification\nPreserve comments & styling]
-    F --> G[Run Verification Suite\nnpm test & npx tsc --noEmit]
-    G --> H[Update Documentation\nReflect changes in 5 core docs]
-    H --> I[Generate Completion Report]
-```
-
-### Step 1: Document Consultation
-
-- **Product & Behavioral Requirements**: Consult [PRD.md](PRD.md).
-- **Colors, Fonts, Badges, Spacing**: Consult [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md).
-- **State Machine, Audio Session, Lifecycle**: Consult [ARCHITECTURE.md](ARCHITECTURE.md).
-- **Feature Ownership & File Mappings**: Consult [FEATURES.md](FEATURES.md).
-
-### Step 2: Codebase Inspection
-
-- Read the relevant source files with `view_file` or `grep_search`.
-- Check where components or functions are exported and consumed.
-- Check if tests exist in `__tests__/` for the target module.
-
-### Step 3: Targeted Implementation
-
-- Apply modifications using `replace_file_content` or `multi_replace_file_content`.
-- Avoid wiping existing comments, docstrings, or platform-specific guards.
-
-### Step 4: Verification
-
-- Run TypeScript verification: `npx tsc --noEmit`
-- Run Jest test suite: `npm test`
-- If modifying native layers, check iOS `Info.plist` and Android `AndroidManifest.xml`.
-
-### Step 5: Documentation Update
-
-- If you added a feature, register it in [FEATURES.md](FEATURES.md).
-- If you modified architecture or data flow, update [ARCHITECTURE.md](ARCHITECTURE.md).
-- If you added or changed design tokens, update [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md).
-
----
-
-## 3. Technology Stack & Directory Conventions
-
-### 3.1 Technology Stack Standards
-
-- **Framework**: React Native `0.87.1` (New Architecture enabled: `RCTNewArchEnabled=true`).
-- **Core Runtime**: React `19.2.3`.
-- **Language**: TypeScript `6.0.3` with strict mode enabled.
-- **Audio & Voice Pipeline**:
-  - Speech-to-Text: `@react-native-voice/voice` `v3.2.4`
-  - Playback Engine: `react-native-track-player` `v4.1.2`
-  - Neural TTS: Kokoro-82M (via Gradio SSE client with local bundle fallback)
-  - On-Device ML Runtime: `onnxruntime-react-native` `v1.24.3` (with custom JSI patch)
-- **Navigation**: React Navigation `v7` (`native-stack`, `bottom-tabs`).
-- **Storage**: `@react-native-async-storage/async-storage` `v3.1.1`.
-- **UI Animation**: `lottie-react-native` `v7.5.0` + React Native Animated.
-- **Vector Graphics**: `react-native-svg` `v15.15.5` + `lucide-react-native` `v1.56.0`.
-
-### 3.2 Directory Structure & Ownership Rules
+### Directory ownership
 
 ```text
 Regius/
-├── App.tsx                     # Top-level root provider wrapper
-├── index.js                    # TrackPlayer & AppRegistry entry point
+├── App.tsx                 # Root provider wrapper
+├── index.js                # TrackPlayer and AppRegistry entry point
 ├── src/
 │   ├── Assets/
-│   │   ├── Audio/              # Bundled fallback WAV audio assets
-│   │   ├── Fonts/              # Ranade & Poppins TTF font files
-│   │   ├── Images/             # SVGs and vector image components
-│   │   ├── JsonAnimations/     # Holograph.json (Lottie orb)
-│   │   └── StyleUtilities/     # Colors.tsx, ResponsivePixels.tsx
-│   ├── Common/                 # Shared UI primitives: Badge.tsx, CustomButton.tsx
-│   ├── Components/             # Modal dialogs (AddTaskModal, AddReminderModal, etc.)
-│   ├── Context/                # Global contexts (TaskReminder, VoiceWakeWord, Auth, Premium)
-│   ├── Navigators/             # AppNavigator, BottomTabNavigator, PlusActionSheet
-│   ├── Screens/                # Screen containers (Dashboard, Tasks, Reminders, Habits, Settings)
-│   ├── Services/               # Core services (Voice/, Kokoro/, WakeWord/, AudioPlayerService)
-│   └── Theme/                  # ThemeContext, fonts, Typographys
-└── __tests__/                  # Jest test suites (Voice, Wake Word, State Machine)
+│   │   ├── Audio/          # Bundled fallback WAVs
+│   │   ├── Fonts/          # Ranade and Poppins TTFs
+│   │   ├── Images/         # SVGs and vector image components
+│   │   ├── JsonAnimations/ # Holograph.json (Lottie orb)
+│   │   └── StyleUtilities/ # Colors.tsx, ResponsivePixels.tsx
+│   ├── Common/             # Shared UI primitives (Badge, CustomButton)
+│   ├── Components/         # Modal dialogs (AddTaskModal, AddReminderModal, etc.)
+│   ├── Context/            # TaskReminder, VoiceWakeWord, Auth, Premium
+│   ├── Navigators/         # AppNavigator, BottomTabNavigator, PlusActionSheet
+│   ├── Screens/             # Dashboard, Tasks, Reminders, Habits, Settings
+│   ├── Services/            # Voice, Kokoro, WakeWord, AudioPlayerService
+│   └── Theme/               # ThemeContext, fonts, Typographys
+└── __tests__/               # Voice, Wake Word and State Machine Jest suites
 ```
 
----
+## 4. Coding and runtime safety
 
-## 4. Code Standards & Patterns
+### TypeScript and React Native
 
-### 4.1 TypeScript Conventions
+- Use strict typing; avoid `any` except for an untyped third-party event payload, and immediately cast/narrow it.
+- Declare explicit return types on all exported functions, hooks and services.
+- Co-locate interfaces in the feature's `types.ts` or at the top of its service file.
+- Use functional components (`React.FC<Props>` or named functions with typed props).
+- Use `useCallback` for expensive/heavy callbacks and `useMemo` for computed data where beneficial.
+- Handle safe areas/notches and floating bottom navigation with `useSafeAreaInsets()`.
+- Include `accessibilityRole` and `accessibilityLabel`; respect `AccessibilityInfo.isReduceMotionEnabled`.
 
-- **Strict Typing Everywhere**: Never use `any` unless wrapping an un-typed third-party event payload, and even then, cast or narrow immediately.
-- **Explicit Return Types**: All exported functions, hooks, and services must declare explicit return types.
-- **Co-located Interfaces**: Place interfaces in a `types.ts` file within the feature folder or at the top of the service file.
+### Voice/audio pipeline — critical native constraints
 
-### 4.2 React Native Component Guidelines
+The voice pipeline controls sensitive native audio hardware. Preserve its sequencing and race protections:
 
-- **Use Functional Components**: `React.FC<Props>` or standard named functions with typed props.
-- **Performance Optimization**: Wrap heavy callbacks in `useCallback` and computed data in `useMemo`.
-- **Responsive Pixels**: Use `ResponsivePixels` from `src/Assets/StyleUtilities/ResponsivePixels.tsx` for device-proportional scaling where appropriate.
-- **Safe Area Insets**: Always handle notch and bottom navigation float using `useSafeAreaInsets()`.
-- **Accessibility**: Include `accessibilityRole`, `accessibilityLabel`, and honor `AccessibilityInfo.isReduceMotionEnabled`.
+1. **Half-duplex:** Await `stopVoiceEngine()` before starting speech playback via `RegiusSpeechService` or `AudioPlayerService`; never record while the app is speaking.
+2. **Audio-session handoff:** After stopping recording and before TrackPlayer playback, wait `160–300ms` for `AVAudioSession`/`AudioRecord` to transition.
+3. **Reject stale callbacks:** Every state-machine transition from asynchronous callbacks (audio completion, network arrival, etc.) must verify `sessionId === currentInteractionIdRef.current`.
+4. **Keep TTS fallback:** If remote Kokoro synthesis times out, immediately use bundled `voice.previewUrl`. Existing timeout races: `1800ms` for greetings; `20s` for general speech.
 
-### 4.3 Voice & Audio Session Hygiene
+### Comments
 
-The voice pipeline in Regius manages sensitive native audio hardware. Agents modifying audio code **must observe these strict constraints**:
+Use concise, human-written, purpose-driven comments only for tricky logic, regexes or hardware edge cases. Do not add multi-paragraph comments, repetitive JSDoc, architectural essays, decorative emoji headers or comments that merely restate names. Remove dead commented-out JSX/legacy code.
 
-1. **Never Record While Speaking**: Ensure `stopVoiceEngine()` is awaited before initiating speech playback through `RegiusSpeechService` or `AudioPlayerService`. This prevents the microphone from capturing the app's own voice output.
-2. **Yield Audio Session**: After stopping voice recording and before starting TrackPlayer playback, introduce a 160ms–300ms pause to let `AVAudioSession` / `AudioRecord` transition cleanly.
-3. **Session ID Guards**: All state machine transitions triggered from asynchronous callbacks (such as audio completion or network arrival) must check `sessionId === currentInteractionIdRef.current` to avoid stale race conditions.
-4. **Guaranteed Fallback**: If remote Kokoro neural TTS synthesis times out (default 1800ms race for greetings, 20s for general speech), immediately fall back to the bundled voice asset (`voice.previewUrl`).
+## 5. UI and design-system rules
 
-### 4.4 Commenting Standards (Concise & Human-Style)
+Consult `DESIGN_SYSTEM.md` for the complete design language. Apply these project-specific constraints to every relevant UI change:
 
-- **No AI-Generated Essays**: Never write multi-paragraph block comments, repetitive JSDocs, architectural dissertations, or decorative emoji headers (e.g. `/** 🌟 ... */`).
-- **Concise & Purpose-Driven**: Use short, 1-line human comments only when explaining non-obvious logic, tricky regexes, or hardware edge cases.
-- **Omit Obvious Comments**: If a function or component name is self-explanatory (e.g. `navigate()`, `AppleLogoSvg`, `stop()`), omit comments entirely rather than stating the obvious.
-- **No Dead Code**: Remove dead, commented-out JSX or legacy code blocks rather than leaving them in active files.
+### Global styling and shared components
 
----
+- Backgrounds: light `Colors.CreamBackground` (`#FFFCE3`); dark `Colors.DarkBackground` (`#121417`).
+- Typography: H1/brand moments use `Typography.h1RanadeBold` or `Typography.displayLargeRanadeBold`; cards/body/section headers/inputs use `Typography.bodyMediumPoppinsSemiBold` or `Fonts.poppins`.
+- Badges: never use flat, borderless text badges. Use `Badge` from `src/Common/Badge.tsx` with semantic variant `purple`, `yellow`, `green`, `orange`, `red` or `neutral`.
+- Buttons: use `CustomButton` from `src/Common/CustomButton.tsx`; full-pill geometry, `borderRadius: 28–50`.
+- Category cards: define all four facets: `bgColor`, `borderColor`, `accentColor`, `shadowColor` (see `DESIGN_SYSTEM.md` §2.3, Category Trios & Semantic Accents).
+- **Responsive geometry:** For every UI addition/change, import `ResponsivePixels` from `src/Assets/StyleUtilities/ResponsivePixels.tsx` for sizing, padding, margins, icon dimensions, coordinate offsets (`top`/`bottom`/`left`/`right`) and component geometry where a scaling token is appropriate. Never use arbitrary raw numbers in place of an applicable token.
 
-## 5. UI Implementation Rules
+### Hero Bento Cards
 
-When creating or updating UI elements:
+Applies to `DailyBriefingCard`, `TaskProductivityBento` and `HabitConsistencyBento`:
 
-1. **Background Color**: Use `Colors.CreamBackground` (`#FFFCE3`) for light mode, `Colors.DarkBackground` (`#121417`) for dark mode.
-2. **Typography Rules**:
-   - High-emphasis screen headers (H1), brand moments: `Typography.h1RanadeBold` or `Typography.displayLargeRanadeBold`.
-   - Cards, body text, section headers, inputs: `Typography.bodyMediumPoppinsSemiBold` or `Fonts.poppins`.
-3. **Badges**:
-   - **Never render flat, borderless text badges.**
-   - Always import and use `<Badge />` from `src/Common/Badge.tsx`.
-   - Specify the semantic variant (`purple`, `yellow`, `green`, `orange`, `red`, `neutral`).
-4. **Buttons**:
-   - Always use full-pill geometry (`borderRadius: 28` to `50`).
-   - Use `<CustomButton />` from `src/Common/CustomButton.tsx`.
-5. **Category Consistency**:
-   - When introducing category cards, define all 4 facets: `bgColor`, `borderColor`, `accentColor`, and `shadowColor` (see [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md#23-category-trios--semantic-accents)).
-6. **Hero Bento Cards (`DailyBriefingCard`, `TaskProductivityBento`, `HabitConsistencyBento`)**:
-   - **Never render thin 1px borders or subtle flat elevation on hero cards.**
-   - MUST use the signature 2-layer wrapper pattern (`cardShadowWrapper` without `overflow: 'hidden'` + inner `card` with `overflow: 'hidden'`).
-   - Inner card MUST have `borderWidth: 4`, `borderColor: 'rgba(255, 255, 255, 0.9)'`, `borderRadius: 24`, and `backgroundColor: Colors.NeroBlack`.
-   - Shadow wrapper MUST have deep volumetric shadow: `shadowColor: '#000000'`, `shadowOffset: { width: 0, height: 10 }`, `shadowOpacity: 0.28`, `shadowRadius: 18`, `elevation: 8-10`.
-   - Parent wrapper MUST use `paddingHorizontal: 10` for consistent 10px screen margin across all tabs.
-7. **Section Header Action & Navigation Buttons (`HeaderActionButton`)**:
-   - **Never render plain text, flat clickable labels, or un-bordered action buttons in section headers.**
-   - When a section has its title on the left and a CTA/navigation action on the right (e.g., "Add Category", "Voice Studio", "Configure"), MUST use `<HeaderActionButton />` from `src/Common/HeaderActionButton.tsx`.
-   - Must use signature luxury Nero pill styling: full pill (`borderRadius: 20`), dark Nero fill (`backgroundColor: '#1E2028'`), slate border (`borderColor: '#363944'`, `borderWidth: 1`), and a circular 14x14 accent aura disc (`borderRadius: 7`, `backgroundColor: 'rgba(245, 197, 24, 0.15)'`) encasing a sharp 11px icon (`strokeWidth: 3`) paired with Poppins SemiBold 10.5 text (`letterSpacing: 0.2`, `color: '#F5C518'`).
-   - Use `iconPosition: 'left'` for action verbs (`Add Category`, `Configure`) and `iconPosition: 'right'` for drill-down navigation chevrons (`Voice Studio`).
-8. **Mandatory Responsive Pixels Usage**:
-   - For all UI modifications and additions, always import `ResponsivePixels` from `src/Assets/StyleUtilities/ResponsivePixels.tsx` whenever sizing, padding, margin, icon dimensions, coordinate offsets (`top`, `bottom`, `left`, `right`), or component geometry are defined or adjusted.
-   - Never use arbitrary raw numbers when a corresponding `ResponsivePixels` token is appropriate.
+- Never use thin `1px` borders or subtle/flat elevation.
+- Use a two-layer structure: outer `cardShadowWrapper` without `overflow: 'hidden'`; inner `card` with `overflow: 'hidden'`.
+- Inner card: `borderWidth: 4`; `borderColor: 'rgba(255, 255, 255, 0.9)'`; `borderRadius: 24`; `backgroundColor: Colors.NeroBlack`.
+- Outer shadow: `shadowColor: '#000000'`; `shadowOffset: { width: 0, height: 10 }`; `shadowOpacity: 0.28`; `shadowRadius: 18`; `elevation: 8–10`.
+- Parent wrapper: `paddingHorizontal: 10` for consistent screen margins across tabs.
 
----
+### Section-header actions — `HeaderActionButton`
 
-## 6. Verification & Quality Assurance
+When a section has a left title and right-side CTA/navigation action (e.g. Add Category, Voice Studio, Configure), always use `HeaderActionButton` from `src/Common/HeaderActionButton.tsx`. Never use plain text, flat clickable labels or unbordered header actions.
 
-Before concluding any development task, agents must run and report:
+- Styling: full pill (`borderRadius: 20`); Nero fill `#1E2028`; slate border `#363944`, width `1`.
+- Icon aura: circular `14×14`, radius `7`, background `rgba(245, 197, 24, 0.15)`; icon `11px`, `strokeWidth: 3`.
+- Text: Poppins SemiBold `10.5`, `letterSpacing: 0.2`, color `#F5C518`.
+- `iconPosition: 'left'` for action verbs (Add Category, Configure); `'right'` for drill-down navigation (Voice Studio).
+
+## 6. Verification and failure handling
+
+Before completing development work, run and report:
 
 ```bash
-# 1. Verify TypeScript types without emitting bundle
 npx tsc --noEmit
-
-# 2. Run Jest test suite
 npm test
 ```
 
-If tests fail:
+For failed tests: read the output; determine whether it exposes an application regression or an outdated assertion; fix the application root cause. Never change assertions merely to hide broken features or replace real logic/bridges with mocks. Report actual exit codes, compiler output/error count, Jest suites and test counts. For native changes, inspect `Info.plist` and `AndroidManifest.xml`.
 
-- Read the test output carefully.
-- Determine whether the failure indicates a regression in application logic or an outdated test assertion.
-- Fix the root cause in application logic. **Do not modify test assertions to hide broken features.**
-
----
-
-## 7. Completion Report Format
-
-Upon finishing a task, output a structured summary adhering to this format:
+## 7. Required completion report
 
 ```markdown
 ### Summary of Changes
 
-- **Files Modified / Created**: `[relative/path/to/file.tsx](file:///absolute/path/to/file.tsx)`
-- **Key Enhancements**: Bulleted list of architectural and behavioral updates.
+- **Files Modified / Created:** `relative/path/to/file.tsx` (include absolute file link when available)
+- **Key Enhancements:** Architectural and behavioral changes.
 
 ### Verification Results
 
-- **TypeScript**: `npx tsc --noEmit` result (Exit Code, error count).
-- **Jest Test Suite**: `npm test` result (Suites passed, total tests passed).
+- **TypeScript:** `npx tsc --noEmit` — exit code and error count/output.
+- **Jest:** `npm test` — suites passed and total tests passed.
 
 ### Documentation Synchronized
 
-- List of documentation files updated (`PRD.md`, `DESIGN_SYSTEM.md`, `ARCHITECTURE.md`, `FEATURES.md`).
+- List applicable docs updated: `PRD.md`, `DESIGN_SYSTEM.md`, `ARCHITECTURE.md`, `FEATURES.md`.
 
 ### Known Limitations & Open Questions
 
-- Any missing backend APIs, unverified platform behaviors, or follow-up items.
+- Missing backend APIs, unverified platform behavior and follow-up items.
 ```

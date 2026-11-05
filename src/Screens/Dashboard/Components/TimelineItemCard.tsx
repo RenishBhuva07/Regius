@@ -8,7 +8,13 @@ import {
   Dimensions,
   LayoutChangeEvent,
 } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import Svg, {
+  Path,
+  Defs,
+  RadialGradient,
+  Stop,
+  Circle,
+} from 'react-native-svg';
 import {
   Check,
   CheckCircle2,
@@ -96,9 +102,10 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
       case 'task':
         return {
           accent: '#F5C518',
-          bgTint: '#FFFCEB',
+          bgTint: '#FFFDF7',
           borderTint: '#FFF5B8',
           shadowColor: '#F5C518',
+          auraColor: '#F5C518',
           pillBg: '#FFF9D2',
           pillText: '#B48216',
           iconBg: '#FFFCEB',
@@ -108,9 +115,10 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
       case 'reminder':
         return {
           accent: '#1B9A72',
-          bgTint: '#EDFDF5',
+          bgTint: '#F5FDF9',
           borderTint: '#C6FFDD',
           shadowColor: '#52D22E',
+          auraColor: '#52D22E',
           pillBg: '#E8FDF0',
           pillText: '#1B9A72',
           iconBg: '#EDFDF5',
@@ -121,9 +129,10 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
       default:
         return {
           accent: '#8383D6',
-          bgTint: '#EFF2FE',
+          bgTint: '#F7F8FE',
           borderTint: '#D8DBFF',
           shadowColor: '#8383D6',
+          auraColor: '#8383D6',
           pillBg: '#EDEAFB',
           pillText: '#7059C8',
           iconBg: '#EFF2FE',
@@ -201,7 +210,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
         style={[
           styles.card,
           {
-            shadowColor: catStyle.shadowColor,
+            shadowColor: isCompleted ? '#D1D5DB' : catStyle.shadowColor,
           },
         ]}
         accessibilityRole="button"
@@ -209,12 +218,40 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
           item.time
         }, ${isCompleted ? 'completed' : 'not completed'}`}
       >
+        {/* Dynamic Cutout Notch Background SVG with Radiant Aura & Starlight Nodes */}
         <Svg
           width={cardSize.width}
           height={cardSize.height}
           style={styles.cardSvgBackground}
           pointerEvents="none"
         >
+          <Defs>
+            {!isCompleted && (
+              <RadialGradient
+                id={`timelineItemAura-${item.id}`}
+                cx={cardSize.width - 55}
+                cy={25}
+                r={110}
+                gradientUnits="userSpaceOnUse"
+              >
+                <Stop
+                  offset="0%"
+                  stopColor={catStyle.auraColor}
+                  stopOpacity={0.16}
+                />
+                <Stop
+                  offset="65%"
+                  stopColor={catStyle.auraColor}
+                  stopOpacity={0.03}
+                />
+                <Stop
+                  offset="100%"
+                  stopColor={catStyle.bgTint}
+                  stopOpacity={0}
+                />
+              </RadialGradient>
+            )}
+          </Defs>
           <Path
             d={getCutoutCardPath(cardSize.width, cardSize.height)}
             fill={isCompleted ? '#FAFAF8' : catStyle.bgTint}
@@ -222,6 +259,30 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
             strokeWidth={1.5}
             strokeLinejoin="round"
           />
+          {!isCompleted && (
+            <>
+              {/* Soft ambient radiance under top-right cutout */}
+              <Path
+                d={getCutoutCardPath(cardSize.width, cardSize.height)}
+                fill={`url(#timelineItemAura-${item.id})`}
+              />
+              {/* Delicate starlight nodes */}
+              <Circle
+                cx={cardSize.width - 66}
+                cy={16}
+                r={1.6}
+                fill={catStyle.accent}
+                opacity={0.4}
+              />
+              <Circle
+                cx={cardSize.width - 80}
+                cy={30}
+                r={1.3}
+                fill={catStyle.accent}
+                opacity={0.3}
+              />
+            </>
+          )}
         </Svg>
 
         <View

@@ -9,7 +9,13 @@ import {
   Dimensions,
   LayoutChangeEvent,
 } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import Svg, {
+  Path,
+  Defs,
+  RadialGradient,
+  Stop,
+  Circle,
+} from 'react-native-svg';
 import {
   Bell,
   Clock,
@@ -95,37 +101,53 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
     }, 130);
   };
 
-  const getCategoryTheme = () => {
+  const getCategoryStyles = () => {
     switch (reminder.category) {
       case 'work':
         return {
-          bgColor: '#EFF2FE',
-          accentColor: '#8383D6',
+          bg: '#F7F8FE',
+          border: '#D8DBFF',
+          accent: '#8383D6',
+          shadow: '#8383D6',
+          iconBg: '#EFF2FE',
+          auraColor: '#8383D6',
           Icon: Briefcase,
-        };
-      case 'health':
-        return {
-          bgColor: '#EDFDF5',
-          accentColor: '#52D22E',
-          Icon: Heart,
         };
       case 'events':
         return {
-          bgColor: '#FFF3E0',
-          accentColor: '#FF9800',
+          bg: '#FFF9F0',
+          border: '#FFE0B2',
+          accent: '#FF9800',
+          shadow: '#FF9800',
+          iconBg: '#FFF3E0',
+          auraColor: '#FF9800',
           Icon: CalendarCheck,
+        };
+      case 'health':
+        return {
+          bg: '#F5FDF9',
+          border: '#C6FFDD',
+          accent: '#1B9A72',
+          shadow: '#52D22E',
+          iconBg: '#EDFDF5',
+          auraColor: '#52D22E',
+          Icon: Heart,
         };
       case 'daily':
       default:
         return {
-          bgColor: '#FFFCEB',
-          accentColor: '#F5C518',
+          bg: '#F5FDF9',
+          border: '#C6FFDD',
+          accent: '#1B9A72',
+          shadow: '#52D22E',
+          iconBg: '#EDFDF5',
+          auraColor: '#52D22E',
           Icon: Bell,
         };
     }
   };
 
-  const theme = getCategoryTheme();
+  const theme = getCategoryStyles();
   const IconComponent = theme.Icon;
   const hasFooter = !!(
     reminder.time ||
@@ -139,26 +161,76 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
       <TouchableOpacity
         activeOpacity={0.88}
         onLayout={handleCardLayout}
-        style={[styles.card, { shadowColor: theme.accentColor }]}
+        style={[
+          styles.card,
+          { shadowColor: localChecked ? '#D1D5DB' : theme.shadow },
+        ]}
         onPress={handlePress}
         accessibilityRole="checkbox"
         accessibilityState={{ checked: localChecked }}
         accessibilityLabel={reminder.title}
       >
-        {/* Dynamic Cutout Notch Background SVG matching Dashboard TimelineItemCard */}
+        {/* Dynamic Cutout Notch Background SVG with Radiant Emerald Aura & Starlight Nodes */}
         <Svg
           width={cardSize.width}
           height={cardSize.height}
           style={styles.cardSvgBackground}
           pointerEvents="none"
         >
+          <Defs>
+            {!localChecked && (
+              <RadialGradient
+                id={`reminderCardAura-${reminder.id}`}
+                cx={cardSize.width - 55}
+                cy={25}
+                r={110}
+                gradientUnits="userSpaceOnUse"
+              >
+                <Stop
+                  offset="0%"
+                  stopColor={theme.auraColor}
+                  stopOpacity={0.16}
+                />
+                <Stop
+                  offset="65%"
+                  stopColor={theme.auraColor}
+                  stopOpacity={0.03}
+                />
+                <Stop offset="100%" stopColor={theme.bg} stopOpacity={0} />
+              </RadialGradient>
+            )}
+          </Defs>
           <Path
             d={getCutoutCardPath(cardSize.width, cardSize.height)}
-            fill={localChecked ? '#FBFDFB' : '#FFFFFF'}
-            stroke={localChecked ? '#E2F4E9' : '#F0ECE4'}
+            fill={localChecked ? '#FAFAF8' : theme.bg}
+            stroke={localChecked ? '#ECEAE4' : theme.border}
             strokeWidth={1.5}
             strokeLinejoin="round"
           />
+          {!localChecked && (
+            <>
+              {/* Soft ambient radiance under top-right cutout */}
+              <Path
+                d={getCutoutCardPath(cardSize.width, cardSize.height)}
+                fill={`url(#reminderCardAura-${reminder.id})`}
+              />
+              {/* Delicate starlight nodes */}
+              <Circle
+                cx={cardSize.width - 66}
+                cy={16}
+                r={1.6}
+                fill={theme.accent}
+                opacity={0.4}
+              />
+              <Circle
+                cx={cardSize.width - 80}
+                cy={30}
+                r={1.3}
+                fill={theme.accent}
+                opacity={0.3}
+              />
+            </>
+          )}
         </Svg>
 
         {/* Floating Checkbox in Top-Right Cutout */}
@@ -173,7 +245,10 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
             styles.floatingCheckbox,
             localChecked
               ? styles.floatingCheckboxChecked
-              : styles.floatingCheckboxUnchecked,
+              : [
+                  styles.floatingCheckboxUnchecked,
+                  { borderColor: theme.border },
+                ],
           ]}
           accessibilityRole="checkbox"
           accessibilityState={{ checked: localChecked }}
@@ -189,13 +264,18 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
             <View
               style={[
                 styles.iconContainer,
-                { backgroundColor: theme.bgColor },
-                localChecked && styles.iconContainerChecked,
+                localChecked
+                  ? styles.iconContainerChecked
+                  : {
+                      backgroundColor: theme.iconBg,
+                      borderColor: theme.border,
+                      borderWidth: 1,
+                    },
               ]}
             >
               <IconComponent
                 size={18}
-                color={localChecked ? '#1B9A72' : theme.accentColor}
+                color={localChecked ? '#1B9A72' : theme.accent}
                 strokeWidth={2.2}
               />
             </View>
@@ -223,7 +303,11 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
           <View style={styles.rightControls}>
             <TouchableOpacity
               activeOpacity={0.7}
-              style={[styles.speakBtn, isSpeaking && styles.speakBtnActive]}
+              style={[
+                styles.speakBtn,
+                { borderColor: theme.border },
+                isSpeaking && styles.speakBtnActive,
+              ]}
               onPress={e => onSpeak(reminder, e)}
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
               accessibilityRole="button"
@@ -232,9 +316,9 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
               }
             >
               {isSpeaking ? (
-                <VolumeX size={15} color="#8383D6" strokeWidth={2.4} />
+                <VolumeX size={15} color="#1B9A72" strokeWidth={2.4} />
               ) : (
-                <Volume2 size={15} color="#8A9099" strokeWidth={2.2} />
+                <Volume2 size={15} color="#7E838F" strokeWidth={2.2} />
               )}
             </TouchableOpacity>
           </View>
@@ -367,7 +451,6 @@ const styles = StyleSheet.create({
   },
   titleCompleted: {
     color: '#7E838F',
-    textDecorationLine: 'line-through',
   },
   notes: {
     ...Typography.bodySmallPoppinsRegular,
@@ -388,12 +471,14 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#F5F6F8',
+    backgroundColor: '#EDFDF5',
+    borderWidth: 1,
+    borderColor: '#C6FFDD',
     alignItems: 'center',
     justifyContent: 'center',
   },
   speakBtnActive: {
-    backgroundColor: '#EFF2FE',
+    backgroundColor: '#C6FFDD',
   },
   cardFooter: {
     flexDirection: 'row',
@@ -401,7 +486,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: '#F5F2EB',
+    borderTopColor: '#E6F5EC',
   },
   footerLeft: {
     flexDirection: 'row',

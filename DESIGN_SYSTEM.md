@@ -340,29 +340,27 @@ Replacing brutalist black toggles with an artisanal, warm luxury minimal segment
 
 ---
 
-### 4.4 Clean Elevated Task & Curated Flow Cards
+### 4.4 Unified Luxury Item Cards & Curated Flow Architecture
 
-Used for list items in `HomeScreen`, `TasksScreen` (`TaskCardItem.tsx`), `RemindersScreen` (`ReminderCardItem.tsx`), and `DashboardScreen` (`TimelineItemCard.tsx`):
+Used for list item cards across `TasksScreen` (`TaskCardItem.tsx`), `RemindersScreen` (`ReminderCardItem.tsx`), `HabitsScreen` (`HabitItemCard.tsx`), and `DashboardScreen` (`TimelineItemCard.tsx`):
 
-- **Signature Inverted Scooped Corner Cutout (`TimelineItemCard.tsx`, `TaskCardItem.tsx`, `ReminderCardItem.tsx`)**:
-  - **Inverted Top-Right Scoop**: Rather than a standard rounded corner, the top-right corner features an organic concave scoop / cutout (`CW: 44, CH: 44`) with smooth quadratic bezier fillets (`R_outer: 12, R_inner: 14`), rendered dynamically via SVG.
+- **Signature Inverted Scooped Corner Cutout with Radial Gradient Aura & Starlight Nodes**:
+  - **Inverted Top-Right Scoop**: Rather than a standard rounded corner, the top-right corner features an organic concave scoop / cutout (`CW: 44, CH: 44`) with smooth quadratic bezier fillets (`R_outer: 12, R_inner: 14`), rendered dynamically via SVG path (`getCutoutCardPath`).
+  - **Radiant Radial Gradient Aura**: Centered under the top-right cutout (`cx={width - 55}, cy=25, r=110`), casting a soft 16% to 0% opacity glow matching the card's theme color.
+  - **Celestial Starlight Nodes**: Two micro-sparkle SVG circles (`r=1.6` at `cx={width - 66}, cy=16`, `r=1.3` at `cx={width - 80}, cy=30`) adding subtle luxury craftsmanship.
   - **Base Border Radius**: `18px` on top-left, bottom-left, and bottom-right corners.
-  - **Leading Accent Sliver**: `width: 3.5`, `borderRadius: 2`, matching category accent tint.
-- **Surface & Category Color Harmony**:
-  - **Tasks**: `#FFFCEB` tinted surface with `#FFF5B8` border (`borderWidth: 1.5`), `#F5C518` gold accent bar and drop shadow glow, yellow 3D `<Badge />`, and `#FFF9D2` time pill (`#B48216` text). Matches Daily Balance Tasks Card.
-  - **Reminders**: `#EDFDF5` tinted surface with `#C6FFDD` border (`borderWidth: 1.5`), `#52D22E` green accent bar and drop shadow glow, green 3D `<Badge />`, and `#E8FDF0` time pill (`#1B9A72` text).
-  - **Habits**: `#EFF2FE` tinted surface with `#D8DBFF` border (`borderWidth: 1.5`), `#8383D6` lavender accent bar and drop shadow glow, purple 3D `<Badge />`, and `#EDEAFB` time pill (`#7059C8` text).
-- **Completed State**: Subdued `#FAFAF8` background with `#ECEAE4` hairline border and muted text (`#8E8D92`), retaining full typography clarity.
-- **Floating Round Checkbox Outside the Card (Top-Right Cutout)**:
-  - **Position**: Floats completely **outside the card's filled surface** in the top-right scooped negative space (`position: 'absolute'`, `top: 9`, `right: 9`, `zIndex: 10`). The screen background (`#FBF9F3`) shines through the cutout, perfectly cradling the circular element as in signature luxury cutout card patterns.
+- **Harmonized Universal Theme Palettes**:
+  - **Tasks (Warm Gold / Yellow)**: Surface `#FFFDF7` / `#FFFCEB` with `#FFF5B8` border (`borderWidth: 1.5`), `#F5C518` gold aura, starlight nodes, and drop shadow glow, yellow 3D `<Badge />`, and `#FFF9D2` time pill (`#B48216` text). Left icon: 36×36 circular container (`#FFFCEB`, border `#FFF5B8`).
+  - **Reminders (Fresh Mint / Green)**: Surface `#F5FDF9` / `#EDFDF5` with `#C6FFDD` border (`borderWidth: 1.5`), `#52D22E` green aura, starlight nodes, and drop shadow glow, green 3D `<Badge />`, and `#EDFDF5` time pill (`#1B9A72` text). Left icon: 36×36 circular container (`#EDFDF5`, border `#C6FFDD`). Includes Kokoro TTS speaker button nestled cleanly beside cutout.
+  - **Habits (Celestial Lavender / Purple)**: Surface `#F7F8FE` / `#EFF2FE` with `#D8DBFF` border (`borderWidth: 1.5`), `#8383D6` purple aura, starlight nodes, and drop shadow glow, purple 3D `<Badge />`, and `#EFF2FE` time pill (`#7059C8` text). Left icon: 36×36 circular container (`#EFF2FE`, border `#D8DBFF`). Includes Edit Pencil button nestled cleanly beside cutout.
+- **Completed State**: Subdued `#FAFAF8` background with `#ECEAE4` hairline border and muted text (`#7E838F`), retaining full typography clarity.
+- **Floating Round Checkbox (Top-Right Cutout)**:
+  - **Position**: Floats completely in the top-right scooped negative space (`position: 'absolute'`, `top: 9`, `right: 9`, `zIndex: 10`).
   - **Shape & Dimensions**: Pure round circular vessel (`width: 26`, `height: 26`, `borderRadius: 13`).
   - **Tactile Elevation**: Soft floating drop shadow (`shadowColor: '#000000'`, `shadowOffset: { width: 0, height: 2 }`, `shadowOpacity: 0.12`, `shadowRadius: 3`, `elevation: 3`).
-  - **Title Padding**: Title container reserves `paddingRight: 48` ensuring text never encroaches into the scooped cutout.
-  - **Unchecked state**: `backgroundColor: '#FFFFFF'`, `borderWidth: 1.5`, category-tinted border (`borderColor: catStyle.borderTint`).
+  - **Title Padding**: Title container reserves `paddingRight: 40–48` ensuring text never encroaches into the scooped cutout.
+  - **Unchecked state**: `backgroundColor: '#FFFFFF'`, `borderWidth: 1.5`, theme-tinted border (`borderColor: theme.border`).
   - **Checked state**: `backgroundColor: '#E8FDF0'`, `borderWidth: 1.5`, `borderColor: '#52D22E'` with `#1B9A72` Check icon (`size: 14, strokeWidth: 3`).
-- **Left Timeline Node Icon**:
-  - **Always displays the persistent category icon** (`CheckCircle2` for Tasks, `Bell` for Reminders, `Flame` for Habits, `Mic` for Voice Nudges).
-  - **Never replaced by a checkmark or checkbox when completed** (completion is indicated strictly by the outside floating checkbox, muted card copy, and subdued node border).
 - **Tactile 3D Badges**: Integrated `<Badge />` chips for category stamps, streaks, and voice check-in indicators floating above the card surface.
 
 #### 4.4.1 Habits Section Sheet & Habit Item Card Architecture (`HabitsScreen.tsx`, `HabitItemCard.tsx`)
@@ -373,13 +371,14 @@ Used for list items in `HomeScreen`, `TasksScreen` (`TaskCardItem.tsx`), `Remind
   - Seamless bottom tab dock clearance (`paddingBottom: insets.bottom + 120` inside the sheet wrapper) preventing item clipping under floating tab bars.
   - Section header row with status capsule (`completedDot` + completion count) and full-pill CTA button (`Plus` icon + "New Habit", `backgroundColor: #1F2228`).
 - **Habit Item Card Colors & Active vs Completed States**:
-  - **Category-Harmonized Trios**:
-    - **Morning**: Active `#FFFFFF` with `#D8F3E5` border, `#EDFDF5` time pill (`#1B9A72`), green 3D Badge; Completed `#F0FAF4` with `#BBE8CE` border.
-    - **Mindful**: Active `#FFFFFF` with `#E3E5FD` border, `#EFF2FE` time pill (`#7059C8`), purple 3D Badge; Completed `#F5F6FE` with `#D2D6FB` border.
-    - **Evening**: Active `#FFFFFF` with `#FFE8D6` border, `#FFF2E6` time pill (`#D95D0F`), orange 3D Badge; Completed `#FFF8F2` with `#FFDAC0` border.
-  - **No Strikethrough Typography**: Titles remain 100% visible, bold, and readable without line-through decoration when marked complete (`color: '#1B1C19'`).
-  - **Tactile Interactive Checkbox**: Rounded square (`26x26`, `borderRadius: 8`, `borderWidth: 1.8`). Unchecked has crisp white fill with category border; Checked fills with category accent color and white checkmark icon.
-  - **7-Day Consistency Dots**: Past completed days are filled with category accent; current day (7th dot) displays an outlined waiting ring when active and a filled accent dot upon completion.
+  - **Theme**: Unified royal Lavender-Purple (`#F7F8FE` bg, `#D8DBFF` border, `#8383D6` glow shadow, `#8383D6` radial aura, starlight nodes). Consistently preserved across both active and completed states to maintain the Lavender-Purple Habits theme rule.
+  - **Category Trios**:
+    - **Morning**: Golden Sunrise 3D Badge (`variant: 'yellow'`), `#FFF8D0` time pill (`#B47804`), `Sun` icon (`#B47804` on `#FFF8D0` circular container).
+    - **Mindful**: Purple 3D Badge (`variant: 'purple'`), `#EFF2FE` time pill (`#7059C8`), `Sparkles` icon (`#7059C8` on `#EFF2FE` circular container).
+    - **Evening**: Orange 3D Badge (`variant: 'orange'`), `#FFF2E6` time pill (`#D95D0F`), `Moon` icon (`#D95D0F` on `#FFF2E6` circular container).
+  - **No Strikethrough Typography**: Titles remain 100% visible, bold, and readable without line-through decoration when marked complete (`color: '#7E838F'`).
+  - **Floating Circular Checkbox**: Positioned in the top-right cutout notch (26×26, r=13), with edit pencil button located in `topRowRightWithCutout`.
+  - **7-Day Mini Consistency Dots**: Past completed days are filled with category accent (`#8383D6`); current day (7th dot) displays an outlined waiting ring when active and a filled accent dot upon completion.
 
 ---
 

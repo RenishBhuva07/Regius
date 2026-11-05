@@ -9,7 +9,13 @@ import {
   Dimensions,
   LayoutChangeEvent,
 } from 'react-native';
-import Svg, { Path } from 'react-native-svg';
+import Svg, {
+  Path,
+  Defs,
+  RadialGradient,
+  Stop,
+  Circle,
+} from 'react-native-svg';
 import {
   Flame,
   Check,
@@ -45,54 +51,12 @@ interface CategoryConfig {
   icon: React.ComponentType<any>;
 }
 
-const CATEGORY_MAP: Record<string, CategoryConfig> = {
-  morning: {
-    label: 'MORNING',
-    badgeVariant: 'green',
-    accentColor: '#1B9A72',
-    activeBorder: '#D8F3E5',
-    checkboxBorder: '#A3E4BF',
-    timePillBg: '#EDFDF5',
-    timePillText: '#1B9A72',
-    completedBg: '#F0FAF4',
-    completedBorder: '#BBE8CE',
-    icon: Sun,
-  },
-  mindful: {
-    label: 'MINDFUL',
-    badgeVariant: 'purple',
-    accentColor: Colors.LavenderPurple,
-    activeBorder: '#E3E5FD',
-    checkboxBorder: '#C4C9FA',
-    timePillBg: '#EFF2FE',
-    timePillText: '#7059C8',
-    completedBg: '#F5F6FE',
-    completedBorder: '#D2D6FB',
-    icon: Sparkles,
-  },
-  evening: {
-    label: 'EVENING',
-    badgeVariant: 'orange',
-    accentColor: '#E65100',
-    activeBorder: '#FFE8D6',
-    checkboxBorder: '#FFCCA4',
-    timePillBg: '#FFF2E6',
-    timePillText: '#D95D0F',
-    completedBg: '#FFF8F2',
-    completedBorder: '#FFDAC0',
-    icon: Moon,
-  },
-};
-
-const DEFAULT_CONFIG: CategoryConfig = CATEGORY_MAP.morning;
-
 export const HabitItemCard: React.FC<HabitItemCardProps> = ({
   habit,
   onToggle,
   onEdit,
 }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
-  const config = CATEGORY_MAP[habit.category] || DEFAULT_CONFIG;
 
   const initialW = Dimensions.get('window').width - 16;
   const [cardSize, setCardSize] = useState({
@@ -133,6 +97,56 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
     onToggle(habit.id);
   };
 
+  const getHabitStyles = () => {
+    const baseTheme = {
+      bg: '#F7F8FE',
+      border: '#D8DBFF',
+      accent: Colors.LavenderPurple,
+      shadow: Colors.LavenderPurple,
+      iconBg: '#EFF2FE',
+      iconColor: '#7059C8',
+      auraColor: Colors.LavenderPurple,
+    };
+
+    if (habit.category === 'morning') {
+      return {
+        ...baseTheme,
+        label: 'MORNING',
+        badgeVariant: 'yellow' as BadgeVariant,
+        timePillBg: '#FFF8D0',
+        timePillText: '#B47804',
+        icon: Sun,
+        iconBg: '#FFF8D0',
+        iconColor: '#B47804',
+      };
+    }
+    if (habit.category === 'evening') {
+      return {
+        ...baseTheme,
+        label: 'EVENING',
+        badgeVariant: 'orange' as BadgeVariant,
+        timePillBg: '#FFF2E6',
+        timePillText: '#D95D0F',
+        icon: Moon,
+        iconBg: '#FFF2E6',
+        iconColor: '#D95D0F',
+      };
+    }
+    return {
+      ...baseTheme,
+      label: 'MINDFUL',
+      badgeVariant: 'purple' as BadgeVariant,
+      timePillBg: '#EFF2FE',
+      timePillText: '#7059C8',
+      icon: Sparkles,
+      iconBg: '#EFF2FE',
+      iconColor: '#7059C8',
+    };
+  };
+
+  const theme = getHabitStyles();
+  const IconComponent = theme.icon;
+
   return (
     <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
       <TouchableOpacity
@@ -142,80 +156,118 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
         style={[
           styles.card,
           {
-            shadowColor: config.accentColor,
+            shadowColor: theme.shadow,
           },
         ]}
+        accessibilityRole="checkbox"
+        accessibilityState={{ checked: habit.completed }}
+        accessibilityLabel={habit.title}
       >
-        {/* Dynamic Cutout Notch Background SVG matching Dashboard TimelineItemCard */}
+        {/* Dynamic Cutout Notch Background SVG with Radiant Lavender Aura & Starlight Nodes */}
         <Svg
           width={cardSize.width}
           height={cardSize.height}
           style={styles.cardSvgBackground}
           pointerEvents="none"
         >
+          <Defs>
+            <RadialGradient
+              id={`habitCardAura-${habit.id}`}
+              cx={cardSize.width - 55}
+              cy={25}
+              r={110}
+              gradientUnits="userSpaceOnUse"
+            >
+              <Stop
+                offset="0%"
+                stopColor={theme.auraColor}
+                stopOpacity={habit.completed ? 0.08 : 0.16}
+              />
+              <Stop
+                offset="65%"
+                stopColor={theme.auraColor}
+                stopOpacity={habit.completed ? 0.015 : 0.03}
+              />
+              <Stop offset="100%" stopColor={theme.bg} stopOpacity={0} />
+            </RadialGradient>
+          </Defs>
           <Path
             d={getCutoutCardPath(cardSize.width, cardSize.height)}
-            fill={habit.completed ? config.completedBg : '#FFFFFF'}
-            stroke={
-              habit.completed ? config.completedBorder : config.activeBorder
-            }
+            fill={theme.bg}
+            stroke={theme.border}
             strokeWidth={1.5}
             strokeLinejoin="round"
           />
+          {/* Soft ambient radiance under top-right cutout */}
+          <Path
+            d={getCutoutCardPath(cardSize.width, cardSize.height)}
+            fill={`url(#habitCardAura-${habit.id})`}
+          />
+          {/* Delicate starlight nodes */}
+          <Circle
+            cx={cardSize.width - 66}
+            cy={16}
+            r={1.6}
+            fill={theme.accent}
+            opacity={habit.completed ? 0.25 : 0.4}
+          />
+          <Circle
+            cx={cardSize.width - 80}
+            cy={30}
+            r={1.3}
+            fill={theme.accent}
+            opacity={habit.completed ? 0.18 : 0.3}
+          />
         </Svg>
 
-        {/* Floating Edit Button inside cutout notch */}
-        {onEdit && (
-          <TouchableOpacity
-            activeOpacity={0.75}
-            onPress={e => {
-              e.stopPropagation();
-              onEdit(habit);
-            }}
-            style={[
-              styles.floatingEditBtn,
-              {
-                borderColor: habit.completed
-                  ? config.completedBorder
-                  : config.checkboxBorder,
-              },
-            ]}
-            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-            accessibilityRole="button"
-            accessibilityLabel={`Edit ${habit.title}`}
-          >
-            <Pencil size={12} color="#7A766E" strokeWidth={2.2} />
-          </TouchableOpacity>
-        )}
+        {/* Floating Checkbox in Top-Right Cutout */}
+        <TouchableOpacity
+          activeOpacity={0.75}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          onPress={e => {
+            e.stopPropagation();
+            handleToggle();
+          }}
+          style={[
+            styles.floatingCheckbox,
+            habit.completed
+              ? styles.floatingCheckboxChecked
+              : [
+                  styles.floatingCheckboxUnchecked,
+                  { borderColor: theme.border },
+                ],
+          ]}
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: habit.completed }}
+          accessibilityLabel={`Mark ${habit.title} as ${
+            habit.completed ? 'incomplete' : 'complete'
+          }`}
+        >
+          {habit.completed && (
+            <Check size={14} color="#1B9A72" strokeWidth={3} />
+          )}
+        </TouchableOpacity>
 
         <View style={styles.cardContent}>
-          {/* Top Row: Category Badge + Time + Streak Pill */}
+          {/* Top Row: Category Badge + Time + Streak Pill + Edit Button */}
           <View style={styles.topRow}>
             <View style={styles.topRowLeft}>
               <Badge
-                label={config.label}
-                variant={config.badgeVariant}
+                label={theme.label}
+                variant={theme.badgeVariant}
                 size="sm"
               />
               <View
-                style={[
-                  styles.timePill,
-                  { backgroundColor: config.timePillBg },
-                ]}
+                style={[styles.timePill, { backgroundColor: theme.timePillBg }]}
               >
-                <Clock size={11} color={config.timePillText} />
-                <Text style={[styles.timeText, { color: config.timePillText }]}>
+                <Clock size={11} color={theme.timePillText} />
+                <Text style={[styles.timeText, { color: theme.timePillText }]}>
                   {habit.timeOfDay}
                 </Text>
               </View>
             </View>
 
-            <View
-              style={[
-                styles.topRowRight,
-                onEdit ? styles.topRowRightWithEdit : null,
-              ]}
-            >
+            <View style={styles.topRowRightWithCutout}>
               <View
                 style={[
                   styles.streakBadge,
@@ -225,11 +277,7 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
                 <Flame
                   size={12}
                   color={
-                    habit.completed
-                      ? '#E65100'
-                      : habit.streak > 0
-                      ? '#E65100'
-                      : '#8E8E93'
+                    habit.completed || habit.streak > 0 ? '#E65100' : '#8E8E93'
                   }
                 />
                 <Text
@@ -241,31 +289,44 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
                   {habit.streak}d streak
                 </Text>
               </View>
+
+              {onEdit && (
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={e => {
+                    e.stopPropagation();
+                    onEdit(habit);
+                  }}
+                  style={[styles.editBtn, { borderColor: theme.border }]}
+                  hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Edit ${habit.title}`}
+                >
+                  <Pencil size={11.5} color="#7A766E" strokeWidth={2.2} />
+                </TouchableOpacity>
+              )}
             </View>
           </View>
 
-          {/* Main Content Row: Checkbox + Title + Frequency */}
+          {/* Main Content Row: Left Theme Icon + Title + Frequency */}
           <View style={styles.mainRow}>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              onPress={handleToggle}
+            <View
               style={[
-                styles.checkbox,
-                habit.completed
-                  ? {
-                      backgroundColor: config.accentColor,
-                      borderColor: config.accentColor,
-                    }
-                  : {
-                      backgroundColor: '#FFFFFF',
-                      borderColor: config.checkboxBorder,
-                    },
+                styles.iconContainer,
+                {
+                  backgroundColor: theme.iconBg,
+                  borderColor: theme.border,
+                  borderWidth: 1,
+                  opacity: habit.completed ? 0.8 : 1,
+                },
               ]}
             >
-              {habit.completed ? (
-                <Check size={14} color="#FFFFFF" strokeWidth={3} />
-              ) : null}
-            </TouchableOpacity>
+              <IconComponent
+                size={18}
+                color={theme.iconColor}
+                strokeWidth={2.2}
+              />
+            </View>
 
             <View style={styles.titleWrap}>
               <Text
@@ -297,13 +358,13 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
                     style={[
                       styles.miniDot,
                       isDotFilled && {
-                        backgroundColor: config.accentColor,
+                        backgroundColor: theme.accent,
                         opacity: isCurrent && !habit.completed ? 0.4 : 0.85,
                       },
                       isCurrent && [
                         styles.miniDotCurrent,
                         !habit.completed && {
-                          borderColor: config.accentColor,
+                          borderColor: theme.accent,
                           borderWidth: 1.5,
                           backgroundColor: 'transparent',
                         },
@@ -326,7 +387,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     ...Platform.select({
       ios: {
-        shadowColor: Colors.DefaultBlack,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.12,
         shadowRadius: 8,
@@ -343,6 +403,37 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     bottom: 0,
+  },
+  floatingCheckbox: {
+    position: 'absolute',
+    top: 9,
+    right: 9,
+    width: 26,
+    height: 26,
+    borderRadius: 13,
+    borderWidth: 1.5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.12,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  floatingCheckboxChecked: {
+    backgroundColor: '#E8FDF0',
+    borderColor: '#52D22E',
+  },
+  floatingCheckboxUnchecked: {
+    backgroundColor: '#FFFFFF',
+    borderColor: '#ECE8DF',
   },
   cardContent: {
     padding: 16,
@@ -370,28 +461,26 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.medium,
     fontSize: 11,
   },
-  topRowRight: {
+  topRowRightWithCutout: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-  },
-  topRowRightWithEdit: {
-    marginRight: 34,
+    marginRight: 36, // Clears the floating checkbox in the top-right cutout
   },
   streakBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: '#F8F7F2',
+    backgroundColor: '#FFF7EE',
     borderWidth: 1,
-    borderColor: '#ECE7DC',
+    borderColor: '#FFE2C6',
     paddingHorizontal: 8,
     paddingVertical: 3.5,
     borderRadius: 10,
   },
   streakBadgeActive: {
-    backgroundColor: '#FFF3E0',
-    borderColor: '#FFE0B2',
+    backgroundColor: '#FFF0DE',
+    borderColor: '#FFD4AA',
   },
   streakText: {
     fontFamily: Fonts.poppins.semiBold,
@@ -401,46 +490,36 @@ const styles = StyleSheet.create({
   streakTextActive: {
     color: '#E65100',
   },
-  floatingEditBtn: {
-    position: 'absolute',
-    top: 9,
-    right: 9,
+  editBtn: {
     width: 26,
     height: 26,
     borderRadius: 13,
-    borderWidth: 1.5,
+    borderWidth: 1,
     backgroundColor: '#FFFFFF',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 10,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.12,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
   },
   mainRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 12,
   },
-  checkbox: {
-    width: 26,
-    height: 26,
-    borderRadius: 8,
-    borderWidth: 1.8,
+  iconContainer: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  iconContainerCompleted: {
+    backgroundColor: '#E8FDF0',
+    borderColor: '#C6FFDD',
+    borderWidth: 1,
   },
   titleWrap: {
     flex: 1,
     gap: 2,
+    paddingRight: 10,
   },
   title: {
     fontFamily: Fonts.poppins.semiBold,
@@ -449,7 +528,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
   },
   titleCompleted: {
-    color: '#1B1C19',
+    color: '#7E838F',
   },
   frequencyRow: {
     flexDirection: 'row',
@@ -467,7 +546,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(0, 0, 0, 0.04)',
+    borderTopColor: '#ECE8FB',
   },
   consistencyLabel: {
     fontFamily: Fonts.poppins.medium,
