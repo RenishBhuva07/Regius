@@ -26,6 +26,7 @@ import {
 } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
 import { Badge } from '../../../Common/Badge';
+import { StreakBadge } from '../../../Common/StreakBadge';
 import Colors from '../../../Assets/StyleUtilities/Colors';
 
 export type TimelineCategoryType = 'task' | 'habit' | 'reminder';
@@ -360,12 +361,12 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
             </View>
 
             {/* Category or Streak 3D tactile badge matching design system */}
-            {item.streak ? (
-              <Badge
-                label={`${item.streak}d streak`}
-                variant="yellow"
+            {typeof item.streak === 'number' &&
+            (item.streak > 0 || item.type === 'habit') ? (
+              <StreakBadge
+                streak={item.streak}
+                active={isCompleted || item.streak > 0}
                 size="sm"
-                icon={<Flame size={10} color="#B47804" />}
               />
             ) : item.type === 'reminder' ? (
               <Badge
@@ -609,19 +610,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.medium,
     fontSize: 11,
     letterSpacing: -0.1,
-  },
-  streakBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FEF7E8',
-    paddingHorizontal: 7,
-    paddingVertical: 3.5,
-    borderRadius: 10,
-  },
-  streakBadgeText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: 10.5,
-    color: '#9C6E10',
   },
   voicePrepBadge: {
     flexDirection: 'row',

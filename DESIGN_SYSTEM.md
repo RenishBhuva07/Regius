@@ -162,6 +162,22 @@ import { ProBadge } from '../Common/ProBadge';
 <ProBadge size="sm" />;
 ```
 
+#### 4.1.2 Universal 3D Streak Badge (`src/Common/StreakBadge.tsx`)
+
+The singular, unified streak indicator across all cards in the Regius application (e.g., `HabitItemCard`, `TimelineItemCard`, etc.):
+
+- **Geometry**: Tactile 3D full pill (`borderRadius: 20` for `sm`/`md`, `24` for `lg`).
+- **Icon**: Flame icon from `lucide-react-native` (`<Flame size={10.5} color={isActive ? '#E65100' : '#8E8E93'} strokeWidth={2.4} />`).
+- **Surface**: Warm peach/amber fire tint (`#FFF0DE`) with specular light rim (`borderWidth: 1`, `borderColor: '#FFFFFF'`) and extruded 3D bottom bevel (`borderBottomWidth: 2`, `borderBottomColor: '#FFB86B'`). When streak is 0 and inactive, cleanly falls back to neutral surface (`#FFFFFF`) with silver-sand bevel (`#D5D0C5`) and muted text/flame (`#8E8E93`).
+- **Drop Shadow**: Warm fire ambient glow (`shadowColor: '#FF9800'`, `shadowOffset: { width: 0, height: 2 }`, `shadowOpacity: 0.22`, `shadowRadius: 3`, `elevation: 2.5`).
+- **Typography**: Poppins Bold uppercase typographic stamping (e.g., `'18D STREAK'`) at `8.5px` (`sm`), `9.5px` (`md`), `11px` (`lg`) with `letterSpacing: 0.5px`.
+
+```tsx
+import { StreakBadge } from '../Common/StreakBadge';
+
+<StreakBadge streak={habit.streak} active={habit.completed || habit.streak > 0} size="sm" />;
+```
+
 ### 4.2 Reusable Regius Brand Wordmark (`src/Common/RegiusLogo.tsx`)
 
 A distinctive, polished typographic wordmark preserving the artisanal luxury identity:

@@ -17,7 +17,6 @@ import Svg, {
   Circle,
 } from 'react-native-svg';
 import {
-  Flame,
   Check,
   Clock,
   Repeat,
@@ -29,6 +28,7 @@ import {
 import { Fonts } from '../../../Theme/fonts';
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import { Badge, BadgeVariant } from '../../../Common/Badge';
+import { StreakBadge } from '../../../Common/StreakBadge';
 import { getCutoutCardPath } from '../../../Common/CutoutCardSvg';
 import { HabitItem } from '../../../Context/TaskReminderContext';
 
@@ -268,27 +268,11 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
             </View>
 
             <View style={styles.topRowRightWithCutout}>
-              <View
-                style={[
-                  styles.streakBadge,
-                  habit.completed && styles.streakBadgeActive,
-                ]}
-              >
-                <Flame
-                  size={12}
-                  color={
-                    habit.completed || habit.streak > 0 ? '#E65100' : '#8E8E93'
-                  }
-                />
-                <Text
-                  style={[
-                    styles.streakText,
-                    habit.completed && styles.streakTextActive,
-                  ]}
-                >
-                  {habit.streak}d streak
-                </Text>
-              </View>
+              <StreakBadge
+                streak={habit.streak}
+                active={habit.completed || habit.streak > 0}
+                size="sm"
+              />
 
               {onEdit && (
                 <TouchableOpacity
@@ -466,29 +450,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     marginRight: 36, // Clears the floating checkbox in the top-right cutout
-  },
-  streakBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 4,
-    backgroundColor: '#FFF7EE',
-    borderWidth: 1,
-    borderColor: '#FFE2C6',
-    paddingHorizontal: 8,
-    paddingVertical: 3.5,
-    borderRadius: 10,
-  },
-  streakBadgeActive: {
-    backgroundColor: '#FFF0DE',
-    borderColor: '#FFD4AA',
-  },
-  streakText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
-    color: '#8E8E93',
-  },
-  streakTextActive: {
-    color: '#E65100',
   },
   editBtn: {
     width: 26,

@@ -150,9 +150,9 @@ export const HabitConsistencyBento: React.FC<HabitConsistencyBentoProps> = ({
           <View style={styles.topRow}>
             <Badge
               label="ACTIVE STREAK"
-              variant="yellow"
+              variant="orange"
               size="sm"
-              icon={<Flame size={13} color="#E65100" />}
+              icon={<Flame size={12} color="#E65100" strokeWidth={2.4} />}
             />
             <Badge
               label="TOP 5% CONSISTENCY"
