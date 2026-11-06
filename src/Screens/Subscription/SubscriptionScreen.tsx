@@ -22,6 +22,7 @@ import {
 import { useScrollReactiveHeader } from '../../Common/useScrollReactiveHeader';
 import { ProBadge } from '../../Common/ProBadge';
 import { StickyActionDock } from '../../Common/StickyActionDock';
+import { StickyBottomButton } from '../../Common/StickyBottomButton';
 import { useTheme } from '../../Theme/ThemeContext';
 import { usePremium, SubscriptionPlanId } from '../../Context/PremiumContext';
 import { SettingsBackgroundSvg } from '../Settings/Components/SettingsBackgroundSvg';
@@ -256,16 +257,28 @@ export const SubscriptionScreen: React.FC = () => {
 
       {/* Sticky Bottom Action Dock */}
       <StickyActionDock>
-        <TouchableOpacity
-          activeOpacity={0.88}
-          style={[
-            styles.ctaButton,
-            isPremium && styles.ctaButtonActive,
-            isProcessing && { opacity: 0.8 },
-          ]}
-          onPress={handlePurchase}
+        <StickyBottomButton
+          title={
+            isPremium
+              ? 'Royal Access Active'
+              : selectedPlan.trialDays > 0
+              ? `Start ${selectedPlan.trialDays}-Day Free Trial`
+              : `Upgrade to ${selectedPlan.name}`
+          }
+          icon={
+            isPremium ? (
+              <CheckCircle2 size={18} color="#1F2228" strokeWidth={2.4} />
+            ) : (
+              <Crown size={18} color="#1F2228" strokeWidth={2.4} />
+            )
+          }
+          loading={isProcessing}
           disabled={isProcessing}
-          accessibilityRole="button"
+          variant="gold"
+          backgroundColor={isPremium ? '#EDFDF5' : '#F5C518'}
+          textColor="#1F2228"
+          shadowColor={isPremium ? '#52D22E' : '#F5C518'}
+          onPress={handlePurchase}
           accessibilityLabel={
             isPremium
               ? 'Regius Royal Active'
@@ -273,25 +286,7 @@ export const SubscriptionScreen: React.FC = () => {
               ? `Start ${selectedPlan.trialDays}-day free trial`
               : `Upgrade to ${selectedPlan.name}`
           }
-        >
-          {isProcessing ? (
-            <ActivityIndicator size="small" color="#1F2228" />
-          ) : isPremium ? (
-            <View style={styles.ctaContentRow}>
-              <CheckCircle2 size={18} color="#1F2228" strokeWidth={2.4} />
-              <Text style={styles.ctaButtonText}>Royal Access Active</Text>
-            </View>
-          ) : (
-            <View style={styles.ctaContentRow}>
-              <Crown size={18} color="#1F2228" strokeWidth={2.4} />
-              <Text style={styles.ctaButtonText}>
-                {selectedPlan.trialDays > 0
-                  ? `Start ${selectedPlan.trialDays}-Day Free Trial`
-                  : `Upgrade to ${selectedPlan.name}`}
-              </Text>
-            </View>
-          )}
-        </TouchableOpacity>
+        />
 
         <Text style={[styles.legalMicrocopy, { color: textSecondary }]}>
           Recurring billing • Cancel anytime in store settings • Zero commitment

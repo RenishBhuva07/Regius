@@ -50,6 +50,7 @@ import { ProBadge } from '../../Common/ProBadge';
 import CustomButton from '../../Common/CustomButton';
 import { SearchInputBar } from '../../Common/SearchInputBar';
 import { StickyActionDock } from '../../Common/StickyActionDock';
+import { StickyBottomButton } from '../../Common/StickyBottomButton';
 import { useTheme } from '../../Theme/ThemeContext';
 import { SettingsBackgroundSvg } from '../Settings/Components/SettingsBackgroundSvg';
 
@@ -558,16 +559,16 @@ export const LanguageScreen: React.FC = () => {
 
       {/* Sticky Frosted Bottom Action Dock */}
       <StickyActionDock>
-        <CustomButton
+        <StickyBottomButton
           title={
             isSaving
               ? 'Applying Regional Locale...'
               : `Set ${currentLang.nativeName} as Default`
           }
           onPress={handleSave}
+          loading={isSaving}
           disabled={isSaving}
-          variant="dark"
-          style={styles.dockButton}
+          accessibilityLabel={`Set ${currentLang.nativeName} as Default`}
         />
       </StickyActionDock>
     </View>

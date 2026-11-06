@@ -19,6 +19,7 @@ import {
   NativeScrollEvent,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import { Plus, Bell, CheckCircle2 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
@@ -38,21 +39,26 @@ import ReminderCardItem from './Components/ReminderCardItem';
 import ReminderSectionBackgroundSvg from './Components/ReminderSectionBackgroundSvg';
 import ReminderEmptyDoodleSvg from './Components/ReminderEmptyDoodleSvg';
 import ReminderWatermarkDoodleSvg from './Components/ReminderWatermarkDoodleSvg';
+import AddReminderModal from '../../Components/AddReminderModal';
 import { useDailyQuote } from '../../Services/DailyQuotes';
 
 type TabKey = 'upcoming' | 'completed';
 
 export const RemindersScreen: React.FC<any> = ({ route }) => {
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation<any>();
   const dailyQuote = useDailyQuote('reminders');
   const [activeTab, setActiveTab] = useState<TabKey>('upcoming');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     'daily',
   );
+  const [editingReminder, setEditingReminder] = useState<Reminder | null>(null);
 
   const {
     reminders,
     toggleReminder,
+    updateReminder,
+    deleteReminder,
     selectedReminders,
     setSelectedReminders,
     openReminderModal,
@@ -133,6 +139,15 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
       }
     },
     [toggleReminder],
+  );
+
+  const handleViewDetails = useCallback(
+    (reminder: Reminder) => {
+      navigation.navigate('ReminderDetailsScreen', {
+        reminderId: reminder.id,
+      });
+    },
+    [navigation],
   );
 
   const handleSpeakReminder = useCallback(
@@ -319,6 +334,8 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
                       onToggle={handleToggleReminder}
                       isSpeaking={speakingReminderId === rem.id}
                       onSpeak={handleSpeakReminder}
+                      onEdit={setEditingReminder}
+                      onDetails={handleViewDetails}
                     />
                   );
                 }}
@@ -382,6 +399,29 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
           </View>
         </FlowSectionSheet>
       </ScrollView>
+
+      {/* Edit Reminder Modal */}
+      {editingReminder && (
+        <AddReminderModal
+          visible={editingReminder !== null}
+          onClose={() => setEditingReminder(null)}
+          reminderToEdit={editingReminder}
+          onCreateReminder={() => {}}
+          onUpdateReminder={(id, remData) => {
+            updateReminder(id, remData);
+            setEditingReminder(null);
+            Toast.show({
+              type: 'success',
+              text1: 'Reminder Updated',
+              text2: 'Alert parameters successfully saved.',
+            });
+          }}
+          onDeleteReminder={id => {
+            deleteReminder(id);
+            setEditingReminder(null);
+          }}
+        />
+      )}
     </View>
   );
 };

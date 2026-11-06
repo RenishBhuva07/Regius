@@ -19,6 +19,7 @@ import {
   NativeScrollEvent,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
 import { Plus, CheckSquare, CheckCircle2 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
@@ -26,7 +27,7 @@ import { Fonts } from '../../Theme/fonts';
 import { Typography } from '../../Theme/Typographys';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
-import { useTaskReminder } from '../../Context/TaskReminderContext';
+import { useTaskReminder, Task } from '../../Context/TaskReminderContext';
 import { ScreenHeader, SCREEN_HEADER_HEIGHT } from '../../Common/ScreenHeader';
 import { TactileSegmentedTabs, FlowSectionSheet } from '../../Common';
 
@@ -35,20 +36,30 @@ import TaskProductivityBento from './Components/TaskProductivityBento';
 import TaskCategoryCarousel from './Components/TaskCategoryCarousel';
 import TaskCardItem from './Components/TaskCardItem';
 import TaskCompleteDoodleSvg from './Components/TaskCompleteDoodleSvg';
+import AddTaskModal from '../../Components/AddTaskModal';
 import { useDailyQuote } from '../../Services/DailyQuotes';
 
 type TabKey = 'taskList' | 'completed';
 
 export const TasksScreen: React.FC<any> = ({ route }) => {
   const insets = useSafeAreaInsets();
+  const navigation = useNavigation<any>();
   const dailyQuote = useDailyQuote('tasks');
   const [activeTab, setActiveTab] = useState<TabKey>('taskList');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     'works',
   );
+  const [editingTask, setEditingTask] = useState<Task | null>(null);
 
-  const { tasks, toggleTask, selectedTasks, selectAllTasks, openTaskModal } =
-    useTaskReminder();
+  const {
+    tasks,
+    toggleTask,
+    updateTask,
+    deleteTask,
+    selectedTasks,
+    selectAllTasks,
+    openTaskModal,
+  } = useTaskReminder();
 
   // Scroll tracking matching DashboardScreen and HabitsScreen reactive headers
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -122,6 +133,13 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
       }
     },
     [toggleTask],
+  );
+
+  const handleViewDetails = useCallback(
+    (task: Task) => {
+      navigation.navigate('TaskDetailsScreen', { taskId: task.id });
+    },
+    [navigation],
   );
 
   // Section title matching HabitsScreen Today's Rituals style
@@ -247,6 +265,8 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
                   task={item}
                   isChecked={item.done}
                   onToggle={handleToggleTask}
+                  onEdit={setEditingTask}
+                  onDetails={handleViewDetails}
                 />
               );
             }}
@@ -339,6 +359,29 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
           </View>
         </FlowSectionSheet>
       </ScrollView>
+
+      {/* Edit Task Modal */}
+      {editingTask && (
+        <AddTaskModal
+          visible={editingTask !== null}
+          onClose={() => setEditingTask(null)}
+          taskToEdit={editingTask}
+          onCreateTask={() => {}}
+          onUpdateTask={(id, taskData) => {
+            updateTask(id, taskData);
+            setEditingTask(null);
+            Toast.show({
+              type: 'success',
+              text1: 'Task Updated',
+              text2: 'Objective parameters successfully saved.',
+            });
+          }}
+          onDeleteTask={id => {
+            deleteTask(id);
+            setEditingTask(null);
+          }}
+        />
+      )}
     </View>
   );
 };

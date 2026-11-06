@@ -8,6 +8,7 @@ import {
   Platform,
   Dimensions,
   LayoutChangeEvent,
+  PanResponder,
 } from 'react-native';
 import Svg, {
   Path,
@@ -28,9 +29,12 @@ import {
   Briefcase,
   Activity,
   CalendarCheck,
+  Pencil,
+  Flame,
 } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
 import { Typography } from '../../../Theme/Typographys';
+import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import { Badge } from '../../../Common/Badge';
 import { getCutoutCardPath } from '../../../Common/CutoutCardSvg';
 import { Reminder } from '../../../Context/TaskReminderContext';
@@ -41,6 +45,8 @@ interface ReminderCardItemProps {
   onToggle: (id: string) => void;
   isSpeaking: boolean;
   onSpeak: (reminder: Reminder, e: any) => void;
+  onEdit?: (reminder: Reminder) => void;
+  onDetails?: (reminder: Reminder) => void;
 }
 
 export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
@@ -49,8 +55,17 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
   onToggle,
   isSpeaking,
   onSpeak,
+  onEdit,
+  onDetails,
 }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
+  const translateX = useRef(new Animated.Value(0)).current;
+  const detailsScaleAnim = useRef(new Animated.Value(1)).current;
+  const editScaleAnim = useRef(new Animated.Value(1)).current;
+  const currentX = useRef(0);
+  const isOpenRef = useRef(false);
+
+  const ACTIONS_WIDTH = 138;
   const [localChecked, setLocalChecked] = useState(isChecked);
 
   const initialW = Dimensions.get('window').width - 16;
@@ -78,6 +93,78 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
     setLocalChecked(isChecked);
   }, [isChecked]);
 
+  const closeSwipe = useCallback(() => {
+    Animated.spring(translateX, {
+      toValue: 0,
+      friction: 8,
+      tension: 60,
+      useNativeDriver: true,
+    }).start(() => {
+      currentX.current = 0;
+      isOpenRef.current = false;
+    });
+  }, [translateX]);
+
+  const openSwipe = useCallback(() => {
+    Animated.spring(translateX, {
+      toValue: -ACTIONS_WIDTH,
+      friction: 8,
+      tension: 60,
+      useNativeDriver: true,
+    }).start(() => {
+      currentX.current = -ACTIONS_WIDTH;
+      isOpenRef.current = true;
+    });
+  }, [translateX, ACTIONS_WIDTH]);
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => false,
+      onMoveShouldSetPanResponder: (_, gestureState) => {
+        return (
+          Math.abs(gestureState.dx) > 10 &&
+          Math.abs(gestureState.dx) > Math.abs(gestureState.dy) * 1.5
+        );
+      },
+      onPanResponderGrant: () => {
+        translateX.stopAnimation();
+      },
+      onPanResponderMove: (_, gestureState) => {
+        const newX = currentX.current + gestureState.dx;
+        if (newX > 0) {
+          translateX.setValue(0);
+        } else if (newX < -ACTIONS_WIDTH - 25) {
+          translateX.setValue(-ACTIONS_WIDTH - 25);
+        } else {
+          translateX.setValue(newX);
+        }
+      },
+      onPanResponderRelease: (_, gestureState) => {
+        const draggedTotal = currentX.current + gestureState.dx;
+        if (isOpenRef.current) {
+          if (gestureState.dx > 25) {
+            closeSwipe();
+          } else {
+            openSwipe();
+          }
+        } else {
+          if (draggedTotal < -35 || gestureState.vx < -0.35) {
+            openSwipe();
+          } else {
+            closeSwipe();
+          }
+        }
+      },
+      onPanResponderTerminate: () => {
+        if (isOpenRef.current) {
+          openSwipe();
+        } else {
+          closeSwipe();
+        }
+      },
+    }),
+  ).current;
+
   const handlePress = () => {
     const nextChecked = !localChecked;
     setLocalChecked(nextChecked);
@@ -100,6 +187,68 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
       onToggle(reminder.id);
     }, 130);
   };
+
+  const handleCardPress = () => {
+    if (isOpenRef.current) {
+      closeSwipe();
+      return;
+    }
+    handlePress();
+  };
+
+  const handleDetailsPress = (e: any) => {
+    e?.stopPropagation?.();
+    closeSwipe();
+    onDetails?.(reminder);
+  };
+
+  const handlePressInDetails = useCallback(() => {
+    Animated.spring(detailsScaleAnim, {
+      toValue: 0.92,
+      tension: 250,
+      friction: 8,
+      useNativeDriver: true,
+    }).start();
+  }, [detailsScaleAnim]);
+
+  const handlePressOutDetails = useCallback(() => {
+    Animated.spring(detailsScaleAnim, {
+      toValue: 1,
+      tension: 250,
+      friction: 8,
+      useNativeDriver: true,
+    }).start();
+  }, [detailsScaleAnim]);
+
+  const handleEditPress = (e: any) => {
+    e?.stopPropagation?.();
+    closeSwipe();
+    onEdit?.(reminder);
+  };
+
+  const handlePressInEdit = useCallback(() => {
+    Animated.spring(editScaleAnim, {
+      toValue: 0.92,
+      tension: 250,
+      friction: 8,
+      useNativeDriver: true,
+    }).start();
+  }, [editScaleAnim]);
+
+  const handlePressOutEdit = useCallback(() => {
+    Animated.spring(editScaleAnim, {
+      toValue: 1,
+      tension: 250,
+      friction: 8,
+      useNativeDriver: true,
+    }).start();
+  }, [editScaleAnim]);
+
+  const actionsOpacity = translateX.interpolate({
+    inputRange: [-ACTIONS_WIDTH, -25, 0],
+    outputRange: [1, 0.5, 0],
+    extrapolate: 'clamp',
+  });
 
   const getCategoryStyles = () => {
     switch (reminder.category) {
@@ -157,210 +306,427 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
   );
 
   return (
-    <Animated.View style={{ transform: [{ scale: scaleAnim }] }}>
-      <TouchableOpacity
-        activeOpacity={0.88}
-        onLayout={handleCardLayout}
+    <View style={styles.swipeContainer}>
+      {/* Revealed Right Action Buttons */}
+      <Animated.View
         style={[
-          styles.card,
-          { shadowColor: localChecked ? '#D1D5DB' : theme.shadow },
+          styles.actionsTray,
+          {
+            opacity: actionsOpacity,
+          },
         ]}
-        onPress={handlePress}
-        accessibilityRole="checkbox"
-        accessibilityState={{ checked: localChecked }}
-        accessibilityLabel={reminder.title}
+        pointerEvents="box-none"
       >
-        {/* Dynamic Cutout Notch Background SVG with Radiant Emerald Aura & Starlight Nodes */}
-        <Svg
-          width={cardSize.width}
-          height={cardSize.height}
-          style={styles.cardSvgBackground}
-          pointerEvents="none"
-        >
-          <Defs>
-            {!localChecked && (
-              <RadialGradient
-                id={`reminderCardAura-${reminder.id}`}
-                cx={cardSize.width - 55}
-                cy={25}
-                r={110}
-                gradientUnits="userSpaceOnUse"
-              >
-                <Stop
-                  offset="0%"
-                  stopColor={theme.auraColor}
-                  stopOpacity={0.16}
-                />
-                <Stop
-                  offset="65%"
-                  stopColor={theme.auraColor}
-                  stopOpacity={0.03}
-                />
-                <Stop offset="100%" stopColor={theme.bg} stopOpacity={0} />
-              </RadialGradient>
-            )}
-          </Defs>
-          <Path
-            d={getCutoutCardPath(cardSize.width, cardSize.height)}
-            fill={localChecked ? '#FAFAF8' : theme.bg}
-            stroke={localChecked ? '#ECEAE4' : theme.border}
-            strokeWidth={1.5}
-            strokeLinejoin="round"
-          />
-          {!localChecked && (
-            <>
-              {/* Soft ambient radiance under top-right cutout */}
-              <Path
-                d={getCutoutCardPath(cardSize.width, cardSize.height)}
-                fill={`url(#reminderCardAura-${reminder.id})`}
-              />
-              {/* Delicate starlight nodes */}
-              <Circle
-                cx={cardSize.width - 66}
-                cy={16}
-                r={1.6}
-                fill={theme.accent}
-                opacity={0.4}
-              />
-              <Circle
-                cx={cardSize.width - 80}
-                cy={30}
-                r={1.3}
-                fill={theme.accent}
-                opacity={0.3}
-              />
-            </>
-          )}
-        </Svg>
+        {onDetails && (
+          <Animated.View
+            style={[
+              styles.actionBtnAnimWrap,
+              {
+                transform: [{ scale: detailsScaleAnim }],
+              },
+            ]}
+          >
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPressIn={handlePressInDetails}
+              onPressOut={handlePressOutDetails}
+              onPress={handleDetailsPress}
+              style={styles.actionBtnDetails}
+              accessibilityRole="button"
+              accessibilityLabel={`View details for ${reminder.title}`}
+            >
+              <View style={styles.actionIconAuraDetails}>
+                <Flame size={14} color="#FF9800" strokeWidth={2.6} />
+              </View>
+              <Text style={styles.actionBtnText}>DETAILS</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
 
-        {/* Floating Checkbox in Top-Right Cutout */}
+        {onEdit && (
+          <Animated.View
+            style={[
+              styles.actionBtnAnimWrap,
+              {
+                transform: [{ scale: editScaleAnim }],
+              },
+            ]}
+          >
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPressIn={handlePressInEdit}
+              onPressOut={handlePressOutEdit}
+              onPress={handleEditPress}
+              style={styles.actionBtnEdit}
+              accessibilityRole="button"
+              accessibilityLabel={`Edit ${reminder.title}`}
+            >
+              <View style={styles.actionIconAuraEdit}>
+                <Pencil size={13.5} color="#F5C518" strokeWidth={2.6} />
+              </View>
+              <Text style={styles.actionBtnText}>EDIT</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
+      </Animated.View>
+
+      {/* Front Card Container with PanResponder */}
+      <Animated.View
+        style={[
+          styles.frontCardContainer,
+          {
+            transform: [{ translateX }, { scale: scaleAnim }],
+          },
+        ]}
+        {...panResponder.panHandlers}
+      >
         <TouchableOpacity
-          activeOpacity={0.75}
-          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-          onPress={e => {
-            e.stopPropagation();
-            handlePress();
-          }}
+          activeOpacity={0.88}
+          onLayout={handleCardLayout}
           style={[
-            styles.floatingCheckbox,
-            localChecked
-              ? styles.floatingCheckboxChecked
-              : [
-                  styles.floatingCheckboxUnchecked,
-                  { borderColor: theme.border },
-                ],
+            styles.card,
+            { shadowColor: localChecked ? '#D1D5DB' : theme.shadow },
           ]}
+          onPress={handleCardPress}
           accessibilityRole="checkbox"
           accessibilityState={{ checked: localChecked }}
-          accessibilityLabel={`Mark ${reminder.title} as ${
-            localChecked ? 'incomplete' : 'complete'
-          }`}
+          accessibilityLabel={reminder.title}
         >
-          {localChecked && <Check size={14} color="#1B9A72" strokeWidth={3} />}
-        </TouchableOpacity>
+          {/* Dynamic Cutout Notch Background SVG with Radiant Emerald Aura & Starlight Nodes */}
+          <Svg
+            width={cardSize.width}
+            height={cardSize.height}
+            style={styles.cardSvgBackground}
+            pointerEvents="none"
+          >
+            <Defs>
+              {!localChecked && (
+                <RadialGradient
+                  id={`reminderCardAura-${reminder.id}`}
+                  cx={cardSize.width - 55}
+                  cy={25}
+                  r={110}
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <Stop
+                    offset="0%"
+                    stopColor={theme.auraColor}
+                    stopOpacity={0.16}
+                  />
+                  <Stop
+                    offset="65%"
+                    stopColor={theme.auraColor}
+                    stopOpacity={0.03}
+                  />
+                  <Stop offset="100%" stopColor={theme.bg} stopOpacity={0} />
+                </RadialGradient>
+              )}
+            </Defs>
+            <Path
+              d={getCutoutCardPath(cardSize.width, cardSize.height)}
+              fill={localChecked ? '#FAFAF8' : theme.bg}
+              stroke={localChecked ? '#ECEAE4' : theme.border}
+              strokeWidth={1.5}
+              strokeLinejoin="round"
+            />
+            {!localChecked && (
+              <>
+                {/* Soft ambient radiance under top-right cutout */}
+                <Path
+                  d={getCutoutCardPath(cardSize.width, cardSize.height)}
+                  fill={`url(#reminderCardAura-${reminder.id})`}
+                />
+                {/* Delicate starlight nodes */}
+                <Circle
+                  cx={cardSize.width - 66}
+                  cy={16}
+                  r={1.6}
+                  fill={theme.accent}
+                  opacity={0.4}
+                />
+                <Circle
+                  cx={cardSize.width - 80}
+                  cy={30}
+                  r={1.3}
+                  fill={theme.accent}
+                  opacity={0.3}
+                />
+              </>
+            )}
+          </Svg>
 
-        <View style={styles.cardHeaderRow}>
-          <View style={styles.leftInfo}>
-            <View
-              style={[
-                styles.iconContainer,
-                localChecked
-                  ? styles.iconContainerChecked
-                  : {
-                      backgroundColor: theme.iconBg,
-                      borderColor: theme.border,
-                      borderWidth: 1,
-                    },
-              ]}
-            >
-              <IconComponent
-                size={18}
-                color={localChecked ? '#1B9A72' : theme.accent}
-                strokeWidth={2.2}
-              />
-            </View>
+          {/* Floating Checkbox in Top-Right Cutout */}
+          <TouchableOpacity
+            activeOpacity={0.75}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            onPress={e => {
+              e.stopPropagation();
+              handlePress();
+            }}
+            style={[
+              styles.floatingCheckbox,
+              localChecked
+                ? styles.floatingCheckboxChecked
+                : [
+                    styles.floatingCheckboxUnchecked,
+                    { borderColor: theme.border },
+                  ],
+            ]}
+            accessibilityRole="checkbox"
+            accessibilityState={{ checked: localChecked }}
+            accessibilityLabel={`Mark ${reminder.title} as ${
+              localChecked ? 'incomplete' : 'complete'
+            }`}
+          >
+            {localChecked && (
+              <Check size={14} color="#1B9A72" strokeWidth={3} />
+            )}
+          </TouchableOpacity>
 
-            <View style={styles.textBlock}>
-              <Text
-                style={[styles.title, localChecked && styles.titleCompleted]}
-                numberOfLines={2}
+          <View style={styles.cardHeaderRow}>
+            <View style={styles.leftInfo}>
+              <View
+                style={[
+                  styles.iconContainer,
+                  localChecked
+                    ? styles.iconContainerChecked
+                    : {
+                        backgroundColor: theme.iconBg,
+                        borderColor: theme.border,
+                        borderWidth: 1,
+                      },
+                ]}
               >
-                {reminder.title}
-              </Text>
+                <IconComponent
+                  size={18}
+                  color={localChecked ? '#1B9A72' : theme.accent}
+                  strokeWidth={2.2}
+                />
+              </View>
 
-              {reminder.notes ? (
+              <View style={styles.textBlock}>
                 <Text
-                  style={[styles.notes, localChecked && styles.notesCompleted]}
+                  style={[styles.title, localChecked && styles.titleCompleted]}
                   numberOfLines={2}
                 >
-                  {reminder.notes}
+                  {reminder.title}
                 </Text>
-              ) : null}
-            </View>
-          </View>
 
-          {/* Right Header Controls: Kokoro TTS Audio */}
-          <View style={styles.rightControls}>
-            <TouchableOpacity
-              activeOpacity={0.7}
-              style={[
-                styles.speakBtn,
-                { borderColor: theme.border },
-                isSpeaking && styles.speakBtnActive,
-              ]}
-              onPress={e => onSpeak(reminder, e)}
-              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-              accessibilityRole="button"
-              accessibilityLabel={
-                isSpeaking ? 'Stop vocalizing reminder' : 'Speak reminder aloud'
-              }
-            >
-              {isSpeaking ? (
-                <VolumeX size={15} color="#1B9A72" strokeWidth={2.4} />
-              ) : (
-                <Volume2 size={15} color="#7E838F" strokeWidth={2.2} />
+                {reminder.notes ? (
+                  <Text
+                    style={[
+                      styles.notes,
+                      localChecked && styles.notesCompleted,
+                    ]}
+                    numberOfLines={2}
+                  >
+                    {reminder.notes}
+                  </Text>
+                ) : null}
+              </View>
+            </View>
+
+            {/* Right Header Controls: Kokoro TTS Audio + Pencil Edit Button */}
+            <View style={styles.rightControls}>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={[
+                  styles.speakBtn,
+                  { borderColor: theme.border },
+                  isSpeaking && styles.speakBtnActive,
+                ]}
+                onPress={e => onSpeak(reminder, e)}
+                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                accessibilityRole="button"
+                accessibilityLabel={
+                  isSpeaking
+                    ? 'Stop vocalizing reminder'
+                    : 'Speak reminder aloud'
+                }
+              >
+                {isSpeaking ? (
+                  <VolumeX size={15} color="#1B9A72" strokeWidth={2.4} />
+                ) : (
+                  <Volume2 size={15} color="#7E838F" strokeWidth={2.2} />
+                )}
+              </TouchableOpacity>
+
+              {onEdit && (
+                <TouchableOpacity
+                  activeOpacity={0.7}
+                  onPress={e => {
+                    e.stopPropagation();
+                    if (isOpenRef.current) {
+                      closeSwipe();
+                    }
+                    onEdit(reminder);
+                  }}
+                  style={[styles.editBtn, { borderColor: theme.border }]}
+                  hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                  accessibilityRole="button"
+                  accessibilityLabel={`Edit ${reminder.title}`}
+                >
+                  <Pencil size={11.5} color="#7A766E" strokeWidth={2.2} />
+                </TouchableOpacity>
               )}
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        {/* Footer Badges & Metadata (time, date, repeat, urgent) */}
-        {hasFooter && (
-          <View style={styles.cardFooter}>
-            <View style={styles.footerLeft}>
-              {reminder.time ? (
-                <View style={styles.metaTag}>
-                  <Clock size={11.5} color="#7E838F" strokeWidth={2} />
-                  <Text style={styles.metaText}>{reminder.time}</Text>
-                </View>
-              ) : null}
-
-              {reminder.date ? (
-                <View style={styles.metaTag}>
-                  <Calendar size={11.5} color="#7E838F" strokeWidth={2} />
-                  <Text style={styles.metaText}>{reminder.date}</Text>
-                </View>
-              ) : null}
-
-              {reminder.repeat ? (
-                <View style={[styles.metaTag, styles.repeatTag]}>
-                  <RotateCw size={11} color="#8383D6" strokeWidth={2.2} />
-                  <Text style={styles.repeatText}>{reminder.repeat}</Text>
-                </View>
-              ) : null}
             </View>
-
-            {reminder.urgentAlarm && (
-              <Badge label="URGENT" variant="red" size="sm" />
-            )}
           </View>
-        )}
-      </TouchableOpacity>
-    </Animated.View>
+
+          {/* Footer Badges & Metadata (time, date, repeat, urgent) */}
+          {hasFooter && (
+            <View style={styles.cardFooter}>
+              <View style={styles.footerLeft}>
+                {reminder.time ? (
+                  <View style={styles.metaTag}>
+                    <Clock size={11.5} color="#7E838F" strokeWidth={2} />
+                    <Text style={styles.metaText}>{reminder.time}</Text>
+                  </View>
+                ) : null}
+
+                {reminder.date ? (
+                  <View style={styles.metaTag}>
+                    <Calendar size={11.5} color="#7E838F" strokeWidth={2} />
+                    <Text style={styles.metaText}>{reminder.date}</Text>
+                  </View>
+                ) : null}
+
+                {reminder.repeat ? (
+                  <View style={[styles.metaTag, styles.repeatTag]}>
+                    <RotateCw size={11} color="#8383D6" strokeWidth={2.2} />
+                    <Text style={styles.repeatText}>{reminder.repeat}</Text>
+                  </View>
+                ) : null}
+              </View>
+
+              {reminder.urgentAlarm && (
+                <Badge label="URGENT" variant="red" size="sm" />
+              )}
+            </View>
+          )}
+        </TouchableOpacity>
+      </Animated.View>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  swipeContainer: {
+    position: 'relative',
+    width: '100%',
+  },
+  actionsTray: {
+    position: 'absolute',
+    right: 0,
+    top: 0,
+    bottom: 0,
+    width: 138,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    gap: 8,
+    paddingRight: 2,
+    zIndex: 1,
+  },
+  actionBtnAnimWrap: {
+    width: 60,
+    height: 56,
+  },
+  actionBtnDetails: {
+    width: 60,
+    height: 56,
+    backgroundColor: Colors.NeroBlack,
+    borderRadius: 18,
+    borderWidth: 1.2,
+    borderTopWidth: 1.8,
+    borderTopColor: 'rgba(255, 255, 255, 0.45)',
+    borderLeftColor: 'rgba(255, 255, 255, 0.14)',
+    borderRightColor: 'rgba(255, 255, 255, 0.14)',
+    borderBottomWidth: 3.5,
+    borderBottomColor: '#0A0B0E',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 4,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#FF9800',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.38,
+        shadowRadius: 7,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
+  },
+  actionIconAuraDetails: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255, 152, 0, 0.22)',
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 152, 0, 0.48)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 3,
+  },
+  actionBtnEdit: {
+    width: 60,
+    height: 56,
+    backgroundColor: Colors.NeroBlack,
+    borderRadius: 18,
+    borderWidth: 1.2,
+    borderTopWidth: 1.8,
+    borderTopColor: 'rgba(255, 255, 255, 0.45)',
+    borderLeftColor: 'rgba(255, 255, 255, 0.14)',
+    borderRightColor: 'rgba(255, 255, 255, 0.14)',
+    borderBottomWidth: 3.5,
+    borderBottomColor: '#0A0B0E',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 4,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#F5C518',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.38,
+        shadowRadius: 7,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
+  },
+  actionIconAuraEdit: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(245, 197, 24, 0.22)',
+    borderWidth: 1.2,
+    borderColor: 'rgba(245, 197, 24, 0.48)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 3,
+  },
+  actionBtnText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: 9.5,
+    color: '#FFFBF0',
+    letterSpacing: 0.75,
+  },
+  frontCardContainer: {
+    width: '100%',
+    zIndex: 2,
+  },
+  editBtn: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    borderWidth: 1,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginLeft: 6,
+  },
   card: {
     backgroundColor: 'transparent',
     padding: 16,
@@ -468,9 +834,9 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   speakBtn: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: 28,
+    height: 28,
+    borderRadius: 14,
     backgroundColor: '#EDFDF5',
     borderWidth: 1,
     borderColor: '#C6FFDD',

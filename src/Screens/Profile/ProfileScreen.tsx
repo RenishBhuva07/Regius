@@ -8,7 +8,6 @@ import {
   Animated,
   Dimensions,
   Platform,
-  ActivityIndicator,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
@@ -23,6 +22,7 @@ import { SubScreenHeader } from '../../Common/SubScreenHeader';
 import { useScrollReactiveHeader } from '../../Common/useScrollReactiveHeader';
 import { ProBadge } from '../../Common/ProBadge';
 import { StickyActionDock } from '../../Common/StickyActionDock';
+import { StickyBottomButton } from '../../Common/StickyBottomButton';
 import { useTheme } from '../../Theme/ThemeContext';
 import { useTaskReminder } from '../../Context/TaskReminderContext';
 import { SettingsBackgroundSvg } from '../Settings/Components/SettingsBackgroundSvg';
@@ -187,46 +187,19 @@ export const ProfileScreen: React.FC = () => {
 
       {/* Floating Action Dock */}
       <StickyActionDock>
-        <TouchableOpacity
-          activeOpacity={0.88}
-          style={[
-            styles.saveButton,
-            {
-              backgroundColor: isDarkMode
-                ? Colors.LavenderPurple
-                : Colors.MidnightCharcoal,
-              shadowColor: isDarkMode ? Colors.LavenderPurple : '#000000',
-            },
-            isSaving && { opacity: 0.8 },
-          ]}
+        <StickyBottomButton
+          title="Save Profile Changes"
           onPress={handleSave}
-          disabled={isSaving}
-          accessibilityRole="button"
+          loading={isSaving}
           accessibilityLabel="Save Profile Changes"
-        >
-          {isSaving ? (
-            <ActivityIndicator
-              size="small"
+          icon={
+            <Check
+              size={18}
               color={isDarkMode ? '#121417' : Colors.PureWhiteText}
+              strokeWidth={2.4}
             />
-          ) : (
-            <View style={styles.buttonContentRow}>
-              <Check
-                size={18}
-                color={isDarkMode ? '#121417' : Colors.PureWhiteText}
-                strokeWidth={2.4}
-              />
-              <Text
-                style={[
-                  styles.saveButtonText,
-                  { color: isDarkMode ? '#121417' : Colors.PureWhiteText },
-                ]}
-              >
-                Save Profile Changes
-              </Text>
-            </View>
-          )}
-        </TouchableOpacity>
+          }
+        />
       </StickyActionDock>
     </View>
   );
@@ -246,25 +219,5 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingTop: ResponsivePixels.size16,
-  },
-  saveButton: {
-    borderRadius: 28,
-    paddingVertical: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.35,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  buttonContentRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  saveButtonText: {
-    fontFamily: Fonts.poppins.bold,
-    fontSize: 15,
-    letterSpacing: 0.2,
   },
 });
