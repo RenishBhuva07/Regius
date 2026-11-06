@@ -207,6 +207,8 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
         subtitle="Daily Objectives & Focus"
         scrollY={scrollY}
         isScrolled={isScrolled}
+        onPressSettings={() => navigation.navigate('Settings')}
+        onPressProfile={() => navigation.navigate('ProfileScreen')}
       />
 
       <ScrollView

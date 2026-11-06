@@ -26,3 +26,4 @@ export * from './UnifiedSchedulePickerModal';
 export * from './CustomCategoryModal';
 export * from './HeaderActionButton';
 export * from './MiniAcousticBars';
+export * from './SettingsButton';

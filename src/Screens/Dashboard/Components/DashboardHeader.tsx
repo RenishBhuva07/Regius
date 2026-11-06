@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Animated } from 'react-native';
-import { Settings } from 'lucide-react-native';
 
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import { SVGS } from '../../../Assets/Images';
 import { RegiusLogo } from '../../../Common/RegiusLogo';
 import { CustomAnimation } from '../../../Common/CustomAnimation';
 import HolographAnimation from '../../../Assets/JsonAnimations/Holograph.json';
+import { SettingsButton } from '../../../Common/SettingsButton';
 import HeaderPatternSvg from './HeaderPatternSvg';
 
 export const HEADER_HEIGHT = 54;
@@ -24,6 +24,7 @@ export interface DashboardHeaderProps {
   headerPatternOpacity: Animated.AnimatedInterpolation<number>;
   onOpenVoiceAssistant: () => void;
   onPressSettings: () => void;
+  onPressProfile?: () => void;
 }
 
 export const DashboardHeader: React.FC<DashboardHeaderProps> = React.memo(
@@ -40,6 +41,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = React.memo(
     headerPatternOpacity,
     onOpenVoiceAssistant,
     onPressSettings,
+    onPressProfile,
   }) => {
     return (
       <Animated.View
@@ -99,27 +101,11 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = React.memo(
               </View>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              activeOpacity={0.75}
-              onPress={onPressSettings}
-              style={[
-                styles.settingsBtn,
-                isScrolled && styles.settingsBtnScrolled,
-              ]}
-              accessibilityRole="button"
-              accessibilityLabel="Open Settings"
-              hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
-            >
-              <Settings
-                size={24}
-                color={isScrolled ? Colors.MidnightCharcoal : '#1B1C19'}
-                strokeWidth={2}
-              />
-            </TouchableOpacity>
+            <SettingsButton isScrolled={isScrolled} onPress={onPressSettings} />
 
             <TouchableOpacity
               activeOpacity={0.8}
-              onPress={onPressSettings}
+              onPress={onPressProfile ?? onPressSettings}
               style={[
                 styles.avatarRing,
                 isScrolled && styles.avatarRingScrolled,
@@ -172,30 +158,6 @@ const styles = StyleSheet.create({
   voiceHeaderAnimation: {
     width: 56,
     height: 56,
-  },
-  settingsBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#FFFFFF',
-    borderWidth: 1,
-    borderColor: '#ECE8DF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.04,
-    shadowRadius: 3,
-    elevation: 1,
-  },
-  settingsBtnScrolled: {
-    backgroundColor: '#FFFFFF',
-    borderColor: 'rgba(255, 255, 255, 0.85)',
-    shadowColor: '#000000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.12,
-    shadowRadius: 4,
-    elevation: 3,
   },
   avatarRing: {
     width: 44,

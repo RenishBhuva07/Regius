@@ -19,6 +19,7 @@ import { CustomAnimation } from './CustomAnimation';
 import HolographAnimation from '../Assets/JsonAnimations/Holograph.json';
 import { useVoiceWakeWord } from '../Context/VoiceWakeWordContext';
 import HeaderPatternSvg from '../Screens/Dashboard/Components/HeaderPatternSvg';
+import { SettingsButton } from './SettingsButton';
 
 export const SCREEN_HEADER_HEIGHT = 54;
 
@@ -28,6 +29,8 @@ export interface ScreenHeaderProps {
   scrollY: Animated.Value;
   isScrolled: boolean;
   showVoiceOrb?: boolean;
+  showSettings?: boolean;
+  onPressSettings?: () => void;
   showProfile?: boolean;
   onPressProfile?: () => void;
   rightAction?: React.ReactNode;
@@ -40,6 +43,8 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
   scrollY,
   isScrolled,
   showVoiceOrb = true,
+  showSettings = true,
+  onPressSettings,
   showProfile = true,
   onPressProfile,
   rightAction,
@@ -91,7 +96,7 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
     if (onPressProfile) {
       onPressProfile();
     } else {
-      navigation.navigate('Settings');
+      navigation.navigate('ProfileScreen');
     }
   };
 
@@ -175,6 +180,10 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
           )}
 
           {rightAction}
+
+          {showSettings && (
+            <SettingsButton isScrolled={isScrolled} onPress={onPressSettings} />
+          )}
 
           {showProfile && (
             <TouchableOpacity

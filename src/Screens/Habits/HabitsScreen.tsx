@@ -128,6 +128,8 @@ export const HabitsScreen: React.FC = () => {
         subtitle="Daily Rituals & Consistency"
         scrollY={scrollY}
         isScrolled={isScrolled}
+        onPressSettings={() => navigation.navigate('Settings')}
+        onPressProfile={() => navigation.navigate('ProfileScreen')}
       />
 
       <ScrollView

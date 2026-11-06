@@ -252,6 +252,8 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
         subtitle="Scheduled Alerts & Horizons"
         scrollY={scrollY}
         isScrolled={isScrolled}
+        onPressSettings={() => navigation.navigate('Settings')}
+        onPressProfile={() => navigation.navigate('ProfileScreen')}
       />
 
       <ScrollView

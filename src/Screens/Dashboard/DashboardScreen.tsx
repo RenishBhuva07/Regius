@@ -347,6 +347,7 @@ export const DashboardScreen: React.FC = () => {
         headerPatternOpacity={headerPatternOpacity}
         onOpenVoiceAssistant={openAssistant}
         onPressSettings={() => navigation.navigate('Settings')}
+        onPressProfile={() => navigation.navigate('ProfileScreen')}
       />
 
       <ScrollView
