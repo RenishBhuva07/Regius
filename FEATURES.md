@@ -359,10 +359,14 @@ sequenceDiagram
 - **Status**: `Implemented`
 - **Source Files**:
   - `src/Screens/Habits/HabitsScreen.tsx` (Reactive scroll header, hero bento card, Today's Flow centered black crest badge, floating half-outside New Habit plus button, card swipe integration with details navigation, Swiggy-inspired brand watermark footer with "Your future self is taking notes!" and "Crafted with ❤️ in Ahmedabad, India")
-  - `src/Screens/Habits/HabitDetailsScreen.tsx` (Deep habit analytics screen: SubScreenHeader with dual 3D badge & Edit CTA, 2-layer luxury Hero Bento card with Ranade typography and fiery streak showcase, 7-day consistency progress matrix without duplicate marks, circadian ritual protocol cards, interactive Sia neural vocal motivation with Kokoro-82M TTS audio preview, philosophy intention quote, full light/dark mode adaptation, and sticky action dock)
+  - `src/Screens/Habits/HabitDetailsScreen.tsx` (Deep habit analytics screen: SubScreenHeader with dual 3D badge & Edit CTA, HabitDetailsBackgroundSvg luxury ambient background canvas, 2-layer luxury Hero Bento card with Ranade typography and fiery streak showcase, 7-day consistency progress matrix cabinet, depth inside box flow circadian ritual protocol cards, interactive Sia neural vocal motivation with dynamic circadian scripts and animated acoustic equalizer via HabitVocalMotivationCard, artisanal wax seal philosophy keepsakes via HabitPhilosophyKeepsakeCard, full light/dark mode adaptation, and standardized StickyBottomButton in sticky action dock)
+  - `src/Screens/Habits/Components/HabitDetailsBackgroundSvg.tsx` (Bespoke luxury ambient canvas with dual sunlit/obsidian sheens, celestial orbital rings, radiant category & streak auras, and starlight constellation marks)
+  - `src/Screens/Habits/Components/HabitVocalMotivationCard.tsx` (Extraordinary neural vocal motivation surface: 7-bar holographic acoustic equalizer, dynamic circadian psychological motivation scripts, obsidian card backing, and tactile high-fidelity audio controls)
+  - `src/Screens/Habits/Components/HabitPhilosophyKeepsakeCard.tsx` (Artisanal manuscript keepsake with 3D floating royal wax seal crest, guilloche vector corners, translucent watermark quotation mark, category wisdom library, and interactive "Inspire Me" shuffle action)
+  - `src/Common/StickyBottomButton.tsx` (Standardized sticky bottom action dock button per DESIGN_SYSTEM.md §4.2, unifying ProfileScreen, HabitDetailsScreen, SubscriptionScreen, and LanguageScreen)
   - `src/Screens/Habits/Components/HabitNotesDoodleSvg.tsx` (Extraordinary 3D luxury obsidian journal, floating golden fountain pen actively writing calligraphic notes, Day 21 streak seal badge, and celestial doodle energy arcs)
   - `src/Screens/Habits/Components/HabitSectionBackgroundSvg.tsx` (Dynamic luxury aesthetic background with habit growth rings, solar chronometer ticks, emerald vitality aura, 7-day tracker matrix doodle, journal checklist doodle, calligraphic flourish checkmark, and footer constellation diamonds)
-  - `src/Screens/Habits/Components/HabitConsistencyBento.tsx` (Dynamic longest streak calculation, dual 3D badges, 7-day consistency strip)
+  - `src/Screens/Habits/Components/HabitConsistencyBento.tsx` (Dynamic longest streak calculation, dual 3D badges, 7-day illuminated streak flow with filled/unfilled flame states and responsive geometry via ResponsivePixels)
   - `src/Screens/Habits/Components/HabitItemCard.tsx` (Native `PanResponder` card swipe gesture revealing right-side tactile action buttons for Details and Edit, category accent strip, tactile animated checkmark, standardized 3D `StreakBadge`, 7-day mini history dots, and top-right floating circular edit button)
   - `src/Common/StreakBadge.tsx` (Standardized 3D tactile streak badge with top specular highlight, extruded 3D bottom bevel, warm fire ambient glow, and uppercase stamping across all cards)
   - `src/Screens/Habits/Components/HabitCategoryFilters.tsx` (Category pills with dynamic item count badges)
@@ -695,6 +699,32 @@ sequenceDiagram
   - Reusable primitive in `src/Common/HeaderActionButton.tsx` replacing inconsistent and un-bordered buttons in section headers.
   - Implemented in `CategoryChipSelector.tsx` ("Add Category"), `DefaultVoiceSection.tsx` ("Voice Studio"), and `WakeWordSection.tsx` ("Configure").
   - Provides full pill (`borderRadius: 20`), Nero background (`#1E2028`), slate border (`#363944`), 14x14 icon disc with translucent aura, Poppins SemiBold 10.5 text (`#F5C518`), and configurable `iconPosition` (`'left' | 'right'`).
+
+---
+
+### 2.25 Standardized Swipe, Details, and Dual-Mode Edit Flows for Tasks & Reminders
+
+- **Purpose**: Parity integration of the luxury Habit interaction model across Tasks and Reminders.
+- **Status**: `Implemented`
+- **Source Files**:
+  - `src/Context/TaskReminderContext.tsx` (`updateTask`, `deleteTask`, `updateReminder`, `deleteReminder`)
+  - `src/Components/AddTaskModal.tsx` (`taskToEdit`, `onUpdateTask`, `onDeleteTask`, pre-population, delete confirmation)
+  - `src/Components/AddReminderModal.tsx` (`reminderToEdit`, `onUpdateReminder`, `onDeleteReminder`, pre-population, delete confirmation)
+  - `src/Screens/Tasks/Components/TaskCardItem.tsx` (swipe gesture with `PanResponder`, revealed 3D Nero `DETAILS` and `EDIT` buttons, header edit button)
+  - `src/Screens/Tasks/TasksScreen.tsx` (`onEdit`, `onDetails`, `editingTask`, `handleViewDetails`)
+  - `src/Screens/Tasks/TaskDetailsScreen.tsx` (Hero Bento Card, Sia vocal briefing with holographic `MiniAcousticBars`, interactive subtasks checklist with deletion & dynamic category progress, parameters matrix, `StickyBottomButton` dock, delete flow, luxury ambient `TaskDetailsBackgroundSvg`)
+  - `src/Screens/Reminders/Components/ReminderCardItem.tsx` (swipe gesture with `PanResponder`, revealed 3D Nero `DETAILS` and `EDIT` buttons, header edit and speak buttons)
+  - `src/Screens/Reminders/RemindersScreen.tsx` (`onEdit`, `onDetails`, `editingReminder`, `handleViewDetails`)
+  - `src/Screens/Reminders/ReminderDetailsScreen.tsx` (Hero Bento Card, Sia vocal alert with holographic `MiniAcousticBars`, schedule & horizon matrix, sound profile, `StickyBottomButton` dock, delete flow, luxury ambient `ReminderDetailsBackgroundSvg`)
+  - `src/Common/MiniAcousticBars.tsx` (Universal 7-bar animated acoustic equalizer for neural audio briefing playback)
+  - `src/Screens/Tasks/Components/TaskDetailsBackgroundSvg.tsx` (Ambient stationery canvas and execution glow)
+  - `src/Screens/Reminders/Components/ReminderDetailsBackgroundSvg.tsx` (Ambient stationery canvas and concentric chime waves)
+  - `src/Navigators/AppNavigator.tsx` (registered `TaskDetailsScreen` and `ReminderDetailsScreen` with `slide_from_right` transitions)
+- **User-Facing Workflow**:
+  - **Swipe Actions**: Swiping any task or reminder card to the left reveals tactile 3D Nero action buttons for `DETAILS` (navigates to dedicated details screen) and `EDIT` (opens dual-mode modal).
+  - **Direct Edit Trigger**: Each card's header also features a direct pencil edit button alongside existing controls.
+  - **Dedicated Details Screens**: Both `TaskDetailsScreen` and `ReminderDetailsScreen` provide executive hero bento cards, Sia AI vocal briefings via Kokoro TTS, live interactive checklist for subtasks, full schedule matrix, destructive delete flows, and `StickyBottomButton` toggle docks.
+  - **Dual-Mode Modals**: `AddTaskModal` and `AddReminderModal` now seamlessly support both creation and editing with pre-filled state, "Save Changes" submit text, and in-modal delete options.
 
 ---
 

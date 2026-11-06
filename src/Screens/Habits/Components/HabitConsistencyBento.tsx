@@ -7,7 +7,7 @@ import {
   Animated,
   Easing,
 } from 'react-native';
-import { Flame, Trophy, Check } from 'lucide-react-native';
+import { Flame, Trophy } from 'lucide-react-native';
 import Svg, {
   Rect,
   Circle,
@@ -21,6 +21,7 @@ import { Typography } from '../../../Theme/Typographys';
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import { Badge } from '../../../Common/Badge';
 import { HabitItem } from '../../../Context/TaskReminderContext';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 interface HabitConsistencyBentoProps {
   habits: HabitItem[];
@@ -205,9 +206,18 @@ export const HabitConsistencyBento: React.FC<HabitConsistencyBentoProps> = ({
             />
           </View>
 
-          {/* 7-Day Consistency Week Strip */}
+          {/* 7-Day Consistency Week Strip with Illuminated Streak Flow */}
           <View style={styles.weekStrip}>
-            <Text style={styles.weekStripLabel}>WEEKLY MOMENTUM</Text>
+            <View style={styles.weekStripHeader}>
+              <Flame
+                size={ResponsivePixels.size12}
+                color="#FF9800"
+                fill="#FF9800"
+                strokeWidth={2}
+              />
+              <Text style={styles.weekStripLabel}>WEEKLY MOMENTUM</Text>
+            </View>
+
             <View style={styles.weekDaysRow}>
               {WEEKDAYS.map((dayLabel, index) => {
                 const isToday = index === currentDayIndex;
@@ -215,36 +225,63 @@ export const HabitConsistencyBento: React.FC<HabitConsistencyBentoProps> = ({
                 const isCompletedToday = isToday && progressPercent >= 50;
                 const isFilled = isPast || isCompletedToday;
 
+                // Flow connector segment to next day
+                const nextIsToday = index + 1 === currentDayIndex;
+                const nextIsPast = index + 1 < currentDayIndex;
+                const nextIsCompletedToday =
+                  nextIsToday && progressPercent >= 50;
+                const nextIsFilled = nextIsPast || nextIsCompletedToday;
+                const isConnectorFilled = isFilled && nextIsFilled;
+
                 return (
-                  <View key={`day-${index}`} style={styles.dayCol}>
+                  <React.Fragment key={`day-flow-${index}`}>
                     <View
-                      style={[
-                        styles.dayBubble,
-                        isToday && styles.dayBubbleToday,
-                        isFilled && styles.dayBubbleFilled,
-                      ]}
+                      style={styles.dayCol}
+                      accessible
+                      accessibilityLabel={`${dayLabel}, ${
+                        isToday ? 'Today, ' : ''
+                      }${isFilled ? 'completed' : 'pending'} streak day`}
                     >
-                      {isFilled ? (
-                        <Check
-                          size={12}
-                          color={isToday ? '#FFFFFF' : '#52D22E'}
-                          strokeWidth={3}
+                      <View
+                        style={[
+                          styles.dayBubble,
+                          isFilled && styles.dayBubbleFilled,
+                          isToday && styles.dayBubbleToday,
+                        ]}
+                      >
+                        <Flame
+                          size={ResponsivePixels.size15}
+                          color={
+                            isFilled
+                              ? '#FFA726'
+                              : isToday
+                              ? '#FFA726'
+                              : 'rgba(255, 255, 255, 0.28)'
+                          }
+                          fill={isFilled ? '#FF9800' : 'none'}
+                          strokeWidth={isToday && !isFilled ? 2 : 1.7}
                         />
-                      ) : (
-                        <View
-                          style={[
-                            styles.emptyDot,
-                            isToday && styles.emptyDotToday,
-                          ]}
-                        />
-                      )}
+                      </View>
+                      <Text
+                        style={[
+                          styles.dayText,
+                          isFilled && styles.dayTextFilled,
+                          isToday && styles.dayTextToday,
+                        ]}
+                      >
+                        {dayLabel}
+                      </Text>
                     </View>
-                    <Text
-                      style={[styles.dayText, isToday && styles.dayTextToday]}
-                    >
-                      {dayLabel}
-                    </Text>
-                  </View>
+
+                    {index < 6 && (
+                      <View
+                        style={[
+                          styles.flowConnector,
+                          isConnectorFilled && styles.flowConnectorFilled,
+                        ]}
+                      />
+                    )}
+                  </React.Fragment>
                 );
               })}
             </View>
@@ -257,7 +294,7 @@ export const HabitConsistencyBento: React.FC<HabitConsistencyBentoProps> = ({
 
 const styles = StyleSheet.create({
   cardShadowWrapper: {
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     backgroundColor: Colors.NeroBlack,
     ...Platform.select({
       ios: {
@@ -272,7 +309,7 @@ const styles = StyleSheet.create({
     }),
   },
   card: {
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     overflow: 'hidden',
     borderWidth: 4,
     borderColor: 'rgba(255, 255, 255, 0.9)',
@@ -280,8 +317,8 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.NeroBlack,
   },
   content: {
-    padding: 20,
-    gap: 8,
+    padding: ResponsivePixels.size20,
+    gap: ResponsivePixels.size8,
   },
   topRow: {
     flexDirection: 'row',
@@ -296,12 +333,12 @@ const styles = StyleSheet.create({
   heroStreakLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
+    gap: ResponsivePixels.size14,
     flex: 1,
   },
   flameWrap: {
-    width: 44,
-    height: 44,
+    width: ResponsivePixels.size44,
+    height: ResponsivePixels.size44,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -311,104 +348,151 @@ const styles = StyleSheet.create({
   },
   metricBig: {
     ...Typography.h1RanadeBold,
-    fontSize: 32,
-    lineHeight: 40,
-    paddingTop: 4,
+    fontSize: ResponsivePixels.size32,
+    lineHeight: ResponsivePixels.size40,
+    paddingTop: ResponsivePixels.size4,
     color: Colors.DefaultWhite,
     letterSpacing: -0.5,
     includeFontPadding: false,
   },
   metricLabel: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: '#A3A8B1',
-    marginTop: 1,
+    marginTop: ResponsivePixels.size1,
   },
   metricRight: {
     alignItems: 'flex-end',
-    gap: 4,
+    gap: ResponsivePixels.size4,
   },
   percentBadge: {
     backgroundColor: 'rgba(82, 210, 46, 0.18)',
     borderWidth: 1,
     borderColor: 'rgba(82, 210, 46, 0.45)',
-    paddingHorizontal: 12,
-    paddingVertical: 4,
-    borderRadius: 14,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size4,
+    borderRadius: ResponsivePixels.size14,
   },
   percentText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 18,
+    fontSize: ResponsivePixels.size18,
     color: '#52D22E',
   },
   progressSubtext: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: '#A3A8B1',
   },
   progressBarTrack: {
-    height: 8,
-    borderRadius: 4,
+    height: ResponsivePixels.size8,
+    borderRadius: ResponsivePixels.size4,
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
     overflow: 'hidden',
   },
   progressBarFill: {
     height: '100%',
-    borderRadius: 4,
+    borderRadius: ResponsivePixels.size4,
     backgroundColor: '#52D22E',
   },
   weekStrip: {
     borderTopWidth: 1,
     borderTopColor: 'rgba(255, 255, 255, 0.08)',
-    paddingTop: 12,
-    gap: 10,
+    paddingTop: ResponsivePixels.size12,
+    gap: ResponsivePixels.size10,
+  },
+  weekStripHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: ResponsivePixels.size5,
   },
   weekStripLabel: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     color: '#8A8E99',
     letterSpacing: 0.8,
   },
   weekDaysRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   },
   dayCol: {
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
+    zIndex: 2,
   },
   dayBubble: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    width: ResponsivePixels.size30,
+    height: ResponsivePixels.size30,
+    borderRadius: ResponsivePixels.size15,
+    backgroundColor: 'rgba(255, 255, 255, 0.04)',
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
-  },
-  dayBubbleToday: {
-    borderColor: Colors.LavenderPurple,
-    backgroundColor: 'rgba(131, 131, 214, 0.28)',
+    borderColor: 'rgba(255, 255, 255, 0.09)',
   },
   dayBubbleFilled: {
-    backgroundColor: 'rgba(82, 210, 46, 0.16)',
-    borderColor: 'rgba(82, 210, 46, 0.4)',
+    backgroundColor: 'rgba(255, 152, 0, 0.14)',
+    borderColor: 'rgba(255, 152, 0, 0.45)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#FF9800',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.32,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
-  emptyDot: {
-    width: 5,
-    height: 5,
-    borderRadius: 2.5,
-    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+  dayBubbleToday: {
+    borderColor: '#FFA726',
+    borderWidth: 1.6,
+    backgroundColor: 'rgba(255, 152, 0, 0.18)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#FFA726',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.4,
+        shadowRadius: 5,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
-  emptyDotToday: {
-    backgroundColor: Colors.LavenderPurple,
+  flowConnector: {
+    flex: 1,
+    height: ResponsivePixels.size2,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    marginTop: ResponsivePixels.size14,
+    borderRadius: ResponsivePixels.size1,
+    zIndex: 1,
+  },
+  flowConnectorFilled: {
+    backgroundColor: '#FF9800',
+    height: ResponsivePixels.size2,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#FF9800',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.5,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   dayText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: '#8A8E99',
+  },
+  dayTextFilled: {
+    fontFamily: Fonts.poppins.semiBold,
+    color: '#FFE0B2',
   },
   dayTextToday: {
     fontFamily: Fonts.poppins.bold,

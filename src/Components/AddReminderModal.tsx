@@ -12,10 +12,12 @@ import {
   Animated,
   Keyboard,
   Pressable,
+  Alert,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { FileText } from 'lucide-react-native';
+import { FileText, Trash2 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
+import { Reminder } from '../Context/TaskReminderContext';
 
 import { Fonts } from '../Theme/fonts';
 import { Colors } from '../Assets/StyleUtilities/Colors';
@@ -120,16 +122,36 @@ export interface AddReminderModalProps {
     sound?: string;
     urgentAlarm?: boolean;
   }) => void;
+  onUpdateReminder?: (
+    id: string,
+    data: {
+      title: string;
+      notes?: string;
+      category: string;
+      time: string;
+      date: string;
+      repeat: string;
+      remindBefore?: string;
+      sound?: string;
+      urgentAlarm?: boolean;
+    },
+  ) => void;
+  onDeleteReminder?: (id: string) => void;
+  reminderToEdit?: Reminder | null;
 }
 
 export const AddReminderModal: React.FC<AddReminderModalProps> = ({
   visible,
   onClose,
   onCreateReminder,
+  onUpdateReminder,
+  onDeleteReminder,
+  reminderToEdit,
 }) => {
   const insets = useSafeAreaInsets();
   const voiceContext = useOptionalVoiceWakeWord();
   const assistantName = voiceContext?.assistantName || 'Regius';
+  const isEditing = !!reminderToEdit;
 
   // Form State
   const [reminderTitle, setReminderTitle] = useState('');
@@ -232,9 +254,29 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
 
   useEffect(() => {
     if (visible) {
-      resetForm();
+      if (reminderToEdit) {
+        setReminderTitle(reminderToEdit.title);
+        setReminderNotes(reminderToEdit.notes || '');
+        setSelectedCategory(reminderToEdit.category || 'daily');
+        setSelectedDate(
+          reminderToEdit.date ||
+            `Today, ${
+              MONTH_SHORT[new Date().getMonth()]
+            } ${new Date().getDate()}`,
+        );
+        setSelectedTime(reminderToEdit.time || '04:30 PM');
+        setRemindBefore(reminderToEdit.remindBefore || '5 mins before');
+        setRepeatCycle(reminderToEdit.repeat || 'Daily');
+        setUrgentAlarm(reminderToEdit.urgentAlarm ?? false);
+        setVoiceNudgeEnabled(true);
+        setIsPlayingPreview(false);
+        scrollY.setValue(0);
+        setIsScrolled(false);
+      } else {
+        resetForm();
+      }
     }
-  }, [visible]);
+  }, [visible, reminderToEdit]);
 
   // DateTimePicker Handlers
   const onDateChange = (_event: any, selected?: Date) => {
@@ -312,11 +354,12 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
       Animated.spring(createAnim, {
         toValue: 1,
         friction: 4,
+        tension: 180,
         useNativeDriver: true,
       }),
     ]).start();
 
-    onCreateReminder({
+    const reminderPayload = {
       title: reminderTitle.replace(/[\r\n]+/g, ' ').trim(),
       notes: reminderNotes.trim() || undefined,
       category: selectedCategory,
@@ -326,7 +369,39 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
       remindBefore,
       sound: 'Gentle Bell',
       urgentAlarm,
-    });
+    };
+
+    if (isEditing && onUpdateReminder && reminderToEdit) {
+      onUpdateReminder(reminderToEdit.id, reminderPayload);
+      onClose();
+    } else {
+      onCreateReminder(reminderPayload);
+    }
+  };
+
+  const handleDelete = () => {
+    if (!reminderToEdit || !onDeleteReminder) return;
+
+    Alert.alert(
+      'Delete Reminder',
+      `Are you sure you want to delete "${reminderToEdit.title}"?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            onDeleteReminder(reminderToEdit.id);
+            Toast.show({
+              type: 'info',
+              text1: 'Reminder Deleted',
+              text2: 'Alert removed from your schedule.',
+            });
+            onClose();
+          },
+        },
+      ],
+    );
   };
 
   const handleCreateCategory = (newCat: CustomCategoryCreated) => {
@@ -399,9 +474,13 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
               {/* Crest badge */}
               <View style={styles.flowHeaderBadge}>
                 <FlowBadgePatternSvg />
-                <Text style={styles.flowTitle}>Craft Your Reminder</Text>
+                <Text style={styles.flowTitle}>
+                  {isEditing ? 'Edit Your Reminder' : 'Craft Your Reminder'}
+                </Text>
                 <Text style={styles.flowSubtitle}>
-                  Timely Alerts & Punctuality
+                  {isEditing
+                    ? 'Refine Scheduled Alert & Horizon'
+                    : 'Timely Alerts & Punctuality'}
                 </Text>
               </View>
 
@@ -497,13 +576,29 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
               onToggleUrgentAlarm={setUrgentAlarm}
               assistantName={assistantName}
             />
+
+            {/* Delete Reminder Action (Only when editing) */}
+            {isEditing && onDeleteReminder && (
+              <View style={styles.deleteSection}>
+                <TouchableOpacity
+                  activeOpacity={0.85}
+                  onPress={handleDelete}
+                  style={styles.deleteCardBtn}
+                  accessibilityRole="button"
+                  accessibilityLabel="Delete Reminder"
+                >
+                  <Trash2 size={16} color="#EF4444" strokeWidth={2.2} />
+                  <Text style={styles.deleteCardBtnText}>Delete Reminder</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </Animated.ScrollView>
 
           {/* Common theme-styled bottom dock */}
           <ModalBottomBar
             onClose={onClose}
             onSubmit={handleSave}
-            submitText="Create Reminder"
+            submitText={isEditing ? 'Save Changes' : 'Create Reminder'}
             createAnim={createAnim}
           />
         </KeyboardAvoidingView>
@@ -668,6 +763,37 @@ const styles = StyleSheet.create({
     margin: 0,
     textAlignVertical: 'center',
     includeFontPadding: false,
+  },
+  deleteSection: {
+    marginTop: 18,
+    marginBottom: 10,
+  },
+  deleteCardBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: '#FECDD3',
+    paddingVertical: 13,
+    borderRadius: 18,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#EF4444',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  deleteCardBtnText: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 13,
+    color: '#EF4444',
   },
 });
 

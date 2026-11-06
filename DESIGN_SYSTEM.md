@@ -232,12 +232,25 @@ Primary buttons follow full-pill geometry (`borderRadius: 28`) and tactile debou
 - **Social Buttons**:
   - `google`: `backgroundColor: '#EEEEED'`, text `#000000` with official multi-color SVG Google logo.
   - `apple`: `backgroundColor: '#000000'`, text `#FFFFFF` with official Apple logo.
-- **Sticky Bottom Action Dock Buttons (`SubscriptionScreen`, `ProfileScreen`)**:
+- **Sticky Bottom Action Dock Buttons (`src/Common/StickyBottomButton.tsx`)**:
+  - Unified component implemented in `src/Common/StickyBottomButton.tsx` and used universally across `ProfileScreen`, `HabitDetailsScreen`, `SubscriptionScreen`, and `LanguageScreen`.
   - Dock: `paddingHorizontal: 20`, `paddingTop: 12`, `paddingBottom: Math.max(insets.bottom, 16)`, `borderTopWidth: 1`, `shadowOffset: { width: 0, height: -4 }`, `shadowRadius: 10`, `elevation: 10`, `zIndex: 20`.
   - Button: full-pill geometry (`borderRadius: 28`), standardized vertical padding rule (`paddingVertical: 15` without fixed height), `alignItems: 'center'`, `justifyContent: 'center'`, `shadowOffset: { width: 0, height: 4 }`, `shadowOpacity: 0.35`, `shadowRadius: 8`, `elevation: 4`.
   - Content: Row with `gap: 8`, icon `size={18}` / `strokeWidth={2.4}`, `fontFamily: Fonts.poppins.bold`, `fontSize: 15`, `letterSpacing: 0.2`, and centered `ActivityIndicator` on loading.
 
-#### 4.2.1 Section Header Action & Navigation Buttons (`src/Common/HeaderActionButton.tsx`)
+#### 4.2.1 Card-Outline Destructive Button (Detail Screens Standard)
+
+The universal destructive action button standard across `TaskDetailsScreen`, `ReminderDetailsScreen`, and `HabitDetailsScreen`:
+
+- **Surface**: Light mode `#FFFFFF` (elevated clean card); dark mode `#1E2228` (Nero slate dark).
+- **Border**: `borderWidth: 1.5`, light `#FECDD3`, dark `#5C2227`.
+- **Geometry**: `borderRadius: 18`, `paddingVertical: 13`.
+- **Icon & Text**: Lucide `Trash2` `size: 16, strokeWidth: 2.2`, `fontFamily: Fonts.poppins.semiBold`, `fontSize: 13`, `#EF4444`.
+- **Drop Shadow**: iOS `shadowColor: '#EF4444'`, `shadowOffset: { width: 0, height: 2 }`, `shadowOpacity: 0.08`, `shadowRadius: 6`, Android `elevation: 2`.
+- **Wrapper**: `<View style={styles.deleteSection}>` with `marginTop: 4, marginBottom: 16`.
+- **Touch Feedback**: `activeOpacity: 0.85`.
+
+#### 4.2.2 Section Header Action & Navigation Buttons (`src/Common/HeaderActionButton.tsx`)
 
 Used across screens wherever a section header places its title on the left and a CTA or navigation action button on the right (e.g. `Add Category` in `AddTaskModal` / `AddReminderModal`, `Voice Studio` and `Configure` in `SettingsScreen`):
 
@@ -249,6 +262,20 @@ Used across screens wherever a section header places its title on the left and a
   - **Directional Icon Flow**:
     - `iconPosition: 'left'` (default) for creation/action triggers (e.g. `+ Add Category`, `🎚️ Configure`).
     - `iconPosition: 'right'` for forward drill-down sub-screen navigations (e.g. `Voice Studio >`).
+
+#### 4.2.2 3D Tactile Swipe Action Duo (`HabitItemCard.tsx`)
+
+Used for revealed swipe-behind actions (Details and Edit) in habit cards:
+
+- **Surface & Geometry**: `backgroundColor: Colors.NeroBlack` (`#1C1D22`), squircle `borderRadius: 18`, twin dimensions `width: 60`, `height: 56`.
+- **Specular Top Light Rim**: `borderTopWidth: 1.8`, `borderTopColor: 'rgba(255, 255, 255, 0.45)'` for ambient top light bounce.
+- **Lateral Rims & 3D Extruded Bevel**: `borderLeftColor: 'rgba(255, 255, 255, 0.14)'`, `borderRightColor: 'rgba(255, 255, 255, 0.14)'`, `borderBottomWidth: 3.5`, `borderBottomColor: '#0A0B0E'`.
+- **Colored Ambient Glow Shadows**:
+  - `Details`: Warm amber fire glow (`shadowColor: '#FF9800'`, `shadowOffset: { width: 0, height: 4 }`, `shadowOpacity: 0.38`, `shadowRadius: 7`, `elevation: 6`).
+  - `Edit`: Radiant imperial gold glow (`shadowColor: '#F5C518'`, `shadowOffset: { width: 0, height: 4 }`, `shadowOpacity: 0.38`, `shadowRadius: 7`, `elevation: 6`).
+- **Luminous Jewel Icon Auras**: `width: 28, height: 28, borderRadius: 14`, `borderWidth: 1.2`, multi-tint backdrop (`0.22` opacity) and glowing border (`0.48` opacity) housing icons with `strokeWidth: 2.6`.
+- **Typographic Stamping**: `fontFamily: Fonts.poppins.bold`, `fontSize: 9.5`, warm ivory `#FFFBF0`, uppercase `'DETAILS'` & `'EDIT'` with letter spacing `0.75px`.
+- **Micro-Spring Tactile Response**: Spring scale compression to `0.92` on press in, rebounding to `1.0` with `tension: 250, friction: 8`.
 
 ---
 
@@ -343,6 +370,11 @@ const styles = StyleSheet.create({
 4. **Unified Outer Screen Gutter**: Positioned with `paddingHorizontal: 10` on parent wrapper (`bentoCardWrapper` or `topSectionWrapper`) for symmetrical 10px screen edge spacing across all tabs.
 5. **Two-Layer Architecture**: The outer `cardShadowWrapper` handles shadow and elevation (without `overflow: 'hidden'`); the inner `card` handles `overflow: 'hidden'`, background SVGs, and the `4px` border.
 6. **Unique Bordered Percentage Badge & Frosted Glass Pills**: Progress is cleanly tracked via the center linear bar indicator, while the percentage metric is housed in a unique squircle frame with dual-layer specular gold borders (`TaskPercentBadge`), paired with frosted glass stat capsules (`glassStatPill` with glowing dots and high-contrast typography).
+7. **Weekly Momentum Illuminated Streak Flow (`HabitConsistencyBento.tsx`)**: Replaces generic circular checklist checkmarks with a continuous 7-day streak pipeline:
+   - **Filled Days**: Fiery amber/orange gradient flame (`#FFA726` / `#FF9800`) inside a glowing amber-bordered disc (`rgba(255, 152, 0, 0.14)` fill, `#FF9800` shadow).
+   - **Unfilled Days**: Clean outline flame (`rgba(255, 255, 255, 0.28)`) inside a deep slate translucent disc.
+   - **Today's Focus Node**: Active amber specular border (`#FFA726`, `borderWidth: 1.6`) with elevated glow shadow; automatically illuminates to filled state upon checking in today's rituals.
+   - **Illuminated Flow Pipeline Rail**: Continuous horizontal connector rail (`height: ResponsivePixels.size2`) bridging the 7 days; segments between consecutive completed days ignite in radiant `#FF9800` amber gold, visualizing unbroken streak flow.
 
 ---
 
@@ -398,7 +430,7 @@ Used for list item cards across `TasksScreen` (`TaskCardItem.tsx`), `RemindersSc
     - **Evening**: Orange 3D Badge (`variant: 'orange'`), `#FFF2E6` time pill (`#D95D0F`), `Moon` icon (`#D95D0F` on `#FFF2E6` circular container).
   - **No Strikethrough Typography**: Titles remain 100% visible, bold, and readable without line-through decoration when marked complete (`color: '#7E838F'`).
   - **Floating Circular Checkbox**: Positioned in the top-right cutout notch (26×26, r=13), with edit pencil button located in `topRowRightWithCutout`.
-  - **7-Day Mini Consistency Dots**: Past completed days are filled with category accent (`#8383D6`); current day (7th dot) displays an outlined waiting ring when active and a filled accent dot upon completion.
+  - **7-Day Consistency Streak Flow**: Replaces legacy circular dots with a 7-day streak pipeline of tactile Lucide `<Flame />` icons; completed streak days illuminate in Universal Fiery Amber (`#FF9800` fill, `#FFA726`/`#E65100` rim) with spring bounce micro-animation, today's pending state shows an active amber focus outline (`#FF9800`), and incomplete/missed days display a subtle muted outline (`#C8C4B7`).
   - **Horizontal Card Swipe Interaction (Habits Flow)**:
     - Native `PanResponder` driven by `useNativeDriver: true` spring physics (`translateX` translation down to `-138px`).
     - Drag threshold logic (`Math.abs(dx) > 10 && Math.abs(dx) > Math.abs(dy) * 1.5`) preserves buttery vertical scrolling without gesture collision.

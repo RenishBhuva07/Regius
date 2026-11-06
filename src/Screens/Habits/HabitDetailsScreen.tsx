@@ -13,7 +13,6 @@ import {
   ScrollView,
   Platform,
   Animated,
-  Dimensions,
   Alert,
   Vibration,
 } from 'react-native';
@@ -33,6 +32,7 @@ import {
   Calendar,
   Quote,
   Zap,
+  RotateCw,
 } from 'lucide-react-native';
 import Svg, {
   Rect,
@@ -59,12 +59,14 @@ import { useScrollReactiveHeader } from '../../Common/useScrollReactiveHeader';
 import { Badge, BadgeVariant } from '../../Common/Badge';
 import { HeaderActionButton } from '../../Common/HeaderActionButton';
 import { StickyActionDock } from '../../Common/StickyActionDock';
-import CustomButton from '../../Common/CustomButton';
+import { StickyBottomButton } from '../../Common/StickyBottomButton';
 import AddHabitModal from '../../Components/AddHabitModal';
 import { KokoroTTSService } from '../../Services/Kokoro/KokoroTTSService';
 import { AudioPlayerService } from '../../Services/AudioPlayerService';
+import { HabitDetailsBackgroundSvg } from './Components/HabitDetailsBackgroundSvg';
+import { HabitVocalMotivationCard } from './Components/HabitVocalMotivationCard';
+import { HabitPhilosophyKeepsakeCard } from './Components/HabitPhilosophyKeepsakeCard';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 export interface HabitDetailsScreenRouteParams {
@@ -314,9 +316,17 @@ export const HabitDetailsScreen: React.FC = () => {
   });
   const scaleAnim = useRef(new Animated.Value(1)).current;
 
-  // Cleanup audio playback on screen unmount
+  // Audio session race condition and cleanup guards
+  const sessionIdRef = useRef<number>(0);
+  const playbackUnsubRef = useRef<(() => void) | null>(null);
+
   useEffect(() => {
     return () => {
+      sessionIdRef.current += 1;
+      if (playbackUnsubRef.current) {
+        playbackUnsubRef.current();
+        playbackUnsubRef.current = null;
+      }
       KokoroTTSService.stop().catch(() => {});
       AudioPlayerService.stop().catch(() => {});
     };
@@ -325,7 +335,7 @@ export const HabitDetailsScreen: React.FC = () => {
   // Category trios & harmonic tokens conforming to DESIGN_SYSTEM.md §2.3
   const categoryTheme = useMemo(() => {
     const baseTheme = {
-      label: 'MINDFUL',
+      label: 'MINDFUL HABITS',
       badgeVariant: 'purple' as BadgeVariant,
       accent: Colors.LavenderPurple,
       bgTint: '#EFF2FE',
@@ -339,7 +349,7 @@ export const HabitDetailsScreen: React.FC = () => {
 
     if (habit?.category === 'morning') {
       return {
-        label: 'MORNING',
+        label: 'MORNING RITUAL',
         badgeVariant: 'yellow' as BadgeVariant,
         accent: '#F5C518',
         bgTint: '#FFF8D0',
@@ -353,7 +363,7 @@ export const HabitDetailsScreen: React.FC = () => {
     }
     if (habit?.category === 'evening') {
       return {
-        label: 'EVENING',
+        label: 'EVENING RITUAL',
         badgeVariant: 'orange' as BadgeVariant,
         accent: '#EA580C',
         bgTint: '#FFF2E6',
@@ -392,7 +402,7 @@ export const HabitDetailsScreen: React.FC = () => {
     if (updated) {
       Toast.show({
         type: 'success',
-        text1: updated.completed ? 'Ritual Checked In! 🔥' : 'Habit Reset',
+        text1: updated.completed ? 'Ritual Checked In!' : 'Habit Reset',
         text2: updated.completed
           ? `Momentum active! Current streak: ${updated.streak} days`
           : 'Status marked incomplete for today.',
@@ -405,21 +415,47 @@ export const HabitDetailsScreen: React.FC = () => {
     if (!habit) return;
     Vibration.vibrate(25);
 
+    sessionIdRef.current += 1;
+    const currentSession = sessionIdRef.current;
+
+    if (playbackUnsubRef.current) {
+      playbackUnsubRef.current();
+      playbackUnsubRef.current = null;
+    }
+
     if (isPlayingMotivation) {
       await KokoroTTSService.stop();
       await AudioPlayerService.stop();
       setIsPlayingMotivation(false);
-    } else {
-      setIsPlayingMotivation(true);
-      const spokenText = `Regius will chime at ${habit.timeOfDay} to ignite your ${habit.title} ritual.`;
-      const unsub = AudioPlayerService.onPlaybackFinished(() => {
-        setIsPlayingMotivation(false);
-        unsub();
-      });
+      return;
+    }
 
-      try {
-        await KokoroTTSService.speak(spokenText);
-      } catch {
+    setIsPlayingMotivation(true);
+    const cat = (habit.category || '').toLowerCase();
+    let spokenText = `Regius will chime at ${habit.timeOfDay} to ignite your ${habit.title} ritual.`;
+    if (cat === 'morning') {
+      spokenText = `Dawn activation secured. Sia will chime at ${habit.timeOfDay} to ignite your ${habit.title} ritual, anchoring dopamine focus for peak daily execution.`;
+    } else if (cat === 'evening') {
+      spokenText = `Twilight reflection active. Sia will nudge your ${habit.title} ritual at ${habit.timeOfDay}, clearing cognitive clutter to pre-align tomorrow’s victories.`;
+    } else {
+      spokenText = `Mindful stoic alignment. Sia channels undivided presence at ${habit.timeOfDay} for your ${habit.title} routine, safeguarding mental equilibrium.`;
+    }
+
+    const unsub = AudioPlayerService.onPlaybackFinished(() => {
+      if (sessionIdRef.current === currentSession) {
+        setIsPlayingMotivation(false);
+      }
+      if (playbackUnsubRef.current) {
+        playbackUnsubRef.current();
+        playbackUnsubRef.current = null;
+      }
+    });
+    playbackUnsubRef.current = unsub;
+
+    try {
+      await KokoroTTSService.speak(spokenText);
+    } catch {
+      if (sessionIdRef.current === currentSession) {
         setIsPlayingMotivation(false);
       }
     }
@@ -497,10 +533,13 @@ export const HabitDetailsScreen: React.FC = () => {
 
   return (
     <View style={[styles.container, isDarkMode && styles.containerDark]}>
+      {/* Luxury Ambient Background Svg Canvas */}
+      <HabitDetailsBackgroundSvg accentColor={categoryTheme.accent} />
+
       {/* Scroll-Reactive Luxury SubScreenHeader */}
       <SubScreenHeader
         title="Habit Details"
-        subtitle={categoryTheme.sublabel}
+        subtitle={categoryTheme.label}
         scrollY={scrollY}
         isScrolled={isScrolled}
         onPressBack={() => navigation.goBack()}
@@ -528,7 +567,7 @@ export const HabitDetailsScreen: React.FC = () => {
           {
             paddingTop:
               insets.top + SUB_SCREEN_HEADER_HEIGHT + ResponsivePixels.size12,
-            paddingBottom: insets.bottom + ResponsivePixels.size75,
+            paddingBottom: insets.bottom + ResponsivePixels.size85,
           },
         ]}
         showsVerticalScrollIndicator={false}
@@ -567,7 +606,7 @@ export const HabitDetailsScreen: React.FC = () => {
               </View>
 
               {/* Habit Editorial Title */}
-              <Text style={styles.bentoTitle} numberOfLines={2}>
+              <Text style={styles.bentoTitle} numberOfLines={3}>
                 {habit.title}
               </Text>
 
@@ -940,12 +979,12 @@ export const HabitDetailsScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* Ritual Schedule & Protocol */}
+        {/* Ritual Schedule & Protocol with Depth Inside Box Flow */}
         <View style={styles.sectionWrapper}>
           <View style={styles.sectionHeaderRow}>
             <View style={styles.sectionHeaderLeft}>
               <Clock
-                size={ResponsivePixels.size16}
+                size={ResponsivePixels.size15}
                 color={isDarkMode ? '#A3A8B1' : '#7A766E'}
                 strokeWidth={2.2}
               />
@@ -958,30 +997,47 @@ export const HabitDetailsScreen: React.FC = () => {
                 Ritual Protocol
               </Text>
             </View>
+            <View style={styles.sectionHeaderCapsule}>
+              <Text style={styles.sectionHeaderCapsuleText}>
+                CIRCADIAN CADENCE
+              </Text>
+            </View>
           </View>
 
-          <View
-            style={[styles.tactileCard, isDarkMode && styles.tactileCardDark]}
-          >
-            {/* Preferred Circadian Window */}
-            <View style={styles.protocolRow}>
+          {/* 3 Independent Inset Depth Boxes following "Depth Inside Box Flow" */}
+          <View style={styles.protocolDepthContainer}>
+            {/* Box 1: Preferred Schedule */}
+            <View
+              style={[
+                styles.protocolDepthBox,
+                isDarkMode && styles.protocolDepthBoxDark,
+              ]}
+            >
               <View
                 style={[
-                  styles.protocolIconAura,
-                  { backgroundColor: categoryTheme.bgTint },
-                  isDarkMode && styles.protocolIconAuraDark,
+                  styles.protocolIconAura3D,
+                  {
+                    backgroundColor: categoryTheme.bgTint,
+                    borderColor: categoryTheme.borderColor,
+                  },
+                  isDarkMode && styles.protocolIconAura3DDark,
                 ]}
               >
                 <Clock
                   size={ResponsivePixels.size18}
                   color={categoryTheme.iconColor}
-                  strokeWidth={2.2}
+                  strokeWidth={2.4}
                 />
               </View>
-              <View style={styles.protocolInfo}>
-                <Text style={styles.protocolLabel}>Preferred Schedule</Text>
+              <View style={styles.protocolDepthInfo}>
+                <Text style={styles.protocolMicroLabel}>
+                  PREFERRED TIME WINDOW
+                </Text>
                 <Text
-                  style={[styles.protocolValue, isDarkMode && styles.textWhite]}
+                  style={[
+                    styles.protocolBoldValue,
+                    isDarkMode && styles.textWhite,
+                  ]}
                 >
                   {habit.timeOfDay}
                 </Text>
@@ -993,32 +1049,35 @@ export const HabitDetailsScreen: React.FC = () => {
               />
             </View>
 
+            {/* Box 2: Frequency & Recurrence Cadence */}
             <View
               style={[
-                styles.cardDivider,
-                isDarkMode && styles.matrixDividerDark,
+                styles.protocolDepthBox,
+                isDarkMode && styles.protocolDepthBoxDark,
               ]}
-            />
-
-            {/* Recurrence Cadence */}
-            <View style={styles.protocolRow}>
+            >
               <View
                 style={[
-                  styles.protocolIconAura,
-                  { backgroundColor: '#EFF2FE' },
-                  isDarkMode && styles.protocolIconAuraDark,
+                  styles.protocolIconAura3D,
+                  { backgroundColor: '#EFF2FE', borderColor: '#D8DBFF' },
+                  isDarkMode && styles.protocolIconAura3DDark,
                 ]}
               >
                 <Repeat
                   size={ResponsivePixels.size18}
                   color={Colors.LavenderPurple}
-                  strokeWidth={2.2}
+                  strokeWidth={2.4}
                 />
               </View>
-              <View style={styles.protocolInfo}>
-                <Text style={styles.protocolLabel}>Frequency</Text>
+              <View style={styles.protocolDepthInfo}>
+                <Text style={styles.protocolMicroLabel}>
+                  CADENCE & RECURRENCE
+                </Text>
                 <Text
-                  style={[styles.protocolValue, isDarkMode && styles.textWhite]}
+                  style={[
+                    styles.protocolBoldValue,
+                    isDarkMode && styles.textWhite,
+                  ]}
                 >
                   {habit.frequency}
                 </Text>
@@ -1026,32 +1085,38 @@ export const HabitDetailsScreen: React.FC = () => {
               <Badge label="RECURRING" variant="purple" size="sm" />
             </View>
 
+            {/* Box 3: Ritual Focus Domain */}
             <View
               style={[
-                styles.cardDivider,
-                isDarkMode && styles.matrixDividerDark,
+                styles.protocolDepthBox,
+                isDarkMode && styles.protocolDepthBoxDark,
               ]}
-            />
-
-            {/* Category Focus Domain */}
-            <View style={styles.protocolRow}>
+            >
               <View
                 style={[
-                  styles.protocolIconAura,
-                  { backgroundColor: categoryTheme.bgTint },
-                  isDarkMode && styles.protocolIconAuraDark,
+                  styles.protocolIconAura3D,
+                  {
+                    backgroundColor: categoryTheme.bgTint,
+                    borderColor: categoryTheme.borderColor,
+                  },
+                  isDarkMode && styles.protocolIconAura3DDark,
                 ]}
               >
                 <IconComponent
                   size={ResponsivePixels.size18}
                   color={categoryTheme.iconColor}
-                  strokeWidth={2.2}
+                  strokeWidth={2.4}
                 />
               </View>
-              <View style={styles.protocolInfo}>
-                <Text style={styles.protocolLabel}>Ritual Domain</Text>
+              <View style={styles.protocolDepthInfo}>
+                <Text style={styles.protocolMicroLabel}>
+                  RITUAL FOCUS DOMAIN
+                </Text>
                 <Text
-                  style={[styles.protocolValue, isDarkMode && styles.textWhite]}
+                  style={[
+                    styles.protocolBoldValue,
+                    isDarkMode && styles.textWhite,
+                  ]}
                 >
                   {categoryTheme.label.charAt(0) +
                     categoryTheme.label.slice(1).toLowerCase()}{' '}
@@ -1063,12 +1128,12 @@ export const HabitDetailsScreen: React.FC = () => {
           </View>
         </View>
 
-        {/* Neural Voice Assistant Guidance */}
+        {/* Extraordinary Regius Vocal Motivation Surface */}
         <View style={styles.sectionWrapper}>
           <View style={styles.sectionHeaderRow}>
             <View style={styles.sectionHeaderLeft}>
               <Volume2
-                size={ResponsivePixels.size16}
+                size={ResponsivePixels.size15}
                 color={isDarkMode ? '#A3A8B1' : '#7A766E'}
                 strokeWidth={2.2}
               />
@@ -1081,139 +1146,98 @@ export const HabitDetailsScreen: React.FC = () => {
                 Regius Vocal Motivation
               </Text>
             </View>
-          </View>
-
-          <View
-            style={[
-              styles.voiceNudgeCard,
-              isDarkMode && styles.voiceNudgeCardDark,
-            ]}
-          >
-            <View style={styles.voiceHeaderRow}>
-              <View
-                style={[
-                  styles.voicePillTag,
-                  isDarkMode && styles.voicePillTagDark,
-                ]}
-              >
-                <Volume2
-                  size={ResponsivePixels.size12}
-                  color={Colors.LavenderPurple}
-                  strokeWidth={2.4}
-                />
-                <Text style={styles.voicePillText}>Sia Neural Nudge</Text>
-              </View>
-
-              <TouchableOpacity
-                activeOpacity={0.75}
-                onPress={handleToggleVocalMotivation}
-                style={[
-                  styles.voiceAudioBtn,
-                  isPlayingMotivation && styles.voiceAudioBtnPlaying,
-                ]}
-                accessibilityRole="button"
-                accessibilityLabel="Preview Sia vocal motivation"
-              >
-                {isPlayingMotivation ? (
-                  <>
-                    <VolumeX
-                      size={ResponsivePixels.size12}
-                      color="#FFFFFF"
-                      strokeWidth={2.4}
-                    />
-                    <Text style={styles.voiceAudioBtnTextActive}>STOP</Text>
-                  </>
-                ) : (
-                  <>
-                    <Volume2
-                      size={ResponsivePixels.size12}
-                      color={Colors.LavenderPurple}
-                      strokeWidth={2.4}
-                    />
-                    <Text style={styles.voiceAudioBtnText}>LISTEN</Text>
-                  </>
-                )}
-              </TouchableOpacity>
+            <View style={styles.sectionHeaderCapsule}>
+              <Text style={styles.sectionHeaderCapsuleText}>
+                SIA NEURAL AUDIO
+              </Text>
             </View>
-
-            <Text
-              style={[
-                styles.voiceQuoteText,
-                isDarkMode && styles.voiceQuoteTextDark,
-              ]}
-            >
-              “Regius will chime at {habit.timeOfDay} to ignite your{' '}
-              {habit.title.toLowerCase()} ritual.”
-            </Text>
           </View>
-        </View>
 
-        {/* Philosophy & Intention Quote */}
-        <View style={styles.sectionWrapper}>
-          <View
-            style={[
-              styles.philosophyCard,
-              isDarkMode && styles.philosophyCardDark,
-            ]}
-          >
-            <Quote
-              size={ResponsivePixels.size20}
-              color={categoryTheme.accent}
-              strokeWidth={2}
-              style={styles.quoteIcon}
-            />
-            <Text
-              style={[
-                styles.philosophyQuote,
-                isDarkMode && styles.philosophyQuoteDark,
-              ]}
-            >
-              {categoryTheme.quote}
-            </Text>
-            <Text style={styles.philosophySignoff}>
-              Mindful Ritual Architecture · Regius Habit Flow
-            </Text>
-          </View>
-        </View>
-
-        {/* Destructive Delete Action: Conforming to Danger Tokens */}
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={handleDelete}
-          style={[
-            styles.deleteActionBtn,
-            isDarkMode && styles.deleteActionBtnDark,
-          ]}
-          accessibilityRole="button"
-          accessibilityLabel="Delete habit ritual"
-        >
-          <Trash2
-            size={ResponsivePixels.size15}
-            color="#D92A0F"
-            strokeWidth={2.2}
+          <HabitVocalMotivationCard
+            habitTitle={habit.title}
+            timeOfDay={habit.timeOfDay}
+            category={habit.category}
+            accentColor={categoryTheme.accent}
+            isPlaying={isPlayingMotivation}
+            onTogglePlay={handleToggleVocalMotivation}
           />
-          <Text style={styles.deleteActionText}>Delete Habit Ritual</Text>
-        </TouchableOpacity>
+        </View>
+
+        {/* Mindful Philosophy Keepsake Card */}
+        <View style={styles.sectionWrapper}>
+          <View style={styles.sectionHeaderRow}>
+            <View style={styles.sectionHeaderLeft}>
+              <Quote
+                size={ResponsivePixels.size15}
+                color={isDarkMode ? '#A3A8B1' : '#7A766E'}
+                strokeWidth={2.2}
+              />
+              <Text
+                style={[
+                  styles.sectionHeaderTitle,
+                  isDarkMode && styles.textWhite,
+                ]}
+              >
+                Philosophy & Intention
+              </Text>
+            </View>
+            <View style={styles.sectionHeaderCapsule}>
+              <Text style={styles.sectionHeaderCapsuleText}>DAILY CODEX</Text>
+            </View>
+          </View>
+
+          <HabitPhilosophyKeepsakeCard
+            category={habit.category}
+            accentColor={categoryTheme.accent}
+          />
+        </View>
+
+        {/* Destructive Delete Button */}
+        <View style={styles.deleteSection}>
+          <TouchableOpacity
+            activeOpacity={0.85}
+            onPress={handleDelete}
+            style={[styles.deleteBtn, isDarkMode && styles.deleteBtnDark]}
+            accessibilityRole="button"
+            accessibilityLabel={`Delete ${habit.title}`}
+          >
+            <Trash2
+              size={ResponsivePixels.size16}
+              color="#EF4444"
+              strokeWidth={2.2}
+            />
+            <Text style={styles.deleteBtnText}>Delete Habit Ritual</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
 
-      {/* Sticky Action Dock with Primary Luxury Button */}
+      {/* Sticky Bottom Action Dock with Standardized StickyBottomButton */}
       <StickyActionDock>
-        <Animated.View
-          style={[styles.dockRow, { transform: [{ scale: scaleAnim }] }]}
-        >
-          <CustomButton
-            title={isCompleted ? 'Completed Today ✓' : 'Check In For Today 🔥'}
-            onPress={handleToggle}
-            variant="dark"
-            style={
-              isCompleted
-                ? styles.dockPrimaryBtnCompleted
-                : styles.dockPrimaryBtnPending
-            }
-            buttonTextStyle={styles.dockButtonText}
-            disableAllCaps
-          />
-        </Animated.View>
+        <StickyBottomButton
+          title={isCompleted ? 'Ritual Checked In' : 'Check In For Today'}
+          onPress={handleToggle}
+          variant={isCompleted ? 'dark' : 'primary'}
+          icon={
+            isCompleted ? (
+              <RotateCw
+                size={ResponsivePixels.size18}
+                color="#FFFFFF"
+                strokeWidth={2.4}
+              />
+            ) : (
+              <Flame
+                size={ResponsivePixels.size18}
+                color="#FFFFFF"
+                strokeWidth={2.4}
+              />
+            )
+          }
+          accessibilityLabel={
+            isCompleted
+              ? 'Reset habit ritual status'
+              : 'Check in habit ritual for today'
+          }
+        />
       </StickyActionDock>
 
       {/* Edit Habit Modal */}
@@ -1253,7 +1277,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: ResponsivePixels.size10,
+    paddingHorizontal: ResponsivePixels.size16,
+    gap: ResponsivePixels.size16,
   },
   headerRightGroup: {
     flexDirection: 'row',
@@ -1264,32 +1289,33 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    padding: ResponsivePixels.size20,
-    gap: ResponsivePixels.size16,
+    gap: ResponsivePixels.size12,
   },
   notFoundText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: ResponsivePixels.size16,
-    color: '#7A766E',
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: ResponsivePixels.size15,
+    color: '#363944',
   },
   notFoundTextDark: {
-    color: '#A3A8B1',
+    color: '#D1D5DB',
   },
   backBtnFallback: {
-    paddingHorizontal: ResponsivePixels.size20,
-    paddingVertical: ResponsivePixels.size10,
-    backgroundColor: Colors.MidnightCharcoal,
-    borderRadius: ResponsivePixels.size20,
+    paddingHorizontal: ResponsivePixels.size16,
+    paddingVertical: ResponsivePixels.size8,
+    backgroundColor: Colors.NeroBlack,
+    borderRadius: ResponsivePixels.size14,
   },
   backBtnFallbackText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: ResponsivePixels.size14,
+    fontFamily: Fonts.poppins.medium,
+    fontSize: ResponsivePixels.size13,
     color: '#FFFFFF',
   },
 
   // 2-Layer Hero Bento Card Architecture (DESIGN_SYSTEM.md § 4.3.1)
   cardShadowWrapper: {
     width: '100%',
+    borderRadius: ResponsivePixels.size24,
+    backgroundColor: Colors.NeroBlack,
     ...Platform.select({
       ios: {
         shadowColor: '#000000',
@@ -1301,21 +1327,18 @@ const styles = StyleSheet.create({
         elevation: 8,
       },
     }),
-    marginBottom: ResponsivePixels.size14,
   },
   card: {
     position: 'relative',
     backgroundColor: Colors.NeroBlack,
-    borderRadius: ResponsivePixels.size20,
-    borderWidth: 3.5,
+    borderRadius: ResponsivePixels.size24,
+    borderWidth: 4,
     borderColor: 'rgba(255, 255, 255, 0.9)',
     overflow: 'hidden',
   },
   bentoContent: {
-    paddingHorizontal: ResponsivePixels.size14,
-    paddingTop: ResponsivePixels.size14,
-    paddingBottom: ResponsivePixels.size14,
-    gap: ResponsivePixels.size10,
+    padding: ResponsivePixels.size20,
+    gap: ResponsivePixels.size12,
   },
   bentoTopRow: {
     flexDirection: 'row',
@@ -1339,12 +1362,10 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3,
   },
   bentoTitle: {
-    fontFamily: Fonts.ranade.bold,
-    fontSize: ResponsivePixels.size17,
-    lineHeight: ResponsivePixels.size22,
-    color: Colors.DefaultWhite,
-    letterSpacing: -0.3,
-    marginTop: ResponsivePixels.size2,
+    fontFamily: Fonts.poppins.bold,
+    fontSize: ResponsivePixels.size22,
+    color: '#FFFFFF',
+    lineHeight: ResponsivePixels.size28,
   },
   streakShowcaseRow: {
     flexDirection: 'row',
@@ -1428,28 +1449,6 @@ const styles = StyleSheet.create({
     fontSize: ResponsivePixels.size9,
     color: Colors.LavenderPurple,
     letterSpacing: 0.5,
-  },
-  tactileCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: ResponsivePixels.size18,
-    borderWidth: 1.5,
-    borderColor: '#ECE7DC',
-    padding: ResponsivePixels.size14,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#1B1C19',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.06,
-        shadowRadius: 8,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-  tactileCardDark: {
-    backgroundColor: '#1E2228',
-    borderColor: '#2C3035',
   },
 
   // Consistency Matrix - Cupboard Architecture
@@ -1760,202 +1759,117 @@ const styles = StyleSheet.create({
     backgroundColor: '#2C3035',
   },
 
-  // Protocol Rows
-  protocolRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: ResponsivePixels.size3,
+  // Protocol Depth Architecture - Inset Box Flow
+  protocolDepthContainer: {
     gap: ResponsivePixels.size10,
   },
-  protocolIconAura: {
-    width: ResponsivePixels.size32,
-    height: ResponsivePixels.size32,
-    borderRadius: ResponsivePixels.size16,
+  protocolDepthBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FAF9F6',
+    borderRadius: ResponsivePixels.size18,
+    borderWidth: 1.2,
+    borderTopWidth: 1.5,
+    borderTopColor: '#FFFFFF',
+    borderBottomWidth: 3.5,
+    borderBottomColor: '#D8D1C2',
+    borderColor: '#ECE7DC',
+    paddingVertical: ResponsivePixels.size12,
+    paddingHorizontal: ResponsivePixels.size14,
+    gap: ResponsivePixels.size12,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#1B1C19',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.08,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  protocolDepthBoxDark: {
+    backgroundColor: '#161922',
+    borderTopColor: 'rgba(255, 255, 255, 0.12)',
+    borderBottomColor: '#0E1016',
+    borderColor: '#262A36',
+  },
+  protocolIconAura3D: {
+    width: ResponsivePixels.size38,
+    height: ResponsivePixels.size38,
+    borderRadius: ResponsivePixels.size19,
+    borderWidth: 1.2,
     alignItems: 'center',
     justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 3,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
-  protocolIconAuraDark: {
+  protocolIconAura3DDark: {
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: 'rgba(255, 255, 255, 0.15)',
   },
-  protocolInfo: {
+  protocolDepthInfo: {
     flex: 1,
+    gap: ResponsivePixels.size2,
   },
-  protocolLabel: {
-    fontFamily: Fonts.poppins.regular,
-    fontSize: ResponsivePixels.size10,
+  protocolMicroLabel: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: ResponsivePixels.size9,
     color: '#8E95A5',
+    letterSpacing: 0.6,
   },
-  protocolValue: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: ResponsivePixels.size12,
+  protocolBoldValue: {
+    fontFamily: Fonts.ranade.bold,
+    fontSize: ResponsivePixels.size15,
     color: '#1B1C19',
-    marginTop: ResponsivePixels.size1,
-  },
-  cardDivider: {
-    height: 1,
-    backgroundColor: '#F3EFE6',
-    marginVertical: ResponsivePixels.size8,
-  },
-
-  // Neural Voice Card
-  voiceNudgeCard: {
-    backgroundColor: '#F8F7FF',
-    borderRadius: ResponsivePixels.size16,
-    borderWidth: 1.5,
-    borderColor: '#E0DEFA',
-    padding: ResponsivePixels.size12,
-    gap: ResponsivePixels.size8,
-  },
-  voiceNudgeCardDark: {
-    backgroundColor: '#1B1D28',
-    borderColor: '#2D3048',
-  },
-  voiceHeaderRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  voicePillTag: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: ResponsivePixels.size5,
-    backgroundColor: '#EFF2FE',
-    paddingHorizontal: ResponsivePixels.size8,
-    paddingVertical: ResponsivePixels.size3,
-    borderRadius: ResponsivePixels.size10,
-  },
-  voicePillTagDark: {
-    backgroundColor: 'rgba(131, 131, 214, 0.16)',
-  },
-  voicePillText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: ResponsivePixels.size10,
-    color: Colors.LavenderPurple,
-  },
-  voiceAudioBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: ResponsivePixels.size4,
-    backgroundColor: '#EFF2FE',
-    paddingHorizontal: ResponsivePixels.size8,
-    paddingVertical: ResponsivePixels.size4,
-    borderRadius: ResponsivePixels.size12,
-    borderWidth: 1,
-    borderColor: '#D8DBFF',
-  },
-  voiceAudioBtnPlaying: {
-    backgroundColor: '#FF3B30',
-    borderColor: '#FF3B30',
-  },
-  voiceAudioBtnText: {
-    fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size9,
-    color: Colors.LavenderPurple,
-    letterSpacing: 0.5,
-  },
-  voiceAudioBtnTextActive: {
-    fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size9,
-    color: '#FFFFFF',
-    letterSpacing: 0.5,
-  },
-  voiceQuoteText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: ResponsivePixels.size11,
-    lineHeight: ResponsivePixels.size16,
-    color: '#3F454D',
-    fontStyle: 'italic',
-  },
-  voiceQuoteTextDark: {
-    color: '#A3A8B1',
-  },
-
-  // Philosophy Card
-  philosophyCard: {
-    backgroundColor: '#FAF8F3',
-    borderRadius: ResponsivePixels.size16,
-    borderWidth: 1.5,
-    borderColor: '#ECE7DC',
-    padding: ResponsivePixels.size14,
-    alignItems: 'center',
-    gap: ResponsivePixels.size6,
-  },
-  philosophyCardDark: {
-    backgroundColor: '#181B21',
-    borderColor: '#2C3035',
-  },
-  quoteIcon: {
-    marginBottom: ResponsivePixels.size2,
-  },
-  philosophyQuote: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: ResponsivePixels.size12,
-    lineHeight: ResponsivePixels.size18,
-    color: '#55544E',
-    textAlign: 'center',
-    fontStyle: 'italic',
-  },
-  philosophyQuoteDark: {
-    color: '#A3A8B1',
-  },
-  philosophySignoff: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: ResponsivePixels.size9,
-    color: '#8E95A5',
-    letterSpacing: 0.4,
-    textTransform: 'uppercase',
-    marginTop: ResponsivePixels.size3,
+    letterSpacing: -0.2,
   },
 
   // Destructive Delete Button conforming to Danger Tokens
-  deleteActionBtn: {
+  deleteSection: {
+    marginTop: ResponsivePixels.size4,
+    marginBottom: ResponsivePixels.size16,
+  },
+  deleteBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: ResponsivePixels.size5,
-    paddingVertical: ResponsivePixels.size11,
-    backgroundColor: '#FEEFEF',
-    borderRadius: ResponsivePixels.size24,
-    borderWidth: 1.2,
-    borderColor: '#FED6D6',
-    marginTop: ResponsivePixels.size2,
-    marginBottom: ResponsivePixels.size8,
-  },
-  deleteActionBtnDark: {
-    backgroundColor: '#2A1616',
-    borderColor: '#4A2020',
-  },
-  deleteActionText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: ResponsivePixels.size12,
-    color: '#D92A0F',
-  },
-
-  // Sticky Action Dock
-  dockRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '100%',
-  },
-  dockPrimaryBtnPending: {
-    flex: 1,
-    backgroundColor: Colors.MidnightCharcoal,
-    borderRadius: ResponsivePixels.size24,
-    paddingVertical: ResponsivePixels.size11,
-    minHeight: ResponsivePixels.size44,
-  },
-  dockPrimaryBtnCompleted: {
-    flex: 1,
-    backgroundColor: Colors.MidnightCharcoal,
-    borderRadius: ResponsivePixels.size24,
+    gap: ResponsivePixels.size8,
+    backgroundColor: '#FFFFFF',
     borderWidth: 1.5,
-    borderColor: Colors.LavenderPurple,
-    paddingVertical: ResponsivePixels.size11,
-    minHeight: ResponsivePixels.size44,
+    borderColor: '#FECDD3',
+    paddingVertical: ResponsivePixels.size13,
+    borderRadius: ResponsivePixels.size18,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#EF4444',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
-  dockButtonText: {
+  deleteBtnDark: {
+    backgroundColor: '#1E2228',
+    borderColor: '#5C2227',
+  },
+  deleteBtnText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: ResponsivePixels.size13,
+    color: '#EF4444',
   },
 
   // Helper Utility

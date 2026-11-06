@@ -13,14 +13,12 @@ import {
   Switch,
   Keyboard,
   Pressable,
+  Alert,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import {
-  FileText,
-  Volume2,
-  Sparkles,
-} from 'lucide-react-native';
+import { FileText, Volume2, Sparkles, Trash2 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
+import { Task } from '../Context/TaskReminderContext';
 
 import { Fonts } from '../Theme/fonts';
 import { Colors } from '../Assets/StyleUtilities/Colors';
@@ -116,16 +114,36 @@ export interface AddTaskModalProps {
     subtasks?: { id: string; text: string; done: boolean }[];
     voiceNudge?: boolean;
   }) => void;
+  onUpdateTask?: (
+    id: string,
+    data: {
+      title: string;
+      note?: string;
+      category: string;
+      iconType: 'mail' | 'users';
+      priority: 'low' | 'medium' | 'high';
+      date: string;
+      time?: string;
+      subtasks?: { id: string; text: string; done: boolean }[];
+      voiceNudge?: boolean;
+    },
+  ) => void;
+  onDeleteTask?: (id: string) => void;
+  taskToEdit?: Task | null;
 }
 
 export const AddTaskModal: React.FC<AddTaskModalProps> = ({
   visible,
   onClose,
   onCreateTask,
+  onUpdateTask,
+  onDeleteTask,
+  taskToEdit,
 }) => {
   const insets = useSafeAreaInsets();
   const voiceContext = useOptionalVoiceWakeWord();
   const assistantName = voiceContext?.assistantName || 'Regius';
+  const isEditing = !!taskToEdit;
 
   // Form State
   const [taskTitle, setTaskTitle] = useState('');
@@ -224,9 +242,30 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
 
   useEffect(() => {
     if (visible) {
-      resetForm();
+      if (taskToEdit) {
+        setTaskTitle(taskToEdit.label);
+        setTaskNote(taskToEdit.note || '');
+        setSelectedCategory(taskToEdit.category || 'works');
+        setSelectedPriority(taskToEdit.priority || 'medium');
+        setSelectedDate(
+          taskToEdit.date ||
+            `Today, ${
+              MONTH_SHORT[new Date().getMonth()]
+            } ${new Date().getDate()}`,
+        );
+        setSelectedTime(taskToEdit.time || '10:00 AM');
+        setVoiceNudgeEnabled(taskToEdit.voiceNudge ?? true);
+        setSubtasks(
+          taskToEdit.subtasks ? taskToEdit.subtasks.map(s => ({ ...s })) : [],
+        );
+        setNewSubtaskInput('');
+        scrollY.setValue(0);
+        setIsScrolled(false);
+      } else {
+        resetForm();
+      }
     }
-  }, [visible]);
+  }, [visible, taskToEdit]);
 
   // Subtask Handlers
   const handleRemoveSubtask = (id: string) => {
@@ -326,15 +365,18 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
       Animated.spring(createAnim, {
         toValue: 1,
         friction: 4,
+        tension: 180,
         useNativeDriver: true,
       }),
     ]).start();
 
-    onCreateTask({
+    const taskPayload = {
       title: taskTitle.replace(/[\r\n]+/g, ' ').trim(),
       note: taskNote.trim() || undefined,
       category: selectedCategory,
-      iconType: selectedCategory === 'works' ? 'mail' : 'users',
+      iconType: (selectedCategory === 'works' ? 'mail' : 'users') as
+        | 'mail'
+        | 'users',
       priority: selectedPriority,
       date: selectedDate,
       time: selectedTime,
@@ -343,7 +385,39 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
           ? subtasks.map(s => ({ id: s.id, text: s.text, done: !!s.done }))
           : undefined,
       voiceNudge: voiceNudgeEnabled,
-    });
+    };
+
+    if (isEditing && onUpdateTask && taskToEdit) {
+      onUpdateTask(taskToEdit.id, taskPayload);
+      onClose();
+    } else {
+      onCreateTask(taskPayload);
+    }
+  };
+
+  const handleDelete = () => {
+    if (!taskToEdit || !onDeleteTask) return;
+
+    Alert.alert(
+      'Delete Task',
+      `Are you sure you want to delete "${taskToEdit.label}"?`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => {
+            onDeleteTask(taskToEdit.id);
+            Toast.show({
+              type: 'info',
+              text1: 'Task Deleted',
+              text2: 'Task removed from your objectives.',
+            });
+            onClose();
+          },
+        },
+      ],
+    );
   };
 
   const handleCreateCategory = (newCat: CustomCategoryCreated) => {
@@ -416,9 +490,13 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
               {/* Crest badge */}
               <View style={styles.flowHeaderBadge}>
                 <FlowBadgePatternSvg />
-                <Text style={styles.flowTitle}>Craft Your Task</Text>
+                <Text style={styles.flowTitle}>
+                  {isEditing ? 'Edit Your Task' : 'Craft Your Task'}
+                </Text>
                 <Text style={styles.flowSubtitle}>
-                  Daily Objectives & Focus
+                  {isEditing
+                    ? 'Refine Objectives & Parameters'
+                    : 'Daily Objectives & Focus'}
                 </Text>
               </View>
 
@@ -550,13 +628,29 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                 ios_backgroundColor="#E4E2DD"
               />
             </View>
+
+            {/* Delete Task Action (Only when editing) */}
+            {isEditing && onDeleteTask && (
+              <View style={styles.deleteSection}>
+                <TouchableOpacity
+                  activeOpacity={0.85}
+                  onPress={handleDelete}
+                  style={styles.deleteCardBtn}
+                  accessibilityRole="button"
+                  accessibilityLabel="Delete Task"
+                >
+                  <Trash2 size={16} color="#EF4444" strokeWidth={2.2} />
+                  <Text style={styles.deleteCardBtnText}>Delete Task</Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </Animated.ScrollView>
 
           {/* Common theme-styled bottom dock */}
           <ModalBottomBar
             onClose={onClose}
             onSubmit={handleSave}
-            submitText="Create Task"
+            submitText={isEditing ? 'Save Changes' : 'Create Task'}
             createAnim={createAnim}
           />
         </KeyboardAvoidingView>
@@ -790,6 +884,37 @@ const styles = StyleSheet.create({
     fontSize: 11.5,
     color: '#7E838F',
     marginTop: 2,
+  },
+  deleteSection: {
+    marginTop: 18,
+    marginBottom: 10,
+  },
+  deleteCardBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1.5,
+    borderColor: '#FECDD3',
+    paddingVertical: 13,
+    borderRadius: 18,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#EF4444',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  deleteCardBtnText: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: 13,
+    color: '#EF4444',
   },
 });
 

@@ -18,6 +18,8 @@ import { PrivacySecurityScreen } from '../Screens/PrivacySecurity';
 import { ThemeScreen } from '../Screens/Theme';
 import { SubscriptionScreen } from '../Screens/Subscription';
 import { HabitDetailsScreen } from '../Screens/Habits';
+import { TaskDetailsScreen } from '../Screens/Tasks';
+import { ReminderDetailsScreen } from '../Screens/Reminders';
 import { AuthContext } from '../Context/AuthContext';
 import { VoiceWakeWordProvider } from '../Context/VoiceWakeWordContext';
 
@@ -111,6 +113,16 @@ export default function AppNavigator() {
           <Stack.Screen
             name="HabitDetailsScreen"
             component={HabitDetailsScreen}
+            options={{ animation: 'slide_from_right' }}
+          />
+          <Stack.Screen
+            name="TaskDetailsScreen"
+            component={TaskDetailsScreen}
+            options={{ animation: 'slide_from_right' }}
+          />
+          <Stack.Screen
+            name="ReminderDetailsScreen"
+            component={ReminderDetailsScreen}
             options={{ animation: 'slide_from_right' }}
           />
           <Stack.Screen name="Dashboard" component={DashboardScreen} />

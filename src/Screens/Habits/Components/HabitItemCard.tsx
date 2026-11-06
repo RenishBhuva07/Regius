@@ -1,4 +1,4 @@
-import React, { useRef, useState, useCallback } from 'react';
+import React, { useRef, useState, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -29,6 +29,7 @@ import {
 } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge, BadgeVariant } from '../../../Common/Badge';
 import { StreakBadge } from '../../../Common/StreakBadge';
 import { getCutoutCardPath } from '../../../Common/CutoutCardSvg';
@@ -62,8 +63,41 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
 }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const translateX = useRef(new Animated.Value(0)).current;
+  const detailsScaleAnim = useRef(new Animated.Value(1)).current;
+  const editScaleAnim = useRef(new Animated.Value(1)).current;
+  const todayFlameScale = useRef(new Animated.Value(1)).current;
+  const isFirstRender = useRef(true);
   const currentX = useRef(0);
   const isOpenRef = useRef(false);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    if (habit.completed) {
+      todayFlameScale.setValue(0.45);
+      Animated.spring(todayFlameScale, {
+        toValue: 1,
+        tension: 320,
+        friction: 5,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      todayFlameScale.setValue(0.75);
+      Animated.spring(todayFlameScale, {
+        toValue: 1,
+        tension: 240,
+        friction: 7,
+        useNativeDriver: true,
+      }).start();
+    }
+  }, [habit.completed, todayFlameScale]);
+
+  const windowDaysCompleted = Math.min(
+    7,
+    habit.streak + (habit.completed && habit.streak === 0 ? 1 : 0),
+  );
 
   const ACTIONS_WIDTH = 138;
 
@@ -192,11 +226,47 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
     onDetails?.(habit);
   };
 
+  const handlePressInDetails = useCallback(() => {
+    Animated.spring(detailsScaleAnim, {
+      toValue: 0.92,
+      tension: 250,
+      friction: 8,
+      useNativeDriver: true,
+    }).start();
+  }, [detailsScaleAnim]);
+
+  const handlePressOutDetails = useCallback(() => {
+    Animated.spring(detailsScaleAnim, {
+      toValue: 1,
+      tension: 250,
+      friction: 8,
+      useNativeDriver: true,
+    }).start();
+  }, [detailsScaleAnim]);
+
   const handleEditPress = (e: any) => {
     e?.stopPropagation?.();
     closeSwipe();
     onEdit?.(habit);
   };
+
+  const handlePressInEdit = useCallback(() => {
+    Animated.spring(editScaleAnim, {
+      toValue: 0.92,
+      tension: 250,
+      friction: 8,
+      useNativeDriver: true,
+    }).start();
+  }, [editScaleAnim]);
+
+  const handlePressOutEdit = useCallback(() => {
+    Animated.spring(editScaleAnim, {
+      toValue: 1,
+      tension: 250,
+      friction: 8,
+      useNativeDriver: true,
+    }).start();
+  }, [editScaleAnim]);
 
   const actionsOpacity = translateX.interpolate({
     inputRange: [-ACTIONS_WIDTH, -25, 0],
@@ -267,33 +337,55 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
         pointerEvents="box-none"
       >
         {onDetails && (
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={handleDetailsPress}
-            style={styles.actionBtnDetails}
-            accessibilityRole="button"
-            accessibilityLabel={`View details for ${habit.title}`}
+          <Animated.View
+            style={[
+              styles.actionBtnAnimWrap,
+              {
+                transform: [{ scale: detailsScaleAnim }],
+              },
+            ]}
           >
-            <View style={styles.actionIconAuraDetails}>
-              <Flame size={14} color="#FF9800" strokeWidth={2.4} />
-            </View>
-            <Text style={styles.actionBtnText}>Details</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPressIn={handlePressInDetails}
+              onPressOut={handlePressOutDetails}
+              onPress={handleDetailsPress}
+              style={styles.actionBtnDetails}
+              accessibilityRole="button"
+              accessibilityLabel={`View details for ${habit.title}`}
+            >
+              <View style={styles.actionIconAuraDetails}>
+                <Flame size={14} color="#FF9800" strokeWidth={2.6} />
+              </View>
+              <Text style={styles.actionBtnText}>DETAILS</Text>
+            </TouchableOpacity>
+          </Animated.View>
         )}
 
         {onEdit && (
-          <TouchableOpacity
-            activeOpacity={0.8}
-            onPress={handleEditPress}
-            style={styles.actionBtnEdit}
-            accessibilityRole="button"
-            accessibilityLabel={`Edit ${habit.title}`}
+          <Animated.View
+            style={[
+              styles.actionBtnAnimWrap,
+              {
+                transform: [{ scale: editScaleAnim }],
+              },
+            ]}
           >
-            <View style={styles.actionIconAuraEdit}>
-              <Pencil size={13.5} color="#F5C518" strokeWidth={2.4} />
-            </View>
-            <Text style={styles.actionBtnText}>Edit</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPressIn={handlePressInEdit}
+              onPressOut={handlePressOutEdit}
+              onPress={handleEditPress}
+              style={styles.actionBtnEdit}
+              accessibilityRole="button"
+              accessibilityLabel={`Edit ${habit.title}`}
+            >
+              <View style={styles.actionIconAuraEdit}>
+                <Pencil size={13.5} color="#F5C518" strokeWidth={2.6} />
+              </View>
+              <Text style={styles.actionBtnText}>EDIT</Text>
+            </TouchableOpacity>
+          </Animated.View>
         )}
       </Animated.View>
 
@@ -496,34 +588,40 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
               </View>
             </View>
 
-            {/* 7-Day Mini Consistency Dots */}
-            <View style={styles.consistencyRow}>
+            {/* 7-Day Consistency Streak Flow with Dynamic Micro-Animation */}
+            <View
+              style={styles.consistencyRow}
+              accessible
+              accessibilityRole="text"
+              accessibilityLabel={`Consistency: ${windowDaysCompleted} of 7 days completed`}
+            >
               <Text style={styles.consistencyLabel}>Consistency</Text>
-              <View style={styles.dotsWrap}>
-                {[1, 2, 3, 4, 5, 6, 7].map((dot, idx) => {
-                  const isCurrent = idx === 6;
-                  const isDotFilled =
-                    habit.completed || (habit.streak > 0 && idx < 6);
+              <View style={styles.streakWrap}>
+                {[0, 1, 2, 3, 4, 5, 6].map(idx => {
+                  const isToday = idx === 6;
+                  const isFilled =
+                    idx >= 7 - windowDaysCompleted &&
+                    (idx < 6 ? true : habit.completed);
 
                   return (
-                    <View
-                      key={`dot-${habit.id}-${idx}`}
+                    <Animated.View
+                      key={`streak-flame-${habit.id}-${idx}`}
                       style={[
-                        styles.miniDot,
-                        isDotFilled && {
-                          backgroundColor: theme.accent,
-                          opacity: isCurrent && !habit.completed ? 0.4 : 0.85,
+                        styles.flameIconWrap,
+                        isToday && {
+                          transform: [{ scale: todayFlameScale }],
                         },
-                        isCurrent && [
-                          styles.miniDotCurrent,
-                          !habit.completed && {
-                            borderColor: theme.accent,
-                            borderWidth: 1.5,
-                            backgroundColor: 'transparent',
-                          },
-                        ],
                       ]}
-                    />
+                    >
+                      <Flame
+                        size={ResponsivePixels.size9}
+                        color={
+                          isFilled ? '#E65100' : isToday ? '#FF9800' : '#C8C4B7'
+                        }
+                        fill={isFilled ? '#FF9800' : 'none'}
+                        strokeWidth={isToday && !isFilled ? 1.5 : 1.2}
+                      />
+                    </Animated.View>
                   );
                 })}
               </View>
@@ -553,87 +651,91 @@ const styles = StyleSheet.create({
     paddingRight: 2,
     zIndex: 1,
   },
+  actionBtnAnimWrap: {
+    width: 60,
+    height: 56,
+  },
   actionBtnDetails: {
     width: 60,
-    height: '100%',
-    maxHeight: 56,
+    height: 56,
     backgroundColor: Colors.NeroBlack,
-    borderRadius: 16,
-    borderWidth: 1.5,
-    borderTopColor: '#4A4E5C',
-    borderLeftColor: '#363944',
-    borderRightColor: '#363944',
-    borderBottomWidth: 3,
-    borderBottomColor: '#090A0D',
+    borderRadius: 18,
+    borderWidth: 1.2,
+    borderTopWidth: 1.8,
+    borderTopColor: 'rgba(255, 255, 255, 0.45)',
+    borderLeftColor: 'rgba(255, 255, 255, 0.14)',
+    borderRightColor: 'rgba(255, 255, 255, 0.14)',
+    borderBottomWidth: 3.5,
+    borderBottomColor: '#0A0B0E',
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 4,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.28,
-        shadowRadius: 5,
+        shadowColor: '#FF9800',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.38,
+        shadowRadius: 7,
       },
       android: {
-        elevation: 4,
+        elevation: 6,
       },
     }),
   },
   actionIconAuraDetails: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    backgroundColor: 'rgba(255, 152, 0, 0.16)',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 152, 0, 0.3)',
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255, 152, 0, 0.22)',
+    borderWidth: 1.2,
+    borderColor: 'rgba(255, 152, 0, 0.48)',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 3,
   },
   actionBtnEdit: {
     width: 60,
-    height: '100%',
-    maxHeight: 56,
+    height: 56,
     backgroundColor: Colors.NeroBlack,
-    borderRadius: 16,
-    borderWidth: 1.5,
-    borderTopColor: '#4A4E5C',
-    borderLeftColor: '#363944',
-    borderRightColor: '#363944',
-    borderBottomWidth: 3,
-    borderBottomColor: '#090A0D',
+    borderRadius: 18,
+    borderWidth: 1.2,
+    borderTopWidth: 1.8,
+    borderTopColor: 'rgba(255, 255, 255, 0.45)',
+    borderLeftColor: 'rgba(255, 255, 255, 0.14)',
+    borderRightColor: 'rgba(255, 255, 255, 0.14)',
+    borderBottomWidth: 3.5,
+    borderBottomColor: '#0A0B0E',
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 4,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.28,
-        shadowRadius: 5,
+        shadowColor: '#F5C518',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.38,
+        shadowRadius: 7,
       },
       android: {
-        elevation: 4,
+        elevation: 6,
       },
     }),
   },
   actionIconAuraEdit: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    backgroundColor: 'rgba(245, 197, 24, 0.16)',
-    borderWidth: 1,
-    borderColor: 'rgba(245, 197, 24, 0.3)',
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: 'rgba(245, 197, 24, 0.22)',
+    borderWidth: 1.2,
+    borderColor: 'rgba(245, 197, 24, 0.48)',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 3,
   },
   actionBtnText: {
-    fontFamily: Fonts.poppins.semiBold,
+    fontFamily: Fonts.poppins.bold,
     fontSize: 9.5,
-    color: '#FFFFFF',
-    letterSpacing: 0.2,
+    color: '#FFFBF0',
+    letterSpacing: 0.75,
   },
   frontCardContainer: {
     width: '100%',
@@ -778,28 +880,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 8,
+    paddingTop: ResponsivePixels.size7,
     borderTopWidth: 1,
     borderTopColor: '#ECE8FB',
   },
   consistencyLabel: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     color: '#A8A49C',
     letterSpacing: 0.5,
   },
-  dotsWrap: {
+  streakWrap: {
     flexDirection: 'row',
-    gap: 6,
+    alignItems: 'center',
+    gap: ResponsivePixels.size5,
   },
-  miniDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#E5E2D9',
-  },
-  miniDotCurrent: {
-    transform: [{ scale: 1.25 }],
+  flameIconWrap: {
+    width: ResponsivePixels.size11,
+    height: ResponsivePixels.size11,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

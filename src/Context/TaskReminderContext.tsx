@@ -220,6 +220,8 @@ interface TaskReminderContextType {
     voiceNudge?: boolean;
   }) => Task | null;
   toggleTask: (id: string) => Task | null;
+  updateTask: (id: string, updates: Partial<Omit<Task, 'id'>>) => Task | null;
+  deleteTask: (id: string) => void;
   selectedTasks: Set<string>;
   setSelectedTasks: React.Dispatch<React.SetStateAction<Set<string>>>;
   selectAllTasks: (markDone?: boolean, targetIds?: string[]) => void;
@@ -237,6 +239,11 @@ interface TaskReminderContextType {
     urgentAlarm?: boolean;
   }) => Reminder | null;
   toggleReminder: (id: string) => Reminder | null;
+  updateReminder: (
+    id: string,
+    updates: Partial<Omit<Reminder, 'id'>>,
+  ) => Reminder | null;
+  deleteReminder: (id: string) => void;
   selectedReminders: Set<string>;
   setSelectedReminders: React.Dispatch<React.SetStateAction<Set<string>>>;
   selectAllReminders: () => void;
@@ -272,6 +279,8 @@ const TaskReminderContext = createContext<TaskReminderContextType>({
   tasks: INITIAL_TASKS,
   addTask: () => null,
   toggleTask: () => null,
+  updateTask: () => null,
+  deleteTask: () => {},
   selectedTasks: new Set(['1']),
   setSelectedTasks: () => {},
   selectAllTasks: () => {},
@@ -279,6 +288,8 @@ const TaskReminderContext = createContext<TaskReminderContextType>({
   reminders: INITIAL_REMINDERS,
   addReminder: () => null,
   toggleReminder: () => null,
+  updateReminder: () => null,
+  deleteReminder: () => {},
   selectedReminders: new Set(['2']),
   setSelectedReminders: () => {},
   selectAllReminders: () => {},
@@ -369,6 +380,36 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
     return updatedTask;
   };
 
+  const updateTask = (
+    id: string,
+    updates: Partial<Omit<Task, 'id'>> & { title?: string },
+  ): Task | null => {
+    let updated: Task | null = null;
+    const normalized: Partial<Omit<Task, 'id'>> = { ...updates };
+    if (typeof updates.title === 'string' && updates.title.trim()) {
+      normalized.label = updates.title.trim();
+    }
+    setTasks(prev =>
+      prev.map(t => {
+        if (t.id === id) {
+          updated = { ...t, ...normalized };
+          return updated;
+        }
+        return t;
+      }),
+    );
+    return updated;
+  };
+
+  const deleteTask = (id: string) => {
+    setTasks(prev => prev.filter(t => t.id !== id));
+    setSelectedTasks(prev => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+  };
+
   const selectAllTasks = useCallback(
     (markDone?: boolean, targetIds?: string[]) => {
       setTasks(prev => {
@@ -449,6 +490,32 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
       return next;
     });
     return updatedRem;
+  };
+
+  const updateReminder = (
+    id: string,
+    updates: Partial<Omit<Reminder, 'id'>>,
+  ): Reminder | null => {
+    let updated: Reminder | null = null;
+    setReminders(prev =>
+      prev.map(r => {
+        if (r.id === id) {
+          updated = { ...r, ...updates };
+          return updated;
+        }
+        return r;
+      }),
+    );
+    return updated;
+  };
+
+  const deleteReminder = (id: string) => {
+    setReminders(prev => prev.filter(r => r.id !== id));
+    setSelectedReminders(prev => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
   };
 
   const selectAllReminders = useCallback(() => {
@@ -539,6 +606,8 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
       tasks,
       addTask,
       toggleTask,
+      updateTask,
+      deleteTask,
       selectedTasks,
       setSelectedTasks,
       selectAllTasks,
@@ -546,6 +615,8 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
       reminders,
       addReminder,
       toggleReminder,
+      updateReminder,
+      deleteReminder,
       selectedReminders,
       setSelectedReminders,
       selectAllReminders,
