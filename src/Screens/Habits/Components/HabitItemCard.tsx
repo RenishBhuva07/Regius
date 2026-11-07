@@ -29,6 +29,7 @@ import {
 } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { useAppTheme } from '../../../Theme/useAppTheme';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge, BadgeVariant } from '../../../Common/Badge';
 import { StreakBadge } from '../../../Common/StreakBadge';
@@ -61,6 +62,7 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
   onEdit,
   onDetails,
 }) => {
+  const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const translateX = useRef(new Animated.Value(0)).current;
   const detailsScaleAnim = useRef(new Animated.Value(1)).current;
@@ -276,48 +278,54 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
 
   const getHabitStyles = () => {
     const baseTheme = {
-      bg: '#F7F8FE',
-      border: '#D8DBFF',
+      bg: isDarkMode ? '#202336' : '#F7F8FE',
+      border: isDarkMode ? '#8383D6' : '#D8DBFF',
       accent: Colors.LavenderPurple,
       shadow: Colors.LavenderPurple,
-      iconBg: '#EFF2FE',
-      iconColor: '#7059C8',
+      iconBg: isDarkMode ? '#2C304A' : '#EFF2FE',
+      iconColor: isDarkMode ? '#8383D6' : '#7059C8',
       auraColor: Colors.LavenderPurple,
     };
 
     if (habit.category === 'morning') {
       return {
         ...baseTheme,
+        bg: isDarkMode ? '#2A2416' : '#F7F8FE',
+        border: isDarkMode ? '#DEAA14' : '#D8DBFF',
+        shadow: isDarkMode ? '#F5C518' : Colors.LavenderPurple,
         label: 'MORNING',
         badgeVariant: 'yellow' as BadgeVariant,
-        timePillBg: '#FFF8D0',
-        timePillText: '#B47804',
+        timePillBg: isDarkMode ? '#3D3420' : '#FFF8D0',
+        timePillText: isDarkMode ? '#FFE600' : '#B47804',
         icon: Sun,
-        iconBg: '#FFF8D0',
-        iconColor: '#B47804',
+        iconBg: isDarkMode ? '#38301D' : '#FFF8D0',
+        iconColor: isDarkMode ? '#F5C518' : '#B47804',
       };
     }
     if (habit.category === 'evening') {
       return {
         ...baseTheme,
+        bg: isDarkMode ? '#331F18' : '#F7F8FE',
+        border: isDarkMode ? '#FF9800' : '#D8DBFF',
+        shadow: isDarkMode ? '#FF9800' : Colors.LavenderPurple,
         label: 'EVENING',
         badgeVariant: 'orange' as BadgeVariant,
-        timePillBg: '#FFF2E6',
-        timePillText: '#D95D0F',
+        timePillBg: isDarkMode ? '#4A2B1E' : '#FFF2E6',
+        timePillText: isDarkMode ? '#FFB74D' : '#D95D0F',
         icon: Moon,
-        iconBg: '#FFF2E6',
-        iconColor: '#D95D0F',
+        iconBg: isDarkMode ? '#452A20' : '#FFF2E6',
+        iconColor: isDarkMode ? '#FF9800' : '#D95D0F',
       };
     }
     return {
       ...baseTheme,
       label: 'MINDFUL',
       badgeVariant: 'purple' as BadgeVariant,
-      timePillBg: '#EFF2FE',
-      timePillText: '#7059C8',
+      timePillBg: isDarkMode ? '#2D3250' : '#EFF2FE',
+      timePillText: isDarkMode ? '#C2C2FF' : '#7059C8',
       icon: Sparkles,
-      iconBg: '#EFF2FE',
-      iconColor: '#7059C8',
+      iconBg: isDarkMode ? '#2C304A' : '#EFF2FE',
+      iconColor: isDarkMode ? '#8383D6' : '#7059C8',
     };
   };
 
@@ -406,7 +414,11 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
           style={[
             styles.card,
             {
-              shadowColor: theme.shadow,
+              shadowColor: habit.completed
+                ? isDarkMode
+                  ? '#000000'
+                  : '#D1D5DB'
+                : theme.shadow,
             },
           ]}
           accessibilityRole="checkbox"
@@ -431,20 +443,48 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
                 <Stop
                   offset="0%"
                   stopColor={theme.auraColor}
-                  stopOpacity={habit.completed ? 0.08 : 0.16}
+                  stopOpacity={
+                    habit.completed
+                      ? isDarkMode
+                        ? 0.12
+                        : 0.08
+                      : isDarkMode
+                      ? 0.28
+                      : 0.16
+                  }
                 />
                 <Stop
                   offset="65%"
                   stopColor={theme.auraColor}
-                  stopOpacity={habit.completed ? 0.015 : 0.03}
+                  stopOpacity={
+                    habit.completed
+                      ? isDarkMode
+                        ? 0.02
+                        : 0.015
+                      : isDarkMode
+                      ? 0.08
+                      : 0.03
+                  }
                 />
                 <Stop offset="100%" stopColor={theme.bg} stopOpacity={0} />
               </RadialGradient>
             </Defs>
             <Path
               d={getCutoutCardPath(cardSize.width, cardSize.height)}
-              fill={theme.bg}
-              stroke={theme.border}
+              fill={
+                habit.completed
+                  ? isDarkMode
+                    ? '#171A20'
+                    : '#FAFAF8'
+                  : theme.bg
+              }
+              stroke={
+                habit.completed
+                  ? isDarkMode
+                    ? '#2C3035'
+                    : '#ECEAE4'
+                  : theme.border
+              }
               strokeWidth={1.5}
               strokeLinejoin="round"
             />
@@ -459,14 +499,30 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
               cy={16}
               r={1.6}
               fill={theme.accent}
-              opacity={habit.completed ? 0.25 : 0.4}
+              opacity={
+                habit.completed
+                  ? isDarkMode
+                    ? 0.35
+                    : 0.25
+                  : isDarkMode
+                  ? 0.6
+                  : 0.4
+              }
             />
             <Circle
               cx={cardSize.width - 80}
               cy={30}
               r={1.3}
               fill={theme.accent}
-              opacity={habit.completed ? 0.18 : 0.3}
+              opacity={
+                habit.completed
+                  ? isDarkMode
+                    ? 0.25
+                    : 0.18
+                  : isDarkMode
+                  ? 0.5
+                  : 0.3
+              }
             />
           </Svg>
 
@@ -481,10 +537,19 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
             style={[
               styles.floatingCheckbox,
               habit.completed
-                ? styles.floatingCheckboxChecked
+                ? [
+                    styles.floatingCheckboxChecked,
+                    isDarkMode && {
+                      backgroundColor: '#13281E',
+                      borderColor: '#52D22E',
+                    },
+                  ]
                 : [
                     styles.floatingCheckboxUnchecked,
-                    { borderColor: theme.border },
+                    {
+                      backgroundColor: isDarkMode ? '#252932' : '#FFFFFF',
+                      borderColor: theme.border,
+                    },
                   ],
             ]}
             accessibilityRole="checkbox"
@@ -494,7 +559,11 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
             }`}
           >
             {habit.completed && (
-              <Check size={14} color="#1B9A72" strokeWidth={3} />
+              <Check
+                size={14}
+                color={isDarkMode ? '#52D22E' : '#1B9A72'}
+                strokeWidth={3}
+              />
             )}
           </TouchableOpacity>
 
@@ -555,7 +624,8 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
                 <Text
                   style={[
                     styles.title,
-                    habit.completed && styles.titleCompleted,
+                    { color: isDarkMode ? textPrimary : '#1B1C19' },
+                    habit.completed && (isDarkMode ? { color: '#5C6270' } : styles.titleCompleted),
                   ]}
                   numberOfLines={2}
                 >
@@ -563,8 +633,18 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
                 </Text>
 
                 <View style={styles.frequencyRow}>
-                  <Repeat size={11} color="#8E8E93" />
-                  <Text style={styles.frequencyText}>{habit.frequency}</Text>
+                  <Repeat
+                    size={11}
+                    color={isDarkMode ? '#A3A8B1' : '#8E8E93'}
+                  />
+                  <Text
+                    style={[
+                      styles.frequencyText,
+                      isDarkMode && { color: '#A3A8B1' },
+                    ]}
+                  >
+                    {habit.frequency}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -576,7 +656,14 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
               accessibilityRole="text"
               accessibilityLabel={`Consistency: ${windowDaysCompleted} of 7 days completed`}
             >
-              <Text style={styles.consistencyLabel}>Consistency</Text>
+              <Text
+                style={[
+                  styles.consistencyLabel,
+                  isDarkMode && { color: '#A3A8B1' },
+                ]}
+              >
+                Consistency
+              </Text>
               <View style={styles.streakWrap}>
                 {[0, 1, 2, 3, 4, 5, 6].map(idx => {
                   const isToday = idx === 6;
@@ -597,7 +684,13 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
                       <Flame
                         size={ResponsivePixels.size9}
                         color={
-                          isFilled ? '#E65100' : isToday ? '#FF9800' : '#C8C4B7'
+                          isFilled
+                            ? '#E65100'
+                            : isToday
+                            ? '#FF9800'
+                            : isDarkMode
+                            ? '#3A3F4D'
+                            : '#C8C4B7'
                         }
                         fill={isFilled ? '#FF9800' : 'none'}
                         strokeWidth={isToday && !isFilled ? 1.5 : 1.2}

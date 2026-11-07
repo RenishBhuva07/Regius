@@ -2,6 +2,7 @@ import React from 'react';
 import { FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Fonts } from '../../../Theme/fonts';
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { useAppTheme } from '../../../Theme/useAppTheme';
 
 export type FlowFilter = 'all' | 'tasks' | 'habits' | 'reminders' | 'voice';
 
@@ -25,6 +26,8 @@ export interface FlowFilterTabsProps {
 
 export const FlowFilterTabs: React.FC<FlowFilterTabsProps> = React.memo(
   ({ activeFilter, onSelectFilter, tabs = DEFAULT_FILTER_TABS }) => {
+    const { isDarkMode, cardBg, borderLight, textSecondary } = useAppTheme();
+
     return (
       <FlatList
         horizontal
@@ -40,7 +43,24 @@ export const FlowFilterTabs: React.FC<FlowFilterTabsProps> = React.memo(
               key={f.key}
               activeOpacity={0.8}
               onPress={() => onSelectFilter(f.key)}
-              style={[styles.filterPill, isActive && styles.filterPillActive]}
+              style={[
+                styles.filterPill,
+                isDarkMode && {
+                  backgroundColor: cardBg,
+                  borderColor: borderLight,
+                  borderBottomColor: '#171A20',
+                  shadowColor: '#000000',
+                },
+                isActive && styles.filterPillActive,
+                isActive &&
+                  isDarkMode && {
+                    backgroundColor: '#0A0B0E',
+                    borderTopColor: '#454955',
+                    borderLeftColor: '#333640',
+                    borderRightColor: '#333640',
+                    borderBottomColor: '#DEAA14',
+                  },
+              ]}
               accessibilityRole="tab"
               accessibilityState={{ selected: isActive }}
               accessibilityLabel={`Filter by ${f.label}`}
@@ -48,6 +68,7 @@ export const FlowFilterTabs: React.FC<FlowFilterTabsProps> = React.memo(
               <Text
                 style={[
                   styles.filterPillText,
+                  isDarkMode && { color: textSecondary },
                   isActive && styles.filterPillTextActive,
                 ]}
               >

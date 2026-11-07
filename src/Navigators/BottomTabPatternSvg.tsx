@@ -12,6 +12,7 @@ import Svg, {
   Stop,
 } from 'react-native-svg';
 import { Colors } from '../Assets/StyleUtilities/Colors';
+import { useTheme } from '../Theme/ThemeContext';
 
 interface BottomTabPatternSvgProps {
   width: number;
@@ -34,6 +35,8 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
       cp: CP = 18,
       borderW: BAR_BORDER_W = 4,
     }) => {
+      const { isDarkMode } = useTheme();
+      const strokeColor = isDarkMode ? '#121417' : Colors.CreamBackground;
       const cx = W / 2;
 
       const d = [
@@ -330,7 +333,7 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
             <Path
               d={d}
               fill="none"
-              stroke={Colors.CreamBackground}
+              stroke={strokeColor}
               strokeWidth={BAR_BORDER_W}
               strokeLinejoin="round"
             />

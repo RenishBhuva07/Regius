@@ -31,6 +31,7 @@ import {
 import { Fonts } from '../../../Theme/fonts';
 import { Typography } from '../../../Theme/Typographys';
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { useAppTheme } from '../../../Theme/useAppTheme';
 import { Badge } from '../../../Common/Badge';
 import { getCutoutCardPath } from '../../../Common/CutoutCardSvg';
 import { Task } from '../../../Context/TaskReminderContext';
@@ -58,6 +59,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
   const isOpenRef = useRef(false);
 
   const ACTIONS_WIDTH = 138;
+  const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
   const [localChecked, setLocalChecked] = useState(isChecked);
 
   const initialW = Dimensions.get('window').width - 16;
@@ -248,7 +250,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
       return (
         <Heart
           size={18}
-          color={localChecked ? '#1B9A72' : '#52D22E'}
+          color={localChecked ? (isDarkMode ? '#52D22E' : '#1B9A72') : '#52D22E'}
           strokeWidth={2.2}
         />
       );
@@ -257,7 +259,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
       return (
         <Sparkles
           size={18}
-          color={localChecked ? '#1B9A72' : '#8383D6'}
+          color={localChecked ? (isDarkMode ? '#52D22E' : '#1B9A72') : '#8383D6'}
           strokeWidth={2.2}
         />
       );
@@ -266,7 +268,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
       return (
         <Mail
           size={18}
-          color={localChecked ? '#1B9A72' : '#454A53'}
+          color={localChecked ? (isDarkMode ? '#52D22E' : '#1B9A72') : (isDarkMode ? '#A3A8B1' : '#454A53')}
           strokeWidth={2.2}
         />
       );
@@ -275,7 +277,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
       return (
         <Users
           size={18}
-          color={localChecked ? '#1B9A72' : '#454A53'}
+          color={localChecked ? (isDarkMode ? '#52D22E' : '#1B9A72') : (isDarkMode ? '#A3A8B1' : '#454A53')}
           strokeWidth={2.2}
         />
       );
@@ -283,7 +285,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
     return (
       <Briefcase
         size={18}
-        color={localChecked ? '#1B9A72' : '#B48216'}
+        color={localChecked ? (isDarkMode ? '#52D22E' : '#1B9A72') : (isDarkMode ? '#F5C518' : '#B48216')}
         strokeWidth={2.2}
       />
     );
@@ -292,30 +294,30 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
   const getCategoryStyles = () => {
     if (task.category === 'sport') {
       return {
-        bg: '#F5FDF9',
-        border: '#C6FFDD',
+        bg: isDarkMode ? '#162820' : '#F5FDF9',
+        border: isDarkMode ? '#1B9A72' : '#C6FFDD',
         accent: '#52D22E',
         shadow: '#52D22E',
-        iconBg: '#EDFDF5',
+        iconBg: isDarkMode ? '#1F382D' : '#EDFDF5',
         auraColor: '#52D22E',
       };
     }
     if (task.category === 'habits') {
       return {
-        bg: '#F7F8FE',
-        border: '#D8DBFF',
+        bg: isDarkMode ? '#202336' : '#F7F8FE',
+        border: isDarkMode ? '#8383D6' : '#D8DBFF',
         accent: '#8383D6',
         shadow: '#8383D6',
-        iconBg: '#EFF2FE',
+        iconBg: isDarkMode ? '#2C304A' : '#EFF2FE',
         auraColor: '#8383D6',
       };
     }
     return {
-      bg: '#FFFDF7',
-      border: '#FFF5B8',
+      bg: isDarkMode ? '#2A2416' : '#FFFDF7',
+      border: isDarkMode ? '#DEAA14' : '#FFF5B8',
       accent: '#F5C518',
       shadow: task.priority === 'high' ? '#FF3B30' : '#F5C518',
-      iconBg: '#FFFCEB',
+      iconBg: isDarkMode ? '#38301D' : '#FFFCEB',
       auraColor: '#F5C518',
     };
   };
@@ -409,7 +411,11 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
           onLayout={handleCardLayout}
           style={[
             styles.card,
-            { shadowColor: localChecked ? '#D1D5DB' : catStyle.shadow },
+            {
+              shadowColor: localChecked
+                ? (isDarkMode ? '#000000' : '#D1D5DB')
+                : catStyle.shadow,
+            },
           ]}
           onPress={handleCardPress}
           accessibilityRole="checkbox"
@@ -435,12 +441,12 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
                   <Stop
                     offset="0%"
                     stopColor={catStyle.auraColor}
-                    stopOpacity={0.16}
+                    stopOpacity={isDarkMode ? 0.28 : 0.16}
                   />
                   <Stop
                     offset="65%"
                     stopColor={catStyle.auraColor}
-                    stopOpacity={0.03}
+                    stopOpacity={isDarkMode ? 0.08 : 0.03}
                   />
                   <Stop offset="100%" stopColor={catStyle.bg} stopOpacity={0} />
                 </RadialGradient>
@@ -448,8 +454,8 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
             </Defs>
             <Path
               d={getCutoutCardPath(cardSize.width, cardSize.height)}
-              fill={localChecked ? '#FAFAF8' : catStyle.bg}
-              stroke={localChecked ? '#ECEAE4' : catStyle.border}
+              fill={localChecked ? (isDarkMode ? '#171A20' : '#FAFAF8') : catStyle.bg}
+              stroke={localChecked ? (isDarkMode ? '#2C3035' : '#ECEAE4') : catStyle.border}
               strokeWidth={1.5}
               strokeLinejoin="round"
             />
@@ -466,14 +472,14 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
                   cy={16}
                   r={1.6}
                   fill={catStyle.accent}
-                  opacity={0.4}
+                  opacity={isDarkMode ? 0.6 : 0.4}
                 />
                 <Circle
                   cx={cardSize.width - 80}
                   cy={30}
                   r={1.3}
                   fill={catStyle.accent}
-                  opacity={0.3}
+                  opacity={isDarkMode ? 0.5 : 0.3}
                 />
               </>
             )}
@@ -490,10 +496,16 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
             style={[
               styles.floatingCheckbox,
               localChecked
-                ? styles.floatingCheckboxChecked
+                ? [
+                    styles.floatingCheckboxChecked,
+                    isDarkMode && { backgroundColor: '#13281E', borderColor: '#52D22E' },
+                  ]
                 : [
                     styles.floatingCheckboxUnchecked,
-                    { borderColor: catStyle.border },
+                    {
+                      backgroundColor: isDarkMode ? '#252932' : '#FFFFFF',
+                      borderColor: catStyle.border,
+                    },
                   ],
             ]}
             accessibilityRole="checkbox"
@@ -503,7 +515,11 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
             }`}
           >
             {localChecked && (
-              <Check size={14} color="#1B9A72" strokeWidth={3} />
+              <Check
+                size={14}
+                color={isDarkMode ? '#52D22E' : '#1B9A72'}
+                strokeWidth={3}
+              />
             )}
           </TouchableOpacity>
 
@@ -513,7 +529,10 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
                 style={[
                   styles.iconContainer,
                   localChecked
-                    ? styles.iconContainerChecked
+                    ? [
+                        styles.iconContainerChecked,
+                        isDarkMode && { backgroundColor: '#13281E' },
+                      ]
                     : {
                         backgroundColor: catStyle.iconBg,
                         borderColor: catStyle.border,
@@ -526,7 +545,11 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
 
               <View style={styles.textBlock}>
                 <Text
-                  style={[styles.title, localChecked && styles.titleCompleted]}
+                  style={[
+                    styles.title,
+                    { color: isDarkMode ? textPrimary : '#1B1C19' },
+                    localChecked && (isDarkMode ? { color: '#5C6270' } : styles.titleCompleted),
+                  ]}
                   numberOfLines={2}
                 >
                   {task.label}
@@ -534,7 +557,11 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
 
                 {task.note ? (
                   <Text
-                    style={[styles.note, localChecked && styles.noteCompleted]}
+                    style={[
+                      styles.note,
+                      { color: isDarkMode ? textSecondary : '#7E838F' },
+                      localChecked && (isDarkMode ? { color: '#4A505C' } : styles.noteCompleted),
+                    ]}
                     numberOfLines={2}
                   >
                     {task.note}
@@ -546,12 +573,33 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
 
           {/* Footer Badges & Metadata (time, priority, subtasks, voice nudge) */}
           {hasFooter && (
-            <View style={styles.cardFooter}>
+            <View
+              style={[
+                styles.cardFooter,
+                isDarkMode && { borderTopColor: '#2C3035' },
+              ]}
+            >
               <View style={styles.footerLeft}>
                 {task.time ? (
-                  <View style={styles.timeTag}>
-                    <Clock size={12} color="#7E838F" strokeWidth={2} />
-                    <Text style={styles.timeText}>{task.time}</Text>
+                  <View
+                    style={[
+                      styles.timeTag,
+                      isDarkMode && { backgroundColor: '#252932' },
+                    ]}
+                  >
+                    <Clock
+                      size={12}
+                      color={isDarkMode ? '#A3A8B1' : '#7E838F'}
+                      strokeWidth={2}
+                    />
+                    <Text
+                      style={[
+                        styles.timeText,
+                        isDarkMode && { color: '#A3A8B1' },
+                      ]}
+                    >
+                      {task.time}
+                    </Text>
                   </View>
                 ) : null}
 

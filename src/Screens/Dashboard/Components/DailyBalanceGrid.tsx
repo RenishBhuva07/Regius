@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { CheckCircle2, Flame, Bell } from 'lucide-react-native';
 import Svg, { Circle } from 'react-native-svg';
 import { Fonts } from '../../../Theme/fonts';
+import { useAppTheme } from '../../../Theme/useAppTheme';
 
 export interface DailyBalanceGridProps {
   tasksCompleted: number;
@@ -52,12 +53,15 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
     remTotal > 0 ? Math.round((remDone / remTotal) * 100) : 0;
 
   const handlePressReminders = onPressReminders || onPressNudges;
+  const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
 
   return (
     <View style={styles.container}>
       {/* Section Header */}
       <View style={styles.sectionHeader}>
-        <Text style={styles.sectionTitle}>Daily Balance</Text>
+        <Text style={[styles.sectionTitle, { color: textPrimary }]}>
+          Daily Balance
+        </Text>
       </View>
 
       {/* Bento 3-Column Grid: Standard Sequence (Tasks, Reminders, Habits) */}
@@ -66,28 +70,53 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
         <TouchableOpacity
           activeOpacity={0.85}
           onPress={onPressTasks}
-          style={[styles.metricCard, styles.tasksCard]}
+          style={[
+            styles.metricCard,
+            styles.tasksCard,
+            isDarkMode && {
+              backgroundColor: '#2A2416',
+              borderColor: '#DEAA14',
+            },
+          ]}
           accessibilityRole="button"
           accessibilityLabel={`Tasks: ${tasksCompleted} of ${tasksTotal} completed, ${taskPercent} percent`}
         >
           <View style={styles.cardTop}>
-            <View style={[styles.iconCircle, styles.tasksIconCircle]}>
-              <CheckCircle2 size={16} color="#B48216" strokeWidth={2.4} />
+            <View
+              style={[
+                styles.iconCircle,
+                styles.tasksIconCircle,
+                isDarkMode && {
+                  backgroundColor: '#38301D',
+                  borderColor: '#DEAA14',
+                },
+              ]}
+            >
+              <CheckCircle2
+                size={16}
+                color={isDarkMode ? '#F5C518' : '#B48216'}
+                strokeWidth={2.4}
+              />
             </View>
             <CircularProgress
               percent={taskPercent}
-              trackColor="#FFF5B8"
-              progressColor="#B48216"
-              textColor="#B48216"
+              trackColor={
+                isDarkMode ? 'rgba(245, 197, 24, 0.2)' : '#FFF5B8'
+              }
+              progressColor={isDarkMode ? '#F5C518' : '#B48216'}
+              textColor={isDarkMode ? '#F5C518' : '#B48216'}
               shadowColor="#F5C518"
             />
           </View>
           <View style={styles.cardBottom}>
-            <Text style={styles.countText}>
+            <Text style={[styles.countText, { color: textPrimary }]}>
               {tasksCompleted}
               <Text style={styles.countTotalText}>/{tasksTotal}</Text>
             </Text>
-            <Text style={styles.label} numberOfLines={1}>
+            <Text
+              style={[styles.label, { color: textPrimary }]}
+              numberOfLines={1}
+            >
               Tasks
             </Text>
           </View>
@@ -99,28 +128,53 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
         <TouchableOpacity
           activeOpacity={0.85}
           onPress={handlePressReminders}
-          style={[styles.metricCard, styles.remindersCard]}
+          style={[
+            styles.metricCard,
+            styles.remindersCard,
+            isDarkMode && {
+              backgroundColor: '#162820',
+              borderColor: '#1B9A72',
+            },
+          ]}
           accessibilityRole="button"
           accessibilityLabel={`Reminders: ${remDone} of ${remTotal} completed, ${reminderPercent} percent`}
         >
           <View style={styles.cardTop}>
-            <View style={[styles.iconCircle, styles.remindersIconCircle]}>
-              <Bell size={16} color="#1B9A72" strokeWidth={2.4} />
+            <View
+              style={[
+                styles.iconCircle,
+                styles.remindersIconCircle,
+                isDarkMode && {
+                  backgroundColor: '#1F382D',
+                  borderColor: '#1B9A72',
+                },
+              ]}
+            >
+              <Bell
+                size={16}
+                color={isDarkMode ? '#52D22E' : '#1B9A72'}
+                strokeWidth={2.4}
+              />
             </View>
             <CircularProgress
               percent={reminderPercent}
-              trackColor="#C6FFDD"
-              progressColor="#1B9A72"
-              textColor="#1B9A72"
+              trackColor={
+                isDarkMode ? 'rgba(82, 210, 46, 0.2)' : '#C6FFDD'
+              }
+              progressColor={isDarkMode ? '#52D22E' : '#1B9A72'}
+              textColor={isDarkMode ? '#52D22E' : '#1B9A72'}
               shadowColor="#52D22E"
             />
           </View>
           <View style={styles.cardBottom}>
-            <Text style={styles.countText}>
+            <Text style={[styles.countText, { color: textPrimary }]}>
               {remDone}
               <Text style={styles.countTotalText}>/{remTotal}</Text>
             </Text>
-            <Text style={styles.label} numberOfLines={1}>
+            <Text
+              style={[styles.label, { color: textPrimary }]}
+              numberOfLines={1}
+            >
               Reminders
             </Text>
           </View>
@@ -132,28 +186,53 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
         <TouchableOpacity
           activeOpacity={0.85}
           onPress={onPressHabits}
-          style={[styles.metricCard, styles.habitsCard]}
+          style={[
+            styles.metricCard,
+            styles.habitsCard,
+            isDarkMode && {
+              backgroundColor: '#202336',
+              borderColor: '#8383D6',
+            },
+          ]}
           accessibilityRole="button"
           accessibilityLabel={`Habits: ${habitsCompleted} of ${habitsTotal} completed, ${habitPercent} percent`}
         >
           <View style={styles.cardTop}>
-            <View style={[styles.iconCircle, styles.habitsIconCircle]}>
-              <Flame size={16} color="#7059C8" strokeWidth={2.4} />
+            <View
+              style={[
+                styles.iconCircle,
+                styles.habitsIconCircle,
+                isDarkMode && {
+                  backgroundColor: '#2C304A',
+                  borderColor: '#8383D6',
+                },
+              ]}
+            >
+              <Flame
+                size={16}
+                color={isDarkMode ? '#8383D6' : '#7059C8'}
+                strokeWidth={2.4}
+              />
             </View>
             <CircularProgress
               percent={habitPercent}
-              trackColor="#D8DBFF"
-              progressColor="#7059C8"
-              textColor="#7059C8"
+              trackColor={
+                isDarkMode ? 'rgba(131, 131, 214, 0.2)' : '#D8DBFF'
+              }
+              progressColor={isDarkMode ? '#8383D6' : '#7059C8'}
+              textColor={isDarkMode ? '#8383D6' : '#7059C8'}
               shadowColor="#8383D6"
             />
           </View>
           <View style={styles.cardBottom}>
-            <Text style={styles.countText}>
+            <Text style={[styles.countText, { color: textPrimary }]}>
               {habitsCompleted}
               <Text style={styles.countTotalText}>/{habitsTotal}</Text>
             </Text>
-            <Text style={styles.label} numberOfLines={1}>
+            <Text
+              style={[styles.label, { color: textPrimary }]}
+              numberOfLines={1}
+            >
               Habits
             </Text>
           </View>

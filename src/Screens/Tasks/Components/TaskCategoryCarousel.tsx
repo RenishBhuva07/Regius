@@ -17,6 +17,7 @@ import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { Task } from '../../../Context/TaskReminderContext';
 import { CircularProgress } from '../../../Common/CircularProgress';
 import { OfficeBagIcon } from '../../../Common/EmblemIcons';
+import { useAppTheme } from '../../../Theme/useAppTheme';
 
 export interface CategoryItem {
   id: string;
@@ -83,6 +84,9 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
   onSelectCategory,
   onAddPress,
 }) => {
+  const { isDarkMode, textPrimary, textSecondary, borderLight, cardBg } =
+    useAppTheme();
+
   const getCategoryMetrics = (catId: string) => {
     const catTasks = tasks.filter(t => {
       if (catId === 'works') return t.category === 'works' || !t.category;
@@ -99,7 +103,9 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
       {/* Section Header */}
       <View style={styles.sectionHeader}>
         <View style={styles.titleRow}>
-          <Text style={styles.sectionTitle}>Categories</Text>
+          <Text style={[styles.sectionTitle, { color: textPrimary }]}>
+            Categories
+          </Text>
           {selectedCategory && (
             <TouchableOpacity
               activeOpacity={0.7}
@@ -116,13 +122,23 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
             activeOpacity={0.7}
             style={[
               styles.filterBtn,
+              isDarkMode && {
+                backgroundColor: cardBg,
+                borderColor: borderLight,
+              },
               selectedCategory !== null && styles.filterBtnActive,
             ]}
             onPress={() => onSelectCategory(selectedCategory ? null : 'works')}
           >
             <Filter
               size={15}
-              color={selectedCategory !== null ? '#FFFFFF' : '#1F2228'}
+              color={
+                selectedCategory !== null
+                  ? '#FFFFFF'
+                  : isDarkMode
+                  ? '#FFFFFF'
+                  : '#1F2228'
+              }
               strokeWidth={2.2}
             />
           </TouchableOpacity>
@@ -150,6 +166,28 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
           const isSelected = selectedCategory === cat.id;
           const metrics = getCategoryMetrics(cat.id);
 
+          const cardBgColor = isDarkMode
+            ? cat.id === 'works'
+              ? '#2A2416'
+              : cat.id === 'sport'
+              ? '#162820'
+              : '#202336'
+            : cat.bgColor;
+          const cardBorderColor = isDarkMode
+            ? cat.id === 'works'
+              ? '#DEAA14'
+              : cat.id === 'sport'
+              ? '#1B9A72'
+              : '#8383D6'
+            : cat.borderColor;
+          const circularTrack = isDarkMode
+            ? 'rgba(255, 255, 255, 0.12)'
+            : cat.trackColor;
+          const circularProgress = isDarkMode
+            ? cat.accentColor
+            : cat.progressColor;
+          const circularText = isDarkMode ? '#FFFFFF' : cat.textColor;
+
           return (
             <TouchableOpacity
               key={cat.id}
@@ -163,7 +201,14 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
               }}
               style={[
                 styles.categoryCard,
-                { backgroundColor: cat.bgColor },
+                {
+                  backgroundColor: cardBgColor,
+                  borderColor: isSelected
+                    ? cardBorderColor
+                    : isDarkMode
+                    ? 'rgba(255, 255, 255, 0.1)'
+                    : 'transparent',
+                },
                 isSelected && [
                   styles.categoryCardSelected,
                   { shadowColor: cat.shadowColor },
@@ -174,8 +219,14 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
                 <View
                   style={[
                     styles.categoryIconWrap,
+                    isDarkMode && {
+                      backgroundColor: '#2A2D35',
+                      borderColor: cardBorderColor,
+                    },
                     {
-                      borderColor: cat.borderColor,
+                      borderColor: isDarkMode
+                        ? cardBorderColor
+                        : cat.borderColor,
                       shadowColor: cat.shadowColor,
                     },
                   ]}
@@ -184,19 +235,22 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
                 </View>
                 <CircularProgress
                   percent={metrics.percent}
-                  trackColor={cat.trackColor}
-                  progressColor={cat.progressColor}
-                  textColor={cat.textColor}
+                  trackColor={circularTrack}
+                  progressColor={circularProgress}
+                  textColor={circularText}
                   shadowColor={cat.shadowColor}
                 />
               </View>
 
               <View style={styles.cardBottom}>
-                <Text style={styles.countText}>
+                <Text style={[styles.countText, { color: textPrimary }]}>
                   {metrics.completed}
                   <Text style={styles.countTotalText}>/{metrics.total}</Text>
                 </Text>
-                <Text style={styles.categoryLabel} numberOfLines={1}>
+                <Text
+                  style={[styles.categoryLabel, { color: textPrimary }]}
+                  numberOfLines={1}
+                >
                   {cat.label}
                 </Text>
               </View>

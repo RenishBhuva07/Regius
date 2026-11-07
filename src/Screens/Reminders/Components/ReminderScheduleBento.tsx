@@ -17,6 +17,7 @@ import Svg, {
 } from 'react-native-svg';
 import { Fonts } from '../../../Theme/fonts';
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { useAppTheme } from '../../../Theme/useAppTheme';
 import { Badge } from '../../../Common/Badge';
 import { Reminder } from '../../../Context/TaskReminderContext';
 
@@ -143,6 +144,7 @@ const ReminderPercentBadge: React.FC<{ percent: number }> = React.memo(
 export const ReminderScheduleBento: React.FC<ReminderScheduleBentoProps> = ({
   reminders,
 }) => {
+  const { isDarkMode } = useAppTheme();
   const completedCount = useMemo(
     () => reminders.filter(r => r.done).length,
     [reminders],
@@ -193,7 +195,12 @@ export const ReminderScheduleBento: React.FC<ReminderScheduleBentoProps> = ({
 
   return (
     <View style={styles.cardShadowWrapper}>
-      <View style={styles.card}>
+      <View
+        style={[
+          styles.card,
+          isDarkMode && { borderColor: 'rgba(255, 255, 255, 0.22)' },
+        ]}
+      >
         <FocusBarBackgroundSvg />
 
         <View style={styles.content}>

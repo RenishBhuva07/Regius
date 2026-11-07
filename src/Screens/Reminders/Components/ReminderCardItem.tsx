@@ -35,6 +35,7 @@ import {
 import { Fonts } from '../../../Theme/fonts';
 import { Typography } from '../../../Theme/Typographys';
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { useAppTheme } from '../../../Theme/useAppTheme';
 import { Badge } from '../../../Common/Badge';
 import { getCutoutCardPath } from '../../../Common/CutoutCardSvg';
 import { Reminder } from '../../../Context/TaskReminderContext';
@@ -66,6 +67,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
   const isOpenRef = useRef(false);
 
   const ACTIONS_WIDTH = 138;
+  const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
   const [localChecked, setLocalChecked] = useState(isChecked);
 
   const initialW = Dimensions.get('window').width - 16;
@@ -254,43 +256,43 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
     switch (reminder.category) {
       case 'work':
         return {
-          bg: '#F7F8FE',
-          border: '#D8DBFF',
+          bg: isDarkMode ? '#202336' : '#F7F8FE',
+          border: isDarkMode ? '#8383D6' : '#D8DBFF',
           accent: '#8383D6',
           shadow: '#8383D6',
-          iconBg: '#EFF2FE',
+          iconBg: isDarkMode ? '#2C304A' : '#EFF2FE',
           auraColor: '#8383D6',
           Icon: Briefcase,
         };
       case 'events':
         return {
-          bg: '#FFF9F0',
-          border: '#FFE0B2',
+          bg: isDarkMode ? '#331F18' : '#FFF9F0',
+          border: isDarkMode ? '#FF9800' : '#FFE0B2',
           accent: '#FF9800',
           shadow: '#FF9800',
-          iconBg: '#FFF3E0',
+          iconBg: isDarkMode ? '#452A20' : '#FFF3E0',
           auraColor: '#FF9800',
           Icon: CalendarCheck,
         };
       case 'health':
         return {
-          bg: '#F5FDF9',
-          border: '#C6FFDD',
+          bg: isDarkMode ? '#162820' : '#F5FDF9',
+          border: isDarkMode ? '#1B9A72' : '#C6FFDD',
           accent: '#1B9A72',
           shadow: '#52D22E',
-          iconBg: '#EDFDF5',
+          iconBg: isDarkMode ? '#1F382D' : '#EDFDF5',
           auraColor: '#52D22E',
           Icon: Heart,
         };
       case 'daily':
       default:
         return {
-          bg: '#F5FDF9',
-          border: '#C6FFDD',
-          accent: '#1B9A72',
-          shadow: '#52D22E',
-          iconBg: '#EDFDF5',
-          auraColor: '#52D22E',
+          bg: isDarkMode ? '#2A2416' : '#F5FDF9',
+          border: isDarkMode ? '#DEAA14' : '#C6FFDD',
+          accent: isDarkMode ? '#F5C518' : '#1B9A72',
+          shadow: isDarkMode ? '#F5C518' : '#52D22E',
+          iconBg: isDarkMode ? '#38301D' : '#EDFDF5',
+          auraColor: isDarkMode ? '#F5C518' : '#52D22E',
           Icon: Bell,
         };
     }
@@ -385,7 +387,11 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
           onLayout={handleCardLayout}
           style={[
             styles.card,
-            { shadowColor: localChecked ? '#D1D5DB' : theme.shadow },
+            {
+              shadowColor: localChecked
+                ? (isDarkMode ? '#000000' : '#D1D5DB')
+                : theme.shadow,
+            },
           ]}
           onPress={handleCardPress}
           accessibilityRole="checkbox"
@@ -411,12 +417,12 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                   <Stop
                     offset="0%"
                     stopColor={theme.auraColor}
-                    stopOpacity={0.16}
+                    stopOpacity={isDarkMode ? 0.28 : 0.16}
                   />
                   <Stop
                     offset="65%"
                     stopColor={theme.auraColor}
-                    stopOpacity={0.03}
+                    stopOpacity={isDarkMode ? 0.08 : 0.03}
                   />
                   <Stop offset="100%" stopColor={theme.bg} stopOpacity={0} />
                 </RadialGradient>
@@ -424,8 +430,8 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
             </Defs>
             <Path
               d={getCutoutCardPath(cardSize.width, cardSize.height)}
-              fill={localChecked ? '#FAFAF8' : theme.bg}
-              stroke={localChecked ? '#ECEAE4' : theme.border}
+              fill={localChecked ? (isDarkMode ? '#171A20' : '#FAFAF8') : theme.bg}
+              stroke={localChecked ? (isDarkMode ? '#2C3035' : '#ECEAE4') : theme.border}
               strokeWidth={1.5}
               strokeLinejoin="round"
             />
@@ -442,14 +448,14 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                   cy={16}
                   r={1.6}
                   fill={theme.accent}
-                  opacity={0.4}
+                  opacity={isDarkMode ? 0.6 : 0.4}
                 />
                 <Circle
                   cx={cardSize.width - 80}
                   cy={30}
                   r={1.3}
                   fill={theme.accent}
-                  opacity={0.3}
+                  opacity={isDarkMode ? 0.5 : 0.3}
                 />
               </>
             )}
@@ -466,10 +472,16 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
             style={[
               styles.floatingCheckbox,
               localChecked
-                ? styles.floatingCheckboxChecked
+                ? [
+                    styles.floatingCheckboxChecked,
+                    isDarkMode && { backgroundColor: '#13281E', borderColor: '#52D22E' },
+                  ]
                 : [
                     styles.floatingCheckboxUnchecked,
-                    { borderColor: theme.border },
+                    {
+                      backgroundColor: isDarkMode ? '#252932' : '#FFFFFF',
+                      borderColor: theme.border,
+                    },
                   ],
             ]}
             accessibilityRole="checkbox"
@@ -479,7 +491,11 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
             }`}
           >
             {localChecked && (
-              <Check size={14} color="#1B9A72" strokeWidth={3} />
+              <Check
+                size={14}
+                color={isDarkMode ? '#52D22E' : '#1B9A72'}
+                strokeWidth={3}
+              />
             )}
           </TouchableOpacity>
 
@@ -489,7 +505,10 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                 style={[
                   styles.iconContainer,
                   localChecked
-                    ? styles.iconContainerChecked
+                    ? [
+                        styles.iconContainerChecked,
+                        isDarkMode && { backgroundColor: '#13281E' },
+                      ]
                     : {
                         backgroundColor: theme.iconBg,
                         borderColor: theme.border,
@@ -499,14 +518,22 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
               >
                 <IconComponent
                   size={18}
-                  color={localChecked ? '#1B9A72' : theme.accent}
+                  color={
+                    localChecked
+                      ? (isDarkMode ? '#52D22E' : '#1B9A72')
+                      : theme.accent
+                  }
                   strokeWidth={2.2}
                 />
               </View>
 
               <View style={styles.textBlock}>
                 <Text
-                  style={[styles.title, localChecked && styles.titleCompleted]}
+                  style={[
+                    styles.title,
+                    { color: isDarkMode ? textPrimary : '#1B1C19' },
+                    localChecked && (isDarkMode ? { color: '#5C6270' } : styles.titleCompleted),
+                  ]}
                   numberOfLines={2}
                 >
                   {reminder.title}
@@ -516,7 +543,8 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                   <Text
                     style={[
                       styles.notes,
-                      localChecked && styles.notesCompleted,
+                      { color: isDarkMode ? textSecondary : '#7E838F' },
+                      localChecked && (isDarkMode ? { color: '#4A505C' } : styles.notesCompleted),
                     ]}
                     numberOfLines={2}
                   >
@@ -533,6 +561,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                 style={[
                   styles.speakBtn,
                   { borderColor: theme.border },
+                  isDarkMode && { backgroundColor: '#1E2228' },
                   isSpeaking && styles.speakBtnActive,
                 ]}
                 onPress={e => onSpeak(reminder, e)}
@@ -545,9 +574,17 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                 }
               >
                 {isSpeaking ? (
-                  <VolumeX size={15} color="#1B9A72" strokeWidth={2.4} />
+                  <VolumeX
+                    size={15}
+                    color={isDarkMode ? '#52D22E' : '#1B9A72'}
+                    strokeWidth={2.4}
+                  />
                 ) : (
-                  <Volume2 size={15} color="#7E838F" strokeWidth={2.2} />
+                  <Volume2
+                    size={15}
+                    color={isDarkMode ? '#A3A8B1' : '#7E838F'}
+                    strokeWidth={2.2}
+                  />
                 )}
               </TouchableOpacity>
             </View>
@@ -555,24 +592,70 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
 
           {/* Footer Badges & Metadata (time, date, repeat, urgent) */}
           {hasFooter && (
-            <View style={styles.cardFooter}>
+            <View
+              style={[
+                styles.cardFooter,
+                isDarkMode && { borderTopColor: '#2C3035' },
+              ]}
+            >
               <View style={styles.footerLeft}>
                 {reminder.time ? (
-                  <View style={styles.metaTag}>
-                    <Clock size={11.5} color="#7E838F" strokeWidth={2} />
-                    <Text style={styles.metaText}>{reminder.time}</Text>
+                  <View
+                    style={[
+                      styles.metaTag,
+                      isDarkMode && { backgroundColor: '#252932' },
+                    ]}
+                  >
+                    <Clock
+                      size={11.5}
+                      color={isDarkMode ? '#A3A8B1' : '#7E838F'}
+                      strokeWidth={2}
+                    />
+                    <Text
+                      style={[
+                        styles.metaText,
+                        isDarkMode && { color: '#A3A8B1' },
+                      ]}
+                    >
+                      {reminder.time}
+                    </Text>
                   </View>
                 ) : null}
 
                 {reminder.date ? (
-                  <View style={styles.metaTag}>
-                    <Calendar size={11.5} color="#7E838F" strokeWidth={2} />
-                    <Text style={styles.metaText}>{reminder.date}</Text>
+                  <View
+                    style={[
+                      styles.metaTag,
+                      isDarkMode && { backgroundColor: '#252932' },
+                    ]}
+                  >
+                    <Calendar
+                      size={11.5}
+                      color={isDarkMode ? '#A3A8B1' : '#7E838F'}
+                      strokeWidth={2}
+                    />
+                    <Text
+                      style={[
+                        styles.metaText,
+                        isDarkMode && { color: '#A3A8B1' },
+                      ]}
+                    >
+                      {reminder.date}
+                    </Text>
                   </View>
                 ) : null}
 
                 {reminder.repeat ? (
-                  <View style={[styles.metaTag, styles.repeatTag]}>
+                  <View
+                    style={[
+                      styles.metaTag,
+                      styles.repeatTag,
+                      isDarkMode && {
+                        backgroundColor: '#24273E',
+                        borderColor: '#434770',
+                      },
+                    ]}
+                  >
                     <RotateCw size={11} color="#8383D6" strokeWidth={2.2} />
                     <Text style={styles.repeatText}>{reminder.repeat}</Text>
                   </View>

@@ -28,6 +28,7 @@ import {
 import { Colors } from '../Assets/StyleUtilities/Colors';
 import { Fonts } from '../Theme/fonts';
 import { Badge } from '../Common/Badge';
+import { useTheme } from '../Theme/ThemeContext';
 
 const { width: SW } = Dimensions.get('window');
 const SHEET_W = Math.min(SW - 20, 362);
@@ -49,6 +50,7 @@ interface SheetBackgroundAestheticSvgProps {
 // Vector background pattern for PlusActionSheet.
 const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
   React.memo(({ width }) => {
+    const { isDarkMode } = useTheme();
     const starPath = (cx: number, cy: number, r: number) =>
       `M ${cx} ${cy - r} Q ${cx} ${cy} ${cx + r} ${cy} Q ${cx} ${cy} ${cx} ${
         cy + r
@@ -67,9 +69,21 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
         >
           <Defs>
             <LinearGradient id="sheetBgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={1} />
-              <Stop offset="50%" stopColor="#FFFDF9" stopOpacity={0.99} />
-              <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={1} />
+              <Stop
+                offset="0%"
+                stopColor={isDarkMode ? '#1E2228' : '#FFFFFF'}
+                stopOpacity={1}
+              />
+              <Stop
+                offset="50%"
+                stopColor={isDarkMode ? '#181B20' : '#FFFDF9'}
+                stopOpacity={0.99}
+              />
+              <Stop
+                offset="100%"
+                stopColor={isDarkMode ? '#14161A' : '#FAF7EF'}
+                stopOpacity={1}
+              />
             </LinearGradient>
             <LinearGradient
               id="champagneGold"
@@ -89,7 +103,11 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
             width={width - 12}
             height={214}
             rx={22}
-            stroke="rgba(232, 226, 213, 0.45)"
+            stroke={
+              isDarkMode
+                ? 'rgba(255, 255, 255, 0.12)'
+                : 'rgba(232, 226, 213, 0.45)'
+            }
             strokeWidth={0.8}
             fill="none"
           />
@@ -147,6 +165,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
   bottomOffset,
   onDismissed,
 }) => {
+  const { isDarkMode } = useTheme();
   const [mounted, setMounted] = useState(visible);
   const anim = useRef(new Animated.Value(0)).current;
   const backdropAnim = useRef(new Animated.Value(0)).current;
@@ -235,11 +254,28 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
         ]}
       >
         {/* Subtle arrow notch pointing toward the center plus button */}
-        <View style={styles.pointerNotch} />
+        <View
+          style={[
+            styles.pointerNotch,
+            isDarkMode && {
+              backgroundColor: '#14161A',
+              borderColor: '#2C3035',
+            },
+          ]}
+        />
 
         {/* 2-layer wrapper: Outer shadow wrapper + inner clipped card */}
         <View style={styles.cardShadowWrapper}>
-          <View style={styles.card}>
+          <View
+            style={[
+              styles.card,
+              isDarkMode && {
+                backgroundColor: '#1E2228',
+                borderColor: '#2C3035',
+                borderTopColor: '#3A3F46',
+              },
+            ]}
+          >
             {/* Pristine luxury background with guilloché arcs & champagne micro-sparkles */}
             <SheetBackgroundAestheticSvg width={SHEET_W} />
 
@@ -258,9 +294,24 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                 }
               />
 
-              <View style={styles.headerRight}>
+              <View
+                style={[
+                  styles.headerRight,
+                  isDarkMode && {
+                    backgroundColor: '#2A2D35',
+                    borderColor: '#363944',
+                  },
+                ]}
+              >
                 <Sparkles size={11} color="#C5A059" strokeWidth={2.2} />
-                <Text style={styles.headerRightLabel}>INSTANT</Text>
+                <Text
+                  style={[
+                    styles.headerRightLabel,
+                    isDarkMode && { color: '#F5C518' },
+                  ]}
+                >
+                  INSTANT
+                </Text>
               </View>
             </View>
 
@@ -269,12 +320,28 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
               {/* ── Option 1: Add New Task ── */}
               <TouchableOpacity
                 activeOpacity={0.82}
-                style={[styles.actionCard, styles.taskCard]}
+                style={[
+                  styles.actionCard,
+                  styles.taskCard,
+                  isDarkMode && {
+                    backgroundColor: '#202336',
+                    borderColor: '#8383D6',
+                  },
+                ]}
                 onPress={onPressNewTask}
               >
                 {/* Top Row: Icon Bubble */}
                 <View style={styles.cardTopRow}>
-                  <View style={[styles.iconWrap, styles.taskIconWrap]}>
+                  <View
+                    style={[
+                      styles.iconWrap,
+                      styles.taskIconWrap,
+                      isDarkMode && {
+                        backgroundColor: '#2A2D35',
+                        borderColor: '#8383D6',
+                      },
+                    ]}
+                  >
                     <CheckSquare
                       size={18}
                       color={Colors.LavenderPurple}
@@ -285,8 +352,21 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
 
                 {/* Title & Subtitle - Snug Spacing, Zero Truncation */}
                 <View style={styles.cardContent}>
-                  <Text style={styles.optionTitle}>Add Task</Text>
-                  <Text style={styles.optionSubtitle} numberOfLines={2}>
+                  <Text
+                    style={[
+                      styles.optionTitle,
+                      isDarkMode && { color: '#FFFFFF' },
+                    ]}
+                  >
+                    Add Task
+                  </Text>
+                  <Text
+                    style={[
+                      styles.optionSubtitle,
+                      isDarkMode && { color: '#A3A8B1' },
+                    ]}
+                    numberOfLines={2}
+                  >
                     To-dos, priorities & deadlines
                   </Text>
                 </View>
@@ -294,7 +374,13 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                 {/* Action Footer: Badge + Chevron Button */}
                 <View style={styles.cardFooter}>
                   <Badge label="TO-DO" variant="purple" size="sm" />
-                  <View style={[styles.arrowCircle, styles.taskArrowCircle]}>
+                  <View
+                    style={[
+                      styles.arrowCircle,
+                      styles.taskArrowCircle,
+                      isDarkMode && { backgroundColor: '#2A2D35' },
+                    ]}
+                  >
                     <ChevronRight
                       size={12}
                       color={Colors.LavenderPurple}
@@ -317,20 +403,49 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
               {/* ── Option 2: Add New Reminder ── */}
               <TouchableOpacity
                 activeOpacity={0.82}
-                style={[styles.actionCard, styles.reminderCard]}
+                style={[
+                  styles.actionCard,
+                  styles.reminderCard,
+                  isDarkMode && {
+                    backgroundColor: '#2A2416',
+                    borderColor: '#DEAA14',
+                  },
+                ]}
                 onPress={onPressNewReminder}
               >
                 {/* Top Row: Icon Bubble */}
                 <View style={styles.cardTopRow}>
-                  <View style={[styles.iconWrap, styles.reminderIconWrap]}>
+                  <View
+                    style={[
+                      styles.iconWrap,
+                      styles.reminderIconWrap,
+                      isDarkMode && {
+                        backgroundColor: '#2A2D35',
+                        borderColor: '#DEAA14',
+                      },
+                    ]}
+                  >
                     <Bell size={18} color="#D97706" strokeWidth={2.4} />
                   </View>
                 </View>
 
                 {/* Title & Subtitle - Snug Spacing, Zero Truncation */}
                 <View style={styles.cardContent}>
-                  <Text style={styles.optionTitle}>Reminder</Text>
-                  <Text style={styles.optionSubtitle} numberOfLines={2}>
+                  <Text
+                    style={[
+                      styles.optionTitle,
+                      isDarkMode && { color: '#FFFFFF' },
+                    ]}
+                  >
+                    Reminder
+                  </Text>
+                  <Text
+                    style={[
+                      styles.optionSubtitle,
+                      isDarkMode && { color: '#A3A8B1' },
+                    ]}
+                    numberOfLines={2}
+                  >
                     Alerts, times & schedules
                   </Text>
                 </View>
@@ -339,7 +454,11 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                 <View style={styles.cardFooter}>
                   <Badge label="ALERT" variant="yellow" size="sm" />
                   <View
-                    style={[styles.arrowCircle, styles.reminderArrowCircle]}
+                    style={[
+                      styles.arrowCircle,
+                      styles.reminderArrowCircle,
+                      isDarkMode && { backgroundColor: '#2A2D35' },
+                    ]}
                   >
                     <ChevronRight size={12} color="#D97706" strokeWidth={2.4} />
                   </View>
@@ -356,20 +475,49 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
               {/* ── Option 3: Add New Habit ── */}
               <TouchableOpacity
                 activeOpacity={0.82}
-                style={[styles.actionCard, styles.habitCard]}
+                style={[
+                  styles.actionCard,
+                  styles.habitCard,
+                  isDarkMode && {
+                    backgroundColor: '#162820',
+                    borderColor: '#1B9A72',
+                  },
+                ]}
                 onPress={onPressNewHabit}
               >
                 {/* Top Row: Icon Bubble */}
                 <View style={styles.cardTopRow}>
-                  <View style={[styles.iconWrap, styles.habitIconWrap]}>
+                  <View
+                    style={[
+                      styles.iconWrap,
+                      styles.habitIconWrap,
+                      isDarkMode && {
+                        backgroundColor: '#2A2D35',
+                        borderColor: '#1B9A72',
+                      },
+                    ]}
+                  >
                     <Flame size={18} color="#2E7D32" strokeWidth={2.4} />
                   </View>
                 </View>
 
                 {/* Title & Subtitle - Snug Spacing, Zero Truncation */}
                 <View style={styles.cardContent}>
-                  <Text style={styles.optionTitle}>Habit</Text>
-                  <Text style={styles.optionSubtitle} numberOfLines={2}>
+                  <Text
+                    style={[
+                      styles.optionTitle,
+                      isDarkMode && { color: '#FFFFFF' },
+                    ]}
+                  >
+                    Habit
+                  </Text>
+                  <Text
+                    style={[
+                      styles.optionSubtitle,
+                      isDarkMode && { color: '#A3A8B1' },
+                    ]}
+                    numberOfLines={2}
+                  >
                     Rituals, streaks & momentum
                   </Text>
                 </View>
@@ -377,7 +525,13 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                 {/* Action Footer: Badge + Chevron Button */}
                 <View style={styles.cardFooter}>
                   <Badge label="RITUAL" variant="green" size="sm" />
-                  <View style={[styles.arrowCircle, styles.habitArrowCircle]}>
+                  <View
+                    style={[
+                      styles.arrowCircle,
+                      styles.habitArrowCircle,
+                      isDarkMode && { backgroundColor: '#2A2D35' },
+                    ]}
+                  >
                     <ChevronRight size={12} color="#2E7D32" strokeWidth={2.4} />
                   </View>
                 </View>

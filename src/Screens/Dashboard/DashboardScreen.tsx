@@ -41,6 +41,7 @@ import FlowSectionBackgroundSvg from './Components/FlowSectionBackgroundSvg';
 import LegendaryDoodleSvg from './Components/LegendaryDoodleSvg';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { useDailyQuote } from '../../Services/DailyQuotes';
+import { useAppTheme } from '../../Theme/useAppTheme';
 import DashboardHeader, { HEADER_HEIGHT } from './Components/DashboardHeader';
 import FlowFilterTabs, { FlowFilter } from './Components/FlowFilterTabs';
 
@@ -66,6 +67,7 @@ export const DashboardScreen: React.FC = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
   const dailyQuote = useDailyQuote('dashboard');
+  const { isDarkMode, bgMain, textPrimary, textSecondary } = useAppTheme();
   const { tasks, toggleTask, reminders, toggleReminder, habits, toggleHabit } =
     useTaskReminder();
 
@@ -112,7 +114,10 @@ export const DashboardScreen: React.FC = () => {
   // Interpolate header visual styles based on scroll position (0 to 30px)
   const headerBgColor = scrollY.interpolate({
     inputRange: [0, 30],
-    outputRange: [Colors.DefaultWhite, Colors.LavenderPurple],
+    outputRange: [
+      isDarkMode ? 'rgba(18, 20, 23, 0)' : 'rgba(255, 255, 255, 0)',
+      isDarkMode ? '#282048' : Colors.LavenderPurple,
+    ],
     extrapolate: 'clamp',
   });
 
@@ -322,12 +327,22 @@ export const DashboardScreen: React.FC = () => {
   );
 
   return (
-    <View style={styles.safeArea}>
+    <View style={[styles.safeArea, { backgroundColor: bgMain }]}>
       <StatusBar
-        barStyle={isScrolled ? 'light-content' : 'dark-content'}
+        barStyle={
+          isScrolled
+            ? 'light-content'
+            : isDarkMode
+            ? 'light-content'
+            : 'dark-content'
+        }
         {...(Platform.OS === 'android'
           ? {
-              backgroundColor: isScrolled ? Colors.LavenderPurple : '#FBF9F3',
+              backgroundColor: isScrolled
+                ? isDarkMode
+                  ? '#282048'
+                  : Colors.LavenderPurple
+                : bgMain,
               translucent: true,
             }
           : {})}
@@ -368,16 +383,26 @@ export const DashboardScreen: React.FC = () => {
           {/* Greeting */}
           <View style={styles.greetingSection}>
             <View style={styles.dateWeatherRow}>
-              <Text style={styles.dateText}>{formattedDate}</Text>
+              <Text style={[styles.dateText, { color: textSecondary }]}>
+                {formattedDate}
+              </Text>
               <View style={styles.ambientStatus}>
-                <Sun size={14} color="#77767B" strokeWidth={2.2} />
-                <Text style={styles.ambientStatusText}>
+                <Sun
+                  size={14}
+                  color={isDarkMode ? '#F5C518' : '#77767B'}
+                  strokeWidth={2.2}
+                />
+                <Text
+                  style={[styles.ambientStatusText, { color: textSecondary }]}
+                >
                   Calm & Focused • 68°F
                 </Text>
               </View>
             </View>
 
-            <Text style={styles.greetingText}>{greeting}</Text>
+            <Text style={[styles.greetingText, { color: textPrimary }]}>
+              {greeting}
+            </Text>
           </View>
 
           {/* Voice briefing card */}
@@ -486,11 +511,24 @@ export const DashboardScreen: React.FC = () => {
             <View style={styles.footerWatermarkRow}>
               {/* Left Column: Bold Typography & Sign-off */}
               <View style={styles.footerTextBlock}>
-                <Text style={styles.footerWatermarkText}>{dailyQuote}</Text>
+                <Text
+                  style={[
+                    styles.footerWatermarkText,
+                    { color: isDarkMode ? '#4A505E' : '#8E95A5' },
+                  ]}
+                >
+                  {dailyQuote}
+                </Text>
                 <View style={styles.craftedWithRow}>
-                  <Text style={styles.craftedWithText}>Crafted with </Text>
+                  <Text
+                    style={[styles.craftedWithText, { color: textSecondary }]}
+                  >
+                    Crafted with{' '}
+                  </Text>
                   <Text style={styles.craftedWithHeart}>❤️</Text>
-                  <Text style={styles.craftedWithText}>
+                  <Text
+                    style={[styles.craftedWithText, { color: textSecondary }]}
+                  >
                     {' '}
                     in Ahmedabad, India
                   </Text>

@@ -1,7 +1,8 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { Colors } from '../Assets/StyleUtilities/Colors';
+import { useTheme } from '../Theme/ThemeContext';
 import { navigationRef } from './Navigator';
 import Splash from '../Screens/Splash/Splash';
 import Intro from '../Screens/Intro/Intro';
@@ -25,17 +26,23 @@ import { VoiceWakeWordProvider } from '../Context/VoiceWakeWordContext';
 
 const Stack = createNativeStackNavigator();
 
-const appTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: Colors.CreamBackground,
-  },
-};
-
 export default function AppNavigator() {
   const { isLoading } = useContext(AuthContext);
+  const { isDarkMode, Colors: themeColors } = useTheme();
   const [minTimePassed, setMinTimePassed] = React.useState(false);
+
+  const navigationTheme = useMemo(
+    () => ({
+      ...DefaultTheme,
+      colors: {
+        ...DefaultTheme.colors,
+        background: isDarkMode
+          ? '#121417'
+          : themeColors.Background || Colors.CreamBackground,
+      },
+    }),
+    [isDarkMode, themeColors],
+  );
 
   React.useEffect(() => {
     const timer = setTimeout(() => {
@@ -46,7 +53,7 @@ export default function AppNavigator() {
 
   if (isLoading || !minTimePassed) {
     return (
-      <NavigationContainer ref={navigationRef} theme={appTheme}>
+      <NavigationContainer ref={navigationRef} theme={navigationTheme}>
         <Stack.Navigator
           screenOptions={{ headerShown: false, animation: 'fade' }}
         >
@@ -58,7 +65,7 @@ export default function AppNavigator() {
 
   return (
     <VoiceWakeWordProvider>
-      <NavigationContainer ref={navigationRef} theme={appTheme}>
+      <NavigationContainer ref={navigationRef} theme={navigationTheme}>
         <Stack.Navigator
           screenOptions={{ headerShown: false, animation: 'fade' }}
         >

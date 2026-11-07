@@ -38,6 +38,7 @@ import TaskCardItem from './Components/TaskCardItem';
 import TaskCompleteDoodleSvg from './Components/TaskCompleteDoodleSvg';
 import AddTaskModal from '../../Components/AddTaskModal';
 import { useDailyQuote } from '../../Services/DailyQuotes';
+import { useAppTheme } from '../../Theme/useAppTheme';
 
 type TabKey = 'taskList' | 'completed';
 
@@ -45,6 +46,7 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
   const dailyQuote = useDailyQuote('tasks');
+  const { isDarkMode, bgMain, textPrimary, textSecondary } = useAppTheme();
   const [activeTab, setActiveTab] = useState<TabKey>('taskList');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     'works',
@@ -190,12 +192,22 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
   );
 
   return (
-    <View style={styles.safeArea}>
+    <View style={[styles.safeArea, { backgroundColor: bgMain }]}>
       <StatusBar
-        barStyle={isScrolled ? 'light-content' : 'dark-content'}
+        barStyle={
+          isScrolled
+            ? 'light-content'
+            : isDarkMode
+            ? 'light-content'
+            : 'dark-content'
+        }
         {...(Platform.OS === 'android'
           ? {
-              backgroundColor: isScrolled ? Colors.LavenderPurple : '#FBF9F3',
+              backgroundColor: isScrolled
+                ? isDarkMode
+                  ? '#282048'
+                  : Colors.LavenderPurple
+                : bgMain,
               translucent: true,
             }
           : {})}
@@ -252,7 +264,15 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
           onPressAdd={openTaskModal}
           addAccessibilityLabel="Add new task"
           bottomPadding={insets.bottom + 130}
-          containerStyle={styles.taskSection}
+          containerStyle={[
+            styles.taskSection,
+            isDarkMode && {
+              backgroundColor: '#181B20',
+              borderTopColor: '#2C3035',
+              borderLeftColor: '#22252B',
+              borderRightColor: '#22252B',
+            },
+          ]}
         >
           {/* Tasks List */}
           <FlatList
@@ -280,12 +300,12 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
                 ) : (
                   <CheckSquare size={38} color="#D1D5DB" strokeWidth={1.5} />
                 )}
-                <Text style={styles.emptyTitle}>
+                <Text style={[styles.emptyTitle, { color: textPrimary }]}>
                   {activeTab === 'completed'
                     ? 'No Completed Tasks Yet'
                     : 'No Tasks in This Category'}
                 </Text>
-                <Text style={styles.emptySubtitle}>
+                <Text style={[styles.emptySubtitle, { color: textSecondary }]}>
                   {activeTab === 'completed'
                     ? 'Completed tasks will appear here as you conquer your daily focus.'
                     : 'Tap below to add your next objective.'}

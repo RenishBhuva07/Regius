@@ -26,6 +26,7 @@ import Toast from 'react-native-toast-message';
 import { Fonts } from '../../Theme/fonts';
 import { Typography } from '../../Theme/Typographys';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
+import { useAppTheme } from '../../Theme/useAppTheme';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { useTaskReminder, Reminder } from '../../Context/TaskReminderContext';
 import { ScreenHeader, SCREEN_HEADER_HEIGHT } from '../../Common/ScreenHeader';
@@ -47,6 +48,7 @@ type TabKey = 'upcoming' | 'completed';
 export const RemindersScreen: React.FC<any> = ({ route }) => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
+  const { isDarkMode, bgMain, textPrimary, textSecondary } = useAppTheme();
   const dailyQuote = useDailyQuote('reminders');
   const [activeTab, setActiveTab] = useState<TabKey>('upcoming');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
@@ -235,12 +237,24 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
   );
 
   return (
-    <View style={styles.safeArea}>
+    <View style={[styles.safeArea, { backgroundColor: bgMain }]}>
       <StatusBar
-        barStyle={isScrolled ? 'light-content' : 'dark-content'}
+        barStyle={
+          isScrolled
+            ? 'light-content'
+            : isDarkMode
+            ? 'light-content'
+            : 'dark-content'
+        }
         {...(Platform.OS === 'android'
           ? {
-              backgroundColor: isScrolled ? Colors.LavenderPurple : '#FBF9F3',
+              backgroundColor: isScrolled
+                ? isDarkMode
+                  ? '#282048'
+                  : Colors.LavenderPurple
+                : isDarkMode
+                ? '#121417'
+                : '#FBF9F3',
               translucent: true,
             }
           : {})}
@@ -300,14 +314,24 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
           onPressAdd={openReminderModal}
           addAccessibilityLabel="Add Reminder"
           bottomPadding={insets.bottom + 130}
-          containerStyle={styles.reminderSection}
+          containerStyle={[
+            styles.reminderSection,
+            isDarkMode && {
+              backgroundColor: '#181B20',
+              borderTopColor: '#2C3035',
+              borderLeftColor: '#2C3035',
+              borderRightColor: '#2C3035',
+            },
+          ]}
         >
           {/* Reminders List or Empty State */}
           {filteredReminders.length === 0 ? (
             <View style={styles.emptyContainer}>
               <ReminderEmptyDoodleSvg />
-              <Text style={styles.emptyTitle}>No reminders here</Text>
-              <Text style={styles.emptySubtitle}>
+              <Text style={[styles.emptyTitle, { color: textPrimary }]}>
+                No reminders here
+              </Text>
+              <Text style={[styles.emptySubtitle, { color: textSecondary }]}>
                 {activeTab === 'completed'
                   ? 'No completed alerts in this category yet.'
                   : 'Tap “+” or the button below to schedule an alert.'}
@@ -382,11 +406,30 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
             <View style={styles.footerWatermarkRow}>
               {/* Left Column: Bold Typography & Sign-off */}
               <View style={styles.liveItUpBlock}>
-                <Text style={styles.liveItUpText}>{dailyQuote}</Text>
+                <Text
+                  style={[
+                    styles.liveItUpText,
+                    isDarkMode && { color: '#5C6270' },
+                  ]}
+                >
+                  {dailyQuote}
+                </Text>
                 <View style={styles.craftedWithRow}>
-                  <Text style={styles.craftedWithText}>Crafted with </Text>
+                  <Text
+                    style={[
+                      styles.craftedWithText,
+                      isDarkMode && { color: '#5C6270' },
+                    ]}
+                  >
+                    Crafted with{' '}
+                  </Text>
                   <Text style={styles.craftedWithHeart}>❤️</Text>
-                  <Text style={styles.craftedWithText}>
+                  <Text
+                    style={[
+                      styles.craftedWithText,
+                      isDarkMode && { color: '#5C6270' },
+                    ]}
+                  >
                     {' '}
                     in Ahmedabad, India
                   </Text>

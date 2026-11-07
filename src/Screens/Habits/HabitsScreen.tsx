@@ -20,6 +20,7 @@ import Toast from 'react-native-toast-message';
 import { Fonts } from '../../Theme/fonts';
 import { Typography } from '../../Theme/Typographys';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
+import { useAppTheme } from '../../Theme/useAppTheme';
 import { useTaskReminder, HabitItem } from '../../Context/TaskReminderContext';
 import HabitConsistencyBento from './Components/HabitConsistencyBento';
 import HabitCategoryFilters, {
@@ -37,6 +38,7 @@ import { useDailyQuote } from '../../Services/DailyQuotes';
 export const HabitsScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
+  const { isDarkMode, bgMain, textPrimary, textSecondary } = useAppTheme();
   const dailyQuote = useDailyQuote('habits');
 
   const {
@@ -111,12 +113,24 @@ export const HabitsScreen: React.FC = () => {
   );
 
   return (
-    <View style={styles.safeArea}>
+    <View style={[styles.safeArea, { backgroundColor: bgMain }]}>
       <StatusBar
-        barStyle={isScrolled ? 'light-content' : 'dark-content'}
+        barStyle={
+          isScrolled
+            ? 'light-content'
+            : isDarkMode
+            ? 'light-content'
+            : 'dark-content'
+        }
         {...(Platform.OS === 'android'
           ? {
-              backgroundColor: isScrolled ? Colors.LavenderPurple : '#FBF9F3',
+              backgroundColor: isScrolled
+                ? isDarkMode
+                  ? '#282048'
+                  : Colors.LavenderPurple
+                : isDarkMode
+                ? '#121417'
+                : '#FBF9F3',
               translucent: true,
             }
           : {})}
@@ -165,7 +179,16 @@ export const HabitsScreen: React.FC = () => {
           onPressAdd={openHabitModal}
           addAccessibilityLabel="Add new habit"
           bottomPadding={insets.bottom + 130}
-          containerStyle={styles.habitsSection}
+          containerStyle={[
+            styles.habitsSection,
+            isDarkMode && {
+              backgroundColor: '#181B20',
+              borderTopColor: '#2C3035',
+              borderLeftColor: '#2C3035',
+              borderRightColor: '#2C3035',
+              borderBottomColor: '#2C3035',
+            },
+          ]}
         >
           {/* All habits list using FlatList */}
           <FlatList
@@ -183,10 +206,20 @@ export const HabitsScreen: React.FC = () => {
             )}
             ItemSeparatorComponent={() => <View style={styles.listSeparator} />}
             ListEmptyComponent={
-              <View style={styles.emptyCard}>
-                <Flame size={32} color="#D8D4CA" strokeWidth={1.5} />
-                <Text style={styles.emptyTitle}>No Rituals In This Flow</Text>
-                <Text style={styles.emptySubtitle}>
+              <View
+                style={[
+                  styles.emptyCard,
+                  isDarkMode && {
+                    backgroundColor: '#1E2228',
+                    borderColor: '#2C3035',
+                  },
+                ]}
+              >
+                <Flame size={32} color={isDarkMode ? '#5C6270' : '#D8D4CA'} strokeWidth={1.5} />
+                <Text style={[styles.emptyTitle, { color: textPrimary }]}>
+                  No Rituals In This Flow
+                </Text>
+                <Text style={[styles.emptySubtitle, { color: textSecondary }]}>
                   Tap below to establish your next healthy daily habit.
                 </Text>
                 <TouchableOpacity
@@ -206,11 +239,30 @@ export const HabitsScreen: React.FC = () => {
             <View style={styles.footerWatermarkRow}>
               {/* Left Column: Bold Typography & Sign-off */}
               <View style={styles.footerTextBlock}>
-                <Text style={styles.footerWatermarkText}>{dailyQuote}</Text>
+                <Text
+                  style={[
+                    styles.footerWatermarkText,
+                    isDarkMode && { color: '#5C6270' },
+                  ]}
+                >
+                  {dailyQuote}
+                </Text>
                 <View style={styles.craftedWithRow}>
-                  <Text style={styles.craftedWithText}>Crafted with </Text>
+                  <Text
+                    style={[
+                      styles.craftedWithText,
+                      isDarkMode && { color: '#5C6270' },
+                    ]}
+                  >
+                    Crafted with{' '}
+                  </Text>
                   <Text style={styles.craftedWithHeart}>❤️</Text>
-                  <Text style={styles.craftedWithText}>
+                  <Text
+                    style={[
+                      styles.craftedWithText,
+                      isDarkMode && { color: '#5C6270' },
+                    ]}
+                  >
                     {' '}
                     in Ahmedabad, India
                   </Text>

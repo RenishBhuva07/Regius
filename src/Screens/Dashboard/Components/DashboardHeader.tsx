@@ -8,6 +8,7 @@ import { CustomAnimation } from '../../../Common/CustomAnimation';
 import HolographAnimation from '../../../Assets/JsonAnimations/Holograph.json';
 import { SettingsButton } from '../../../Common/SettingsButton';
 import HeaderPatternSvg from './HeaderPatternSvg';
+import { useTheme } from '../../../Theme/ThemeContext';
 
 export const HEADER_HEIGHT = 54;
 
@@ -43,6 +44,7 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = React.memo(
     onPressSettings,
     onPressProfile,
   }) => {
+    const { isDarkMode } = useTheme();
     return (
       <Animated.View
         style={[
@@ -76,7 +78,10 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = React.memo(
 
         <View style={styles.header}>
           <View style={styles.headerLeft}>
-            <RegiusLogo size="xl" variant={isScrolled ? 'light' : 'default'} />
+            <RegiusLogo
+              size="xl"
+              variant={isScrolled || isDarkMode ? 'light' : 'default'}
+            />
           </View>
 
           <View style={styles.headerRight}>

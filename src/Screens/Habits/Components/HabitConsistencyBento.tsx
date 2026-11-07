@@ -19,6 +19,7 @@ import Svg, {
 import { Fonts } from '../../../Theme/fonts';
 import { Typography } from '../../../Theme/Typographys';
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { useAppTheme } from '../../../Theme/useAppTheme';
 import { Badge } from '../../../Common/Badge';
 import { HabitItem } from '../../../Context/TaskReminderContext';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
@@ -102,6 +103,7 @@ const BentoBackgroundSvg: React.FC = React.memo(() => (
 export const HabitConsistencyBento: React.FC<HabitConsistencyBentoProps> = ({
   habits,
 }) => {
+  const { isDarkMode } = useAppTheme();
   const completedCount = habits.filter(h => h.completed).length;
   const totalCount = habits.length;
   const progressPercent =
@@ -142,7 +144,12 @@ export const HabitConsistencyBento: React.FC<HabitConsistencyBentoProps> = ({
 
   return (
     <View style={styles.cardShadowWrapper}>
-      <View style={styles.card}>
+      <View
+        style={[
+          styles.card,
+          isDarkMode && { borderColor: 'rgba(255, 255, 255, 0.22)' },
+        ]}
+      >
         {/* Luxury Dark Ambient Background matching DailyBriefingCard */}
         <BentoBackgroundSvg />
 

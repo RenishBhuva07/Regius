@@ -28,6 +28,7 @@ import { Fonts } from '../../../Theme/fonts';
 import { Badge } from '../../../Common/Badge';
 import { StreakBadge } from '../../../Common/StreakBadge';
 import Colors from '../../../Assets/StyleUtilities/Colors';
+import { useAppTheme } from '../../../Theme/useAppTheme';
 
 export type TimelineCategoryType = 'task' | 'habit' | 'reminder';
 
@@ -69,6 +70,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
   onExtendMinutes,
 }) => {
   const isCompleted = item.completed;
+  const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
 
   // Responsive card size state for exact SVG path rendering
   const initialW = Dimensions.get('window').width - 118;
@@ -103,41 +105,41 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
       case 'task':
         return {
           accent: '#F5C518',
-          bgTint: '#FFFDF7',
-          borderTint: '#FFF5B8',
+          bgTint: isDarkMode ? '#2A2416' : '#FFFDF7',
+          borderTint: isDarkMode ? '#DEAA14' : '#FFF5B8',
           shadowColor: '#F5C518',
           auraColor: '#F5C518',
-          pillBg: '#FFF9D2',
-          pillText: '#B48216',
-          iconBg: '#FFFCEB',
-          iconColor: '#B48216',
+          pillBg: isDarkMode ? '#38301D' : '#FFF9D2',
+          pillText: isDarkMode ? '#F5C518' : '#B48216',
+          iconBg: isDarkMode ? '#38301D' : '#FFFCEB',
+          iconColor: isDarkMode ? '#F5C518' : '#B48216',
           badgeVariant: 'yellow' as const,
         };
       case 'reminder':
         return {
           accent: '#1B9A72',
-          bgTint: '#F5FDF9',
-          borderTint: '#C6FFDD',
+          bgTint: isDarkMode ? '#162820' : '#F5FDF9',
+          borderTint: isDarkMode ? '#1B9A72' : '#C6FFDD',
           shadowColor: '#52D22E',
           auraColor: '#52D22E',
-          pillBg: '#E8FDF0',
-          pillText: '#1B9A72',
-          iconBg: '#EDFDF5',
-          iconColor: '#1B9A72',
+          pillBg: isDarkMode ? '#1F382D' : '#E8FDF0',
+          pillText: isDarkMode ? '#52D22E' : '#1B9A72',
+          iconBg: isDarkMode ? '#1F382D' : '#EDFDF5',
+          iconColor: isDarkMode ? '#52D22E' : '#1B9A72',
           badgeVariant: 'green' as const,
         };
       case 'habit':
       default:
         return {
           accent: '#8383D6',
-          bgTint: '#F7F8FE',
-          borderTint: '#D8DBFF',
+          bgTint: isDarkMode ? '#202336' : '#F7F8FE',
+          borderTint: isDarkMode ? '#8383D6' : '#D8DBFF',
           shadowColor: '#8383D6',
           auraColor: '#8383D6',
-          pillBg: '#EDEAFB',
-          pillText: '#7059C8',
-          iconBg: '#EFF2FE',
-          iconColor: '#7059C8',
+          pillBg: isDarkMode ? '#2C304A' : '#EDEAFB',
+          pillText: isDarkMode ? '#8383D6' : '#7059C8',
+          iconBg: isDarkMode ? '#2C304A' : '#EFF2FE',
+          iconColor: isDarkMode ? '#8383D6' : '#7059C8',
           badgeVariant: 'purple' as const,
         };
     }
@@ -172,17 +174,32 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
             styles.timelineLine,
             isFirst && styles.timelineLineFirst,
             isLast && styles.timelineLineLast,
+            isDarkMode && { backgroundColor: '#2C3035' },
           ]}
         />
 
         <View style={styles.timeTextContainer}>
           <Text
-            style={[styles.timeNumber, isCompleted && styles.timeCompletedText]}
+            style={[
+              styles.timeNumber,
+              isCompleted && styles.timeCompletedText,
+              {
+                color: isCompleted
+                  ? isDarkMode
+                    ? '#6B7280'
+                    : '#A8A6A4'
+                  : textPrimary,
+              },
+            ]}
           >
             {timeNumber}
           </Text>
           <Text
-            style={[styles.timePeriod, isCompleted && styles.timeCompletedText]}
+            style={[
+              styles.timePeriod,
+              isCompleted && styles.timeCompletedText,
+              { color: textSecondary },
+            ]}
           >
             {timePeriod}
           </Text>
@@ -191,9 +208,18 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
         <View
           style={[
             styles.nodeCircle,
+            isDarkMode && { borderColor: '#1E2228' },
             {
-              backgroundColor: isCompleted ? '#F7F6F2' : catStyle.iconBg,
-              borderColor: isCompleted ? '#E8E5DE' : catStyle.borderTint,
+              backgroundColor: isCompleted
+                ? isDarkMode
+                  ? '#252932'
+                  : '#F7F6F2'
+                : catStyle.iconBg,
+              borderColor: isCompleted
+                ? isDarkMode
+                  ? '#2C3035'
+                  : '#E8E5DE'
+                : catStyle.borderTint,
             },
           ]}
         >
@@ -255,8 +281,20 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
           </Defs>
           <Path
             d={getCutoutCardPath(cardSize.width, cardSize.height)}
-            fill={isCompleted ? '#FAFAF8' : catStyle.bgTint}
-            stroke={isCompleted ? '#ECEAE4' : catStyle.borderTint}
+            fill={
+              isCompleted
+                ? isDarkMode
+                  ? '#171A20'
+                  : '#FAFAF8'
+                : catStyle.bgTint
+            }
+            stroke={
+              isCompleted
+                ? isDarkMode
+                  ? '#2C3035'
+                  : '#ECEAE4'
+                : catStyle.borderTint
+            }
             strokeWidth={1.5}
             strokeLinejoin="round"
           />
@@ -305,6 +343,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
               : [
                   styles.floatingCheckboxUnchecked,
                   { borderColor: catStyle.borderTint },
+                  isDarkMode && { backgroundColor: '#252932' },
                 ],
           ]}
           accessibilityRole="checkbox"
@@ -321,7 +360,12 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
         <View style={styles.cardContent}>
           <View style={styles.cardTopRow}>
             <Text
-              style={[styles.title, isCompleted && styles.titleCompleted]}
+              style={[
+                styles.title,
+                isCompleted
+                  ? styles.titleCompleted
+                  : { color: textPrimary },
+              ]}
               numberOfLines={2}
             >
               {item.title}
@@ -330,7 +374,12 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
 
           {item.subtitle ? (
             <Text
-              style={[styles.subtitle, isCompleted && styles.subtitleCompleted]}
+              style={[
+                styles.subtitle,
+                isCompleted
+                  ? styles.subtitleCompleted
+                  : { color: textSecondary },
+              ]}
               numberOfLines={2}
             >
               {item.subtitle}

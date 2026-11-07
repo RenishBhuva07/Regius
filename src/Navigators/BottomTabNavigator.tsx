@@ -18,6 +18,7 @@ import TasksScreen from '../Screens/Tasks/TasksScreen';
 import RemindersScreen from '../Screens/Reminders/RemindersScreen';
 import { HabitsScreen } from '../Screens/Habits';
 import { Colors } from '../Assets/StyleUtilities/Colors';
+import { useTheme } from '../Theme/ThemeContext';
 import { Typography } from '../Theme/Typographys';
 import { Fonts } from '../Theme/fonts';
 import PlusActionSheet from './PlusActionSheet';
@@ -96,6 +97,7 @@ const getTabX = (slot: number): number =>
 
 const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
   const insets = useSafeAreaInsets();
+  const { isDarkMode } = useTheme();
   const safeBot = Math.max(insets.bottom, 8);
 
   // Height the nav system reserves: bar + button float + safe area
@@ -353,8 +355,20 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
           { bottom: btnBottom, left: SW / 2 - (BTN_SIZE + BTN_RING) / 2 },
         ]}
       >
-        {/* Cream halo — visually separates button from bar */}
-        <View style={[styles.btnHalo, styles.btnShadow]}>
+        {/* Halo — visually separates button from bar */}
+        <View
+          style={[
+            styles.btnHalo,
+            styles.btnShadow,
+            isDarkMode && {
+              backgroundColor: '#121417',
+              borderTopColor: '#2C3035',
+              borderLeftColor: '#22252B',
+              borderRightColor: '#22252B',
+              borderBottomColor: '#1A1C20',
+            },
+          ]}
+        >
           <Animated.View
             style={[styles.btnCircle, { transform: [{ scale: plusScale }] }]}
           >

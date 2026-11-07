@@ -16,6 +16,7 @@ import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { Reminder } from '../../../Context/TaskReminderContext';
 import { CircularProgress } from '../../../Common/CircularProgress';
 import { OfficeBagIcon } from '../../../Common/EmblemIcons';
+import { useAppTheme } from '../../../Theme/useAppTheme';
 
 export interface ReminderCategoryItem {
   id: string;
@@ -91,6 +92,9 @@ interface ReminderCategoryCarouselProps {
 export const ReminderCategoryCarousel: React.FC<
   ReminderCategoryCarouselProps
 > = ({ reminders, selectedCategory, onSelectCategory, onAddPress }) => {
+  const { isDarkMode, textPrimary, textSecondary, borderLight, cardBg } =
+    useAppTheme();
+
   const getCategoryMetrics = (catId: string) => {
     const catReminders = reminders.filter(r => r.category === catId);
     const total = catReminders.length;
@@ -104,14 +108,26 @@ export const ReminderCategoryCarousel: React.FC<
       {/* Section Header */}
       <View style={styles.sectionHeader}>
         <View style={styles.titleRow}>
-          <Text style={styles.sectionTitle}>Categories</Text>
+          <Text style={[styles.sectionTitle, { color: textPrimary }]}>
+            Categories
+          </Text>
           {selectedCategory && (
             <TouchableOpacity
               activeOpacity={0.7}
               onPress={() => onSelectCategory(null)}
-              style={styles.clearFilterChip}
+              style={[
+                styles.clearFilterChip,
+                isDarkMode && { backgroundColor: '#1E2228' },
+              ]}
             >
-              <Text style={styles.clearFilterText}>Show All</Text>
+              <Text
+                style={[
+                  styles.clearFilterText,
+                  isDarkMode && { color: '#A3A8B1' },
+                ]}
+              >
+                Show All
+              </Text>
             </TouchableOpacity>
           )}
         </View>
@@ -121,13 +137,20 @@ export const ReminderCategoryCarousel: React.FC<
             activeOpacity={0.7}
             style={[
               styles.filterBtn,
+              isDarkMode && { backgroundColor: '#1E2228' },
               selectedCategory !== null && styles.filterBtnActive,
             ]}
             onPress={() => onSelectCategory(selectedCategory ? null : 'daily')}
           >
             <Filter
               size={15}
-              color={selectedCategory !== null ? '#FFFFFF' : '#1F2228'}
+              color={
+                selectedCategory !== null
+                  ? '#FFFFFF'
+                  : isDarkMode
+                  ? '#FFFFFF'
+                  : '#1F2228'
+              }
               strokeWidth={2.2}
             />
           </TouchableOpacity>
@@ -155,6 +178,32 @@ export const ReminderCategoryCarousel: React.FC<
           const isSelected = selectedCategory === cat.id;
           const metrics = getCategoryMetrics(cat.id);
 
+          const cardBgColor = isDarkMode
+            ? cat.id === 'daily'
+              ? '#2A2416'
+              : cat.id === 'health'
+              ? '#162820'
+              : cat.id === 'work'
+              ? '#202336'
+              : '#331F18'
+            : cat.bgColor;
+          const cardBorderColor = isDarkMode
+            ? cat.id === 'daily'
+              ? '#DEAA14'
+              : cat.id === 'health'
+              ? '#1B9A72'
+              : cat.id === 'work'
+              ? '#8383D6'
+              : '#FF9800'
+            : cat.borderColor;
+          const circularTrack = isDarkMode
+            ? 'rgba(255, 255, 255, 0.12)'
+            : cat.trackColor;
+          const circularProgress = isDarkMode
+            ? cat.accentColor
+            : cat.progressColor;
+          const circularText = isDarkMode ? '#FFFFFF' : cat.textColor;
+
           return (
             <TouchableOpacity
               key={cat.id}
@@ -168,7 +217,14 @@ export const ReminderCategoryCarousel: React.FC<
               }}
               style={[
                 styles.categoryCard,
-                { backgroundColor: cat.bgColor },
+                {
+                  backgroundColor: cardBgColor,
+                  borderColor: isSelected
+                    ? cardBorderColor
+                    : isDarkMode
+                    ? 'rgba(255, 255, 255, 0.1)'
+                    : 'transparent',
+                },
                 isSelected && [
                   styles.categoryCardSelected,
                   { shadowColor: cat.shadowColor },
@@ -183,8 +239,14 @@ export const ReminderCategoryCarousel: React.FC<
                 <View
                   style={[
                     styles.categoryIconWrap,
+                    isDarkMode && {
+                      backgroundColor: '#2A2D35',
+                      borderColor: cardBorderColor,
+                    },
                     {
-                      borderColor: cat.borderColor,
+                      borderColor: isDarkMode
+                        ? cardBorderColor
+                        : cat.borderColor,
                       shadowColor: cat.shadowColor,
                     },
                   ]}
@@ -194,20 +256,23 @@ export const ReminderCategoryCarousel: React.FC<
 
                 <CircularProgress
                   percent={metrics.percent}
-                  trackColor={cat.trackColor}
-                  progressColor={cat.progressColor}
-                  textColor={cat.textColor}
+                  trackColor={circularTrack}
+                  progressColor={circularProgress}
+                  textColor={circularText}
                   shadowColor={cat.shadowColor}
                 />
               </View>
 
               {/* Card Bottom: Completed/Total Ratio & Category Label */}
               <View style={styles.cardBottom}>
-                <Text style={styles.countText}>
+                <Text style={[styles.countText, { color: textPrimary }]}>
                   {metrics.completed}
                   <Text style={styles.countTotalText}>/{metrics.total}</Text>
                 </Text>
-                <Text style={styles.categoryLabel} numberOfLines={1}>
+                <Text
+                  style={[styles.categoryLabel, { color: textPrimary }]}
+                  numberOfLines={1}
+                >
                   {cat.label}
                 </Text>
               </View>

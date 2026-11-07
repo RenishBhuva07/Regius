@@ -9,6 +9,7 @@ import {
 import { Compass, Sun, Sparkles, Moon } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { useAppTheme } from '../../../Theme/useAppTheme';
 import { HabitItem } from '../../../Context/TaskReminderContext';
 
 export type HabitFilterKey = 'all' | 'morning' | 'mindful' | 'evening';
@@ -37,6 +38,8 @@ export const HabitCategoryFilters: React.FC<HabitCategoryFiltersProps> = ({
   onSelectFilter,
   habits,
 }) => {
+  const { isDarkMode } = useAppTheme();
+
   const getCategoryCount = (key: HabitFilterKey) => {
     if (key === 'all') return habits.length;
     return habits.filter(h => h.category === key).length;
@@ -60,23 +63,42 @@ export const HabitCategoryFilters: React.FC<HabitCategoryFiltersProps> = ({
             key={item.key}
             activeOpacity={0.8}
             onPress={() => onSelectFilter(item.key)}
-            style={[styles.filterPill, isActive && styles.filterPillActive]}
+            style={[
+              styles.filterPill,
+              isDarkMode && !isActive && {
+                backgroundColor: '#1E2228',
+                borderColor: '#2C3035',
+                borderBottomColor: '#171A1F',
+              },
+              isActive && styles.filterPillActive,
+            ]}
           >
             <IconComponent
               size={14}
-              color={isActive ? Colors.DefaultWhite : '#555450'}
+              color={
+                isActive
+                  ? Colors.DefaultWhite
+                  : isDarkMode
+                  ? '#A3A8B1'
+                  : '#555450'
+              }
               strokeWidth={2.2}
             />
             <Text
               style={[
                 styles.filterPillText,
+                isDarkMode && !isActive && { color: '#A3A8B1' },
                 isActive && styles.filterPillTextActive,
               ]}
             >
               {item.label}
             </Text>
             <View
-              style={[styles.countBadge, isActive && styles.countBadgeActive]}
+              style={[
+                styles.countBadge,
+                isDarkMode && !isActive && { backgroundColor: '#2A2D35' },
+                isActive && styles.countBadgeActive,
+              ]}
             >
               <Text
                 style={[styles.countText, isActive && styles.countTextActive]}
