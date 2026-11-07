@@ -17,6 +17,7 @@ import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../Theme/fonts';
 import { Colors } from '../Assets/StyleUtilities/Colors';
+import { useAppTheme } from '../Theme/useAppTheme';
 import { Badge, BadgeVariant } from './Badge';
 import {
   PictureEmblemIcon,
@@ -153,6 +154,7 @@ export interface CustomCategoryModalProps {
 
 export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
   React.memo(({ visible, onClose, onCreateCategory }) => {
+    const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
     const [newCatName, setNewCatName] = useState('');
     const [newCatPresetIndex, setNewCatPresetIndex] = useState(0);
     const [selectedIconIndex, setSelectedIconIndex] = useState(0);
@@ -198,8 +200,23 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
         <TouchableWithoutFeedback onPress={onClose}>
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-              <View style={styles.modalCard}>
-                <View style={styles.modalDragHandle} />
+              <View
+                style={[
+                  styles.modalCard,
+                  isDarkMode && {
+                    backgroundColor: '#1E2228',
+                    borderTopColor: '#2C3035',
+                    borderLeftColor: '#2C3035',
+                    borderRightColor: '#2C3035',
+                  },
+                ]}
+              >
+                <View
+                  style={[
+                    styles.modalDragHandle,
+                    isDarkMode && { backgroundColor: '#363944' },
+                  ]}
+                />
 
                 {/* Header Crest Badge & Title */}
                 <View style={styles.modalHeaderRow}>
@@ -210,8 +227,20 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                       label="CATEGORY STUDIO"
                       icon={<Sparkles size={10} color="#D97706" />}
                     />
-                    <Text style={styles.modalHeading}>Craft Category</Text>
-                    <Text style={styles.modalSubtitle}>
+                    <Text
+                      style={[
+                        styles.modalHeading,
+                        isDarkMode && { color: '#FFFFFF' },
+                      ]}
+                    >
+                      Craft Category
+                    </Text>
+                    <Text
+                      style={[
+                        styles.modalSubtitle,
+                        isDarkMode && { color: '#A3A8B1' },
+                      ]}
+                    >
                       Curate an iconic visual signature for your focus
                     </Text>
                   </View>
@@ -310,9 +339,23 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
 
                 {/* Name Input */}
                 <View style={styles.inputSection}>
-                  <Text style={styles.inputLabel}>CATEGORY LABEL</Text>
+                  <Text
+                    style={[
+                      styles.inputLabel,
+                      isDarkMode && { color: '#A3A8B1' },
+                    ]}
+                  >
+                    CATEGORY LABEL
+                  </Text>
                   <TextInput
-                    style={styles.textInput}
+                    style={[
+                      styles.textInput,
+                      isDarkMode && {
+                        backgroundColor: '#171A1F',
+                        borderColor: '#2C3035',
+                        color: '#FFFFFF',
+                      },
+                    ]}
                     placeholder="e.g. Finance, Wellness, Client X"
                     placeholderTextColor="#A3A8B1"
                     value={newCatName}
@@ -324,7 +367,14 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
 
                 {/* Icon Selection */}
                 <View style={styles.inputSection}>
-                  <Text style={styles.inputLabel}>CHOOSE ICON</Text>
+                  <Text
+                    style={[
+                      styles.inputLabel,
+                      isDarkMode && { color: '#A3A8B1' },
+                    ]}
+                  >
+                    CHOOSE ICON
+                  </Text>
                   <View style={styles.iconChoiceRow}>
                     {CATEGORY_ICON_CHOICES.map((choice, idx) => {
                       const isSel = idx === selectedIconIndex;
@@ -336,13 +386,23 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                           onPress={() => setSelectedIconIndex(idx)}
                           style={[
                             styles.iconChoiceBtn,
+                            isDarkMode && {
+                              backgroundColor: '#171A1F',
+                              borderColor: '#2C3035',
+                            },
                             isSel && styles.iconChoiceBtnActive,
                           ]}
                           accessibilityLabel={choice.label}
                         >
                           <IconComp
                             size={18}
-                            color={isSel ? '#1F2228' : '#77767B'}
+                            color={
+                              isSel
+                                ? '#1F2228'
+                                : isDarkMode
+                                ? '#A3A8B1'
+                                : '#77767B'
+                            }
                           />
                         </TouchableOpacity>
                       );
@@ -352,7 +412,14 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
 
                 {/* Color Palette Presets */}
                 <View style={styles.inputSection}>
-                  <Text style={styles.inputLabel}>CHOOSE COLOR HARMONY</Text>
+                  <Text
+                    style={[
+                      styles.inputLabel,
+                      isDarkMode && { color: '#A3A8B1' },
+                    ]}
+                  >
+                    CHOOSE COLOR HARMONY
+                  </Text>
                   <ScrollView
                     horizontal
                     showsHorizontalScrollIndicator={false}
@@ -392,10 +459,20 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                 <View style={styles.modalActionRow}>
                   <TouchableOpacity
                     activeOpacity={0.8}
-                    style={styles.cancelBtn}
+                    style={[
+                      styles.cancelBtn,
+                      isDarkMode && { backgroundColor: '#252932' },
+                    ]}
                     onPress={onClose}
                   >
-                    <Text style={styles.cancelBtnText}>Cancel</Text>
+                    <Text
+                      style={[
+                        styles.cancelBtnText,
+                        isDarkMode && { color: '#A3A8B1' },
+                      ]}
+                    >
+                      Cancel
+                    </Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity

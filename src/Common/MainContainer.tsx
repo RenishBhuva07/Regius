@@ -25,15 +25,15 @@ interface IMainContainerProps {
 }
 
 const MainContainer = (props: IMainContainerProps) => {
-  const { Colors } = useTheme();
+  const { Colors, isDarkMode } = useTheme();
 
   const {
     children,
-    statusBarStyle = 'dark-content',
+    statusBarStyle = isDarkMode ? 'light-content' : 'dark-content',
     statusBarBackgroundColor = 'transparent',
     statusBarHidden = false,
     keyboardVerticalOffset = 0,
-    containerBackgroundColor = Colors.CreamBackground,
+    containerBackgroundColor = isDarkMode ? '#121417' : Colors.Background,
     translucent = true,
   } = props;
 

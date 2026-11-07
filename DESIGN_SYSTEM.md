@@ -37,21 +37,32 @@ Regius embraces **Modern Warm Luxury & Mindful Productivity** (_"Plan Your Day I
 | `RingBorder`       | `#E8E2D5` | Subtle divider border for avatar rings, input cards, and hairline borders.          |
 | `HomeIndicator`    | `#D5D0C5` | Bottom iOS gesture bar indicator color.                                             |
 
-### 2.2 Dark Mode Surface Adaptations
+### 2.2 Dark Mode Surface Adaptations & Obsidian Palette Standard
 
-| Token Name           | Hex Value             | Semantic Role & Usage                              |
-| :------------------- | :-------------------- | :------------------------------------------------- |
-| `DarkBackground`     | `#121417`             | Deep midnight canvas for dark theme.               |
-| `DarkCardBackground` | `#1E2228`             | Elevated card surface in dark theme.               |
-| `DarkSecondaryText`  | `#A3A8B1`             | Subdued secondary copy and captions in dark theme. |
-| `DarkBorder`         | `#2C3035` / `#3A3F46` | Subtle hairline borders in dark mode.              |
+Regius features an app-wide Obsidian Dark Theme that maintains artisanal luxury warmth while preventing eye strain. Clinical pure `#000000` pitch black and generic flat greys are strictly avoided in favor of rich midnight tones and deep category jewel tints.
 
-### 2.3 Category Trios & Semantic Accents
+| Token Name           | Hex Value             | Semantic Role & Usage                                                        |
+| :------------------- | :-------------------- | :--------------------------------------------------------------------------- |
+| `DarkBackground`     | `#121417`             | Deep midnight canvas for all screens (`Dashboard`, `Tasks`, `Reminders`, `Habits`). |
+| `DarkCardBackground` | `#1E2228`             | Elevated modal cards, quick action cards, and bento cards in dark theme.     |
+| `DarkSectionSurface` | `#181B20`             | Flow section rounded sheet containers and canopy docks.                      |
+| `DarkInputBg`        | `#171A1F`             | Deep input fields, search bars, and subtask text inputs.                     |
+| `DarkCardFill`       | `#171A20`             | Asymmetric cutout SVG card fill color in dark mode.                          |
+| `DarkCardStroke`     | `#2C3035`             | Asymmetric cutout SVG card hairline perimeter border.                        |
+| `DarkCheckboxUnchecked`| `#252932`           | Floating checkbox button surface when unchecked.                             |
+| `DarkCheckboxChecked`| `#13281E`             | Floating checkbox button surface when checked (border: `#52D22E`).           |
+| `DarkSecondaryText`  | `#A3A8B1`             | Subdued secondary copy, metadata stamps, and unselected filter chips.        |
+| `DarkBorder`         | `#2C3035` / `#363944` | Subtle hairline borders, divider lines, and card bevels.                     |
+| `PureWhiteText`      | `#FFFFFF`             | High-contrast titles, headers, active tab icons, and primary inputs.         |
+
+### 2.3 Category Trios & Semantic Accents (Dual Light & Dark Harmonized System)
 
 Every major category or card type pairs 4 harmonized color values, structured according to the **Universal Product Navigation & Metric Sequence Standard**:
 
 > **Universal Product Hierarchy**: **1. Tasks** (Works / Gold-Yellow) → **2. Reminders** (Alerts & Nudges / Mint-Green) → **3. Habits** (Mindful Routines / Lavender-Purple).  
 > This order is enforced across all surfaces: Bottom Tab Bar (`Dashboard` → `Tasks` → `[+]` → `Reminders` → `Habits`), Daily Balance Grid (`Tasks` → `Reminders` → `Habits`), Flow Filters (`All Flow` → `Tasks` → `Reminders` → `Habits`), and Dynamic Assistant Spoken Briefings.
+
+#### Light Mode Category Palettes (`isDarkMode: false`)
 
 | Sequence & Category      | Bg Tint (`bgColor`) | Border Tint (`borderColor`) | Vibrant Accent / Icon             | Drop Shadow Glow (`shadowColor`) |
 | :----------------------- | :------------------ | :-------------------------- | :-------------------------------- | :------------------------------- |
@@ -60,6 +71,41 @@ Every major category or card type pairs 4 harmonized color values, structured ac
 | **3. Habits / Brand**    | `#EFF2FE`           | `#D8DBFF`                   | `#8383D6` (Lavender Purple)       | `#8383D6` (Lavender Glow)        |
 | **4. Events / Alerts**   | `#FFF3E0`           | `#FFE0B2`                   | `#FF9800` (Amber)                 | `#FF9800` (Amber Glow)           |
 | **5. Danger / Delete**   | `#FEEFEF`           | `#FED6D6`                   | `#FF3B30` / `#D92A0F`             | `#FF3B30` (Crimson Glow)         |
+
+#### Dark Mode Deep Jewel Category Palettes (`isDarkMode: true`)
+
+In dark mode, category surfaces gracefully switch from pale pastels to rich, deep jewel tints with glowing luminous borders and radiant accents:
+
+| Sequence & Category      | Dark Bg Tint (`bgColor`) | Glowing Border (`borderColor`) | Vibrant Accent / Icon | Dark Glow Shadow (`shadowColor`) |
+| :----------------------- | :----------------------- | :----------------------------- | :-------------------- | :------------------------------- |
+| **1. Works / Tasks**     | `#2A2416`                | `#DEAA14`                      | `#F5C518`             | `#F5C518` (Gold Glow)            |
+| **2. Sport / Reminders** | `#162820`                | `#1B9A72`                      | `#52D22E`             | `#52D22E` (Mint Glow)            |
+| **3. Habits / Mindful**  | `#202336`                | `#8383D6`                      | `#8383D6`             | `#8383D6` (Lavender Glow)        |
+| **4. Events / Alerts**   | `#331F18`                | `#FF9800`                      | `#FF9800`             | `#FF9800` (Amber Glow)           |
+| **5. Danger / Delete**   | `#381A1A`                | `#EF4444`                      | `#FF453A`             | `#FF3B30` (Crimson Glow)         |
+
+### 2.3.1 Universal Theme Hook: `useAppTheme` (`src/Theme/useAppTheme.ts`)
+
+Components throughout Regius consume dynamic design tokens using the centralized `useAppTheme()` hook:
+
+```tsx
+import { useAppTheme } from '../../Theme';
+
+const {
+  isDarkMode,       // boolean: true when dark mode is active
+  activeThemeId,    // string: 'obsidian' | 'cream' | etc.
+  Colors,           // base color tokens
+  bgMain,           // '#121417' (dark) | '#FFFCE3' (light)
+  cardBg,           // '#1E2228' (dark) | '#FFFFFF' (light)
+  surfaceAlt,       // '#181B20' (dark) | '#FAF8F5' (light)
+  inputBg,          // '#171A1F' (dark) | '#FFFFFF' (light)
+  textPrimary,      // '#FFFFFF' (dark) | '#1F2228' (light)
+  textSecondary,    // '#A3A8B1' (dark) | '#666665' (light)
+  borderLight,      // '#2C3035' (dark) | '#E8E2D5' (light)
+  borderSubtle,     // '#363944' (dark) | '#F0EDE6' (light)
+  getCategoryTheme, // (categoryKey) => { bg, border, accent, shadow }
+} = useAppTheme();
+```
 
 ### 2.4 Typography Foregrounds
 
@@ -414,6 +460,14 @@ Used for list item cards across `TasksScreen` (`TaskCardItem.tsx`), `RemindersSc
   - **Unchecked state**: `backgroundColor: '#FFFFFF'`, `borderWidth: 1.5`, theme-tinted border (`borderColor: theme.border`).
   - **Checked state**: `backgroundColor: '#E8FDF0'`, `borderWidth: 1.5`, `borderColor: '#52D22E'` with `#1B9A72` Check icon (`size: 14, strokeWidth: 3`).
 - **Tactile 3D Badges**: Integrated `<Badge />` chips for category stamps, streaks, and voice check-in indicators floating above the card surface.
+- **Dark Mode Cutout Card Adaptations**:
+  - **SVG Path Surface Fill**: Dynamic fill switches from light category tint to Obsidian card fill `#171A20` with `#2C3035` perimeter hairline stroke.
+  - **Floating Checkbox (Top-Right Scoop)**:
+    - *Unchecked*: Deep slate surface (`backgroundColor: '#252932'`), border `#3A3F46`.
+    - *Checked*: Deep emerald jewel surface (`backgroundColor: '#13281E'`), border `#52D22E` with `#52D22E` Check icon.
+  - **Category Indicators**: Top-row 3D badges, icon containers, and radial glowing auras maintain their vibrant category accents (`#F5C518` Works, `#52D22E` Sport/Reminders, `#8383D6` Habits/Mindful, `#FF9800` Events).
+  - **Completed Cards**: Fill `#171A20`, stroke `#2C3035`, titles `#8E939E` without strikethrough decoration.
+  - **Metadata & Subtask Pills**: Deep slate tags (`backgroundColor: '#252932'`, border `#363944`, text `#A3A8B1`).
 
 #### 4.4.1 Habits Section Sheet & Habit Item Card Architecture (`HabitsScreen.tsx`, `HabitItemCard.tsx`)
 
@@ -826,3 +880,17 @@ To prevent divergence and maintain strict aesthetic consistency across features,
 
 - **Purpose**: Consolidated bottom sticky action dock for creation and edition modals (`AddTaskModal`, `AddReminderModal`, `AddHabitModal`).
 - **Visuals**: Replaces transparent backgrounds with a theme-adaptive backdrop matching the top header (`Colors.LavenderPurple` in Classic Light, `#282048` in Classic Dark, or active theme preset color), `borderTopLeftRadius: 24`, `borderTopRightRadius: 24`, deep volumetric upward shadow (`shadowRadius: 14, elevation: 10`), delicate top rim highlight border, and custom `ModalBottomPatternSvg` aesthetic background with concentric orbit rings, starlight diamonds, and Regius crown emblem. Hosts the circular tactile dismiss button on the left (`ArrowDown`) and the animated hero submit pill button on the right (`ArrowRight`).
+
+### 10.10 Modal Dialogs & Pickers Dark Mode Standards
+
+All creation modals (`AddTaskModal`, `AddReminderModal`, `AddHabitModal`), dialogs (`CustomCategoryModal`), and chrono pickers (`UnifiedSchedulePickerModal`) dynamically adapt to dark mode:
+
+- **Backdrop Scrim**: `rgba(0, 0, 0, 0.72)` deep dimming overlay preserving focus.
+- **Root Canvas & Modal Card Surfaces**:
+  - Full-screen creation modals (`AddTaskModal`, `AddReminderModal`, `AddHabitModal`): Canvas root `#121417`, primary input card `#1E2228`, border `#2C3035`.
+  - Floating dialog modals (`CustomCategoryModal`, `UnifiedSchedulePickerModal`): Card surface `#1E2228`, border `#2C3035`, shadow `#000000`.
+- **Inputs & Fields**: Input container background `#171A1F`, border `#2C3035`, placeholder text `#666665`, typed text `#FFFFFF`.
+- **Section Headings & Labels**: Poppins SemiBold `#FFFFFF` for primary titles, `#A3A8B1` for secondary context.
+- **Category Chips & Selectors**: Deep jewel backgrounds (`#2A2416` Works, `#162820` Sport, `#202336` Mindful, `#331F18` Events) with high-contrast active borders and glowing accents.
+- **Platform Pickers**: Native iOS `DateTimePicker` sets `textColor="#FFFFFF"` and `themeVariant="dark"` when `isDarkMode` is true.
+- **Destructive & Cancel Controls**: Outlined slate buttons (`#252932` fill, `#363944` border) for cancel actions; high-contrast crimson `#EF4444` for delete actions.

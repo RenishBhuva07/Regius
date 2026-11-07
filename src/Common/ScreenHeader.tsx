@@ -14,6 +14,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Fonts } from '../Theme/fonts';
 import { Typography } from '../Theme/Typographys';
 import { Colors } from '../Assets/StyleUtilities/Colors';
+import { useTheme } from '../Theme/ThemeContext';
 import { SVGS } from '../Assets/Images';
 import { CustomAnimation } from './CustomAnimation';
 import HolographAnimation from '../Assets/JsonAnimations/Holograph.json';
@@ -53,12 +54,16 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
   const { assistantName, openAssistant } = useVoiceWakeWord();
+  const { isDarkMode } = useTheme();
   const { width: screenWidth } = Dimensions.get('window');
 
   // Interpolate header visual styles based on scroll position (0 to 30px)
   const headerBgColor = scrollY.interpolate({
     inputRange: [0, 30],
-    outputRange: [Colors.DefaultWhite, Colors.LavenderPurple],
+    outputRange: [
+      isDarkMode ? 'rgba(18, 20, 23, 0)' : 'rgba(255, 255, 255, 0)',
+      isDarkMode ? '#282048' : Colors.LavenderPurple,
+    ],
     extrapolate: 'clamp',
   });
 
@@ -136,7 +141,9 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
           <Text
             style={[
               styles.screenTitle,
-              isScrolled && styles.screenTitleScrolled,
+              isScrolled
+                ? styles.screenTitleScrolled
+                : { color: isDarkMode ? '#FFFFFF' : '#1B1C19' },
             ]}
             numberOfLines={1}
           >
@@ -146,7 +153,9 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
             <Text
               style={[
                 styles.screenSubtitle,
-                isScrolled && styles.screenSubtitleScrolled,
+                isScrolled
+                  ? styles.screenSubtitleScrolled
+                  : { color: isDarkMode ? '#A3A8B1' : '#767772' },
               ]}
               numberOfLines={1}
             >

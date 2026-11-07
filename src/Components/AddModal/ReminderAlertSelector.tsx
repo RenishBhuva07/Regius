@@ -17,6 +17,7 @@ import {
 
 import { Fonts } from '../../Theme/fonts';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
+import { useAppTheme } from '../../Theme/useAppTheme';
 import { Badge } from '../../Common/Badge';
 
 export const REMIND_BEFORE_OPTIONS = [
@@ -59,13 +60,29 @@ export const ReminderAlertSelector: React.FC<ReminderAlertSelectorProps> = ({
   onToggleUrgentAlarm,
   assistantName = 'Regius',
 }) => {
+  const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
+
   return (
     <View style={styles.container}>
       {/* Repeat Cycle */}
       <View style={styles.sectionBlock}>
         <View style={styles.sectionHeaderRow}>
-          <Text style={styles.sectionHeading}>Repeat Cycle</Text>
-          <Text style={styles.sectionSubtext}>Routine cadence</Text>
+          <Text
+            style={[
+              styles.sectionHeading,
+              isDarkMode && { color: textPrimary },
+            ]}
+          >
+            Repeat Cycle
+          </Text>
+          <Text
+            style={[
+              styles.sectionSubtext,
+              isDarkMode && { color: textSecondary },
+            ]}
+          >
+            Routine cadence
+          </Text>
         </View>
 
         <View style={styles.segmentedContainer}>
@@ -100,7 +117,14 @@ export const ReminderAlertSelector: React.FC<ReminderAlertSelectorProps> = ({
       {/* Remind Me Before (2x2 Tactile Capsule Grid) */}
       <View style={styles.sectionBlock}>
         <View style={styles.sectionHeaderRow}>
-          <Text style={styles.sectionHeading}>Remind Me Before</Text>
+          <Text
+            style={[
+              styles.sectionHeading,
+              isDarkMode && { color: textPrimary },
+            ]}
+          >
+            Remind Me Before
+          </Text>
           <Badge
             variant="yellow"
             size="sm"
@@ -119,6 +143,12 @@ export const ReminderAlertSelector: React.FC<ReminderAlertSelectorProps> = ({
                 onPress={() => onSelectRemindBefore(opt)}
                 style={[
                   styles.remindBeforeCard,
+                  isDarkMode &&
+                    !isSelected && {
+                      backgroundColor: '#1E2228',
+                      borderColor: '#2C3035',
+                      borderBottomColor: '#171A1F',
+                    },
                   isSelected && styles.remindBeforeCardSelected,
                 ]}
               >
@@ -131,6 +161,7 @@ export const ReminderAlertSelector: React.FC<ReminderAlertSelectorProps> = ({
                 <Text
                   style={[
                     styles.remindBeforeCardText,
+                    isDarkMode && !isSelected && { color: '#FFFFFF' },
                     isSelected && styles.remindBeforeCardTextSelected,
                   ]}
                 >
@@ -144,14 +175,37 @@ export const ReminderAlertSelector: React.FC<ReminderAlertSelectorProps> = ({
 
       {/* Sound & Haptics Preview Card */}
       {onPreviewSound && (
-        <View style={styles.soundCard}>
+        <View
+          style={[
+            styles.soundCard,
+            isDarkMode && {
+              backgroundColor: '#1E2228',
+              borderColor: '#2C3035',
+            },
+          ]}
+        >
           <View style={styles.soundLeftGroup}>
-            <View style={styles.soundIconTile}>
+            <View
+              style={[
+                styles.soundIconTile,
+                isDarkMode && {
+                  backgroundColor: '#1F382D',
+                  borderColor: '#1B9A72',
+                },
+              ]}
+            >
               <Volume2 size={20} color="#1B9A72" strokeWidth={2.4} />
             </View>
 
             <View style={styles.soundTextGroup}>
-              <Text style={styles.soundTitle}>{soundTitle}</Text>
+              <Text
+                style={[
+                  styles.soundTitle,
+                  isDarkMode && { color: '#FFFFFF' },
+                ]}
+              >
+                {soundTitle}
+              </Text>
               <Text style={styles.soundSubtitle}>{soundSubtitle}</Text>
             </View>
           </View>
@@ -173,15 +227,37 @@ export const ReminderAlertSelector: React.FC<ReminderAlertSelectorProps> = ({
       )}
 
       {/* Spoken Voice Nudge */}
-      <View style={styles.voiceNudgeCard}>
+      <View
+        style={[
+          styles.voiceNudgeCard,
+          isDarkMode && {
+            backgroundColor: '#1E2228',
+            borderColor: '#2C3035',
+          },
+        ]}
+      >
         <View style={styles.voiceNudgeLeft}>
-          <View style={styles.voiceIconBox}>
+          <View
+            style={[
+              styles.voiceIconBox,
+              isDarkMode && {
+                backgroundColor: '#1F382D',
+                borderColor: '#1B9A72',
+              },
+            ]}
+          >
             <Volume2 size={20} color="#1B9A72" strokeWidth={2.4} />
           </View>
 
           <View style={styles.voiceTextGroup}>
             <View style={styles.voiceTitleRow}>
-              <Text style={styles.voiceTitle} numberOfLines={1}>
+              <Text
+                style={[
+                  styles.voiceTitle,
+                  isDarkMode && { color: '#FFFFFF' },
+                ]}
+                numberOfLines={1}
+              >
                 Voice Nudge
               </Text>
               <Badge
@@ -201,24 +277,46 @@ export const ReminderAlertSelector: React.FC<ReminderAlertSelectorProps> = ({
           value={voiceNudgeEnabled}
           onValueChange={onToggleVoiceNudge}
           trackColor={{
-            false: '#E4E2DD',
-            true: Colors.MidnightCharcoal,
+            false: isDarkMode ? '#2C3035' : '#E4E2DD',
+            true: isDarkMode ? '#8383D6' : Colors.MidnightCharcoal,
           }}
           thumbColor="#FFFFFF"
-          ios_backgroundColor="#E4E2DD"
+          ios_backgroundColor={isDarkMode ? '#2C3035' : '#E4E2DD'}
         />
       </View>
 
       {/* Urgent Alarm */}
-      <View style={styles.urgentAlarmCard}>
+      <View
+        style={[
+          styles.urgentAlarmCard,
+          isDarkMode && {
+            backgroundColor: '#1E2228',
+            borderColor: '#5A2528',
+          },
+        ]}
+      >
         <View style={styles.urgentAlarmLeft}>
-          <View style={styles.urgentIconTile}>
+          <View
+            style={[
+              styles.urgentIconTile,
+              isDarkMode && {
+                backgroundColor: '#381A1C',
+                borderColor: '#5A2528',
+              },
+            ]}
+          >
             <AlertTriangle size={20} color="#EF4444" strokeWidth={2.4} />
           </View>
 
           <View style={styles.urgentTextGroup}>
             <View style={styles.urgentTitleRow}>
-              <Text style={styles.urgentTitle} numberOfLines={1}>
+              <Text
+                style={[
+                  styles.urgentTitle,
+                  isDarkMode && { color: '#FFFFFF' },
+                ]}
+                numberOfLines={1}
+              >
                 Urgent Alarm
               </Text>
               <Badge variant="red" size="sm" label="CRITICAL" />
@@ -233,11 +331,11 @@ export const ReminderAlertSelector: React.FC<ReminderAlertSelectorProps> = ({
           value={urgentAlarm}
           onValueChange={onToggleUrgentAlarm}
           trackColor={{
-            false: '#E4E2DD',
+            false: isDarkMode ? '#2C3035' : '#E4E2DD',
             true: '#EF4444',
           }}
           thumbColor="#FFFFFF"
-          ios_backgroundColor="#E4E2DD"
+          ios_backgroundColor={isDarkMode ? '#2C3035' : '#E4E2DD'}
         />
       </View>
     </View>

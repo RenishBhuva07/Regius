@@ -21,6 +21,7 @@ import { Reminder } from '../Context/TaskReminderContext';
 
 import { Fonts } from '../Theme/fonts';
 import { Colors } from '../Assets/StyleUtilities/Colors';
+import { useAppTheme } from '../Theme/useAppTheme';
 import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 import { useOptionalVoiceWakeWord } from '../Context/VoiceWakeWordContext';
 import FlowBadgePatternSvg from '../Screens/Dashboard/Components/FlowBadgePatternSvg';
@@ -149,6 +150,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
   reminderToEdit,
 }) => {
   const insets = useSafeAreaInsets();
+  const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
   const voiceContext = useOptionalVoiceWakeWord();
   const assistantName = voiceContext?.assistantName || 'Regius';
   const isEditing = !!reminderToEdit;
@@ -419,12 +421,17 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
       presentationStyle="fullScreen"
       onRequestClose={onClose}
     >
-      <View style={styles.canvasContainer}>
+      <View
+        style={[
+          styles.canvasContainer,
+          isDarkMode && { backgroundColor: '#121417' },
+        ]}
+      >
         <StatusBar
-          barStyle="dark-content"
+          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
           {...(Platform.OS === 'android'
             ? {
-                backgroundColor: '#FAF8F5',
+                backgroundColor: isDarkMode ? '#121417' : '#FAF8F5',
                 translucent: true,
               }
             : {})}
@@ -468,6 +475,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
             <View
               style={[
                 styles.primaryCardWrapper,
+                isDarkMode && { backgroundColor: '#1E2228' },
                 { shadowColor: activeCategory.shadowColor },
               ]}
             >
@@ -487,6 +495,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
               <View
                 style={[
                   styles.primaryCard,
+                  isDarkMode && { backgroundColor: '#1E2228' },
                   {
                     borderColor: activeCategory.borderColor,
                   },
@@ -502,6 +511,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
                 <TextInput
                   style={[
                     styles.titleInput,
+                    isDarkMode && { color: '#FFFFFF' },
                     titleInputHeight > 48 ? { height: titleInputHeight } : null,
                   ]}
                   placeholder="e.g., Client Follow-up Call..."
@@ -513,30 +523,50 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
                   scrollEnabled={true}
                   rejectResponderTermination={true}
                   autoFocus={true}
-                  cursorColor={Colors.MidnightCharcoal}
-                  selectionColor="rgba(31, 34, 40, 0.25)"
+                  cursorColor={isDarkMode ? '#FFFFFF' : Colors.MidnightCharcoal}
+                  selectionColor={
+                    isDarkMode
+                      ? 'rgba(255, 255, 255, 0.25)'
+                      : 'rgba(31, 34, 40, 0.25)'
+                  }
                 />
 
                 {/* Memo input */}
                 <Pressable
-                  style={styles.contextRow}
+                  style={[
+                    styles.contextRow,
+                    isDarkMode && { borderColor: '#2C3035' },
+                  ]}
                   onPress={() => noteInputRef.current?.focus()}
                   accessible={false}
                 >
                   <View style={styles.contextIconWrap}>
-                    <FileText size={16} color="#7E838F" strokeWidth={2} />
+                    <FileText
+                      size={16}
+                      color={isDarkMode ? '#A3A8B1' : '#7E838F'}
+                      strokeWidth={2}
+                    />
                   </View>
                   <TextInput
                     ref={noteInputRef}
-                    style={styles.contextInput}
+                    style={[
+                      styles.contextInput,
+                      isDarkMode && { color: '#FFFFFF' },
+                    ]}
                     placeholder="Add gentle context or personal memo..."
                     placeholderTextColor="#A3A8B1"
                     value={reminderNotes}
                     onChangeText={setReminderNotes}
                     returnKeyType="done"
                     blurOnSubmit={true}
-                    cursorColor={Colors.MidnightCharcoal}
-                    selectionColor="rgba(31, 34, 40, 0.25)"
+                    cursorColor={
+                      isDarkMode ? '#FFFFFF' : Colors.MidnightCharcoal
+                    }
+                    selectionColor={
+                      isDarkMode
+                        ? 'rgba(255, 255, 255, 0.25)'
+                        : 'rgba(31, 34, 40, 0.25)'
+                    }
                   />
                 </Pressable>
               </View>
@@ -583,7 +613,13 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
                 <TouchableOpacity
                   activeOpacity={0.85}
                   onPress={handleDelete}
-                  style={styles.deleteCardBtn}
+                  style={[
+                    styles.deleteCardBtn,
+                    isDarkMode && {
+                      backgroundColor: '#1E2228',
+                      borderColor: '#5A2528',
+                    },
+                  ]}
                   accessibilityRole="button"
                   accessibilityLabel="Delete Reminder"
                 >

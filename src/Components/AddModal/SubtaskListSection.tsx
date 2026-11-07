@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { Plus, X } from 'lucide-react-native';
 import { Fonts } from '../../Theme/fonts';
+import { useAppTheme } from '../../Theme/useAppTheme';
 
 export interface SubtaskItem {
   id: string;
@@ -37,18 +38,41 @@ export const SubtaskListSection: React.FC<SubtaskListSectionProps> = React.memo(
     subheading = 'Break into actionable steps',
     placeholder = 'e.g. Draft structure, Review feedback',
   }) => {
+    const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
+
     return (
       <View style={styles.sectionBlock}>
         <View style={styles.sectionHeaderRow}>
-          <Text style={styles.sectionHeading}>{heading}</Text>
+          <Text
+            style={[
+              styles.sectionHeading,
+              isDarkMode && { color: textPrimary },
+            ]}
+          >
+            {heading}
+          </Text>
           {subheading && (
-            <Text style={styles.sectionSubtext}>{subheading}</Text>
+            <Text
+              style={[
+                styles.sectionSubtext,
+                isDarkMode && { color: textSecondary },
+              ]}
+            >
+              {subheading}
+            </Text>
           )}
         </View>
 
         <View style={styles.subtaskInputRow}>
           <TextInput
-            style={styles.subtaskTextInput}
+            style={[
+              styles.subtaskTextInput,
+              isDarkMode && {
+                backgroundColor: '#171A1F',
+                borderColor: '#2C3035',
+                color: '#FFFFFF',
+              },
+            ]}
             placeholder={placeholder}
             placeholderTextColor="#A3A8B1"
             value={input}
@@ -71,12 +95,42 @@ export const SubtaskListSection: React.FC<SubtaskListSectionProps> = React.memo(
         {subtasks.length > 0 && (
           <View style={styles.subtasksList}>
             {subtasks.map((item, index) => (
-              <View key={item.id} style={styles.subtaskItemRow}>
-                <View style={styles.subtaskStepIndicator}>
-                  <Text style={styles.subtaskStepNumber}>{index + 1}</Text>
+              <View
+                key={item.id}
+                style={[
+                  styles.subtaskItemRow,
+                  isDarkMode && {
+                    backgroundColor: '#1E2228',
+                    borderColor: '#2C3035',
+                  },
+                ]}
+              >
+                <View
+                  style={[
+                    styles.subtaskStepIndicator,
+                    isDarkMode && {
+                      backgroundColor: '#2A2D35',
+                      borderColor: '#363944',
+                    },
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.subtaskStepNumber,
+                      isDarkMode && { color: '#A3A8B1' },
+                    ]}
+                  >
+                    {index + 1}
+                  </Text>
                 </View>
 
-                <Text style={styles.subtaskItemText} numberOfLines={2}>
+                <Text
+                  style={[
+                    styles.subtaskItemText,
+                    isDarkMode && { color: '#FFFFFF' },
+                  ]}
+                  numberOfLines={2}
+                >
                   {item.text}
                 </Text>
 
@@ -87,7 +141,11 @@ export const SubtaskListSection: React.FC<SubtaskListSectionProps> = React.memo(
                   hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
                   accessibilityLabel={`Remove subtask ${item.text}`}
                 >
-                  <X size={13} color="#7E838F" strokeWidth={2.2} />
+                  <X
+                    size={13}
+                    color={isDarkMode ? '#A3A8B1' : '#7E838F'}
+                    strokeWidth={2.2}
+                  />
                 </TouchableOpacity>
               </View>
             ))}

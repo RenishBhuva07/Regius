@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Plus, Check } from 'lucide-react-native';
 import { Fonts } from '../../Theme/fonts';
+import { useAppTheme } from '../../Theme/useAppTheme';
 import { BadgeVariant } from '../../Common/Badge';
 import { HeaderActionButton } from '../../Common/HeaderActionButton';
 
@@ -45,10 +46,72 @@ export const CategoryChipSelector: React.FC<CategoryChipSelectorProps> =
       onPressAddCategory,
       heading = 'Category',
     }) => {
+      const { isDarkMode, textPrimary } = useAppTheme();
+
+      const getCategoryThemedStyles = (cat: CategoryItem) => {
+        if (!isDarkMode) {
+          return {
+            bg: cat.bgColor,
+            border: cat.borderColor,
+            iconWrapBg: '#FFFFFF',
+            labelColor: cat.checkColor || '#121417',
+          };
+        }
+        switch (cat.id) {
+          case 'works':
+          case 'daily':
+            return {
+              bg: '#2A2416',
+              border: '#DEAA14',
+              iconWrapBg: '#38301D',
+              labelColor: '#FFE600',
+            };
+          case 'sport':
+          case 'health':
+            return {
+              bg: '#162820',
+              border: '#1B9A72',
+              iconWrapBg: '#1F382D',
+              labelColor: '#52D22E',
+            };
+          case 'habits':
+          case 'work':
+          case 'mindful':
+            return {
+              bg: '#202336',
+              border: '#8383D6',
+              iconWrapBg: '#2C304A',
+              labelColor: '#C2C2FF',
+            };
+          case 'events':
+          case 'evening':
+            return {
+              bg: '#331F18',
+              border: '#FF9800',
+              iconWrapBg: '#452A20',
+              labelColor: '#FFB74D',
+            };
+          default:
+            return {
+              bg: '#1E2228',
+              border: cat.borderColor,
+              iconWrapBg: '#252932',
+              labelColor: '#FFFFFF',
+            };
+        }
+      };
+
       return (
         <View style={styles.sectionBlock}>
           <View style={styles.sectionHeaderRow}>
-            <Text style={styles.sectionHeading}>{heading}</Text>
+            <Text
+              style={[
+                styles.sectionHeading,
+                isDarkMode && { color: textPrimary },
+              ]}
+            >
+              {heading}
+            </Text>
             <HeaderActionButton
               label="Add Category"
               icon={Plus}
@@ -69,6 +132,7 @@ export const CategoryChipSelector: React.FC<CategoryChipSelectorProps> =
             renderItem={({ item: cat }) => {
               const isSelected = selectedCategory === cat.id;
               const CatIcon = cat.Icon;
+              const catTheme = getCategoryThemedStyles(cat);
 
               return (
                 <TouchableOpacity
@@ -78,14 +142,14 @@ export const CategoryChipSelector: React.FC<CategoryChipSelectorProps> =
                   style={[
                     styles.categoryCardExact,
                     {
-                      backgroundColor: cat.bgColor,
+                      backgroundColor: catTheme.bg,
                       width: categoryCardWidth,
                       shadowColor: cat.shadowColor,
                     },
                     isSelected && [
                       styles.categoryCardExactSelected,
                       {
-                        borderColor: cat.borderColor,
+                        borderColor: catTheme.border,
                       },
                     ],
                   ]}
@@ -98,7 +162,8 @@ export const CategoryChipSelector: React.FC<CategoryChipSelectorProps> =
                       style={[
                         styles.categoryIconWrap,
                         {
-                          borderColor: cat.borderColor,
+                          backgroundColor: catTheme.iconWrapBg,
+                          borderColor: catTheme.border,
                           shadowColor: cat.shadowColor,
                         },
                       ]}
@@ -112,7 +177,7 @@ export const CategoryChipSelector: React.FC<CategoryChipSelectorProps> =
                           styles.categoryFloatingCheckboxChecked,
                           {
                             borderColor: cat.accentColor,
-                            backgroundColor: cat.bgColor,
+                            backgroundColor: catTheme.bg,
                             shadowColor: cat.shadowColor,
                           },
                         ]}
@@ -129,7 +194,10 @@ export const CategoryChipSelector: React.FC<CategoryChipSelectorProps> =
                           styles.categoryFloatingCheckbox,
                           styles.categoryFloatingCheckboxUnchecked,
                           {
-                            borderColor: cat.borderColor,
+                            borderColor: catTheme.border,
+                            backgroundColor: isDarkMode
+                              ? '#252932'
+                              : 'rgba(255, 255, 255, 0.4)',
                           },
                         ]}
                       />
@@ -140,8 +208,14 @@ export const CategoryChipSelector: React.FC<CategoryChipSelectorProps> =
                     <Text
                       style={[
                         styles.categoryCardLabel,
-                        isSelected && {
-                          color: cat.checkColor || '#121417',
+                        {
+                          color: isDarkMode
+                            ? isSelected
+                              ? catTheme.labelColor
+                              : '#A3A8B1'
+                            : isSelected
+                            ? cat.checkColor || '#121417'
+                            : '#121417',
                         },
                       ]}
                       numberOfLines={1}

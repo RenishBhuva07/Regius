@@ -51,6 +51,7 @@ import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../Theme/fonts';
 import { Colors } from '../Assets/StyleUtilities/Colors';
+import { useAppTheme } from '../Theme/useAppTheme';
 import { Badge } from '../Common/Badge';
 import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 import { HabitItem } from '../Context/TaskReminderContext';
@@ -154,6 +155,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
   habitToEdit,
 }) => {
   const insets = useSafeAreaInsets();
+  const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
   const voiceContext = useOptionalVoiceWakeWord();
   const assistantName = voiceContext?.assistantName || 'Regius';
   const { width: screenWidth } = Dimensions.get('window');
@@ -338,12 +340,17 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
       presentationStyle="fullScreen"
       onRequestClose={onClose}
     >
-      <View style={styles.canvasContainer}>
+      <View
+        style={[
+          styles.canvasContainer,
+          isDarkMode && { backgroundColor: '#121417' },
+        ]}
+      >
         <StatusBar
-          barStyle="dark-content"
+          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
           {...(Platform.OS === 'android'
             ? {
-                backgroundColor: '#FAF8F5',
+                backgroundColor: isDarkMode ? '#121417' : '#FAF8F5',
                 translucent: true,
               }
             : {})}
@@ -387,6 +394,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
             <View
               style={[
                 styles.primaryCardWrapper,
+                isDarkMode && { backgroundColor: '#1E2228' },
                 { shadowColor: activeCategory.shadowColor },
               ]}
             >
@@ -404,6 +412,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
               <View
                 style={[
                   styles.primaryCard,
+                  isDarkMode && { backgroundColor: '#1E2228' },
                   {
                     borderColor: activeCategory.borderColor,
                   },
@@ -435,6 +444,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                 <TextInput
                   style={[
                     styles.titleInput,
+                    isDarkMode && { color: '#FFFFFF' },
                     titleInputHeight > 48 ? { height: titleInputHeight } : null,
                   ]}
                   placeholder="e.g., Morning Sunlight & 500ml Water..."
@@ -446,30 +456,50 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                   scrollEnabled={true}
                   rejectResponderTermination={true}
                   autoFocus={!isEditing}
-                  cursorColor={Colors.MidnightCharcoal}
-                  selectionColor="rgba(31, 34, 40, 0.25)"
+                  cursorColor={isDarkMode ? '#FFFFFF' : Colors.MidnightCharcoal}
+                  selectionColor={
+                    isDarkMode
+                      ? 'rgba(255, 255, 255, 0.25)'
+                      : 'rgba(31, 34, 40, 0.25)'
+                  }
                 />
 
                 {/* Intention input */}
                 <Pressable
-                  style={styles.contextRow}
+                  style={[
+                    styles.contextRow,
+                    isDarkMode && { borderColor: '#2C3035' },
+                  ]}
                   onPress={() => noteInputRef.current?.focus()}
                   accessible={false}
                 >
                   <View style={styles.contextIconWrap}>
-                    <FileText size={16} color="#7E838F" strokeWidth={2} />
+                    <FileText
+                      size={16}
+                      color={isDarkMode ? '#A3A8B1' : '#7E838F'}
+                      strokeWidth={2}
+                    />
                   </View>
                   <TextInput
                     ref={noteInputRef}
-                    style={styles.contextInput}
+                    style={[
+                      styles.contextInput,
+                      isDarkMode && { color: '#FFFFFF' },
+                    ]}
                     placeholder="Add routine intention or milestone cue..."
                     placeholderTextColor="#A3A8B1"
                     value={intentionNote}
                     onChangeText={setIntentionNote}
                     returnKeyType="done"
                     blurOnSubmit={true}
-                    cursorColor={Colors.MidnightCharcoal}
-                    selectionColor="rgba(31, 34, 40, 0.25)"
+                    cursorColor={
+                      isDarkMode ? '#FFFFFF' : Colors.MidnightCharcoal
+                    }
+                    selectionColor={
+                      isDarkMode
+                        ? 'rgba(255, 255, 255, 0.25)'
+                        : 'rgba(31, 34, 40, 0.25)'
+                    }
                   />
                 </Pressable>
               </View>
@@ -478,10 +508,22 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
             {/* Category Flow Selector (Morning, Mindful, Evening) */}
             <View style={styles.sectionBlock}>
               <View style={styles.sectionHeaderRow}>
-                <Text style={styles.sectionHeading}>
+                <Text
+                  style={[
+                    styles.sectionHeading,
+                    isDarkMode && { color: textPrimary },
+                  ]}
+                >
                   Category & Ritual Flow
                 </Text>
-                <Text style={styles.sectionSubtext}>Time anchor</Text>
+                <Text
+                  style={[
+                    styles.sectionSubtext,
+                    isDarkMode && { color: textSecondary },
+                  ]}
+                >
+                  Time anchor
+                </Text>
               </View>
 
               <FlatList
@@ -497,6 +539,28 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                   const isSelected = category === cat.id;
                   const CatIcon = cat.Icon;
 
+                  const cardBg = isDarkMode
+                    ? cat.id === 'morning'
+                      ? '#2A2416'
+                      : cat.id === 'mindful'
+                      ? '#202336'
+                      : '#331F18'
+                    : cat.bgColor;
+                  const cardBorder = isDarkMode
+                    ? cat.id === 'morning'
+                      ? '#DEAA14'
+                      : cat.id === 'mindful'
+                      ? '#8383D6'
+                      : '#FF9800'
+                    : cat.borderColor;
+                  const iconWrapBg = isDarkMode
+                    ? cat.id === 'morning'
+                      ? '#38301D'
+                      : cat.id === 'mindful'
+                      ? '#2C304A'
+                      : '#452A20'
+                    : '#FFFFFF';
+
                   return (
                     <TouchableOpacity
                       key={cat.id}
@@ -505,14 +569,14 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                       style={[
                         styles.categoryCardExact,
                         {
-                          backgroundColor: cat.bgColor,
+                          backgroundColor: cardBg,
                           width: categoryCardWidth,
                           shadowColor: cat.shadowColor,
                         },
                         isSelected && [
                           styles.categoryCardExactSelected,
                           {
-                            borderColor: cat.borderColor,
+                            borderColor: cardBorder,
                           },
                         ],
                       ]}
@@ -522,14 +586,23 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                           style={[
                             styles.categoryIconWrap,
                             {
-                              borderColor: cat.borderColor,
+                              backgroundColor: iconWrapBg,
+                              borderColor: cardBorder,
                               shadowColor: cat.shadowColor,
                             },
                           ]}
                         >
                           <CatIcon
                             size={16}
-                            color={cat.checkColor}
+                            color={
+                              isDarkMode
+                                ? cat.id === 'morning'
+                                  ? '#F5C518'
+                                  : cat.id === 'mindful'
+                                  ? '#8383D6'
+                                  : '#FF9800'
+                                : cat.checkColor
+                            }
                             strokeWidth={2.4}
                           />
                         </View>
@@ -540,14 +613,18 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                               styles.categoryFloatingCheckboxChecked,
                               {
                                 borderColor: cat.accentColor,
-                                backgroundColor: cat.bgColor,
+                                backgroundColor: cardBg,
                                 shadowColor: cat.shadowColor,
                               },
                             ]}
                           >
                             <Check
                               size={12}
-                              color={cat.checkColor}
+                              color={
+                                isDarkMode
+                                  ? '#52D22E'
+                                  : cat.checkColor
+                              }
                               strokeWidth={3}
                             />
                           </View>
@@ -557,7 +634,10 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                               styles.categoryFloatingCheckbox,
                               styles.categoryFloatingCheckboxUnchecked,
                               {
-                                borderColor: cat.borderColor,
+                                borderColor: cardBorder,
+                                backgroundColor: isDarkMode
+                                  ? '#252932'
+                                  : 'rgba(255, 255, 255, 0.4)',
                               },
                             ]}
                           />
@@ -566,7 +646,10 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
 
                       <View style={styles.categoryCardBottom}>
                         <Text
-                          style={styles.categoryCardLabel}
+                          style={[
+                            styles.categoryCardLabel,
+                            isDarkMode && { color: '#FFFFFF' },
+                          ]}
                           numberOfLines={1}
                         >
                           {cat.label}
@@ -592,7 +675,14 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
             {/* Frequency & Cadence Selector */}
             <View style={styles.sectionBlock}>
               <View style={styles.sectionHeaderRow}>
-                <Text style={styles.sectionHeading}>Ritual Frequency</Text>
+                <Text
+                  style={[
+                    styles.sectionHeading,
+                    isDarkMode && { color: textPrimary },
+                  ]}
+                >
+                  Ritual Frequency
+                </Text>
                 <Badge
                   variant="green"
                   size="sm"
@@ -611,12 +701,18 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                       onPress={() => setFrequency(f)}
                       style={[
                         styles.frequencyChip,
+                        isDarkMode &&
+                          !isSelected && {
+                            backgroundColor: '#1E2228',
+                            borderColor: '#2C3035',
+                          },
                         isSelected && styles.frequencyChipSelected,
                       ]}
                     >
                       <Text
                         style={[
                           styles.frequencyChipText,
+                          isDarkMode && !isSelected && { color: '#A3A8B1' },
                           isSelected && styles.frequencyChipTextSelected,
                         ]}
                       >
@@ -631,8 +727,22 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
             {/* Ideal Time of Day */}
             <View style={styles.sectionBlock}>
               <View style={styles.sectionHeaderRow}>
-                <Text style={styles.sectionHeading}>Ideal Time of Day</Text>
-                <Text style={styles.sectionSubtext}>Trigger cue</Text>
+                <Text
+                  style={[
+                    styles.sectionHeading,
+                    isDarkMode && { color: textPrimary },
+                  ]}
+                >
+                  Ideal Time of Day
+                </Text>
+                <Text
+                  style={[
+                    styles.sectionSubtext,
+                    isDarkMode && { color: textSecondary },
+                  ]}
+                >
+                  Trigger cue
+                </Text>
               </View>
 
               {/* Time Presets Quick Chips */}
@@ -646,12 +756,19 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                       onPress={() => setTimeOfDay(preset)}
                       style={[
                         styles.quickTimeChip,
+                        isDarkMode &&
+                          !isPresetSelected && {
+                            backgroundColor: '#1E2228',
+                            borderColor: '#2C3035',
+                          },
                         isPresetSelected && styles.quickTimeChipSelected,
                       ]}
                     >
                       <Text
                         style={[
                           styles.quickTimeChipText,
+                          isDarkMode &&
+                            !isPresetSelected && { color: '#A3A8B1' },
                           isPresetSelected && styles.quickTimeChipTextSelected,
                         ]}
                       >
@@ -694,15 +811,37 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
             </View>
 
             {/* Spoken Voice Nudge (Voice nudge) */}
-            <View style={styles.voiceNudgeCard}>
+            <View
+              style={[
+                styles.voiceNudgeCard,
+                isDarkMode && {
+                  backgroundColor: '#1E2228',
+                  borderColor: '#2C3035',
+                },
+              ]}
+            >
               <View style={styles.voiceNudgeLeft}>
-                <View style={styles.voiceIconBox}>
+                <View
+                  style={[
+                    styles.voiceIconBox,
+                    isDarkMode && {
+                      backgroundColor: '#1F382D',
+                      borderColor: '#1B9A72',
+                    },
+                  ]}
+                >
                   <Volume2 size={20} color="#1B9A72" strokeWidth={2.4} />
                 </View>
 
                 <View style={styles.voiceTextGroup}>
                   <View style={styles.voiceTitleRow}>
-                    <Text style={styles.voiceTitle} numberOfLines={1}>
+                    <Text
+                      style={[
+                        styles.voiceTitle,
+                        isDarkMode && { color: '#FFFFFF' },
+                      ]}
+                      numberOfLines={1}
+                    >
                       Voice Nudge
                     </Text>
                     <Badge
@@ -722,11 +861,11 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                 value={voiceNudgeEnabled}
                 onValueChange={setVoiceNudgeEnabled}
                 trackColor={{
-                  false: '#E4E2DD',
-                  true: Colors.MidnightCharcoal,
+                  false: isDarkMode ? '#2C3035' : '#E4E2DD',
+                  true: isDarkMode ? '#8383D6' : Colors.MidnightCharcoal,
                 }}
                 thumbColor="#FFFFFF"
-                ios_backgroundColor="#E4E2DD"
+                ios_backgroundColor={isDarkMode ? '#2C3035' : '#E4E2DD'}
               />
             </View>
 
@@ -736,7 +875,13 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                 <TouchableOpacity
                   activeOpacity={0.85}
                   onPress={handleDelete}
-                  style={styles.deleteCardBtn}
+                  style={[
+                    styles.deleteCardBtn,
+                    isDarkMode && {
+                      backgroundColor: '#1E2228',
+                      borderColor: '#5A2528',
+                    },
+                  ]}
                   accessibilityRole="button"
                   accessibilityLabel="Delete Habit"
                 >

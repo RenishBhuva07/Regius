@@ -22,6 +22,7 @@ import { Task } from '../Context/TaskReminderContext';
 
 import { Fonts } from '../Theme/fonts';
 import { Colors } from '../Assets/StyleUtilities/Colors';
+import { useAppTheme } from '../Theme/useAppTheme';
 import { Badge } from '../Common/Badge';
 import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 import { useOptionalVoiceWakeWord } from '../Context/VoiceWakeWordContext';
@@ -141,6 +142,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
   taskToEdit,
 }) => {
   const insets = useSafeAreaInsets();
+  const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
   const voiceContext = useOptionalVoiceWakeWord();
   const assistantName = voiceContext?.assistantName || 'Regius';
   const isEditing = !!taskToEdit;
@@ -435,12 +437,17 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
       presentationStyle="fullScreen"
       onRequestClose={onClose}
     >
-      <View style={styles.canvasContainer}>
+      <View
+        style={[
+          styles.canvasContainer,
+          isDarkMode && { backgroundColor: '#121417' },
+        ]}
+      >
         <StatusBar
-          barStyle="dark-content"
+          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
           {...(Platform.OS === 'android'
             ? {
-                backgroundColor: '#FAF8F5',
+                backgroundColor: isDarkMode ? '#121417' : '#FAF8F5',
                 translucent: true,
               }
             : {})}
@@ -484,6 +491,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
             <View
               style={[
                 styles.primaryTaskCardWrapper,
+                isDarkMode && { backgroundColor: '#1E2228' },
                 { shadowColor: activeCategory.shadowColor },
               ]}
             >
@@ -503,6 +511,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
               <View
                 style={[
                   styles.primaryTaskCard,
+                  isDarkMode && { backgroundColor: '#1E2228' },
                   {
                     borderColor: activeCategory.borderColor,
                   },
@@ -518,6 +527,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                 <TextInput
                   style={[
                     styles.titleInput,
+                    isDarkMode && { color: '#FFFFFF' },
                     titleInputHeight > 48 ? { height: titleInputHeight } : null,
                   ]}
                   placeholder="e.g., Weekly Team Sync & Catchup..."
@@ -529,30 +539,50 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                   scrollEnabled={true}
                   rejectResponderTermination={true}
                   autoFocus={true}
-                  cursorColor={Colors.MidnightCharcoal}
-                  selectionColor="rgba(31, 34, 40, 0.25)"
+                  cursorColor={isDarkMode ? '#FFFFFF' : Colors.MidnightCharcoal}
+                  selectionColor={
+                    isDarkMode
+                      ? 'rgba(255, 255, 255, 0.25)'
+                      : 'rgba(31, 34, 40, 0.25)'
+                  }
                 />
 
                 {/* Memo input */}
                 <Pressable
-                  style={styles.contextRow}
+                  style={[
+                    styles.contextRow,
+                    isDarkMode && { borderColor: '#2C3035' },
+                  ]}
                   onPress={() => noteInputRef.current?.focus()}
                   accessible={false}
                 >
                   <View style={styles.contextIconWrap}>
-                    <FileText size={16} color="#7E838F" strokeWidth={2} />
+                    <FileText
+                      size={16}
+                      color={isDarkMode ? '#A3A8B1' : '#7E838F'}
+                      strokeWidth={2}
+                    />
                   </View>
                   <TextInput
                     ref={noteInputRef}
-                    style={styles.contextInput}
+                    style={[
+                      styles.contextInput,
+                      isDarkMode && { color: '#FFFFFF' },
+                    ]}
                     placeholder="Add gentle context or personal memo..."
                     placeholderTextColor="#A3A8B1"
                     value={taskNote}
                     onChangeText={setTaskNote}
                     returnKeyType="done"
                     blurOnSubmit={true}
-                    cursorColor={Colors.MidnightCharcoal}
-                    selectionColor="rgba(31, 34, 40, 0.25)"
+                    cursorColor={
+                      isDarkMode ? '#FFFFFF' : Colors.MidnightCharcoal
+                    }
+                    selectionColor={
+                      isDarkMode
+                        ? 'rgba(255, 255, 255, 0.25)'
+                        : 'rgba(31, 34, 40, 0.25)'
+                    }
                   />
                 </Pressable>
 
@@ -593,15 +623,37 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
             />
 
             {/* Spoken Voice Nudge */}
-            <View style={styles.voiceNudgeCard}>
+            <View
+              style={[
+                styles.voiceNudgeCard,
+                isDarkMode && {
+                  backgroundColor: '#1E2228',
+                  borderColor: '#2C3035',
+                },
+              ]}
+            >
               <View style={styles.voiceNudgeLeft}>
-                <View style={styles.voiceIconBox}>
+                <View
+                  style={[
+                    styles.voiceIconBox,
+                    isDarkMode && {
+                      backgroundColor: '#1F382D',
+                      borderColor: '#1B9A72',
+                    },
+                  ]}
+                >
                   <Volume2 size={20} color="#1B9A72" strokeWidth={2.4} />
                 </View>
 
                 <View style={styles.voiceTextGroup}>
                   <View style={styles.voiceTitleRow}>
-                    <Text style={styles.voiceTitle} numberOfLines={1}>
+                    <Text
+                      style={[
+                        styles.voiceTitle,
+                        isDarkMode && { color: '#FFFFFF' },
+                      ]}
+                      numberOfLines={1}
+                    >
                       Voice Nudge
                     </Text>
                     <Badge
@@ -621,11 +673,11 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                 value={voiceNudgeEnabled}
                 onValueChange={setVoiceNudgeEnabled}
                 trackColor={{
-                  false: '#E4E2DD',
-                  true: Colors.MidnightCharcoal,
+                  false: isDarkMode ? '#2C3035' : '#E4E2DD',
+                  true: isDarkMode ? '#F5C518' : Colors.MidnightCharcoal,
                 }}
                 thumbColor="#FFFFFF"
-                ios_backgroundColor="#E4E2DD"
+                ios_backgroundColor={isDarkMode ? '#2C3035' : '#E4E2DD'}
               />
             </View>
 
@@ -635,7 +687,13 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                 <TouchableOpacity
                   activeOpacity={0.85}
                   onPress={handleDelete}
-                  style={styles.deleteCardBtn}
+                  style={[
+                    styles.deleteCardBtn,
+                    isDarkMode && {
+                      backgroundColor: '#1E2228',
+                      borderColor: '#5A2528',
+                    },
+                  ]}
                   accessibilityRole="button"
                   accessibilityLabel="Delete Task"
                 >

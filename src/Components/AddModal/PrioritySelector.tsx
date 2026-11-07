@@ -7,6 +7,7 @@ import {
   Platform,
 } from 'react-native';
 import { Fonts } from '../../Theme/fonts';
+import { useAppTheme } from '../../Theme/useAppTheme';
 
 export type PriorityLevel = 'low' | 'medium' | 'high';
 
@@ -34,16 +35,40 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = React.memo(
     heading = 'Priority Weight',
     subheading = 'Balance energy load',
   }) => {
+    const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
+
     return (
       <View style={styles.sectionBlock}>
         <View style={styles.sectionHeaderRow}>
-          <Text style={styles.sectionHeading}>{heading}</Text>
+          <Text
+            style={[
+              styles.sectionHeading,
+              isDarkMode && { color: textPrimary },
+            ]}
+          >
+            {heading}
+          </Text>
           {subheading && (
-            <Text style={styles.sectionSubtext}>{subheading}</Text>
+            <Text
+              style={[
+                styles.sectionSubtext,
+                isDarkMode && { color: textSecondary },
+              ]}
+            >
+              {subheading}
+            </Text>
           )}
         </View>
 
-        <View style={styles.priorityBarContainer}>
+        <View
+          style={[
+            styles.priorityBarContainer,
+            isDarkMode && {
+              backgroundColor: '#1E2228',
+              borderColor: '#2C3035',
+            },
+          ]}
+        >
           {PRIORITY_OPTIONS.map(item => {
             const isActive = selectedPriority === item.key;
             return (
@@ -53,7 +78,10 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = React.memo(
                 onPress={() => onSelectPriority(item.key)}
                 style={[
                   styles.priorityTab,
-                  isActive && styles.priorityTabActive,
+                  isActive && [
+                    styles.priorityTabActive,
+                    isDarkMode && { backgroundColor: '#2C3035' },
+                  ],
                 ]}
                 accessibilityRole="radio"
                 accessibilityState={{ selected: isActive }}
@@ -70,7 +98,10 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = React.memo(
                     styles.priorityTabText,
                     isActive
                       ? styles.priorityTabTextActive
-                      : styles.priorityTabTextInactive,
+                      : [
+                          styles.priorityTabTextInactive,
+                          isDarkMode && { color: '#A3A8B1' },
+                        ],
                   ]}
                 >
                   {item.label}

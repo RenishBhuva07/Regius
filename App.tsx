@@ -5,7 +5,7 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import AppNavigator from './src/Navigators/AppNavigator';
-import { ThemeProvider } from './src/Theme/ThemeContext';
+import { ThemeProvider, useTheme } from './src/Theme/ThemeContext';
 import { PremiumProvider } from './src/Context/PremiumContext';
 import { AuthProvider } from './src/Context/AuthContext';
 import { TaskReminderProvider } from './src/Context/TaskReminderContext';
@@ -13,6 +13,21 @@ import { MilestoneProvider } from './src/Context/MilestoneContext';
 import { MilestoneFullScreenSheet } from './src/Screens/Milestones';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from './src/Common/ToastConfig';
+
+const ThemedStatusBar: React.FC = () => {
+  const { isDarkMode } = useTheme();
+  return (
+    <StatusBar
+      barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+      {...(Platform.OS === 'android'
+        ? {
+            backgroundColor: 'transparent',
+            translucent: true,
+          }
+        : {})}
+    />
+  );
+};
 
 const ThemedToast: React.FC = () => {
   const insets = useSafeAreaInsets();
@@ -36,7 +51,7 @@ function App() {
           <TaskReminderProvider>
             <MilestoneProvider>
               <SafeAreaProvider>
-                <StatusBar barStyle="dark-content" />
+                <ThemedStatusBar />
                 <AppNavigator />
                 <MilestoneFullScreenSheet />
                 <ThemedToast />

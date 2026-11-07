@@ -14,6 +14,7 @@ import DateTimePicker, {
 import { Calendar, Clock } from 'lucide-react-native';
 import { Fonts } from '../Theme/fonts';
 import { Colors } from '../Assets/StyleUtilities/Colors';
+import { useAppTheme } from '../Theme/useAppTheme';
 import PickerAestheticBg from '../Components/PickerAestheticBg';
 
 export interface UnifiedSchedulePickerModalProps {
@@ -29,6 +30,7 @@ export interface UnifiedSchedulePickerModalProps {
 export const UnifiedSchedulePickerModal: React.FC<UnifiedSchedulePickerModalProps> =
   React.memo(
     ({ visible, mode, value, onChange, onClose, title, badgeText }) => {
+      const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
       const isDate = mode === 'date';
       const defaultTitle = isDate ? 'Schedule Date' : 'Due Time';
       const defaultBadge = isDate ? 'SOLAR CALENDAR' : 'LUNAR CHRONO';
@@ -56,8 +58,23 @@ export const UnifiedSchedulePickerModal: React.FC<UnifiedSchedulePickerModalProp
           <TouchableWithoutFeedback onPress={onClose}>
             <View style={styles.pickerModalOverlay}>
               <TouchableWithoutFeedback>
-                <View style={styles.pickerModalCard}>
-                  <View style={styles.pickerDragHandle} />
+                <View
+                  style={[
+                    styles.pickerModalCard,
+                    isDarkMode && {
+                      backgroundColor: '#1E2228',
+                      borderTopColor: '#2C3035',
+                      borderLeftColor: '#2C3035',
+                      borderRightColor: '#2C3035',
+                    },
+                  ]}
+                >
+                  <View
+                    style={[
+                      styles.pickerDragHandle,
+                      isDarkMode && { backgroundColor: '#363944' },
+                    ]}
+                  />
                   <PickerAestheticBg type={mode} />
 
                   <View style={styles.pickerModalHeader}>
@@ -89,7 +106,12 @@ export const UnifiedSchedulePickerModal: React.FC<UnifiedSchedulePickerModalProp
                           {badgeText || defaultBadge}
                         </Text>
                       </View>
-                      <Text style={styles.pickerModalTitle}>
+                      <Text
+                        style={[
+                          styles.pickerModalTitle,
+                          isDarkMode && { color: '#FFFFFF' },
+                        ]}
+                      >
                         {title || defaultTitle}
                       </Text>
                     </View>
@@ -111,8 +133,8 @@ export const UnifiedSchedulePickerModal: React.FC<UnifiedSchedulePickerModalProp
                       mode={mode}
                       display="spinner"
                       onChange={onChange}
-                      textColor={Colors.MidnightCharcoal}
-                      themeVariant="light"
+                      textColor={isDarkMode ? '#FFFFFF' : Colors.MidnightCharcoal}
+                      themeVariant={isDarkMode ? 'dark' : 'light'}
                     />
                   </View>
                 </View>

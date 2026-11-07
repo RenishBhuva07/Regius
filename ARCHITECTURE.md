@@ -279,6 +279,66 @@ graph LR
    - Calculates total XP (+15 Task, +10 Reminder, +20 Habit, +2/day Habit Streak) and evaluates current rank across 5 Royalty Prestige Tiers.
    - Manages dual-gate Pro access: users unlock bespoke luxury themes (_Champagne Gold_, _Emerald Velvet_, _Celestial Azure_, _Obsidian Sovereign_) and Pro privileges (Haptic intensity, Wake word studio, Priority TTS) either by leveling up through discipline or via `isPremium: true`.
    - Persists historical metrics to `AsyncStorage` (`@regius_milestone_progression`).
+6. **`ThemeContext` & `useAppTheme`**:
+   - Manages user theme mode (`isDarkMode: boolean`) and active theme preset (`activeThemeId: string`), persisting state to `@regius_theme_mode` and `@regius_active_theme` in `AsyncStorage`.
+   - Exposes universal semantic hook `useAppTheme()` providing reactive color tokens, surface values, and dynamic category palette resolvers.
+
+### 5.2 App-Wide Theme Architecture & Dark Mode Data Flow
+
+```mermaid
+graph TD
+    subgraph Storage_Layer [Persistence]
+        AS[AsyncStorage\n@regius_theme_mode\n@regius_active_theme]
+    end
+
+    subgraph Theme_Provider [Theme State Engine]
+        TC[ThemeContext.tsx\nisDarkMode, activeThemeId, setDarkMode]
+        UAT[useAppTheme.ts\nUniversal Semantic Design Tokens]
+    end
+
+    subgraph Native_Shell [Root & Navigation Shell]
+        TSB[App.tsx\nThemedStatusBar: dark-content / light-content]
+        AN[AppNavigator.tsx\nnavigationTheme: background #121417 / #FFFCE3]
+        BTN[BottomTabNavigator.tsx\nDynamic Dock Halo & Indicator]
+        PAS[PlusActionSheet.tsx\nDark Gradients & Notch]
+    end
+
+    subgraph App_Screens [Screen & Feature Layer]
+        Dash[DashboardScreen & DailyBalanceGrid]
+        Tasks[TasksScreen & TaskCardItem]
+        Reminders[RemindersScreen & ReminderCardItem]
+        Habits[HabitsScreen & HabitItemCard]
+        Modals[Modals & Chrono Pickers\nAddTask, AddReminder, AddHabit, SchedulePicker]
+    end
+
+    AS --> TC
+    TC --> UAT
+    TC --> TSB
+    TC --> AN
+    UAT --> BTN
+    UAT --> PAS
+    UAT --> Dash
+    UAT --> Tasks
+    UAT --> Reminders
+    UAT --> Habits
+    UAT --> Modals
+```
+
+#### Theme Distribution & Component Binding Lifecycle:
+
+1. **Storage & State Hydration**: On app mount, `ThemeContext` reads `@regius_theme_mode` from `AsyncStorage`. If no preference is stored, it defaults cleanly to light mode (`isDarkMode: false`).
+2. **Global Native Shell Synchronization**:
+   - **Status Bar**: `App.tsx` hosts a reactive `ThemedStatusBar` that synchronizes `barStyle` (`'light-content'` in dark mode, `'dark-content'` in light mode) and background color without screen flashing.
+   - **Navigation Canvas**: `AppNavigator.tsx` builds a dynamic `navigationTheme` passed to `NavigationContainer`, locking `colors.background` to `#121417` in dark mode to eliminate white blips during native-stack screen push/pop transitions.
+   - **Curved Bottom Bar Dock**: `BottomTabNavigator.tsx` and `BottomTabPatternSvg.tsx` bind `strokeColor` and halo background to `#121417`, ensuring seamless fusion with screen canvases.
+   - **Action Sheet**: `PlusActionSheet.tsx` switches background gradients (`#1A1D24` to `#121417`), top notch fill, and quick action cards to elevated dark surfaces (`#1E2228`).
+3. **Screen & List Component Adaptation**:
+   - Primary tabs (`DashboardScreen`, `TasksScreen`, `RemindersScreen`, `HabitsScreen`) set root containers to `bgMain` (`#121417`) and section canopy sheets to `surfaceAlt` (`#181B20`).
+   - List item cards (`TaskCardItem`, `ReminderCardItem`, `HabitItemCard`, `TimelineItemCard`) dynamically adapt cutout SVG paths (fill `#171A20`, stroke `#2C3035`), floating checkbox surfaces (`#252932`), and secondary metadata pills.
+   - Category carousels and filter pills dynamically render deep jewel surfaces (`#2A2416` Works, `#162820` Sport, `#202336` Mindful, `#331F18` Events) with high-contrast active borders.
+4. **Creation Modals & Chrono Pickers**:
+   - Creation modals (`AddTaskModal`, `AddReminderModal`, `AddHabitModal`) adapt primary card wrappers (`#1E2228`), text inputs (`#171A1F`), section headers (`#FFFFFF`), and context rows (`#2C3035`).
+   - Pickers and dialogs (`UnifiedSchedulePickerModal`, `CustomCategoryModal`) switch modal cards to `#1E2228`, divider hairlines to `#2C3035`, and configure native `DateTimePicker` to `themeVariant="dark"` and `textColor="#FFFFFF"`.
 
 ---
 

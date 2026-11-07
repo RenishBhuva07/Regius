@@ -13,6 +13,7 @@ import { Fonts } from '../Theme/fonts';
 import { Colors } from '../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 import FlowBadgePatternSvg from '../Screens/Dashboard/Components/FlowBadgePatternSvg';
+import { useTheme } from '../Theme/ThemeContext';
 
 export interface FlowSectionSheetProps {
   title: string | React.ReactNode;
@@ -36,10 +37,18 @@ export const FlowSectionSheet: React.FC<FlowSectionSheetProps> = React.memo(
     bottomPadding = 130,
     containerStyle,
   }) => {
+    const { isDarkMode } = useTheme();
+
     return (
       <View
         style={[
           styles.sectionContainer,
+          isDarkMode && {
+            backgroundColor: '#181B20',
+            borderTopColor: '#2C3035',
+            borderLeftColor: '#22252B',
+            borderRightColor: '#22252B',
+          },
           { paddingBottom: bottomPadding },
           containerStyle,
         ]}

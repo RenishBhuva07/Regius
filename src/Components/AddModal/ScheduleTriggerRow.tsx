@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Calendar, Clock } from 'lucide-react-native';
 import { Fonts } from '../../Theme/fonts';
+import { useAppTheme } from '../../Theme/useAppTheme';
 import { ScheduleButtonBackgroundSvg } from '../../Common/ScheduleButtonBackgroundSvg';
 
 export type QuickDateType = 'today' | 'tomorrow' | 'weekend';
@@ -28,10 +29,19 @@ export const ScheduleTriggerRow: React.FC<ScheduleTriggerRowProps> = React.memo(
     dateLabel = 'SCHEDULE DATE',
     timeLabel = 'TIME',
   }) => {
+    const { isDarkMode, textPrimary } = useAppTheme();
+
     return (
       <View style={styles.sectionBlock}>
         <View style={styles.sectionHeaderRow}>
-          <Text style={styles.sectionHeading}>{heading}</Text>
+          <Text
+            style={[
+              styles.sectionHeading,
+              isDarkMode && { color: textPrimary },
+            ]}
+          >
+            {heading}
+          </Text>
         </View>
 
         {/* Quick Date Chips */}
@@ -57,6 +67,11 @@ export const ScheduleTriggerRow: React.FC<ScheduleTriggerRowProps> = React.memo(
                   onPress={() => onSelectQuickDate(type)}
                   style={[
                     styles.quickDateChip,
+                    isDarkMode &&
+                      !isSelected && {
+                        backgroundColor: '#1E2228',
+                        borderColor: '#2C3035',
+                      },
                     isSelected && styles.quickDateChipSelected,
                   ]}
                   accessibilityRole="button"
@@ -65,6 +80,7 @@ export const ScheduleTriggerRow: React.FC<ScheduleTriggerRowProps> = React.memo(
                   <Text
                     style={[
                       styles.quickDateChipText,
+                      isDarkMode && !isSelected && { color: '#A3A8B1' },
                       isSelected && styles.quickDateChipTextSelected,
                     ]}
                   >
