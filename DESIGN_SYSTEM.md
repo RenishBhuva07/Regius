@@ -41,19 +41,19 @@ Regius embraces **Modern Warm Luxury & Mindful Productivity** (_"Plan Your Day I
 
 Regius features an app-wide Obsidian Dark Theme that maintains artisanal luxury warmth while preventing eye strain. Clinical pure `#000000` pitch black and generic flat greys are strictly avoided in favor of rich midnight tones and deep category jewel tints.
 
-| Token Name           | Hex Value             | Semantic Role & Usage                                                        |
-| :------------------- | :-------------------- | :--------------------------------------------------------------------------- |
-| `DarkBackground`     | `#121417`             | Deep midnight canvas for all screens (`Dashboard`, `Tasks`, `Reminders`, `Habits`). |
-| `DarkCardBackground` | `#1E2228`             | Elevated modal cards, quick action cards, and bento cards in dark theme.     |
-| `DarkSectionSurface` | `#181B20`             | Flow section rounded sheet containers and canopy docks.                      |
-| `DarkInputBg`        | `#171A1F`             | Deep input fields, search bars, and subtask text inputs.                     |
-| `DarkCardFill`       | `#171A20`             | Asymmetric cutout SVG card fill color in dark mode.                          |
-| `DarkCardStroke`     | `#2C3035`             | Asymmetric cutout SVG card hairline perimeter border.                        |
-| `DarkCheckboxUnchecked`| `#252932`           | Floating checkbox button surface when unchecked.                             |
-| `DarkCheckboxChecked`| `#13281E`             | Floating checkbox button surface when checked (border: `#52D22E`).           |
-| `DarkSecondaryText`  | `#A3A8B1`             | Subdued secondary copy, metadata stamps, and unselected filter chips.        |
-| `DarkBorder`         | `#2C3035` / `#363944` | Subtle hairline borders, divider lines, and card bevels.                     |
-| `PureWhiteText`      | `#FFFFFF`             | High-contrast titles, headers, active tab icons, and primary inputs.         |
+| Token Name              | Hex Value             | Semantic Role & Usage                                                               |
+| :---------------------- | :-------------------- | :---------------------------------------------------------------------------------- |
+| `DarkBackground`        | `#121417`             | Deep midnight canvas for all screens (`Dashboard`, `Tasks`, `Reminders`, `Habits`). |
+| `DarkCardBackground`    | `#1E2228`             | Elevated modal cards, quick action cards, and bento cards in dark theme.            |
+| `DarkSectionSurface`    | `#181B20`             | Flow section rounded sheet containers and canopy docks.                             |
+| `DarkInputBg`           | `#171A1F`             | Deep input fields, search bars, and subtask text inputs.                            |
+| `DarkCardFill`          | `#171A20`             | Asymmetric cutout SVG card fill color in dark mode.                                 |
+| `DarkCardStroke`        | `#2C3035`             | Asymmetric cutout SVG card hairline perimeter border.                               |
+| `DarkCheckboxUnchecked` | `#252932`             | Floating checkbox button surface when unchecked.                                    |
+| `DarkCheckboxChecked`   | `#13281E`             | Floating checkbox button surface when checked (border: `#52D22E`).                  |
+| `DarkSecondaryText`     | `#A3A8B1`             | Subdued secondary copy, metadata stamps, and unselected filter chips.               |
+| `DarkBorder`            | `#2C3035` / `#363944` | Subtle hairline borders, divider lines, and card bevels.                            |
+| `PureWhiteText`         | `#FFFFFF`             | High-contrast titles, headers, active tab icons, and primary inputs.                |
 
 ### 2.3 Category Trios & Semantic Accents (Dual Light & Dark Harmonized System)
 
@@ -92,17 +92,17 @@ Components throughout Regius consume dynamic design tokens using the centralized
 import { useAppTheme } from '../../Theme';
 
 const {
-  isDarkMode,       // boolean: true when dark mode is active
-  activeThemeId,    // string: 'obsidian' | 'cream' | etc.
-  Colors,           // base color tokens
-  bgMain,           // '#121417' (dark) | '#FFFCE3' (light)
-  cardBg,           // '#1E2228' (dark) | '#FFFFFF' (light)
-  surfaceAlt,       // '#181B20' (dark) | '#FAF8F5' (light)
-  inputBg,          // '#171A1F' (dark) | '#FFFFFF' (light)
-  textPrimary,      // '#FFFFFF' (dark) | '#1F2228' (light)
-  textSecondary,    // '#A3A8B1' (dark) | '#666665' (light)
-  borderLight,      // '#2C3035' (dark) | '#E8E2D5' (light)
-  borderSubtle,     // '#363944' (dark) | '#F0EDE6' (light)
+  isDarkMode, // boolean: true when dark mode is active
+  activeThemeId, // string: 'obsidian' | 'cream' | etc.
+  Colors, // base color tokens
+  bgMain, // '#121417' (dark) | '#FFFCE3' (light)
+  cardBg, // '#1E2228' (dark) | '#FFFFFF' (light)
+  surfaceAlt, // '#181B20' (dark) | '#FAF8F5' (light)
+  inputBg, // '#171A1F' (dark) | '#FFFFFF' (light)
+  textPrimary, // '#FFFFFF' (dark) | '#1F2228' (light)
+  textSecondary, // '#A3A8B1' (dark) | '#666665' (light)
+  borderLight, // '#2C3035' (dark) | '#E8E2D5' (light)
+  borderSubtle, // '#363944' (dark) | '#F0EDE6' (light)
   getCategoryTheme, // (categoryKey) => { bg, border, accent, shadow }
 } = useAppTheme();
 ```
@@ -463,8 +463,8 @@ Used for list item cards across `TasksScreen` (`TaskCardItem.tsx`), `RemindersSc
 - **Dark Mode Cutout Card Adaptations**:
   - **SVG Path Surface Fill**: Dynamic fill switches from light category tint to Obsidian card fill `#171A20` with `#2C3035` perimeter hairline stroke.
   - **Floating Checkbox (Top-Right Scoop)**:
-    - *Unchecked*: Deep slate surface (`backgroundColor: '#252932'`), border `#3A3F46`.
-    - *Checked*: Deep emerald jewel surface (`backgroundColor: '#13281E'`), border `#52D22E` with `#52D22E` Check icon.
+    - _Unchecked_: Deep slate surface (`backgroundColor: '#252932'`), border `#3A3F46`.
+    - _Checked_: Deep emerald jewel surface (`backgroundColor: '#13281E'`), border `#52D22E` with `#52D22E` Check icon.
   - **Category Indicators**: Top-row 3D badges, icon containers, and radial glowing auras maintain their vibrant category accents (`#F5C518` Works, `#52D22E` Sport/Reminders, `#8383D6` Habits/Mindful, `#FF9800` Events).
   - **Completed Cards**: Fill `#171A20`, stroke `#2C3035`, titles `#8E939E` without strikethrough decoration.
   - **Metadata & Subtask Pills**: Deep slate tags (`backgroundColor: '#252932'`, border `#363944`, text `#A3A8B1`).
@@ -666,13 +666,24 @@ The authentication screen provides an artisanal, warm luxury gateway to Regius:
 
 ---
 
-### 4.12 Intro Screen Artisanal Canvas & 3D Interactive Controls (`src/Screens/Intro/Intro.tsx`, `IntroAestheticBackgroundSvg.tsx`)
+### 4.12 Intro Screen Artisanal Canvas, Hero Illustration & 3D Controls (`src/Screens/Intro/Intro.tsx`, `IntroHeroIllustration.tsx`, `IntroAestheticBackgroundSvg.tsx`)
 
-1. **Dynamic Atmospheric Background (`IntroAestheticBackgroundSvg.tsx`)**:
+1. **Theme-Adaptive Hero Illustration (`IntroHeroIllustration.tsx`)**:
+
+   - **Dual-Theme Stage Architecture**:
+     - _Light Mode_: Pristine `#FFFFFF` stage disc (`r=237.5`) providing clean contrast on `Colors.CreamBackground` (`#FFFCE3`).
+     - _Dark Mode_: Obsidian stage disc with deep dual-stop radial gradient (`#242831` core to `#14161B` rim) encircled by a specular hairline rim (`stroke="rgba(255, 255, 255, 0.08)"`, `strokeWidth: 1.2`) and an ambient halo tinted by the active category `accentColor`.
+   - **Masking Integrity**: The alpha mask (`<Mask id="mask0_2_3056">`) strictly retains `<Circle ... fill="white" />` across all modes, guaranteeing the character is never erased or made semi-transparent.
+   - **Tactile Floating Badges**:
+     - _Heart Badge_: Disc adapts to deep obsidian (`#1E2228`) with mint hairline rim (`rgba(82, 210, 46, 0.38)`) and vibrant `#52D22E` heart.
+     - _Office Bag Badge_: Disc adapts to deep obsidian (`#1E2228`) with warm amber hairline rim (`rgba(245, 197, 24, 0.38)`) and vibrant `#F5C518` bag.
+   - **Specular Hair Silhouette**: Subtle specular contour highlight (`stroke="rgba(255, 255, 255, 0.16)"`) preserving the character's upward hair swoosh against the dark canvas and iOS Dynamic Island.
+
+2. **Dynamic Atmospheric Background (`IntroAestheticBackgroundSvg.tsx`)**:
    - Background adapts dynamically to the active step's accent color (`#F5C518` Tasks, `#52D22E` Reminders, `#8383D6` Habits).
    - Radiates concentric acoustic resonance rings behind the lower dock and guilloché wave ribbons across the card area.
    - Regius signature 4-point diamond celestial stars and micro-sparkles.
-2. **3D Touch & Volumetric Controls**:
+3. **3D Touch & Volumetric Controls**:
    - **Content Pedestal**: Slide content grounded in an elevated translucent bento card with volumetric drop shadow, specular top edge, and category-accented bottom bevel.
    - **Tactile 3D Step Indicators**: Active indicator pill with category glow shadow (`shadowOffset: { width: 0, height: 2 }`, `shadowOpacity: 0.45`, `shadowRadius: 5`, `elevation: 4`) and specular top reflection.
    - **"Get Started" Button**: Volumetric 3D drop shadow (`shadowOffset: { width: 0, height: 10 }`, `shadowOpacity: 0.38`, `shadowRadius: 18`, `elevation: 10`), specular top rim (`borderTopWidth: 1.5`), and extruded 3D bottom bevel (`borderBottomWidth: 4`, `borderBottomColor: '#0E1013'`).

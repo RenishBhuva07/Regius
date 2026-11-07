@@ -199,6 +199,8 @@ const Intro: React.FC = () => {
         <SVGS.IntroHeroIllustration
           width={illustrationWidth}
           height={illustrationHeight}
+          isDark={isDarkMode}
+          accentColor={currentStep.accentColor}
         />
       </View>
 

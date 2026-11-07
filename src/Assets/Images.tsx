@@ -3,7 +3,7 @@ import BtnIconSvg from './Images/SVGs/BtnIcon';
 import FloatHeartSvg from './Images/SVGs/FloatHeart.svg';
 import FloatPictureSvg from './Images/SVGs/FloatPicture.svg';
 import HeartBorderedSvg from './Images/SVGs/HeartBordered.svg';
-import IntroHeroIllustrationSvg from './Images/SVGs/IntroHeroIllustration.svg';
+import IntroHeroIllustration from './Images/SVGs/IntroHeroIllustration';
 import OfficeBagSvg from './Images/SVGs/OfficeBag.svg';
 import PictureBorderedSvg from './Images/SVGs/PictureBordered.svg';
 import RegiusAvatarSvg from './Images/SVGs/RegiusAvatar.svg';
@@ -15,7 +15,7 @@ export const SVGS = {
   FloatHeart: FloatHeartSvg,
   FloatPicture: FloatPictureSvg,
   HeartBordered: HeartBorderedSvg,
-  IntroHeroIllustration: IntroHeroIllustrationSvg,
+  IntroHeroIllustration: IntroHeroIllustration,
   OfficeBag: OfficeBagSvg,
   PictureBordered: PictureBorderedSvg,
   RegiusAvatar: RegiusAvatarSvg,
