@@ -374,7 +374,7 @@ sequenceDiagram
   - `src/Context/TaskReminderContext.tsx` (`addHabit`, `toggleHabit`, `updateHabit`, `deleteHabit`)
 - **User-Facing Workflow**:
   - **Two Dedicated Flows**:
-    1. **Edit Flow**: Quick editing accessible directly from the card top-right pencil button, the swiped action tray's Edit button, or the top header button in Habit Details.
+    1. **Edit Flow**: Quick editing accessible from the swiped action tray's Edit button, or the top header button in Habit Details.
     2. **Details Flow**: Swiping a habit card to the left smoothly slides the card open with a native spring animation to reveal tactile "Details" and "Edit" action buttons on the right side. Tapping "Details" navigates seamlessly to `HabitDetailsScreen` for deep analytics, 7-day consistency heatmap, ritual protocol, and vocal motivation.
   - Checking habit increments streak count (`streak + 1`) and shows celebratory toast with haptic feedback.
   - Unchecking decrements streak count safely (`Math.max(streak - 1, 0)`).
@@ -722,7 +722,7 @@ sequenceDiagram
   - `src/Navigators/AppNavigator.tsx` (registered `TaskDetailsScreen` and `ReminderDetailsScreen` with `slide_from_right` transitions)
 - **User-Facing Workflow**:
   - **Swipe Actions**: Swiping any task or reminder card to the left reveals tactile 3D Nero action buttons for `DETAILS` (navigates to dedicated details screen) and `EDIT` (opens dual-mode modal).
-  - **Direct Edit Trigger**: Each card's header also features a direct pencil edit button alongside existing controls.
+  - **Edit Triggers**: Card editing is triggered smoothly via the swiped action tray's Edit button, or from the details screen header.
   - **Dedicated Details Screens**: Both `TaskDetailsScreen` and `ReminderDetailsScreen` provide executive hero bento cards, Sia AI vocal briefings via Kokoro TTS, live interactive checklist for subtasks, full schedule matrix, destructive delete flows, and `StickyBottomButton` toggle docks.
   - **Dual-Mode Modals**: `AddTaskModal` and `AddReminderModal` now seamlessly support both creation and editing with pre-filled state, "Save Changes" submit text, and in-modal delete options.
 

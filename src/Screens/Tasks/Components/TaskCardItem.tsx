@@ -542,26 +542,6 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
                 ) : null}
               </View>
             </View>
-
-            {/* Direct Pencil Edit Button in header */}
-            {onEdit && (
-              <TouchableOpacity
-                activeOpacity={0.7}
-                onPress={e => {
-                  e.stopPropagation();
-                  if (isOpenRef.current) {
-                    closeSwipe();
-                  }
-                  onEdit(task);
-                }}
-                style={[styles.editBtn, { borderColor: catStyle.border }]}
-                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                accessibilityRole="button"
-                accessibilityLabel={`Edit ${task.label}`}
-              >
-                <Pencil size={11.5} color="#7A766E" strokeWidth={2.2} />
-              </TouchableOpacity>
-            )}
           </View>
 
           {/* Footer Badges & Metadata (time, priority, subtasks, voice nudge) */}
@@ -714,16 +694,6 @@ const styles = StyleSheet.create({
   frontCardContainer: {
     width: '100%',
     zIndex: 2,
-  },
-  editBtn: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    borderWidth: 1,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 6,
   },
   card: {
     backgroundColor: 'transparent',

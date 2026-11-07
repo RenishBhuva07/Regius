@@ -526,7 +526,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
               </View>
             </View>
 
-            {/* Right Header Controls: Kokoro TTS Audio + Pencil Edit Button */}
+            {/* Right Header Controls: Kokoro TTS Audio */}
             <View style={styles.rightControls}>
               <TouchableOpacity
                 activeOpacity={0.7}
@@ -550,25 +550,6 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                   <Volume2 size={15} color="#7E838F" strokeWidth={2.2} />
                 )}
               </TouchableOpacity>
-
-              {onEdit && (
-                <TouchableOpacity
-                  activeOpacity={0.7}
-                  onPress={e => {
-                    e.stopPropagation();
-                    if (isOpenRef.current) {
-                      closeSwipe();
-                    }
-                    onEdit(reminder);
-                  }}
-                  style={[styles.editBtn, { borderColor: theme.border }]}
-                  hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                  accessibilityRole="button"
-                  accessibilityLabel={`Edit ${reminder.title}`}
-                >
-                  <Pencil size={11.5} color="#7A766E" strokeWidth={2.2} />
-                </TouchableOpacity>
-              )}
             </View>
           </View>
 
@@ -716,16 +697,6 @@ const styles = StyleSheet.create({
   frontCardContainer: {
     width: '100%',
     zIndex: 2,
-  },
-  editBtn: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    borderWidth: 1,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginLeft: 6,
   },
   card: {
     backgroundColor: 'transparent',

@@ -404,7 +404,7 @@ Used for list item cards across `TasksScreen` (`TaskCardItem.tsx`), `RemindersSc
 - **Harmonized Universal Theme Palettes**:
   - **Tasks (Warm Gold / Yellow)**: Surface `#FFFDF7` / `#FFFCEB` with `#FFF5B8` border (`borderWidth: 1.5`), `#F5C518` gold aura, starlight nodes, and drop shadow glow, yellow 3D `<Badge />`, and `#FFF9D2` time pill (`#B48216` text). Left icon: 36×36 circular container (`#FFFCEB`, border `#FFF5B8`).
   - **Reminders (Fresh Mint / Green)**: Surface `#F5FDF9` / `#EDFDF5` with `#C6FFDD` border (`borderWidth: 1.5`), `#52D22E` green aura, starlight nodes, and drop shadow glow, green 3D `<Badge />`, and `#EDFDF5` time pill (`#1B9A72` text). Left icon: 36×36 circular container (`#EDFDF5`, border `#C6FFDD`). Includes Kokoro TTS speaker button nestled cleanly beside cutout.
-  - **Habits (Celestial Lavender / Purple)**: Surface `#F7F8FE` / `#EFF2FE` with `#D8DBFF` border (`borderWidth: 1.5`), `#8383D6` purple aura, starlight nodes, and drop shadow glow, purple 3D `<Badge />`, and `#EFF2FE` time pill (`#7059C8` text). Left icon: 36×36 circular container (`#EFF2FE`, border `#D8DBFF`). Includes Edit Pencil button nestled cleanly beside cutout.
+  - **Habits (Celestial Lavender / Purple)**: Surface `#F7F8FE` / `#EFF2FE` with `#D8DBFF` border (`borderWidth: 1.5`), `#8383D6` purple aura, starlight nodes, and drop shadow glow, purple 3D `<Badge />`, and `#EFF2FE` time pill (`#7059C8` text). Left icon: 36×36 circular container (`#EFF2FE`, border `#D8DBFF`).
 - **Completed State**: Subdued `#FAFAF8` background with `#ECEAE4` hairline border and muted text (`#7E838F`), retaining full typography clarity.
 - **Floating Round Checkbox (Top-Right Cutout)**:
   - **Position**: Floats completely in the top-right scooped negative space (`position: 'absolute'`, `top: 9`, `right: 9`, `zIndex: 10`).
@@ -429,7 +429,7 @@ Used for list item cards across `TasksScreen` (`TaskCardItem.tsx`), `RemindersSc
     - **Mindful**: Purple 3D Badge (`variant: 'purple'`), `#EFF2FE` time pill (`#7059C8`), `Sparkles` icon (`#7059C8` on `#EFF2FE` circular container).
     - **Evening**: Orange 3D Badge (`variant: 'orange'`), `#FFF2E6` time pill (`#D95D0F`), `Moon` icon (`#D95D0F` on `#FFF2E6` circular container).
   - **No Strikethrough Typography**: Titles remain 100% visible, bold, and readable without line-through decoration when marked complete (`color: '#7E838F'`).
-  - **Floating Circular Checkbox**: Positioned in the top-right cutout notch (26×26, r=13), with edit pencil button located in `topRowRightWithCutout`.
+  - **Floating Circular Checkbox**: Positioned in the top-right cutout notch (26×26, r=13), with `StreakBadge` nestled cleanly beside cutout in `topRowRightWithCutout`.
   - **7-Day Consistency Streak Flow**: Replaces legacy circular dots with a 7-day streak pipeline of tactile Lucide `<Flame />` icons; completed streak days illuminate in Universal Fiery Amber (`#FF9800` fill, `#FFA726`/`#E65100` rim) with spring bounce micro-animation, today's pending state shows an active amber focus outline (`#FF9800`), and incomplete/missed days display a subtle muted outline (`#C8C4B7`).
   - **Horizontal Card Swipe Interaction (Habits Flow)**:
     - Native `PanResponder` driven by `useNativeDriver: true` spring physics (`translateX` translation down to `-138px`).

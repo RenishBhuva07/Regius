@@ -499,7 +499,7 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
           </TouchableOpacity>
 
           <View style={styles.cardContent}>
-            {/* Top Row: Category Badge + Time + Streak Pill + Edit Button */}
+            {/* Top Row: Category Badge + Time + Streak Pill */}
             <View style={styles.topRow}>
               <View style={styles.topRowLeft}>
                 <Badge
@@ -528,25 +528,6 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
                   active={habit.completed || habit.streak > 0}
                   size="sm"
                 />
-
-                {onEdit && (
-                  <TouchableOpacity
-                    activeOpacity={0.7}
-                    onPress={e => {
-                      e.stopPropagation();
-                      if (isOpenRef.current) {
-                        closeSwipe();
-                      }
-                      onEdit(habit);
-                    }}
-                    style={[styles.editBtn, { borderColor: theme.border }]}
-                    hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-                    accessibilityRole="button"
-                    accessibilityLabel={`Edit ${habit.title}`}
-                  >
-                    <Pencil size={11.5} color="#7A766E" strokeWidth={2.2} />
-                  </TouchableOpacity>
-                )}
               </View>
             </View>
 
@@ -825,15 +806,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     marginRight: 36, // Clears the floating checkbox in the top-right cutout
-  },
-  editBtn: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
-    borderWidth: 1,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   mainRow: {
     flexDirection: 'row',
