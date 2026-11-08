@@ -22,7 +22,7 @@ export interface IntroHeroIllustrationProps extends SvgProps {
   accentColor?: string;
 }
 
-export const IntroHeroIllustration: React.FC<IntroHeroIllustrationProps> = ({
+const IntroHeroIllustrationComponent: React.FC<IntroHeroIllustrationProps> = ({
   isDark: propIsDark,
   accentColor = '#F5C518',
   ...props
@@ -38,13 +38,7 @@ export const IntroHeroIllustration: React.FC<IntroHeroIllustrationProps> = ({
   const isDark = propIsDark !== undefined ? propIsDark : contextIsDark;
 
   return (
-    <Svg
-      width={331}
-      height={673}
-      viewBox="0 0 331 673"
-      fill="none"
-      {...props}
-    >
+    <Svg width={331} height={673} viewBox="0 0 331 673" fill="none" {...props}>
       <Defs>
         {/* Luxury Dark Stage Radial Atmosphere */}
         <RadialGradient id="introHeroStageDark" cx="50%" cy="38%" r="62%">
@@ -421,5 +415,6 @@ export const IntroHeroIllustration: React.FC<IntroHeroIllustrationProps> = ({
   );
 };
 
-export default IntroHeroIllustration;
+export const IntroHeroIllustration = React.memo(IntroHeroIllustrationComponent);
 
+export default IntroHeroIllustration;

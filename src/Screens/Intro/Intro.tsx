@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,6 @@ import {
   StatusBar,
   Platform,
   FlatList,
-  Animated,
   NativeSyntheticEvent,
   NativeScrollEvent,
 } from 'react-native';
@@ -64,14 +63,112 @@ const INTRO_STEPS: IntroStep[] = [
   },
 ];
 
+interface IntroBottomControlsProps {
+  activeIndex: number;
+  isLastStep: boolean;
+  currentStep: IntroStep;
+  buttonSize: number;
+  isDarkMode: boolean;
+  onNextPress: () => void;
+}
+
+const IntroBottomControls = React.memo<IntroBottomControlsProps>(
+  ({
+    activeIndex,
+    isLastStep,
+    currentStep,
+    buttonSize,
+    isDarkMode,
+    onNextPress,
+  }) => {
+    return (
+      <>
+        {/* ── Tactile 3D Step Indicator Pills ── */}
+        <View style={styles.indicatorContainer}>
+          {INTRO_STEPS.map((step, idx) => {
+            const isActive = activeIndex === idx;
+            return (
+              <View
+                key={step.id}
+                style={[
+                  styles.indicatorDot,
+                  isActive
+                    ? [
+                        styles.indicatorActive,
+                        {
+                          backgroundColor: step.accentColor,
+                          shadowColor: step.accentColor,
+                        },
+                      ]
+                    : {
+                        backgroundColor: isDarkMode
+                          ? Colors.CarbonSlate
+                          : '#DDD6C6',
+                      },
+                ]}
+              />
+            );
+          })}
+        </View>
+
+        {/* ── Primary Action Controls (Strict 84px Zero-Shift Dock) ── */}
+        <View style={styles.buttonWrapper}>
+          {isLastStep ? (
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={onNextPress}
+              style={[
+                styles.getStartedButton,
+                {
+                  backgroundColor: Colors.MidnightCharcoal,
+                  shadowColor: currentStep.accentColor,
+                },
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel="Get Started"
+            >
+              <Text style={styles.getStartedText}>Get Started</Text>
+              <View
+                style={[
+                  styles.arrowCircle,
+                  { backgroundColor: currentStep.accentColor },
+                ]}
+              >
+                <ArrowRight size={18} color="#FFFFFF" />
+              </View>
+            </TouchableOpacity>
+          ) : (
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={onNextPress}
+              style={[
+                styles.actionButtonTouch,
+                { shadowColor: currentStep.accentColor },
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel="Next step"
+            >
+              <SVGS.Btn width={buttonSize} height={buttonSize} />
+            </TouchableOpacity>
+          )}
+        </View>
+      </>
+    );
+  },
+);
+
 const Intro: React.FC = () => {
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
   const { isDarkMode, Colors: themeColors } = useTheme();
 
   const [activeIndex, setActiveIndex] = useState(0);
+  const activeIndexRef = useRef(0);
   const flatListRef = useRef<FlatList<IntroStep>>(null);
-  const scrollX = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
 
   // Scale based on Figma artboard width (375px)
   const scale = width / 375;
@@ -79,30 +176,62 @@ const Intro: React.FC = () => {
   const illustrationHeight = 673 * scale;
   const buttonSize = ResponsivePixels.size84;
 
-  const handleNextPress = () => {
-    if (activeIndex < INTRO_STEPS.length - 1) {
-      const nextIndex = activeIndex + 1;
+  const handleNextPress = useCallback(() => {
+    if (activeIndexRef.current < INTRO_STEPS.length - 1) {
+      const nextIndex = activeIndexRef.current + 1;
+      activeIndexRef.current = nextIndex;
       flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
       setActiveIndex(nextIndex);
     } else {
       navigation.replace('Login');
     }
-  };
+  }, [navigation]);
 
-  const handleSkipPress = () => {
+  const handleSkipPress = useCallback(() => {
     navigation.replace('Login');
-  };
+  }, [navigation]);
 
-  const onMomentumScrollEnd = useCallback(
+  const handleScrollEnd = useCallback(
     (e: NativeSyntheticEvent<NativeScrollEvent>) => {
       const contentOffsetX = e.nativeEvent.contentOffset.x;
       const index = Math.round(contentOffsetX / width);
-      if (index >= 0 && index < INTRO_STEPS.length) {
+      if (
+        index >= 0 &&
+        index < INTRO_STEPS.length &&
+        index !== activeIndexRef.current
+      ) {
+        activeIndexRef.current = index;
         setActiveIndex(index);
       }
     },
     [],
   );
+
+  const onViewableItemsChanged = useRef<
+    NonNullable<
+      React.ComponentProps<typeof FlatList<IntroStep>>['onViewableItemsChanged']
+    >
+  >(({ viewableItems }) => {
+    if (
+      viewableItems.length > 0 &&
+      viewableItems[0].index !== undefined &&
+      viewableItems[0].index !== null
+    ) {
+      const nextIndex = viewableItems[0].index;
+      if (
+        nextIndex >= 0 &&
+        nextIndex < INTRO_STEPS.length &&
+        nextIndex !== activeIndexRef.current
+      ) {
+        activeIndexRef.current = nextIndex;
+        setActiveIndex(nextIndex);
+      }
+    }
+  }).current;
+
+  const viewabilityConfig = useRef({
+    itemVisiblePercentThreshold: 60,
+  }).current;
 
   const backgroundColor =
     themeColors.Background ||
@@ -117,54 +246,59 @@ const Intro: React.FC = () => {
   const isLastStep = activeIndex === INTRO_STEPS.length - 1;
   const currentStep = INTRO_STEPS[activeIndex];
 
-  const renderStepItem = ({ item }: { item: IntroStep }) => {
-    return (
-      <View style={[styles.textSlide, { width }]}>
-        <View
-          style={[
-            styles.textCard,
-            {
-              backgroundColor: isDarkMode
-                ? 'rgba(30, 34, 40, 0.65)'
-                : 'rgba(255, 255, 255, 0.58)',
-              borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : '#FFFFFF',
-              borderBottomColor: item.accentColor,
-            },
-          ]}
-        >
-          <View style={styles.badgeWrapper}>
-            <Badge
-              variant={item.badgeVariant}
-              label={item.badgeLabel}
-              size="md"
-            />
+  const renderStepItem = useCallback(
+    ({ item }: { item: IntroStep }) => {
+      return (
+        <View style={[styles.textSlide, { width }]}>
+          <View
+            style={[
+              styles.textCard,
+              {
+                backgroundColor: isDarkMode
+                  ? 'rgba(30, 34, 40, 0.65)'
+                  : 'rgba(255, 255, 255, 0.58)',
+                borderColor: isDarkMode
+                  ? 'rgba(255, 255, 255, 0.08)'
+                  : '#FFFFFF',
+                borderBottomColor: item.accentColor,
+              },
+            ]}
+          >
+            <View style={styles.badgeWrapper}>
+              <Badge
+                variant={item.badgeVariant}
+                label={item.badgeLabel}
+                size="md"
+              />
+            </View>
+
+            <Text
+              style={[
+                styles.title,
+                {
+                  color: textColor,
+                },
+              ]}
+            >
+              {item.title}
+            </Text>
+
+            <Text
+              style={[
+                styles.subtitle,
+                {
+                  color: subtitleColor,
+                },
+              ]}
+            >
+              {item.subtitle}
+            </Text>
           </View>
-
-          <Text
-            style={[
-              styles.title,
-              {
-                color: textColor,
-              },
-            ]}
-          >
-            {item.title}
-          </Text>
-
-          <Text
-            style={[
-              styles.subtitle,
-              {
-                color: subtitleColor,
-              },
-            ]}
-          >
-            {item.subtitle}
-          </Text>
         </View>
-      </View>
-    );
-  };
+      );
+    },
+    [isDarkMode, textColor, subtitleColor],
+  );
 
   return (
     <View style={[styles.container, { backgroundColor }]}>
@@ -179,7 +313,8 @@ const Intro: React.FC = () => {
       <View style={styles.backgroundSvgWrapper} pointerEvents="none">
         <IntroAestheticBackgroundSvg
           isDark={isDarkMode}
-          accentColor={currentStep.accentColor}
+          accentColor={Colors.AccentYellow}
+          pointerEvents="none"
         />
       </View>
 
@@ -200,7 +335,8 @@ const Intro: React.FC = () => {
           width={illustrationWidth}
           height={illustrationHeight}
           isDark={isDarkMode}
-          accentColor={currentStep.accentColor}
+          accentColor={Colors.AccentYellow}
+          pointerEvents="none"
         />
       </View>
 
@@ -250,8 +386,14 @@ const Intro: React.FC = () => {
             data={INTRO_STEPS}
             keyExtractor={item => item.id}
             horizontal
-            pagingEnabled
+            pagingEnabled={Platform.OS === 'ios'}
+            snapToInterval={width}
+            snapToAlignment="center"
+            decelerationRate="fast"
+            disableIntervalMomentum={true}
+            bounces={false}
             showsHorizontalScrollIndicator={false}
+            style={styles.flatList}
             getItemLayout={(_, index) => ({
               length: width,
               offset: width * index,
@@ -263,85 +405,24 @@ const Intro: React.FC = () => {
                 animated: true,
               });
             }}
-            onMomentumScrollEnd={onMomentumScrollEnd}
-            onScroll={Animated.event(
-              [{ nativeEvent: { contentOffset: { x: scrollX } } }],
-              { useNativeDriver: false },
-            )}
+            onMomentumScrollEnd={handleScrollEnd}
+            onScrollEndDrag={handleScrollEnd}
+            onViewableItemsChanged={onViewableItemsChanged}
+            viewabilityConfig={viewabilityConfig}
             scrollEventThrottle={16}
             renderItem={renderStepItem}
           />
         </View>
 
-        {/* ── Tactile 3D Step Indicator Pills ── */}
-        <View style={styles.indicatorContainer}>
-          {INTRO_STEPS.map((step, idx) => {
-            const isActive = activeIndex === idx;
-            return (
-              <View
-                key={step.id}
-                style={[
-                  styles.indicatorDot,
-                  isActive
-                    ? [
-                        styles.indicatorActive,
-                        {
-                          backgroundColor: step.accentColor,
-                          shadowColor: step.accentColor,
-                        },
-                      ]
-                    : {
-                        backgroundColor: isDarkMode
-                          ? Colors.CarbonSlate
-                          : '#DDD6C6',
-                      },
-                ]}
-              />
-            );
-          })}
-        </View>
-
-        {/* ── Primary Action Controls ── */}
-        <View style={styles.buttonWrapper}>
-          {isLastStep ? (
-            <TouchableOpacity
-              activeOpacity={0.85}
-              onPress={handleNextPress}
-              style={[
-                styles.getStartedButton,
-                {
-                  backgroundColor: Colors.MidnightCharcoal,
-                  shadowColor: currentStep.accentColor,
-                },
-              ]}
-              accessibilityRole="button"
-              accessibilityLabel="Get Started"
-            >
-              <Text style={styles.getStartedText}>Get Started</Text>
-              <View
-                style={[
-                  styles.arrowCircle,
-                  { backgroundColor: currentStep.accentColor },
-                ]}
-              >
-                <ArrowRight size={18} color="#FFFFFF" />
-              </View>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              activeOpacity={0.85}
-              onPress={handleNextPress}
-              style={[
-                styles.actionButtonTouch,
-                { shadowColor: currentStep.accentColor },
-              ]}
-              accessibilityRole="button"
-              accessibilityLabel="Next step"
-            >
-              <SVGS.Btn width={buttonSize} height={buttonSize} />
-            </TouchableOpacity>
-          )}
-        </View>
+        {/* ── Isolated Bottom Controls (Zero Layout Shift) ── */}
+        <IntroBottomControls
+          activeIndex={activeIndex}
+          isLastStep={isLastStep}
+          currentStep={currentStep}
+          buttonSize={buttonSize}
+          isDarkMode={isDarkMode}
+          onNextPress={handleNextPress}
+        />
       </View>
     </View>
   );
@@ -397,6 +478,10 @@ const styles = StyleSheet.create({
     width: '100%',
     minHeight: ResponsivePixels.size150,
     justifyContent: 'center',
+  },
+  flatList: {
+    width: '100%',
+    flexGrow: 0,
   },
   textSlide: {
     alignItems: 'center',
@@ -461,7 +546,7 @@ const styles = StyleSheet.create({
   buttonWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: ResponsivePixels.size84,
+    height: ResponsivePixels.size84,
   },
   actionButtonTouch: {
     alignItems: 'center',

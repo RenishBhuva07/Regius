@@ -18,7 +18,7 @@ interface IntroAestheticBackgroundSvgProps extends SvgProps {
   accentColor?: string;
 }
 
-export const IntroAestheticBackgroundSvg: React.FC<
+const IntroAestheticBackgroundSvgComponent: React.FC<
   IntroAestheticBackgroundSvgProps
 > = ({ isDark = false, accentColor = '#F5C518', ...props }) => {
   const W = SCREEN_WIDTH;
@@ -208,3 +208,7 @@ export const IntroAestheticBackgroundSvg: React.FC<
     </Svg>
   );
 };
+
+export const IntroAestheticBackgroundSvg = React.memo(
+  IntroAestheticBackgroundSvgComponent,
+);
