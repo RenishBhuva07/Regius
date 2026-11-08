@@ -641,14 +641,24 @@ The authentication screen provides an artisanal, warm luxury gateway to Regius:
 
 1. **Atmospheric Canvas & Aesthetic Background (`LoginAestheticBackgroundSvg.tsx`)**:
    - Full-bleed responsive background combining organic header waves with a central radiant golden dawn crest halo (`#FFFCE3` / `#F5C518`), concentric acoustic resonance ripples, and flanking glowing auras (`#8383D6` lavender and `#52D22E` mint).
+   - Dynamic `crestCy` synchronization aligning ambient ripples precisely with safe area top offsets.
    - Precision 4-point gold and lavender celestial diamond stars (`✦`) and micro-starlight points framing the screen.
-2. **3D Volumetric Drop Shadows & Tactile Extrusions**:
-   - **Regius Crown Crest**: Elevated with a floating drop shadow wrapper (`shadowColor: '#8383D6'`, `shadowOffset: { width: 0, height: 8 }`, `shadowOpacity: 0.28`, `shadowRadius: 16`, `elevation: 8`).
-   - **Two-Layer Form Card Architecture**: Outer `formCardShadowWrapper` (`shadowColor: '#121417'`, `shadowOffset: { width: 0, height: 14 }`, `shadowOpacity: 0.1`, `shadowRadius: 24`, `elevation: 8`) enclosing the inner card with specular top rim (`borderTopWidth: 1.5`, `borderTopColor: '#FFFFFF'`) and extruded 3D bottom bevel (`borderBottomWidth: 4`, `borderBottomColor: '#E2DCD0'` light / `#16191F` dark).
-   - **Segmented Mode Switcher Pill**: Outer track with inset bottom depth (`borderBottomWidth: 3`, `borderBottomColor: '#DFD9CB'`) and 3D floating active white pill with specular rim and bottom bevel.
-   - **Recessed Input Fields**: Inset 3D depth (`borderBottomWidth: 2.2`) with dynamic ambient lavender glow shadow on focus.
-   - **Primary CTA Button**: 3D extruded pill with specular top rim (`borderTopWidth: 1.2`), extruded bottom bevel (`borderBottomWidth: 4`), and volumetric drop shadow (`shadowOffset: { width: 0, height: 6 }`, `shadowOpacity: 0.35`, `shadowRadius: 14`, `elevation: 7`).
-   - **Social Logins**: 3D tactile buttons with specular top edge, extruded 3D bottom bevel (`borderBottomWidth: 2.8`), and tactile drop shadow.
+2. **Full-Bleed Transparent Scroll & Safe Area Architecture**:
+   - Status bar and notch area remain 100% transparent with full-bleed `ScrollView` extending from `top: 0`, preserving fluid iOS scrolling and allowing organic background waves to show through the top notch/Dynamic Island.
+   - Initial resting `paddingTop: insets.top + ResponsivePixels.size8` giving comfortable breathing room below the notch at rest.
+   - Compact responsive vertical rhythm (76px crest, 46px switcher, 48px inputs, 44px social buttons) guaranteeing that both `Sign In` and `Create Account` viewports fit gracefully on standard mobile screens without awkward fold clipping.
+3. **Dual-Theme Regius Crown Crest (`RegiusCrownCrestSvg.tsx`)**:
+   - _Light Mode_: Multi-layered porcelain cream disc (`#FFFCE3`) with soft lavender hairline border (`#D8DBFF`).
+   - _Dark Mode_: Obsidian jewel disc (`#1E2228` / `#282C35`) with slate perimeter rim (`#363944`) and luminous gold crown crest.
+4. **Theme-Harmonized Tactile Checkboxes**:
+   - Complying with Obsidian Palette tokens: unchecked uses `#252932` surface with `#363944` border (preventing stark white contrast glitches), while checked switches to rich jewel emerald `#13281E` with luminous `#52D22E` border and drop shadow.
+5. **3D Volumetric Drop Shadows & Tactile Extrusions**:
+   - **Regius Crown Crest**: Elevated with a floating drop shadow wrapper (`shadowColor: '#8383D6'`, `shadowOffset: { width: 0, height: 6 }`, `shadowOpacity: 0.25`, `shadowRadius: 14`, `elevation: 6`).
+   - **Two-Layer Form Card Architecture**: Outer `formCardShadowWrapper` (`shadowColor: '#121417'`, `shadowOffset: { width: 0, height: 10 }`, `shadowOpacity: 0.1`, `shadowRadius: 18`, `elevation: 6`) enclosing the inner card with specular top rim (`borderTopWidth: 1.5`, `borderTopColor: '#FFFFFF'`) and extruded 3D bottom bevel (`borderBottomWidth: 3.5`, `borderBottomColor: '#E2DCD0'` light / `#16191F` dark).
+   - **Segmented Mode Switcher Pill**: Outer recessed track (`#14171C` dark / `#FAF5E4` light) with inset bottom depth (`borderBottomWidth: 3`, `#0F1115` dark / `#DFD9CB` light) and 3D floating active elevated pill (`#242832` dark with `#383E4C` border and specular rim / `#FFFFFF` light) providing high-contrast visual tab selection.
+   - **Recessed Input Fields**: Inset 3D depth (`borderBottomWidth: 2`) with dynamic ambient lavender glow shadow on focus.
+   - **Primary CTA Button**: Adaptive pill geometry—in Dark Mode, renders as a seamless, pristine white luxury pill (`#FFFFFF`) with zero bottom border and soft physical elevation shadow (`shadowColor: '#000000'`, `elevation: 6`); in Light Mode, renders as an extruded obsidian pill (`#1F2228`) with specular top rim (`borderTopWidth: 1.2`), extruded 3D bottom bevel (`borderBottomWidth: 3.5`, `#0E1013`), and warm amber star sparkle.
+   - **Social Logins**: 3D tactile buttons with specular top edge, extruded 3D bottom bevel (`borderBottomWidth: 2.5`), and tactile drop shadow.
 
 ---
 

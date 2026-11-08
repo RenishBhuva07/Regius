@@ -11,10 +11,10 @@ import Svg, {
 
 // Auth SVG icons and illustrations
 export const RegiusCrownCrestSvg: React.FC<
-  SvgProps & { glowColor?: string }
-> = ({ glowColor: _glowColor, ...props }) => {
+  SvgProps & { glowColor?: string; isDark?: boolean; size?: number }
+> = ({ glowColor: _glowColor, isDark = false, size = 96, ...props }) => {
   return (
-    <Svg width={96} height={96} viewBox="0 0 96 96" fill="none" {...props}>
+    <Svg width={size} height={size} viewBox="0 0 96 96" fill="none" {...props}>
       <Defs>
         <LinearGradient
           id="crestGrad"
@@ -24,8 +24,8 @@ export const RegiusCrownCrestSvg: React.FC<
           y2="96"
           gradientUnits="userSpaceOnUse"
         >
-          <Stop offset="0%" stopColor="#FFFFFF" />
-          <Stop offset="100%" stopColor="#FFFCE3" />
+          <Stop offset="0%" stopColor={isDark ? '#282C35' : '#FFFFFF'} />
+          <Stop offset="100%" stopColor={isDark ? '#1A1D23' : '#FFFCE3'} />
         </LinearGradient>
         <LinearGradient
           id="purpleGrad"
@@ -35,8 +35,8 @@ export const RegiusCrownCrestSvg: React.FC<
           y2="80"
           gradientUnits="userSpaceOnUse"
         >
-          <Stop offset="0%" stopColor="#9C9CE8" />
-          <Stop offset="100%" stopColor="#8383D6" />
+          <Stop offset="0%" stopColor={isDark ? '#9A9AE6' : '#9C9CE8'} />
+          <Stop offset="100%" stopColor={isDark ? '#6B6BD0' : '#8383D6'} />
         </LinearGradient>
         <LinearGradient
           id="goldGrad"
@@ -50,10 +50,28 @@ export const RegiusCrownCrestSvg: React.FC<
           <Stop offset="100%" stopColor="#F5C518" />
         </LinearGradient>
       </Defs>
-      <Circle cx={48} cy={48} r={46} fill="#FFFFFF" fillOpacity={0.7} />
-      <Circle cx={48} cy={48} r={45} stroke="#E8E2D5" strokeWidth={1.5} />
+      <Circle
+        cx={48}
+        cy={48}
+        r={46}
+        fill={isDark ? '#1E2228' : '#FFFFFF'}
+        fillOpacity={isDark ? 0.92 : 0.7}
+      />
+      <Circle
+        cx={48}
+        cy={48}
+        r={45}
+        stroke={isDark ? '#363944' : '#E8E2D5'}
+        strokeWidth={1.5}
+      />
       <Circle cx={48} cy={48} r={38} fill="url(#crestGrad)" />
-      <Circle cx={48} cy={48} r={38} stroke="#D8DBFF" strokeWidth={1.5} />
+      <Circle
+        cx={48}
+        cy={48}
+        r={38}
+        stroke={isDark ? '#4D5366' : '#D8DBFF'}
+        strokeWidth={1.5}
+      />
       <Circle cx={48} cy={48} r={28} fill="url(#purpleGrad)" />
       <Path
         d="M36 56H60L58 45L52 50L48 40L44 50L38 45L36 56Z"
@@ -77,7 +95,7 @@ export const RegiusCrownCrestSvg: React.FC<
       />
       <Path
         d="M26 62L27 65L30 66L27 67L26 70L25 67L22 66L25 65L26 62Z"
-        fill="#8383D6"
+        fill={isDark ? '#9A9AE6' : '#8383D6'}
       />
     </Svg>
   );

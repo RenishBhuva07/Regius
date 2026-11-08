@@ -12,6 +12,7 @@ import {
   Animated,
   ActivityIndicator,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
@@ -41,6 +42,7 @@ type AuthMode = 'signin' | 'signup';
 
 export const LoginScreen: React.FC = () => {
   const navigation = useNavigation<any>();
+  const insets = useSafeAreaInsets();
   const { isDarkMode } = useTheme();
   const { setAuthState } = useContext(AuthContext);
 
@@ -98,7 +100,20 @@ export const LoginScreen: React.FC = () => {
     ? Colors.MidnightInkText
     : Colors.PureWhiteText;
 
-  // Tab indicator slide calculation
+  // Segmented Switcher Color Tokens
+  const switcherTrackBg = isDarkMode ? '#14171C' : '#FAF5E4';
+  const switcherTrackBorder = isDarkMode ? '#282C34' : borderLight;
+  const switcherTrackBottomBorder = isDarkMode ? '#0F1115' : '#DFD9CB';
+  const switcherIndicatorBg = isDarkMode ? '#242832' : Colors.DefaultWhite;
+  const switcherIndicatorBorder = isDarkMode ? '#383E4C' : '#E8E2D5';
+  const switcherIndicatorTopBorder = isDarkMode
+    ? 'rgba(255, 255, 255, 0.22)'
+    : '#FFFFFF';
+  const switcherIndicatorBottomBorder = isDarkMode ? '#16191E' : '#DFD9CB';
+  const tabActiveColor = textPrimary;
+  const tabInactiveColor = isDarkMode ? '#8E94A0' : textSecondary;
+
+  // Tab indicator slide calculation (accounting for 4px padding on each side)
   const tabWidth = switcherWidth > 0 ? (switcherWidth - 8) / 2 : 0;
   const indicatorTranslateX = modeSwitchAnim.interpolate({
     inputRange: [0, 1],
@@ -209,7 +224,10 @@ export const LoginScreen: React.FC = () => {
 
       {/* Signature Artisanal Aesthetic Background Canvas */}
       <View style={styles.backgroundSvgWrapper} pointerEvents="none">
-        <LoginAestheticBackgroundSvg isDark={isDarkMode} />
+        <LoginAestheticBackgroundSvg
+          isDark={isDarkMode}
+          crestCy={insets.top + ResponsivePixels.size38}
+        />
       </View>
 
       <KeyboardAvoidingView
@@ -218,7 +236,14 @@ export const LoginScreen: React.FC = () => {
       >
         <ScrollView
           style={styles.scrollView}
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={[
+            styles.scrollContent,
+            {
+              paddingTop: insets.top + ResponsivePixels.size8,
+              paddingBottom:
+                Math.max(insets.bottom, 16) + ResponsivePixels.size8,
+            },
+          ]}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
@@ -226,9 +251,9 @@ export const LoginScreen: React.FC = () => {
           <View style={styles.headerSection}>
             <View style={styles.crestShadowWrapper}>
               <View style={styles.crestWrapper}>
-                <RegiusCrownCrestSvg />
+                <RegiusCrownCrestSvg isDark={isDarkMode} size={76} />
                 <View style={styles.crestSparkle}>
-                  <SparkleSvg size={16} color={Colors.AccentYellow} />
+                  <SparkleSvg size={14} color={Colors.AccentYellow} />
                 </View>
               </View>
             </View>
@@ -260,9 +285,9 @@ export const LoginScreen: React.FC = () => {
             style={[
               styles.switchContainer,
               {
-                backgroundColor: isDarkMode ? '#1E2228' : '#FAF5E4',
-                borderColor: borderLight,
-                borderBottomColor: isDarkMode ? '#15181C' : '#DFD9CB',
+                backgroundColor: switcherTrackBg,
+                borderColor: switcherTrackBorder,
+                borderBottomColor: switcherTrackBottomBorder,
               },
             ]}
             onLayout={e => setSwitcherWidth(e.nativeEvent.layout.width)}
@@ -275,11 +300,11 @@ export const LoginScreen: React.FC = () => {
                   {
                     width: tabWidth,
                     transform: [{ translateX: indicatorTranslateX }],
-                    backgroundColor: surfaceCardBg,
-                    borderTopColor: isDarkMode
-                      ? 'rgba(255,255,255,0.1)'
-                      : '#FFFFFF',
-                    borderBottomColor: isDarkMode ? '#171A1F' : '#E8E2D5',
+                    backgroundColor: switcherIndicatorBg,
+                    borderColor: switcherIndicatorBorder,
+                    borderTopColor: switcherIndicatorTopBorder,
+                    borderBottomColor: switcherIndicatorBottomBorder,
+                    shadowOpacity: isDarkMode ? 0.35 : 0.12,
                   },
                 ]}
               />
@@ -294,7 +319,8 @@ export const LoginScreen: React.FC = () => {
                 style={[
                   styles.switchTabText,
                   {
-                    color: authMode === 'signin' ? textPrimary : textSecondary,
+                    color:
+                      authMode === 'signin' ? tabActiveColor : tabInactiveColor,
                     fontFamily:
                       authMode === 'signin'
                         ? Fonts.poppins.semiBold
@@ -315,7 +341,8 @@ export const LoginScreen: React.FC = () => {
                 style={[
                   styles.switchTabText,
                   {
-                    color: authMode === 'signup' ? textPrimary : textSecondary,
+                    color:
+                      authMode === 'signup' ? tabActiveColor : tabInactiveColor,
                     fontFamily:
                       authMode === 'signup'
                         ? Fonts.poppins.semiBold
@@ -518,16 +545,36 @@ export const LoginScreen: React.FC = () => {
                   activeOpacity={0.8}
                   style={styles.checkboxRow}
                   onPress={() => setRememberMe(prev => !prev)}
+                  accessibilityRole="checkbox"
+                  accessibilityState={{ checked: rememberMe }}
                 >
                   <View
                     style={[
                       styles.tactileCheckbox,
-                      rememberMe
-                        ? styles.checkboxChecked
-                        : [
-                            styles.checkboxUnchecked,
-                            { borderColor: borderLight },
-                          ],
+                      {
+                        backgroundColor: rememberMe
+                          ? isDarkMode
+                            ? '#13281E'
+                            : '#E8FDF0'
+                          : isDarkMode
+                          ? '#252932'
+                          : '#EFF1F4',
+                        borderColor: rememberMe
+                          ? isDarkMode
+                            ? '#52D22E'
+                            : '#C6FFDD'
+                          : isDarkMode
+                          ? '#363944'
+                          : borderLight,
+                        borderBottomColor: rememberMe
+                          ? isDarkMode
+                            ? '#1B9A72'
+                            : '#82E8A6'
+                          : isDarkMode
+                          ? '#20242B'
+                          : '#DFD9CB',
+                      },
+                      rememberMe && styles.checkboxCheckedGlow,
                     ]}
                   >
                     {rememberMe && (
@@ -545,16 +592,36 @@ export const LoginScreen: React.FC = () => {
                   activeOpacity={0.8}
                   style={styles.checkboxRow}
                   onPress={() => setAgreeTerms(prev => !prev)}
+                  accessibilityRole="checkbox"
+                  accessibilityState={{ checked: agreeTerms }}
                 >
                   <View
                     style={[
                       styles.tactileCheckbox,
-                      agreeTerms
-                        ? styles.checkboxChecked
-                        : [
-                            styles.checkboxUnchecked,
-                            { borderColor: borderLight },
-                          ],
+                      {
+                        backgroundColor: agreeTerms
+                          ? isDarkMode
+                            ? '#13281E'
+                            : '#E8FDF0'
+                          : isDarkMode
+                          ? '#252932'
+                          : '#EFF1F4',
+                        borderColor: agreeTerms
+                          ? isDarkMode
+                            ? '#52D22E'
+                            : '#C6FFDD'
+                          : isDarkMode
+                          ? '#363944'
+                          : borderLight,
+                        borderBottomColor: agreeTerms
+                          ? isDarkMode
+                            ? '#1B9A72'
+                            : '#82E8A6'
+                          : isDarkMode
+                          ? '#20242B'
+                          : '#DFD9CB',
+                      },
+                      agreeTerms && styles.checkboxCheckedGlow,
                     ]}
                   >
                     {agreeTerms && (
@@ -582,10 +649,27 @@ export const LoginScreen: React.FC = () => {
                 </TouchableOpacity>
               )}
 
-              {/* Primary Action Button (3D Extruded Pill Architecture) */}
+              {/* Primary Action Button (Seamless Luxury Pill in Dark Mode, 3D Extruded in Light Mode) */}
               <TouchableOpacity
                 activeOpacity={0.85}
-                style={[styles.primaryCta, { backgroundColor: ctaBg }]}
+                style={[
+                  styles.primaryCta,
+                  {
+                    backgroundColor: ctaBg,
+                    borderTopWidth: isDarkMode ? 0 : 1.2,
+                    borderBottomWidth: isDarkMode ? 0 : 3.5,
+                    borderTopColor: isDarkMode
+                      ? 'transparent'
+                      : 'rgba(255, 255, 255, 0.3)',
+                    borderBottomColor: isDarkMode ? 'transparent' : '#0E1013',
+                    shadowColor: isDarkMode
+                      ? '#000000'
+                      : Colors.MidnightCharcoal,
+                    shadowOpacity: isDarkMode ? 0.25 : 0.3,
+                    shadowOffset: { width: 0, height: isDarkMode ? 3 : 4 },
+                    shadowRadius: isDarkMode ? 8 : 10,
+                  },
+                ]}
                 onPress={handleAuthSubmit}
                 disabled={isLoading}
                 accessibilityRole="button"
@@ -602,12 +686,8 @@ export const LoginScreen: React.FC = () => {
                     </Text>
                     <View style={styles.ctaSparkle}>
                       <SparkleSvg
-                        size={15}
-                        color={
-                          isDarkMode
-                            ? Colors.MidnightCharcoal
-                            : Colors.AccentYellow
-                        }
+                        size={14}
+                        color={isDarkMode ? '#DDA006' : Colors.AccentYellow}
                       />
                     </View>
                   </View>
@@ -725,25 +805,22 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingHorizontal: ResponsivePixels.size24,
-    paddingTop:
-      Platform.OS === 'ios' ? ResponsivePixels.size50 : ResponsivePixels.size40,
-    paddingBottom: ResponsivePixels.size40,
     alignItems: 'center',
   },
   headerSection: {
     alignItems: 'center',
-    marginBottom: ResponsivePixels.size20,
+    marginBottom: ResponsivePixels.size14,
   },
   crestShadowWrapper: {
     shadowColor: Colors.LavenderPurple,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.28,
-    shadowRadius: 16,
-    elevation: 8,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.25,
+    shadowRadius: 14,
+    elevation: 6,
   },
   crestWrapper: {
     position: 'relative',
-    marginBottom: ResponsivePixels.size12,
+    marginBottom: ResponsivePixels.size8,
   },
   crestSparkle: {
     position: 'absolute',
@@ -751,51 +828,51 @@ const styles = StyleSheet.create({
     right: -2,
   },
   badgeWrapper: {
-    marginBottom: ResponsivePixels.size12,
+    marginBottom: ResponsivePixels.size8,
   },
   brandTitle: {
     ...Typography.h1RanadeBold,
-    fontSize: 26,
-    lineHeight: 32,
+    fontSize: 24,
+    lineHeight: 30,
     textAlign: 'center',
     letterSpacing: -0.3,
-    marginBottom: ResponsivePixels.size6,
+    marginBottom: ResponsivePixels.size4,
   },
   brandSubtitle: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 13,
+    fontSize: 12.5,
     textAlign: 'center',
-    lineHeight: 18,
+    lineHeight: 17,
     maxWidth: 290,
   },
   switchContainer: {
     flexDirection: 'row',
     position: 'relative',
     width: '100%',
-    height: 50,
-    borderRadius: ResponsivePixels.size26,
+    height: 46,
+    borderRadius: ResponsivePixels.size24,
     borderWidth: 1.5,
     borderBottomWidth: 3,
     padding: 4,
-    marginBottom: ResponsivePixels.size18,
+    marginBottom: ResponsivePixels.size14,
   },
   switchIndicator: {
     position: 'absolute',
     top: 4,
     left: 4,
     bottom: 4,
-    borderRadius: ResponsivePixels.size22,
-    borderTopWidth: 1,
+    borderRadius: ResponsivePixels.size20,
+    borderWidth: 1,
+    borderTopWidth: 1.2,
     borderBottomWidth: 2,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.12,
-    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 5,
     elevation: 4,
   },
   switchTab: {
     flex: 1,
-    borderRadius: ResponsivePixels.size22,
+    borderRadius: ResponsivePixels.size20,
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 2,
@@ -806,29 +883,29 @@ const styles = StyleSheet.create({
   },
   formCardShadowWrapper: {
     width: '100%',
-    borderRadius: ResponsivePixels.size28,
+    borderRadius: ResponsivePixels.size24,
     shadowColor: '#121417',
-    shadowOffset: { width: 0, height: 14 },
+    shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.1,
-    shadowRadius: 24,
-    elevation: 8,
+    shadowRadius: 18,
+    elevation: 6,
   },
   formCard: {
     width: '100%',
-    borderRadius: ResponsivePixels.size28,
+    borderRadius: ResponsivePixels.size24,
     borderWidth: 1.5,
     borderTopWidth: 1.5,
-    borderBottomWidth: 4,
-    paddingHorizontal: ResponsivePixels.size20,
-    paddingVertical: ResponsivePixels.size24,
+    borderBottomWidth: 3.5,
+    paddingHorizontal: ResponsivePixels.size18,
+    paddingVertical: ResponsivePixels.size18,
   },
   fieldGroup: {
-    marginBottom: ResponsivePixels.size16,
+    marginBottom: ResponsivePixels.size12,
   },
   fieldLabel: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
-    marginBottom: ResponsivePixels.size6,
+    fontSize: 12.5,
+    marginBottom: ResponsivePixels.size5,
     letterSpacing: 0.1,
   },
   passwordLabelRow: {
@@ -838,33 +915,33 @@ const styles = StyleSheet.create({
   },
   forgotPasswordText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12.5,
+    fontSize: 12,
     color: Colors.LavenderPurple,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 52,
-    borderRadius: ResponsivePixels.size18,
-    paddingHorizontal: ResponsivePixels.size14,
-    borderBottomWidth: 2.2,
+    height: 48,
+    borderRadius: ResponsivePixels.size16,
+    paddingHorizontal: ResponsivePixels.size12,
+    borderBottomWidth: 2,
   },
   inputWrapperFocused: {
     shadowColor: Colors.LavenderPurple,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.22,
-    shadowRadius: 8,
+    shadowRadius: 6,
     elevation: 3,
   },
   fieldIcon: {
-    marginRight: ResponsivePixels.size10,
+    marginRight: ResponsivePixels.size8,
     alignItems: 'center',
     justifyContent: 'center',
   },
   input: {
     flex: 1,
     fontFamily: Fonts.poppins.medium,
-    fontSize: 14,
+    fontSize: 13.5,
     paddingVertical: 0,
   },
   eyeBtn: {
@@ -873,26 +950,20 @@ const styles = StyleSheet.create({
   checkboxRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: ResponsivePixels.size22,
-    marginTop: ResponsivePixels.size4,
+    marginBottom: ResponsivePixels.size14,
+    marginTop: ResponsivePixels.size2,
   },
   tactileCheckbox: {
-    width: 22,
-    height: 22,
+    width: 20,
+    height: 20,
     borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: ResponsivePixels.size10,
     borderWidth: 1.5,
-  },
-  checkboxUnchecked: {
-    backgroundColor: '#EFF1F4',
-  },
-  checkboxChecked: {
-    backgroundColor: '#E8FDF0',
-    borderColor: '#C6FFDD',
-    borderBottomColor: '#82E8A6',
     borderBottomWidth: 2.2,
+  },
+  checkboxCheckedGlow: {
     shadowColor: Colors.AccentGreen,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.35,
@@ -901,7 +972,7 @@ const styles = StyleSheet.create({
   },
   checkboxLabel: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12.5,
+    fontSize: 12,
     flex: 1,
   },
   linkText: {
@@ -910,20 +981,16 @@ const styles = StyleSheet.create({
   },
   primaryCta: {
     width: '100%',
-    height: 52,
-    borderRadius: ResponsivePixels.size26,
+    height: 48,
+    borderRadius: ResponsivePixels.size24,
     alignItems: 'center',
     justifyContent: 'center',
-    borderTopWidth: 1.2,
-    borderTopColor: 'rgba(255, 255, 255, 0.3)',
-    borderBottomWidth: 4,
-    borderBottomColor: '#0E1013',
     shadowColor: Colors.MidnightCharcoal,
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.35,
-    shadowRadius: 14,
-    elevation: 7,
-    marginBottom: ResponsivePixels.size20,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 10,
+    elevation: 6,
+    marginBottom: ResponsivePixels.size14,
   },
   ctaContent: {
     flexDirection: 'row',
@@ -931,16 +998,16 @@ const styles = StyleSheet.create({
   },
   primaryCtaText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 15.5,
-    letterSpacing: 0.4,
+    fontSize: 14.5,
+    letterSpacing: 0.3,
   },
   ctaSparkle: {
-    marginLeft: ResponsivePixels.size8,
+    marginLeft: ResponsivePixels.size6,
   },
   dividerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: ResponsivePixels.size18,
+    marginBottom: ResponsivePixels.size12,
   },
   dividerLine: {
     flex: 1,
@@ -948,44 +1015,44 @@ const styles = StyleSheet.create({
   },
   dividerText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
+    fontSize: 10.5,
     letterSpacing: 0.8,
-    paddingHorizontal: ResponsivePixels.size12,
+    paddingHorizontal: ResponsivePixels.size10,
   },
   socialRow: {
     flexDirection: 'row',
-    gap: ResponsivePixels.size12,
+    gap: ResponsivePixels.size10,
   },
   socialBtn: {
     flex: 1,
-    height: 48,
-    borderRadius: ResponsivePixels.size24,
+    height: 44,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
     borderTopWidth: 1,
-    borderBottomWidth: 2.8,
+    borderBottomWidth: 2.5,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: ResponsivePixels.size8,
+    gap: ResponsivePixels.size6,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
-    shadowRadius: 5,
-    elevation: 2.5,
+    shadowRadius: 4,
+    elevation: 2,
   },
   socialBtnText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13.5,
+    fontSize: 13,
   },
   guestLinkTouch: {
-    marginTop: ResponsivePixels.size20,
-    paddingVertical: ResponsivePixels.size8,
-    paddingHorizontal: ResponsivePixels.size16,
-    borderRadius: ResponsivePixels.size18,
+    marginTop: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size6,
+    paddingHorizontal: ResponsivePixels.size14,
+    borderRadius: ResponsivePixels.size16,
   },
   guestLinkText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 13,
+    fontSize: 12.5,
     letterSpacing: 0.2,
   },
 });

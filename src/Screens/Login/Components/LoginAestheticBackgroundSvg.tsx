@@ -15,15 +15,16 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 interface LoginAestheticBackgroundSvgProps extends SvgProps {
   isDark?: boolean;
+  crestCy?: number;
 }
 
 export const LoginAestheticBackgroundSvg: React.FC<
   LoginAestheticBackgroundSvgProps
-> = ({ isDark = false, ...props }) => {
+> = ({ isDark = false, crestCy, ...props }) => {
   const W = SCREEN_WIDTH;
   const H = SCREEN_HEIGHT;
   const CX = W / 2;
-  const CREST_CY = 100;
+  const CREST_CY = crestCy ?? 96;
   const CARD_CY = H * 0.52;
 
   const fillColor1 = isDark ? '#1E2228' : '#FAF6E8';
