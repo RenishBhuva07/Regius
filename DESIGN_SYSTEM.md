@@ -864,9 +864,9 @@ To prevent divergence and maintain strict aesthetic consistency across features,
 
 ### 10.2 `TactileSegmentedTabs.tsx`
 
-- **Purpose**: Tactile sliding pill segmented control with haptic feedback and fluid indicator animation.
-- **Visuals**: High-contrast pill geometry, active indicator pill with subtle volumetric drop shadow, and crisp typography (`Fonts.poppins.semiBold`).
-- **Props**: `tabs: { key: string; label: string; count?: number }[]`, `activeTab: string`, `onTabChange: (key: string) => void`.
+- **Purpose**: Centralized 3D tactile sliding pill segmented control with fluid spring indicator animation and responsive geometry.
+- **Visuals**: Recessed track (`borderWidth: 1.5`, `borderBottomWidth: 3`), sliding 3D indicator pill powered by `Animated.spring` (`tension: 65, friction: 8`, `useNativeDriver: true`) with top specular highlight rim (`borderTopWidth: 1.2`, `#FFFFFF`), extruded 3D bottom bevel (`borderBottomWidth: 2.5`, `#DFD9CB`), and volumetric drop shadow. In Dark Mode, features high-contrast 3D white active pill (`#FFFFFF`) with dark obsidian typography (`#121417`, `Fonts.poppins.bold`), integrated active icon tinting, and 3D yellow/green/purple count badges.
+- **Props**: `tabs: TabItem<T>[]`, `activeTab: T`, `onChangeTab: (key: T) => void`, `containerStyle?: StyleProp<ViewStyle>`, `activeColor?: string`, `inactiveColor?: string`.
 
 ### 10.3 `StickyActionDock.tsx`
 

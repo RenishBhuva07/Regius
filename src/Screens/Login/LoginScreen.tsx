@@ -104,13 +104,13 @@ export const LoginScreen: React.FC = () => {
   const switcherTrackBg = isDarkMode ? '#14171C' : '#FAF5E4';
   const switcherTrackBorder = isDarkMode ? '#282C34' : borderLight;
   const switcherTrackBottomBorder = isDarkMode ? '#0F1115' : '#DFD9CB';
-  const switcherIndicatorBg = isDarkMode ? '#242832' : Colors.DefaultWhite;
-  const switcherIndicatorBorder = isDarkMode ? '#383E4C' : '#E8E2D5';
-  const switcherIndicatorTopBorder = isDarkMode
-    ? 'rgba(255, 255, 255, 0.22)'
-    : '#FFFFFF';
-  const switcherIndicatorBottomBorder = isDarkMode ? '#16191E' : '#DFD9CB';
-  const tabActiveColor = textPrimary;
+  const switcherIndicatorBg = Colors.DefaultWhite;
+  const switcherIndicatorBorder = isDarkMode
+    ? 'rgba(255, 255, 255, 0.95)'
+    : '#E8E2D5';
+  const switcherIndicatorTopBorder = '#FFFFFF';
+  const switcherIndicatorBottomBorder = '#DFD9CB';
+  const tabActiveColor = Colors.MidnightInkText;
   const tabInactiveColor = isDarkMode ? '#8E94A0' : textSecondary;
 
   // Tab indicator slide calculation (accounting for 4px padding on each side)
@@ -323,7 +323,7 @@ export const LoginScreen: React.FC = () => {
                       authMode === 'signin' ? tabActiveColor : tabInactiveColor,
                     fontFamily:
                       authMode === 'signin'
-                        ? Fonts.poppins.semiBold
+                        ? Fonts.poppins.bold
                         : Fonts.poppins.medium,
                   },
                 ]}
@@ -345,7 +345,7 @@ export const LoginScreen: React.FC = () => {
                       authMode === 'signup' ? tabActiveColor : tabInactiveColor,
                     fontFamily:
                       authMode === 'signup'
-                        ? Fonts.poppins.semiBold
+                        ? Fonts.poppins.bold
                         : Fonts.poppins.medium,
                   },
                 ]}
@@ -864,7 +864,7 @@ const styles = StyleSheet.create({
     borderRadius: ResponsivePixels.size20,
     borderWidth: 1,
     borderTopWidth: 1.2,
-    borderBottomWidth: 2,
+    borderBottomWidth: 2.5,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 5,
