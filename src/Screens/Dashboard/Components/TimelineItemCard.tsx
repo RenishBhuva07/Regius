@@ -27,7 +27,6 @@ import {
 import { Fonts } from '../../../Theme/fonts';
 import { Badge } from '../../../Common/Badge';
 import { StreakBadge } from '../../../Common/StreakBadge';
-import Colors from '../../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../../Theme/useAppTheme';
 
 export type TimelineCategoryType = 'task' | 'habit' | 'reminder';
@@ -67,7 +66,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
   isLast = false,
   onToggleComplete,
   onPressCard,
-  onExtendMinutes,
+  onExtendMinutes: _onExtendMinutes,
 }) => {
   const isCompleted = item.completed;
   const { isDarkMode, textPrimary, textSecondary } = useAppTheme();

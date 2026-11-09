@@ -5,7 +5,6 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,
   StatusBar,
   Vibration,
   Dimensions,
@@ -18,18 +17,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   X,
   Crown,
-  CheckCircle2,
-  Lock,
   Sparkles,
   Zap,
   CheckSquare,
   Bell,
   Activity,
-  Palette,
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
-import { Typography } from '../../Theme/Typographys';
 import { Fonts } from '../../Theme/fonts';
 import {
   Colors as StaticColors,
@@ -48,8 +43,6 @@ import {
 } from '../../Services/Milestone/MilestoneService';
 import { useDailyQuote } from '../../Services/DailyQuotes';
 import {
-  ThreeDStatusBadge,
-  GameRoadCheckpoint,
   ZigzagGameRoad,
   MilestoneLevelDetailModal,
   MilestoneWatermarkDoodleSvg,
@@ -146,7 +139,6 @@ export const MilestoneFullScreenSheet: React.FC = () => {
   const cardBorder = isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#E8E2D5';
   const textPrimary = isDarkMode ? '#FFFFFF' : '#121417';
   const textSecondary = isDarkMode ? '#8E95A5' : '#6B7280';
-  const dividerColor = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : '#ECE6DA';
 
   const handleApplyTheme = (themeId: string, themeName: string) => {
     Vibration.vibrate(25);

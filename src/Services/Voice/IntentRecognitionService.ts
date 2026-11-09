@@ -386,7 +386,7 @@ export const IntentRecognitionService = {
       };
     }
 
-    // ─── 7. Fresh Command Parsing ──────────────────────────────────────────
+    // Fresh command parsing
 
     // A: Reminders: Show
     if (showRemindersPattern(normalized)) {
@@ -516,7 +516,7 @@ export const IntentRecognitionService = {
   ): InterpretedVoiceCommand {
     const raw = cleanRaw;
 
-    // ─── ADD_REMINDER Clarification ───
+    // ADD_REMINDER clarification
     if (pending.intent === 'ADD_REMINDER') {
       if (pending.missingSlot === 'both') {
         const { cleanTitle, date, time, repeat } = extractDateTime(cleanRaw);
@@ -711,7 +711,7 @@ export const IntentRecognitionService = {
       }
     }
 
-    // ─── ADD_TASK Clarification ───
+    // ADD_TASK clarification
     if (pending.intent === 'ADD_TASK') {
       const cleanedAnswer = cleanRaw
         .replace(/^(?:to|about|for)\s+/i, '')
@@ -731,7 +731,7 @@ export const IntentRecognitionService = {
       };
     }
 
-    // ─── ADD_HABIT Clarification ───
+    // ADD_HABIT clarification
     if (pending.intent === 'ADD_HABIT') {
       const cleanedAnswer = cleanRaw
         .replace(/^(?:to|about|for)\s+/i, '')
@@ -1313,8 +1313,7 @@ export const IntentRecognitionService = {
   },
 };
 
-// ─── Helper Pattern Matchers ─────────────────────────────────────────────
-
+// Helper pattern matchers
 function focusSessionPattern(normalized: string): boolean {
   return /\b(?:focus\s+session|start\s+focus|extend\s+focus)\b/i.test(
     normalized,

@@ -1,10 +1,8 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
   StyleSheet,
-  StatusBar,
-  Platform,
   Switch,
   Animated,
   Dimensions,
@@ -157,6 +155,17 @@ export const WakeWordStudioScreen: React.FC = () => {
   const borderLight = isDarkMode ? '#2C3035' : '#E8E2D5';
   const surfaceAlt = isDarkMode ? '#171A1F' : '#FAF8F5';
 
+  const renderRightAction = useCallback(
+    (scrolled: boolean) => (
+      <Badge
+        label="NEURAL V3"
+        variant={scrolled ? 'yellow' : 'purple'}
+        size="sm"
+      />
+    ),
+    [],
+  );
+
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>
       <SettingsBackgroundSvg />
@@ -168,13 +177,7 @@ export const WakeWordStudioScreen: React.FC = () => {
         scrollY={scrollY}
         isScrolled={isScrolled}
         isAbsolute={false}
-        rightAction={scrolled => (
-          <Badge
-            label="NEURAL V3"
-            variant={scrolled ? 'yellow' : 'purple'}
-            size="sm"
-          />
-        )}
+        rightAction={renderRightAction}
         backAccessibilityLabel="Back to Settings"
       />
 

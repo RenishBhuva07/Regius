@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { CheckCircle2, Flame, Bell } from 'lucide-react-native';
-import Svg, { Circle } from 'react-native-svg';
 import { Fonts } from '../../../Theme/fonts';
 import { useAppTheme } from '../../../Theme/useAppTheme';
 
@@ -53,7 +52,7 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
     remTotal > 0 ? Math.round((remDone / remTotal) * 100) : 0;
 
   const handlePressReminders = onPressReminders || onPressNudges;
-  const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
+  const { isDarkMode, textPrimary } = useAppTheme();
 
   return (
     <View style={styles.container}>

@@ -1,3 +1,8 @@
+const devLog = (...args: any[]): void => {
+  if (__DEV__) {
+    console.log(...args);
+  }
+};
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { splitIntoChunks } from './normalizer';
 import { tokenizeText } from './tokenizer';
@@ -149,7 +154,7 @@ function streamGradioQueue(
                   if (u.startsWith('/')) {
                     u = `https://hexgrad-kokoro-tts.hf.space${u}`;
                   }
-                  console.log(
+                  devLog(
                     '[KokoroTTSService] Synthesis completed with URL:',
                     u,
                   );
@@ -166,7 +171,7 @@ function streamGradioQueue(
             if (u.startsWith('/')) {
               u = `https://hexgrad-kokoro-tts.hf.space${u}`;
             }
-            console.log('[KokoroTTSService] Synthesis completed with URL:', u);
+            devLog('[KokoroTTSService] Synthesis completed with URL:', u);
             finish(u);
             return;
           }
@@ -348,7 +353,7 @@ export const KokoroTTSService = {
     // Tokenizer verification logging
     const tokens = tokenizeText(trimmed);
     const phonemes = phonemize(trimmed);
-    console.log(
+    devLog(
       `[KokoroTTSService] Phonemes: "${phonemes}", Tokens: ${tokens.length}`,
     );
 

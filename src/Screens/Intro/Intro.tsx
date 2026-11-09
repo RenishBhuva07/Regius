@@ -22,7 +22,7 @@ import { SVGS } from '../../Assets/Images';
 import { Badge, BadgeVariant } from '../../Common/Badge';
 import { IntroAestheticBackgroundSvg } from './Components/IntroAestheticBackgroundSvg';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 interface IntroStep {
   id: string;

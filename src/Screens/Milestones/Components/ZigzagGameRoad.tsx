@@ -36,7 +36,7 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
   tiers,
   currentTier,
   nextTier,
-  totalXp,
+  totalXp: _totalXp,
   onSelectTier,
   isDarkMode,
 }) => {

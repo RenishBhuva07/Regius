@@ -428,7 +428,7 @@ export const DailyBriefingCard: React.FC<DailyBriefingCardProps> = ({
         text2: 'Could not play Morning Brief at this moment.',
       });
     }
-  }, [isPlaying, hasStarted, isLoading, briefText]);
+  }, [isPlaying, hasStarted, isLoading, briefText, assistantName]);
 
   const formatTimer = (sec: number) => {
     const mins = Math.floor(sec / 60);

@@ -3,7 +3,7 @@ import { phonemize } from './phonemizer';
 import { normalizeText } from './normalizer';
 
 const VOCAB: Record<string, number> = vocabData as Record<string, number>;
-const PAD_START_END_TOKEN = VOCAB['$'] ?? 0;
+const PAD_START_END_TOKEN = VOCAB.$ ?? 0;
 const SPACE_TOKEN = VOCAB[' '] ?? 16;
 const MAX_TOKENS = 510;
 

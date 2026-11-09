@@ -8,7 +8,6 @@ import {
   Platform,
 } from 'react-native';
 import { Filter, CalendarCheck } from 'lucide-react-native';
-import Svg, { Path, Circle } from 'react-native-svg';
 import { Typography } from '../../../Theme/Typographys';
 import { Fonts } from '../../../Theme/fonts';
 import { SVGS } from '../../../Assets/Images';
@@ -92,8 +91,7 @@ interface ReminderCategoryCarouselProps {
 export const ReminderCategoryCarousel: React.FC<
   ReminderCategoryCarouselProps
 > = ({ reminders, selectedCategory, onSelectCategory, onAddPress }) => {
-  const { isDarkMode, textPrimary, textSecondary, borderLight, cardBg } =
-    useAppTheme();
+  const { isDarkMode, textPrimary } = useAppTheme();
 
   const getCategoryMetrics = (catId: string) => {
     const catReminders = reminders.filter(r => r.category === catId);

@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 // Kokoro-82M voice profiles and style embeddings
 
 export interface KokoroVoiceProfile {

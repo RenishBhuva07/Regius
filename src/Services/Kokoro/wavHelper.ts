@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 // Encodes Float32Array PCM samples (24kHz) into WAV buffer/data URI
 
 function writeString(view: DataView, offset: number, string: string) {

@@ -8,7 +8,7 @@ import {
   Easing,
   Platform,
 } from 'react-native';
-import { Volume2, VolumeX, Sparkles, Mic, Activity } from 'lucide-react-native';
+import { Volume2, VolumeX, Sparkles, Activity } from 'lucide-react-native';
 import Svg, {
   Defs,
   LinearGradient,

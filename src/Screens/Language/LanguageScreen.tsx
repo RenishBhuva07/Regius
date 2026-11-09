@@ -1,9 +1,7 @@
 import React, {
   useState,
   useEffect,
-  useRef,
   useMemo,
-  useCallback,
 } from 'react';
 import {
   View,
@@ -11,43 +9,28 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  TextInput,
-  StatusBar,
   Switch,
   Platform,
-  Animated,
   Vibration,
-  Dimensions,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import {
   Globe,
-  Search,
-  Check,
   Sparkles,
   Volume2,
-  X,
-  Radio,
-  SlidersHorizontal,
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { Typography } from '../../Theme/Typographys';
 import { Fonts } from '../../Theme/fonts';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
-import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../Common/Badge';
 import {
   SubScreenHeader,
   SUB_SCREEN_HEADER_HEIGHT,
 } from '../../Common/SubScreenHeader';
 import { useScrollReactiveHeader } from '../../Common/useScrollReactiveHeader';
-import { ProBadge } from '../../Common/ProBadge';
-import CustomButton from '../../Common/CustomButton';
 import { SearchInputBar } from '../../Common/SearchInputBar';
 import { StickyActionDock } from '../../Common/StickyActionDock';
 import { StickyBottomButton } from '../../Common/StickyBottomButton';
@@ -157,7 +140,6 @@ export const LanguageScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
   const { isDarkMode } = useTheme();
-  const { width: screenWidth } = Dimensions.get('window');
 
   const [selectedLanguageCode, setSelectedLanguageCode] = useState('en-US');
   const [autoDetect, setAutoDetect] = useState(false);
@@ -278,7 +260,6 @@ export const LanguageScreen: React.FC = () => {
     : Colors.MidnightInkText;
   const textSecondary = isDarkMode ? '#A3A8B1' : Colors.SubtitleGray;
   const borderLight = isDarkMode ? '#2C3035' : '#E8E2D5';
-  const surfaceAlt = isDarkMode ? '#171A1F' : '#FAF8F5';
 
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>

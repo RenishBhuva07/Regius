@@ -18,7 +18,6 @@ import { Plus, Flame } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../../Theme/fonts';
-import { Typography } from '../../Theme/Typographys';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../Theme/useAppTheme';
 import { useTaskReminder, HabitItem } from '../../Context/TaskReminderContext';
@@ -34,6 +33,8 @@ import { FlowSectionSheet } from '../../Common/FlowSectionSheet';
 import HabitNotesDoodleSvg from './Components/HabitNotesDoodleSvg';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { useDailyQuote } from '../../Services/DailyQuotes';
+
+const HabitListSeparator = () => <View style={styles.listSeparator} />;
 
 export const HabitsScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
@@ -204,7 +205,7 @@ export const HabitsScreen: React.FC = () => {
                 onDetails={handleViewDetails}
               />
             )}
-            ItemSeparatorComponent={() => <View style={styles.listSeparator} />}
+            ItemSeparatorComponent={HabitListSeparator}
             ListEmptyComponent={
               <View
                 style={[

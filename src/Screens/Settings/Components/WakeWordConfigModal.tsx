@@ -17,7 +17,6 @@ import {
   Info,
   Sparkles,
   Zap,
-  Play,
   RotateCcw,
   Sliders,
   ShieldCheck,
@@ -35,8 +34,6 @@ import {
   DEFAULT_WAKE_WORD_PRESET,
   validateWakePhrase,
   testWakeWordRecognition,
-  ENGINE_LIMITATIONS,
-  formatWakePhrase,
 } from '../../../Services/WakeWord/WakeWordService';
 
 interface WakeWordConfigModalProps {
@@ -59,7 +56,6 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
     textSecondary,
     borderLight,
     surfaceAlt,
-    bgMain,
   } = useSettingsTheme();
 
   const [selectedPhrase, setSelectedPhrase] = useState(currentPhrase);

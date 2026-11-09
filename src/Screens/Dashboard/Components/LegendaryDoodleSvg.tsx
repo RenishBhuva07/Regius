@@ -3,7 +3,6 @@ import { View, StyleSheet } from 'react-native';
 import Svg, {
   Path,
   Circle,
-  Rect,
   G,
   Defs,
   LinearGradient,
@@ -18,17 +17,7 @@ export interface LegendaryDoodleSvgProps {
   height?: number;
 }
 
-/**
- * Extraordinary Legendary Crown & Triumph Doodle Illustration:
- * - 3D tilted Imperial Regius Crown of Triumph with velvet violet cushion dome
- * - Embedded royal jewels: Emerald diamond, amethyst gems, ruby tear sparks
- * - Golden filigree crown arches, pearl finials & radiant starlight apex
- * - Classical Victory Laurel Wreath flourish curving gracefully at base
- * - Floating 3D faceted diamond gemstone with crystalline refraction
- * - Hand-drawn doodle lightning bolt of electric ambition & energy arcs
- * - Celebratory celestial starbursts, orbital dash rings, and stardust
- * - Custom crafted to accompany: "Make today a little legendary!"
- */
+// Imperial Regius Crown & Triumph illustration accompanying legendary daily quote
 export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
   width = 144,
   height = 152,

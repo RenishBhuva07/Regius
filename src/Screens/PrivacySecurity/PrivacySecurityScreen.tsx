@@ -1,24 +1,17 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  StatusBar,
   Switch,
   Alert,
   Platform,
-  Animated,
   Vibration,
-  Dimensions,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
 import {
-  Shield,
   Lock,
   EyeOff,
   Server,
@@ -28,24 +21,19 @@ import {
   CheckCircle2,
   HardDrive,
   Key,
-  AlertTriangle,
   Sparkles,
   ShieldCheck,
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
-import { Typography } from '../../Theme/Typographys';
 import { Fonts } from '../../Theme/fonts';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
-import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../Common/Badge';
 import {
   SubScreenHeader,
   SUB_SCREEN_HEADER_HEIGHT,
 } from '../../Common/SubScreenHeader';
 import { useScrollReactiveHeader } from '../../Common/useScrollReactiveHeader';
-import { ProBadge } from '../../Common/ProBadge';
-import CustomButton from '../../Common/CustomButton';
 import { useTheme } from '../../Theme/ThemeContext';
 import { VoiceSettingsService } from '../../Services/VoiceSettingsService';
 import { SettingsBackgroundSvg } from '../Settings/Components/SettingsBackgroundSvg';
@@ -54,9 +42,7 @@ const HEADER_HEIGHT = SUB_SCREEN_HEADER_HEIGHT;
 
 export const PrivacySecurityScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation<any>();
   const { isDarkMode } = useTheme();
-  const { width: screenWidth } = Dimensions.get('window');
 
   const [onDeviceSpeech, setOnDeviceSpeech] = useState(true);
   const [cloudSync, setCloudSync] = useState(true);

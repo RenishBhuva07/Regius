@@ -4,15 +4,8 @@ import {
   Award,
   ChevronRight,
   Sparkles,
-  Zap,
-  CheckCircle2,
-  Lock,
 } from 'lucide-react-native';
-import { Typography } from '../../../Theme/Typographys';
 import { Fonts } from '../../../Theme/fonts';
-import Colors, {
-  Colors as StaticColors,
-} from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../../Common/Badge';
 import { MilestoneTier } from '../../../Services/Milestone/MilestoneService';

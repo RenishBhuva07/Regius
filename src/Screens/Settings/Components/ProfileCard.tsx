@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Edit3, Award, ChevronRight } from 'lucide-react-native';
-import { Typography } from '../../../Theme/Typographys';
 import { Fonts } from '../../../Theme/fonts';
 import Colors, {
   Colors as StaticColors,
@@ -34,16 +33,16 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   name,
   email,
   bio,
-  role,
+  role: _role,
   selectedVoiceName,
   onEditPress,
   milestoneTier,
   milestoneXp = 0,
   milestoneProgress = 0,
   tasksDoneCount = 142,
-  habitsFollowedCount = 8,
+  habitsFollowedCount: _habitsFollowedCount = 8,
   onMilestonePress,
-  isPremium = false,
+  isPremium: _isPremium = false,
   onProPress,
 }) => {
   return (

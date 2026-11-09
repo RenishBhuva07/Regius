@@ -18,7 +18,6 @@ import Svg, {
 } from 'react-native-svg';
 
 import { Fonts } from '../../../Theme/fonts';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { useTheme } from '../../../Theme/ThemeContext';
 

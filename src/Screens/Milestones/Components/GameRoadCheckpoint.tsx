@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
-import Svg, { Line, Path, Rect } from 'react-native-svg';
+import Svg, { Line } from 'react-native-svg';
 import { Crown, Lock, Check } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
 import { MilestoneTier } from '../../../Services/Milestone/MilestoneService';

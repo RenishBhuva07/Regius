@@ -98,7 +98,7 @@ const CATEGORIES: Category[] = [
 const HomeScreen: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabKey>('taskList');
   const [selectedCategory, setSelectedCategory] = useState<string>('works');
-  const { tasks, toggleTask, selectedTasks, selectAllTasks, openTaskModal } =
+  const { tasks, toggleTask, selectAllTasks, openTaskModal } =
     useTaskReminder();
 
   return (

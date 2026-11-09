@@ -27,7 +27,6 @@ import {
   VolumeX,
   Heart,
   Briefcase,
-  Activity,
   CalendarCheck,
   Pencil,
   Flame,

@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 import { DAILY_QUOTES, ScreenQuoteKey } from './dailyQuotesData';
 
 // 32-bit FNV-1a hash algorithm

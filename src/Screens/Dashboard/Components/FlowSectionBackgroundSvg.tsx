@@ -5,7 +5,6 @@ import Svg, {
   Circle,
   Rect,
   Line,
-  G,
   Defs,
   LinearGradient,
   RadialGradient,

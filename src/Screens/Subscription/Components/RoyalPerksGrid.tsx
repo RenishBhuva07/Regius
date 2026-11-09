@@ -11,7 +11,6 @@ import {
 } from 'lucide-react-native';
 
 import { Fonts } from '../../../Theme/fonts';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
 
 export interface RoyalPerksGridProps {
   isDarkMode: boolean;

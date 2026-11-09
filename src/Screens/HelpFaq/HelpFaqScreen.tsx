@@ -1,52 +1,38 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  TextInput,
-  StatusBar,
   Linking,
   Platform,
-  Animated,
   Vibration,
-  Dimensions,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useNavigation } from '@react-navigation/native';
 import {
   ChevronDown,
   ChevronUp,
-  Search,
-  HelpCircle,
   Mail,
   MessageSquare,
-  Sparkles,
-  ExternalLink,
   Shield,
   Mic,
   CheckSquare,
   Flame,
-  X,
-  Compass,
+  Sparkles,
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
-import { Typography } from '../../Theme/Typographys';
 import { Fonts } from '../../Theme/fonts';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
-import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../Common/Badge';
+import { ProBadge } from '../../Common/ProBadge';
+import CustomButton from '../../Common/CustomButton';
 import {
   SubScreenHeader,
   SUB_SCREEN_HEADER_HEIGHT,
 } from '../../Common/SubScreenHeader';
 import { useScrollReactiveHeader } from '../../Common/useScrollReactiveHeader';
-import { ProBadge } from '../../Common/ProBadge';
-import CustomButton from '../../Common/CustomButton';
 import { SearchInputBar } from '../../Common/SearchInputBar';
 import { useTheme } from '../../Theme/ThemeContext';
 import { SettingsBackgroundSvg } from '../Settings/Components/SettingsBackgroundSvg';
@@ -116,9 +102,7 @@ type CategoryFilter = 'All' | 'Voice' | 'Tasks' | 'Gestures' | 'Privacy';
 
 export const HelpFaqScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
-  const navigation = useNavigation<any>();
   const { isDarkMode } = useTheme();
-  const { width: screenWidth } = Dimensions.get('window');
 
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>('All');
@@ -126,14 +110,6 @@ export const HelpFaqScreen: React.FC = () => {
 
   // Scroll tracking for reactive header layer
   const { scrollY, isScrolled, handleScroll } = useScrollReactiveHeader();
-
-  const categories: CategoryFilter[] = [
-    'All',
-    'Voice',
-    'Tasks',
-    'Gestures',
-    'Privacy',
-  ];
 
   const filteredFaqs = useMemo(() => {
     return FAQS.filter(item => {

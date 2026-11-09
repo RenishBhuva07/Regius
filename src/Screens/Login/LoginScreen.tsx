@@ -123,7 +123,6 @@ export const LoginScreen: React.FC = () => {
   // Validation & Submit
   const handleAuthSubmit = () => {
     const trimmedEmail = email.trim();
-    const trimmedPass = password.trim();
 
     if (trimmedEmail) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

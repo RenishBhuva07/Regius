@@ -34,7 +34,6 @@ import type { VoiceOption } from './Components';
 import { useVoiceWakeWord } from '../../Context/VoiceWakeWordContext';
 import { useMilestones } from '../../Context/MilestoneContext';
 import { usePremium } from '../../Context/PremiumContext';
-import { useTheme } from '../../Theme/ThemeContext';
 import {
   VOICES,
   useSettingsTheme,
@@ -79,13 +78,9 @@ const SettingsScreen: React.FC = () => {
     currentInTier,
     requiredForTier,
     completedTasksCount,
-    completedRemindersCount,
     habitsFollowedCount,
-    isMilestoneModalVisible,
     openMilestoneModal,
-    closeMilestoneModal,
   } = useMilestones();
-  const { setActiveThemeId } = useTheme();
   const { isPremium } = usePremium();
 
   const {

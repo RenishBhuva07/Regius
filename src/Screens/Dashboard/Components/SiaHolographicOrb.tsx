@@ -32,11 +32,11 @@ export interface SiaHolographicOrbProps {
 export const SiaHolographicOrb: React.FC<SiaHolographicOrbProps> = ({
   state,
   size = DEFAULT_HOLOGRAPHIC_ORB_SIZE,
-  onPress,
-  disabled = false,
+  onPress: _onPress,
+  disabled: _disabled = false,
   lottieSource,
-  accentColor = '#9D9BF0',
-  isDarkMode = true,
+  accentColor: _accentColor = '#9D9BF0',
+  isDarkMode: _isDarkMode = true,
 }) => {
   const [reduceMotion, setReduceMotion] = React.useState(false);
   const lottieRef = useRef<LottieView>(null);
@@ -165,8 +165,6 @@ export const SiaHolographicOrb: React.FC<SiaHolographicOrbProps> = ({
     breathAnim,
     glowAnim,
   ]);
-
-  const glowSize = size * 1.12;
 
   return (
     <View style={[styles.container, { width: size, height: size }]}>

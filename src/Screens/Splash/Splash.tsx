@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Dimensions, Animated } from 'react-native';
+import { View, Text, StyleSheet, Animated } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MainContainer from '../../Common/MainContainer';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
@@ -9,8 +9,6 @@ import { useTheme } from '../../Theme/ThemeContext';
 import { SVGS } from '../../Assets/Images';
 import { RegiusLogo } from '../../Common/RegiusLogo';
 import { SplashAestheticBackgroundSvg } from './Components/SplashAestheticBackgroundSvg';
-
-const { width } = Dimensions.get('window');
 
 const SplashScreen: React.FC = () => {
   const insets = useSafeAreaInsets();

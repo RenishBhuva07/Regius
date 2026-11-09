@@ -3,7 +3,6 @@ import { StyleSheet, View } from 'react-native';
 import Svg, {
   Path,
   Circle,
-  G,
   Defs,
   LinearGradient,
   RadialGradient,

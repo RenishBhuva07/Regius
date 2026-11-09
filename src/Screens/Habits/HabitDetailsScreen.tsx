@@ -27,7 +27,6 @@ import {
   Sparkles,
   Pencil,
   Volume2,
-  VolumeX,
   Trash2,
   Calendar,
   Quote,
@@ -46,11 +45,10 @@ import Svg, {
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../../Theme/fonts';
-import { Typography } from '../../Theme/Typographys';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { useTheme } from '../../Theme/ThemeContext';
-import { useTaskReminder, HabitItem } from '../../Context/TaskReminderContext';
+import { useTaskReminder } from '../../Context/TaskReminderContext';
 import {
   SubScreenHeader,
   SUB_SCREEN_HEADER_HEIGHT,

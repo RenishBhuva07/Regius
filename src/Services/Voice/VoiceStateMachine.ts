@@ -1,3 +1,8 @@
+const devLog = (...args: any[]): void => {
+  if (__DEV__) {
+    console.log(...args);
+  }
+};
 // Voice assistant state machine and valid state transitions
 
 export type VoiceAssistantState =
@@ -284,7 +289,7 @@ export class VoiceStateMachine {
 
     const prevState = this.currentState;
     this.currentState = nextState;
-    console.log(
+    devLog(
       `[VoiceStateMachine] Transitioned: ${prevState} -> ${nextState} (Session: ${
         this.currentSessionId || 'none'
       })`,

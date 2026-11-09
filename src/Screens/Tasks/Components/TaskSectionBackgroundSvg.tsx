@@ -11,7 +11,6 @@ import Svg, {
   Stop,
   Line,
 } from 'react-native-svg';
-import { Fonts } from '../../../Theme/fonts';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 

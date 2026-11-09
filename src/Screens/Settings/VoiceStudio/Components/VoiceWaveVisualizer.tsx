@@ -146,7 +146,16 @@ export const VoiceWaveVisualizer: React.FC<VoiceWaveVisualizerProps> =
       return () => {
         animLoop?.stop();
       };
-    }, [isActive]);
+    }, [
+      isActive,
+      waveAnim1,
+      waveAnim2,
+      waveAnim3,
+      waveAnim4,
+      waveAnim5,
+      waveAnim6,
+      waveAnim7,
+    ]);
 
     const label =
       statusText ||

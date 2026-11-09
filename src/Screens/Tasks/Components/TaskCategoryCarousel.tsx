@@ -8,10 +8,8 @@ import {
   Platform,
 } from 'react-native';
 import { Filter } from 'lucide-react-native';
-import Svg, { Path, Circle } from 'react-native-svg';
 import { Typography } from '../../../Theme/Typographys';
 import { Fonts } from '../../../Theme/fonts';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import { SVGS } from '../../../Assets/Images';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { Task } from '../../../Context/TaskReminderContext';
@@ -84,7 +82,7 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
   onSelectCategory,
   onAddPress,
 }) => {
-  const { isDarkMode, textPrimary, textSecondary, borderLight, cardBg } =
+  const { isDarkMode, textPrimary, borderLight, cardBg } =
     useAppTheme();
 
   const getCategoryMetrics = (catId: string) => {

@@ -42,6 +42,8 @@ import { useAppTheme } from '../../Theme/useAppTheme';
 
 type TabKey = 'taskList' | 'completed';
 
+const TaskListSeparator = () => <View style={styles.listSeparator} />;
+
 export const TasksScreen: React.FC<any> = ({ route }) => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
@@ -58,7 +60,6 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
     toggleTask,
     updateTask,
     deleteTask,
-    selectedTasks,
     selectAllTasks,
     openTaskModal,
   } = useTaskReminder();
@@ -292,7 +293,7 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
                 />
               );
             }}
-            ItemSeparatorComponent={() => <View style={styles.listSeparator} />}
+            ItemSeparatorComponent={TaskListSeparator}
             ListEmptyComponent={
               <View style={styles.emptyContainer}>
                 {activeTab === 'completed' ? (

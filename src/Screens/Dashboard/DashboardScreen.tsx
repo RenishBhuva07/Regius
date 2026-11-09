@@ -9,7 +9,6 @@ import {
   View,
   Text,
   StyleSheet,
-  TouchableOpacity,
   ScrollView,
   FlatList,
   StatusBar,
@@ -20,7 +19,7 @@ import {
   Dimensions,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Sun, Settings, Calendar } from 'lucide-react-native';
+import { Sun, Calendar } from 'lucide-react-native';
 import {
   useNavigation,
   useFocusEffect,
@@ -36,7 +35,6 @@ import DailyBriefingCard from './Components/DailyBriefingCard';
 import DailyBalanceGrid from './Components/DailyBalanceGrid';
 import TimelineItemCard, { TimelineItem } from './Components/TimelineItemCard';
 import { FlowSectionSheet } from '../../Common/FlowSectionSheet';
-import FlowBadgePatternSvg from './Components/FlowBadgePatternSvg';
 import FlowSectionBackgroundSvg from './Components/FlowSectionBackgroundSvg';
 import LegendaryDoodleSvg from './Components/LegendaryDoodleSvg';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';

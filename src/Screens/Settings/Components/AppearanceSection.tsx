@@ -185,6 +185,7 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
+            style={styles.themesScroll}
             contentContainerStyle={styles.themesScrollContent}
           >
             {themePresets.map(theme => {
@@ -550,27 +551,28 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3,
   },
   themesContainer: {
-    borderRadius: 14,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1,
-    padding: 10,
-    marginTop: 10,
-    marginBottom: 4,
+    padding: ResponsivePixels.size10,
+    marginTop: ResponsivePixels.size10,
+    marginBottom: ResponsivePixels.size4,
+    overflow: 'hidden',
   },
   themesHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: ResponsivePixels.size8,
   },
   themesHeaderLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   themesHeaderRight: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 3,
+    gap: ResponsivePixels.size3,
   },
   viewAllThemesText: {
     fontFamily: Fonts.poppins.bold,
@@ -581,10 +583,14 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.medium,
     fontSize: 11.5,
   },
+  themesScroll: {
+    marginHorizontal: -ResponsivePixels.size10,
+  },
   themesScrollContent: {
     flexDirection: 'row',
-    gap: 8,
-    paddingVertical: 2,
+    gap: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size2,
+    paddingHorizontal: ResponsivePixels.size10,
   },
   themePill: {
     flexDirection: 'row',

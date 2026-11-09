@@ -1,3 +1,4 @@
+/* eslint-disable no-bitwise */
 import React, {
   createContext,
   useContext,
@@ -32,7 +33,7 @@ export const isLightColor = (hex: string): boolean => {
   return luma > 165;
 };
 
-// --- BASE LIGHT COLORS ---
+// Base light palette
 export const lightColors = {
   ...Colors,
   Background: Colors.CreamBackground,
@@ -46,7 +47,7 @@ export const lightColors = {
   BorderLight: '#E8E2D5',
 };
 
-// --- PRESTIGE LIGHT THEMES ---
+// Prestige light themes
 export const champagneGoldLightColors = {
   ...lightColors,
   Background: '#FAF6EE',
@@ -99,7 +100,7 @@ export const obsidianGoldLightColors = {
   BorderLight: '#DDDDE2',
 };
 
-// --- BASE DARK COLORS ---
+// Base dark palette
 export const darkColors = {
   ...lightColors,
   Background: '#121417',
@@ -117,7 +118,7 @@ export const darkColors = {
   FogGrey: '#4A5058',
 };
 
-// --- PRESTIGE DARK THEMES ---
+// Prestige dark themes
 export const champagneGoldDarkColors = {
   ...darkColors,
   Background: '#161410',

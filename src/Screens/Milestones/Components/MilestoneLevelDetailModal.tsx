@@ -6,7 +6,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
-  Platform,
   Dimensions,
   Vibration,
 } from 'react-native';
@@ -17,18 +16,13 @@ import {
   Palette,
   CheckCircle2,
   Crown,
-  ChevronRight,
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../../../Theme/fonts';
-import { Colors as StaticColors } from '../../../Assets/StyleUtilities/Colors';
-import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../../Common/Badge';
 import { MilestoneTier } from '../../../Services/Milestone/MilestoneService';
 import { ThreeDStatusBadge } from './ThreeDStatusBadge';
-
-const { width: screenWidth } = Dimensions.get('window');
 
 interface MilestoneLevelDetailModalProps {
   tier: MilestoneTier | null;
@@ -79,7 +73,6 @@ export const MilestoneLevelDetailModal: React.FC<
   const textPrimary = isDarkMode ? '#FFFFFF' : '#121417';
   const textSecondary = isDarkMode ? '#8E95A5' : '#6B7280';
   const cardBorder = isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#E8E2D5';
-  const dividerColor = isDarkMode ? 'rgba(255, 255, 255, 0.08)' : '#ECE6DA';
 
   const xpRemaining = Math.max(0, tier.minXp - totalXp);
 

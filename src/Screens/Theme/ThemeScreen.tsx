@@ -120,6 +120,49 @@ export const ThemeScreen: React.FC = () => {
   const bgMain = isDarkMode ? '#121417' : Colors.CreamBackground;
   const cardBg = isDarkMode ? '#1E2228' : Colors.DefaultWhite;
 
+  const renderRightAction = useCallback(
+    (scrolled: boolean) => (
+      <View style={styles.headerRightActions}>
+        <TouchableOpacity
+          activeOpacity={0.75}
+          onPress={toggleTheme}
+          style={[
+            styles.modeToggleBtn,
+            scrolled
+              ? styles.modeToggleBtnScrolled
+              : {
+                  backgroundColor: cardBg,
+                  borderColor: isDarkMode
+                    ? 'rgba(255, 255, 255, 0.12)'
+                    : '#FFFFFF',
+                  borderBottomColor: isDarkMode ? '#14161A' : '#DCD6CA',
+                  shadowColor: isDarkMode
+                    ? '#000000'
+                    : 'rgba(0, 0, 0, 0.08)',
+                },
+          ]}
+          accessibilityRole="button"
+          accessibilityLabel={
+            isDarkMode ? 'Switch to Light Theme' : 'Switch to Dark Theme'
+          }
+        >
+          {isDarkMode ? (
+            <Sun size={17} color="#F5C518" strokeWidth={2.4} />
+          ) : (
+            <Moon
+              size={17}
+              color={scrolled ? Colors.DefaultWhite : Colors.LavenderPurple}
+              strokeWidth={2.4}
+            />
+          )}
+        </TouchableOpacity>
+
+        <Badge label="6 PALETTES" variant="yellow" size="sm" />
+      </View>
+    ),
+    [toggleTheme, isDarkMode, cardBg],
+  );
+
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>
       <SettingsBackgroundSvg />
@@ -131,45 +174,7 @@ export const ThemeScreen: React.FC = () => {
         scrollY={scrollY}
         isScrolled={isScrolled}
         isAbsolute={false}
-        rightAction={scrolled => (
-          <View style={styles.headerRightActions}>
-            <TouchableOpacity
-              activeOpacity={0.75}
-              onPress={toggleTheme}
-              style={[
-                styles.modeToggleBtn,
-                scrolled
-                  ? styles.modeToggleBtnScrolled
-                  : {
-                      backgroundColor: cardBg,
-                      borderColor: isDarkMode
-                        ? 'rgba(255, 255, 255, 0.12)'
-                        : '#FFFFFF',
-                      borderBottomColor: isDarkMode ? '#14161A' : '#DCD6CA',
-                      shadowColor: isDarkMode
-                        ? '#000000'
-                        : 'rgba(0, 0, 0, 0.08)',
-                    },
-              ]}
-              accessibilityRole="button"
-              accessibilityLabel={
-                isDarkMode ? 'Switch to Light Theme' : 'Switch to Dark Theme'
-              }
-            >
-              {isDarkMode ? (
-                <Sun size={17} color="#F5C518" strokeWidth={2.4} />
-              ) : (
-                <Moon
-                  size={17}
-                  color={scrolled ? Colors.DefaultWhite : Colors.LavenderPurple}
-                  strokeWidth={2.4}
-                />
-              )}
-            </TouchableOpacity>
-
-            <Badge label="6 PALETTES" variant="yellow" size="sm" />
-          </View>
-        )}
+        rightAction={renderRightAction}
         backAccessibilityLabel="Back to Settings"
       />
 

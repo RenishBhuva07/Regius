@@ -43,26 +43,13 @@ interface HabitItemCardProps {
   onDetails?: (habit: HabitItem) => void;
 }
 
-interface CategoryConfig {
-  label: string;
-  badgeVariant: BadgeVariant;
-  accentColor: string;
-  activeBorder: string;
-  checkboxBorder: string;
-  timePillBg: string;
-  timePillText: string;
-  completedBg: string;
-  completedBorder: string;
-  icon: React.ComponentType<any>;
-}
-
 export const HabitItemCard: React.FC<HabitItemCardProps> = ({
   habit,
   onToggle,
   onEdit,
   onDetails,
 }) => {
-  const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
+  const { isDarkMode, textPrimary } = useAppTheme();
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const translateX = useRef(new Animated.Value(0)).current;
   const detailsScaleAnim = useRef(new Animated.Value(1)).current;
