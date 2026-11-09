@@ -7,9 +7,9 @@ import { ThemeContext } from '../src/Theme/ThemeContext';
 
 // Mock Lucide icons
 jest.mock('lucide-react-native', () => {
-  const React = require('react');
+  const reactModule = require('react');
   const View = require('react-native').View;
-  const MockIcon = (props: any) => React.createElement(View, props);
+  const MockIcon = (props: any) => reactModule.createElement(View, props);
   return {
     KeyRound: MockIcon,
     X: MockIcon,

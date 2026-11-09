@@ -57,7 +57,6 @@ import { ReminderSectionBackgroundSvg } from '../src/Screens/Reminders/Component
 import { ReminderEmptyDoodleSvg } from '../src/Screens/Reminders/Components/ReminderEmptyDoodleSvg';
 import {
   INITIAL_REMINDERS,
-  Reminder,
 } from '../src/Context/TaskReminderContext';
 
 describe('Reminders Redesign Suite', () => {

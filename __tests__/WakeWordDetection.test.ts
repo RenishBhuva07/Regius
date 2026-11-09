@@ -4,7 +4,6 @@ import {
   validateWakePhrase,
   testWakeWordRecognition,
   setActiveWakePhrase,
-  getActiveWakePhrase,
 } from '../src/Services/WakeWord/WakeWordDetectionEngine';
 import { SUPPORTED_WAKE_WORD_PRESETS } from '../src/Services/WakeWord/WakeWordPresets';
 

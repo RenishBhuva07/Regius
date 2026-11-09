@@ -53,8 +53,7 @@ const TAB_SLOT_W = (BAR_W - SIDE_PADDING * 2) / 5; // equal width for all 5 slot
 const TAB_INNER_W = Math.min(66, Math.floor(TAB_SLOT_W));
 const TAB_INNER_H = 50;
 
-// ─── SVG curved card (rounded corners + center notch + aesthetic background) ──
-
+// Curved bottom tab bar with center notch and pattern
 const BAR_BORDER_W = 4; // cream border matching plus button halo
 
 const CurvedBar: React.FC = () => {

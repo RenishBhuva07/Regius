@@ -532,7 +532,7 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
   const openReminderModal = () => setIsReminderModalOpen(true);
   const closeReminderModal = () => setIsReminderModalOpen(false);
 
-  // ─── Habits State & Handlers ──────────────────────────────
+  // Habits state and handlers
   const [habits, setHabits] = useState<HabitItem[]>(INITIAL_HABITS);
   const [isHabitModalOpen, setIsHabitModalOpen] = useState(false);
 

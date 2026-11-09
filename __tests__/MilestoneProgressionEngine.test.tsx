@@ -33,7 +33,6 @@ import { MilestoneSection } from '../src/Screens/Settings/Components/MilestoneSe
 import {
   MilestoneFullScreenSheet,
   ThreeDStatusBadge,
-  GameRoadCheckpoint,
   ZigzagGameRoad,
   MilestoneLevelDetailModal,
 } from '../src/Screens/Milestones';

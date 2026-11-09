@@ -30,7 +30,7 @@ export interface UnifiedSchedulePickerModalProps {
 export const UnifiedSchedulePickerModal: React.FC<UnifiedSchedulePickerModalProps> =
   React.memo(
     ({ visible, mode, value, onChange, onClose, title, badgeText }) => {
-      const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
+      const { isDarkMode } = useAppTheme();
       const isDate = mode === 'date';
       const defaultTitle = isDate ? 'Schedule Date' : 'Due Time';
       const defaultBadge = isDate ? 'SOLAR CALENDAR' : 'LUNAR CHRONO';

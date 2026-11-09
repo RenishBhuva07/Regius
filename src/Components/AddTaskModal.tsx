@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -142,7 +142,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
   taskToEdit,
 }) => {
   const insets = useSafeAreaInsets();
-  const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
+  const { isDarkMode } = useAppTheme();
   const voiceContext = useOptionalVoiceWakeWord();
   const assistantName = voiceContext?.assistantName || 'Regius';
   const isEditing = !!taskToEdit;
@@ -187,7 +187,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
   const createAnim = useRef(new Animated.Value(1)).current;
   const noteInputRef = useRef<React.ComponentRef<typeof TextInput>>(null);
 
-  const resetForm = () => {
+  const resetForm = useCallback(() => {
     const today = new Date();
     const formattedDefaultDate = `Today, ${
       MONTH_SHORT[today.getMonth()]
@@ -206,7 +206,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
     setTitleInputHeight(48);
     scrollY.setValue(0);
     setIsScrolled(false);
-  };
+  }, [scrollY]);
 
   const handleTitleContentSizeChange = (e: {
     nativeEvent: { contentSize: { height: number; width: number } };
@@ -267,7 +267,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
         resetForm();
       }
     }
-  }, [visible, taskToEdit]);
+  }, [visible, taskToEdit, resetForm, scrollY]);
 
   // Subtask Handlers
   const handleRemoveSubtask = (id: string) => {
@@ -291,10 +291,6 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
     };
     setSubtasks(prev => [...prev, newItem]);
     setNewSubtaskInput('');
-  };
-
-  const handleResetSubtasks = () => {
-    setSubtasks([]);
   };
 
   // Date Picker Handler

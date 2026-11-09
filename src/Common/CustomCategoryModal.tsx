@@ -12,11 +12,10 @@ import {
   Keyboard,
   Dimensions,
 } from 'react-native';
-import { Check, Sparkles, Plus, X } from 'lucide-react-native';
+import { Check, Sparkles, Plus } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../Theme/fonts';
-import { Colors } from '../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../Theme/useAppTheme';
 import { Badge, BadgeVariant } from './Badge';
 import {
@@ -154,7 +153,7 @@ export interface CustomCategoryModalProps {
 
 export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
   React.memo(({ visible, onClose, onCreateCategory }) => {
-    const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
+    const { isDarkMode } = useAppTheme();
     const [newCatName, setNewCatName] = useState('');
     const [newCatPresetIndex, setNewCatPresetIndex] = useState(0);
     const [selectedIconIndex, setSelectedIconIndex] = useState(0);

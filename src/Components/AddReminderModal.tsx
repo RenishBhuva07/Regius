@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
@@ -150,7 +150,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
   reminderToEdit,
 }) => {
   const insets = useSafeAreaInsets();
-  const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
+  const { isDarkMode } = useAppTheme();
   const voiceContext = useOptionalVoiceWakeWord();
   const assistantName = voiceContext?.assistantName || 'Regius';
   const isEditing = !!reminderToEdit;
@@ -196,7 +196,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
   const createAnim = useRef(new Animated.Value(1)).current;
   const noteInputRef = useRef<React.ComponentRef<typeof TextInput>>(null);
 
-  const resetForm = () => {
+  const resetForm = useCallback(() => {
     const today = new Date();
     const formattedDefaultDate = `Today, ${
       MONTH_SHORT[today.getMonth()]
@@ -218,7 +218,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
     setTitleInputHeight(48);
     scrollY.setValue(0);
     setIsScrolled(false);
-  };
+  }, [scrollY]);
 
   const handleTitleContentSizeChange = (e: {
     nativeEvent: { contentSize: { height: number; width: number } };
@@ -278,7 +278,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
         resetForm();
       }
     }
-  }, [visible, reminderToEdit]);
+  }, [visible, reminderToEdit, resetForm, scrollY]);
 
   // DateTimePicker Handlers
   const onDateChange = (_event: any, selected?: Date) => {

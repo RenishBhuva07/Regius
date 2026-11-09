@@ -2,14 +2,7 @@ import {
   VoiceCommandService,
   ExecutionContext,
 } from '../src/Services/Voice/VoiceCommandService';
-import { IntentRecognitionService } from '../src/Services/Voice/IntentRecognitionService';
 import { VoiceStateMachine } from '../src/Services/Voice/VoiceStateMachine';
-import {
-  normalizeTranscript,
-  isGratitudeIntent,
-  isGoodbyeIntent,
-  isDeclineIntent,
-} from '../src/Services/Voice/TranscriptNormalizer';
 import { PendingClarification } from '../src/Services/Voice/VoiceTypes';
 
 describe('Voice Assistant Conversation Flow & Intelligence Suite (14 Core Scenarios)', () => {
@@ -181,7 +174,7 @@ describe('Voice Assistant Conversation Flow & Intelligence Suite (14 Core Scenar
     let executionCounter = 0;
     let isProcessingLatch = false;
 
-    const executeCommandOnce = (cmd: string) => {
+    const executeCommandOnce = (_cmd: string) => {
       if (isProcessingLatch) return;
       isProcessingLatch = true;
       executionCounter += 1;

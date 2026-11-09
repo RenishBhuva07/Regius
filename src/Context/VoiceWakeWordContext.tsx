@@ -52,6 +52,12 @@ import {
   extractNameFromPhrase,
 } from '../Services/WakeWord/WakeWordDetectionEngine';
 
+const devLog = (...args: any[]): void => {
+  if (__DEV__) {
+    console.log(...args);
+  }
+};
+
 export interface VoiceWakeWordContextType {
   assistantName: string;
   isWakeWordEnabled: boolean;
@@ -313,7 +319,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
           return;
         }
 
-        console.log(
+        devLog(
           '[VoiceWakeWord] ⏳ 10s of listening silence. Prompting: "Are you still there?"',
         );
         hasPromptedInactivityRef.current = true;
@@ -342,7 +348,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
                   assistantStateRef.current === 'listening' &&
                   currentInteractionIdRef.current === sessionId
                 ) {
-                  console.log(
+                  devLog(
                     '[VoiceWakeWord] ⏳ Grace period silence reached with no user input. Closing session gracefully.',
                   );
                   closeAssistantRef.current();
@@ -462,7 +468,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         isListeningRef.current = true;
         setIsListening(true);
         if (!hasLoggedWakeWordListeningRef.current || forceRestart) {
-          console.log(
+          devLog(
             `[VoiceWakeWord] 🎙️ Listening for "${wakeWordPhraseRef.current}"...`,
           );
           hasLoggedWakeWordListeningRef.current = true;
@@ -510,7 +516,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         maxUtteranceTimerRef.current = null;
       }
 
-      console.log(
+      devLog(
         '[VoiceWakeWord] 🎯 Finalizing complete utterance:',
         candidate,
       );
@@ -588,7 +594,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
       await Voice.start('en-US');
       isListeningRef.current = true;
       setIsListening(true);
-      console.log(
+      devLog(
         '[VoiceWakeWord] 🎙️ Microphone active: Listening for command...',
       );
 
@@ -605,7 +611,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
             wakeWordPhraseRef.current,
           )
         ) {
-          console.log(
+          devLog(
             '[VoiceWakeWord] Max utterance duration reached, finalizing...',
           );
           finalizeUtteranceRef.current();
@@ -633,7 +639,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
 
       const sessionId = currentInteractionIdRef.current;
       if (expectedSessionId && expectedSessionId !== sessionId) {
-        console.log('[VoiceWakeWord] Stale command session ignored');
+        devLog('[VoiceWakeWord] Stale command session ignored');
         return;
       }
 
@@ -1144,7 +1150,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         },
         onEnded: () => {
           if (sessionId === currentInteractionIdRef.current) {
-            console.log(
+            devLog(
               '[VoiceWakeWord] Greeting playback completed. Starting listening...',
             );
             AudioPlayerService.stop().catch(() => {});
@@ -1191,7 +1197,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
         assistantStateRef.current !== 'executing' &&
         assistantStateRef.current !== 'processing'
       ) {
-        console.log('[VoiceWakeWord] 🎤 Mic active: listening for command...');
+        devLog('[VoiceWakeWord] 🎤 Mic active: listening for command...');
         transitionState('listening', currentInteractionIdRef.current);
       }
     };
@@ -1245,7 +1251,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
       if (assistantStateRef.current === 'idle') {
         const rawHypothesis = (candidates[0] || '').trim();
         if (rawHypothesis) {
-          console.log(
+          devLog(
             `[VoiceWakeWord] 👂 Heard: "${rawHypothesis}" (Target: "${wakeWordPhraseRef.current}")`,
           );
         }
@@ -1262,7 +1268,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
               clearTimeout(idleFlushTimerRef.current);
               idleFlushTimerRef.current = null;
             }
-            console.log(
+            devLog(
               `[VoiceWakeWord] 🎯 "${wakeWordPhraseRef.current}" matched in partials:`,
               result.matchedPhrase,
             );
@@ -1280,7 +1286,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
           idleFlushTimerRef.current = setTimeout(() => {
             idleFlushTimerRef.current = null;
             if (assistantStateRef.current === 'idle') {
-              console.log(
+              devLog(
                 '[VoiceWakeWord] 🧹 Flushing idle recognition buffer after silence...',
               );
               scheduleWakeWordRestartRef.current(100);
@@ -1342,7 +1348,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
       if (assistantStateRef.current === 'idle') {
         const rawHypothesis = (candidates[0] || '').trim();
         if (rawHypothesis) {
-          console.log(
+          devLog(
             `[VoiceWakeWord] 🗣️ Final hypothesis: "${rawHypothesis}"`,
           );
         }
@@ -1359,7 +1365,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
               clearTimeout(idleFlushTimerRef.current);
               idleFlushTimerRef.current = null;
             }
-            console.log(
+            devLog(
               `[VoiceWakeWord] 🎯 "${wakeWordPhraseRef.current}" matched in results:`,
               result.matchedPhrase,
             );
@@ -1375,7 +1381,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
           idleFlushTimerRef.current = setTimeout(() => {
             idleFlushTimerRef.current = null;
             if (assistantStateRef.current === 'idle') {
-              console.log(
+              devLog(
                 '[VoiceWakeWord] 🧹 Flushing idle recognition buffer after silence...',
               );
               scheduleWakeWordRestartRef.current(100);
@@ -1399,7 +1405,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
 
       if (assistantStateRef.current === 'listening') {
         if (e.isFinal && !isFinalizingRef.current) {
-          console.log(
+          devLog(
             '[VoiceWakeWord] 🏁 SFSpeechRecognizer reported isFinal: true',
           );
           finalizeUtteranceRef.current();
@@ -1409,7 +1415,7 @@ export const VoiceWakeWordProvider: React.FC<{ children: React.ReactNode }> = ({
 
     Voice.onSpeechEnd = () => {
       if (assistantStateRef.current !== 'idle') {
-        console.log(
+        devLog(
           '[VoiceWakeWord] 🔇 Speech stream ended, refreshing listener cycle...',
         );
       }

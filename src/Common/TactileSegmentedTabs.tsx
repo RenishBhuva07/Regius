@@ -10,7 +10,6 @@ import {
   Animated,
 } from 'react-native';
 import { Fonts } from '../Theme/fonts';
-import { Colors } from '../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 import { useTheme } from '../Theme/ThemeContext';
 

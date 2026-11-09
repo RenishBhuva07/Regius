@@ -1,10 +1,7 @@
-import React from 'react';
-import renderer from 'react-test-renderer';
-
 jest.mock('lucide-react-native', () => {
-  const React = require('react');
+  const reactModule = require('react');
   const View = require('react-native').View;
-  const MockIcon = (props: any) => React.createElement(View, props);
+  const MockIcon = (props: any) => reactModule.createElement(View, props);
   return {
     __esModule: true,
     Mic: MockIcon,
@@ -26,11 +23,11 @@ jest.mock('react-native-safe-area-context', () => ({
 }));
 
 jest.mock('lottie-react-native', () => {
-  const React = require('react');
+  const reactModule = require('react');
   const View = require('react-native').View;
   return {
     __esModule: true,
-    default: (props: any) => React.createElement(View, props),
+    default: (props: any) => reactModule.createElement(View, props),
   };
 });
 
@@ -44,7 +41,6 @@ import {
   ExecutionContext,
 } from '../src/Services/Voice/VoiceCommandService';
 import { VoiceStateMachine } from '../src/Services/Voice/VoiceStateMachine';
-import { buildConfirmationMessage } from '../src/Services/Voice/VoiceConfirmationBuilder';
 import {
   VoiceAssistantSheet,
   normalizeAssistantState,

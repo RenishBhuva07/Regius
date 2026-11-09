@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,
   StatusBar,
   Platform,
   Modal,
@@ -12,7 +11,6 @@ import {
   KeyboardAvoidingView,
   Animated,
   Switch,
-  TouchableWithoutFeedback,
   Dimensions,
   Keyboard,
   FlatList,
@@ -22,10 +20,8 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   Check,
-  X,
   Clock,
   Sparkles,
-  Plus,
   FileText,
   Volume2,
   Flame,
@@ -34,17 +30,7 @@ import {
   Trash2,
   RotateCw,
 } from 'lucide-react-native';
-import Svg, {
-  Path,
-  Defs,
-  LinearGradient,
-  RadialGradient,
-  Stop,
-  Rect,
-  Circle,
-  SvgProps,
-} from 'react-native-svg';
-import DateTimePicker, {
+import {
   DateTimePickerEvent,
 } from '@react-native-community/datetimepicker';
 import Toast from 'react-native-toast-message';
@@ -189,7 +175,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
 
   const isEditing = !!habitToEdit;
 
-  const resetForm = () => {
+  const resetForm = useCallback(() => {
     if (habitToEdit) {
       setTitle(habitToEdit.title);
       setCategory(habitToEdit.category);
@@ -209,13 +195,13 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
     setTitleInputHeight(48);
     scrollY.setValue(0);
     setIsScrolled(false);
-  };
+  }, [habitToEdit, scrollY]);
 
   useEffect(() => {
     if (visible) {
       resetForm();
     }
-  }, [visible, habitToEdit]);
+  }, [visible, resetForm]);
 
   const handleTitleContentSizeChange = (e: {
     nativeEvent: { contentSize: { height: number; width: number } };

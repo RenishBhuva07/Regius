@@ -77,7 +77,7 @@ describe('useDailyQuote Hook', () => {
         return { remove: jest.fn() };
       });
 
-    const getLocalDateKeySpy = jest
+    jest
       .spyOn(DailyQuotesService, 'getLocalDateKey')
       .mockReturnValueOnce('2026-10-22') // initial ref on mount
       .mockReturnValue('2026-10-23'); // subsequent calls (e.g. app resume next day)

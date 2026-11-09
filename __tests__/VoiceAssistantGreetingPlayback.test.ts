@@ -1,6 +1,5 @@
 import {
   WakeWordRepliesService,
-  DEFAULT_PREDEFINED_REPLIES,
 } from '../src/Services/Voice/wakeWordReplies';
 import { RegiusSpeechService } from '../src/Services/RegiusSpeechService';
 import { KokoroTTSService } from '../src/Services/Kokoro/KokoroTTSService';

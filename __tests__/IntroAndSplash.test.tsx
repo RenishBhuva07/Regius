@@ -6,9 +6,9 @@ import Intro from '../src/Screens/Intro/Intro';
 
 // Mock SVGs
 jest.mock('../src/Assets/Images', () => {
-  const React = require('react');
+  const reactModule = require('react');
   const View = require('react-native').View;
-  const MockSvg = (props: any) => React.createElement(View, props);
+  const MockSvg = (props: any) => reactModule.createElement(View, props);
   return {
     SVGS: {
       RegiusAvatar: MockSvg,
@@ -26,9 +26,9 @@ jest.mock('../src/Assets/Images', () => {
 
 // Mock lucide icons
 jest.mock('lucide-react-native', () => {
-  const React = require('react');
+  const reactModule = require('react');
   const View = require('react-native').View;
-  const MockIcon = (props: any) => React.createElement(View, props);
+  const MockIcon = (props: any) => reactModule.createElement(View, props);
   return {
     CheckSquare: MockIcon,
     Bell: MockIcon,

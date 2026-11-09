@@ -17,16 +17,7 @@ export interface StreakBadgeProps {
   uppercase?: boolean;
 }
 
-/**
- * Universal 3D Tactile Streak Badge
- *
- * Adheres to Regius 3D tactile badge standards (DESIGN_SYSTEM.md §4.1 / §4.1.2):
- * - Top specular highlight rim (borderWidth: 1, borderColor: '#FFFFFF')
- * - Extruded 3D bottom bevel (borderBottomWidth: 2-2.8, bottomBorderColor: '#FFB86B')
- * - Ambient warm fire drop shadow (shadowColor: '#FF9800', elevation)
- * - Poppins Bold uppercase typographic stamping (e.g., '18D STREAK')
- * - Dynamic active state: vibrant orange fire palette when active, elegant neutral when 0 days
- */
+// Universal 3D Tactile Streak Badge with specular highlight and fire glow
 export const StreakBadge: React.FC<StreakBadgeProps> = ({
   streak,
   count,

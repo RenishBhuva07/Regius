@@ -1,4 +1,4 @@
-import { VoiceCommandService, ExecutionContext } from '../src/Services/Voice/VoiceCommandService';
+import { VoiceCommandService } from '../src/Services/Voice/VoiceCommandService';
 import { VoiceSessionConfig } from '../src/Services/Voice/VoiceSessionConfig';
 
 describe('Conversational Voice Assistant & Dynamic Intent Recognition', () => {

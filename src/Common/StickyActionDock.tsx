@@ -2,7 +2,6 @@ import React from 'react';
 import { View, StyleSheet, Platform, StyleProp, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../Theme/ThemeContext';
-import { Colors } from '../Assets/StyleUtilities/Colors';
 
 export interface StickyActionDockProps {
   children: React.ReactNode;

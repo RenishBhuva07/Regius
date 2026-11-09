@@ -9,7 +9,6 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { Settings } from 'lucide-react-native';
 import { Colors } from '../Assets/StyleUtilities/Colors';
-import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 import { useTheme } from '../Theme/ThemeContext';
 
 export interface SettingsButtonProps {
