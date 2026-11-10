@@ -27,7 +27,7 @@ export const SettingsButton: React.FC<SettingsButtonProps> = ({
   size = 36,
 }) => {
   const navigation = useNavigation<any>();
-  const { isDarkMode } = useTheme();
+  const { isDarkMode, Colors: themeColors } = useTheme();
   const pressAnim = useRef(new Animated.Value(0)).current;
 
   const handlePressIn = () => {
@@ -56,7 +56,8 @@ export const SettingsButton: React.FC<SettingsButtonProps> = ({
     }
   };
 
-  const cardBg = isDarkMode ? '#1E2228' : Colors.DefaultWhite;
+  const cardBg =
+    themeColors.CardBackground || (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
   const iconColor = isScrolled
     ? Colors.DefaultWhite
     : isDarkMode

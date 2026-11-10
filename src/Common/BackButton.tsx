@@ -24,7 +24,7 @@ export const BackButton: React.FC<BackButtonProps> = ({
   style,
 }) => {
   const navigation = useNavigation<any>();
-  const { isDarkMode } = useTheme();
+  const { isDarkMode, Colors: themeColors } = useTheme();
 
   const handlePress = () => {
     if (onPress) {
@@ -34,10 +34,11 @@ export const BackButton: React.FC<BackButtonProps> = ({
     }
   };
 
-  const cardBg = isDarkMode ? '#1E2228' : Colors.DefaultWhite;
-  const textPrimary = isDarkMode
-    ? Colors.PureWhiteText
-    : Colors.MidnightInkText;
+  const cardBg =
+    themeColors.CardBackground || (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
+  const textPrimary =
+    themeColors.PrimaryText ||
+    (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
 
   return (
     <TouchableOpacity

@@ -38,7 +38,7 @@ const HEADER_HEIGHT = SUB_SCREEN_HEADER_HEIGHT;
 export const SubscriptionScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
-  const { isDarkMode } = useTheme();
+  const { isDarkMode, Colors: themeColors } = useTheme();
 
   const {
     isPremium,
@@ -57,9 +57,12 @@ export const SubscriptionScreen: React.FC = () => {
   // Scroll tracking for reactive header layer
   const { scrollY, isScrolled, handleScroll } = useScrollReactiveHeader();
 
-  const bgMain = isDarkMode ? '#121417' : Colors.CreamBackground;
-  const textPrimary = isDarkMode ? '#FFFFFF' : '#111111';
-  const textSecondary = isDarkMode ? '#A3A8B1' : '#666665';
+  const bgMain =
+    themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
+  const textPrimary =
+    themeColors.PrimaryText || (isDarkMode ? '#FFFFFF' : '#111111');
+  const textSecondary =
+    themeColors.SecondaryText || (isDarkMode ? '#A3A8B1' : '#666665');
 
   const selectedPlan = plans.find(p => p.id === selectedPlanId) || plans[0];
 

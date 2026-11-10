@@ -10,15 +10,13 @@ import {
   ScrollView,
 } from 'react-native';
 import {
-  Moon,
-  Sun,
   Smartphone,
   Globe,
   ChevronRight,
   Sliders,
   Palette,
   Lock,
-  CheckCircle2,
+  Check,
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 import { Typography } from '../../../Theme/Typographys';
@@ -101,9 +99,9 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
     <>
       <View style={styles.sectionHeaderRow}>
         <View style={styles.sectionTitleWithIcon}>
-          <Moon size={18} color="#F5C518" strokeWidth={2.4} />
+          <Palette size={18} color="#F5C518" strokeWidth={2.4} />
           <Text style={[styles.sectionTitle, { color: textPrimary }]}>
-            Appearance & Theme
+            Appearance & Themes
           </Text>
         </View>
       </View>
@@ -120,40 +118,6 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
           },
         ]}
       >
-        {/* Dark / Light Mode Switch */}
-        <View style={styles.settingItemRow}>
-          <View style={styles.settingItemLeft}>
-            <View
-              style={[
-                styles.iconSquare,
-                { backgroundColor: isDarkMode ? '#2C3035' : '#FFFCEB' },
-              ]}
-            >
-              {isDarkMode ? (
-                <Moon size={18} color="#F5C518" strokeWidth={2.2} />
-              ) : (
-                <Sun size={18} color="#F5C518" strokeWidth={2.2} />
-              )}
-            </View>
-            <View style={styles.settingItemMeta}>
-              <Text style={[styles.settingItemTitle, { color: textPrimary }]}>
-                Dark Theme
-              </Text>
-              <Text style={[styles.settingItemDesc, { color: textSecondary }]}>
-                {isDarkMode
-                  ? 'Dark obsidian mode active'
-                  : 'Warm cream light mode active'}
-              </Text>
-            </View>
-          </View>
-          <Switch
-            value={isDarkMode}
-            onValueChange={toggleTheme}
-            trackColor={{ false: '#D9D9D9', true: '#F5C518' }}
-            thumbColor="#FFFFFF"
-          />
-        </View>
-
         {/* Bespoke Luxury Themes (Unlocked via Milestones) */}
         <View
           style={[
@@ -191,23 +155,12 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
             {themePresets.map(theme => {
               const unlocked = isThemeUnlocked(theme.id);
               const isSelected = activeThemeId === theme.id;
-              const isLightPill = isLightColor(theme.previewBg);
+              const [cCanvas, cSurface, cAccent, cForeground] = theme.palette;
               return (
                 <TouchableOpacity
                   key={theme.id}
-                  activeOpacity={0.8}
-                  style={[
-                    styles.themePill,
-                    isSelected && styles.themePillSelected,
-                    {
-                      backgroundColor: theme.previewBg,
-                      borderColor: isSelected
-                        ? theme.accent
-                        : isLightPill
-                        ? 'rgba(0, 0, 0, 0.16)'
-                        : 'rgba(255, 255, 255, 0.16)',
-                    },
-                  ]}
+                  activeOpacity={0.85}
+                  style={styles.roundThemeItem}
                   onPress={() => {
                     if (unlocked) {
                       setActiveThemeId(theme.id);
@@ -226,55 +179,102 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
                   accessibilityRole="button"
                   accessibilityLabel={`${theme.name} theme, ${
                     unlocked
-                      ? 'Unlocked'
+                      ? isSelected
+                        ? 'Active theme'
+                        : 'Unlocked'
                       : `Locked, requires Tier ${theme.requiredTierLevel}`
                   }`}
                 >
                   <View
                     style={[
-                      styles.themeAccentDot,
-                      { backgroundColor: theme.accent },
+                      styles.roundThemeCircleWrap,
+                      isSelected && {
+                        borderColor: theme.accent,
+                        shadowColor: theme.accent,
+                        shadowOpacity: 0.35,
+                        elevation: 4,
+                      },
                     ]}
-                  />
+                  >
+                    {/* 4-Quadrant Color Disc */}
+                    <View style={styles.quadCircle}>
+                      <View style={styles.quadRow}>
+                        <View
+                          style={[
+                            styles.quadQuarter,
+                            { backgroundColor: cCanvas.hex },
+                          ]}
+                        />
+                        <View
+                          style={[
+                            styles.quadQuarter,
+                            { backgroundColor: cSurface.hex },
+                          ]}
+                        />
+                      </View>
+                      <View style={styles.quadRow}>
+                        <View
+                          style={[
+                            styles.quadQuarter,
+                            { backgroundColor: cAccent.hex },
+                          ]}
+                        />
+                        <View
+                          style={[
+                            styles.quadQuarter,
+                            { backgroundColor: cForeground.hex },
+                          ]}
+                        />
+                      </View>
+                    </View>
+
+                    {/* Unlocked & Selected Check Badge */}
+                    {unlocked ? (
+                      isSelected && (
+                        <View
+                          style={[
+                            styles.roundCheckBadge,
+                            { backgroundColor: theme.accent },
+                          ]}
+                        >
+                          <Check
+                            size={9}
+                            color={
+                              isLightColor(theme.accent) ? '#000000' : '#FFFFFF'
+                            }
+                            strokeWidth={3}
+                          />
+                        </View>
+                      )
+                    ) : (
+                      /* Locked Overlay with Lock Icon */
+                      <View style={styles.roundLockedOverlay}>
+                        <Lock size={12} color="#FFFFFF" strokeWidth={2.4} />
+                      </View>
+                    )}
+                  </View>
+
+                  {/* Theme Name */}
                   <Text
                     style={[
-                      styles.themePillText,
-                      { color: isLightPill ? '#121417' : '#FFFFFF' },
+                      styles.roundThemeName,
+                      {
+                        color: isSelected ? textPrimary : textSecondary,
+                        fontFamily: isSelected
+                          ? Fonts.poppins.semiBold
+                          : Fonts.poppins.medium,
+                      },
                     ]}
                     numberOfLines={1}
                   >
                     {theme.name}
                   </Text>
-                  {unlocked ? (
-                    isSelected && (
-                      <CheckCircle2
-                        size={12}
-                        color={theme.accent}
-                        strokeWidth={2.4}
-                      />
-                    )
-                  ) : (
-                    <View
-                      style={[
-                        styles.themeLockBadge,
-                        isLightPill && {
-                          backgroundColor: 'rgba(0, 0, 0, 0.08)',
-                        },
-                      ]}
-                    >
-                      <Lock
-                        size={9}
-                        color={isLightPill ? '#555B66' : '#8E95A5'}
-                      />
-                      <Text
-                        style={[
-                          styles.themeTierReqText,
-                          isLightPill && { color: '#555B66' },
-                        ]}
-                      >
-                        T{theme.requiredTierLevel}
-                      </Text>
-                    </View>
+
+                  {/* Tier indicator if locked */}
+                  {!unlocked && (
+                    <Text style={styles.roundThemeTierText}>
+                      Tier {theme.requiredTierLevel}
+                    </Text>
                   )}
                 </TouchableOpacity>
               );
@@ -589,47 +589,73 @@ const styles = StyleSheet.create({
   themesScrollContent: {
     flexDirection: 'row',
     gap: ResponsivePixels.size8,
-    paddingVertical: ResponsivePixels.size2,
+    paddingVertical: ResponsivePixels.size6,
     paddingHorizontal: ResponsivePixels.size10,
   },
-  themePill: {
-    flexDirection: 'row',
+  roundThemeItem: {
     alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 16,
-    borderWidth: 1.5,
+    width: ResponsivePixels.size66,
   },
-  themePillSelected: {
+  roundThemeCircleWrap: {
+    width: ResponsivePixels.size52,
+    height: ResponsivePixels.size52,
+    borderRadius: ResponsivePixels.size26,
+    borderWidth: 2,
+    borderColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 2,
   },
-  themeAccentDot: {
-    width: 10,
-    height: 10,
-    borderRadius: 5,
+  quadCircle: {
+    width: ResponsivePixels.size44,
+    height: ResponsivePixels.size44,
+    borderRadius: ResponsivePixels.size22,
+    overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: 'rgba(0, 0, 0, 0.12)',
   },
-  themePillText: {
-    fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
-    color: '#FFFFFF',
-  },
-  themeLockBadge: {
+  quadRow: {
+    flex: 1,
     flexDirection: 'row',
-    alignItems: 'center',
-    gap: 2,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    paddingHorizontal: 4,
-    paddingVertical: 1.5,
-    borderRadius: 6,
   },
-  themeTierReqText: {
+  quadQuarter: {
+    flex: 1,
+  },
+  roundCheckBadge: {
+    position: 'absolute',
+    bottom: -1,
+    right: -1,
+    width: ResponsivePixels.size16,
+    height: ResponsivePixels.size16,
+    borderRadius: ResponsivePixels.size8,
+    borderWidth: 1.5,
+    borderColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  roundLockedOverlay: {
+    position: 'absolute',
+    width: ResponsivePixels.size44,
+    height: ResponsivePixels.size44,
+    borderRadius: ResponsivePixels.size22,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  roundThemeName: {
+    ...Typography.bodySmallPoppinsRegular,
+    fontSize: 10.5,
+    marginTop: ResponsivePixels.size6,
+    textAlign: 'center',
+  },
+  roundThemeTierText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 9,
     color: '#8E95A5',
+    marginTop: 1,
   },
 });
 

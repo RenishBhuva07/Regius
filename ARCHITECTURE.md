@@ -277,7 +277,7 @@ graph LR
 5. **`MilestoneContext` & `MilestoneService`**:
    - Manages gamification progression and Pro feature entitlements earned via daily task completion, reminder clearance, and habit streaks.
    - Calculates total XP (+15 Task, +10 Reminder, +20 Habit, +2/day Habit Streak) and evaluates current rank across 5 Royalty Prestige Tiers.
-   - Manages dual-gate Pro access: users unlock bespoke luxury themes (_Champagne Gold_, _Emerald Velvet_, _Celestial Azure_, _Obsidian Sovereign_) and Pro privileges (Haptic intensity, Wake word studio, Priority TTS) either by leveling up through discipline or via `isPremium: true`.
+   - Manages dual-gate Pro access: users unlock bespoke luxury themes (_Cyprus Sand_, _Emerald Velvet_, _Celestial Azure_, _Obsidian Sovereign_) and Pro privileges (Haptic intensity, Wake word studio, Priority TTS) either by leveling up through discipline or via `isPremium: true`.
    - Persists historical metrics to `AsyncStorage` (`@regius_milestone_progression`).
 6. **`ThemeContext` & `useAppTheme`**:
    - Manages user theme mode (`isDarkMode: boolean`) and active theme preset (`activeThemeId: string`), persisting state to `@regius_theme_mode` and `@regius_active_theme` in `AsyncStorage`.

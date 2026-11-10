@@ -6,6 +6,7 @@ import { Fonts } from '../../../Theme/fonts';
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import { Typography } from '../../../Theme/Typographys';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
+import { useTheme } from '../../../Theme/ThemeContext';
 
 export interface ProfileCredentialsFormProps {
   name: string;
@@ -33,14 +34,21 @@ export const ProfileCredentialsForm: React.FC<ProfileCredentialsFormProps> =
       isDarkMode,
     }) => {
       const [focusedInput, setFocusedInput] = useState<string | null>(null);
+      const { Colors: themeColors } = useTheme();
 
-      const cardBg = isDarkMode ? '#1E2228' : Colors.DefaultWhite;
-      const textPrimary = isDarkMode
-        ? Colors.PureWhiteText
-        : Colors.MidnightInkText;
-      const textSecondary = isDarkMode ? '#A3A8B1' : Colors.SubtitleGray;
-      const borderLight = isDarkMode ? '#2C3035' : '#E8E2D5';
-      const inputBg = isDarkMode ? '#171A1F' : '#FAF8F5';
+      const cardBg =
+        themeColors.CardBackground ||
+        (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
+      const textPrimary =
+        themeColors.PrimaryText ||
+        (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
+      const textSecondary =
+        themeColors.SecondaryText ||
+        (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+      const borderLight =
+        themeColors.BorderLight || (isDarkMode ? '#2C3035' : '#E8E2D5');
+      const inputBg =
+        themeColors.SurfaceAlt || (isDarkMode ? '#171A1F' : '#FAF8F5');
 
       return (
         <View style={styles.container}>

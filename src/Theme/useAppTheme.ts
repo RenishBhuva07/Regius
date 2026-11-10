@@ -32,15 +32,27 @@ export interface AppThemeTokens {
 
 export const useAppTheme = (): AppThemeTokens => {
   const themeContext = useTheme();
-  const { isDarkMode, activeThemeId, Colors, toggleTheme, setDarkMode, themePresets } = themeContext;
+  const {
+    isDarkMode,
+    activeThemeId,
+    Colors,
+    toggleTheme,
+    setDarkMode,
+    themePresets,
+  } = themeContext;
 
-  const bgMain = isDarkMode ? '#121417' : StaticColors.CreamBackground;
-  const cardBg = isDarkMode ? '#1E2228' : '#FFFFFF';
-  const surfaceAlt = isDarkMode ? '#181B20' : '#FAF8F5';
-  const inputBg = isDarkMode ? '#171A1F' : '#FFFFFF';
-  const textPrimary = isDarkMode ? '#FFFFFF' : '#111111';
-  const textSecondary = isDarkMode ? '#A3A8B1' : '#666665';
-  const borderLight = isDarkMode ? '#2C3035' : '#EAE5D9';
+  const bgMain =
+    Colors.Background ||
+    (isDarkMode ? '#121417' : StaticColors.CreamBackground);
+  const cardBg = Colors.CardBackground || (isDarkMode ? '#1E2228' : '#FFFFFF');
+  const surfaceAlt = Colors.SurfaceAlt || (isDarkMode ? '#181B20' : '#FAF8F5');
+  const inputBg = isDarkMode ? Colors.SurfaceAlt || '#171A1F' : '#FFFFFF';
+  const textPrimary =
+    Colors.PrimaryText || (isDarkMode ? '#FFFFFF' : '#111111');
+  const textSecondary =
+    Colors.SecondaryText || (isDarkMode ? '#A3A8B1' : '#666665');
+  const borderLight =
+    Colors.BorderLight || (isDarkMode ? '#2C3035' : '#EAE5D9');
   const borderSubtle = isDarkMode ? '#22252B' : '#F0ECE1';
 
   const getCategoryTheme = useMemo(() => {
@@ -130,4 +142,3 @@ export const useAppTheme = (): AppThemeTokens => {
 };
 
 export default useAppTheme;
-

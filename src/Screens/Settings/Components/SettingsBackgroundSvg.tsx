@@ -23,7 +23,7 @@ export interface SettingsBackgroundSvgProps {
 // Background pattern for Settings screen.
 export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
   React.memo(({ width: propWidth, height: propHeight }) => {
-    const { isDarkMode } = useSettingsTheme();
+    const { isDarkMode, bgMain } = useSettingsTheme();
 
     const [dimensions, setDimensions] = useState<{
       width: number;
@@ -70,22 +70,22 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             >
               <Stop
                 offset="0%"
-                stopColor={isDarkMode ? '#121417' : '#FFFDF2'}
+                stopColor={isDarkMode ? bgMain : '#FFFDF2'}
                 stopOpacity={1}
               />
               <Stop
                 offset="30%"
-                stopColor={isDarkMode ? '#161920' : '#FFFCE8'}
+                stopColor={isDarkMode ? bgMain : '#FFFCE8'}
                 stopOpacity={1}
               />
               <Stop
                 offset="70%"
-                stopColor={isDarkMode ? '#191C24' : '#FAF5E8'}
+                stopColor={isDarkMode ? bgMain : '#FAF5E8'}
                 stopOpacity={1}
               />
               <Stop
                 offset="100%"
-                stopColor={isDarkMode ? '#121417' : '#F5EFE0'}
+                stopColor={isDarkMode ? bgMain : '#F5EFE0'}
                 stopOpacity={1}
               />
             </LinearGradient>
@@ -113,7 +113,7 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
               />
               <Stop
                 offset="100%"
-                stopColor={isDarkMode ? '#121417' : '#FFFCE8'}
+                stopColor={isDarkMode ? bgMain : '#FFFCE8'}
                 stopOpacity={0}
               />
             </RadialGradient>
@@ -136,7 +136,7 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
               />
               <Stop
                 offset="100%"
-                stopColor={isDarkMode ? '#121417' : '#FAF5E8'}
+                stopColor={isDarkMode ? bgMain : '#FAF5E8'}
                 stopOpacity={0}
               />
             </RadialGradient>
@@ -159,7 +159,7 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
               />
               <Stop
                 offset="100%"
-                stopColor={isDarkMode ? '#121417' : '#FAF5E8'}
+                stopColor={isDarkMode ? bgMain : '#FAF5E8'}
                 stopOpacity={0}
               />
             </RadialGradient>

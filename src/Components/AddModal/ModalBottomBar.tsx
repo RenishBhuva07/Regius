@@ -30,8 +30,8 @@ export interface ModalBottomBarProps {
 const getBottomBarBgColor = (themeId: string, isDark: boolean): string => {
   if (isDark) {
     switch (themeId) {
-      case 'champagne_gold':
-        return '#2A2318';
+      case 'cyprus_sand':
+        return '#003835';
       case 'emerald_velvet':
         return '#12261E';
       case 'celestial_azure':
@@ -45,8 +45,8 @@ const getBottomBarBgColor = (themeId: string, isDark: boolean): string => {
     }
   } else {
     switch (themeId) {
-      case 'champagne_gold':
-        return '#C5A059';
+      case 'cyprus_sand':
+        return '#004643';
       case 'emerald_velvet':
         return '#1B9A72';
       case 'celestial_azure':
@@ -143,7 +143,10 @@ export const ModalBottomBar: React.FC<ModalBottomBarProps> = ({
             activeOpacity={0.9}
             onPress={handlePressSubmit}
             disabled={disabled}
-            style={[styles.heroSubmitBtn, disabled && styles.heroSubmitBtnDisabled]}
+            style={[
+              styles.heroSubmitBtn,
+              disabled && styles.heroSubmitBtnDisabled,
+            ]}
             accessibilityRole="button"
             accessibilityLabel={submitAccessibilityLabel ?? submitText}
           >
@@ -257,4 +260,3 @@ const styles = StyleSheet.create({
 });
 
 export default ModalBottomBar;
-

@@ -35,8 +35,9 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
       cp: CP = 18,
       borderW: BAR_BORDER_W = 4,
     }) => {
-      const { isDarkMode } = useTheme();
-      const strokeColor = isDarkMode ? '#121417' : Colors.CreamBackground;
+      const { isDarkMode, Colors: themeColors } = useTheme();
+      const strokeColor =
+        themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
       const cx = W / 2;
 
       const d = [

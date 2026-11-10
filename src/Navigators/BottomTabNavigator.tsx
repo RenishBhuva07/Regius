@@ -96,7 +96,7 @@ const getTabX = (slot: number): number =>
 
 const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
   const insets = useSafeAreaInsets();
-  const { isDarkMode } = useTheme();
+  const { isDarkMode, Colors: themeColors } = useTheme();
   const safeBot = Math.max(insets.bottom, 8);
 
   // Height the nav system reserves: bar + button float + safe area
@@ -314,6 +314,8 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
             styles.activeIndicator,
             {
               transform: [{ translateX: indicatorX }],
+              backgroundColor:
+                themeColors.Background || (isDarkMode ? '#121417' : '#FFFFFF'),
             },
           ]}
         >
@@ -360,7 +362,7 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
             styles.btnHalo,
             styles.btnShadow,
             isDarkMode && {
-              backgroundColor: '#121417',
+              backgroundColor: themeColors.Background || '#121417',
               borderTopColor: '#2C3035',
               borderLeftColor: '#22252B',
               borderRightColor: '#22252B',

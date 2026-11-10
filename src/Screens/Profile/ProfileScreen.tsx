@@ -35,7 +35,7 @@ const PROFILE_STORAGE_KEY = '@regius_profile_data';
 export const ProfileScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
-  const { isDarkMode } = useTheme();
+  const { isDarkMode, Colors: themeColors } = useTheme();
   const { tasks, habits } = useTaskReminder();
 
   const [name, setName] = useState('Alex Mercer');
@@ -120,7 +120,8 @@ export const ProfileScreen: React.FC = () => {
     });
   };
 
-  const bgMain = isDarkMode ? '#121417' : Colors.CreamBackground;
+  const bgMain =
+    themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
 
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>

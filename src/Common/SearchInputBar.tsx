@@ -31,16 +31,22 @@ export const SearchInputBar: React.FC<SearchInputBarProps> = React.memo(
     containerStyle,
     autoFocus = false,
   }) => {
-    const { isDarkMode } = useTheme();
+    const { isDarkMode, Colors: themeColors } = useTheme();
     const [isFocused, setIsFocused] = useState(false);
 
-    const cardBg = isDarkMode ? '#1E2228' : Colors.DefaultWhite;
-    const textPrimary = isDarkMode
-      ? Colors.PureWhiteText
-      : Colors.MidnightInkText;
-    const textSecondary = isDarkMode ? '#A3A8B1' : Colors.SubtitleGray;
-    const borderDefault = isDarkMode ? '#2C3035' : '#EAE5D9';
-    const borderActive = isDarkMode ? '#8383D6' : Colors.LavenderPurple;
+    const cardBg =
+      themeColors.CardBackground ||
+      (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
+    const textPrimary =
+      themeColors.PrimaryText ||
+      (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
+    const textSecondary =
+      themeColors.SecondaryText ||
+      (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+    const borderDefault =
+      themeColors.BorderLight || (isDarkMode ? '#2C3035' : '#EAE5D9');
+    const borderActive =
+      themeColors.Accent || (isDarkMode ? '#8383D6' : Colors.LavenderPurple);
 
     const handleClear = () => {
       onChangeText('');

@@ -48,17 +48,17 @@ export const lightColors = {
 };
 
 // Prestige light themes
-export const champagneGoldLightColors = {
+export const cyprusSandLightColors = {
   ...lightColors,
-  Background: '#FAF6EE',
+  Background: '#F0EDE5',
   CardBackground: '#FFFFFF',
-  PrimaryText: '#241E15',
-  SecondaryText: '#7A6E5D',
-  ButtonBackground: '#C5A059',
-  ButtonText: '#FFFFFF',
-  Accent: '#C5A059',
-  SurfaceAlt: '#F5EFE4',
-  BorderLight: '#EBE2D3',
+  PrimaryText: '#002B28',
+  SecondaryText: '#566B67',
+  ButtonBackground: '#004643',
+  ButtonText: '#F0EDE5',
+  Accent: '#004643',
+  SurfaceAlt: '#E6E2D8',
+  BorderLight: '#D8D2C5',
 };
 
 export const emeraldVelvetLightColors = {
@@ -119,17 +119,17 @@ export const darkColors = {
 };
 
 // Prestige dark themes
-export const champagneGoldDarkColors = {
+export const cyprusSandDarkColors = {
   ...darkColors,
-  Background: '#161410',
-  CardBackground: '#221F18',
-  PrimaryText: '#F7E7CE',
-  SecondaryText: '#C4B59D',
-  ButtonBackground: '#D4AF37',
-  ButtonText: '#12100B',
-  Accent: '#D4AF37',
-  SurfaceAlt: '#1D1A14',
-  BorderLight: '#332E24',
+  Background: '#004643',
+  CardBackground: '#075955',
+  PrimaryText: '#F0EDE5',
+  SecondaryText: '#A1BDBA',
+  ButtonBackground: '#F0EDE5',
+  ButtonText: '#004643',
+  Accent: '#F0EDE5',
+  SurfaceAlt: '#003835',
+  BorderLight: '#0E6B66',
 };
 
 export const emeraldVelvetDarkColors = {
@@ -174,7 +174,7 @@ export const obsidianGoldDarkColors = {
 export type ThemePresetId =
   | 'classic_light'
   | 'classic_dark'
-  | 'champagne_gold'
+  | 'cyprus_sand'
   | 'emerald_velvet'
   | 'celestial_azure'
   | 'obsidian_gold';
@@ -207,6 +207,7 @@ export interface ThemePresetData {
   tagline: string;
   accent: string;
   requiredTierLevel: number;
+  palette: [ThemeColorItem, ThemeColorItem, ThemeColorItem, ThemeColorItem];
   lightPalette: [
     ThemeColorItem,
     ThemeColorItem,
@@ -216,37 +217,96 @@ export interface ThemePresetData {
   darkPalette: [ThemeColorItem, ThemeColorItem, ThemeColorItem, ThemeColorItem];
 }
 
+/**
+ * Helper to generate a full theme color dictionary from 4 primary colors.
+ * Used for easily adding new custom themes in the future.
+ */
+export const createThemePalette = (
+  canvas: string,
+  surface: string,
+  accent: string,
+  foreground: string,
+  overrides?: Partial<typeof lightColors>,
+): typeof lightColors => {
+  const isDark = !isLightColor(canvas);
+  const base = isDark ? darkColors : lightColors;
+  return {
+    ...base,
+    Background: canvas,
+    CardBackground: surface,
+    Accent: accent,
+    PrimaryText: foreground,
+    SecondaryText: isDark ? '#A3A8B1' : '#666665',
+    ButtonBackground: isDark ? accent : '#242424',
+    ButtonText: isDark
+      ? isLightColor(accent)
+        ? '#000000'
+        : '#FFFFFF'
+      : '#FFFFFF',
+    SurfaceAlt: isDark ? '#171A1F' : '#FAF8F5',
+    BorderLight: isDark ? '#2C3035' : '#E8E2D5',
+    ...overrides,
+  };
+};
+
+/**
+ * Helper to generate a full theme color dictionary from ONLY TWO colors:
+ * Canvas (Background) and Accent (Brand Highlight), benchmarked against Warm Cream.
+ */
+export const createThemePaletteFromTwoColors = (
+  canvas: string,
+  accent: string,
+  overrides?: Partial<typeof lightColors>,
+): typeof lightColors => {
+  const isDark = !isLightColor(canvas);
+  const surface = isDark ? '#1E2228' : '#FFFFFF';
+  const foreground = isDark ? '#FFFFFF' : '#000000';
+  return createThemePalette(canvas, surface, accent, foreground, overrides);
+};
+
 export const THEME_PRESETS_DATA: ThemePresetData[] = [
-  {
-    id: 'classic_dark',
-    name: 'Obsidian Night',
-    tagline: 'Signature obsidian noir with imperial gold accents',
-    accent: '#F5C518',
-    requiredTierLevel: 1,
-    lightPalette: [
-      { label: 'Canvas', hex: '#FFFCE3' },
-      { label: 'Surface', hex: '#FFFFFF' },
-      { label: 'Accent', hex: '#8383D6' },
-      { label: 'Foreground', hex: '#121417' },
-    ],
-    darkPalette: [
-      { label: 'Canvas', hex: '#121417' },
-      { label: 'Surface', hex: '#1E2228' },
-      { label: 'Accent', hex: '#F5C518' },
-      { label: 'Foreground', hex: '#FFFFFF' },
-    ],
-  },
   {
     id: 'classic_light',
     name: 'Warm Cream',
     tagline: 'Timeless luxury cream canvas with deep midnight ink',
     accent: '#8383D6',
     requiredTierLevel: 1,
+    palette: [
+      { label: 'Canvas', hex: '#FFFCE3' },
+      { label: 'Surface', hex: '#FFFFFF' },
+      { label: 'Accent', hex: '#8383D6' },
+      { label: 'Foreground', hex: '#000000' },
+    ],
     lightPalette: [
       { label: 'Canvas', hex: '#FFFCE3' },
       { label: 'Surface', hex: '#FFFFFF' },
       { label: 'Accent', hex: '#8383D6' },
-      { label: 'Foreground', hex: '#121417' },
+      { label: 'Foreground', hex: '#000000' },
+    ],
+    darkPalette: [
+      { label: 'Canvas', hex: '#FFFCE3' },
+      { label: 'Surface', hex: '#FFFFFF' },
+      { label: 'Accent', hex: '#8383D6' },
+      { label: 'Foreground', hex: '#000000' },
+    ],
+  },
+  {
+    id: 'classic_dark',
+    name: 'Obsidian Night',
+    tagline: 'Signature obsidian noir with imperial gold accents',
+    accent: '#F5C518',
+    requiredTierLevel: 1,
+    palette: [
+      { label: 'Canvas', hex: '#121417' },
+      { label: 'Surface', hex: '#1E2228' },
+      { label: 'Accent', hex: '#F5C518' },
+      { label: 'Foreground', hex: '#FFFFFF' },
+    ],
+    lightPalette: [
+      { label: 'Canvas', hex: '#121417' },
+      { label: 'Surface', hex: '#1E2228' },
+      { label: 'Accent', hex: '#F5C518' },
+      { label: 'Foreground', hex: '#FFFFFF' },
     ],
     darkPalette: [
       { label: 'Canvas', hex: '#121417' },
@@ -256,22 +316,28 @@ export const THEME_PRESETS_DATA: ThemePresetData[] = [
     ],
   },
   {
-    id: 'champagne_gold',
-    name: 'Champagne Gold',
-    tagline: 'Warm bronze and glowing champagne luminescence',
-    accent: '#D4AF37',
+    id: 'cyprus_sand',
+    name: 'Cyprus Sand',
+    tagline: 'Deep architectural cyprus teal with sun-bleached coastal sand',
+    accent: '#004643',
     requiredTierLevel: 2,
+    palette: [
+      { label: 'Canvas', hex: '#004643' },
+      { label: 'Surface', hex: '#075955' },
+      { label: 'Accent', hex: '#F0EDE5' },
+      { label: 'Foreground', hex: '#F0EDE5' },
+    ],
     lightPalette: [
-      { label: 'Canvas', hex: '#FAF6EE' },
+      { label: 'Canvas', hex: '#F0EDE5' },
       { label: 'Surface', hex: '#FFFFFF' },
-      { label: 'Accent', hex: '#C5A059' },
-      { label: 'Foreground', hex: '#241E15' },
+      { label: 'Accent', hex: '#004643' },
+      { label: 'Foreground', hex: '#002B28' },
     ],
     darkPalette: [
-      { label: 'Canvas', hex: '#161410' },
-      { label: 'Surface', hex: '#221F18' },
-      { label: 'Accent', hex: '#D4AF37' },
-      { label: 'Foreground', hex: '#F7E7CE' },
+      { label: 'Canvas', hex: '#004643' },
+      { label: 'Surface', hex: '#075955' },
+      { label: 'Accent', hex: '#F0EDE5' },
+      { label: 'Foreground', hex: '#F0EDE5' },
     ],
   },
   {
@@ -280,11 +346,17 @@ export const THEME_PRESETS_DATA: ThemePresetData[] = [
     tagline: 'Imperial deep emerald with radiant mint luster',
     accent: '#2ECC71',
     requiredTierLevel: 3,
+    palette: [
+      { label: 'Canvas', hex: '#0F1A15' },
+      { label: 'Surface', hex: '#162720' },
+      { label: 'Accent', hex: '#2ECC71' },
+      { label: 'Foreground', hex: '#E3F7EE' },
+    ],
     lightPalette: [
-      { label: 'Canvas', hex: '#F0F7F4' },
-      { label: 'Surface', hex: '#FFFFFF' },
-      { label: 'Accent', hex: '#1B9A72' },
-      { label: 'Foreground', hex: '#0E231B' },
+      { label: 'Canvas', hex: '#0F1A15' },
+      { label: 'Surface', hex: '#162720' },
+      { label: 'Accent', hex: '#2ECC71' },
+      { label: 'Foreground', hex: '#E3F7EE' },
     ],
     darkPalette: [
       { label: 'Canvas', hex: '#0F1A15' },
@@ -299,11 +371,17 @@ export const THEME_PRESETS_DATA: ThemePresetData[] = [
     tagline: 'Deep cosmic sapphire with electric celestial blue',
     accent: '#60A5FA',
     requiredTierLevel: 4,
+    palette: [
+      { label: 'Canvas', hex: '#0D1424' },
+      { label: 'Surface', hex: '#141D34' },
+      { label: 'Accent', hex: '#60A5FA' },
+      { label: 'Foreground', hex: '#E6EEFA' },
+    ],
     lightPalette: [
-      { label: 'Canvas', hex: '#F0F4FC' },
-      { label: 'Surface', hex: '#FFFFFF' },
-      { label: 'Accent', hex: '#3B82F6' },
-      { label: 'Foreground', hex: '#0E1A33' },
+      { label: 'Canvas', hex: '#0D1424' },
+      { label: 'Surface', hex: '#141D34' },
+      { label: 'Accent', hex: '#60A5FA' },
+      { label: 'Foreground', hex: '#E6EEFA' },
     ],
     darkPalette: [
       { label: 'Canvas', hex: '#0D1424' },
@@ -318,11 +396,17 @@ export const THEME_PRESETS_DATA: ThemePresetData[] = [
     tagline: 'Supreme jet black with pure 24K sovereign gold luster',
     accent: '#FFD700',
     requiredTierLevel: 5,
+    palette: [
+      { label: 'Canvas', hex: '#08080A' },
+      { label: 'Surface', hex: '#121217' },
+      { label: 'Accent', hex: '#FFD700' },
+      { label: 'Foreground', hex: '#FFFDF0' },
+    ],
     lightPalette: [
-      { label: 'Canvas', hex: '#F7F7F8' },
-      { label: 'Surface', hex: '#FFFFFF' },
-      { label: 'Accent', hex: '#D4AF37' },
-      { label: 'Foreground', hex: '#111113' },
+      { label: 'Canvas', hex: '#08080A' },
+      { label: 'Surface', hex: '#121217' },
+      { label: 'Accent', hex: '#FFD700' },
+      { label: 'Foreground', hex: '#FFFDF0' },
     ],
     darkPalette: [
       { label: 'Canvas', hex: '#08080A' },
@@ -333,29 +417,14 @@ export const THEME_PRESETS_DATA: ThemePresetData[] = [
   },
 ];
 
-export const getThemePresetsForMode = (isDark: boolean): ThemeOption[] => {
-  return THEME_PRESETS_DATA.map(item => {
-    // For classic_light vs classic_dark, keep their primary brand previewBg
-    const previewBg =
-      item.id === 'classic_light'
-        ? item.lightPalette[0].hex
-        : item.id === 'classic_dark'
-        ? item.darkPalette[0].hex
-        : isDark
-        ? item.darkPalette[0].hex
-        : item.lightPalette[0].hex;
+export const THEME_PRESETS: ThemeOption[] = THEME_PRESETS_DATA.map(item => ({
+  ...item,
+  previewBg: item.palette[0].hex,
+}));
 
-    const palette = isDark ? item.darkPalette : item.lightPalette;
-
-    return {
-      ...item,
-      previewBg,
-      palette,
-    };
-  });
+export const getThemePresetsForMode = (_isDark?: boolean): ThemeOption[] => {
+  return THEME_PRESETS;
 };
-
-export const THEME_PRESETS: ThemeOption[] = getThemePresetsForMode(false);
 
 interface ThemeContextType {
   isDarkMode: boolean;
@@ -384,7 +453,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   const [activeThemeId, setActiveThemeIdState] = useState<ThemePresetId>(
     systemTheme === 'dark' ? 'classic_dark' : 'classic_light',
   );
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(systemTheme === 'dark');
 
   useEffect(() => {
     AsyncStorage.getItem(THEME_STORAGE_KEY)
@@ -394,100 +462,50 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
         }
       })
       .catch(() => {});
-
-    AsyncStorage.getItem(DARK_MODE_STORAGE_KEY)
-      .then(saved => {
-        if (saved !== null) {
-          setIsDarkMode(saved === 'true');
-        }
-      })
-      .catch(() => {});
   }, []);
 
   const setActiveThemeId = useCallback((id: ThemePresetId) => {
     setActiveThemeIdState(id);
     AsyncStorage.setItem(THEME_STORAGE_KEY, id).catch(() => {});
-
-    // Automatically align dark mode when user explicitly selects classic_light or classic_dark
-    if (id === 'classic_light') {
-      setIsDarkMode(false);
-      AsyncStorage.setItem(DARK_MODE_STORAGE_KEY, 'false').catch(() => {});
-    } else if (id === 'classic_dark') {
-      setIsDarkMode(true);
-      AsyncStorage.setItem(DARK_MODE_STORAGE_KEY, 'true').catch(() => {});
-    }
   }, []);
 
   const toggleTheme = useCallback(() => {
-    setIsDarkMode(prev => {
-      const next = !prev;
-      AsyncStorage.setItem(DARK_MODE_STORAGE_KEY, String(next)).catch(() => {});
-
-      // If on classic themes, seamlessly align activeThemeId
-      setActiveThemeIdState(currTheme => {
-        if (currTheme === 'classic_light' && next) {
-          AsyncStorage.setItem(THEME_STORAGE_KEY, 'classic_dark').catch(
-            () => {},
-          );
-          return 'classic_dark';
-        }
-        if (currTheme === 'classic_dark' && !next) {
-          AsyncStorage.setItem(THEME_STORAGE_KEY, 'classic_light').catch(
-            () => {},
-          );
-          return 'classic_light';
-        }
-        return currTheme;
-      });
-
-      return next;
+    setActiveThemeIdState(currTheme => {
+      const nextTheme =
+        currTheme === 'classic_light' ? 'classic_dark' : 'classic_light';
+      AsyncStorage.setItem(THEME_STORAGE_KEY, nextTheme).catch(() => {});
+      return nextTheme;
     });
   }, []);
 
   const setDarkMode = useCallback((enabled: boolean) => {
-    setIsDarkMode(enabled);
-    AsyncStorage.setItem(DARK_MODE_STORAGE_KEY, String(enabled)).catch(
-      () => {},
-    );
+    const nextTheme = enabled ? 'classic_dark' : 'classic_light';
+    setActiveThemeIdState(nextTheme);
+    AsyncStorage.setItem(THEME_STORAGE_KEY, nextTheme).catch(() => {});
   }, []);
 
   const activeColors = useMemo(() => {
-    if (isDarkMode) {
-      switch (activeThemeId) {
-        case 'champagne_gold':
-          return champagneGoldDarkColors;
-        case 'emerald_velvet':
-          return emeraldVelvetDarkColors;
-        case 'celestial_azure':
-          return celestialAzureDarkColors;
-        case 'obsidian_gold':
-          return obsidianGoldDarkColors;
-        case 'classic_light':
-        case 'classic_dark':
-        default:
-          return darkColors;
-      }
-    } else {
-      switch (activeThemeId) {
-        case 'champagne_gold':
-          return champagneGoldLightColors;
-        case 'emerald_velvet':
-          return emeraldVelvetLightColors;
-        case 'celestial_azure':
-          return celestialAzureLightColors;
-        case 'obsidian_gold':
-          return obsidianGoldLightColors;
-        case 'classic_dark':
-        case 'classic_light':
-        default:
-          return lightColors;
-      }
+    switch (activeThemeId) {
+      case 'cyprus_sand':
+        return cyprusSandDarkColors;
+      case 'emerald_velvet':
+        return emeraldVelvetDarkColors;
+      case 'celestial_azure':
+        return celestialAzureDarkColors;
+      case 'obsidian_gold':
+        return obsidianGoldDarkColors;
+      case 'classic_dark':
+        return darkColors;
+      case 'classic_light':
+      default:
+        return lightColors;
     }
-  }, [activeThemeId, isDarkMode]);
+  }, [activeThemeId]);
 
-  const currentThemePresets = useMemo(() => {
-    return getThemePresetsForMode(isDarkMode);
-  }, [isDarkMode]);
+  // isDarkMode is now dynamically computed from the active theme's Background canvas
+  const isDarkMode = useMemo(() => {
+    return !isLightColor(activeColors.Background);
+  }, [activeColors.Background]);
 
   return (
     <ThemeContext.Provider
@@ -498,7 +516,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
         setDarkMode,
         activeThemeId,
         setActiveThemeId,
-        themePresets: currentThemePresets,
+        themePresets: THEME_PRESETS,
       }}
     >
       {children}

@@ -86,7 +86,7 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
               />
             </LinearGradient>
             <LinearGradient
-              id="champagneGold"
+              id="goldSparkle"
               x1="0%"
               y1="0%"
               x2="100%"
@@ -136,7 +136,7 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
             strokeWidth={0.7}
             fill="none"
           />
-          <Path d={starPath(width - 24, 18, 4.5)} fill="url(#champagneGold)" />
+          <Path d={starPath(width - 24, 18, 4.5)} fill="url(#goldSparkle)" />
           <Circle
             cx={width - 38}
             cy={22}
@@ -146,7 +146,7 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
           />
           <Path
             d={starPath(22, 22, 3.5)}
-            fill="url(#champagneGold)"
+            fill="url(#goldSparkle)"
             opacity={0.7}
           />
           <Circle cx={34} cy={16} r={1} fill="#C5A059" opacity={0.35} />
@@ -276,7 +276,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
               },
             ]}
           >
-            {/* Pristine luxury background with guilloché arcs & champagne micro-sparkles */}
+            {/* Pristine luxury background with guilloché arcs & gold micro-sparkles */}
             <SheetBackgroundAestheticSvg width={SHEET_W} />
 
             {/* Header row with 3D Badge + clean right tag */}

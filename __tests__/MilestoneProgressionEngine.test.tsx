@@ -81,11 +81,11 @@ describe('Milestone Progression & Pro Unlocking Engine', () => {
   });
 
   describe('Theme & Feature Entitlement Checks', () => {
-    it('locks Champagne Gold for Tier 1 non-pro users, unlocks at Tier 2', () => {
-      expect(MilestoneService.isThemeUnlocked('champagne_gold', 1, false)).toBe(
+    it('locks Cyprus Sand for Tier 1 non-pro users, unlocks at Tier 2', () => {
+      expect(MilestoneService.isThemeUnlocked('cyprus_sand', 1, false)).toBe(
         false,
       );
-      expect(MilestoneService.isThemeUnlocked('champagne_gold', 2, false)).toBe(
+      expect(MilestoneService.isThemeUnlocked('cyprus_sand', 2, false)).toBe(
         true,
       );
     });
@@ -214,7 +214,7 @@ describe('Milestone Progression & Pro Unlocking Engine', () => {
             tierProgress={0.2}
             currentInTier={41}
             requiredForTier={200}
-            activeThemeId="champagne_gold"
+            activeThemeId="cyprus_sand"
             onApplyTheme={onApplyMock}
             isDarkMode={false}
           />,
@@ -224,7 +224,7 @@ describe('Milestone Progression & Pro Unlocking Engine', () => {
       const json = JSON.stringify(tree.toJSON());
       expect(json).toContain('Focused Vanguard');
       expect(json).toContain('Luxury Bespoke Themes');
-      expect(json).toContain('Champagne Gold');
+      expect(json).toContain('Cyprus Sand');
       expect(json).toContain('Haptic Intensity Curves');
     });
   });

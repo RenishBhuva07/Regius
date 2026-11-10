@@ -33,17 +33,22 @@ const MainContainer = (props: IMainContainerProps) => {
     statusBarBackgroundColor = 'transparent',
     statusBarHidden = false,
     keyboardVerticalOffset = 0,
-    containerBackgroundColor = isDarkMode ? '#121417' : Colors.Background,
+    containerBackgroundColor = Colors.Background ||
+      (isDarkMode ? '#121417' : Colors.CreamBackground),
     translucent = true,
   } = props;
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard?.dismiss} accessible={false}>
-      <View style={[styles.root, { backgroundColor: containerBackgroundColor }]}>
+      <View
+        style={[styles.root, { backgroundColor: containerBackgroundColor }]}
+      >
         <StatusBar
           barStyle={statusBarStyle}
           hidden={statusBarHidden}
-          {...(Platform.OS === 'android' ? { backgroundColor: statusBarBackgroundColor, translucent } : {})}
+          {...(Platform.OS === 'android'
+            ? { backgroundColor: statusBarBackgroundColor, translucent }
+            : {})}
         />
 
         <KeyboardAvoidingView
@@ -51,8 +56,16 @@ const MainContainer = (props: IMainContainerProps) => {
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           keyboardVerticalOffset={keyboardVerticalOffset}
         >
-          <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right', 'bottom']}>
-            <View style={[styles.innerContent, { backgroundColor: containerBackgroundColor }]}>
+          <SafeAreaView
+            style={styles.safeArea}
+            edges={['top', 'left', 'right', 'bottom']}
+          >
+            <View
+              style={[
+                styles.innerContent,
+                { backgroundColor: containerBackgroundColor },
+              ]}
+            >
               {children}
             </View>
           </SafeAreaView>

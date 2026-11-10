@@ -141,7 +141,8 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
   habitToEdit,
 }) => {
   const insets = useSafeAreaInsets();
-  const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
+  const { isDarkMode, bgMain, cardBg, textPrimary, textSecondary } =
+    useAppTheme();
   const voiceContext = useOptionalVoiceWakeWord();
   const assistantName = voiceContext?.assistantName || 'Regius';
   const { width: screenWidth } = Dimensions.get('window');
@@ -329,14 +330,14 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
       <View
         style={[
           styles.canvasContainer,
-          isDarkMode && { backgroundColor: '#121417' },
+          isDarkMode && { backgroundColor: bgMain },
         ]}
       >
         <StatusBar
           barStyle={isDarkMode ? 'light-content' : 'dark-content'}
           {...(Platform.OS === 'android'
             ? {
-                backgroundColor: isDarkMode ? '#121417' : '#FAF8F5',
+                backgroundColor: isDarkMode ? bgMain : '#FAF8F5',
                 translucent: true,
               }
             : {})}
@@ -380,7 +381,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
             <View
               style={[
                 styles.primaryCardWrapper,
-                isDarkMode && { backgroundColor: '#1E2228' },
+                isDarkMode && { backgroundColor: cardBg },
                 { shadowColor: activeCategory.shadowColor },
               ]}
             >
@@ -398,7 +399,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
               <View
                 style={[
                   styles.primaryCard,
-                  isDarkMode && { backgroundColor: '#1E2228' },
+                  isDarkMode && { backgroundColor: cardBg },
                   {
                     borderColor: activeCategory.borderColor,
                   },

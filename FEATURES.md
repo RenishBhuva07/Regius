@@ -553,7 +553,7 @@ sequenceDiagram
   - **XP Formula**: +15 XP per Task completed, +10 XP per Reminder completed, +20 XP per Habit kept, +2 XP per day of habit streak.
   - **5-Tier Royalty Ladder**:
     - **Tier 1: Novice Initiate (0 XP)**: Core tasks, standard Kokoro voice.
-    - **Tier 2: Focused Vanguard (100 XP)**: Unlocks _Champagne Gold Theme_, Haptic Intensity selector, Wake Word quick presets.
+    - **Tier 2: Focused Vanguard (100 XP)**: Unlocks _Cyprus Sand Theme_, Haptic Intensity selector, Wake Word quick presets.
     - **Tier 3: Habitual Artisan (300 XP)**: Unlocks _Emerald Velvet Theme_, Priority Kokoro Neural Voice Synthesis, Smart Audio cache flush tools.
     - **Tier 4: Productive Master (600 XP)**: Unlocks _Celestial Azure Theme_, Custom Wake Word Studio privileges, Smart AI workflow categorization.
     - **Tier 5: Regius Sovereign (1000+ XP)**: Unlocks _Obsidian Sovereign Theme_, Imperial Crown Profile Accent, all Pro features permanently unlocked.
@@ -567,15 +567,16 @@ sequenceDiagram
 
 ### 2.16 Prestige Themes & Color System Screen
 
-- **Purpose**: Full-screen luxury theme showroom displaying all bespoke color palettes, 4 round color swatches with hex color codes in a single horizontal row, live interactive UI preview, milestone unlock tiers, and active status indicators.
+- **Purpose**: Full-screen luxury theme showroom displaying all bespoke standalone color palettes, 4 round color swatches with hex color codes in a single horizontal row, live interactive UI preview, milestone unlock tiers, and active status indicators. Removes binary dark/light mode toggle in favor of distinct standalone themes with automatic canvas luminance detection.
 - **Files Owned**:
   - `src/Screens/Theme/ThemeScreen.tsx` (Redesigned with 2-layer obsidian Live Mockup hero bento, 4px ceramic rim, SettingsBackgroundSvg, scroll-reactive header with HeaderPatternSvg, single-line 4-color round swatches with uppercase hex codes, and milestone gating modal)
   - `src/Screens/Theme/index.ts` (Theme screen barrel export)
-  - `src/Theme/ThemeContext.tsx` (Theme palettes metadata, 4-color definitions, and `@regius_active_theme_id` persistence)
-  - `src/Screens/Settings/Components/AppearanceSection.tsx` (Interactive header navigation to `ThemeScreen`)
+  - `src/Theme/ThemeContext.tsx` (Standalone theme palettes metadata, 4-color definitions, `createThemePalette` generator, automatic `isDarkMode` calculation, and `@regius_active_theme_id` persistence)
+  - `src/Screens/Settings/Components/AppearanceSection.tsx` (Interactive 4-quadrant round circle theme selector with edge-to-edge scroll and direct navigation to `ThemeScreen`)
   - `src/Navigators/AppNavigator.tsx` (Stack screen registration)
 - **Key Capabilities**:
-  - **Single-Line 4-Color Round Swatches**: Each theme card features exactly 4 round circular color swatches (`width: 38`, `height: 38`, `borderRadius: 19`, 1.5px border, subtle specular depth) aligned horizontally in one row. Each swatch displays its uppercase hexadecimal color code (e.g. `#121417`, `#FFFCE3`, `#D4AF37`) and semantic role label (`Canvas`, `Surface`, `Accent`, `Foreground`). Tapping any swatch emits tactile haptic feedback and displays a toast with color details.
+  - **4-Quadrant Round Circle Prestige Theme Swatches in Settings**: `AppearanceSection.tsx` features 4-color quadrant round discs (`Canvas`, `Surface`, `Accent`, `Foreground`) with edge-to-edge horizontal scrolling, active accent border with bottom-right check badge, lock overlay, and centered theme typography.
+  - **Single-Line 4-Color Round Swatches in ThemeScreen**: Each theme card features exactly 4 round circular color swatches (`width: 38`, `height: 38`, `borderRadius: 19`, 1.5px border, subtle specular depth) aligned horizontally in one row. Each swatch displays its uppercase hexadecimal color code (e.g. `#121417`, `#FFFCE3`, `#D4AF37`) and semantic role label (`Canvas`, `Surface`, `Accent`, `Foreground`). Tapping any swatch emits tactile haptic feedback and displays a toast with color details.
   - **Status Indications**:
     - **Selected Theme**: Highlighted with a luminous accent border, 3D `<Badge label="CURRENT THEME" variant="green" size="sm" />`, and "Active Palette Applied" banner.
     - **Unlocked Theme**: Displayed with 3D `<Badge label="UNLOCKED" variant="neutral" size="sm" />` and 1-tap "Apply Theme" button with tactile vibration.

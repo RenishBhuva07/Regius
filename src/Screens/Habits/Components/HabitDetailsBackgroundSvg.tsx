@@ -28,7 +28,7 @@ export interface HabitDetailsBackgroundSvgProps {
 export const HabitDetailsBackgroundSvg: React.FC<HabitDetailsBackgroundSvgProps> =
   React.memo(
     ({ accentColor = '#8383D6', width: propWidth, height: propHeight }) => {
-      const { isDarkMode } = useTheme();
+      const { isDarkMode, Colors: themeColors } = useTheme();
       const [dimensions, setDimensions] = useState<{
         width: number;
         height: number;
@@ -78,7 +78,11 @@ export const HabitDetailsBackgroundSvg: React.FC<HabitDetailsBackgroundSvgProps>
                 />
                 <Stop
                   offset="35%"
-                  stopColor={isDarkMode ? '#121417' : '#FAF7EF'}
+                  stopColor={
+                    isDarkMode
+                      ? themeColors.Background || '#121417'
+                      : '#FAF7EF'
+                  }
                   stopOpacity={isDarkMode ? 0.99 : 0.96}
                 />
                 <Stop

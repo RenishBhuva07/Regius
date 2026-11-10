@@ -58,10 +58,10 @@ export const MILESTONE_TIERS: MilestoneTier[] = [
     accentColor: '#F5C518',
     unlockedThemes: [
       {
-        id: 'champagne_gold',
-        name: 'Champagne Gold',
-        hex: '#D4AF37',
-        desc: 'Radiant champagne accents with warm bronze tint',
+        id: 'cyprus_sand',
+        name: 'Cyprus Sand',
+        hex: '#004643',
+        desc: 'Deep cyprus teal canvas with luminous sand accents',
       },
     ],
     unlockedFeatures: [

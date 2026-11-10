@@ -43,7 +43,7 @@ const { width: screenWidth } = Dimensions.get('window');
 export const WakeWordStudioScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
-  const { isDarkMode } = useTheme();
+  const { isDarkMode, Colors: themeColors } = useTheme();
 
   const {
     wakeWordPhrase,
@@ -146,14 +146,19 @@ export const WakeWordStudioScreen: React.FC = () => {
     }
   };
 
-  const bgMain = isDarkMode ? '#121417' : Colors.CreamBackground;
-  const cardBg = isDarkMode ? '#1E2228' : Colors.DefaultWhite;
-  const textPrimary = isDarkMode
-    ? Colors.PureWhiteText
-    : Colors.MidnightInkText;
-  const textSecondary = isDarkMode ? '#A3A8B1' : Colors.SubtitleGray;
-  const borderLight = isDarkMode ? '#2C3035' : '#E8E2D5';
-  const surfaceAlt = isDarkMode ? '#171A1F' : '#FAF8F5';
+  const bgMain =
+    themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
+  const cardBg =
+    themeColors.CardBackground || (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
+  const textPrimary =
+    themeColors.PrimaryText ||
+    (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
+  const textSecondary =
+    themeColors.SecondaryText || (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+  const borderLight =
+    themeColors.BorderLight || (isDarkMode ? '#2C3035' : '#E8E2D5');
+  const surfaceAlt =
+    themeColors.SurfaceAlt || (isDarkMode ? '#171A1F' : '#FAF8F5');
 
   const renderRightAction = useCallback(
     (scrolled: boolean) => (

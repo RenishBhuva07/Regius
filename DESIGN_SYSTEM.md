@@ -126,7 +126,7 @@ Every theme preset in Regius is constructed with dedicated, bespoke **Light Mode
 | :------------------------------ | :----------------------- | :---------------- | :-------------- | :------------------- |
 | **Warm Cream** (Tier 1)         | `#FFFCE3`                | `#FFFFFF`         | `#8383D6`       | `#121417`            |
 | **Obsidian Night** (Tier 1)     | `#FFFCE3`                | `#FFFFFF`         | `#8383D6`       | `#121417`            |
-| **Champagne Gold** (Tier 2)     | `#FAF6EE`                | `#FFFFFF`         | `#C5A059`       | `#241E15`            |
+| **Cyprus Sand** (Tier 2)        | `#F0EDE5`                | `#FFFFFF`         | `#004643`       | `#002B28`            |
 | **Emerald Velvet** (Tier 3)     | `#F0F7F4`                | `#FFFFFF`         | `#1B9A72`       | `#0E231B`            |
 | **Celestial Azure** (Tier 4)    | `#F0F4FC`                | `#FFFFFF`         | `#3B82F6`       | `#0E1A33`            |
 | **Obsidian Sovereign** (Tier 5) | `#F7F7F8`                | `#FFFFFF`         | `#D4AF37`       | `#111113`            |
@@ -137,7 +137,7 @@ Every theme preset in Regius is constructed with dedicated, bespoke **Light Mode
 | :------------------------------ | :----------------------- | :---------------- | :-------------- | :------------------- |
 | **Obsidian Night** (Tier 1)     | `#121417`                | `#1E2228`         | `#F5C518`       | `#FFFFFF`            |
 | **Warm Cream** (Tier 1)         | `#121417`                | `#1E2228`         | `#F5C518`       | `#FFFFFF`            |
-| **Champagne Gold** (Tier 2)     | `#161410`                | `#221F18`         | `#D4AF37`       | `#F7E7CE`            |
+| **Cyprus Sand** (Tier 2)        | `#004643`                | `#075955`         | `#F0EDE5`       | `#F0EDE5`            |
 | **Emerald Velvet** (Tier 3)     | `#0F1A15`                | `#162720`         | `#2ECC71`       | `#E3F7EE`            |
 | **Celestial Azure** (Tier 4)    | `#0D1424`                | `#141D34`         | `#60A5FA`       | `#E6EEFA`            |
 | **Obsidian Sovereign** (Tier 5) | `#08080A`                | `#121217`         | `#FFD700`       | `#FFFDF0`            |
@@ -583,7 +583,7 @@ Regius employs a signature dual-tier luxury header architecture where scrolling 
 
 - **Placement & Motion**: Floats right above the center dock with a subtle pointer notch pointing down toward the plus/cross button, backed by a soft dim backdrop (`rgba(18, 20, 23, 0.42)`). Features a silky-smooth entrance spring animation (`tension: 85, friction: 9`).
 - **Signature 2-Layer Shadow Wrapper**: Outer wrapper provides volumetric luxury drop shadow (`shadowColor: '#121417', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.18, shadowRadius: 20, elevation: 16`) encasing an inner clipped card (`borderRadius: 26, borderWidth: 1.5, borderColor: '#E8E2D5'`).
-- **Pristine Luxury Background (`SheetBackgroundAestheticSvg`)**: Clean warm ivory canvas with delicate concentric champagne celestial guilloché arcs, perimeter registration frame, and micro-sparkles.
+- **Pristine Luxury Background (`SheetBackgroundAestheticSvg`)**: Clean warm ivory canvas with delicate concentric gold celestial guilloché arcs, perimeter registration frame, and micro-sparkles.
 - **Header with Right Tag**: Left-aligned 3D `QUICK CREATE` badge paired with an elegant right-aligned `INSTANT` tag with gold sparkle.
 - **3 Responsive Action Cards (158px Compact Height)**:
   1. **Add Task**: `#EFF2FE`, border `#D8DBFF`, lavender accent `#8383D6`, `TO-DO` 3D badge.

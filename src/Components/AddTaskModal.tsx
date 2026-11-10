@@ -142,7 +142,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
   taskToEdit,
 }) => {
   const insets = useSafeAreaInsets();
-  const { isDarkMode } = useAppTheme();
+  const { isDarkMode, bgMain, cardBg } = useAppTheme();
   const voiceContext = useOptionalVoiceWakeWord();
   const assistantName = voiceContext?.assistantName || 'Regius';
   const isEditing = !!taskToEdit;
@@ -436,14 +436,14 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
       <View
         style={[
           styles.canvasContainer,
-          isDarkMode && { backgroundColor: '#121417' },
+          isDarkMode && { backgroundColor: bgMain },
         ]}
       >
         <StatusBar
           barStyle={isDarkMode ? 'light-content' : 'dark-content'}
           {...(Platform.OS === 'android'
             ? {
-                backgroundColor: isDarkMode ? '#121417' : '#FAF8F5',
+                backgroundColor: isDarkMode ? bgMain : '#FAF8F5',
                 translucent: true,
               }
             : {})}
@@ -487,7 +487,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
             <View
               style={[
                 styles.primaryTaskCardWrapper,
-                isDarkMode && { backgroundColor: '#1E2228' },
+                isDarkMode && { backgroundColor: cardBg },
                 { shadowColor: activeCategory.shadowColor },
               ]}
             >
@@ -507,7 +507,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
               <View
                 style={[
                   styles.primaryTaskCard,
-                  isDarkMode && { backgroundColor: '#1E2228' },
+                  isDarkMode && { backgroundColor: cardBg },
                   {
                     borderColor: activeCategory.borderColor,
                   },

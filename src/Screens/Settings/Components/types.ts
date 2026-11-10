@@ -124,12 +124,17 @@ export const VOICES: VoiceOption[] = [
 export const useSettingsTheme = () => {
   const { Colors, isDarkMode, toggleTheme } = useTheme();
 
-  const bgMain = isDarkMode ? '#121417' : StaticColors.CreamBackground;
-  const cardBg = isDarkMode ? '#1E2228' : '#FFFFFF';
-  const textPrimary = isDarkMode ? '#FFFFFF' : '#111111';
-  const textSecondary = isDarkMode ? '#A3A8B1' : '#666665';
-  const borderLight = isDarkMode ? '#2C3035' : '#EAE5D9';
-  const surfaceAlt = isDarkMode ? '#181B20' : '#F7F5EC';
+  const bgMain =
+    Colors.Background ||
+    (isDarkMode ? '#121417' : StaticColors.CreamBackground);
+  const cardBg = Colors.CardBackground || (isDarkMode ? '#1E2228' : '#FFFFFF');
+  const textPrimary =
+    Colors.PrimaryText || (isDarkMode ? '#FFFFFF' : '#111111');
+  const textSecondary =
+    Colors.SecondaryText || (isDarkMode ? '#A3A8B1' : '#666665');
+  const borderLight =
+    Colors.BorderLight || (isDarkMode ? '#2C3035' : '#EAE5D9');
+  const surfaceAlt = Colors.SurfaceAlt || (isDarkMode ? '#181B20' : '#F7F5EC');
 
   return {
     Colors,

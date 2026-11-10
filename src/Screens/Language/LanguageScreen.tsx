@@ -139,7 +139,7 @@ type RegionFilter = 'all' | 'neural' | 'Americas' | 'Europe' | 'Asia';
 export const LanguageScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
-  const { isDarkMode } = useTheme();
+  const { isDarkMode, Colors: themeColors } = useTheme();
 
   const [selectedLanguageCode, setSelectedLanguageCode] = useState('en-US');
   const [autoDetect, setAutoDetect] = useState(false);
@@ -253,13 +253,17 @@ export const LanguageScreen: React.FC = () => {
     }
   };
 
-  const bgMain = isDarkMode ? '#121417' : Colors.CreamBackground;
-  const cardBg = isDarkMode ? '#1E2228' : Colors.DefaultWhite;
-  const textPrimary = isDarkMode
-    ? Colors.PureWhiteText
-    : Colors.MidnightInkText;
-  const textSecondary = isDarkMode ? '#A3A8B1' : Colors.SubtitleGray;
-  const borderLight = isDarkMode ? '#2C3035' : '#E8E2D5';
+  const bgMain =
+    themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
+  const cardBg =
+    themeColors.CardBackground || (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
+  const textPrimary =
+    themeColors.PrimaryText ||
+    (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
+  const textSecondary =
+    themeColors.SecondaryText || (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+  const borderLight =
+    themeColors.BorderLight || (isDarkMode ? '#2C3035' : '#E8E2D5');
 
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>

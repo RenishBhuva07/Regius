@@ -102,7 +102,7 @@ type CategoryFilter = 'All' | 'Voice' | 'Tasks' | 'Gestures' | 'Privacy';
 
 export const HelpFaqScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
-  const { isDarkMode } = useTheme();
+  const { isDarkMode, Colors: themeColors } = useTheme();
 
   const [searchQuery, setSearchQuery] = useState('');
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>('All');
@@ -150,13 +150,17 @@ export const HelpFaqScreen: React.FC = () => {
     });
   };
 
-  const bgMain = isDarkMode ? '#121417' : Colors.CreamBackground;
-  const cardBg = isDarkMode ? '#1E2228' : Colors.DefaultWhite;
-  const textPrimary = isDarkMode
-    ? Colors.PureWhiteText
-    : Colors.MidnightInkText;
-  const textSecondary = isDarkMode ? '#A3A8B1' : Colors.SubtitleGray;
-  const borderLight = isDarkMode ? '#2C3035' : '#E8E2D5';
+  const bgMain =
+    themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
+  const cardBg =
+    themeColors.CardBackground || (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
+  const textPrimary =
+    themeColors.PrimaryText ||
+    (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
+  const textSecondary =
+    themeColors.SecondaryText || (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+  const borderLight =
+    themeColors.BorderLight || (isDarkMode ? '#2C3035' : '#E8E2D5');
 
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>

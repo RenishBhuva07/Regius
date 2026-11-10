@@ -53,7 +53,8 @@ const HEADER_HEIGHT = 52;
 
 export const MilestoneFullScreenSheet: React.FC = () => {
   const insets = useSafeAreaInsets();
-  const { isDarkMode, activeThemeId, setActiveThemeId } = useTheme();
+  const { isDarkMode, activeThemeId, setActiveThemeId, Colors: themeColors } =
+    useTheme();
   const dailyQuote = useDailyQuote('milestones');
 
   const {
@@ -133,12 +134,19 @@ export const MilestoneFullScreenSheet: React.FC = () => {
     extrapolate: 'clamp',
   });
 
-  // Dynamic light/dark theme tokens
-  const sheetBg = isDarkMode ? '#121417' : StaticColors.CreamBackground;
-  const cardBg = isDarkMode ? '#1E2228' : '#FFFFFF';
-  const cardBorder = isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#E8E2D5';
-  const textPrimary = isDarkMode ? '#FFFFFF' : '#121417';
-  const textSecondary = isDarkMode ? '#8E95A5' : '#6B7280';
+  // Dynamic theme tokens
+  const sheetBg =
+    themeColors.Background ||
+    (isDarkMode ? '#121417' : StaticColors.CreamBackground);
+  const cardBg =
+    themeColors.CardBackground || (isDarkMode ? '#1E2228' : '#FFFFFF');
+  const cardBorder =
+    themeColors.BorderLight ||
+    (isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#E8E2D5');
+  const textPrimary =
+    themeColors.PrimaryText || (isDarkMode ? '#FFFFFF' : '#121417');
+  const textSecondary =
+    themeColors.SecondaryText || (isDarkMode ? '#8E95A5' : '#6B7280');
 
   const handleApplyTheme = (themeId: string, themeName: string) => {
     Vibration.vibrate(25);

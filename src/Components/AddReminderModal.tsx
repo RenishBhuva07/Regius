@@ -150,7 +150,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
   reminderToEdit,
 }) => {
   const insets = useSafeAreaInsets();
-  const { isDarkMode } = useAppTheme();
+  const { isDarkMode, bgMain, cardBg } = useAppTheme();
   const voiceContext = useOptionalVoiceWakeWord();
   const assistantName = voiceContext?.assistantName || 'Regius';
   const isEditing = !!reminderToEdit;
@@ -424,14 +424,14 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
       <View
         style={[
           styles.canvasContainer,
-          isDarkMode && { backgroundColor: '#121417' },
+          isDarkMode && { backgroundColor: bgMain },
         ]}
       >
         <StatusBar
           barStyle={isDarkMode ? 'light-content' : 'dark-content'}
           {...(Platform.OS === 'android'
             ? {
-                backgroundColor: isDarkMode ? '#121417' : '#FAF8F5',
+                backgroundColor: isDarkMode ? bgMain : '#FAF8F5',
                 translucent: true,
               }
             : {})}
@@ -475,7 +475,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
             <View
               style={[
                 styles.primaryCardWrapper,
-                isDarkMode && { backgroundColor: '#1E2228' },
+                isDarkMode && { backgroundColor: cardBg },
                 { shadowColor: activeCategory.shadowColor },
               ]}
             >
@@ -495,7 +495,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
               <View
                 style={[
                   styles.primaryCard,
-                  isDarkMode && { backgroundColor: '#1E2228' },
+                  isDarkMode && { backgroundColor: cardBg },
                   {
                     borderColor: activeCategory.borderColor,
                   },

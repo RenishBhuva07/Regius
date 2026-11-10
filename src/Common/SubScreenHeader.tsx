@@ -59,14 +59,16 @@ export const SubScreenHeader: React.FC<SubScreenHeaderProps> = ({
   containerStyle,
 }) => {
   const insets = useSafeAreaInsets();
-  const { isDarkMode } = useTheme();
+  const { isDarkMode, Colors: themeColors } = useTheme();
   const { width: screenWidth } = Dimensions.get('window');
 
-  const bgMain = isDarkMode ? '#121417' : Colors.CreamBackground;
-  const textPrimary = isDarkMode
-    ? Colors.PureWhiteText
-    : Colors.MidnightInkText;
-  const textSecondary = isDarkMode ? '#A3A8B1' : Colors.SubtitleGray;
+  const bgMain =
+    themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
+  const textPrimary =
+    themeColors.PrimaryText ||
+    (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
+  const textSecondary =
+    themeColors.SecondaryText || (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
 
   // Interpolate header visual styles based on scroll position (0 to 30px)
   const headerBgColor = scrollY.interpolate({
@@ -284,4 +286,3 @@ const styles = StyleSheet.create({
 });
 
 export default SubScreenHeader;
-

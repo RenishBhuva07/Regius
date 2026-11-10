@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Star } from 'lucide-react-native';
 
 import { Fonts } from '../../../Theme/fonts';
+import { useTheme } from '../../../Theme/ThemeContext';
 
 export interface SocialProofCardProps {
   isDarkMode: boolean;
@@ -10,10 +11,15 @@ export interface SocialProofCardProps {
 
 export const SocialProofCard: React.FC<SocialProofCardProps> = React.memo(
   ({ isDarkMode }) => {
-    const cardBg = isDarkMode ? '#1E2228' : '#FFFFFF';
-    const textPrimary = isDarkMode ? '#FFFFFF' : '#111111';
-    const textSecondary = isDarkMode ? '#A3A8B1' : '#666665';
-    const borderLight = isDarkMode ? '#2C3035' : '#EAE5D9';
+    const { Colors: themeColors } = useTheme();
+    const cardBg =
+      themeColors.CardBackground || (isDarkMode ? '#1E2228' : '#FFFFFF');
+    const textPrimary =
+      themeColors.PrimaryText || (isDarkMode ? '#FFFFFF' : '#111111');
+    const textSecondary =
+      themeColors.SecondaryText || (isDarkMode ? '#A3A8B1' : '#666665');
+    const borderLight =
+      themeColors.BorderLight || (isDarkMode ? '#2C3035' : '#EAE5D9');
 
     return (
       <View

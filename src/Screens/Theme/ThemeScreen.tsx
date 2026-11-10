@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { Sun, Moon } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
 import { Colors } from '../../Assets/StyleUtilities/Colors';
@@ -38,7 +37,7 @@ export const ThemeScreen: React.FC = () => {
     activeThemeId,
     setActiveThemeId,
     isDarkMode,
-    toggleTheme,
+    Colors: themeColors,
     themePresets,
   } = useTheme();
   const { currentTier, totalXp, isThemeUnlocked, allTiers, openMilestones } =
@@ -117,50 +116,23 @@ export const ThemeScreen: React.FC = () => {
     [],
   );
 
-  const bgMain = isDarkMode ? '#121417' : Colors.CreamBackground;
-  const cardBg = isDarkMode ? '#1E2228' : Colors.DefaultWhite;
+  const bgMain =
+    themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
+  const cardBg =
+    themeColors.CardBackground ||
+    (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
 
   const renderRightAction = useCallback(
-    (scrolled: boolean) => (
+    () => (
       <View style={styles.headerRightActions}>
-        <TouchableOpacity
-          activeOpacity={0.75}
-          onPress={toggleTheme}
-          style={[
-            styles.modeToggleBtn,
-            scrolled
-              ? styles.modeToggleBtnScrolled
-              : {
-                  backgroundColor: cardBg,
-                  borderColor: isDarkMode
-                    ? 'rgba(255, 255, 255, 0.12)'
-                    : '#FFFFFF',
-                  borderBottomColor: isDarkMode ? '#14161A' : '#DCD6CA',
-                  shadowColor: isDarkMode
-                    ? '#000000'
-                    : 'rgba(0, 0, 0, 0.08)',
-                },
-          ]}
-          accessibilityRole="button"
-          accessibilityLabel={
-            isDarkMode ? 'Switch to Light Theme' : 'Switch to Dark Theme'
-          }
-        >
-          {isDarkMode ? (
-            <Sun size={17} color="#F5C518" strokeWidth={2.4} />
-          ) : (
-            <Moon
-              size={17}
-              color={scrolled ? Colors.DefaultWhite : Colors.LavenderPurple}
-              strokeWidth={2.4}
-            />
-          )}
-        </TouchableOpacity>
-
-        <Badge label="6 PALETTES" variant="yellow" size="sm" />
+        <Badge
+          label={`${themePresets.length} PALETTES`}
+          variant="yellow"
+          size="sm"
+        />
       </View>
     ),
-    [toggleTheme, isDarkMode, cardBg],
+    [themePresets.length],
   );
 
   return (
@@ -261,28 +233,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  modeToggleBtnScrolled: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderColor: 'rgba(255, 255, 255, 0.4)',
-    borderBottomColor: 'rgba(255, 255, 255, 0.3)',
-  },
   headerRightActions: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-  },
-  modeToggleBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 1.5,
-    borderBottomWidth: 3,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
   },
   scrollView: {
     flex: 1,
