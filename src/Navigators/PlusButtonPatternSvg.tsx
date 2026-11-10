@@ -8,6 +8,7 @@ import Svg, {
   RadialGradient,
   Stop,
 } from 'react-native-svg';
+import { useTheme } from '../Theme/ThemeContext';
 
 interface PlusButtonPatternSvgProps {
   size?: number;
@@ -16,7 +17,62 @@ interface PlusButtonPatternSvgProps {
 // Pattern background for the floating center Plus button.
 export const PlusButtonPatternSvg: React.FC<PlusButtonPatternSvgProps> =
   React.memo(({ size = 54 }) => {
+    const { activeThemeId } = useTheme();
     const center = size / 2;
+
+    const getPlusBtnGradient = () => {
+      if (activeThemeId === 'cyprus_sand') {
+        return {
+          c0: '#0D7E78',
+          c30: '#0A6B66',
+          c70: '#004643',
+          c100: '#002624',
+          coreAura: '#0A6B66',
+          rimSheen: '#001A18',
+        };
+      }
+      if (activeThemeId === 'emerald_velvet') {
+        return {
+          c0: '#2ECC71',
+          c30: '#27AE60',
+          c70: '#1B9A72',
+          c100: '#0E5C43',
+          coreAura: '#2ECC71',
+          rimSheen: '#0B1711',
+        };
+      }
+      if (activeThemeId === 'celestial_azure') {
+        return {
+          c0: '#60A5FA',
+          c30: '#3B82F6',
+          c70: '#2563EB',
+          c100: '#1D4ED8',
+          coreAura: '#60A5FA',
+          rimSheen: '#090F1C',
+        };
+      }
+      if (activeThemeId === 'classic_dark' || activeThemeId === 'obsidian_gold') {
+        return {
+          c0: '#FFE066',
+          c30: '#F5C518',
+          c70: '#DEAA14',
+          c100: '#B48216',
+          coreAura: '#F5C518',
+          rimSheen: '#1A1810',
+        };
+      }
+      // Warm Cream
+      return {
+        c0: '#A2A2F8',
+        c30: '#8A8AE6',
+        c70: '#7171CE',
+        c100: '#5656B2',
+        coreAura: '#8A8AE6',
+        rimSheen: '#2E2E6E',
+      };
+    };
+
+    const plusGrad = getPlusBtnGradient();
 
     // 4-point diamond star path generator centered at (cx, cy)
     const star = (cx: number, cy: number, s: number) =>
@@ -39,10 +95,10 @@ export const PlusButtonPatternSvg: React.FC<PlusButtonPatternSvgProps> =
         >
           <Defs>
             <LinearGradient id="plusBtnBg" x1="0%" y1="0%" x2="0%" y2="100%">
-              <Stop offset="0%" stopColor="#A2A2F8" stopOpacity={1} />
-              <Stop offset="30%" stopColor="#8A8AE6" stopOpacity={1} />
-              <Stop offset="70%" stopColor="#7171CE" stopOpacity={1} />
-              <Stop offset="100%" stopColor="#5656B2" stopOpacity={1} />
+              <Stop offset="0%" stopColor={plusGrad.c0} stopOpacity={1} />
+              <Stop offset="30%" stopColor={plusGrad.c30} stopOpacity={1} />
+              <Stop offset="70%" stopColor={plusGrad.c70} stopOpacity={1} />
+              <Stop offset="100%" stopColor={plusGrad.c100} stopOpacity={1} />
             </LinearGradient>
             <RadialGradient
               id="plusCoreGlow"
@@ -53,7 +109,7 @@ export const PlusButtonPatternSvg: React.FC<PlusButtonPatternSvgProps> =
             >
               <Stop offset="0%" stopColor="#FFFCE3" stopOpacity={0.35} />
               <Stop offset="45%" stopColor="#F5C518" stopOpacity={0.15} />
-              <Stop offset="100%" stopColor="#8A8AE6" stopOpacity={0} />
+              <Stop offset="100%" stopColor={plusGrad.coreAura} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
               id="plusLensGloss"
@@ -69,7 +125,7 @@ export const PlusButtonPatternSvg: React.FC<PlusButtonPatternSvgProps> =
             <LinearGradient id="plusRimSheen" x1="0%" y1="0%" x2="0%" y2="100%">
               <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.55} />
               <Stop offset="45%" stopColor="#FFFFFF" stopOpacity={0.15} />
-              <Stop offset="100%" stopColor="#2E2E6E" stopOpacity={0.45} />
+              <Stop offset="100%" stopColor={plusGrad.rimSheen} stopOpacity={0.45} />
             </LinearGradient>
             <LinearGradient
               id="plusGoldStar"

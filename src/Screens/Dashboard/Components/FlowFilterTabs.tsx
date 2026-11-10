@@ -26,7 +26,7 @@ export interface FlowFilterTabsProps {
 
 export const FlowFilterTabs: React.FC<FlowFilterTabsProps> = React.memo(
   ({ activeFilter, onSelectFilter, tabs = DEFAULT_FILTER_TABS }) => {
-    const { isDarkMode, cardBg, borderLight, textSecondary } = useAppTheme();
+    const { isDarkMode, activeThemeId, cardBg, borderLight, textSecondary } = useAppTheme();
 
     return (
       <FlatList
@@ -48,8 +48,10 @@ export const FlowFilterTabs: React.FC<FlowFilterTabsProps> = React.memo(
                 isDarkMode && {
                   backgroundColor: cardBg,
                   borderColor: borderLight,
-                  borderBottomColor: '#171A20',
-                  shadowColor: '#000000',
+                  borderBottomColor:
+                    activeThemeId === 'cyprus_sand' ? '#C8C2B4' : '#171A20',
+                  shadowColor:
+                    activeThemeId === 'cyprus_sand' ? '#5C5441' : '#000000',
                 },
                 isActive && styles.filterPillActive,
                 isActive &&

@@ -283,12 +283,12 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
             <View style={styles.header}>
               <Badge
                 label="QUICK CREATE"
-                variant="purple"
+                variant="neutral"
                 size="md"
                 icon={
                   <Sparkles
                     size={11}
-                    color={Colors.LavenderPurple}
+                    color="#D4AF37"
                     strokeWidth={2.4}
                   />
                 }
@@ -317,15 +317,15 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
 
             {/* Action Cards Container - Responsive Row with Compact Height */}
             <View style={styles.optionsRow}>
-              {/* ── Option 1: Add New Task ── */}
+              {/* ── Option 1: Add New Task (Works / Gold) ── */}
               <TouchableOpacity
                 activeOpacity={0.82}
                 style={[
                   styles.actionCard,
                   styles.taskCard,
                   isDarkMode && {
-                    backgroundColor: '#202336',
-                    borderColor: '#8383D6',
+                    backgroundColor: '#2A2416',
+                    borderColor: '#DEAA14',
                   },
                 ]}
                 onPress={onPressNewTask}
@@ -338,13 +338,13 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                       styles.taskIconWrap,
                       isDarkMode && {
                         backgroundColor: '#2A2D35',
-                        borderColor: '#8383D6',
+                        borderColor: '#DEAA14',
                       },
                     ]}
                   >
                     <CheckSquare
                       size={18}
-                      color={Colors.LavenderPurple}
+                      color="#D97706"
                       strokeWidth={2.4}
                     />
                   </View>
@@ -373,7 +373,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
 
                 {/* Action Footer: Badge + Chevron Button */}
                 <View style={styles.cardFooter}>
-                  <Badge label="TO-DO" variant="purple" size="sm" />
+                  <Badge label="TO-DO" variant="yellow" size="sm" />
                   <View
                     style={[
                       styles.arrowCircle,
@@ -383,7 +383,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                   >
                     <ChevronRight
                       size={12}
-                      color={Colors.LavenderPurple}
+                      color="#D97706"
                       strokeWidth={2.4}
                     />
                   </View>
@@ -394,21 +394,21 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                   <View
                     style={[
                       styles.cardAccent,
-                      { backgroundColor: Colors.LavenderPurple },
+                      { backgroundColor: '#F5C518' },
                     ]}
                   />
                 </View>
               </TouchableOpacity>
 
-              {/* ── Option 2: Add New Reminder ── */}
+              {/* ── Option 2: Add New Reminder (Reminders / Mint Green) ── */}
               <TouchableOpacity
                 activeOpacity={0.82}
                 style={[
                   styles.actionCard,
                   styles.reminderCard,
                   isDarkMode && {
-                    backgroundColor: '#2A2416',
-                    borderColor: '#DEAA14',
+                    backgroundColor: '#162820',
+                    borderColor: '#1B9A72',
                   },
                 ]}
                 onPress={onPressNewReminder}
@@ -421,11 +421,11 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                       styles.reminderIconWrap,
                       isDarkMode && {
                         backgroundColor: '#2A2D35',
-                        borderColor: '#DEAA14',
+                        borderColor: '#1B9A72',
                       },
                     ]}
                   >
-                    <Bell size={18} color="#D97706" strokeWidth={2.4} />
+                    <Bell size={18} color="#1B9A72" strokeWidth={2.4} />
                   </View>
                 </View>
 
@@ -452,7 +452,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
 
                 {/* Action Footer: Badge + Chevron Button */}
                 <View style={styles.cardFooter}>
-                  <Badge label="ALERT" variant="yellow" size="sm" />
+                  <Badge label="ALERT" variant="green" size="sm" />
                   <View
                     style={[
                       styles.arrowCircle,
@@ -460,27 +460,27 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                       isDarkMode && { backgroundColor: '#2A2D35' },
                     ]}
                   >
-                    <ChevronRight size={12} color="#D97706" strokeWidth={2.4} />
+                    <ChevronRight size={12} color="#1B9A72" strokeWidth={2.4} />
                   </View>
                 </View>
 
                 {/* Signature category bottom accent bar */}
                 <View style={styles.cardAccentWrap}>
                   <View
-                    style={[styles.cardAccent, { backgroundColor: '#FDD835' }]}
+                    style={[styles.cardAccent, { backgroundColor: '#52D22E' }]}
                   />
                 </View>
               </TouchableOpacity>
 
-              {/* ── Option 3: Add New Habit ── */}
+              {/* ── Option 3: Add New Habit (Habits / Lavender Purple) ── */}
               <TouchableOpacity
                 activeOpacity={0.82}
                 style={[
                   styles.actionCard,
                   styles.habitCard,
                   isDarkMode && {
-                    backgroundColor: '#162820',
-                    borderColor: '#1B9A72',
+                    backgroundColor: '#202336',
+                    borderColor: '#8383D6',
                   },
                 ]}
                 onPress={onPressNewHabit}
@@ -493,11 +493,11 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                       styles.habitIconWrap,
                       isDarkMode && {
                         backgroundColor: '#2A2D35',
-                        borderColor: '#1B9A72',
+                        borderColor: '#8383D6',
                       },
                     ]}
                   >
-                    <Flame size={18} color="#2E7D32" strokeWidth={2.4} />
+                    <Flame size={18} color="#8383D6" strokeWidth={2.4} />
                   </View>
                 </View>
 
@@ -524,7 +524,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
 
                 {/* Action Footer: Badge + Chevron Button */}
                 <View style={styles.cardFooter}>
-                  <Badge label="RITUAL" variant="green" size="sm" />
+                  <Badge label="RITUAL" variant="purple" size="sm" />
                   <View
                     style={[
                       styles.arrowCircle,
@@ -532,14 +532,14 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                       isDarkMode && { backgroundColor: '#2A2D35' },
                     ]}
                   >
-                    <ChevronRight size={12} color="#2E7D32" strokeWidth={2.4} />
+                    <ChevronRight size={12} color="#8383D6" strokeWidth={2.4} />
                   </View>
                 </View>
 
                 {/* Signature category bottom accent bar */}
                 <View style={styles.cardAccentWrap}>
                   <View
-                    style={[styles.cardAccent, { backgroundColor: '#2E7D32' }]}
+                    style={[styles.cardAccent, { backgroundColor: '#8383D6' }]}
                   />
                 </View>
               </TouchableOpacity>
@@ -658,15 +658,6 @@ const styles = StyleSheet.create({
     }),
   },
   taskCard: {
-    backgroundColor: '#EFF2FE',
-    borderColor: '#D8DBFF',
-    ...Platform.select({
-      ios: {
-        shadowColor: Colors.LavenderPurple,
-      },
-    }),
-  },
-  reminderCard: {
     backgroundColor: '#FFFCEB',
     borderColor: '#FFF5B8',
     ...Platform.select({
@@ -675,12 +666,21 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  habitCard: {
+  reminderCard: {
     backgroundColor: '#EDFDF5',
     borderColor: '#C6FFDD',
     ...Platform.select({
       ios: {
         shadowColor: '#2E7D32',
+      },
+    }),
+  },
+  habitCard: {
+    backgroundColor: '#EFF2FE',
+    borderColor: '#D8DBFF',
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.LavenderPurple,
       },
     }),
   },
@@ -709,14 +709,6 @@ const styles = StyleSheet.create({
     }),
   },
   taskIconWrap: {
-    borderColor: '#D8DBFF',
-    ...Platform.select({
-      ios: {
-        shadowColor: Colors.LavenderPurple,
-      },
-    }),
-  },
-  reminderIconWrap: {
     borderColor: '#FFF5B8',
     ...Platform.select({
       ios: {
@@ -724,11 +716,19 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  habitIconWrap: {
+  reminderIconWrap: {
     borderColor: '#C6FFDD',
     ...Platform.select({
       ios: {
         shadowColor: '#2E7D32',
+      },
+    }),
+  },
+  habitIconWrap: {
+    borderColor: '#D8DBFF',
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.LavenderPurple,
       },
     }),
   },
@@ -777,14 +777,6 @@ const styles = StyleSheet.create({
     }),
   },
   taskArrowCircle: {
-    borderColor: '#D8DBFF',
-    ...Platform.select({
-      ios: {
-        shadowColor: Colors.LavenderPurple,
-      },
-    }),
-  },
-  reminderArrowCircle: {
     borderColor: '#FFF5B8',
     ...Platform.select({
       ios: {
@@ -792,11 +784,19 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  habitArrowCircle: {
+  reminderArrowCircle: {
     borderColor: '#C6FFDD',
     ...Platform.select({
       ios: {
         shadowColor: '#2E7D32',
+      },
+    }),
+  },
+  habitArrowCircle: {
+    borderColor: '#D8DBFF',
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.LavenderPurple,
       },
     }),
   },

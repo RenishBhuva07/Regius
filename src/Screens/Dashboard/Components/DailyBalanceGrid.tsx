@@ -52,13 +52,14 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
     remTotal > 0 ? Math.round((remDone / remTotal) * 100) : 0;
 
   const handlePressReminders = onPressReminders || onPressNudges;
-  const { isDarkMode, textPrimary } = useAppTheme();
+  const { isDarkMode, textPrimary, canvasTextPrimary } = useAppTheme();
+  const cardTextColor = isDarkMode ? '#FFFFFF' : textPrimary;
 
   return (
     <View style={styles.container}>
       {/* Section Header */}
       <View style={styles.sectionHeader}>
-        <Text style={[styles.sectionTitle, { color: textPrimary }]}>
+        <Text style={[styles.sectionTitle, { color: canvasTextPrimary }]}>
           Daily Balance
         </Text>
       </View>
@@ -108,12 +109,12 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
             />
           </View>
           <View style={styles.cardBottom}>
-            <Text style={[styles.countText, { color: textPrimary }]}>
+            <Text style={[styles.countText, { color: cardTextColor }]}>
               {tasksCompleted}
               <Text style={styles.countTotalText}>/{tasksTotal}</Text>
             </Text>
             <Text
-              style={[styles.label, { color: textPrimary }]}
+              style={[styles.label, { color: cardTextColor }]}
               numberOfLines={1}
             >
               Tasks
@@ -166,12 +167,12 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
             />
           </View>
           <View style={styles.cardBottom}>
-            <Text style={[styles.countText, { color: textPrimary }]}>
+            <Text style={[styles.countText, { color: cardTextColor }]}>
               {remDone}
               <Text style={styles.countTotalText}>/{remTotal}</Text>
             </Text>
             <Text
-              style={[styles.label, { color: textPrimary }]}
+              style={[styles.label, { color: cardTextColor }]}
               numberOfLines={1}
             >
               Reminders
@@ -224,12 +225,12 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
             />
           </View>
           <View style={styles.cardBottom}>
-            <Text style={[styles.countText, { color: textPrimary }]}>
+            <Text style={[styles.countText, { color: cardTextColor }]}>
               {habitsCompleted}
               <Text style={styles.countTotalText}>/{habitsTotal}</Text>
             </Text>
             <Text
-              style={[styles.label, { color: textPrimary }]}
+              style={[styles.label, { color: cardTextColor }]}
               numberOfLines={1}
             >
               Habits

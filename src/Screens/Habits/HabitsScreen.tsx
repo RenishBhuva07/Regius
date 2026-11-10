@@ -39,7 +39,15 @@ const HabitListSeparator = () => <View style={styles.listSeparator} />;
 export const HabitsScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
-  const { isDarkMode, bgMain, textPrimary, textSecondary } = useAppTheme();
+  const {
+    isDarkMode,
+    bgMain,
+    textPrimary,
+    textSecondary,
+    accentDeep,
+    surfaceAlt,
+    borderLight,
+  } = useAppTheme();
   const dailyQuote = useDailyQuote('habits');
 
   const {
@@ -126,12 +134,8 @@ export const HabitsScreen: React.FC = () => {
         {...(Platform.OS === 'android'
           ? {
               backgroundColor: isScrolled
-                ? isDarkMode
-                  ? '#282048'
-                  : Colors.LavenderPurple
-                : isDarkMode
-                ? '#121417'
-                : '#FBF9F3',
+                ? accentDeep
+                : bgMain,
               translucent: true,
             }
           : {})}
@@ -180,16 +184,7 @@ export const HabitsScreen: React.FC = () => {
           onPressAdd={openHabitModal}
           addAccessibilityLabel="Add new habit"
           bottomPadding={insets.bottom + 130}
-          containerStyle={[
-            styles.habitsSection,
-            isDarkMode && {
-              backgroundColor: '#181B20',
-              borderTopColor: '#2C3035',
-              borderLeftColor: '#2C3035',
-              borderRightColor: '#2C3035',
-              borderBottomColor: '#2C3035',
-            },
-          ]}
+          containerStyle={styles.habitsSection}
         >
           {/* All habits list using FlatList */}
           <FlatList

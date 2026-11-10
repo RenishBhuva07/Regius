@@ -106,7 +106,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
           accent: '#F5C518',
           bgTint: isDarkMode ? '#2A2416' : '#FFFDF7',
           borderTint: isDarkMode ? '#DEAA14' : '#FFF5B8',
-          shadowColor: '#F5C518',
+          shadowColor: isDarkMode ? '#000000' : '#F5C518',
           auraColor: '#F5C518',
           pillBg: isDarkMode ? '#38301D' : '#FFF9D2',
           pillText: isDarkMode ? '#F5C518' : '#B48216',
@@ -119,7 +119,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
           accent: '#1B9A72',
           bgTint: isDarkMode ? '#162820' : '#F5FDF9',
           borderTint: isDarkMode ? '#1B9A72' : '#C6FFDD',
-          shadowColor: '#52D22E',
+          shadowColor: isDarkMode ? '#000000' : '#52D22E',
           auraColor: '#52D22E',
           pillBg: isDarkMode ? '#1F382D' : '#E8FDF0',
           pillText: isDarkMode ? '#52D22E' : '#1B9A72',
@@ -133,7 +133,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
           accent: '#8383D6',
           bgTint: isDarkMode ? '#202336' : '#F7F8FE',
           borderTint: isDarkMode ? '#8383D6' : '#D8DBFF',
-          shadowColor: '#8383D6',
+          shadowColor: isDarkMode ? '#000000' : '#8383D6',
           auraColor: '#8383D6',
           pillBg: isDarkMode ? '#2C304A' : '#EDEAFB',
           pillText: isDarkMode ? '#8383D6' : '#7059C8',
@@ -236,7 +236,11 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
         style={[
           styles.card,
           {
-            shadowColor: isCompleted ? '#D1D5DB' : catStyle.shadowColor,
+            shadowColor: isCompleted
+              ? isDarkMode
+                ? '#000000'
+                : '#D1D5DB'
+              : catStyle.shadowColor,
           },
         ]}
         accessibilityRole="button"

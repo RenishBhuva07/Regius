@@ -65,7 +65,15 @@ export const DashboardScreen: React.FC = () => {
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
   const dailyQuote = useDailyQuote('dashboard');
-  const { isDarkMode, bgMain, textPrimary, textSecondary } = useAppTheme();
+  const {
+    isDarkMode,
+    bgMain,
+    textPrimary,
+    textSecondary,
+    canvasTextPrimary,
+    canvasTextSecondary,
+    accentDeep,
+  } = useAppTheme();
   const { tasks, toggleTask, reminders, toggleReminder, habits, toggleHabit } =
     useTaskReminder();
 
@@ -114,7 +122,7 @@ export const DashboardScreen: React.FC = () => {
     inputRange: [0, 30],
     outputRange: [
       isDarkMode ? 'rgba(18, 20, 23, 0)' : 'rgba(255, 255, 255, 0)',
-      isDarkMode ? '#282048' : Colors.LavenderPurple,
+      accentDeep,
     ],
     extrapolate: 'clamp',
   });
@@ -337,9 +345,7 @@ export const DashboardScreen: React.FC = () => {
         {...(Platform.OS === 'android'
           ? {
               backgroundColor: isScrolled
-                ? isDarkMode
-                  ? '#282048'
-                  : Colors.LavenderPurple
+                ? accentDeep
                 : bgMain,
               translucent: true,
             }
@@ -381,7 +387,7 @@ export const DashboardScreen: React.FC = () => {
           {/* Greeting */}
           <View style={styles.greetingSection}>
             <View style={styles.dateWeatherRow}>
-              <Text style={[styles.dateText, { color: textSecondary }]}>
+              <Text style={[styles.dateText, { color: canvasTextSecondary }]}>
                 {formattedDate}
               </Text>
               <View style={styles.ambientStatus}>
@@ -391,14 +397,14 @@ export const DashboardScreen: React.FC = () => {
                   strokeWidth={2.2}
                 />
                 <Text
-                  style={[styles.ambientStatusText, { color: textSecondary }]}
+                  style={[styles.ambientStatusText, { color: canvasTextSecondary }]}
                 >
                   Calm & Focused • 68°F
                 </Text>
               </View>
             </View>
 
-            <Text style={[styles.greetingText, { color: textPrimary }]}>
+            <Text style={[styles.greetingText, { color: canvasTextPrimary }]}>
               {greeting}
             </Text>
           </View>

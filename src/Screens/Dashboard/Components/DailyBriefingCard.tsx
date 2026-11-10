@@ -19,6 +19,7 @@ import { KokoroTTSService } from '../../../Services/Kokoro/KokoroTTSService';
 import { VoiceSettingsService } from '../../../Services/VoiceSettingsService';
 import { VOICES } from '../../Settings/Components/types';
 import Colors from '../../../Assets/StyleUtilities/Colors';
+import { useTheme, isLightColor } from '../../../Theme/ThemeContext';
 import Svg, {
   Path,
   Circle,
@@ -31,27 +32,44 @@ import Svg, {
 } from 'react-native-svg';
 
 // Background vector pattern for DailyBriefingCard.
-const DailyBriefingBackgroundSvg: React.FC = React.memo(() => (
-  <View style={StyleSheet.absoluteFill} pointerEvents="none">
-    <Svg
-      width="100%"
-      height="100%"
-      viewBox="0 0 360 210"
-      preserveAspectRatio="xMidYMid slice"
-      fill="none"
-    >
-      <Defs>
-        <LinearGradient id="cardBgSheen" x1="0%" y1="0%" x2="100%" y2="100%">
-          <Stop offset="0%" stopColor="#252733" stopOpacity={0.65} />
-          <Stop offset="50%" stopColor={Colors.NeroBlack} stopOpacity={0.15} />
-          <Stop offset="100%" stopColor="#15161A" stopOpacity={0.7} />
-        </LinearGradient>
-        <RadialGradient id="lavenderAura" cx="86%" cy="14%" rx="68%" ry="68%">
-          <Stop offset="0%" stopColor="#9C9CE3" stopOpacity={0.42} />
-          <Stop offset="35%" stopColor="#8383D6" stopOpacity={0.22} />
-          <Stop offset="70%" stopColor="#554E9B" stopOpacity={0.06} />
-          <Stop offset="100%" stopColor={Colors.NeroBlack} stopOpacity={0} />
-        </RadialGradient>
+const DailyBriefingBackgroundSvg: React.FC = React.memo(() => {
+  const { activeThemeId, Colors: themeColors } = useTheme();
+  const auraColor =
+    activeThemeId === 'cyprus_sand'
+      ? '#0A6B66'
+      : activeThemeId === 'emerald_velvet'
+      ? '#1B9A72'
+      : activeThemeId === 'celestial_azure'
+      ? '#3B82F6'
+      : activeThemeId === 'classic_dark' || activeThemeId === 'obsidian_gold'
+      ? '#D4AF37'
+      : '#8383D6';
+
+  return (
+    <View style={StyleSheet.absoluteFill} pointerEvents="none">
+      <Svg
+        width="100%"
+        height="100%"
+        viewBox="0 0 360 210"
+        preserveAspectRatio="xMidYMid slice"
+        fill="none"
+      >
+        <Defs>
+          <LinearGradient id="cardBgSheen" x1="0%" y1="0%" x2="100%" y2="100%">
+            <Stop offset="0%" stopColor="#252733" stopOpacity={0.65} />
+            <Stop offset="50%" stopColor={Colors.NeroBlack} stopOpacity={0.15} />
+            <Stop offset="100%" stopColor="#15161A" stopOpacity={0.7} />
+          </LinearGradient>
+          <RadialGradient id="lavenderAura" cx="86%" cy="14%" rx="68%" ry="68%">
+            <Stop offset="0%" stopColor={auraColor} stopOpacity={0.42} />
+            <Stop offset="35%" stopColor={auraColor} stopOpacity={0.22} />
+            <Stop
+              offset="70%"
+              stopColor={themeColors.AccentDeep || Colors.NeroBlack}
+              stopOpacity={0.06}
+            />
+            <Stop offset="100%" stopColor={Colors.NeroBlack} stopOpacity={0} />
+          </RadialGradient>
         <RadialGradient id="goldDawnGlow" cx="12%" cy="88%" rx="52%" ry="52%">
           <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.16} />
           <Stop offset="45%" stopColor="#B48216" stopOpacity={0.06} />
@@ -188,7 +206,8 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => (
       <Circle cx={344} cy={176} r={1.3} fill="#CCE6D0" opacity={0.45} />
     </Svg>
   </View>
-));
+  );
+});
 
 interface DailyBriefingCardProps {
   taskCount?: number;
@@ -207,6 +226,30 @@ export const DailyBriefingCard: React.FC<DailyBriefingCardProps> = ({
   onOpenVoiceAssistant,
   onTriggerWakeWord,
 }) => {
+  const { activeThemeId, isDarkMode } = useTheme();
+
+  const playBtnBg =
+    activeThemeId === 'cyprus_sand'
+      ? isDarkMode
+        ? '#F0EDE5'
+        : '#004643'
+      : activeThemeId === 'emerald_velvet'
+      ? '#2ECC71'
+      : activeThemeId === 'celestial_azure'
+      ? '#60A5FA'
+      : activeThemeId === 'classic_dark' || activeThemeId === 'obsidian_gold'
+      ? '#F5C518'
+      : Colors.LavenderPurple;
+
+  const playIconColor =
+    activeThemeId === 'cyprus_sand'
+      ? isDarkMode
+        ? '#004643'
+        : '#F0EDE5'
+      : isLightColor(playBtnBg)
+      ? '#000000'
+      : '#FFFFFF';
+
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
@@ -489,26 +532,33 @@ export const DailyBriefingCard: React.FC<DailyBriefingCardProps> = ({
               activeOpacity={0.85}
               onPress={handleTogglePlayback}
               disabled={isLoading}
-              style={[styles.playBtn, isPlaying && styles.playBtnActive]}
+              style={[
+                styles.playBtn,
+                {
+                  backgroundColor: playBtnBg,
+                  shadowColor: playBtnBg,
+                },
+                isPlaying && styles.playBtnActive,
+              ]}
               accessibilityRole="button"
               accessibilityLabel={
                 isPlaying ? 'Pause Morning Brief' : 'Play Morning Brief'
               }
             >
               {isLoading ? (
-                <ActivityIndicator size="small" color={Colors.DefaultBlack} />
+                <ActivityIndicator size="small" color={playIconColor} />
               ) : isPlaying ? (
                 <Pause
                   size={18}
-                  color={Colors.DefaultBlack}
+                  color={playIconColor}
                   strokeWidth={2.5}
-                  fill={Colors.DefaultBlack}
+                  fill={playIconColor}
                 />
               ) : (
                 <Play
                   size={18}
-                  color={Colors.DefaultBlack}
-                  fill={Colors.DefaultBlack}
+                  color={playIconColor}
+                  fill={playIconColor}
                   style={{ marginLeft: 2 }}
                 />
               )}

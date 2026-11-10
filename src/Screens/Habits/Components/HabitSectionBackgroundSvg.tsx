@@ -11,6 +11,7 @@ import Svg, {
   Stop,
   Line,
 } from 'react-native-svg';
+import { useTheme } from '../../../Theme/ThemeContext';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -45,9 +46,20 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
       }
     }, []);
 
+    const { isDarkMode, activeThemeId, Colors: themeColors } = useTheme();
     const W = Math.round(propWidth || dimensions.width);
     const H = Math.round(propHeight || dimensions.height);
     const centerX = W / 2;
+
+    const isSandTheme = !isDarkMode || activeThemeId === 'cyprus_sand';
+    const bgStop0 = isSandTheme ? '#FFFDF7' : (themeColors.SurfaceAlt || '#181B20');
+    const bgStop20 = isSandTheme ? '#FAF7EF' : (themeColors.Background || '#14171C');
+    const bgStop65 = isSandTheme ? '#F5EFE3' : (themeColors.AccentDeep || '#101216');
+    const bgStop100 = isSandTheme ? '#ECE4D4' : (themeColors.AccentDark || '#0D0E12');
+    const fadeColor = isSandTheme ? '#FAF7EF' : (themeColors.SurfaceAlt || '#181B20');
+    const fadeColorMid = isSandTheme ? '#F5EFE3' : (themeColors.Background || '#14171C');
+    const fadeColorBottom = isSandTheme ? '#ECE4D4' : (themeColors.AccentDeep || '#101216');
+    const themeAura = activeThemeId === 'cyprus_sand' ? '#004643' : (themeColors.Accent || '#7059C8');
 
     // Diamond habit spark generator
     const habitDiamond = (cx: number, cy: number, s: number) =>
@@ -71,10 +83,10 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               y2={H}
               gradientUnits="userSpaceOnUse"
             >
-              <Stop offset="0%" stopColor="#FFFDF7" stopOpacity={0.98} />
-              <Stop offset="20%" stopColor="#FAF7EF" stopOpacity={0.97} />
-              <Stop offset="65%" stopColor="#F5EFE3" stopOpacity={0.96} />
-              <Stop offset="100%" stopColor="#ECE4D4" stopOpacity={0.98} />
+              <Stop offset="0%" stopColor={bgStop0} stopOpacity={0.98} />
+              <Stop offset="20%" stopColor={bgStop20} stopOpacity={0.97} />
+              <Stop offset="65%" stopColor={bgStop65} stopOpacity={0.96} />
+              <Stop offset="100%" stopColor={bgStop100} stopOpacity={0.98} />
             </LinearGradient>
             <RadialGradient
               id="habitCrestAura"
@@ -85,7 +97,7 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
             >
               <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.22} />
               <Stop offset="40%" stopColor="#E2A612" stopOpacity={0.08} />
-              <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={0} />
+              <Stop offset="100%" stopColor={fadeColor} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
               id="habitPlusAura"
@@ -96,7 +108,7 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
             >
               <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.24} />
               <Stop offset="50%" stopColor="#D99B0F" stopOpacity={0.06} />
-              <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={0} />
+              <Stop offset="100%" stopColor={fadeColor} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
               id="habitEmeraldAura"
@@ -107,7 +119,7 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
             >
               <Stop offset="0%" stopColor="#1B9A72" stopOpacity={0.16} />
               <Stop offset="50%" stopColor="#2EE29F" stopOpacity={0.05} />
-              <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={0} />
+              <Stop offset="100%" stopColor={fadeColor} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
               id="habitMindfulAura"
@@ -116,9 +128,9 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
               r={160}
               gradientUnits="userSpaceOnUse"
             >
-              <Stop offset="0%" stopColor="#7059C8" stopOpacity={0.14} />
-              <Stop offset="55%" stopColor="#9C9CE3" stopOpacity={0.04} />
-              <Stop offset="100%" stopColor="#F5EFE3" stopOpacity={0} />
+              <Stop offset="0%" stopColor={themeAura} stopOpacity={0.14} />
+              <Stop offset="55%" stopColor={themeAura} stopOpacity={0.04} />
+              <Stop offset="100%" stopColor={fadeColorMid} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
               id="habitStreakAura"
@@ -129,7 +141,7 @@ export const HabitSectionBackgroundSvg: React.FC<HabitSectionBackgroundSvgProps>
             >
               <Stop offset="0%" stopColor="#E65100" stopOpacity={0.12} />
               <Stop offset="50%" stopColor="#FF9800" stopOpacity={0.04} />
-              <Stop offset="100%" stopColor="#ECE4D4" stopOpacity={0} />
+              <Stop offset="100%" stopColor={fadeColorBottom} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
               id="habitSageAura"

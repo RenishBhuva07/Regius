@@ -10,6 +10,7 @@ import Svg, {
   RadialGradient,
   Stop,
 } from 'react-native-svg';
+import { useTheme } from '../Theme/ThemeContext';
 
 interface FocusedTabPatternSvgProps {
   width?: number;
@@ -18,6 +19,29 @@ interface FocusedTabPatternSvgProps {
 
 export const FocusedTabPatternSvg: React.FC<FocusedTabPatternSvgProps> =
   React.memo(({ width = 66, height = 50 }) => {
+    const { activeThemeId, Colors: themeColors } = useTheme();
+
+    const glowColor0 =
+      activeThemeId === 'cyprus_sand'
+        ? '#0D7E78'
+        : activeThemeId === 'emerald_velvet'
+        ? '#2ECC71'
+        : activeThemeId === 'celestial_azure'
+        ? '#60A5FA'
+        : activeThemeId === 'classic_dark' || activeThemeId === 'obsidian_gold'
+        ? '#F5C518'
+        : '#9C9CE3';
+
+    const glowColor60 =
+      activeThemeId === 'cyprus_sand'
+        ? '#004643'
+        : activeThemeId === 'emerald_velvet'
+        ? '#1B9A72'
+        : activeThemeId === 'celestial_azure'
+        ? '#2563EB'
+        : activeThemeId === 'classic_dark' || activeThemeId === 'obsidian_gold'
+        ? '#B48216'
+        : '#8383D6';
     return (
       <View style={StyleSheet.absoluteFill} pointerEvents="none">
         <Svg
@@ -40,8 +64,8 @@ export const FocusedTabPatternSvg: React.FC<FocusedTabPatternSvgProps> =
               rx="65%"
               ry="65%"
             >
-              <Stop offset="0%" stopColor="#9C9CE3" stopOpacity={0.22} />
-              <Stop offset="60%" stopColor="#8383D6" stopOpacity={0.08} />
+              <Stop offset="0%" stopColor={glowColor0} stopOpacity={0.22} />
+              <Stop offset="60%" stopColor={glowColor60} stopOpacity={0.08} />
               <Stop offset="100%" stopColor="#0B0C0E" stopOpacity={0} />
             </RadialGradient>
 

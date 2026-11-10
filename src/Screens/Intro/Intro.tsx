@@ -21,6 +21,7 @@ import { useTheme } from '../../Theme/ThemeContext';
 import { SVGS } from '../../Assets/Images';
 import { Badge, BadgeVariant } from '../../Common/Badge';
 import { IntroAestheticBackgroundSvg } from './Components/IntroAestheticBackgroundSvg';
+import { IntroNextArrowButton } from './Components/IntroNextArrowButton';
 
 const { width } = Dimensions.get('window');
 
@@ -69,7 +70,11 @@ interface IntroBottomControlsProps {
   currentStep: IntroStep;
   buttonSize: number;
   isDarkMode: boolean;
+  isCyprusSand?: boolean;
   onNextPress: () => void;
+  buttonBackground?: string;
+  buttonText?: string;
+  borderLight?: string;
 }
 
 const IntroBottomControls = React.memo<IntroBottomControlsProps>(
@@ -79,7 +84,11 @@ const IntroBottomControls = React.memo<IntroBottomControlsProps>(
     currentStep,
     buttonSize,
     isDarkMode,
+    isCyprusSand,
     onNextPress,
+    buttonBackground,
+    buttonText,
+    borderLight,
   }) => {
     return (
       <>
@@ -101,8 +110,10 @@ const IntroBottomControls = React.memo<IntroBottomControlsProps>(
                         },
                       ]
                     : {
-                        backgroundColor: isDarkMode
-                          ? Colors.CarbonSlate
+                        backgroundColor: isCyprusSand
+                          ? 'rgba(240, 237, 229, 0.35)'
+                          : isDarkMode
+                          ? borderLight || 'rgba(255, 255, 255, 0.25)'
                           : '#DDD6C6',
                       },
                 ]}
@@ -120,14 +131,21 @@ const IntroBottomControls = React.memo<IntroBottomControlsProps>(
               style={[
                 styles.getStartedButton,
                 {
-                  backgroundColor: Colors.MidnightCharcoal,
+                  backgroundColor: buttonBackground || Colors.MidnightCharcoal,
                   shadowColor: currentStep.accentColor,
                 },
               ]}
               accessibilityRole="button"
               accessibilityLabel="Get Started"
             >
-              <Text style={styles.getStartedText}>Get Started</Text>
+              <Text
+                style={[
+                  styles.getStartedText,
+                  buttonText ? { color: buttonText } : null,
+                ]}
+              >
+                Get Started
+              </Text>
               <View
                 style={[
                   styles.arrowCircle,
@@ -148,7 +166,7 @@ const IntroBottomControls = React.memo<IntroBottomControlsProps>(
               accessibilityRole="button"
               accessibilityLabel="Next step"
             >
-              <SVGS.Btn width={buttonSize} height={buttonSize} />
+              <IntroNextArrowButton size={buttonSize} isDark={isDarkMode} />
             </TouchableOpacity>
           )}
         </View>
@@ -160,7 +178,8 @@ const IntroBottomControls = React.memo<IntroBottomControlsProps>(
 const Intro: React.FC = () => {
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
-  const { isDarkMode, Colors: themeColors } = useTheme();
+  const { isDarkMode, activeThemeId, Colors: themeColors } = useTheme();
+  const isCyprusSand = activeThemeId === 'cyprus_sand';
 
   const [activeIndex, setActiveIndex] = useState(0);
   const activeIndexRef = useRef(0);
@@ -236,12 +255,22 @@ const Intro: React.FC = () => {
   const backgroundColor =
     themeColors.Background ||
     (isDarkMode ? Colors.NeroBlack : Colors.CreamBackground);
-  const textColor =
+
+  const cardBg = isCyprusSand
+    ? 'rgba(240, 237, 229, 0.70)' // Sand with lower opacity (frosted glass)
+    : themeColors.CardBackground ||
+      (isDarkMode ? 'rgba(30, 34, 40, 0.65)' : 'rgba(255, 255, 255, 0.58)');
+  const cardBorder = isCyprusSand
+    ? 'rgba(255, 255, 255, 0.55)'
+    : themeColors.BorderLight ||
+      (isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#DDD6C6');
+  const cardTitleColor =
     themeColors.PrimaryText ||
-    (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
-  const subtitleColor =
-    themeColors.SecondaryText ||
-    (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray);
+    (isDarkMode ? '#FFFFFF' : Colors.MidnightInkText);
+  const cardSubtitleColor =
+    themeColors.SecondaryText || (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+
+  const heroAccentColor = isCyprusSand ? '#0A6B66' : Colors.AccentYellow;
 
   const isLastStep = activeIndex === INTRO_STEPS.length - 1;
   const currentStep = INTRO_STEPS[activeIndex];
@@ -254,12 +283,9 @@ const Intro: React.FC = () => {
             style={[
               styles.textCard,
               {
-                backgroundColor: isDarkMode
-                  ? 'rgba(30, 34, 40, 0.65)'
-                  : 'rgba(255, 255, 255, 0.58)',
-                borderColor: isDarkMode
-                  ? 'rgba(255, 255, 255, 0.08)'
-                  : '#FFFFFF',
+                backgroundColor: cardBg,
+                borderColor: cardBorder,
+                borderTopColor: '#FFFFFF',
                 borderBottomColor: item.accentColor,
               },
             ]}
@@ -276,7 +302,7 @@ const Intro: React.FC = () => {
               style={[
                 styles.title,
                 {
-                  color: textColor,
+                  color: cardTitleColor,
                 },
               ]}
             >
@@ -287,7 +313,7 @@ const Intro: React.FC = () => {
               style={[
                 styles.subtitle,
                 {
-                  color: subtitleColor,
+                  color: cardSubtitleColor,
                 },
               ]}
             >
@@ -297,7 +323,7 @@ const Intro: React.FC = () => {
         </View>
       );
     },
-    [isDarkMode, textColor, subtitleColor],
+    [cardBg, cardBorder, cardTitleColor, cardSubtitleColor],
   );
 
   return (
@@ -313,7 +339,8 @@ const Intro: React.FC = () => {
       <View style={styles.backgroundSvgWrapper} pointerEvents="none">
         <IntroAestheticBackgroundSvg
           isDark={isDarkMode}
-          accentColor={Colors.AccentYellow}
+          accentColor={heroAccentColor}
+          canvasColor={backgroundColor}
           pointerEvents="none"
         />
       </View>
@@ -335,7 +362,7 @@ const Intro: React.FC = () => {
           width={illustrationWidth}
           height={illustrationHeight}
           isDark={isDarkMode}
-          accentColor={Colors.AccentYellow}
+          accentColor={heroAccentColor}
           pointerEvents="none"
         />
       </View>
@@ -348,11 +375,21 @@ const Intro: React.FC = () => {
           styles.skipButton,
           {
             top: Math.max(insets.top, ResponsivePixels.size16),
-            backgroundColor: isDarkMode
+            backgroundColor: isCyprusSand
+              ? themeColors.CardBackground || '#F0EDE5'
+              : isDarkMode
               ? 'rgba(255, 255, 255, 0.08)'
               : 'rgba(255, 255, 255, 0.75)',
-            borderColor: isDarkMode ? '#2C3035' : '#EAE4D6',
-            borderBottomColor: isDarkMode ? '#1E2228' : '#DED6C7',
+            borderColor: isCyprusSand
+              ? themeColors.BorderLight || '#DDD7CB'
+              : isDarkMode
+              ? '#2C3035'
+              : '#EAE4D6',
+            borderBottomColor: isCyprusSand
+              ? '#C8C2B5'
+              : isDarkMode
+              ? '#1E2228'
+              : '#DED6C7',
           },
         ]}
         accessibilityRole="button"
@@ -362,7 +399,11 @@ const Intro: React.FC = () => {
           style={[
             styles.skipText,
             {
-              color: isDarkMode ? Colors.SteelMist : Colors.SubtitleGray,
+              color: isCyprusSand
+                ? themeColors.PrimaryText || '#002B28'
+                : isDarkMode
+                ? themeColors.CanvasTextSecondary || Colors.SteelMist
+                : Colors.SubtitleGray,
             },
           ]}
         >
@@ -421,7 +462,11 @@ const Intro: React.FC = () => {
           currentStep={currentStep}
           buttonSize={buttonSize}
           isDarkMode={isDarkMode}
+          isCyprusSand={isCyprusSand}
           onNextPress={handleNextPress}
+          buttonBackground={themeColors.ButtonBackground}
+          buttonText={themeColors.ButtonText}
+          borderLight={themeColors.BorderLight}
         />
       </View>
     </View>

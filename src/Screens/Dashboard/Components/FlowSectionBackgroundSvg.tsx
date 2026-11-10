@@ -10,6 +10,7 @@ import Svg, {
   RadialGradient,
   Stop,
 } from 'react-native-svg';
+import { useTheme } from '../../../Theme/ThemeContext';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -44,9 +45,19 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
       }
     }, []);
 
+    const { isDarkMode, activeThemeId, Colors: themeColors } = useTheme();
     const W = Math.round(propWidth || dimensions.width);
     const H = Math.round(propHeight || dimensions.height);
     const centerX = W / 2;
+
+    const isSandTheme = !isDarkMode || activeThemeId === 'cyprus_sand';
+    const bgStop0 = isSandTheme ? '#FFFDF7' : (themeColors.SurfaceAlt || '#181B20');
+    const bgStop25 = isSandTheme ? '#FAF6ED' : (themeColors.Background || '#14171C');
+    const bgStop75 = isSandTheme ? '#F5EFE3' : (themeColors.AccentDeep || '#101216');
+    const bgStop100 = isSandTheme ? '#EDE5D6' : (themeColors.AccentDark || '#0D0E12');
+    const fadeColor = isSandTheme ? '#FAF6ED' : (themeColors.SurfaceAlt || '#181B20');
+    const fadeColorBottom = isSandTheme ? '#EDE5D6' : (themeColors.AccentDeep || '#101216');
+    const themeAura = activeThemeId === 'cyprus_sand' ? '#004643' : (themeColors.Accent || '#8383D6');
 
     // Symmetrical 4-point diamond star generator (fixed pixel geometry)
     const star = (cx: number, cy: number, s: number) =>
@@ -70,10 +81,10 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               y2={H}
               gradientUnits="userSpaceOnUse"
             >
-              <Stop offset="0%" stopColor="#FFFDF7" stopOpacity={0.98} />
-              <Stop offset="25%" stopColor="#FAF6ED" stopOpacity={0.96} />
-              <Stop offset="75%" stopColor="#F5EFE3" stopOpacity={0.96} />
-              <Stop offset="100%" stopColor="#EDE5D6" stopOpacity={0.98} />
+              <Stop offset="0%" stopColor={bgStop0} stopOpacity={0.98} />
+              <Stop offset="25%" stopColor={bgStop25} stopOpacity={0.96} />
+              <Stop offset="75%" stopColor={bgStop75} stopOpacity={0.96} />
+              <Stop offset="100%" stopColor={bgStop100} stopOpacity={0.98} />
             </LinearGradient>
             <RadialGradient
               id="crestDawnAura"
@@ -84,7 +95,7 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
             >
               <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.18} />
               <Stop offset="45%" stopColor="#E2A612" stopOpacity={0.06} />
-              <Stop offset="100%" stopColor="#FAF6ED" stopOpacity={0} />
+              <Stop offset="100%" stopColor={fadeColor} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
               id="flowLavenderAura"
@@ -93,9 +104,9 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               r={130}
               gradientUnits="userSpaceOnUse"
             >
-              <Stop offset="0%" stopColor="#9C9CE3" stopOpacity={0.18} />
-              <Stop offset="55%" stopColor="#8383D6" stopOpacity={0.06} />
-              <Stop offset="100%" stopColor="#FAF6ED" stopOpacity={0} />
+              <Stop offset="0%" stopColor={themeAura} stopOpacity={0.18} />
+              <Stop offset="55%" stopColor={themeAura} stopOpacity={0.06} />
+              <Stop offset="100%" stopColor={fadeColor} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
               id="flowAmberTopAura"
@@ -106,7 +117,7 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
             >
               <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.12} />
               <Stop offset="50%" stopColor="#E2A612" stopOpacity={0.04} />
-              <Stop offset="100%" stopColor="#FAF6ED" stopOpacity={0} />
+              <Stop offset="100%" stopColor={fadeColor} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
               id="flowMintAura"
@@ -117,7 +128,7 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
             >
               <Stop offset="0%" stopColor="#52D22E" stopOpacity={0.08} />
               <Stop offset="50%" stopColor="#1B9A72" stopOpacity={0.03} />
-              <Stop offset="100%" stopColor="#EDE5D6" stopOpacity={0} />
+              <Stop offset="100%" stopColor={fadeColorBottom} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
               id="flowPeachAura"
@@ -128,7 +139,7 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
             >
               <Stop offset="0%" stopColor="#E87A5D" stopOpacity={0.07} />
               <Stop offset="55%" stopColor="#D96E52" stopOpacity={0.02} />
-              <Stop offset="100%" stopColor="#EDE5D6" stopOpacity={0} />
+              <Stop offset="100%" stopColor={fadeColorBottom} stopOpacity={0} />
             </RadialGradient>
             <LinearGradient
               id="flowGoldStar"
@@ -149,9 +160,21 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               y2={H}
               gradientUnits="userSpaceOnUse"
             >
-              <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.9} />
-              <Stop offset="30%" stopColor="#FFFFFF" stopOpacity={0.25} />
-              <Stop offset="100%" stopColor="#DDD4C4" stopOpacity={0.4} />
+              <Stop
+                offset="0%"
+                stopColor="#FFFFFF"
+                stopOpacity={isDarkMode ? 0.15 : 0.9}
+              />
+              <Stop
+                offset="30%"
+                stopColor="#FFFFFF"
+                stopOpacity={isDarkMode ? 0.05 : 0.25}
+              />
+              <Stop
+                offset="100%"
+                stopColor={isDarkMode ? '#000000' : '#DDD4C4'}
+                stopOpacity={isDarkMode ? 0.2 : 0.4}
+              />
             </LinearGradient>
           </Defs>
           <Rect width={W} height={H} fill="url(#flowBgSheen)" />
