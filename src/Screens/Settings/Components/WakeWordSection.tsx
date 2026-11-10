@@ -12,6 +12,7 @@ import { Fonts } from '../../../Theme/fonts';
 import { Colors as StaticColors } from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { HeaderActionButton } from '../../../Common/HeaderActionButton';
+import { useTheme } from '../../../Theme/ThemeContext';
 import { useSettingsTheme } from './types';
 import {
   DEFAULT_WAKE_WORD_PHRASE,
@@ -41,9 +42,19 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
     cardBg,
     textPrimary,
     textSecondary,
+    canvasTextPrimary,
     borderLight,
     surfaceAlt,
+    accent,
   } = useSettingsTheme();
+  const { activeThemeId } = useTheme();
+
+  const themeAccent =
+    activeThemeId === 'cyprus_sand'
+      ? isDarkMode
+        ? '#0A6B66'
+        : '#004643'
+      : accent;
 
   return (
     <View style={styles.container}>
@@ -52,10 +63,10 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
         <View style={styles.sectionTitleWithIcon}>
           <Radio
             size={18}
-            color={StaticColors.LavenderPurple}
+            color={themeAccent}
             strokeWidth={2.4}
           />
-          <Text style={[styles.sectionTitle, { color: textPrimary }]}>
+          <Text style={[styles.sectionTitle, { color: canvasTextPrimary }]}>
             Wake Word Engine
           </Text>
         </View>
@@ -77,9 +88,24 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
           styles.wakeWordCard,
           {
             backgroundColor: cardBg,
-            borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#FFFFFF',
-            borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
-            shadowColor: isDarkMode ? '#000000' : 'rgba(131, 131, 214, 0.14)',
+            borderColor:
+              activeThemeId === 'cyprus_sand'
+                ? '#DDD7CB'
+                : isDarkMode
+                ? 'rgba(255, 255, 255, 0.12)'
+                : '#FFFFFF',
+            borderBottomColor:
+              activeThemeId === 'cyprus_sand'
+                ? '#C8C2B4'
+                : isDarkMode
+                ? '#171A20'
+                : '#E2DCD0',
+            shadowColor:
+              activeThemeId === 'cyprus_sand'
+                ? 'rgba(0, 70, 67, 0.16)'
+                : isDarkMode
+                ? '#000000'
+                : 'rgba(131, 131, 214, 0.14)',
           },
         ]}
       >
@@ -94,13 +120,23 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
                 style={[
                   styles.phrasePill,
                   {
-                    backgroundColor: isDarkMode ? '#2A243D' : '#F4EEFF',
-                    borderColor: isDarkMode ? '#473668' : '#D8CBFF',
+                    backgroundColor:
+                      activeThemeId === 'cyprus_sand'
+                        ? '#E6E1D5'
+                        : isDarkMode
+                        ? '#2A243D'
+                        : '#F4EEFF',
+                    borderColor:
+                      activeThemeId === 'cyprus_sand'
+                        ? '#DDD7CB'
+                        : isDarkMode
+                        ? '#473668'
+                        : '#D8CBFF',
                   },
                 ]}
               >
-                <Sparkles size={11} color={StaticColors.LavenderPurple} />
-                <Text style={styles.phrasePillText}>
+                <Sparkles size={11} color={themeAccent} />
+                <Text style={[styles.phrasePillText, { color: themeAccent }]}>
                   &ldquo;{wakeWordPhrase}&rdquo;
                 </Text>
               </View>
@@ -114,7 +150,7 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
             onValueChange={onToggleWakeWord}
             trackColor={{
               false: '#D9D9D9',
-              true: StaticColors.LavenderPurple,
+              true: themeAccent,
             }}
             thumbColor="#FFFFFF"
           />
@@ -187,11 +223,15 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
                       {
                         backgroundColor: isActive
                           ? isDarkMode
-                            ? '#2E2248'
+                            ? activeThemeId === 'cyprus_sand'
+                              ? '#003835'
+                              : '#2E2248'
+                            : activeThemeId === 'cyprus_sand'
+                            ? '#EAE5DB'
                             : '#F3E8FF'
                           : surfaceAlt,
                         borderColor: isActive
-                          ? StaticColors.LavenderPurple
+                          ? themeAccent
                           : borderLight,
                       },
                     ]}
@@ -208,7 +248,7 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
                         styles.presetChipText,
                         {
                           color: isActive
-                            ? StaticColors.LavenderPurple
+                            ? themeAccent
                             : textSecondary,
                           fontFamily: isActive
                             ? Fonts.poppins.semiBold
@@ -240,7 +280,7 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
           >
             <SlidersHorizontal
               size={13}
-              color={StaticColors.LavenderPurple}
+              color={themeAccent}
               strokeWidth={2}
             />
             <Text style={[styles.configFooterText, { color: textSecondary }]}>
@@ -260,10 +300,10 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
           >
             <RotateCcw
               size={12}
-              color={StaticColors.LavenderPurple}
+              color={themeAccent}
               strokeWidth={2.2}
             />
-            <Text style={styles.insideResetText}>Reset Wake Word Defaults</Text>
+            <Text style={[styles.insideResetText, { color: themeAccent }]}>Reset Wake Word Defaults</Text>
           </TouchableOpacity>
         )}
       </View>

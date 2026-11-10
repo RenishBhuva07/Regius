@@ -25,8 +25,15 @@ export interface AppThemeTokens {
   inputBg: string;
   textPrimary: string;
   textSecondary: string;
+  canvasTextPrimary: string;
+  canvasTextSecondary: string;
   borderLight: string;
   borderSubtle: string;
+  accent: string;
+  accentDeep: string;
+  accentLight: string;
+  accentDark: string;
+  accentAura: string;
   getCategoryTheme: (category?: string) => CategoryThemeTokens;
 }
 
@@ -51,9 +58,22 @@ export const useAppTheme = (): AppThemeTokens => {
     Colors.PrimaryText || (isDarkMode ? '#FFFFFF' : '#111111');
   const textSecondary =
     Colors.SecondaryText || (isDarkMode ? '#A3A8B1' : '#666665');
+  const canvasTextPrimary =
+    Colors.CanvasTextPrimary || (isDarkMode ? '#FFFFFF' : '#111111');
+  const canvasTextSecondary =
+    Colors.CanvasTextSecondary || (isDarkMode ? '#A3A8B1' : '#666665');
   const borderLight =
     Colors.BorderLight || (isDarkMode ? '#2C3035' : '#EAE5D9');
   const borderSubtle = isDarkMode ? '#22252B' : '#F0ECE1';
+
+  const accent = Colors.Accent || (isDarkMode ? '#F5C518' : '#8383D6');
+  const accentDeep =
+    Colors.AccentDeep || (isDarkMode ? '#282048' : StaticColors.LavenderPurple);
+  const accentLight = Colors.AccentLight || (isDarkMode ? '#F5C518' : '#9494EC');
+  const accentDark = Colors.AccentDark || (isDarkMode ? '#14151C' : '#6C6CC4');
+  const accentAura =
+    Colors.AccentAura ||
+    (isDarkMode ? 'rgba(245, 197, 24, 0.2)' : 'rgba(131, 131, 214, 0.25)');
 
   const getCategoryTheme = useMemo(() => {
     return (category?: string): CategoryThemeTokens => {
@@ -72,7 +92,7 @@ export const useAppTheme = (): AppThemeTokens => {
           border: isDarkMode ? '#1B9A72' : '#C6FFDD',
           accent: '#52D22E',
           text: isDarkMode ? '#FFFFFF' : '#1B9A72',
-          shadow: '#52D22E',
+          shadow: isDarkMode ? '#000000' : '#52D22E',
           aura: '#52D22E',
           iconBg: isDarkMode ? '#1F382D' : '#EDFDF5',
         };
@@ -90,7 +110,7 @@ export const useAppTheme = (): AppThemeTokens => {
           border: isDarkMode ? '#8383D6' : '#D8DBFF',
           accent: '#8383D6',
           text: isDarkMode ? '#FFFFFF' : '#7059C8',
-          shadow: '#8383D6',
+          shadow: isDarkMode ? '#000000' : '#8383D6',
           aura: '#8383D6',
           iconBg: isDarkMode ? '#2C304A' : '#EFF2FE',
         };
@@ -103,7 +123,7 @@ export const useAppTheme = (): AppThemeTokens => {
           border: isDarkMode ? '#FF9800' : '#FFE0B2',
           accent: '#FF9800',
           text: isDarkMode ? '#FFFFFF' : '#E65100',
-          shadow: '#FF9800',
+          shadow: isDarkMode ? '#000000' : '#FF9800',
           aura: '#FF9800',
           iconBg: isDarkMode ? '#442A20' : '#FFF0DE',
         };
@@ -115,7 +135,7 @@ export const useAppTheme = (): AppThemeTokens => {
         border: isDarkMode ? '#DEAA14' : '#FFF5B8',
         accent: '#F5C518',
         text: isDarkMode ? '#FFFFFF' : '#B48216',
-        shadow: '#F5C518',
+        shadow: isDarkMode ? '#000000' : '#F5C518',
         aura: '#F5C518',
         iconBg: isDarkMode ? '#38301D' : '#FFFCEB',
       };
@@ -135,8 +155,15 @@ export const useAppTheme = (): AppThemeTokens => {
     inputBg,
     textPrimary,
     textSecondary,
+    canvasTextPrimary,
+    canvasTextSecondary,
     borderLight,
     borderSubtle,
+    accent,
+    accentDeep,
+    accentLight,
+    accentDark,
+    accentAura,
     getCategoryTheme,
   };
 };

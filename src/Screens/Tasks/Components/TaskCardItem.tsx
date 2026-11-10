@@ -297,7 +297,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
         bg: isDarkMode ? '#162820' : '#F5FDF9',
         border: isDarkMode ? '#1B9A72' : '#C6FFDD',
         accent: '#52D22E',
-        shadow: '#52D22E',
+        shadow: isDarkMode ? '#000000' : '#52D22E',
         iconBg: isDarkMode ? '#1F382D' : '#EDFDF5',
         auraColor: '#52D22E',
       };
@@ -307,7 +307,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
         bg: isDarkMode ? '#202336' : '#F7F8FE',
         border: isDarkMode ? '#8383D6' : '#D8DBFF',
         accent: '#8383D6',
-        shadow: '#8383D6',
+        shadow: isDarkMode ? '#000000' : '#8383D6',
         iconBg: isDarkMode ? '#2C304A' : '#EFF2FE',
         auraColor: '#8383D6',
       };
@@ -316,7 +316,11 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
       bg: isDarkMode ? '#2A2416' : '#FFFDF7',
       border: isDarkMode ? '#DEAA14' : '#FFF5B8',
       accent: '#F5C518',
-      shadow: task.priority === 'high' ? '#FF3B30' : '#F5C518',
+      shadow: isDarkMode
+        ? '#000000'
+        : task.priority === 'high'
+        ? '#FF3B30'
+        : '#F5C518',
       iconBg: isDarkMode ? '#38301D' : '#FFFCEB',
       auraColor: '#F5C518',
     };

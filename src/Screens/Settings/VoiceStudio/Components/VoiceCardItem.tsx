@@ -5,6 +5,7 @@ import { Fonts } from '../../../../Theme/fonts';
 import { Colors } from '../../../../Assets/StyleUtilities/Colors';
 import { Badge } from '../../../../Common/Badge';
 import { VoiceOption } from '../../Components/types';
+import { isLightColor } from '../../../../Theme/ThemeContext';
 
 export interface VoiceCardItemProps {
   voice: VoiceOption;
@@ -17,6 +18,8 @@ export interface VoiceCardItemProps {
   textSecondary?: string;
   borderLight?: string;
   surfaceAlt?: string;
+  themeAccent?: string;
+  cardBg?: string;
 }
 
 export const VoiceCardItem: React.FC<VoiceCardItemProps> = React.memo(
@@ -31,13 +34,19 @@ export const VoiceCardItem: React.FC<VoiceCardItemProps> = React.memo(
     textSecondary = Colors.SubtitleGray,
     borderLight = '#E8E2D5',
     surfaceAlt = '#FAF8F5',
+    themeAccent = Colors.LavenderPurple,
+    cardBg,
   }) => {
+    const isCardLight = cardBg ? isLightColor(cardBg) : !isDarkMode;
+
     return (
       <View
         style={[
           styles.voiceItemRow,
           isSelected && {
-            backgroundColor: isDarkMode ? '#22283A' : '#EFF2FE',
+            backgroundColor: isCardLight
+              ? 'rgba(0, 70, 67, 0.08)'
+              : '#22283A',
           },
         ]}
       >
@@ -51,7 +60,7 @@ export const VoiceCardItem: React.FC<VoiceCardItemProps> = React.memo(
               styles.voiceAvatar,
               {
                 backgroundColor: isSelected
-                  ? Colors.LavenderPurple
+                  ? themeAccent
                   : surfaceAlt,
                 borderColor: isSelected ? '#FFFFFF' : borderLight,
               },
@@ -59,7 +68,13 @@ export const VoiceCardItem: React.FC<VoiceCardItemProps> = React.memo(
           >
             <Mic
               size={16}
-              color={isSelected ? '#FFFFFF' : textSecondary}
+              color={
+                isSelected
+                  ? isLightColor(themeAccent)
+                    ? '#000000'
+                    : '#FFFFFF'
+                  : textSecondary
+              }
               strokeWidth={2.2}
             />
           </View>

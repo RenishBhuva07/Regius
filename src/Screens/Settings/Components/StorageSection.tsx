@@ -41,9 +41,11 @@ export const StorageSection: React.FC<StorageSectionProps> = ({
 }) => {
   const {
     isDarkMode,
+    activeThemeId,
     cardBg,
     textPrimary,
     textSecondary,
+    canvasTextPrimary,
     borderLight,
     surfaceAlt,
   } = useSettingsTheme();
@@ -105,7 +107,7 @@ export const StorageSection: React.FC<StorageSectionProps> = ({
       <View style={styles.sectionHeaderRow}>
         <View style={styles.sectionTitleWithIcon}>
           <Database size={18} color="#165DFF" strokeWidth={2.4} />
-          <Text style={[styles.sectionTitle, { color: textPrimary }]}>
+          <Text style={[styles.sectionTitle, { color: canvasTextPrimary }]}>
             Cloud & Data Storage
           </Text>
         </View>
@@ -117,9 +119,24 @@ export const StorageSection: React.FC<StorageSectionProps> = ({
           styles.settingsGroupCard,
           {
             backgroundColor: cardBg,
-            borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#FFFFFF',
-            borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
-            shadowColor: isDarkMode ? '#000000' : 'rgba(22, 93, 255, 0.12)',
+            borderColor:
+              activeThemeId === 'cyprus_sand'
+                ? '#DDD7CB'
+                : isDarkMode
+                ? 'rgba(255, 255, 255, 0.12)'
+                : '#FFFFFF',
+            borderBottomColor:
+              activeThemeId === 'cyprus_sand'
+                ? '#C8C2B4'
+                : isDarkMode
+                ? '#171A20'
+                : '#E2DCD0',
+            shadowColor:
+              activeThemeId === 'cyprus_sand'
+                ? 'rgba(0, 70, 67, 0.16)'
+                : isDarkMode
+                ? '#000000'
+                : 'rgba(22, 93, 255, 0.12)',
           },
         ]}
       >

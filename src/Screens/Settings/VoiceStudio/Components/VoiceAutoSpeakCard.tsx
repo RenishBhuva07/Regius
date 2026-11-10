@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, Switch, StyleSheet } from 'react-native';
 import { Fonts } from '../../../../Theme/fonts';
 import { Colors } from '../../../../Assets/StyleUtilities/Colors';
+import { useTheme } from '../../../../Theme/ThemeContext';
 
 export interface VoiceAutoSpeakCardProps {
   autoSpeakReplies: boolean;
@@ -19,6 +20,9 @@ export const VoiceAutoSpeakCard: React.FC<VoiceAutoSpeakCardProps> = React.memo(
     textPrimary = Colors.MidnightInkText,
     textSecondary = Colors.SubtitleGray,
   }) => {
+    const { Colors: themeColors } = useTheme();
+    const themeAccent = themeColors.Accent || Colors.LavenderPurple;
+
     return (
       <View style={styles.toggleRow}>
         <View style={styles.toggleMeta}>
@@ -35,7 +39,7 @@ export const VoiceAutoSpeakCard: React.FC<VoiceAutoSpeakCardProps> = React.memo(
           onValueChange={onToggleAutoSpeak}
           trackColor={{
             false: isDarkMode ? '#3A3F46' : '#D9D9D9',
-            true: Colors.LavenderPurple,
+            true: themeAccent,
           }}
           thumbColor="#FFFFFF"
         />

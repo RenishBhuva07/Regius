@@ -28,9 +28,11 @@ export const SubscriptionSection: React.FC<SubscriptionSectionProps> = ({
 }) => {
   const {
     isDarkMode,
+    activeThemeId,
     cardBg,
     textPrimary,
     textSecondary,
+    canvasTextPrimary,
     borderLight,
     surfaceAlt,
   } = useSettingsTheme();
@@ -41,7 +43,7 @@ export const SubscriptionSection: React.FC<SubscriptionSectionProps> = ({
       <View style={styles.sectionHeaderRow}>
         <View style={styles.sectionTitleWithIcon}>
           <Crown size={18} color="#F5C518" strokeWidth={2.4} />
-          <Text style={[styles.sectionTitle, { color: textPrimary }]}>
+          <Text style={[styles.sectionTitle, { color: canvasTextPrimary }]}>
             Membership & Subscription
           </Text>
         </View>
@@ -58,9 +60,24 @@ export const SubscriptionSection: React.FC<SubscriptionSectionProps> = ({
           styles.settingsGroupCard,
           {
             backgroundColor: cardBg,
-            borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#FFFFFF',
-            borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
-            shadowColor: isDarkMode ? '#000000' : 'rgba(245, 197, 24, 0.15)',
+            borderColor:
+              activeThemeId === 'cyprus_sand'
+                ? '#DDD7CB'
+                : isDarkMode
+                ? 'rgba(255, 255, 255, 0.12)'
+                : '#FFFFFF',
+            borderBottomColor:
+              activeThemeId === 'cyprus_sand'
+                ? '#C8C2B4'
+                : isDarkMode
+                ? '#171A20'
+                : '#E2DCD0',
+            shadowColor:
+              activeThemeId === 'cyprus_sand'
+                ? 'rgba(0, 70, 67, 0.16)'
+                : isDarkMode
+                ? '#000000'
+                : 'rgba(245, 197, 24, 0.15)',
           },
         ]}
       >
@@ -81,13 +98,16 @@ export const SubscriptionSection: React.FC<SubscriptionSectionProps> = ({
               style={[
                 styles.iconBadgeBox,
                 {
-                  backgroundColor: isPremium
-                    ? isDarkMode
-                      ? '#2A2615'
-                      : '#FFF9E0'
-                    : isDarkMode
-                    ? '#22252A'
-                    : '#FFFCEB',
+                  backgroundColor:
+                    activeThemeId === 'cyprus_sand'
+                      ? '#FAF6ED'
+                      : isPremium
+                      ? isDarkMode
+                        ? '#2A2615'
+                        : '#FFF9E0'
+                      : isDarkMode
+                      ? '#22252A'
+                      : '#FFFCEB',
                   borderColor: isPremium ? '#F5C518' : '#FDE68A',
                 },
               ]}

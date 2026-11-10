@@ -27,7 +27,14 @@ export const SettingsHeader: React.FC<SettingsHeaderProps> = ({
   scrollY,
   isScrolled = false,
 }) => {
-  const { isDarkMode, textPrimary, textSecondary } = useSettingsTheme();
+  const {
+    isDarkMode,
+    textPrimary,
+    textSecondary,
+    canvasTextPrimary,
+    canvasTextSecondary,
+    accentDeep,
+  } = useSettingsTheme();
   const navigation = useNavigation<any>();
   const insetsContext = useContext(SafeAreaInsetsContext);
   const insets = insetsContext ?? { top: 0, bottom: 0, left: 0, right: 0 };
@@ -40,8 +47,8 @@ export const SettingsHeader: React.FC<SettingsHeaderProps> = ({
   const headerBgColor = activeScrollY.interpolate({
     inputRange: [0, 30],
     outputRange: [
-      isDarkMode ? 'rgba(40, 32, 72, 0)' : 'rgba(131, 131, 214, 0)',
-      isDarkMode ? '#282048' : Colors.LavenderPurple,
+      'rgba(0, 0, 0, 0)',
+      accentDeep,
     ],
     extrapolate: 'clamp',
   });
@@ -118,7 +125,7 @@ export const SettingsHeader: React.FC<SettingsHeaderProps> = ({
                 styles.headerTitle,
                 isScrolled
                   ? styles.headerTitleScrolled
-                  : { color: textPrimary },
+                  : { color: canvasTextPrimary },
               ]}
               numberOfLines={1}
             >
@@ -129,7 +136,7 @@ export const SettingsHeader: React.FC<SettingsHeaderProps> = ({
                 styles.headerSubtitle,
                 isScrolled
                   ? styles.headerSubtitleScrolled
-                  : { color: textSecondary },
+                  : { color: canvasTextSecondary },
               ]}
               numberOfLines={1}
               ellipsizeMode="tail"

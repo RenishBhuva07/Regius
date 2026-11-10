@@ -122,7 +122,7 @@ export const VOICES: VoiceOption[] = [
 ];
 
 export const useSettingsTheme = () => {
-  const { Colors, isDarkMode, toggleTheme } = useTheme();
+  const { Colors, isDarkMode, activeThemeId, toggleTheme } = useTheme();
 
   const bgMain =
     Colors.Background ||
@@ -132,19 +132,31 @@ export const useSettingsTheme = () => {
     Colors.PrimaryText || (isDarkMode ? '#FFFFFF' : '#111111');
   const textSecondary =
     Colors.SecondaryText || (isDarkMode ? '#A3A8B1' : '#666665');
+  const canvasTextPrimary =
+    Colors.CanvasTextPrimary || (isDarkMode ? '#FFFFFF' : '#111111');
+  const canvasTextSecondary =
+    Colors.CanvasTextSecondary || (isDarkMode ? '#A3A8B1' : '#666665');
   const borderLight =
     Colors.BorderLight || (isDarkMode ? '#2C3035' : '#EAE5D9');
   const surfaceAlt = Colors.SurfaceAlt || (isDarkMode ? '#181B20' : '#F7F5EC');
+  const accent = Colors.Accent || (isDarkMode ? '#F5C518' : '#8383D6');
+  const accentDeep =
+    Colors.AccentDeep || (isDarkMode ? '#282048' : StaticColors.LavenderPurple);
 
   return {
     Colors,
     isDarkMode,
+    activeThemeId,
     toggleTheme,
     bgMain,
     cardBg,
     textPrimary,
     textSecondary,
+    canvasTextPrimary,
+    canvasTextSecondary,
     borderLight,
     surfaceAlt,
+    accent,
+    accentDeep,
   };
 };

@@ -33,6 +33,9 @@ export interface VoicePlaygroundCardProps {
   surfaceAlt?: string;
   textPrimary?: string;
   textSecondary?: string;
+  themeAccent?: string;
+  buttonBg?: string;
+  buttonTextColor?: string;
 }
 
 export const VoicePlaygroundCard: React.FC<VoicePlaygroundCardProps> =
@@ -51,6 +54,9 @@ export const VoicePlaygroundCard: React.FC<VoicePlaygroundCardProps> =
       surfaceAlt = '#FAF8F5',
       textPrimary = Colors.MidnightInkText,
       textSecondary = Colors.SubtitleGray,
+      themeAccent = Colors.LavenderPurple,
+      buttonBg,
+      buttonTextColor,
     }) => {
       return (
         <View
@@ -65,7 +71,7 @@ export const VoicePlaygroundCard: React.FC<VoicePlaygroundCardProps> =
           <View style={styles.playgroundHeader}>
             <Sparkles
               size={16}
-              color={Colors.LavenderPurple}
+              color={themeAccent}
               strokeWidth={2.4}
             />
             <Text
@@ -126,7 +132,7 @@ export const VoicePlaygroundCard: React.FC<VoicePlaygroundCardProps> =
               {synthesisState === 'synthesizing' && (
                 <ActivityIndicator
                   size="small"
-                  color={Colors.LavenderPurple}
+                  color={themeAccent}
                   style={styles.statusSpinner}
                 />
               )}
@@ -137,7 +143,7 @@ export const VoicePlaygroundCard: React.FC<VoicePlaygroundCardProps> =
                     color:
                       synthesisState === 'error'
                         ? '#FF3B30'
-                        : Colors.LavenderPurple,
+                        : themeAccent,
                   },
                 ]}
               >
@@ -161,14 +167,26 @@ export const VoicePlaygroundCard: React.FC<VoicePlaygroundCardProps> =
                 activeOpacity={0.8}
                 style={[
                   styles.actionBtn,
-                  { backgroundColor: Colors.MidnightCharcoal },
+                  {
+                    backgroundColor:
+                      buttonBg || Colors.MidnightCharcoal,
+                  },
                   synthesisState === 'synthesizing' && styles.disabledBtn,
                 ]}
                 onPress={onSynthesize}
                 disabled={synthesisState === 'synthesizing'}
               >
-                <Volume2 size={16} color="#FFFFFF" strokeWidth={2.2} />
-                <Text style={styles.actionBtnText}>
+                <Volume2
+                  size={16}
+                  color={buttonTextColor || '#FFFFFF'}
+                  strokeWidth={2.2}
+                />
+                <Text
+                  style={[
+                    styles.actionBtnText,
+                    buttonTextColor ? { color: buttonTextColor } : null,
+                  ]}
+                >
                   {synthesisState === 'synthesizing'
                     ? 'Synthesizing...'
                     : 'Synthesize & Speak with Kokoro ✦'}

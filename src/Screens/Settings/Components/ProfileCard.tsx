@@ -11,6 +11,7 @@ import { ProBadge } from '../../../Common/ProBadge';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import ProfileCardBackgroundSvg from './ProfileCardBackgroundSvg';
 import { MilestoneTier } from '../../../Services/Milestone/MilestoneService';
+import { useSettingsTheme } from './types';
 
 interface ProfileCardProps {
   name: string;
@@ -45,6 +46,9 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
   isPremium: _isPremium = false,
   onProPress,
 }) => {
+  const { accent } = useSettingsTheme();
+  const themeAccent = accent || StaticColors.LavenderPurple;
+
   return (
     <View style={styles.cardShadowWrapper}>
       <View style={styles.card}>
@@ -170,7 +174,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
               <Text
                 style={[
                   styles.metricValue,
-                  { color: StaticColors.LavenderPurple },
+                  { color: themeAccent },
                 ]}
               >
                 {selectedVoiceName}

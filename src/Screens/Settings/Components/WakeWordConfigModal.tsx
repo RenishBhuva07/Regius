@@ -56,7 +56,9 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
     textSecondary,
     borderLight,
     surfaceAlt,
+    accent,
   } = useSettingsTheme();
+  const themeAccent = accent || StaticColors.LavenderPurple;
 
   const [selectedPhrase, setSelectedPhrase] = useState(currentPhrase);
   const [customInput, setCustomInput] = useState('');
@@ -161,7 +163,7 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
           >
             <View style={styles.headerTitleRow}>
               <View style={styles.headerIconBadge}>
-                <Sliders size={20} color={StaticColors.LavenderPurple} />
+                <Sliders size={20} color={themeAccent} />
               </View>
               <View>
                 <Text style={[styles.modalTitle, { color: textPrimary }]}>
@@ -245,7 +247,7 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
                             : '#F5F3FF'
                           : surfaceAlt,
                         borderColor: isSelected
-                          ? StaticColors.LavenderPurple
+                          ? themeAccent
                           : borderLight,
                       },
                     ]}
@@ -258,7 +260,7 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
                             styles.presetPhraseText,
                             {
                               color: isSelected
-                                ? StaticColors.LavenderPurple
+                                ? themeAccent
                                 : textPrimary,
                             },
                           ]}
@@ -277,10 +279,10 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
                           styles.radioDot,
                           {
                             borderColor: isSelected
-                              ? StaticColors.LavenderPurple
+                              ? themeAccent
                               : borderLight,
                             backgroundColor: isSelected
-                              ? StaticColors.LavenderPurple
+                              ? themeAccent
                               : 'transparent',
                           },
                         ]}
@@ -334,14 +336,14 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
                   backgroundColor: surfaceAlt,
                   borderColor: isCustomMode
                     ? validation.isValid
-                      ? StaticColors.LavenderPurple
+                      ? themeAccent
                       : '#EF4444'
                     : borderLight,
                 },
               ]}
             >
               <View style={styles.inputRow}>
-                <Mic size={18} color={StaticColors.LavenderPurple} />
+                <Mic size={18} color={themeAccent} />
                 <TextInput
                   style={[styles.textInput, { color: textPrimary }]}
                   placeholder="e.g. Hey Aria, Hello Jarvis, Hey Luna"
@@ -593,7 +595,7 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
                           styles.detailValue,
                           {
                             color: testResult.remainingCommand
-                              ? StaticColors.LavenderPurple
+                              ? themeAccent
                               : textSecondary,
                             fontStyle: testResult.remainingCommand
                               ? 'normal'
@@ -635,7 +637,7 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
                 styles.applyButton,
                 {
                   backgroundColor: validation.isValid
-                    ? StaticColors.LavenderPurple
+                    ? themeAccent
                     : '#9CA3AF',
                 },
               ]}

@@ -48,7 +48,15 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
   const dailyQuote = useDailyQuote('tasks');
-  const { isDarkMode, bgMain, textPrimary, textSecondary } = useAppTheme();
+  const {
+    isDarkMode,
+    bgMain,
+    textPrimary,
+    textSecondary,
+    accentDeep,
+    surfaceAlt,
+    borderLight,
+  } = useAppTheme();
   const [activeTab, setActiveTab] = useState<TabKey>('taskList');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
     'works',
@@ -205,9 +213,7 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
         {...(Platform.OS === 'android'
           ? {
               backgroundColor: isScrolled
-                ? isDarkMode
-                  ? '#282048'
-                  : Colors.LavenderPurple
+                ? accentDeep
                 : bgMain,
               translucent: true,
             }
@@ -265,15 +271,7 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
           onPressAdd={openTaskModal}
           addAccessibilityLabel="Add new task"
           bottomPadding={insets.bottom + 130}
-          containerStyle={[
-            styles.taskSection,
-            isDarkMode && {
-              backgroundColor: '#181B20',
-              borderTopColor: '#2C3035',
-              borderLeftColor: '#22252B',
-              borderRightColor: '#22252B',
-            },
-          ]}
+          containerStyle={styles.taskSection}
         >
           {/* Tasks List */}
           <FlatList

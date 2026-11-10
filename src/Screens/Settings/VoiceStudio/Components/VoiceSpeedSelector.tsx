@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Sliders } from 'lucide-react-native';
 import { Fonts } from '../../../../Theme/fonts';
 import { Colors } from '../../../../Assets/StyleUtilities/Colors';
+import { isLightColor } from '../../../../Theme/ThemeContext';
 
 export interface VoiceSpeedSelectorProps {
   speechSpeed: number;
@@ -11,6 +12,7 @@ export interface VoiceSpeedSelectorProps {
   borderLight?: string;
   surfaceAlt?: string;
   textPrimary?: string;
+  themeAccent?: string;
 }
 
 export const VoiceSpeedSelector: React.FC<VoiceSpeedSelectorProps> = React.memo(
@@ -20,11 +22,12 @@ export const VoiceSpeedSelector: React.FC<VoiceSpeedSelectorProps> = React.memo(
     borderLight = '#E8E2D5',
     surfaceAlt = '#FAF8F5',
     textPrimary = Colors.MidnightInkText,
+    themeAccent = Colors.LavenderPurple,
   }) => {
     return (
       <View style={styles.container}>
         <View style={styles.controlHeaderRow}>
-          <Sliders size={16} color={Colors.LavenderPurple} strokeWidth={2.2} />
+          <Sliders size={16} color={themeAccent} strokeWidth={2.2} />
           <Text style={[styles.controlHeaderTitle, { color: textPrimary }]}>
             Playback Speed ({speechSpeed}x)
           </Text>
@@ -41,7 +44,7 @@ export const VoiceSpeedSelector: React.FC<VoiceSpeedSelectorProps> = React.memo(
                   styles.speedPill,
                   {
                     backgroundColor: isActive
-                      ? Colors.LavenderPurple
+                      ? themeAccent
                       : surfaceAlt,
                     borderColor: isActive ? '#FFFFFF' : borderLight,
                   },
@@ -51,7 +54,13 @@ export const VoiceSpeedSelector: React.FC<VoiceSpeedSelectorProps> = React.memo(
                 <Text
                   style={[
                     styles.speedPillText,
-                    { color: isActive ? '#FFFFFF' : textPrimary },
+                    {
+                      color: isActive
+                        ? isLightColor(themeAccent)
+                          ? '#000000'
+                          : '#FFFFFF'
+                        : textPrimary,
+                    },
                   ]}
                 >
                   {speed}x

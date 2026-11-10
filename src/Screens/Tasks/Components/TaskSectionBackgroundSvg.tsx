@@ -11,6 +11,7 @@ import Svg, {
   Stop,
   Line,
 } from 'react-native-svg';
+import { useTheme } from '../../../Theme/ThemeContext';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -45,9 +46,20 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
       }
     }, []);
 
+    const { isDarkMode, activeThemeId, Colors: themeColors } = useTheme();
     const W = Math.round(propWidth || dimensions.width);
     const H = Math.round(propHeight || dimensions.height);
     const centerX = W / 2;
+
+    const isSandTheme = !isDarkMode || activeThemeId === 'cyprus_sand';
+    const bgStop0 = isSandTheme ? '#FFFDF7' : (themeColors.SurfaceAlt || '#181B20');
+    const bgStop22 = isSandTheme ? '#FAF7EF' : (themeColors.Background || '#14171C');
+    const bgStop68 = isSandTheme ? '#F5EFE3' : (themeColors.AccentDeep || '#101216');
+    const bgStop100 = isSandTheme ? '#ECE4D4' : (themeColors.AccentDark || '#0D0E12');
+    const fadeColor = isSandTheme ? '#FAF7EF' : (themeColors.SurfaceAlt || '#181B20');
+    const fadeColorMid = isSandTheme ? '#F5EFE3' : (themeColors.Background || '#14171C');
+    const fadeColorBottom = isSandTheme ? '#ECE4D4' : (themeColors.AccentDeep || '#101216');
+    const themeAura = activeThemeId === 'cyprus_sand' ? '#004643' : (themeColors.Accent || '#8383D6');
 
     const taskDiamond = (cx: number, cy: number, s: number) =>
       `M ${cx} ${cy - s} Q ${cx} ${cy}, ${cx + s} ${cy} Q ${cx} ${cy}, ${cx} ${
@@ -70,10 +82,10 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               y2={H}
               gradientUnits="userSpaceOnUse"
             >
-              <Stop offset="0%" stopColor="#FFFDF7" stopOpacity={0.98} />
-              <Stop offset="22%" stopColor="#FAF7EF" stopOpacity={0.97} />
-              <Stop offset="68%" stopColor="#F5EFE3" stopOpacity={0.96} />
-              <Stop offset="100%" stopColor="#ECE4D4" stopOpacity={0.98} />
+              <Stop offset="0%" stopColor={bgStop0} stopOpacity={0.98} />
+              <Stop offset="22%" stopColor={bgStop22} stopOpacity={0.97} />
+              <Stop offset="68%" stopColor={bgStop68} stopOpacity={0.96} />
+              <Stop offset="100%" stopColor={bgStop100} stopOpacity={0.98} />
             </LinearGradient>
             <RadialGradient
               id="taskCrestAura"
@@ -84,7 +96,7 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
             >
               <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.24} />
               <Stop offset="45%" stopColor="#DEAA14" stopOpacity={0.08} />
-              <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={0} />
+              <Stop offset="100%" stopColor={fadeColor} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
               id="taskPlusAura"
@@ -95,7 +107,7 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
             >
               <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.25} />
               <Stop offset="50%" stopColor="#D99B0F" stopOpacity={0.07} />
-              <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={0} />
+              <Stop offset="100%" stopColor={fadeColor} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
               id="taskLavenderAura"
@@ -104,9 +116,9 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               r={160}
               gradientUnits="userSpaceOnUse"
             >
-              <Stop offset="0%" stopColor="#8383D6" stopOpacity={0.14} />
-              <Stop offset="50%" stopColor="#9C9CE3" stopOpacity={0.04} />
-              <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={0} />
+              <Stop offset="0%" stopColor={themeAura} stopOpacity={0.14} />
+              <Stop offset="50%" stopColor={themeAura} stopOpacity={0.04} />
+              <Stop offset="100%" stopColor={fadeColor} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
               id="taskMintAura"
@@ -117,7 +129,7 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
             >
               <Stop offset="0%" stopColor="#52D22E" stopOpacity={0.12} />
               <Stop offset="55%" stopColor="#1B9A72" stopOpacity={0.03} />
-              <Stop offset="100%" stopColor="#F5EFE3" stopOpacity={0} />
+              <Stop offset="100%" stopColor={fadeColorMid} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
               id="taskFooterAura"
@@ -128,7 +140,7 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
             >
               <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.18} />
               <Stop offset="48%" stopColor="#E2A612" stopOpacity={0.05} />
-              <Stop offset="100%" stopColor="#ECE4D4" stopOpacity={0} />
+              <Stop offset="100%" stopColor={fadeColorBottom} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
               id="taskTargetAura"
@@ -139,7 +151,7 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
             >
               <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.18} />
               <Stop offset="50%" stopColor="#DEAA14" stopOpacity={0.05} />
-              <Stop offset="100%" stopColor="#ECE4D4" stopOpacity={0} />
+              <Stop offset="100%" stopColor={fadeColorBottom} stopOpacity={0} />
             </RadialGradient>
             <LinearGradient
               id="taskGoldNode"
@@ -160,9 +172,21 @@ export const TaskSectionBackgroundSvg: React.FC<TaskSectionBackgroundSvgProps> =
               y2={H}
               gradientUnits="userSpaceOnUse"
             >
-              <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.95} />
-              <Stop offset="15%" stopColor="#FFFFFF" stopOpacity={0.3} />
-              <Stop offset="100%" stopColor="#DACFBE" stopOpacity={0.4} />
+              <Stop
+                offset="0%"
+                stopColor="#FFFFFF"
+                stopOpacity={isDarkMode ? 0.15 : 0.95}
+              />
+              <Stop
+                offset="15%"
+                stopColor="#FFFFFF"
+                stopOpacity={isDarkMode ? 0.05 : 0.3}
+              />
+              <Stop
+                offset="100%"
+                stopColor={isDarkMode ? '#000000' : '#DACFBE'}
+                stopOpacity={isDarkMode ? 0.2 : 0.4}
+              />
             </LinearGradient>
           </Defs>
           <Rect x={0} y={0} width={W} height={H} fill="url(#taskBgSheen)" />
