@@ -48,7 +48,15 @@ type TabKey = 'upcoming' | 'completed';
 export const RemindersScreen: React.FC<any> = ({ route }) => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
-  const { isDarkMode, bgMain, textPrimary, textSecondary } = useAppTheme();
+  const {
+    isDarkMode,
+    bgMain,
+    textPrimary,
+    textSecondary,
+    accentDeep,
+    surfaceAlt,
+    borderLight,
+  } = useAppTheme();
   const dailyQuote = useDailyQuote('reminders');
   const [activeTab, setActiveTab] = useState<TabKey>('upcoming');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(
@@ -249,12 +257,8 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
         {...(Platform.OS === 'android'
           ? {
               backgroundColor: isScrolled
-                ? isDarkMode
-                  ? '#282048'
-                  : Colors.LavenderPurple
-                : isDarkMode
-                ? '#121417'
-                : '#FBF9F3',
+                ? accentDeep
+                : bgMain,
               translucent: true,
             }
           : {})}
@@ -314,15 +318,7 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
           onPressAdd={openReminderModal}
           addAccessibilityLabel="Add Reminder"
           bottomPadding={insets.bottom + 130}
-          containerStyle={[
-            styles.reminderSection,
-            isDarkMode && {
-              backgroundColor: '#181B20',
-              borderTopColor: '#2C3035',
-              borderLeftColor: '#2C3035',
-              borderRightColor: '#2C3035',
-            },
-          ]}
+          containerStyle={styles.reminderSection}
         >
           {/* Reminders List or Empty State */}
           {filteredReminders.length === 0 ? (

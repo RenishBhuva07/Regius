@@ -54,8 +54,11 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
     cardBg,
     textPrimary,
     textSecondary,
+    canvasTextPrimary,
     borderLight,
     surfaceAlt,
+    accent,
+    accentDeep,
   } = useSettingsTheme();
   const { activeThemeId, setActiveThemeId, themePresets } = useTheme();
   const { isThemeUnlocked } = useMilestones();
@@ -100,7 +103,7 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
       <View style={styles.sectionHeaderRow}>
         <View style={styles.sectionTitleWithIcon}>
           <Palette size={18} color="#F5C518" strokeWidth={2.4} />
-          <Text style={[styles.sectionTitle, { color: textPrimary }]}>
+          <Text style={[styles.sectionTitle, { color: canvasTextPrimary }]}>
             Appearance & Themes
           </Text>
         </View>
@@ -112,9 +115,24 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
           styles.settingsGroupCard,
           {
             backgroundColor: cardBg,
-            borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#FFFFFF',
-            borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
-            shadowColor: isDarkMode ? '#000000' : 'rgba(131, 131, 214, 0.12)',
+            borderColor:
+              activeThemeId === 'cyprus_sand'
+                ? '#DDD7CB'
+                : isDarkMode
+                ? 'rgba(255, 255, 255, 0.12)'
+                : '#FFFFFF',
+            borderBottomColor:
+              activeThemeId === 'cyprus_sand'
+                ? '#C8C2B4'
+                : isDarkMode
+                ? '#171A20'
+                : '#E2DCD0',
+            shadowColor:
+              activeThemeId === 'cyprus_sand'
+                ? 'rgba(0, 70, 67, 0.16)'
+                : isDarkMode
+                ? '#000000'
+                : 'rgba(131, 131, 214, 0.12)',
           },
         ]}
       >
@@ -290,12 +308,26 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
             <View
               style={[
                 styles.iconSquare,
-                { backgroundColor: isDarkMode ? '#2C3035' : '#EFF2FE' },
+                {
+                  backgroundColor: isDarkMode
+                    ? activeThemeId === 'cyprus_sand'
+                      ? '#003835'
+                      : '#2C3035'
+                    : activeThemeId === 'cyprus_sand'
+                    ? '#EAE5DB'
+                    : '#EFF2FE',
+                },
               ]}
             >
               <Smartphone
                 size={18}
-                color={StaticColors.LavenderPurple}
+                color={
+                  activeThemeId === 'cyprus_sand'
+                    ? isDarkMode
+                      ? '#0A6B66'
+                      : '#004643'
+                    : accent
+                }
                 strokeWidth={2.2}
               />
             </View>
@@ -313,7 +345,12 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
             onValueChange={onToggleHapticFeedback}
             trackColor={{
               false: '#D9D9D9',
-              true: StaticColors.LavenderPurple,
+              true:
+                activeThemeId === 'cyprus_sand'
+                  ? isDarkMode
+                    ? '#0A6B66'
+                    : '#004643'
+                  : accent,
             }}
             thumbColor="#FFFFFF"
           />
@@ -330,7 +367,13 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
             <View style={styles.intensityHeader}>
               <Sliders
                 size={13}
-                color={StaticColors.LavenderPurple}
+                color={
+                  activeThemeId === 'cyprus_sand'
+                    ? isDarkMode
+                      ? '#0A6B66'
+                      : '#004643'
+                    : accent
+                }
                 strokeWidth={2.2}
               />
               <Text
@@ -343,6 +386,12 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
             <View style={styles.intensityPillsRow}>
               {intensities.map(({ key, label }) => {
                 const isActive = currentIntensity === key;
+                const activePillBg =
+                  activeThemeId === 'cyprus_sand'
+                    ? isDarkMode
+                      ? '#0A6B66'
+                      : '#004643'
+                    : accent;
                 return (
                   <TouchableOpacity
                     key={key}
@@ -352,16 +401,16 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
                       isActive && styles.intensityPillActive,
                       {
                         backgroundColor: isActive
-                          ? StaticColors.LavenderPurple
+                          ? activePillBg
                           : cardBg,
                         borderColor: isActive ? '#FFFFFF' : borderLight,
                         borderBottomColor: isActive
-                          ? '#4D4DB8'
+                          ? accentDeep || '#4D4DB8'
                           : isDarkMode
                           ? '#1A1D22'
                           : '#D5D0C5',
                         shadowColor: isActive
-                          ? StaticColors.LavenderPurple
+                          ? activePillBg
                           : 'transparent',
                       },
                     ]}

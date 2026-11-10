@@ -32,9 +32,11 @@ export const MilestoneSection: React.FC<MilestoneSectionProps> = ({
 }) => {
   const {
     isDarkMode,
+    activeThemeId,
     cardBg,
     textPrimary,
     textSecondary,
+    canvasTextPrimary,
     borderLight,
     surfaceAlt,
   } = useSettingsTheme();
@@ -44,7 +46,7 @@ export const MilestoneSection: React.FC<MilestoneSectionProps> = ({
       <View style={styles.sectionHeaderRow}>
         <View style={styles.sectionTitleWithIcon}>
           <Award size={18} color="#F5C518" strokeWidth={2.4} />
-          <Text style={[styles.sectionTitle, { color: textPrimary }]}>
+          <Text style={[styles.sectionTitle, { color: canvasTextPrimary }]}>
             Milestones & Pro Unlocks
           </Text>
         </View>
@@ -61,9 +63,24 @@ export const MilestoneSection: React.FC<MilestoneSectionProps> = ({
           styles.settingsGroupCard,
           {
             backgroundColor: cardBg,
-            borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#FFFFFF',
-            borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
-            shadowColor: isDarkMode ? '#000000' : 'rgba(131, 131, 214, 0.12)',
+            borderColor:
+              activeThemeId === 'cyprus_sand'
+                ? '#DDD7CB'
+                : isDarkMode
+                ? 'rgba(255, 255, 255, 0.12)'
+                : '#FFFFFF',
+            borderBottomColor:
+              activeThemeId === 'cyprus_sand'
+                ? '#C8C2B4'
+                : isDarkMode
+                ? '#171A20'
+                : '#E2DCD0',
+            shadowColor:
+              activeThemeId === 'cyprus_sand'
+                ? 'rgba(0, 70, 67, 0.16)'
+                : isDarkMode
+                ? '#000000'
+                : 'rgba(131, 131, 214, 0.12)',
           },
         ]}
       >
@@ -80,7 +97,12 @@ export const MilestoneSection: React.FC<MilestoneSectionProps> = ({
               style={[
                 styles.tierIconBadge,
                 {
-                  backgroundColor: isDarkMode ? '#272B33' : '#FFF9E0',
+                  backgroundColor:
+                    activeThemeId === 'cyprus_sand'
+                      ? '#FAF6ED'
+                      : isDarkMode
+                      ? '#272B33'
+                      : '#FFF9E0',
                   borderColor: currentTier.accentColor,
                 },
               ]}

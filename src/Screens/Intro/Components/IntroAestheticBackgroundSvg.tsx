@@ -16,11 +16,17 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 interface IntroAestheticBackgroundSvgProps extends SvgProps {
   isDark?: boolean;
   accentColor?: string;
+  canvasColor?: string;
 }
 
 const IntroAestheticBackgroundSvgComponent: React.FC<
   IntroAestheticBackgroundSvgProps
-> = ({ isDark = false, accentColor = '#F5C518', ...props }) => {
+> = ({
+  isDark = false,
+  accentColor = '#F5C518',
+  canvasColor,
+  ...props
+}) => {
   const W = SCREEN_WIDTH;
   const H = SCREEN_HEIGHT;
   const CX = W / 2;
@@ -51,7 +57,7 @@ const IntroAestheticBackgroundSvgComponent: React.FC<
           />
           <Stop
             offset="100%"
-            stopColor={isDark ? '#121417' : '#FFFCE3'}
+            stopColor={canvasColor || (isDark ? '#121417' : '#FFFCE3')}
             stopOpacity={0}
           />
         </RadialGradient>
@@ -65,7 +71,7 @@ const IntroAestheticBackgroundSvgComponent: React.FC<
           />
           <Stop
             offset="100%"
-            stopColor={isDark ? '#121417' : '#FFFCE3'}
+            stopColor={canvasColor || (isDark ? '#121417' : '#FFFCE3')}
             stopOpacity={0}
           />
         </RadialGradient>

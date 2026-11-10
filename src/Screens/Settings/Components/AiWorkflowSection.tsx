@@ -23,15 +23,23 @@ export const AiWorkflowSection: React.FC<AiWorkflowSectionProps> = ({
   notificationsEnabled,
   onToggleNotifications,
 }) => {
-  const { isDarkMode, cardBg, textPrimary, textSecondary, borderLight } =
-    useSettingsTheme();
+  const {
+    isDarkMode,
+    activeThemeId,
+    cardBg,
+    textPrimary,
+    textSecondary,
+    canvasTextPrimary,
+    borderLight,
+    accent,
+  } = useSettingsTheme();
 
   return (
     <>
       <View style={styles.sectionHeaderRow}>
         <View style={styles.sectionTitleWithIcon}>
           <Zap size={18} color="#52D22E" strokeWidth={2.4} />
-          <Text style={[styles.sectionTitle, { color: textPrimary }]}>
+          <Text style={[styles.sectionTitle, { color: canvasTextPrimary }]}>
             AI Workflow & Notifications
           </Text>
         </View>
@@ -42,9 +50,24 @@ export const AiWorkflowSection: React.FC<AiWorkflowSectionProps> = ({
           styles.settingsGroupCard,
           {
             backgroundColor: cardBg,
-            borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#FFFFFF',
-            borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
-            shadowColor: isDarkMode ? '#000000' : 'rgba(82, 210, 46, 0.12)',
+            borderColor:
+              activeThemeId === 'cyprus_sand'
+                ? '#DDD7CB'
+                : isDarkMode
+                ? 'rgba(255, 255, 255, 0.12)'
+                : '#FFFFFF',
+            borderBottomColor:
+              activeThemeId === 'cyprus_sand'
+                ? '#C8C2B4'
+                : isDarkMode
+                ? '#171A20'
+                : '#E2DCD0',
+            shadowColor:
+              activeThemeId === 'cyprus_sand'
+                ? 'rgba(0, 70, 67, 0.16)'
+                : isDarkMode
+                ? '#000000'
+                : 'rgba(82, 210, 46, 0.12)',
           },
         ]}
       >
@@ -111,12 +134,12 @@ export const AiWorkflowSection: React.FC<AiWorkflowSectionProps> = ({
             <View
               style={[
                 styles.iconSquare,
-                { backgroundColor: isDarkMode ? '#2C3035' : '#EFF2FE' },
+                { backgroundColor: isDarkMode ? '#2C3035' : '#EDFDF5' },
               ]}
             >
               <Volume2
                 size={18}
-                color={StaticColors.LavenderPurple}
+                color={isDarkMode ? '#52D22E' : '#1B9A72'}
                 strokeWidth={2.2}
               />
             </View>
@@ -134,7 +157,7 @@ export const AiWorkflowSection: React.FC<AiWorkflowSectionProps> = ({
             onValueChange={onToggleNotifications}
             trackColor={{
               false: '#D9D9D9',
-              true: StaticColors.LavenderPurple,
+              true: '#52D22E',
             }}
             thumbColor="#FFFFFF"
           />

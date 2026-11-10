@@ -16,11 +16,12 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 interface LoginAestheticBackgroundSvgProps extends SvgProps {
   isDark?: boolean;
   crestCy?: number;
+  canvasColor?: string;
 }
 
 export const LoginAestheticBackgroundSvg: React.FC<
   LoginAestheticBackgroundSvgProps
-> = ({ isDark = false, crestCy, ...props }) => {
+> = ({ isDark = false, crestCy, canvasColor, ...props }) => {
   const W = SCREEN_WIDTH;
   const H = SCREEN_HEIGHT;
   const CX = W / 2;
@@ -80,7 +81,7 @@ export const LoginAestheticBackgroundSvg: React.FC<
           />
           <Stop
             offset="100%"
-            stopColor={isDark ? '#121417' : '#FFFCE3'}
+            stopColor={canvasColor || (isDark ? '#121417' : '#FFFCE3')}
             stopOpacity={0}
           />
         </RadialGradient>

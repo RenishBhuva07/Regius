@@ -95,11 +95,14 @@ export const MilestoneFullScreenSheet: React.FC = () => {
     },
   );
 
+  const scrolledBg =
+    themeColors.AccentDeep || (isDarkMode ? '#282048' : Colors.LavenderPurple);
+
   const headerBgColor = scrollY.interpolate({
     inputRange: [0, 30],
     outputRange: [
       isDarkMode ? 'rgba(18, 20, 23, 0)' : 'rgba(255, 252, 227, 0)',
-      isDarkMode ? '#282048' : Colors.LavenderPurple,
+      scrolledBg,
     ],
     extrapolate: 'clamp',
   });
@@ -184,9 +187,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
           {...(Platform.OS === 'android'
             ? {
                 backgroundColor: isScrolled
-                  ? isDarkMode
-                    ? '#282048'
-                    : Colors.LavenderPurple
+                  ? scrolledBg
                   : sheetBg,
                 translucent: true,
               }

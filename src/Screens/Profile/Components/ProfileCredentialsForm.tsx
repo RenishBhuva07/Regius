@@ -34,7 +34,7 @@ export const ProfileCredentialsForm: React.FC<ProfileCredentialsFormProps> =
       isDarkMode,
     }) => {
       const [focusedInput, setFocusedInput] = useState<string | null>(null);
-      const { Colors: themeColors } = useTheme();
+      const { isDarkMode: themeIsDark, Colors: themeColors } = useTheme();
 
       const cardBg =
         themeColors.CardBackground ||
@@ -45,14 +45,21 @@ export const ProfileCredentialsForm: React.FC<ProfileCredentialsFormProps> =
       const textSecondary =
         themeColors.SecondaryText ||
         (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+      const canvasTextSecondary =
+        themeColors.CanvasTextSecondary ||
+        (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
       const borderLight =
         themeColors.BorderLight || (isDarkMode ? '#2C3035' : '#E8E2D5');
       const inputBg =
         themeColors.SurfaceAlt || (isDarkMode ? '#171A1F' : '#FAF8F5');
+      const themeAccent =
+        themeColors.AccentLight ||
+        themeColors.Accent ||
+        Colors.LavenderPurple;
 
       return (
         <View style={styles.container}>
-          <Text style={[styles.sectionHeading, { color: textSecondary }]}>
+          <Text style={[styles.sectionHeading, { color: canvasTextSecondary }]}>
             PERSONAL CREDENTIALS
           </Text>
 
@@ -76,7 +83,7 @@ export const ProfileCredentialsForm: React.FC<ProfileCredentialsFormProps> =
               <View style={styles.inputLabelRow}>
                 <User
                   size={15}
-                  color={Colors.LavenderPurple}
+                  color={themeAccent}
                   strokeWidth={2.2}
                 />
                 <Text style={[styles.inputLabel, { color: textPrimary }]}>
@@ -90,7 +97,7 @@ export const ProfileCredentialsForm: React.FC<ProfileCredentialsFormProps> =
                     backgroundColor: inputBg,
                     borderColor:
                       focusedInput === 'name'
-                        ? Colors.LavenderPurple
+                        ? themeAccent
                         : borderLight,
                   },
                 ]}
@@ -116,7 +123,7 @@ export const ProfileCredentialsForm: React.FC<ProfileCredentialsFormProps> =
               <View style={styles.inputLabelRow}>
                 <Mail
                   size={15}
-                  color={Colors.LavenderPurple}
+                  color={themeAccent}
                   strokeWidth={2.2}
                 />
                 <Text style={[styles.inputLabel, { color: textPrimary }]}>
@@ -130,7 +137,7 @@ export const ProfileCredentialsForm: React.FC<ProfileCredentialsFormProps> =
                     backgroundColor: inputBg,
                     borderColor:
                       focusedInput === 'email'
-                        ? Colors.LavenderPurple
+                        ? themeAccent
                         : borderLight,
                   },
                 ]}
@@ -158,7 +165,7 @@ export const ProfileCredentialsForm: React.FC<ProfileCredentialsFormProps> =
               <View style={styles.inputLabelRow}>
                 <FileText
                   size={15}
-                  color={Colors.LavenderPurple}
+                  color={themeAccent}
                   strokeWidth={2.2}
                 />
                 <Text style={[styles.inputLabel, { color: textPrimary }]}>
@@ -173,7 +180,7 @@ export const ProfileCredentialsForm: React.FC<ProfileCredentialsFormProps> =
                     backgroundColor: inputBg,
                     borderColor:
                       focusedInput === 'bio'
-                        ? Colors.LavenderPurple
+                        ? themeAccent
                         : borderLight,
                   },
                 ]}
@@ -205,7 +212,7 @@ export const ProfileCredentialsForm: React.FC<ProfileCredentialsFormProps> =
               <View style={styles.inputLabelRow}>
                 <ShieldCheck
                   size={15}
-                  color={Colors.LavenderPurple}
+                  color={themeAccent}
                   strokeWidth={2.2}
                 />
                 <Text style={[styles.inputLabel, { color: textPrimary }]}>
@@ -219,7 +226,7 @@ export const ProfileCredentialsForm: React.FC<ProfileCredentialsFormProps> =
                     backgroundColor: inputBg,
                     borderColor:
                       focusedInput === 'role'
-                        ? Colors.LavenderPurple
+                        ? themeAccent
                         : borderLight,
                   },
                 ]}

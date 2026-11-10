@@ -201,10 +201,17 @@ export const VoiceStudioScreen: React.FC = () => {
     (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
   const textSecondary =
     themeColors.SecondaryText || (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+  const canvasTextSecondary =
+    themeColors.CanvasTextSecondary ||
+    (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
   const borderLight =
     themeColors.BorderLight || (isDarkMode ? '#2C3035' : '#E8E2D5');
   const surfaceAlt =
     themeColors.SurfaceAlt || (isDarkMode ? '#171A1F' : '#FAF8F5');
+  const themeAccent =
+    themeColors.AccentLight ||
+    themeColors.Accent ||
+    Colors.LavenderPurple;
 
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>
@@ -291,7 +298,7 @@ export const VoiceStudioScreen: React.FC = () => {
         </View>
 
         {/* Speech Controls & Pacing Bento */}
-        <Text style={[styles.sectionHeading, { color: textSecondary }]}>
+        <Text style={[styles.sectionHeading, { color: canvasTextSecondary }]}>
           SPEECH CONTROLS & PACING
         </Text>
 
@@ -310,6 +317,7 @@ export const VoiceStudioScreen: React.FC = () => {
             borderLight={borderLight}
             surfaceAlt={surfaceAlt}
             textPrimary={textPrimary}
+            themeAccent={themeAccent}
           />
 
           <View
@@ -326,7 +334,7 @@ export const VoiceStudioScreen: React.FC = () => {
         </View>
 
         {/* Neural Speech Playground */}
-        <Text style={[styles.sectionHeading, { color: textSecondary }]}>
+        <Text style={[styles.sectionHeading, { color: canvasTextSecondary }]}>
           NEURAL SPEECH PLAYGROUND
         </Text>
 
@@ -346,10 +354,13 @@ export const VoiceStudioScreen: React.FC = () => {
           surfaceAlt={surfaceAlt}
           textPrimary={textPrimary}
           textSecondary={textSecondary}
+          themeAccent={themeAccent}
+          buttonBg={themeColors.ButtonBackground}
+          buttonTextColor={themeColors.ButtonText}
         />
 
         {/* Kokoro Voice Catalog */}
-        <Text style={[styles.sectionHeading, { color: textSecondary }]}>
+        <Text style={[styles.sectionHeading, { color: canvasTextSecondary }]}>
           KOKORO VOICE CATALOG ({VOICES.length})
         </Text>
 
@@ -380,6 +391,8 @@ export const VoiceStudioScreen: React.FC = () => {
                   textSecondary={textSecondary}
                   borderLight={borderLight}
                   surfaceAlt={surfaceAlt}
+                  themeAccent={themeAccent}
+                  cardBg={cardBg}
                 />
                 {idx < VOICES.length - 1 && (
                   <View

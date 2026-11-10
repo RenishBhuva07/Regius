@@ -22,6 +22,7 @@ import { Fonts } from '../../../Theme/fonts';
 import { Colors as StaticColors } from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { HeaderActionButton } from '../../../Common/HeaderActionButton';
+import { useTheme } from '../../../Theme/ThemeContext';
 import { VoiceOption, useSettingsTheme } from './types';
 
 interface DefaultVoiceSectionProps {
@@ -58,9 +59,19 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
     cardBg,
     textPrimary,
     textSecondary,
+    canvasTextPrimary,
     borderLight,
     surfaceAlt,
+    accent,
   } = useSettingsTheme();
+  const { activeThemeId } = useTheme();
+
+  const themeAccent =
+    activeThemeId === 'cyprus_sand'
+      ? isDarkMode
+        ? '#0A6B66'
+        : '#004643'
+      : accent;
 
   const isCurrentVoicePlaying =
     isPlayingPreview && playingVoiceId === selectedVoice.id;
@@ -72,11 +83,11 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
         <View style={styles.sectionTitleWithIcon}>
           <Headphones
             size={18}
-            color={StaticColors.LavenderPurple}
+            color={themeAccent}
             strokeWidth={2.4}
           />
           <Text
-            style={[styles.sectionTitle, { color: textPrimary }]}
+            style={[styles.sectionTitle, { color: canvasTextPrimary }]}
             numberOfLines={1}
             ellipsizeMode="tail"
           >
@@ -99,9 +110,24 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
           styles.activeVoiceCard,
           {
             backgroundColor: cardBg,
-            borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#FFFFFF',
-            borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
-            shadowColor: isDarkMode ? '#000000' : 'rgba(131, 131, 214, 0.16)',
+            borderColor:
+              activeThemeId === 'cyprus_sand'
+                ? '#DDD7CB'
+                : isDarkMode
+                ? 'rgba(255, 255, 255, 0.12)'
+                : '#FFFFFF',
+            borderBottomColor:
+              activeThemeId === 'cyprus_sand'
+                ? '#C8C2B4'
+                : isDarkMode
+                ? '#171A20'
+                : '#E2DCD0',
+            shadowColor:
+              activeThemeId === 'cyprus_sand'
+                ? 'rgba(0, 70, 67, 0.16)'
+                : isDarkMode
+                ? '#000000'
+                : 'rgba(131, 131, 214, 0.16)',
           },
         ]}
       >
@@ -225,7 +251,7 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
           <View style={styles.presetsInsideHeader}>
             <Headphones
               size={13}
-              color={StaticColors.LavenderPurple}
+              color={themeAccent}
               strokeWidth={2.2}
             />
             <Text style={[styles.presetsInsideTitle, { color: textSecondary }]}>
@@ -325,7 +351,7 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
               onValueChange={onToggleAutoSpeakReplies}
               trackColor={{
                 false: '#D9D9D9',
-                true: StaticColors.LavenderPurple,
+                true: themeAccent,
               }}
               thumbColor="#FFFFFF"
             />
@@ -343,10 +369,10 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
           >
             <RotateCcw
               size={12}
-              color={StaticColors.LavenderPurple}
+              color={themeAccent}
               strokeWidth={2.2}
             />
-            <Text style={styles.insideResetText}>Reset Voice Defaults</Text>
+            <Text style={[styles.insideResetText, { color: themeAccent }]}>Reset Voice Defaults</Text>
           </TouchableOpacity>
         )}
       </View>

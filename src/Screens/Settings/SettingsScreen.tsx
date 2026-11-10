@@ -60,7 +60,7 @@ export { VOICES };
 const PROFILE_STORAGE_KEY = '@regius_profile_data';
 
 const SettingsScreen: React.FC = () => {
-  const { bgMain, isDarkMode } = useSettingsTheme();
+  const { bgMain, isDarkMode, accentDeep } = useSettingsTheme();
   const { logout } = useContext(AuthContext);
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
@@ -352,9 +352,7 @@ const SettingsScreen: React.FC = () => {
         {...(Platform.OS === 'android'
           ? {
               backgroundColor: isScrolled
-                ? isDarkMode
-                  ? '#282048'
-                  : Colors.LavenderPurple
+                ? accentDeep
                 : bgMain,
               translucent: true,
             }

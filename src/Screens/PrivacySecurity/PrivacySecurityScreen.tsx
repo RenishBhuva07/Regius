@@ -43,6 +43,7 @@ const HEADER_HEIGHT = SUB_SCREEN_HEADER_HEIGHT;
 export const PrivacySecurityScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const { isDarkMode, Colors: themeColors } = useTheme();
+  const themeAccent = themeColors.Accent || Colors.LavenderPurple;
 
   const [onDeviceSpeech, setOnDeviceSpeech] = useState(true);
   const [cloudSync, setCloudSync] = useState(true);
@@ -189,7 +190,7 @@ export const PrivacySecurityScreen: React.FC = () => {
 
               <View style={styles.pillarItem}>
                 <View style={styles.pillarIconCircle}>
-                  <EyeOff size={14} color={Colors.LavenderPurple} strokeWidth={2.2} />
+                  <EyeOff size={14} color={themeAccent} strokeWidth={2.2} />
                 </View>
                 <Text style={styles.pillarTitle}>Zero Ad Tracking</Text>
                 <Text style={styles.pillarSub}>No Profiling</Text>
@@ -271,7 +272,7 @@ export const PrivacySecurityScreen: React.FC = () => {
               >
                 <Server
                   size={18}
-                  color={Colors.LavenderPurple}
+                  color={themeAccent}
                   strokeWidth={2.2}
                 />
               </View>
@@ -294,7 +295,7 @@ export const PrivacySecurityScreen: React.FC = () => {
               }}
               trackColor={{
                 false: isDarkMode ? '#3A3F46' : '#D9D9D9',
-                true: Colors.LavenderPurple,
+                true: themeAccent,
               }}
               thumbColor="#FFFFFF"
             />
@@ -370,7 +371,7 @@ export const PrivacySecurityScreen: React.FC = () => {
               }}
               trackColor={{
                 false: isDarkMode ? '#3A3F46' : '#D9D9D9',
-                true: Colors.LavenderPurple,
+                true: themeAccent,
               }}
               thumbColor="#FFFFFF"
             />
@@ -406,7 +407,7 @@ export const PrivacySecurityScreen: React.FC = () => {
               >
                 <Download
                   size={18}
-                  color={Colors.LavenderPurple}
+                  color={themeAccent}
                   strokeWidth={2.2}
                 />
               </View>

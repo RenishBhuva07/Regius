@@ -193,7 +193,10 @@ export const ProfileScreen: React.FC = () => {
           icon={
             <Check
               size={18}
-              color={isDarkMode ? '#121417' : Colors.PureWhiteText}
+              color={
+                themeColors.ButtonText ||
+                (isDarkMode ? '#121417' : Colors.PureWhiteText)
+              }
               strokeWidth={2.4}
             />
           }

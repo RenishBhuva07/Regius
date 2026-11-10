@@ -43,7 +43,7 @@ type AuthMode = 'signin' | 'signup';
 export const LoginScreen: React.FC = () => {
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
-  const { isDarkMode } = useTheme();
+  const { isDarkMode, Colors: themeColors } = useTheme();
   const { setAuthState } = useContext(AuthContext);
 
   // Form State
@@ -58,10 +58,10 @@ export const LoginScreen: React.FC = () => {
 
   // Modals
   const [forgotModalVisible, setForgotModalVisible] = useState(false);
-  const [termsModalVisible, setTermsModalVisible] = useState(false);
   const [termsModalTab, setTermsModalTab] = useState<'terms' | 'privacy'>(
     'terms',
   );
+  const [termsModalVisible, setTermsModalVisible] = useState(false);
 
   // Field Focus States
   const [focusedField, setFocusedField] = useState<string | null>(null);
@@ -87,18 +87,31 @@ export const LoginScreen: React.FC = () => {
   };
 
   // Color Tokens based on Theme
-  const bgCanvas = isDarkMode ? '#121417' : Colors.CreamBackground;
+  const bgCanvas =
+    themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
   const surfaceCardBg = isDarkMode ? '#1E2228' : Colors.DefaultWhite;
   const textPrimary = isDarkMode
     ? Colors.PureWhiteText
     : Colors.MidnightInkText;
   const textSecondary = isDarkMode ? '#A3A8B1' : Colors.SubtitleGray;
-  const borderLight = isDarkMode ? '#2C3035' : Colors.RingBorder;
-  const inputBg = isDarkMode ? '#171A1F' : '#FAF8F5';
-  const ctaBg = isDarkMode ? Colors.PureWhiteText : Colors.MidnightCharcoal;
-  const ctaTextColor = isDarkMode
-    ? Colors.MidnightInkText
-    : Colors.PureWhiteText;
+  const canvasTextPrimary =
+    themeColors.CanvasTextPrimary || textPrimary;
+  const canvasTextSecondary =
+    themeColors.CanvasTextSecondary || textSecondary;
+  const borderLight =
+    themeColors.BorderLight || (isDarkMode ? '#2C3035' : Colors.RingBorder);
+  const inputBg =
+    themeColors.SurfaceAlt || (isDarkMode ? '#171A1F' : '#FAF8F5');
+  const ctaBg =
+    themeColors.ButtonBackground ||
+    (isDarkMode ? Colors.PureWhiteText : Colors.MidnightCharcoal);
+  const ctaTextColor =
+    themeColors.ButtonText ||
+    (isDarkMode ? Colors.MidnightInkText : Colors.PureWhiteText);
+  const themeAccent =
+    themeColors.AccentLight ||
+    themeColors.Accent ||
+    Colors.LavenderPurple;
 
   // Segmented Switcher Color Tokens
   const switcherTrackBg = isDarkMode ? '#14171C' : '#FAF5E4';
@@ -226,6 +239,7 @@ export const LoginScreen: React.FC = () => {
         <LoginAestheticBackgroundSvg
           isDark={isDarkMode}
           crestCy={insets.top + ResponsivePixels.size38}
+          canvasColor={bgCanvas}
         />
       </View>
 
@@ -267,12 +281,12 @@ export const LoginScreen: React.FC = () => {
               />
             </View>
 
-            <Text style={[styles.brandTitle, { color: textPrimary }]}>
+            <Text style={[styles.brandTitle, { color: canvasTextPrimary }]}>
               {authMode === 'signin'
                 ? 'Sign In to Regius'
                 : 'Create an Account'}
             </Text>
-            <Text style={[styles.brandSubtitle, { color: textSecondary }]}>
+            <Text style={[styles.brandSubtitle, { color: canvasTextSecondary }]}>
               {authMode === 'signin'
                 ? 'Plan your day in details with mindful luxury'
                 : 'Experience artisanal productivity and smart workflows'}
@@ -382,12 +396,12 @@ export const LoginScreen: React.FC = () => {
                         backgroundColor: inputBg,
                         borderColor:
                           focusedField === 'name'
-                            ? Colors.LavenderPurple
+                            ? themeAccent
                             : borderLight,
                         borderWidth: focusedField === 'name' ? 1.8 : 1.2,
                         borderBottomColor:
                           focusedField === 'name'
-                            ? Colors.LavenderPurple
+                            ? themeAccent
                             : isDarkMode
                             ? '#20242B'
                             : '#EAE4D7',
@@ -399,7 +413,7 @@ export const LoginScreen: React.FC = () => {
                       <UserFieldSvg
                         color={
                           focusedField === 'name'
-                            ? Colors.LavenderPurple
+                            ? themeAccent
                             : textSecondary
                         }
                       />
@@ -431,12 +445,12 @@ export const LoginScreen: React.FC = () => {
                       backgroundColor: inputBg,
                       borderColor:
                         focusedField === 'email'
-                          ? Colors.LavenderPurple
+                          ? themeAccent
                           : borderLight,
                       borderWidth: focusedField === 'email' ? 1.8 : 1.2,
                       borderBottomColor:
                         focusedField === 'email'
-                          ? Colors.LavenderPurple
+                          ? themeAccent
                           : isDarkMode
                           ? '#20242B'
                           : '#EAE4D7',
@@ -448,7 +462,7 @@ export const LoginScreen: React.FC = () => {
                     <MailFieldSvg
                       color={
                         focusedField === 'email'
-                          ? Colors.LavenderPurple
+                          ? themeAccent
                           : textSecondary
                       }
                     />
@@ -491,12 +505,12 @@ export const LoginScreen: React.FC = () => {
                       backgroundColor: inputBg,
                       borderColor:
                         focusedField === 'password'
-                          ? Colors.LavenderPurple
+                          ? themeAccent
                           : borderLight,
                       borderWidth: focusedField === 'password' ? 1.8 : 1.2,
                       borderBottomColor:
                         focusedField === 'password'
-                          ? Colors.LavenderPurple
+                          ? themeAccent
                           : isDarkMode
                           ? '#20242B'
                           : '#EAE4D7',
@@ -508,7 +522,7 @@ export const LoginScreen: React.FC = () => {
                     <LockFieldSvg
                       color={
                         focusedField === 'password'
-                          ? Colors.LavenderPurple
+                          ? themeAccent
                           : textSecondary
                       }
                     />
