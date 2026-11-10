@@ -123,8 +123,26 @@ export const RegiusToast: React.FC<RegiusToastProps> = ({
   onPress,
   hide,
 }) => {
-  const { isDarkMode } = useTheme();
-  const config = VARIANT_CONFIGS[variant] || VARIANT_CONFIGS.info;
+  const { isDarkMode, activeThemeId } = useTheme();
+  const baseConfig = VARIANT_CONFIGS[variant] || VARIANT_CONFIGS.info;
+  const config =
+    activeThemeId === 'cyprus_sand' && variant === 'info'
+      ? {
+          ...baseConfig,
+          iconColor: isDarkMode ? '#F0EDE5' : '#004643',
+          badgeBgDark: '#003835',
+          badgeBorderDark: '#0A6B66',
+          badgeBottomBorderDark: '#001A18',
+          badgeBgLight: '#E6E2D8',
+          badgeBorderLight: '#FFFFFF',
+          badgeBottomBorderLight: '#DDD7CB',
+          cardBorderDark: '#0A6B66',
+          cardBottomBorderDark: '#001A18',
+          cardBorderLight: '#DDD7CB',
+          cardBottomBorderLight: '#C8C2B4',
+          glowColor: '#0A6B66',
+        }
+      : baseConfig;
   const { Icon } = config;
 
   const hasTitle = Boolean(text1 && text1.trim().length > 0);
@@ -191,7 +209,11 @@ export const RegiusToast: React.FC<RegiusToastProps> = ({
       ]}
     >
       {/* Toast background */}
-      <ToastAestheticPatternSvg variant={variant} isDarkMode={isDarkMode} />
+      <ToastAestheticPatternSvg
+        variant={variant}
+        isDarkMode={isDarkMode}
+        activeThemeId={activeThemeId}
+      />
 
       {/* Icon badge */}
       <View

@@ -53,15 +53,18 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
   const { assistantName, openAssistant } = useVoiceWakeWord();
-  const { isDarkMode } = useTheme();
+  const { isDarkMode, Colors: themeColors } = useTheme();
   const { width: screenWidth } = Dimensions.get('window');
+
+  const scrolledBg =
+    themeColors.AccentDeep || (isDarkMode ? '#282048' : Colors.LavenderPurple);
 
   // Interpolate header visual styles based on scroll position (0 to 30px)
   const headerBgColor = scrollY.interpolate({
     inputRange: [0, 30],
     outputRange: [
       isDarkMode ? 'rgba(18, 20, 23, 0)' : 'rgba(255, 255, 255, 0)',
-      isDarkMode ? '#282048' : Colors.LavenderPurple,
+      scrolledBg,
     ],
     extrapolate: 'clamp',
   });

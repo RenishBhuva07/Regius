@@ -64,18 +64,22 @@ export const SubScreenHeader: React.FC<SubScreenHeaderProps> = ({
 
   const bgMain =
     themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
-  const textPrimary =
-    themeColors.PrimaryText ||
+  const canvasTextPrimary =
+    themeColors.CanvasTextPrimary ||
     (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
-  const textSecondary =
-    themeColors.SecondaryText || (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+  const canvasTextSecondary =
+    themeColors.CanvasTextSecondary ||
+    (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+
+  const scrolledBg =
+    themeColors.AccentDeep || (isDarkMode ? '#282048' : Colors.LavenderPurple);
 
   // Interpolate header visual styles based on scroll position (0 to 30px)
   const headerBgColor = scrollY.interpolate({
     inputRange: [0, 30],
     outputRange: [
       isDarkMode ? 'rgba(18, 20, 23, 0)' : 'rgba(255, 252, 227, 0)',
-      isDarkMode ? '#282048' : Colors.LavenderPurple,
+      scrolledBg,
     ],
     extrapolate: 'clamp',
   });
@@ -142,9 +146,7 @@ export const SubScreenHeader: React.FC<SubScreenHeaderProps> = ({
           {...(Platform.OS === 'android'
             ? {
                 backgroundColor: isScrolled
-                  ? isDarkMode
-                    ? '#282048'
-                    : Colors.LavenderPurple
+                  ? scrolledBg
                   : statusBgMain ?? bgMain,
                 translucent: true,
               }
@@ -201,7 +203,7 @@ export const SubScreenHeader: React.FC<SubScreenHeaderProps> = ({
                   styles.headerTitle,
                   isScrolled
                     ? styles.headerTitleScrolled
-                    : { color: textPrimary },
+                    : { color: canvasTextPrimary },
                 ]}
                 numberOfLines={1}
               >
@@ -218,7 +220,7 @@ export const SubScreenHeader: React.FC<SubScreenHeaderProps> = ({
                     styles.headerSubtitle,
                     isScrolled
                       ? styles.headerSubtitleScrolled
-                      : { color: textSecondary },
+                      : { color: canvasTextSecondary },
                   ]}
                   numberOfLines={1}
                 >

@@ -35,10 +35,64 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
       cp: CP = 18,
       borderW: BAR_BORDER_W = 4,
     }) => {
-      const { isDarkMode, Colors: themeColors } = useTheme();
+      const { isDarkMode, activeThemeId, Colors: themeColors } = useTheme();
       const strokeColor =
         themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
       const cx = W / 2;
+
+      const getBarGradient = () => {
+        if (activeThemeId === 'cyprus_sand') {
+          return {
+            top: '#0A6B66',
+            mid: '#004643',
+            bot: '#001A18',
+            aura: 'rgba(0, 70, 67, 0.4)',
+            leftAura: '#0D7E78',
+            haloGold: '#F0EDE5',
+          };
+        }
+        if (activeThemeId === 'emerald_velvet') {
+          return {
+            top: '#1B9A72',
+            mid: '#0F1A15',
+            bot: '#070D0A',
+            aura: 'rgba(46, 204, 113, 0.35)',
+            leftAura: '#2ECC71',
+            haloGold: '#E3F7EE',
+          };
+        }
+        if (activeThemeId === 'celestial_azure') {
+          return {
+            top: '#2563EB',
+            mid: '#0D1424',
+            bot: '#060A14',
+            aura: 'rgba(96, 165, 250, 0.35)',
+            leftAura: '#60A5FA',
+            haloGold: '#E6EEFA',
+          };
+        }
+        if (activeThemeId === 'classic_dark' || activeThemeId === 'obsidian_gold') {
+          return {
+            top: '#252932',
+            mid: '#15171D',
+            bot: '#0B0C0F',
+            aura: 'rgba(245, 197, 24, 0.25)',
+            leftAura: '#323742',
+            haloGold: '#F5C518',
+          };
+        }
+        // Default: Warm Cream (classic_light)
+        return {
+          top: '#9494EC',
+          mid: '#8383D6',
+          bot: '#6C6CC4',
+          aura: '#8383D6',
+          leftAura: '#B2B2FF',
+          haloGold: '#FFFCE3',
+        };
+      };
+
+      const barGrad = getBarGradient();
 
       const d = [
         `M ${R} 0`,
@@ -99,9 +153,9 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 x2="0%"
                 y2="100%"
               >
-                <Stop offset="0%" stopColor="#9494EC" stopOpacity={1} />
-                <Stop offset="35%" stopColor="#8383D6" stopOpacity={1} />
-                <Stop offset="100%" stopColor="#6C6CC4" stopOpacity={1} />
+                <Stop offset="0%" stopColor={barGrad.top} stopOpacity={1} />
+                <Stop offset="35%" stopColor={barGrad.mid} stopOpacity={1} />
+                <Stop offset="100%" stopColor={barGrad.bot} stopOpacity={1} />
               </LinearGradient>
               <RadialGradient
                 id="barNotchHalo"
@@ -110,9 +164,9 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 rx="38%"
                 ry="80%"
               >
-                <Stop offset="0%" stopColor="#FFFCE3" stopOpacity={0.32} />
+                <Stop offset="0%" stopColor={barGrad.haloGold} stopOpacity={0.32} />
                 <Stop offset="45%" stopColor="#F5C518" stopOpacity={0.12} />
-                <Stop offset="100%" stopColor="#8383D6" stopOpacity={0} />
+                <Stop offset="100%" stopColor={barGrad.mid} stopOpacity={0} />
               </RadialGradient>
               <RadialGradient
                 id="barLeftAura"
@@ -121,8 +175,8 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 rx="35%"
                 ry="70%"
               >
-                <Stop offset="0%" stopColor="#B2B2FF" stopOpacity={0.25} />
-                <Stop offset="100%" stopColor="#8383D6" stopOpacity={0} />
+                <Stop offset="0%" stopColor={barGrad.leftAura} stopOpacity={0.25} />
+                <Stop offset="100%" stopColor={barGrad.mid} stopOpacity={0} />
               </RadialGradient>
               <RadialGradient
                 id="barRightAura"
@@ -132,7 +186,7 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 ry="70%"
               >
                 <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.16} />
-                <Stop offset="100%" stopColor="#8383D6" stopOpacity={0} />
+                <Stop offset="100%" stopColor={barGrad.mid} stopOpacity={0} />
               </RadialGradient>
               <LinearGradient id="barTopRim" x1="0%" y1="0%" x2="100%" y2="0%">
                 <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.06} />

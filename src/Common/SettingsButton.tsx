@@ -27,7 +27,8 @@ export const SettingsButton: React.FC<SettingsButtonProps> = ({
   size = 36,
 }) => {
   const navigation = useNavigation<any>();
-  const { isDarkMode, Colors: themeColors } = useTheme();
+  const { isDarkMode, activeThemeId, Colors: themeColors } = useTheme();
+  const isCyprusSand = activeThemeId === 'cyprus_sand';
   const pressAnim = useRef(new Animated.Value(0)).current;
 
   const handlePressIn = () => {
@@ -56,10 +57,14 @@ export const SettingsButton: React.FC<SettingsButtonProps> = ({
     }
   };
 
-  const cardBg =
-    themeColors.CardBackground || (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
+  const cardBg = isCyprusSand
+    ? '#003835'
+    : themeColors.CardBackground ||
+      (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
   const iconColor = isScrolled
     ? Colors.DefaultWhite
+    : isCyprusSand
+    ? '#F0EDE5'
     : isDarkMode
     ? Colors.PureWhiteText
     : '#1E2028';

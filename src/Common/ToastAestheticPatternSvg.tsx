@@ -16,6 +16,7 @@ export type ToastAestheticVariant = 'success' | 'error' | 'warning' | 'info';
 interface ToastAestheticPatternSvgProps {
   variant: ToastAestheticVariant;
   isDarkMode?: boolean;
+  activeThemeId?: string;
 }
 
 interface AestheticColorPalette {
@@ -143,14 +144,44 @@ const DARK_PALETTES: Record<ToastAestheticVariant, AestheticColorPalette> = {
 };
 
 export const ToastAestheticPatternSvg: React.FC<ToastAestheticPatternSvgProps> =
-  React.memo(({ variant, isDarkMode = false }) => {
-    const palette =
+  React.memo(({ variant, isDarkMode = false, activeThemeId }) => {
+    let palette =
       (isDarkMode ? DARK_PALETTES : LIGHT_PALETTES)[variant] ||
       (isDarkMode ? DARK_PALETTES.info : LIGHT_PALETTES.info);
 
-    const gradId = `toastGrad_${variant}_${isDarkMode ? 'dark' : 'light'}`;
-    const auraId = `toastAura_${variant}_${isDarkMode ? 'dark' : 'light'}`;
-    const rimId = `toastRim_${variant}_${isDarkMode ? 'dark' : 'light'}`;
+    if (activeThemeId === 'cyprus_sand' && variant === 'info') {
+      palette = isDarkMode
+        ? {
+            gradStart: '#002624',
+            gradMid: '#003835',
+            gradEnd: '#001A18',
+            auraColor: '#0A6B66',
+            auraOpacity: 0.45,
+            ringColor: '#F0EDE5',
+            ringOpacity: 0.22,
+            waveColor: '#0A6B66',
+            waveOpacity: 0.25,
+            rimColor: '#F0EDE5',
+            rimOpacity: 0.4,
+          }
+        : {
+            gradStart: '#FAF8F5',
+            gradMid: '#F0EDE5',
+            gradEnd: '#E6E2D8',
+            auraColor: '#0A6B66',
+            auraOpacity: 0.24,
+            ringColor: '#004643',
+            ringOpacity: 0.15,
+            waveColor: '#0A6B66',
+            waveOpacity: 0.18,
+            rimColor: '#FFFFFF',
+            rimOpacity: 0.85,
+          };
+    }
+
+    const gradId = `toastGrad_${variant}_${activeThemeId || 'default'}_${isDarkMode ? 'dark' : 'light'}`;
+    const auraId = `toastAura_${variant}_${activeThemeId || 'default'}_${isDarkMode ? 'dark' : 'light'}`;
+    const rimId = `toastRim_${variant}_${activeThemeId || 'default'}_${isDarkMode ? 'dark' : 'light'}`;
 
     return (
       <View style={StyleSheet.absoluteFill} pointerEvents="none">

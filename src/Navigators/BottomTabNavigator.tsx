@@ -361,17 +361,26 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
           style={[
             styles.btnHalo,
             styles.btnShadow,
+            {
+              shadowColor: isDarkMode
+                ? (themeColors.AccentDark || '#000000')
+                : (themeColors.Accent || Colors.LavenderPurple),
+            },
             isDarkMode && {
               backgroundColor: themeColors.Background || '#121417',
-              borderTopColor: '#2C3035',
-              borderLeftColor: '#22252B',
-              borderRightColor: '#22252B',
-              borderBottomColor: '#1A1C20',
+              borderTopColor: themeColors.BorderLight || '#2C3035',
+              borderLeftColor: themeColors.BorderLight || '#22252B',
+              borderRightColor: themeColors.BorderLight || '#22252B',
+              borderBottomColor: themeColors.SurfaceAlt || '#1A1C20',
             },
           ]}
         >
           <Animated.View
-            style={[styles.btnCircle, { transform: [{ scale: plusScale }] }]}
+            style={[
+              styles.btnCircle,
+              { backgroundColor: themeColors.Accent || Colors.LavenderPurple },
+              { transform: [{ scale: plusScale }] },
+            ]}
           >
             <PlusButtonPatternSvg size={BTN_SIZE} />
             <TouchableOpacity

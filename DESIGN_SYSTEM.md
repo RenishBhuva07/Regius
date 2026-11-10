@@ -137,10 +137,33 @@ Every theme preset in Regius is constructed with dedicated, bespoke **Light Mode
 | :------------------------------ | :----------------------- | :---------------- | :-------------- | :------------------- |
 | **Obsidian Night** (Tier 1)     | `#121417`                | `#1E2228`         | `#F5C518`       | `#FFFFFF`            |
 | **Warm Cream** (Tier 1)         | `#121417`                | `#1E2228`         | `#F5C518`       | `#FFFFFF`            |
-| **Cyprus Sand** (Tier 2)        | `#004643`                | `#075955`         | `#F0EDE5`       | `#F0EDE5`            |
+| **Cyprus Sand** (Tier 2)        | `#004643`                | `#F0EDE5`         | `#004643`       | `#002B28`            |
 | **Emerald Velvet** (Tier 3)     | `#0F1A15`                | `#162720`         | `#2ECC71`       | `#E3F7EE`            |
 | **Celestial Azure** (Tier 4)    | `#0D1424`                | `#141D34`         | `#60A5FA`       | `#E6EEFA`            |
 | **Obsidian Sovereign** (Tier 5) | `#08080A`                | `#121217`         | `#FFD700`       | `#FFFDF0`            |
+
+#### Dual-Tone Architecture (Cyprus Sand Dark Mode)
+
+In **Cyprus Sand** dark mode:
+
+- **Screen Canvas (`Background`)**: Deep Cyprus Teal (`#004643`). Top canvas views across Dashboard, Tasks, Reminders, Habits, and Settings sit on this dark backdrop with `CanvasTextPrimary` (`#F0EDE5`) and `CanvasTextSecondary` (`#A1BDBA`).
+- **Sliding Main Sheets (`FlowSectionSheet`)**: Sliding sheets on Dashboard ("Today's Flow"), Tasks, Reminders, and Habits render in warm **Sand Ivory** (`#F0EDE5`) with soft Sand gradient filigrees (`#FFFDF7` → `#FAF6ED` → `#F5EFE3` → `#EDE5D6`) and warm borders (`#FFFFFF` / `#E6E2D8`), breaking visual monotony with luxury dual-tone contrast.
+- **Settings Screen Bento Cards**: The hero `ProfileCard` retains its 2-layer Nero Black structure (`#1E2028` with 4px border). All secondary settings cards (`SubscriptionSection`, `MilestoneSection`, `DefaultVoiceSection`, `WakeWordSection`, `AppearanceSection`, `AiWorkflowSection`, `StorageSection`, `AccountSupportSection`) render in **Sand Ivory** (`#F0EDE5`) with **Deep Cyprus Ink** typography (`#002B28`), muted sage slate body (`#566B67`), and warm sand recessed wells (`#E6E2D8`).
+- **Toast System Harmonization**: Info toasts adopt the active theme palette (`#002624` → `#003835` → `#001A18` Cyprus Noir gradient, `#0A6B66` Cyprus Teal aura, `#F0EDE5` Sand ring & accents) rather than Obsidian Night purple.
+
+#### Extended 5-Tone Shade Architecture (`ThemePalette`)
+
+To guarantee seamless visual continuity without clashing hardcoded Obsidian/Warm Cream fallbacks:
+
+- `Accent`: Main high-contrast action & highlight tone (`#004643` in Cyprus Sand dark).
+- `AccentDeep`: Scrolled header backdrop and modal bar (`#002624` in Cyprus Sand dark).
+- `AccentLight`: Upper radiant sheen for bottom tab dock & buttons (`#0A6B66` in Cyprus Sand dark).
+- `AccentDark`: Base shadow & gradient anchor for navigation widgets (`#001A18` in Cyprus Sand dark).
+- `AccentAura`: Luminous ambient radial glow (`rgba(0, 70, 67, 0.28)` in Cyprus Sand dark).
+
+#### Dark Mode Card Shadow Elevation Standard
+
+In dark mode presets (including Cyprus Sand and Obsidian Night), item cards across Tasks, Reminders, Habits, and Timeline default to `#000000` depth shadows. This prevents colored drop shadows from bleeding into dark teal/charcoal surfaces, while letting the crisp category borders (`#F5C518`, `#1B9A72`, `#8383D6`) define the category identity.
 
 - **Circular Swatch Geometry**: `width: 38`, `height: 38`, `borderRadius: 19`, `borderWidth: 1.5`, elevation shadow.
 - **Dynamic Perceived Luminance (`isLightColor`)**: Guarantees high-contrast borders and text across all light canvas and card combinations.
@@ -682,11 +705,14 @@ The authentication screen provides an artisanal, warm luxury gateway to Regius:
 
    - **Dual-Theme Stage Architecture**:
      - _Light Mode_: Pristine `#FFFFFF` stage disc (`r=237.5`) providing clean contrast on `Colors.CreamBackground` (`#FFFCE3`).
-     - _Dark Mode_: Obsidian stage disc with deep dual-stop radial gradient (`#242831` core to `#14161B` rim) encircled by a specular hairline rim (`stroke="rgba(255, 255, 255, 0.08)"`, `strokeWidth: 1.2`) and an ambient halo tinted by the active category `accentColor`.
+     - _Dark Mode / Theme-Adaptive_: Prominent architectural stage disc with deep obsidian-noir gradient (`#1E2428` core to `#0D1214` rim), framed by a specular hairline rim (`rgba(240, 237, 229, 0.22)` on Cyprus Sand, `rgba(255, 255, 255, 0.12)` on classic dark; `strokeWidth: 1.2`) and an ambient halo tinted in Cyprus Teal (`#0A6B66` core, `#004643` mid) on Cyprus Sand, eliminating yellowish-olive muddy shadows.
+   - **Theme-Adaptive Character Clothing (`clothesFill`)**:
+     - On _Cyprus Sand_: Character is dressed in warm **Coastal Sand Ivory Cashmere (`#F0EDE5`)** with soft sand shading (`#DDD7CB`) and muted crease lines (`#AFA798`), providing high-contrast luxury elegance against the dark stage disc and echoing the Sand card below.
+     - On _Classic Light_: Retains signature Lavender Purple (`#8383D6`).
    - **Masking Integrity**: The alpha mask (`<Mask id="mask0_2_3056">`) strictly retains `<Circle ... fill="white" />` across all modes, guaranteeing the character is never erased or made semi-transparent.
    - **Tactile Floating Badges**:
-     - _Heart Badge_: Disc adapts to deep obsidian (`#1E2228`) with mint hairline rim (`rgba(82, 210, 46, 0.38)`) and vibrant `#52D22E` heart.
-     - _Office Bag Badge_: Disc adapts to deep obsidian (`#1E2228`) with warm amber hairline rim (`rgba(245, 197, 24, 0.38)`) and vibrant `#F5C518` bag.
+     - _Heart Badge_: Disc adapts to deep obsidian (`#1E2228`) with mint hairline rim (`rgba(82, 210, 46, 0.42)`) and vibrant heart (`#52D22E`).
+     - _Office Bag Badge_: Disc adapts to deep obsidian (`#1E2228`) with warm amber hairline rim (`rgba(245, 197, 24, 0.42)`) and vibrant bag (`#FFE600`).
    - **Specular Hair Silhouette**: Subtle specular contour highlight (`stroke="rgba(255, 255, 255, 0.16)"`) preserving the character's upward hair swoosh against the dark canvas and iOS Dynamic Island.
 
 2. **Dynamic Atmospheric Background (`IntroAestheticBackgroundSvg.tsx`)**:
@@ -694,10 +720,11 @@ The authentication screen provides an artisanal, warm luxury gateway to Regius:
    - Radiates concentric acoustic resonance rings behind the lower dock and guilloché wave ribbons across the card area.
    - Regius signature 4-point diamond celestial stars and micro-sparkles.
 3. **3D Touch & Volumetric Controls**:
-   - **Content Pedestal**: Slide content grounded in an elevated translucent bento card with volumetric drop shadow, specular top edge, and category-accented bottom bevel.
-   - **Tactile 3D Step Indicators**: Active indicator pill with category glow shadow (`shadowOffset: { width: 0, height: 2 }`, `shadowOpacity: 0.45`, `shadowRadius: 5`, `elevation: 4`) and specular top reflection.
+   - **Content Pedestal**: Slide content grounded in an elevated frosted glass bento card with subtle translucency (e.g. pristine white with opacity `rgba(255, 255, 255, 0.58)` in Light, frosted coastal sand ivory `rgba(240, 237, 229, 0.70)` in Cyprus Sand, and deep obsidian `rgba(30, 34, 40, 0.65)` in classic dark) with volumetric drop shadow, specular top edge (`#FFFFFF`), category-accented bottom bevel, and dark high-contrast typography (`themeColors.PrimaryText` `#002B28` on Sand).
+   - **Tactile 3D Step Indicators**: Active indicator pill with category glow shadow (`shadowOffset: { width: 0, height: 2 }`, `shadowOpacity: 0.45`, `shadowRadius: 5`, `elevation: 4`) and specular top reflection. Inactive dots adapt to soft sand (`rgba(240, 237, 229, 0.35)`) on Cyprus Sand.
+   - **Circular Next Arrow Button (`IntroNextArrowButton.tsx`)**: 84px tactile circular action button. In Cyprus Sand, renders a Sand Ivory disc (`#F0EDE5`) with hairline Sand border (`#DDD7CB`), concentric acoustic resonance ring (`rgba(240, 237, 229, 0.28)`), and Deep Cyprus Ink arrow (`#002B28`).
    - **"Get Started" Button**: Volumetric 3D drop shadow (`shadowOffset: { width: 0, height: 10 }`, `shadowOpacity: 0.38`, `shadowRadius: 18`, `elevation: 10`), specular top rim (`borderTopWidth: 1.5`), and extruded 3D bottom bevel (`borderBottomWidth: 4`, `borderBottomColor: '#0E1013'`).
-   - **Skip Button**: Upgraded to a 3D tactile micro-pill with beveled bottom border and subtle floating shadow.
+   - **Skip Button**: Upgraded to a 3D tactile micro-pill with beveled bottom border and subtle floating shadow. In Cyprus Sand, renders in Sand Ivory (`#F0EDE5`) with Deep Cyprus Ink typography (`#002B28`).
 
 ---
 

@@ -27,7 +27,12 @@ export interface ModalBottomBarProps {
   disabled?: boolean;
 }
 
-const getBottomBarBgColor = (themeId: string, isDark: boolean): string => {
+const getBottomBarBgColor = (
+  themeId: string,
+  isDark: boolean,
+  accentDeep?: string,
+): string => {
+  if (accentDeep) return accentDeep;
   if (isDark) {
     switch (themeId) {
       case 'cyprus_sand':
@@ -71,13 +76,17 @@ export const ModalBottomBar: React.FC<ModalBottomBarProps> = ({
   disabled = false,
 }) => {
   const insets = useSafeAreaInsets();
-  const { isDarkMode, activeThemeId } = useTheme();
+  const { isDarkMode, activeThemeId, Colors: themeColors } = useTheme();
   const { width: screenWidth } = Dimensions.get('window');
 
   const fallbackAnim = useRef(new Animated.Value(1)).current;
   const activeAnim = createAnim ?? fallbackAnim;
 
-  const barBgColor = getBottomBarBgColor(activeThemeId, isDarkMode);
+  const barBgColor = getBottomBarBgColor(
+    activeThemeId,
+    isDarkMode,
+    themeColors.AccentDeep,
+  );
   const bottomPadding = Math.max(insets.bottom, 16) + 6;
   const totalBarHeight = 74 + bottomPadding;
 

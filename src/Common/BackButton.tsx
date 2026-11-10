@@ -24,7 +24,8 @@ export const BackButton: React.FC<BackButtonProps> = ({
   style,
 }) => {
   const navigation = useNavigation<any>();
-  const { isDarkMode, Colors: themeColors } = useTheme();
+  const { isDarkMode, activeThemeId, Colors: themeColors } = useTheme();
+  const isCyprusSand = activeThemeId === 'cyprus_sand';
 
   const handlePress = () => {
     if (onPress) {
@@ -34,11 +35,17 @@ export const BackButton: React.FC<BackButtonProps> = ({
     }
   };
 
-  const cardBg =
-    themeColors.CardBackground || (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
+  const cardBg = isCyprusSand
+    ? '#003835'
+    : themeColors.CardBackground ||
+      (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
   const textPrimary =
     themeColors.PrimaryText ||
     (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
+  const chevronColor = isScrolled
+    ? Colors.DefaultWhite
+    : themeColors.CanvasTextPrimary ||
+      (isDarkMode ? Colors.PureWhiteText : textPrimary);
 
   return (
     <TouchableOpacity
@@ -50,10 +57,16 @@ export const BackButton: React.FC<BackButtonProps> = ({
           ? styles.backButtonScrolled
           : {
               backgroundColor: cardBg,
-              borderColor: isDarkMode
+              borderColor: isCyprusSand
+                ? '#0A6B66'
+                : isDarkMode
                 ? 'rgba(255, 255, 255, 0.12)'
                 : '#FFFFFF',
-              borderBottomColor: isDarkMode ? '#14161A' : '#DCD6CA',
+              borderBottomColor: isCyprusSand
+                ? '#001A18'
+                : isDarkMode
+                ? '#14161A'
+                : '#DCD6CA',
               shadowColor: isDarkMode ? '#000000' : 'rgba(0, 0, 0, 0.08)',
             },
         style,
@@ -63,7 +76,7 @@ export const BackButton: React.FC<BackButtonProps> = ({
     >
       <ChevronLeft
         size={20}
-        color={isScrolled ? Colors.DefaultWhite : textPrimary}
+        color={chevronColor}
         strokeWidth={2.4}
       />
     </TouchableOpacity>

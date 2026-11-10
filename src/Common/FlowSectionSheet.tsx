@@ -13,7 +13,7 @@ import { Fonts } from '../Theme/fonts';
 import { Colors } from '../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 import FlowBadgePatternSvg from '../Screens/Dashboard/Components/FlowBadgePatternSvg';
-import { useTheme } from '../Theme/ThemeContext';
+import { useAppTheme } from '../Theme/useAppTheme';
 
 export interface FlowSectionSheetProps {
   title: string | React.ReactNode;
@@ -37,20 +37,28 @@ export const FlowSectionSheet: React.FC<FlowSectionSheetProps> = React.memo(
     bottomPadding = 130,
     containerStyle,
   }) => {
-    const { isDarkMode } = useTheme();
+    const { isDarkMode, activeThemeId, surfaceAlt, borderLight } = useAppTheme();
+    const isSandSheet = activeThemeId === 'cyprus_sand';
 
     return (
       <View
         style={[
           styles.sectionContainer,
-          isDarkMode && {
-            backgroundColor: '#181B20',
-            borderTopColor: '#2C3035',
-            borderLeftColor: '#22252B',
-            borderRightColor: '#22252B',
+          containerStyle,
+          isDarkMode &&
+            !isSandSheet && {
+              backgroundColor: surfaceAlt,
+              borderTopColor: borderLight,
+              borderLeftColor: borderLight,
+              borderRightColor: borderLight,
+            },
+          isSandSheet && {
+            backgroundColor: '#F0EDE5',
+            borderTopColor: '#FFFFFF',
+            borderLeftColor: '#E6E2D8',
+            borderRightColor: '#E6E2D8',
           },
           { paddingBottom: bottomPadding },
-          containerStyle,
         ]}
       >
         {/* Background decorative SVG filigree */}

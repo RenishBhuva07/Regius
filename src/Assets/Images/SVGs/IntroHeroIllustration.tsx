@@ -27,31 +27,48 @@ const IntroHeroIllustrationComponent: React.FC<IntroHeroIllustrationProps> = ({
   accentColor = '#F5C518',
   ...props
 }) => {
-  let contextIsDark = false;
-  try {
-    const theme = useTheme();
-    contextIsDark = theme?.isDarkMode ?? false;
-  } catch {
-    contextIsDark = false;
-  }
+  const { isDarkMode, activeThemeId } = useTheme();
+  const isDark = propIsDark !== undefined ? propIsDark : isDarkMode;
+  const isCyprusSand = activeThemeId === 'cyprus_sand';
 
-  const isDark = propIsDark !== undefined ? propIsDark : contextIsDark;
+  // Theme-Adaptive Character Clothing Palette
+  const clothesFill = isCyprusSand
+    ? '#F0EDE5' // Coastal Sand Ivory Cashmere
+    : isDark
+    ? '#D8D4CA'
+    : '#8383D6'; // Classic Warm Cream Lavender
+
+  const torsoSeamFill = isCyprusSand
+    ? '#DDD7CB' // Soft sand seam shadow
+    : '#5A525D';
+
+  const creaseStroke = isCyprusSand
+    ? '#AFA798' // Muted sand crease line
+    : '#472A1C';
 
   return (
     <Svg width={331} height={673} viewBox="0 0 331 673" fill="none" {...props}>
       <Defs>
         {/* Luxury Dark Stage Radial Atmosphere */}
         <RadialGradient id="introHeroStageDark" cx="50%" cy="38%" r="62%">
-          <Stop offset="0%" stopColor="#242831" stopOpacity={1} />
-          <Stop offset="65%" stopColor="#1C1F26" stopOpacity={1} />
-          <Stop offset="100%" stopColor="#14161B" stopOpacity={1} />
+          <Stop offset="0%" stopColor="#1E2428" stopOpacity={1} />
+          <Stop offset="65%" stopColor="#14191C" stopOpacity={1} />
+          <Stop offset="100%" stopColor="#0D1214" stopOpacity={1} />
         </RadialGradient>
 
-        {/* Dynamic Category Ambient Halo behind the Hero Stage */}
+        {/* Dynamic Category / Theme Ambient Halo behind the Hero Stage */}
         <RadialGradient id="introHeroStageAura" cx="50%" cy="32%" r="56%">
-          <Stop offset="0%" stopColor={accentColor} stopOpacity={0.18} />
-          <Stop offset="75%" stopColor={accentColor} stopOpacity={0.04} />
-          <Stop offset="100%" stopColor="#14161B" stopOpacity={0} />
+          <Stop
+            offset="0%"
+            stopColor={isCyprusSand ? '#0A6B66' : accentColor}
+            stopOpacity={isCyprusSand ? 0.32 : 0.18}
+          />
+          <Stop
+            offset="75%"
+            stopColor={isCyprusSand ? '#004643' : accentColor}
+            stopOpacity={isCyprusSand ? 0.1 : 0.04}
+          />
+          <Stop offset="100%" stopColor="#0D1214" stopOpacity={0} />
         </RadialGradient>
 
         <Filter
@@ -123,13 +140,19 @@ const IntroHeroIllustrationComponent: React.FC<IntroHeroIllustrationProps> = ({
         </Filter>
       </Defs>
 
-      {/* ── Dynamic Hero Backdrop Stage Circle ── */}
+      {/* ── Dynamic Hero Backdrop Stage Circle with Crisp Visible Rim ── */}
       <Circle
         cx={93.5}
         cy={182.5}
         r={237.5}
         fill={isDark ? 'url(#introHeroStageDark)' : 'white'}
-        stroke={isDark ? 'rgba(255, 255, 255, 0.08)' : 'transparent'}
+        stroke={
+          isDark
+            ? isCyprusSand
+              ? 'rgba(240, 237, 229, 0.22)' // Sand Specular Hairline Rim
+              : 'rgba(255, 255, 255, 0.12)'
+            : 'transparent'
+        }
         strokeWidth={isDark ? 1.2 : 0}
       />
       {isDark && (
@@ -138,9 +161,13 @@ const IntroHeroIllustrationComponent: React.FC<IntroHeroIllustrationProps> = ({
           cy={182.5}
           r={237.5}
           fill="url(#introHeroStageAura)"
-          stroke={accentColor}
+          stroke={
+            isCyprusSand
+              ? 'rgba(10, 107, 102, 0.35)'
+              : accentColor
+          }
           strokeWidth={1}
-          strokeOpacity={0.22}
+          strokeOpacity={isCyprusSand ? 0.35 : 0.22}
         />
       )}
 
@@ -161,7 +188,7 @@ const IntroHeroIllustrationComponent: React.FC<IntroHeroIllustrationProps> = ({
         {/* Right sleeve arm */}
         <Path
           d="M397.653 506.336L331.569 386.855L265.694 232.336C259.038 216.795 241.016 209.638 225.721 216.246C210.18 222.902 203.023 240.924 209.631 256.219L277.122 413.739C278.003 415.608 278.933 417.722 280.306 419.494L366.605 528.838L397.653 506.336Z"
-          fill="#8383D6"
+          fill={clothesFill}
         />
         {/* Torso / Underarm */}
         <Path
@@ -181,12 +208,12 @@ const IntroHeroIllustrationComponent: React.FC<IntroHeroIllustrationProps> = ({
         {/* Torso seam shadow */}
         <Path
           d="M88.5437 341.269C87.6159 337.876 86.6395 334.238 85.7117 330.846C85.612 331.632 85.2178 332.221 85.1182 333.007C86.0969 335.367 87.173 338.219 88.5437 341.269Z"
-          fill="#5A525D"
+          fill={torsoSeamFill}
         />
         {/* Shirt body */}
         <Path
           d="M264.173 231.105C264.173 231.105 248.153 203.115 214.831 205.12L214.782 204.875L213.553 205.118C209.277 205.455 204.607 206.38 199.789 207.846L188.482 210.087C173.294 212.075 158.205 213.277 143.114 215.757C141.639 216.049 140.165 216.342 138.69 216.634C134.511 217.462 130.333 218.29 126.203 219.364C126.203 219.364 125.957 219.413 125.711 219.462C123.745 219.851 122.073 220.438 120.156 221.074C118.238 221.709 116.566 222.296 114.648 222.931C108.895 224.838 103.486 227.187 98.2221 230.274C97.2876 230.715 96.4019 231.401 95.7133 231.793C95.2704 232.136 94.7789 232.234 94.336 232.577C93.2044 233.312 91.8758 234.342 90.4984 235.125C90.4984 235.125 90.4983 235.125 90.2525 235.174C90.2525 235.174 90.2526 235.174 90.0068 235.223C78.5916 243.36 66.1888 254.248 65.9672 268.597C65.6123 302.898 84.5224 336.446 97.2457 367.133C113.981 407.753 127.816 449.204 139.044 491.682C139.142 492.174 139.239 492.665 139.337 493.157L301.165 462.874L264.173 231.105Z"
-          fill="#8383D6"
+          fill={clothesFill}
         />
         {/* Head & Neck skin */}
         <Path
@@ -267,7 +294,7 @@ const IntroHeroIllustrationComponent: React.FC<IntroHeroIllustrationProps> = ({
         {/* Right sleeve crease line */}
         <Path
           d="M274.857 275.99L291.273 358.823"
-          stroke="#472A1C"
+          stroke={creaseStroke}
           strokeWidth={0.4269}
           strokeMiterlimit={10}
           strokeLinecap="round"
@@ -276,12 +303,12 @@ const IntroHeroIllustrationComponent: React.FC<IntroHeroIllustrationProps> = ({
         {/* Left arm sleeve */}
         <Path
           d="M131.372 579.289L117.603 444.075L122.909 276.216C123.43 259.508 110.137 245.283 93.43 244.762C76.7226 244.242 62.4974 257.534 61.9768 274.242L56.5666 445.443C56.4647 447.507 56.6573 449.768 57.0958 451.98L90.6192 587.621L131.421 579.535L131.372 579.289Z"
-          fill="#8383D6"
+          fill={clothesFill}
         />
         {/* Left sleeve crease line */}
         <Path
           d="M126.912 319.615L115.29 418.223"
-          stroke="#472A1C"
+          stroke={creaseStroke}
           strokeWidth={0.4269}
           strokeMiterlimit={10}
           strokeLinecap="round"
