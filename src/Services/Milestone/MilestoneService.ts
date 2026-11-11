@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Colors } from '../../Assets/StyleUtilities/Colors';
 
 export interface MilestoneTier {
   level: number;
@@ -20,18 +21,18 @@ export const MILESTONE_TIERS: MilestoneTier[] = [
     minXp: 0,
     maxXp: 100,
     badgeVariant: 'neutral',
-    accentColor: '#8E95A5',
+    accentColor: Colors.MilestoneSlate,
     unlockedThemes: [
       {
         id: 'classic_light',
         name: 'Warm Cream',
-        hex: '#FFFCE3',
+        hex: Colors.CreamBackground,
         desc: 'Default warm cream canvas',
       },
       {
         id: 'classic_dark',
         name: 'Obsidian Night',
-        hex: '#121417',
+        hex: Colors.DarkBackground,
         desc: 'Signature obsidian dark mode',
       },
     ],
@@ -55,12 +56,12 @@ export const MILESTONE_TIERS: MilestoneTier[] = [
     minXp: 100,
     maxXp: 300,
     badgeVariant: 'yellow',
-    accentColor: '#F5C518',
+    accentColor: Colors.AccentYellow,
     unlockedThemes: [
       {
         id: 'cyprus_sand',
         name: 'Cyprus Sand',
-        hex: '#004643',
+        hex: Colors.CyprusTeal,
         desc: 'Deep cyprus teal canvas with luminous sand accents',
       },
     ],
@@ -84,12 +85,12 @@ export const MILESTONE_TIERS: MilestoneTier[] = [
     minXp: 300,
     maxXp: 600,
     badgeVariant: 'green',
-    accentColor: '#2ECC71',
+    accentColor: Colors.EmeraldVibrant,
     unlockedThemes: [
       {
         id: 'emerald_velvet',
         name: 'Emerald Velvet',
-        hex: '#1E392A',
+        hex: Colors.MilestoneForestSwatch,
         desc: 'Deep imperial emerald tones with mint luster',
       },
     ],
@@ -113,12 +114,12 @@ export const MILESTONE_TIERS: MilestoneTier[] = [
     minXp: 600,
     maxXp: 1000,
     badgeVariant: 'purple',
-    accentColor: '#8383D6',
+    accentColor: Colors.LavenderPurple,
     unlockedThemes: [
       {
         id: 'celestial_azure',
         name: 'Celestial Azure',
-        hex: '#1A233A',
+        hex: Colors.MilestoneNavySwatch,
         desc: 'Royal sapphire navy with celestial lavender highlights',
       },
     ],
@@ -142,12 +143,12 @@ export const MILESTONE_TIERS: MilestoneTier[] = [
     minXp: 1000,
     maxXp: -1, // Supreme level cap
     badgeVariant: 'orange',
-    accentColor: '#FF9800',
+    accentColor: Colors.AccentAmber,
     unlockedThemes: [
       {
         id: 'obsidian_gold',
         name: 'Obsidian Sovereign',
-        hex: '#0A0A0C',
+        hex: Colors.MilestoneOnyxSwatch,
         desc: 'High-gloss jet black accented with pure 24K gold',
       },
     ],

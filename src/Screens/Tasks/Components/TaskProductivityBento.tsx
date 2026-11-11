@@ -16,7 +16,7 @@ import Svg, {
   Stop,
 } from 'react-native-svg';
 import { Fonts } from '../../../Theme/fonts';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../../Theme/useAppTheme';
 import { Badge } from '../../../Common/Badge';
 import { Task } from '../../../Context/TaskReminderContext';
@@ -38,15 +38,15 @@ const FocusBarBackgroundSvg: React.FC = React.memo(() => (
     >
       <Defs>
         <LinearGradient id="focusBarBg" x1="0%" y1="0%" x2="100%" y2="100%">
-          <Stop offset="0%" stopColor="#252733" stopOpacity={0.8} />
-          <Stop offset="50%" stopColor="#1C1E26" stopOpacity={0.5} />
-          <Stop offset="100%" stopColor="#141519" stopOpacity={0.9} />
+          <Stop offset="0%" stopColor={Colors.BentoStopSlate} stopOpacity={0.8} />
+          <Stop offset="50%" stopColor={Colors.BentoStopMid} stopOpacity={0.5} />
+          <Stop offset="100%" stopColor={Colors.BentoStopAbyss} stopOpacity={0.9} />
         </LinearGradient>
 
         <RadialGradient id="focusGoldAura" cx="12%" cy="50%" rx="50%" ry="90%">
-          <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.28} />
-          <Stop offset="55%" stopColor="#DEAA14" stopOpacity={0.06} />
-          <Stop offset="100%" stopColor="#141519" stopOpacity={0} />
+          <Stop offset="0%" stopColor={Colors.AccentYellow} stopOpacity={0.28} />
+          <Stop offset="55%" stopColor={Colors.WorkDarkBorder} stopOpacity={0.06} />
+          <Stop offset="100%" stopColor={Colors.BentoStopAbyss} stopOpacity={0} />
         </RadialGradient>
 
         <RadialGradient
@@ -56,9 +56,9 @@ const FocusBarBackgroundSvg: React.FC = React.memo(() => (
           rx="45%"
           ry="80%"
         >
-          <Stop offset="0%" stopColor="#9C9CE3" stopOpacity={0.2} />
-          <Stop offset="60%" stopColor="#8383D6" stopOpacity={0.04} />
-          <Stop offset="100%" stopColor="#141519" stopOpacity={0} />
+          <Stop offset="0%" stopColor={Colors.PeriwinkleSoft} stopOpacity={0.2} />
+          <Stop offset="60%" stopColor={Colors.LavenderPurple} stopOpacity={0.04} />
+          <Stop offset="100%" stopColor={Colors.BentoStopAbyss} stopOpacity={0} />
         </RadialGradient>
       </Defs>
 
@@ -69,7 +69,7 @@ const FocusBarBackgroundSvg: React.FC = React.memo(() => (
         cx={330}
         cy={20}
         r={32}
-        stroke="rgba(255, 245, 184, 0.12)"
+        stroke={withAlpha(Colors.WorkLightBorder, 0.12)}
         strokeWidth={1}
         fill="none"
       />
@@ -89,9 +89,9 @@ const TaskPercentBadge: React.FC<{ percent: number }> = React.memo(
             x2="100%"
             y2="100%"
           >
-            <Stop offset="0%" stopColor="#FFF176" stopOpacity={0.9} />
-            <Stop offset="50%" stopColor="#F5C518" stopOpacity={0.65} />
-            <Stop offset="100%" stopColor="#DEAA14" stopOpacity={0.85} />
+            <Stop offset="0%" stopColor={Colors.HeroSunGlowYellow} stopOpacity={0.9} />
+            <Stop offset="50%" stopColor={Colors.AccentYellow} stopOpacity={0.65} />
+            <Stop offset="100%" stopColor={Colors.WorkDarkBorder} stopOpacity={0.85} />
           </LinearGradient>
         </Defs>
 
@@ -104,7 +104,7 @@ const TaskPercentBadge: React.FC<{ percent: number }> = React.memo(
           rx={18}
           stroke="url(#uniqueBorderGrad)"
           strokeWidth={1.8}
-          fill="rgba(245, 197, 24, 0.08)"
+          fill={withAlpha(Colors.AccentYellow, 0.08)}
         />
 
         {/* Inner Subtle Hairline Accent */}
@@ -114,9 +114,9 @@ const TaskPercentBadge: React.FC<{ percent: number }> = React.memo(
           width={47}
           height={47}
           rx={14}
-          stroke="rgba(255, 255, 255, 0.12)"
+          stroke={withAlpha(Colors.PureWhite, 0.12)}
           strokeWidth={1}
-          fill="rgba(0, 0, 0, 0.28)"
+          fill={withAlpha(Colors.PureBlack, 0.28)}
         />
       </Svg>
 
@@ -177,7 +177,7 @@ export const TaskProductivityBento: React.FC<TaskProductivityBentoProps> = ({
       <View
         style={[
           styles.card,
-          isDarkMode && { borderColor: 'rgba(255, 255, 255, 0.22)' },
+          isDarkMode && { borderColor: withAlpha(Colors.PureWhite, 0.22) },
         ]}
       >
         <FocusBarBackgroundSvg />
@@ -218,13 +218,17 @@ export const TaskProductivityBento: React.FC<TaskProductivityBentoProps> = ({
           {/* Right: Quick Stats with Glassy Tactile Badges */}
           <View style={styles.rightStats}>
             <View style={styles.glassStatPill}>
-              <View style={[styles.statDot, { backgroundColor: '#F5C518' }]} />
+              <View
+                style={[styles.statDot, { backgroundColor: Colors.AccentYellow }]}
+              />
               <Text style={styles.statNumber}>{pendingCount}</Text>
               <Text style={styles.statCaption}>left</Text>
             </View>
 
             <View style={styles.glassStatPill}>
-              <View style={[styles.statDot, { backgroundColor: '#52D22E' }]} />
+              <View
+                style={[styles.statDot, { backgroundColor: Colors.AccentGreen }]}
+              />
               <Text style={styles.statNumber}>{completedCount}</Text>
               <Text style={styles.statCaption}>done</Text>
             </View>
@@ -241,7 +245,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.NeroBlack,
     ...Platform.select({
       ios: {
-        shadowColor: Colors.DefaultBlack,
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 10 },
         shadowOpacity: 0.28,
         shadowRadius: 18,
@@ -255,7 +259,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.NeroBlack,
     borderRadius: 24,
     borderWidth: 4,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: withAlpha(Colors.PureWhite, 0.9),
     overflow: 'hidden',
     position: 'relative',
     height: 88,
@@ -282,13 +286,13 @@ const styles = StyleSheet.create({
   percentageText: {
     fontFamily: Fonts.ranade.bold,
     fontSize: 15,
-    color: '#FFE600',
+    color: Colors.WorkDarkLabelGold,
     lineHeight: 18,
   },
   percentageLabel: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 7.5,
-    color: '#E8E2D5',
+    color: Colors.RingBorder,
     letterSpacing: 0.6,
   },
   centerBlock: {
@@ -304,7 +308,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.08),
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 10,
@@ -313,29 +317,29 @@ const styles = StyleSheet.create({
     width: 5,
     height: 5,
     borderRadius: 2.5,
-    backgroundColor: '#52D22E',
+    backgroundColor: Colors.AccentGreen,
   },
   liveText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 8.5,
-    color: '#A3E4BF',
+    color: Colors.BentoMintGreen,
     letterSpacing: 0.4,
   },
   progressBarBg: {
     height: 5,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.12),
     borderRadius: 2.5,
     overflow: 'hidden',
   },
   progressBarFill: {
     height: '100%',
-    backgroundColor: '#F5C518',
+    backgroundColor: Colors.AccentYellow,
     borderRadius: 2.5,
   },
   statusText: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 10.5,
-    color: '#D4CCA8',
+    color: Colors.BentoWarmGoldMuted,
   },
   rightStats: {
     gap: 6,
@@ -344,15 +348,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.12),
     paddingHorizontal: 9,
     paddingVertical: 4.5,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.22)',
+    borderColor: withAlpha(Colors.PureWhite, 0.22),
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.18,
         shadowRadius: 4,
@@ -370,13 +374,13 @@ const styles = StyleSheet.create({
   statNumber: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 12,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     letterSpacing: -0.2,
   },
   statCaption: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 10,
-    color: '#E0DFE3',
+    color: Colors.BentoLightSilver,
     letterSpacing: 0.2,
   },
 });

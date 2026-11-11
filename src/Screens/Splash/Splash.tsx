@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import MainContainer from '../../Common/MainContainer';
-import { Colors } from '../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { Typography } from '../../Theme/Typographys';
 import { useTheme } from '../../Theme/ThemeContext';
@@ -79,7 +79,7 @@ const SplashScreen: React.FC = () => {
     (isDarkMode ? Colors.NeroBlack : Colors.CreamBackground);
   const cardBg =
     themeColors.CardBackground ||
-    (isDarkMode ? Colors.MidnightCharcoal : Colors.DefaultWhite);
+    (isDarkMode ? Colors.MidnightCharcoal : Colors.PureWhite);
 
   return (
     <MainContainer
@@ -113,7 +113,9 @@ const SplashScreen: React.FC = () => {
             style={[
               styles.avatarShadowWrapper,
               {
-                shadowColor: isDarkMode ? '#000000' : '#2A1A4E',
+                shadowColor: isDarkMode
+                  ? Colors.PureBlack
+                  : Colors.SplashAvatarShadowLight,
                 transform: [{ scale: pulseAnim }],
               },
             ]}
@@ -123,8 +125,12 @@ const SplashScreen: React.FC = () => {
                 styles.avatarContainer,
                 {
                   backgroundColor: cardBg,
-                  borderColor: isDarkMode ? '#2C3038' : '#FFFFFF',
-                  borderBottomColor: isDarkMode ? '#171A21' : '#DED6C7',
+                  borderColor: isDarkMode
+                    ? Colors.DarkSteelBorder
+                    : Colors.PureWhite,
+                  borderBottomColor: isDarkMode
+                    ? Colors.SplashAvatarBevelDark
+                    : Colors.SplashAvatarBevelLight,
                 },
               ]}
             >
@@ -149,7 +155,9 @@ const SplashScreen: React.FC = () => {
                     styles.badgeHeart,
                     {
                       backgroundColor: cardBg,
-                      borderBottomColor: isDarkMode ? '#1B9A72' : '#82E8A6',
+                      borderBottomColor: isDarkMode
+                        ? Colors.GreenGracious
+                        : Colors.BadgeGreenBevel,
                     },
                   ]}
                 >
@@ -181,7 +189,9 @@ const SplashScreen: React.FC = () => {
                     styles.badgePicture,
                     {
                       backgroundColor: cardBg,
-                      borderBottomColor: isDarkMode ? '#8383D6' : '#B6BEF5',
+                      borderBottomColor: isDarkMode
+                        ? Colors.LavenderPurple
+                        : Colors.BadgePurpleBevel,
                     },
                   ]}
                 >
@@ -210,12 +220,14 @@ const SplashScreen: React.FC = () => {
                 {
                   opacity: taglineFadeAnim,
                   backgroundColor: isDarkMode
-                    ? 'rgba(255, 255, 255, 0.05)'
-                    : 'rgba(255, 255, 255, 0.7)',
+                    ? withAlpha(Colors.PureWhite, 0.05)
+                    : withAlpha(Colors.PureWhite, 0.7),
                   borderColor: isDarkMode
-                    ? 'rgba(255, 255, 255, 0.08)'
-                    : '#EFE9DC',
-                  borderBottomColor: isDarkMode ? '#1E2228' : '#DED7C8',
+                    ? withAlpha(Colors.PureWhite, 0.08)
+                    : Colors.SplashTaglineBorderLight,
+                  borderBottomColor: isDarkMode
+                    ? Colors.DarkCardBackground
+                    : Colors.SplashTaglineBevelLight,
                 },
               ]}
             >
@@ -302,9 +314,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.5,
-    borderTopColor: '#FFFFFF',
-    borderLeftColor: '#E6F4EA',
-    borderRightColor: '#E6F4EA',
+    borderTopColor: Colors.PureWhite,
+    borderLeftColor: Colors.SplashHeartBadgeSideLight,
+    borderRightColor: Colors.SplashHeartBadgeSideLight,
     borderBottomWidth: 3,
   },
   badgePictureShadow: {
@@ -324,9 +336,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.5,
-    borderTopColor: '#FFFFFF',
-    borderLeftColor: '#ECEBF8',
-    borderRightColor: '#ECEBF8',
+    borderTopColor: Colors.PureWhite,
+    borderLeftColor: Colors.SplashPictureBadgeSideLight,
+    borderRightColor: Colors.SplashPictureBadgeSideLight,
     borderBottomWidth: 3,
   },
   textContainer: {
@@ -340,7 +352,7 @@ const styles = StyleSheet.create({
     borderRadius: ResponsivePixels.size20,
     borderWidth: 1,
     borderBottomWidth: 2.2,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.05,
     shadowRadius: 6,

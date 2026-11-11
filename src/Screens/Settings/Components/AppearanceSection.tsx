@@ -21,7 +21,10 @@ import {
 import Toast from 'react-native-toast-message';
 import { Typography } from '../../../Theme/Typographys';
 import { Fonts } from '../../../Theme/fonts';
-import { Colors as StaticColors } from '../../../Assets/StyleUtilities/Colors';
+import {
+  Colors as StaticColors,
+  withAlpha,
+} from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { useSettingsTheme } from './types';
 import { useTheme, isLightColor } from '../../../Theme/ThemeContext';
@@ -102,7 +105,11 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
     <>
       <View style={styles.sectionHeaderRow}>
         <View style={styles.sectionTitleWithIcon}>
-          <Palette size={18} color="#F5C518" strokeWidth={2.4} />
+          <Palette
+            size={18}
+            color={StaticColors.AccentYellow}
+            strokeWidth={2.4}
+          />
           <Text style={[styles.sectionTitle, { color: canvasTextPrimary }]}>
             Appearance & Themes
           </Text>
@@ -117,22 +124,22 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
             backgroundColor: cardBg,
             borderColor:
               activeThemeId === 'cyprus_sand'
-                ? '#DDD7CB'
+                ? StaticColors.CyprusBorderDarkCard
                 : isDarkMode
-                ? 'rgba(255, 255, 255, 0.12)'
-                : '#FFFFFF',
+                ? withAlpha(StaticColors.PureWhite, 0.12)
+                : StaticColors.PureWhite,
             borderBottomColor:
               activeThemeId === 'cyprus_sand'
-                ? '#C8C2B4'
+                ? StaticColors.SandstoneBorder
                 : isDarkMode
-                ? '#171A20'
-                : '#E2DCD0',
+                ? StaticColors.DarkSurfaceDeep
+                : StaticColors.WarmStoneBorder,
             shadowColor:
               activeThemeId === 'cyprus_sand'
-                ? 'rgba(0, 70, 67, 0.16)'
+                ? withAlpha(StaticColors.CyprusTeal, 0.16)
                 : isDarkMode
-                ? '#000000'
-                : 'rgba(131, 131, 214, 0.12)',
+                ? StaticColors.PureBlack
+                : withAlpha(StaticColors.LavenderPurple, 0.12),
           },
         ]}
       >
@@ -151,7 +158,11 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
             accessibilityLabel="Open all prestige themes"
           >
             <View style={styles.themesHeaderLeft}>
-              <Palette size={14} color="#F5C518" strokeWidth={2.2} />
+              <Palette
+                size={14}
+                color={StaticColors.AccentYellow}
+                strokeWidth={2.2}
+              />
               <Text
                 style={[styles.themesHeaderTitle, { color: textSecondary }]}
               >
@@ -160,7 +171,11 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
             </View>
             <View style={styles.themesHeaderRight}>
               <Text style={styles.viewAllThemesText}>View All & Colors</Text>
-              <ChevronRight size={14} color="#F5C518" strokeWidth={2.4} />
+              <ChevronRight
+                size={14}
+                color={StaticColors.AccentYellow}
+                strokeWidth={2.4}
+              />
             </View>
           </TouchableOpacity>
 
@@ -258,7 +273,9 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
                           <Check
                             size={9}
                             color={
-                              isLightColor(theme.accent) ? '#000000' : '#FFFFFF'
+                              isLightColor(theme.accent)
+                                ? StaticColors.PureBlack
+                                : StaticColors.PureWhite
                             }
                             strokeWidth={3}
                           />
@@ -267,7 +284,11 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
                     ) : (
                       /* Locked Overlay with Lock Icon */
                       <View style={styles.roundLockedOverlay}>
-                        <Lock size={12} color="#FFFFFF" strokeWidth={2.4} />
+                        <Lock
+                          size={12}
+                          color={StaticColors.PureWhite}
+                          strokeWidth={2.4}
+                        />
                       </View>
                     )}
                   </View>
@@ -311,11 +332,11 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
                 {
                   backgroundColor: isDarkMode
                     ? activeThemeId === 'cyprus_sand'
-                      ? '#003835'
-                      : '#2C3035'
+                      ? StaticColors.CyprusTealDark
+                      : StaticColors.CarbonSlate
                     : activeThemeId === 'cyprus_sand'
-                    ? '#EAE5DB'
-                    : '#EFF2FE',
+                    ? StaticColors.WarmCreamBorder
+                    : StaticColors.MindfulLightBg,
                 },
               ]}
             >
@@ -324,8 +345,8 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
                 color={
                   activeThemeId === 'cyprus_sand'
                     ? isDarkMode
-                      ? '#0A6B66'
-                      : '#004643'
+                      ? StaticColors.CyprusTealLight
+                      : StaticColors.CyprusTeal
                     : accent
                 }
                 strokeWidth={2.2}
@@ -344,15 +365,15 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
             value={hapticFeedback}
             onValueChange={onToggleHapticFeedback}
             trackColor={{
-              false: '#D9D9D9',
+              false: StaticColors.FogGrey,
               true:
                 activeThemeId === 'cyprus_sand'
                   ? isDarkMode
-                    ? '#0A6B66'
-                    : '#004643'
+                    ? StaticColors.CyprusTealLight
+                    : StaticColors.CyprusTeal
                   : accent,
             }}
-            thumbColor="#FFFFFF"
+            thumbColor={StaticColors.PureWhite}
           />
         </View>
 
@@ -370,8 +391,8 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
                 color={
                   activeThemeId === 'cyprus_sand'
                     ? isDarkMode
-                      ? '#0A6B66'
-                      : '#004643'
+                      ? StaticColors.CyprusTealLight
+                      : StaticColors.CyprusTeal
                     : accent
                 }
                 strokeWidth={2.2}
@@ -389,8 +410,8 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
                 const activePillBg =
                   activeThemeId === 'cyprus_sand'
                     ? isDarkMode
-                      ? '#0A6B66'
-                      : '#004643'
+                      ? StaticColors.CyprusTealLight
+                      : StaticColors.CyprusTeal
                     : accent;
                 return (
                   <TouchableOpacity
@@ -403,15 +424,17 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
                         backgroundColor: isActive
                           ? activePillBg
                           : cardBg,
-                        borderColor: isActive ? '#FFFFFF' : borderLight,
+                        borderColor: isActive
+                          ? StaticColors.PureWhite
+                          : borderLight,
                         borderBottomColor: isActive
-                          ? accentDeep || '#4D4DB8'
+                          ? accentDeep || StaticColors.LavenderDeepFallback
                           : isDarkMode
-                          ? '#1A1D22'
-                          : '#D5D0C5',
+                          ? StaticColors.DarkPreviewSurface
+                          : StaticColors.HomeIndicator,
                         shadowColor: isActive
                           ? activePillBg
-                          : 'transparent',
+                          : StaticColors.Transparent,
                       },
                     ]}
                     onPress={() => handleSelectIntensity(key)}
@@ -422,7 +445,9 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
                       style={[
                         styles.intensityPillText,
                         {
-                          color: isActive ? '#FFFFFF' : textPrimary,
+                          color: isActive
+                            ? StaticColors.PureWhite
+                            : textPrimary,
                           fontFamily: isActive
                             ? Fonts.poppins.bold
                             : Fonts.poppins.medium,
@@ -459,10 +484,18 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
             <View
               style={[
                 styles.iconSquare,
-                { backgroundColor: isDarkMode ? '#2C3035' : '#EDFDF5' },
+                {
+                  backgroundColor: isDarkMode
+                    ? StaticColors.CarbonSlate
+                    : StaticColors.WellnessLightBg,
+                },
               ]}
             >
-              <Globe size={18} color="#21AF85" strokeWidth={2.2} />
+              <Globe
+                size={18}
+                color={StaticColors.LuminousGreen}
+                strokeWidth={2.2}
+              />
             </View>
             <View style={styles.settingItemMeta}>
               <Text style={[styles.settingItemTitle, { color: textPrimary }]}>
@@ -626,7 +659,7 @@ const styles = StyleSheet.create({
   viewAllThemesText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 11,
-    color: '#F5C518',
+    color: StaticColors.AccentYellow,
   },
   themesHeaderTitle: {
     fontFamily: Fonts.poppins.medium,
@@ -650,7 +683,7 @@ const styles = StyleSheet.create({
     height: ResponsivePixels.size52,
     borderRadius: ResponsivePixels.size26,
     borderWidth: 2,
-    borderColor: 'transparent',
+    borderColor: StaticColors.Transparent,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
@@ -664,7 +697,7 @@ const styles = StyleSheet.create({
     borderRadius: ResponsivePixels.size22,
     overflow: 'hidden',
     borderWidth: 1,
-    borderColor: 'rgba(0, 0, 0, 0.12)',
+    borderColor: withAlpha(StaticColors.PureBlack, 0.12),
   },
   quadRow: {
     flex: 1,
@@ -681,7 +714,7 @@ const styles = StyleSheet.create({
     height: ResponsivePixels.size16,
     borderRadius: ResponsivePixels.size8,
     borderWidth: 1.5,
-    borderColor: '#FFFFFF',
+    borderColor: StaticColors.PureWhite,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -690,7 +723,7 @@ const styles = StyleSheet.create({
     width: ResponsivePixels.size44,
     height: ResponsivePixels.size44,
     borderRadius: ResponsivePixels.size22,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: withAlpha(StaticColors.PureBlack, 0.5),
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -703,7 +736,7 @@ const styles = StyleSheet.create({
   roundThemeTierText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 9,
-    color: '#8E95A5',
+    color: StaticColors.MilestoneSlate,
     marginTop: 1,
   },
 });

@@ -49,10 +49,10 @@ export const VoicePlaygroundCard: React.FC<VoicePlaygroundCardProps> =
       statusMessage,
       onSynthesize,
       onStop,
-      cardBg = Colors.DefaultWhite,
-      borderLight = '#E8E2D5',
-      surfaceAlt = '#FAF8F5',
-      textPrimary = Colors.MidnightInkText,
+      cardBg = Colors.PureWhite,
+      borderLight = Colors.RingBorder,
+      surfaceAlt = Colors.CreamSurfaceAlt,
+      textPrimary = Colors.PureBlack,
       textSecondary = Colors.SubtitleGray,
       themeAccent = Colors.LavenderPurple,
       buttonBg,
@@ -142,7 +142,7 @@ export const VoicePlaygroundCard: React.FC<VoicePlaygroundCardProps> =
                   {
                     color:
                       synthesisState === 'error'
-                        ? '#FF3B30'
+                        ? Colors.CrimsonPulse
                         : themeAccent,
                   },
                 ]}
@@ -159,7 +159,11 @@ export const VoicePlaygroundCard: React.FC<VoicePlaygroundCardProps> =
                 style={[styles.actionBtn, styles.stopBtn]}
                 onPress={onStop}
               >
-                <StopCircle size={16} color="#FFFFFF" strokeWidth={2.2} />
+                <StopCircle
+                  size={16}
+                  color={Colors.PureWhite}
+                  strokeWidth={2.2}
+                />
                 <Text style={styles.actionBtnText}>Stop Speech</Text>
               </TouchableOpacity>
             ) : (
@@ -178,7 +182,7 @@ export const VoicePlaygroundCard: React.FC<VoicePlaygroundCardProps> =
               >
                 <Volume2
                   size={16}
-                  color={buttonTextColor || '#FFFFFF'}
+                  color={buttonTextColor || Colors.PureWhite}
                   strokeWidth={2.2}
                 />
                 <Text
@@ -205,7 +209,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     padding: 16,
     marginBottom: 26,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
     shadowRadius: 8,
@@ -282,7 +286,7 @@ const styles = StyleSheet.create({
     paddingVertical: 13,
   },
   stopBtn: {
-    backgroundColor: '#FF3B30',
+    backgroundColor: Colors.CrimsonPulse,
   },
   disabledBtn: {
     opacity: 0.6,
@@ -290,7 +294,7 @@ const styles = StyleSheet.create({
   actionBtnText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 13.5,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
 });
 

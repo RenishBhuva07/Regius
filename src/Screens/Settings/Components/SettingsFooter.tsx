@@ -9,9 +9,15 @@ import SettingsWatermarkDoodleSvg from './SettingsWatermarkDoodleSvg';
 export const SettingsFooter: React.FC = () => {
   const { isDarkMode } = useSettingsTheme();
 
-  const watermarkColor = isDarkMode ? '#5E6472' : '#8E95A5';
-  const subtextColor = isDarkMode ? '#828896' : '#717885';
-  const regiusHighlightColor = isDarkMode ? '#9C9CE3' : Colors.LavenderPurple;
+  const watermarkColor = isDarkMode
+    ? Colors.DarkWatermarkSlate
+    : Colors.MilestoneSlate;
+  const subtextColor = isDarkMode
+    ? Colors.DarkSubtextCoolGray
+    : Colors.LightSubtextSlateGray;
+  const regiusHighlightColor = isDarkMode
+    ? Colors.PeriwinkleSoft
+    : Colors.LavenderPurple;
 
   return (
     <View style={styles.footerWatermarkWrapper} pointerEvents="none">

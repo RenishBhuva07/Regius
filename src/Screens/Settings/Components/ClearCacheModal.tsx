@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 import { Trash2 } from 'lucide-react-native';
 import { Typography } from '../../../Theme/Typographys';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
+import Colors, { withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { useSettingsTheme } from './types';
 
 interface ClearCacheModalProps {
@@ -36,9 +37,12 @@ export const ClearCacheModal: React.FC<ClearCacheModalProps> = ({
           ]}
         >
           <View
-            style={[styles.dialogIconWrap, { backgroundColor: '#FFF0F0' }]}
+            style={[
+              styles.dialogIconWrap,
+              { backgroundColor: Colors.VoiceBellaBg },
+            ]}
           >
-            <Trash2 size={24} color="#FF3B30" strokeWidth={2.2} />
+            <Trash2 size={24} color={Colors.CrimsonPulse} strokeWidth={2.2} />
           </View>
           <Text style={[styles.dialogTitle, { color: textPrimary }]}>
             Clear Cache?
@@ -67,7 +71,10 @@ export const ClearCacheModal: React.FC<ClearCacheModalProps> = ({
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.85}
-              style={[styles.dialogBtnDanger, { backgroundColor: '#FF3B30' }]}
+              style={[
+                styles.dialogBtnDanger,
+                { backgroundColor: Colors.CrimsonPulse },
+              ]}
               onPress={onConfirm}
             >
               <Text style={styles.dialogBtnDangerText}>Clear Now</Text>
@@ -82,7 +89,7 @@ export const ClearCacheModal: React.FC<ClearCacheModalProps> = ({
 const styles = StyleSheet.create({
   dialogBackdrop: {
     flex: 1,
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    backgroundColor: withAlpha(Colors.PureBlack, 0.5),
     alignItems: 'center',
     justifyContent: 'center',
     paddingHorizontal: ResponsivePixels.size24,
@@ -141,7 +148,7 @@ const styles = StyleSheet.create({
   dialogBtnDangerText: {
     ...Typography.bodyMediumPoppinsSemiBold,
     fontSize: 13,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
 });
 

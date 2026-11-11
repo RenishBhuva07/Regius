@@ -12,6 +12,7 @@ import Svg, {
   Line,
 } from 'react-native-svg';
 import { useTheme } from '../../../Theme/ThemeContext';
+import { Colors } from '../../../Assets/StyleUtilities/Colors';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -52,14 +53,31 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
     const centerX = W / 2;
 
     const isSandTheme = !isDarkMode || activeThemeId === 'cyprus_sand';
-    const bgStop0 = isSandTheme ? '#FFFDF7' : (themeColors.SurfaceAlt || '#181B20');
-    const bgStop22 = isSandTheme ? '#FAF7EF' : (themeColors.Background || '#14171C');
-    const bgStop68 = isSandTheme ? '#F5EFE3' : (themeColors.AccentDeep || '#101216');
-    const bgStop100 = isSandTheme ? '#ECE4D4' : (themeColors.AccentDark || '#0D0E12');
-    const fadeColor = isSandTheme ? '#FAF7EF' : (themeColors.SurfaceAlt || '#181B20');
-    const fadeColorMid = isSandTheme ? '#F5EFE3' : (themeColors.Background || '#14171C');
-    const fadeColorBottom = isSandTheme ? '#ECE4D4' : (themeColors.AccentDeep || '#101216');
-    const themeAura = activeThemeId === 'cyprus_sand' ? '#004643' : (themeColors.Accent || '#8383D6');
+    const bgStop0 = isSandTheme
+      ? Colors.WorkTintCream
+      : themeColors.SurfaceAlt || Colors.DarkSurfacePressed;
+    const bgStop22 = isSandTheme
+      ? Colors.WarmParchment
+      : themeColors.Background || Colors.DarkCanvasDeep;
+    const bgStop68 = isSandTheme
+      ? Colors.SvgSectionCreamBase
+      : themeColors.AccentDeep || Colors.RoadCurbEdgeDark;
+    const bgStop100 = isSandTheme
+      ? Colors.SvgSectionParchment
+      : themeColors.AccentDark || Colors.SvgSectionVoid;
+    const fadeColor = isSandTheme
+      ? Colors.WarmParchment
+      : themeColors.SurfaceAlt || Colors.DarkSurfacePressed;
+    const fadeColorMid = isSandTheme
+      ? Colors.SvgSectionCreamBase
+      : themeColors.Background || Colors.DarkCanvasDeep;
+    const fadeColorBottom = isSandTheme
+      ? Colors.SvgSectionParchment
+      : themeColors.AccentDeep || Colors.RoadCurbEdgeDark;
+    const themeAura =
+      activeThemeId === 'cyprus_sand'
+        ? Colors.CyprusTeal
+        : themeColors.Accent || Colors.LavenderPurple;
 
     const remDiamond = (cx: number, cy: number, s: number) =>
       `M ${cx} ${cy - s} Q ${cx} ${cy}, ${cx + s} ${cy} Q ${cx} ${cy}, ${cx} ${
@@ -94,8 +112,12 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               r={175}
               gradientUnits="userSpaceOnUse"
             >
-              <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.24} />
-              <Stop offset="45%" stopColor="#DEAA14" stopOpacity={0.08} />
+              <Stop offset="0%" stopColor={Colors.AccentYellow} stopOpacity={0.24} />
+              <Stop
+                offset="45%"
+                stopColor={Colors.WorkDarkBorder}
+                stopOpacity={0.08}
+              />
               <Stop offset="100%" stopColor={fadeColor} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
@@ -105,8 +127,12 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               r={115}
               gradientUnits="userSpaceOnUse"
             >
-              <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.25} />
-              <Stop offset="50%" stopColor="#D99B0F" stopOpacity={0.07} />
+              <Stop offset="0%" stopColor={Colors.AccentYellow} stopOpacity={0.25} />
+              <Stop
+                offset="50%"
+                stopColor={Colors.SvgDoodleGoldShadow}
+                stopOpacity={0.07}
+              />
               <Stop offset="100%" stopColor={fadeColor} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
@@ -127,8 +153,12 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               r={160}
               gradientUnits="userSpaceOnUse"
             >
-              <Stop offset="0%" stopColor="#52D22E" stopOpacity={0.12} />
-              <Stop offset="55%" stopColor="#1B9A72" stopOpacity={0.03} />
+              <Stop offset="0%" stopColor={Colors.AccentGreen} stopOpacity={0.12} />
+              <Stop
+                offset="55%"
+                stopColor={Colors.GreenGracious}
+                stopOpacity={0.03}
+              />
               <Stop offset="100%" stopColor={fadeColorMid} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
@@ -138,8 +168,12 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               r={210}
               gradientUnits="userSpaceOnUse"
             >
-              <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.18} />
-              <Stop offset="48%" stopColor="#E2A612" stopOpacity={0.05} />
+              <Stop offset="0%" stopColor={Colors.AccentYellow} stopOpacity={0.18} />
+              <Stop
+                offset="48%"
+                stopColor={Colors.SvgGoldAuraMid}
+                stopOpacity={0.05}
+              />
               <Stop offset="100%" stopColor={fadeColorBottom} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
@@ -149,8 +183,12 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               r={160}
               gradientUnits="userSpaceOnUse"
             >
-              <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.18} />
-              <Stop offset="50%" stopColor="#DEAA14" stopOpacity={0.05} />
+              <Stop offset="0%" stopColor={Colors.AccentYellow} stopOpacity={0.18} />
+              <Stop
+                offset="50%"
+                stopColor={Colors.WorkDarkBorder}
+                stopOpacity={0.05}
+              />
               <Stop offset="100%" stopColor={fadeColorBottom} stopOpacity={0} />
             </RadialGradient>
             <LinearGradient
@@ -160,9 +198,21 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               x2="100%"
               y2="100%"
             >
-              <Stop offset="0%" stopColor="#FFFCE3" stopOpacity={0.95} />
-              <Stop offset="50%" stopColor="#F5C518" stopOpacity={0.85} />
-              <Stop offset="100%" stopColor="#B48216" stopOpacity={0.65} />
+              <Stop
+                offset="0%"
+                stopColor={Colors.CreamBackground}
+                stopOpacity={0.95}
+              />
+              <Stop
+                offset="50%"
+                stopColor={Colors.AccentYellow}
+                stopOpacity={0.85}
+              />
+              <Stop
+                offset="100%"
+                stopColor={Colors.WorkTextAccent}
+                stopOpacity={0.65}
+              />
             </LinearGradient>
           </Defs>
           <Rect x={0} y={0} width={W} height={H} fill="url(#remBgSheen)" />
@@ -177,7 +227,7 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               cx={centerX}
               cy={0}
               r={60}
-              stroke="#D4CCA8"
+              stroke={Colors.BentoWarmGoldMuted}
               strokeWidth={1}
               strokeDasharray="4 6"
               fill="none"
@@ -187,7 +237,7 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               cx={centerX}
               cy={0}
               r={95}
-              stroke="#F5C518"
+              stroke={Colors.AccentYellow}
               strokeWidth={1.2}
               fill="none"
               opacity={0.35}
@@ -196,7 +246,7 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               cx={centerX}
               cy={0}
               r={140}
-              stroke="#8383D6"
+              stroke={Colors.LavenderPurple}
               strokeWidth={1}
               strokeDasharray="8 8"
               fill="none"
@@ -206,7 +256,7 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               cx={centerX}
               cy={0}
               r={190}
-              stroke="#D8D0BA"
+              stroke={Colors.SvgSectionSandstone}
               strokeWidth={1}
               fill="none"
               opacity={0.22}
@@ -215,7 +265,7 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               cx={centerX}
               cy={0}
               r={240}
-              stroke="#D0C8B0"
+              stroke={Colors.SvgSectionKhakiLine}
               strokeWidth={0.9}
               strokeDasharray="3 7"
               fill="none"
@@ -236,7 +286,9 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
                   y1={y1}
                   x2={x2}
                   y2={y2}
-                  stroke={i % 2 === 0 ? '#F5C518' : '#8383D6'}
+                  stroke={
+                    i % 2 === 0 ? Colors.AccentYellow : Colors.LavenderPurple
+                  }
                   strokeWidth={1.2}
                   opacity={0.3}
                   strokeLinecap="round"
@@ -250,7 +302,7 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               y1={130}
               x2={Math.min(W, 360)}
               y2={Math.min(H, 490)}
-              stroke="#DFD7C2"
+              stroke={Colors.SvgSectionLinen}
               strokeWidth={0.9}
               strokeDasharray="3 5"
             />
@@ -259,7 +311,7 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               y1={250}
               x2={Math.min(W, 360)}
               y2={Math.min(H, 610)}
-              stroke="#DFD7C2"
+              stroke={Colors.SvgSectionLinen}
               strokeWidth={0.9}
               strokeDasharray="3 5"
             />
@@ -268,7 +320,7 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               y1={130}
               x2={Math.max(0, W - 360)}
               y2={Math.min(H, 490)}
-              stroke="#DFD7C2"
+              stroke={Colors.SvgSectionLinen}
               strokeWidth={0.9}
               strokeDasharray="3 5"
             />
@@ -277,14 +329,14 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               y1={250}
               x2={Math.max(0, W - 360)}
               y2={Math.min(H, 610)}
-              stroke="#DFD7C2"
+              stroke={Colors.SvgSectionLinen}
               strokeWidth={0.9}
               strokeDasharray="3 5"
             />
           </G>
           <Path
             d={`M 0 160 Q 28 230 16 320 T 30 460 T 14 600 T 26 ${H - 35}`}
-            stroke="#F5C518"
+            stroke={Colors.AccentYellow}
             strokeWidth={1.2}
             strokeDasharray="5 7"
             fill="none"
@@ -328,20 +380,20 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
           <G transform={`translate(${W - 68}, 235)`} opacity={0.22}>
             <Path
               d="M 12 0 C 6 0, 3 8, 2 16 L 22 16 C 21 8, 18 0, 12 0 Z"
-              stroke="#F5C518"
+              stroke={Colors.AccentYellow}
               strokeWidth={1.2}
               fill="none"
             />
-            <Circle cx={12} cy={18} r={2} fill="#8383D6" />
+            <Circle cx={12} cy={18} r={2} fill={Colors.LavenderPurple} />
             <Path
               d="M -4 10 C -8 14, -8 20, -4 24"
-              stroke="#8383D6"
+              stroke={Colors.LavenderPurple}
               strokeWidth={1}
               fill="none"
             />
             <Path
               d="M 28 10 C 32 14, 32 20, 28 24"
-              stroke="#8383D6"
+              stroke={Colors.LavenderPurple}
               strokeWidth={1}
               fill="none"
             />
@@ -352,17 +404,17 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
           >
             <Path
               d="M 4 2 L 24 2 L 14 16 L 24 30 L 4 30 L 14 16 Z"
-              stroke="#D4CCA8"
+              stroke={Colors.BentoWarmGoldMuted}
               strokeWidth={1.2}
               fill="none"
             />
-            <Circle cx={14} cy={16} r={1.5} fill="#F5C518" />
+            <Circle cx={14} cy={16} r={1.5} fill={Colors.AccentYellow} />
             <Line
               x1={2}
               y1={2}
               x2={26}
               y2={2}
-              stroke="#F5C518"
+              stroke={Colors.AccentYellow}
               strokeWidth={1.2}
             />
             <Line
@@ -370,23 +422,43 @@ export const ReminderSectionBackgroundSvg: React.FC<ReminderSectionBackgroundSvg
               y1={30}
               x2={26}
               y2={30}
-              stroke="#F5C518"
+              stroke={Colors.AccentYellow}
               strokeWidth={1.2}
             />
           </G>
-          <Path d={remDiamond(48, 100, 3.5)} fill="#F5C518" opacity={0.35} />
-          <Path d={remDiamond(W - 42, 120, 4)} fill="#8383D6" opacity={0.32} />
-          <Path d={remDiamond(W - 84, 180, 3)} fill="#52D22E" opacity={0.3} />
-          <Path d={remDiamond(52, 280, 3.2)} fill="#F5C518" opacity={0.28} />
+          <Path
+            d={remDiamond(48, 100, 3.5)}
+            fill={Colors.AccentYellow}
+            opacity={0.35}
+          />
+          <Path
+            d={remDiamond(W - 42, 120, 4)}
+            fill={Colors.LavenderPurple}
+            opacity={0.32}
+          />
+          <Path
+            d={remDiamond(W - 84, 180, 3)}
+            fill={Colors.AccentGreen}
+            opacity={0.3}
+          />
+          <Path
+            d={remDiamond(52, 280, 3.2)}
+            fill={Colors.AccentYellow}
+            opacity={0.28}
+          />
           <Path
             d={remDiamond(W - 36, 360, 4.2)}
-            fill="#F5C518"
+            fill={Colors.AccentYellow}
             opacity={0.34}
           />
-          <Path d={remDiamond(40, 520, 3.5)} fill="#8383D6" opacity={0.28} />
+          <Path
+            d={remDiamond(40, 520, 3.5)}
+            fill={Colors.LavenderPurple}
+            opacity={0.28}
+          />
           <Path
             d={remDiamond(W - 55, H - 150, 4.5)}
-            fill="#F5C518"
+            fill={Colors.AccentYellow}
             opacity={0.36}
           />
         </Svg>

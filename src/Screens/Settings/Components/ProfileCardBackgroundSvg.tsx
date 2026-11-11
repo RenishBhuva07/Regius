@@ -9,7 +9,7 @@ import Svg, {
   RadialGradient,
   Stop,
 } from 'react-native-svg';
-import Colors from '../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 
 // Background pattern for Settings profile card.
 export const ProfileCardBackgroundSvg: React.FC = React.memo(() => (
@@ -23,9 +23,9 @@ export const ProfileCardBackgroundSvg: React.FC = React.memo(() => (
     >
       <Defs>
         <LinearGradient id="profileBgSheen" x1="0%" y1="0%" x2="100%" y2="100%">
-          <Stop offset="0%" stopColor="#252733" stopOpacity={0.7} />
+          <Stop offset="0%" stopColor={Colors.BentoStopSlate} stopOpacity={0.7} />
           <Stop offset="50%" stopColor={Colors.NeroBlack} stopOpacity={0.2} />
-          <Stop offset="100%" stopColor="#141519" stopOpacity={0.75} />
+          <Stop offset="100%" stopColor={Colors.BentoStopAbyss} stopOpacity={0.75} />
         </LinearGradient>
         <RadialGradient
           id="profileGoldDawn"
@@ -34,9 +34,9 @@ export const ProfileCardBackgroundSvg: React.FC = React.memo(() => (
           rx="60%"
           ry="60%"
         >
-          <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.26} />
-          <Stop offset="40%" stopColor="#DEAA14" stopOpacity={0.1} />
-          <Stop offset="80%" stopColor="#8A6409" stopOpacity={0.02} />
+          <Stop offset="0%" stopColor={Colors.AccentYellow} stopOpacity={0.26} />
+          <Stop offset="40%" stopColor={Colors.WorkDarkBorder} stopOpacity={0.1} />
+          <Stop offset="80%" stopColor={Colors.SvgAntiqueBronze} stopOpacity={0.02} />
           <Stop offset="100%" stopColor={Colors.NeroBlack} stopOpacity={0} />
         </RadialGradient>
         <RadialGradient
@@ -46,8 +46,8 @@ export const ProfileCardBackgroundSvg: React.FC = React.memo(() => (
           rx="55%"
           ry="55%"
         >
-          <Stop offset="0%" stopColor="#9C9CE3" stopOpacity={0.32} />
-          <Stop offset="45%" stopColor="#8383D6" stopOpacity={0.14} />
+          <Stop offset="0%" stopColor={Colors.PeriwinkleSoft} stopOpacity={0.32} />
+          <Stop offset="45%" stopColor={Colors.LavenderPurple} stopOpacity={0.14} />
           <Stop offset="100%" stopColor={Colors.NeroBlack} stopOpacity={0} />
         </RadialGradient>
         <RadialGradient
@@ -57,7 +57,7 @@ export const ProfileCardBackgroundSvg: React.FC = React.memo(() => (
           rx="40%"
           ry="40%"
         >
-          <Stop offset="0%" stopColor="#52D22E" stopOpacity={0.08} />
+          <Stop offset="0%" stopColor={Colors.AccentGreen} stopOpacity={0.08} />
           <Stop offset="100%" stopColor={Colors.NeroBlack} stopOpacity={0} />
         </RadialGradient>
         <LinearGradient
@@ -67,8 +67,8 @@ export const ProfileCardBackgroundSvg: React.FC = React.memo(() => (
           x2="100%"
           y2="100%"
         >
-          <Stop offset="0%" stopColor="#FFFCE3" stopOpacity={0.95} />
-          <Stop offset="100%" stopColor="#F5C518" stopOpacity={0.8} />
+          <Stop offset="0%" stopColor={Colors.CreamBackground} stopOpacity={0.95} />
+          <Stop offset="100%" stopColor={Colors.AccentYellow} stopOpacity={0.8} />
         </LinearGradient>
       </Defs>
       <Rect width="100%" height="100%" fill="url(#profileBgSheen)" />
@@ -79,7 +79,7 @@ export const ProfileCardBackgroundSvg: React.FC = React.memo(() => (
         cx={54}
         cy={52}
         r={38}
-        stroke="rgba(245, 197, 24, 0.18)"
+        stroke={withAlpha(Colors.AccentYellow, 0.18)}
         strokeWidth={1}
         fill="none"
       />
@@ -87,7 +87,7 @@ export const ProfileCardBackgroundSvg: React.FC = React.memo(() => (
         cx={54}
         cy={52}
         r={58}
-        stroke="rgba(255, 245, 184, 0.10)"
+        stroke={withAlpha(Colors.WorkLightBorder, 0.1)}
         strokeWidth={1}
         strokeDasharray="4 4"
         fill="none"
@@ -96,13 +96,13 @@ export const ProfileCardBackgroundSvg: React.FC = React.memo(() => (
         cx={54}
         cy={52}
         r={82}
-        stroke="rgba(255, 255, 255, 0.04)"
+        stroke={withAlpha(Colors.PureWhite, 0.04)}
         strokeWidth={1}
         fill="none"
       />
       <Path
         d="M -10 110 C 80 70, 160 140, 260 90 S 340 120, 390 95"
-        stroke="rgba(156, 156, 227, 0.14)"
+        stroke={withAlpha(Colors.PeriwinkleSoft, 0.14)}
         strokeWidth={1.2}
         strokeLinecap="round"
         fill="none"
@@ -111,9 +111,27 @@ export const ProfileCardBackgroundSvg: React.FC = React.memo(() => (
         d="M 315 28 Q 315 34, 321 34 Q 315 34, 315 40 Q 315 34, 309 34 Q 315 34, 315 28 Z"
         fill="url(#profileStarGold)"
       />
-      <Circle cx={335} cy={54} r={1.5} fill="#FFFCE3" opacity={0.65} />
-      <Circle cx={275} cy={22} r={1.2} fill="#9C9CE3" opacity={0.5} />
-      <Circle cx={145} cy={18} r={1.2} fill="#F5C518" opacity={0.6} />
+      <Circle
+        cx={335}
+        cy={54}
+        r={1.5}
+        fill={Colors.CreamBackground}
+        opacity={0.65}
+      />
+      <Circle
+        cx={275}
+        cy={22}
+        r={1.2}
+        fill={Colors.PeriwinkleSoft}
+        opacity={0.5}
+      />
+      <Circle
+        cx={145}
+        cy={18}
+        r={1.2}
+        fill={Colors.AccentYellow}
+        opacity={0.6}
+      />
     </Svg>
   </View>
 ));

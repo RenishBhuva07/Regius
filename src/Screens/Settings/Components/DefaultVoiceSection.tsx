@@ -19,7 +19,10 @@ import {
 } from 'lucide-react-native';
 import { Typography } from '../../../Theme/Typographys';
 import { Fonts } from '../../../Theme/fonts';
-import { Colors as StaticColors } from '../../../Assets/StyleUtilities/Colors';
+import {
+  Colors as StaticColors,
+  withAlpha,
+} from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { HeaderActionButton } from '../../../Common/HeaderActionButton';
 import { useTheme } from '../../../Theme/ThemeContext';
@@ -69,8 +72,8 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
   const themeAccent =
     activeThemeId === 'cyprus_sand'
       ? isDarkMode
-        ? '#0A6B66'
-        : '#004643'
+        ? StaticColors.CyprusTealLight
+        : StaticColors.CyprusTeal
       : accent;
 
   const isCurrentVoicePlaying =
@@ -112,22 +115,22 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
             backgroundColor: cardBg,
             borderColor:
               activeThemeId === 'cyprus_sand'
-                ? '#DDD7CB'
+                ? StaticColors.CyprusBorderDarkCard
                 : isDarkMode
-                ? 'rgba(255, 255, 255, 0.12)'
-                : '#FFFFFF',
+                ? withAlpha(StaticColors.PureWhite, 0.12)
+                : StaticColors.PureWhite,
             borderBottomColor:
               activeThemeId === 'cyprus_sand'
-                ? '#C8C2B4'
+                ? StaticColors.SandstoneBorder
                 : isDarkMode
-                ? '#171A20'
-                : '#E2DCD0',
+                ? StaticColors.DarkSurfaceDeep
+                : StaticColors.WarmStoneBorder,
             shadowColor:
               activeThemeId === 'cyprus_sand'
-                ? 'rgba(0, 70, 67, 0.16)'
+                ? withAlpha(StaticColors.CyprusTeal, 0.16)
                 : isDarkMode
-                ? '#000000'
-                : 'rgba(131, 131, 214, 0.16)',
+                ? StaticColors.PureBlack
+                : withAlpha(StaticColors.LavenderPurple, 0.16),
           },
         ]}
       >
@@ -190,7 +193,7 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
               styles.playPauseCircleBtn,
               {
                 backgroundColor: isCurrentVoicePlaying
-                  ? '#1F2228'
+                  ? StaticColors.MidnightCharcoal
                   : selectedVoice.accentColor,
               },
             ]}
@@ -203,12 +206,16 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
             }
           >
             {isCurrentVoicePlaying ? (
-              <Pause size={14} color="#FFFFFF" fill="#FFFFFF" />
+              <Pause
+                size={14}
+                color={StaticColors.PureWhite}
+                fill={StaticColors.PureWhite}
+              />
             ) : (
               <Play
                 size={14}
-                color="#FFFFFF"
-                fill="#FFFFFF"
+                color={StaticColors.PureWhite}
+                fill={StaticColors.PureWhite}
                 style={styles.playIconOffset}
               />
             )}
@@ -284,10 +291,12 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
                         borderColor: isSelected
                           ? voice.accentColor
                           : isDarkMode
-                          ? '#2C3038'
-                          : '#E8E2D5',
+                          ? StaticColors.DarkSteelBorder
+                          : StaticColors.RingBorder,
                         borderWidth: isSelected ? 2.5 : 1.5,
-                        shadowColor: isSelected ? voice.accentColor : '#000000',
+                        shadowColor: isSelected
+                          ? voice.accentColor
+                          : StaticColors.PureBlack,
                         shadowOpacity: isSelected ? 0.3 : 0.06,
                       },
                     ]}
@@ -308,7 +317,11 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
                           { backgroundColor: voice.accentColor },
                         ]}
                       >
-                        <Check size={8} color="#FFFFFF" strokeWidth={3} />
+                        <Check
+                          size={8}
+                          color={StaticColors.PureWhite}
+                          strokeWidth={3}
+                        />
                       </View>
                     )}
                   </View>
@@ -350,10 +363,10 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
               value={autoSpeakReplies}
               onValueChange={onToggleAutoSpeakReplies}
               trackColor={{
-                false: '#D9D9D9',
+                false: StaticColors.FogGrey,
                 true: themeAccent,
               }}
-              thumbColor="#FFFFFF"
+              thumbColor={StaticColors.PureWhite}
             />
           </View>
         </View>
@@ -464,7 +477,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
-    shadowColor: '#000000',
+    shadowColor: StaticColors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.18,
     shadowRadius: 4,
@@ -553,7 +566,7 @@ const styles = StyleSheet.create({
     height: 15,
     borderRadius: 7.5,
     borderWidth: 1.5,
-    borderColor: '#FFFFFF',
+    borderColor: StaticColors.PureWhite,
     alignItems: 'center',
     justifyContent: 'center',
   },

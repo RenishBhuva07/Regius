@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated } from 'react-native';
 import { Mic, MicOff } from 'lucide-react-native';
+import Colors, { withAlpha } from '../../../../Assets/StyleUtilities/Colors';
 
 export interface WakeWordRadarPulseProps {
   isWakeWordEnabled: boolean;
@@ -72,17 +73,19 @@ export const WakeWordRadarPulse: React.FC<WakeWordRadarPulseProps> = React.memo(
           style={[
             styles.micCoreOrb,
             {
-              backgroundColor: isWakeWordEnabled ? '#21AF85' : '#2C3035',
+              backgroundColor: isWakeWordEnabled
+                ? Colors.LuminousGreen
+                : Colors.CarbonSlate,
               borderColor: isWakeWordEnabled
-                ? 'rgba(33, 175, 133, 0.4)'
-                : 'rgba(255, 255, 255, 0.1)',
+                ? withAlpha(Colors.LuminousGreen, 0.4)
+                : withAlpha(Colors.PureWhite, 0.1),
             },
           ]}
         >
           {isWakeWordEnabled ? (
-            <Mic size={28} color="#FFFFFF" strokeWidth={2.4} />
+            <Mic size={28} color={Colors.PureWhite} strokeWidth={2.4} />
           ) : (
-            <MicOff size={28} color="#A3A8B1" strokeWidth={2.4} />
+            <MicOff size={28} color={Colors.SteelMist} strokeWidth={2.4} />
           )}
         </View>
       </View>
@@ -104,7 +107,7 @@ const styles = StyleSheet.create({
     height: 114,
     borderRadius: 57,
     borderWidth: 2,
-    borderColor: '#21AF85',
+    borderColor: Colors.LuminousGreen,
   },
   radarRingMiddle: {
     position: 'absolute',
@@ -112,7 +115,7 @@ const styles = StyleSheet.create({
     height: 90,
     borderRadius: 45,
     borderWidth: 1,
-    borderColor: 'rgba(33, 175, 133, 0.3)',
+    borderColor: withAlpha(Colors.LuminousGreen, 0.3),
   },
   micCoreOrb: {
     width: 66,
@@ -121,7 +124,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#21AF85',
+    shadowColor: Colors.LuminousGreen,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.35,
     shadowRadius: 10,

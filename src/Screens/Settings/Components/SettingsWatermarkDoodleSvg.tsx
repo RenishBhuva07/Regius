@@ -9,6 +9,7 @@ import Svg, {
   Stop,
   Rect,
 } from 'react-native-svg';
+import Colors from '../../../Assets/StyleUtilities/Colors';
 
 export interface SettingsWatermarkDoodleSvgProps {
   width?: number;
@@ -30,10 +31,10 @@ export const SettingsWatermarkDoodleSvg: React.FC<
             x2="100%"
             y2="100%"
           >
-            <Stop offset="0%" stopColor="#FFFCE3" />
-            <Stop offset="30%" stopColor="#F5C518" />
-            <Stop offset="75%" stopColor="#DEAA14" />
-            <Stop offset="100%" stopColor="#B47804" />
+            <Stop offset="0%" stopColor={Colors.CreamBackground} />
+            <Stop offset="30%" stopColor={Colors.AccentYellow} />
+            <Stop offset="75%" stopColor={Colors.WorkDarkBorder} />
+            <Stop offset="100%" stopColor={Colors.BadgeYellowText} />
           </LinearGradient>
           <LinearGradient
             id="regiusCrownBase"
@@ -42,9 +43,9 @@ export const SettingsWatermarkDoodleSvg: React.FC<
             x2="100%"
             y2="0%"
           >
-            <Stop offset="0%" stopColor="#F5C518" />
-            <Stop offset="50%" stopColor="#FFF8D0" />
-            <Stop offset="100%" stopColor="#D99B0F" />
+            <Stop offset="0%" stopColor={Colors.AccentYellow} />
+            <Stop offset="50%" stopColor={Colors.BadgeYellowBg} />
+            <Stop offset="100%" stopColor={Colors.SvgDoodleGoldShadow} />
           </LinearGradient>
           <LinearGradient
             id="regiusCrownLavender"
@@ -53,9 +54,9 @@ export const SettingsWatermarkDoodleSvg: React.FC<
             x2="100%"
             y2="100%"
           >
-            <Stop offset="0%" stopColor="#D8DBFF" />
-            <Stop offset="50%" stopColor="#8383D6" />
-            <Stop offset="100%" stopColor="#5E5EB2" />
+            <Stop offset="0%" stopColor={Colors.MindfulLightBorder} />
+            <Stop offset="50%" stopColor={Colors.LavenderPurple} />
+            <Stop offset="100%" stopColor={Colors.BentoVioletStopDeep} />
           </LinearGradient>
         </Defs>
         <Path
@@ -103,7 +104,7 @@ export const SettingsWatermarkDoodleSvg: React.FC<
                L 80 72 
                Z"
             fill="url(#regiusCrownGold)"
-            stroke="#B47804"
+            stroke={Colors.BadgeYellowText}
             strokeWidth={2.4}
             strokeLinejoin="round"
             opacity={0.95}
@@ -112,32 +113,32 @@ export const SettingsWatermarkDoodleSvg: React.FC<
             cx={4}
             cy={30}
             r={5.5}
-            fill="#FFFCE3"
-            stroke="#B47804"
+            fill={Colors.CreamBackground}
+            stroke={Colors.BadgeYellowText}
             strokeWidth={2}
           />
-          <Circle cx={3} cy={28.5} r={1.5} fill="#FFFFFF" />
+          <Circle cx={3} cy={28.5} r={1.5} fill={Colors.PureWhite} />
           <Circle
             cx={44}
             cy={12}
             r={7}
-            fill="#FFFCE3"
-            stroke="#B47804"
+            fill={Colors.CreamBackground}
+            stroke={Colors.BadgeYellowText}
             strokeWidth={2.2}
           />
-          <Circle cx={42.5} cy={10} r={2} fill="#FFFFFF" />
+          <Circle cx={42.5} cy={10} r={2} fill={Colors.PureWhite} />
           <Circle
             cx={84}
             cy={30}
             r={5.5}
-            fill="#FFFCE3"
-            stroke="#B47804"
+            fill={Colors.CreamBackground}
+            stroke={Colors.BadgeYellowText}
             strokeWidth={2}
           />
-          <Circle cx={83} cy={28.5} r={1.5} fill="#FFFFFF" />
+          <Circle cx={83} cy={28.5} r={1.5} fill={Colors.PureWhite} />
           <Path
             d="M 26 50 Q 35 62, 44 68 Q 53 62, 62 50"
-            stroke="#FFFCE3"
+            stroke={Colors.CreamBackground}
             strokeWidth={2}
             strokeLinecap="round"
             fill="none"
@@ -150,19 +151,19 @@ export const SettingsWatermarkDoodleSvg: React.FC<
             height={14}
             rx={4}
             fill="url(#regiusCrownBase)"
-            stroke="#B47804"
+            stroke={Colors.BadgeYellowText}
             strokeWidth={2}
           />
-          <Circle cx={18} cy={77} r={2.8} fill="#8383D6" />
-          <Circle cx={31} cy={77} r={3.2} fill="#52D22E" />
-          <Circle cx={44} cy={77} r={3.8} fill="#FF5B65" />
-          <Circle cx={57} cy={77} r={3.2} fill="#52D22E" />
-          <Circle cx={70} cy={77} r={2.8} fill="#8383D6" />
+          <Circle cx={18} cy={77} r={2.8} fill={Colors.LavenderPurple} />
+          <Circle cx={31} cy={77} r={3.2} fill={Colors.AccentGreen} />
+          <Circle cx={44} cy={77} r={3.8} fill={Colors.SunburstFlame} />
+          <Circle cx={57} cy={77} r={3.2} fill={Colors.AccentGreen} />
+          <Circle cx={70} cy={77} r={2.8} fill={Colors.LavenderPurple} />
         </G>
-        <Circle cx={20} cy={95} r={2} fill="#F5C518" opacity={0.8} />
-        <Circle cx={116} cy={88} r={2.2} fill="#8383D6" opacity={0.75} />
-        <Circle cx={28} cy={114} r={1.5} fill="#F5C518" opacity={0.6} />
-        <Circle cx={102} cy={110} r={1.8} fill="#F5C518" opacity={0.7} />
+        <Circle cx={20} cy={95} r={2} fill={Colors.AccentYellow} opacity={0.8} />
+        <Circle cx={116} cy={88} r={2.2} fill={Colors.LavenderPurple} opacity={0.75} />
+        <Circle cx={28} cy={114} r={1.5} fill={Colors.AccentYellow} opacity={0.6} />
+        <Circle cx={102} cy={110} r={1.8} fill={Colors.AccentYellow} opacity={0.7} />
       </Svg>
     </View>
   );

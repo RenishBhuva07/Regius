@@ -117,10 +117,11 @@ export const ThemeScreen: React.FC = () => {
   );
 
   const bgMain =
-    themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
+    themeColors.Background ||
+    (isDarkMode ? Colors.DarkBackground : Colors.CreamBackground);
   const cardBg =
     themeColors.CardBackground ||
-    (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
+    (isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite);
 
   const renderRightAction = useCallback(
     () => (

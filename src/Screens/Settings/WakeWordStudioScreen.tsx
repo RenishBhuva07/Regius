@@ -13,7 +13,7 @@ import { Sparkles, Zap, Activity, ShieldCheck } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../../Theme/fonts';
-import { Colors } from '../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../Common/Badge';
 import CustomButton from '../../Common/CustomButton';
@@ -147,18 +147,23 @@ export const WakeWordStudioScreen: React.FC = () => {
   };
 
   const bgMain =
-    themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
+    themeColors.Background ||
+    (isDarkMode ? Colors.DarkBackground : Colors.CreamBackground);
   const cardBg =
-    themeColors.CardBackground || (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
+    themeColors.CardBackground ||
+    (isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite);
   const textPrimary =
     themeColors.PrimaryText ||
-    (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
+    (isDarkMode ? Colors.PureWhite : Colors.PureBlack);
   const textSecondary =
-    themeColors.SecondaryText || (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+    themeColors.SecondaryText ||
+    (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray);
   const borderLight =
-    themeColors.BorderLight || (isDarkMode ? '#2C3035' : '#E8E2D5');
+    themeColors.BorderLight ||
+    (isDarkMode ? Colors.CarbonSlate : Colors.RingBorder);
   const surfaceAlt =
-    themeColors.SurfaceAlt || (isDarkMode ? '#171A1F' : '#FAF8F5');
+    themeColors.SurfaceAlt ||
+    (isDarkMode ? Colors.DarkSurfaceAlt : Colors.CreamSurfaceAlt);
 
   const renderRightAction = useCallback(
     (scrolled: boolean) => (
@@ -206,7 +211,11 @@ export const WakeWordStudioScreen: React.FC = () => {
                 {/* Aura Status Pill */}
                 <View style={styles.heroStatusRow}>
                   <View style={styles.heroStatusLeft}>
-                    <Sparkles size={14} color="#F5C518" strokeWidth={2.4} />
+                    <Sparkles
+                      size={14}
+                      color={Colors.AccentYellow}
+                      strokeWidth={2.4}
+                    />
                     <Text style={styles.heroStatusLabel}>ACOUSTIC RADAR</Text>
                   </View>
                   <Badge
@@ -232,17 +241,29 @@ export const WakeWordStudioScreen: React.FC = () => {
                 {/* Acoustic Radar Metrics Pill */}
                 <View style={styles.radarMetricsRow}>
                   <View style={styles.metricCell}>
-                    <Activity size={13} color="#F5C518" strokeWidth={2.2} />
+                    <Activity
+                      size={13}
+                      color={Colors.AccentYellow}
+                      strokeWidth={2.2}
+                    />
                     <Text style={styles.metricText}>On-Device ML</Text>
                   </View>
                   <View style={styles.metricDivider} />
                   <View style={styles.metricCell}>
-                    <ShieldCheck size={13} color="#21AF85" strokeWidth={2.2} />
+                    <ShieldCheck
+                      size={13}
+                      color={Colors.LuminousGreen}
+                      strokeWidth={2.2}
+                    />
                     <Text style={styles.metricText}>Zero Cloud Audio</Text>
                   </View>
                   <View style={styles.metricDivider} />
                   <View style={styles.metricCell}>
-                    <Zap size={13} color="#A78BFA" strokeWidth={2.2} />
+                    <Zap
+                      size={13}
+                      color={Colors.Violet400}
+                      strokeWidth={2.2}
+                    />
                     <Text style={styles.metricText}>&lt; 40ms Match</Text>
                   </View>
                 </View>
@@ -262,8 +283,11 @@ export const WakeWordStudioScreen: React.FC = () => {
                   <Switch
                     value={isWakeWordEnabled}
                     onValueChange={setWakeWordEnabled}
-                    trackColor={{ false: '#3A3F47', true: '#21AF85' }}
-                    thumbColor="#FFFFFF"
+                    trackColor={{
+                      false: Colors.DarkSwitchTrackOff,
+                      true: Colors.LuminousGreen,
+                    }}
+                    thumbColor={Colors.PureWhite}
                   />
                 </View>
               </View>
@@ -351,7 +375,9 @@ export const WakeWordStudioScreen: React.FC = () => {
         style={[
           styles.floatingActionDock,
           {
-            backgroundColor: isDarkMode ? '#1E2228' : '#FFFFFF',
+            backgroundColor: isDarkMode
+              ? Colors.DarkCardBackground
+              : Colors.PureWhite,
             borderTopColor: borderLight,
             paddingBottom: insets.bottom + 12,
           },
@@ -385,8 +411,8 @@ const styles = StyleSheet.create({
   },
   cardShadowWrapper: {
     borderRadius: 24,
-    backgroundColor: '#000000',
-    shadowColor: '#000000',
+    backgroundColor: Colors.PureBlack,
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.28,
     shadowRadius: 18,
@@ -395,7 +421,7 @@ const styles = StyleSheet.create({
   card: {
     borderRadius: 24,
     borderWidth: 4,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: withAlpha(Colors.PureWhite, 0.9),
     backgroundColor: Colors.NeroBlack,
     padding: ResponsivePixels.size20,
     overflow: 'hidden',
@@ -420,7 +446,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.bold,
     fontSize: 10.5,
     letterSpacing: 0.8,
-    color: '#F5C518',
+    color: Colors.AccentYellow,
   },
   phraseReadoutWrap: {
     alignItems: 'center',
@@ -430,26 +456,26 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.medium,
     fontSize: 10,
     letterSpacing: 1.2,
-    color: 'rgba(255, 255, 255, 0.45)',
+    color: withAlpha(Colors.PureWhite, 0.45),
     marginBottom: 4,
   },
   phraseDisplay: {
     fontFamily: Fonts.ranade.bold,
     fontSize: 22,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     letterSpacing: -0.3,
   },
   radarMetricsRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.06),
     borderRadius: 14,
     paddingVertical: 8,
     paddingHorizontal: 12,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: withAlpha(Colors.PureWhite, 0.08),
   },
   metricCell: {
     flexDirection: 'row',
@@ -459,24 +485,24 @@ const styles = StyleSheet.create({
   metricText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 10.5,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: withAlpha(Colors.PureWhite, 0.8),
   },
   metricDivider: {
     width: 1,
     height: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.15),
     marginHorizontal: 10,
   },
   heroMasterSwitch: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.05),
     borderRadius: 16,
     paddingHorizontal: 14,
     paddingVertical: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: withAlpha(Colors.PureWhite, 0.08),
   },
   heroMasterSwitchMeta: {
     flex: 1,
@@ -485,12 +511,12 @@ const styles = StyleSheet.create({
   heroMasterSwitchTitle: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 14,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
   heroMasterSwitchDesc: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.55)',
+    color: withAlpha(Colors.PureWhite, 0.55),
     marginTop: 1,
   },
   sectionHeaderRow: {
@@ -518,7 +544,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: ResponsivePixels.size16,
     paddingTop: 12,
     borderTopWidth: StyleSheet.hairlineWidth,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.08,
     shadowRadius: 12,

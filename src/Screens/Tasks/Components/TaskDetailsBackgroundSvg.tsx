@@ -11,6 +11,7 @@ import Svg, {
   G,
 } from 'react-native-svg';
 import { useTheme } from '../../../Theme/ThemeContext';
+import Colors from '../../../Assets/StyleUtilities/Colors';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -27,7 +28,11 @@ export interface TaskDetailsBackgroundSvgProps {
  */
 export const TaskDetailsBackgroundSvg: React.FC<TaskDetailsBackgroundSvgProps> =
   React.memo(
-    ({ accentColor = '#F5C518', width: propWidth, height: propHeight }) => {
+    ({
+      accentColor = Colors.AccentYellow,
+      width: propWidth,
+      height: propHeight,
+    }) => {
       const { isDarkMode, Colors: themeColors } = useTheme();
       const [dimensions, setDimensions] = useState<{
         width: number;
@@ -73,26 +78,38 @@ export const TaskDetailsBackgroundSvg: React.FC<TaskDetailsBackgroundSvgProps> =
               >
                 <Stop
                   offset="0%"
-                  stopColor={isDarkMode ? '#161821' : '#FFFDF6'}
+                  stopColor={
+                    isDarkMode
+                      ? Colors.DetailDarkSectionBg
+                      : Colors.SvgCreamHighlight
+                  }
                   stopOpacity={0.98}
                 />
                 <Stop
                   offset="35%"
                   stopColor={
                     isDarkMode
-                      ? themeColors.Background || '#121417'
-                      : '#FAF7EF'
+                      ? themeColors.Background || Colors.DarkBackground
+                      : Colors.WarmParchment
                   }
                   stopOpacity={isDarkMode ? 0.99 : 0.96}
                 />
                 <Stop
                   offset="70%"
-                  stopColor={isDarkMode ? '#0F1014' : '#F5ECE0'}
+                  stopColor={
+                    isDarkMode
+                      ? Colors.SvgCanvasAbyssMid
+                      : Colors.KeepsakeLightBottom
+                  }
                   stopOpacity={isDarkMode ? 0.99 : 0.95}
                 />
                 <Stop
                   offset="100%"
-                  stopColor={isDarkMode ? '#0B0C0E' : '#ECE3D3'}
+                  stopColor={
+                    isDarkMode
+                      ? Colors.SvgCanvasAbyss
+                      : Colors.SvgDetailsParchment
+                  }
                   stopOpacity={isDarkMode ? 1 : 0.98}
                 />
               </LinearGradient>
@@ -115,7 +132,7 @@ export const TaskDetailsBackgroundSvg: React.FC<TaskDetailsBackgroundSvgProps> =
                   stopColor={accentColor}
                   stopOpacity={isDarkMode ? 0.05 : 0.03}
                 />
-                <Stop offset="100%" stopColor="#000000" stopOpacity={0} />
+                <Stop offset="100%" stopColor={Colors.PureBlack} stopOpacity={0} />
               </RadialGradient>
 
               {/* Warm Execution Gold Aura (Top Left) */}
@@ -128,15 +145,15 @@ export const TaskDetailsBackgroundSvg: React.FC<TaskDetailsBackgroundSvgProps> =
               >
                 <Stop
                   offset="0%"
-                  stopColor="#F5C518"
+                  stopColor={Colors.AccentYellow}
                   stopOpacity={isDarkMode ? 0.14 : 0.09}
                 />
                 <Stop
                   offset="65%"
-                  stopColor="#D97706"
+                  stopColor={Colors.HabitBurnishedAmber}
                   stopOpacity={isDarkMode ? 0.03 : 0.015}
                 />
-                <Stop offset="100%" stopColor="#000000" stopOpacity={0} />
+                <Stop offset="100%" stopColor={Colors.PureBlack} stopOpacity={0} />
               </RadialGradient>
 
               {/* Bottom Grounding Aura */}
@@ -152,7 +169,7 @@ export const TaskDetailsBackgroundSvg: React.FC<TaskDetailsBackgroundSvgProps> =
                   stopColor={accentColor}
                   stopOpacity={isDarkMode ? 0.12 : 0.07}
                 />
-                <Stop offset="100%" stopColor="#000000" stopOpacity={0} />
+                <Stop offset="100%" stopColor={Colors.PureBlack} stopOpacity={0} />
               </RadialGradient>
             </Defs>
 
@@ -173,7 +190,11 @@ export const TaskDetailsBackgroundSvg: React.FC<TaskDetailsBackgroundSvgProps> =
             {/* Subtle Geometric Precision Lines */}
             <G
               opacity={isDarkMode ? 0.22 : 0.35}
-              stroke={isDarkMode ? '#3A3F4D' : '#DCD5C5'}
+              stroke={
+                isDarkMode
+                  ? Colors.HabitCardMutedBorderDark
+                  : Colors.SvgDetailsWarmStone
+              }
               strokeWidth={1}
             >
               <Circle

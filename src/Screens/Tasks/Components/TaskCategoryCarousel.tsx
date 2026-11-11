@@ -10,6 +10,7 @@ import {
 import { Filter } from 'lucide-react-native';
 import { Typography } from '../../../Theme/Typographys';
 import { Fonts } from '../../../Theme/fonts';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { SVGS } from '../../../Assets/Images';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { Task } from '../../../Context/TaskReminderContext';
@@ -34,38 +35,38 @@ const CATEGORY_ITEMS: CategoryItem[] = [
   {
     id: 'works',
     label: 'Works',
-    bgColor: '#FFFCEB',
-    borderColor: '#FFF5B8',
-    shadowColor: '#F5C518',
+    bgColor: Colors.WorkLightBg,
+    borderColor: Colors.WorkLightBorder,
+    shadowColor: Colors.AccentYellow,
     Icon: OfficeBagIcon,
-    accentColor: '#FDD835',
-    trackColor: '#FFF5B8',
-    progressColor: '#B48216',
-    textColor: '#B48216',
+    accentColor: Colors.TaskGoldVivid,
+    trackColor: Colors.WorkLightBorder,
+    progressColor: Colors.WorkTextAccent,
+    textColor: Colors.WorkTextAccent,
   },
   {
     id: 'sport',
     label: 'Sport',
-    bgColor: '#EDFDF5',
-    borderColor: '#C6FFDD',
-    shadowColor: '#52D22E',
+    bgColor: Colors.WellnessLightBg,
+    borderColor: Colors.WellnessLightBorder,
+    shadowColor: Colors.AccentGreen,
     Icon: SVGS.FloatHeart,
-    accentColor: '#52D22E',
-    trackColor: '#C6FFDD',
-    progressColor: '#1B9A72',
-    textColor: '#1B9A72',
+    accentColor: Colors.AccentGreen,
+    trackColor: Colors.WellnessLightBorder,
+    progressColor: Colors.GreenGracious,
+    textColor: Colors.GreenGracious,
   },
   {
     id: 'habits',
     label: 'Habits',
-    bgColor: '#EFF2FE',
-    borderColor: '#D8DBFF',
-    shadowColor: '#8383D6',
+    bgColor: Colors.MindfulLightBg,
+    borderColor: Colors.MindfulLightBorder,
+    shadowColor: Colors.LavenderPurple,
     Icon: SVGS.FloatPicture,
-    accentColor: '#8383D6',
-    trackColor: '#D8DBFF',
-    progressColor: '#7059C8',
-    textColor: '#7059C8',
+    accentColor: Colors.LavenderPurple,
+    trackColor: Colors.MindfulLightBorder,
+    progressColor: Colors.MindfulTextAccent,
+    textColor: Colors.MindfulTextAccent,
   },
 ];
 
@@ -132,10 +133,10 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
               size={15}
               color={
                 selectedCategory !== null
-                  ? '#FFFFFF'
+                  ? Colors.PureWhite
                   : isDarkMode
-                  ? '#FFFFFF'
-                  : '#1F2228'
+                  ? Colors.PureWhite
+                  : Colors.MidnightCharcoal
               }
               strokeWidth={2.2}
             />
@@ -166,25 +167,25 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
 
           const cardBgColor = isDarkMode
             ? cat.id === 'works'
-              ? '#2A2416'
+              ? Colors.WorkDarkBg
               : cat.id === 'sport'
-              ? '#162820'
-              : '#202336'
+              ? Colors.WellnessDarkBg
+              : Colors.MindfulDarkBg
             : cat.bgColor;
           const cardBorderColor = isDarkMode
             ? cat.id === 'works'
-              ? '#DEAA14'
+              ? Colors.WorkDarkBorder
               : cat.id === 'sport'
-              ? '#1B9A72'
-              : '#8383D6'
+              ? Colors.GreenGracious
+              : Colors.LavenderPurple
             : cat.borderColor;
           const circularTrack = isDarkMode
-            ? 'rgba(255, 255, 255, 0.12)'
+            ? withAlpha(Colors.PureWhite, 0.12)
             : cat.trackColor;
           const circularProgress = isDarkMode
             ? cat.accentColor
             : cat.progressColor;
-          const circularText = isDarkMode ? '#FFFFFF' : cat.textColor;
+          const circularText = isDarkMode ? Colors.PureWhite : cat.textColor;
 
           return (
             <TouchableOpacity
@@ -204,8 +205,8 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
                   borderColor: isSelected
                     ? cardBorderColor
                     : isDarkMode
-                    ? 'rgba(255, 255, 255, 0.1)'
-                    : 'transparent',
+                    ? withAlpha(Colors.PureWhite, 0.1)
+                    : Colors.Transparent,
                 },
                 isSelected && [
                   styles.categoryCardSelected,
@@ -218,7 +219,7 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
                   style={[
                     styles.categoryIconWrap,
                     isDarkMode && {
-                      backgroundColor: '#2A2D35',
+                      backgroundColor: Colors.DarkCardElevated,
                       borderColor: cardBorderColor,
                     },
                     {
@@ -288,11 +289,11 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     ...Typography.h6Bold,
-    color: '#000000',
+    color: Colors.PureBlack,
     fontSize: 17,
   },
   clearFilterChip: {
-    backgroundColor: '#EFF1F4',
+    backgroundColor: Colors.GrayPillSurface,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 12,
@@ -300,7 +301,7 @@ const styles = StyleSheet.create({
   clearFilterText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 10.5,
-    color: '#454A53',
+    color: Colors.DarkIconSlate,
   },
   sectionActions: {
     flexDirection: 'row',
@@ -311,22 +312,22 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#F5F6F8',
+    backgroundColor: Colors.CoolNeutralSurface,
     alignItems: 'center',
     justifyContent: 'center',
   },
   filterBtnActive: {
-    backgroundColor: '#1F2228',
+    backgroundColor: Colors.MidnightCharcoal,
   },
   addBtn: {
-    backgroundColor: '#1F2228',
+    backgroundColor: Colors.MidnightCharcoal,
     paddingHorizontal: ResponsivePixels.size14,
     paddingVertical: ResponsivePixels.size6,
     borderRadius: 50,
   },
   addBtnText: {
     ...Typography.bodySmallPoppinsSemiBold,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     fontSize: 11.5,
   },
   categoriesScroll: {
@@ -347,11 +348,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: ResponsivePixels.size11,
     position: 'relative',
     borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderColor: withAlpha(Colors.PureWhite, 0.4),
     justifyContent: 'space-between',
   },
   categoryCardSelected: {
-    borderColor: '#FFFFFF',
+    borderColor: Colors.PureWhite,
     ...Platform.select({
       ios: {
         shadowOffset: { width: 0, height: 6 },
@@ -373,7 +374,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -392,7 +393,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     ...Platform.select({
       ios: {
         shadowOffset: { width: 0, height: 2 },
@@ -426,19 +427,19 @@ const styles = StyleSheet.create({
   countText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 18,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     letterSpacing: -0.4,
     lineHeight: 22,
   },
   countTotalText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 12,
-    color: '#8E8D92',
+    color: Colors.TimelineMutedGray,
   },
   categoryLabel: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 12.5,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     letterSpacing: -0.1,
     lineHeight: 16,
   },

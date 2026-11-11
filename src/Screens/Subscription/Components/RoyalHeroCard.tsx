@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Platform } from 'react-native';
 import { Crown, Sparkles, Palette, Zap } from 'lucide-react-native';
 
 import { Fonts } from '../../../Theme/fonts';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { Badge } from '../../../Common/Badge';
 
 export interface RoyalHeroCardProps {
@@ -25,8 +25,8 @@ export const RoyalHeroCard: React.FC<RoyalHeroCardProps> = React.memo(
                 <View style={styles.crownIconBox}>
                   <Crown
                     size={24}
-                    color="#F5C518"
-                    fill="#F5C518"
+                    color={Colors.AccentYellow}
+                    fill={Colors.AccentYellow}
                     strokeWidth={2.2}
                   />
                 </View>
@@ -62,15 +62,27 @@ export const RoyalHeroCard: React.FC<RoyalHeroCardProps> = React.memo(
               {/* Hero Feature Pills */}
               <View style={styles.heroPillsRow}>
                 <View style={styles.heroPill}>
-                  <Sparkles size={12} color="#F5C518" strokeWidth={2.4} />
+                  <Sparkles
+                    size={12}
+                    color={Colors.AccentYellow}
+                    strokeWidth={2.4}
+                  />
                   <Text style={styles.heroPillText}>Unlimited AI Voice</Text>
                 </View>
                 <View style={styles.heroPill}>
-                  <Palette size={12} color="#F5C518" strokeWidth={2.4} />
+                  <Palette
+                    size={12}
+                    color={Colors.AccentYellow}
+                    strokeWidth={2.4}
+                  />
                   <Text style={styles.heroPillText}>8 Luxury Themes</Text>
                 </View>
                 <View style={styles.heroPill}>
-                  <Zap size={12} color="#F5C518" strokeWidth={2.4} />
+                  <Zap
+                    size={12}
+                    color={Colors.AccentYellow}
+                    strokeWidth={2.4}
+                  />
                   <Text style={styles.heroPillText}>2x XP Boost</Text>
                 </View>
               </View>
@@ -91,7 +103,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.NeroBlack,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 12 },
         shadowOpacity: 0.32,
         shadowRadius: 20,
@@ -105,7 +117,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.NeroBlack,
     borderRadius: 24,
     borderWidth: 4,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: withAlpha(Colors.PureWhite, 0.9),
     overflow: 'hidden',
     position: 'relative',
     padding: 20,
@@ -117,7 +129,7 @@ const styles = StyleSheet.create({
     width: 160,
     height: 160,
     borderRadius: 80,
-    backgroundColor: 'rgba(245, 197, 24, 0.15)',
+    backgroundColor: withAlpha(Colors.AccentYellow, 0.15),
   },
   heroCardContent: {
     position: 'relative',
@@ -133,9 +145,9 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: 'rgba(245, 197, 24, 0.18)',
+    backgroundColor: withAlpha(Colors.AccentYellow, 0.18),
     borderWidth: 1.5,
-    borderColor: 'rgba(245, 197, 24, 0.45)',
+    borderColor: withAlpha(Colors.AccentYellow, 0.45),
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -146,7 +158,7 @@ const styles = StyleSheet.create({
   heroTitle: {
     fontFamily: Fonts.ranade.bold,
     fontSize: 22,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     letterSpacing: -0.5,
     lineHeight: 28,
     marginBottom: 8,
@@ -154,7 +166,7 @@ const styles = StyleSheet.create({
   heroDesc: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 12.5,
-    color: '#D1D5DB',
+    color: Colors.Gray300,
     lineHeight: 18,
     marginBottom: 18,
   },
@@ -167,17 +179,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.1),
     borderRadius: 20,
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: withAlpha(Colors.PureWhite, 0.2),
   },
   heroPillText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 11,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
 });
 

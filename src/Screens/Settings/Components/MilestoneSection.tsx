@@ -7,6 +7,7 @@ import {
 } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
+import Colors, { withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { Badge } from '../../../Common/Badge';
 import { MilestoneTier } from '../../../Services/Milestone/MilestoneService';
 import { useSettingsTheme } from './types';
@@ -45,7 +46,7 @@ export const MilestoneSection: React.FC<MilestoneSectionProps> = ({
     <View style={styles.container}>
       <View style={styles.sectionHeaderRow}>
         <View style={styles.sectionTitleWithIcon}>
-          <Award size={18} color="#F5C518" strokeWidth={2.4} />
+          <Award size={18} color={Colors.AccentYellow} strokeWidth={2.4} />
           <Text style={[styles.sectionTitle, { color: canvasTextPrimary }]}>
             Milestones & Pro Unlocks
           </Text>
@@ -65,22 +66,22 @@ export const MilestoneSection: React.FC<MilestoneSectionProps> = ({
             backgroundColor: cardBg,
             borderColor:
               activeThemeId === 'cyprus_sand'
-                ? '#DDD7CB'
+                ? Colors.CyprusBorderDarkCard
                 : isDarkMode
-                ? 'rgba(255, 255, 255, 0.12)'
-                : '#FFFFFF',
+                ? withAlpha(Colors.PureWhite, 0.12)
+                : Colors.PureWhite,
             borderBottomColor:
               activeThemeId === 'cyprus_sand'
-                ? '#C8C2B4'
+                ? Colors.SandstoneBorder
                 : isDarkMode
-                ? '#171A20'
-                : '#E2DCD0',
+                ? Colors.DarkSurfaceDeep
+                : Colors.WarmStoneBorder,
             shadowColor:
               activeThemeId === 'cyprus_sand'
-                ? 'rgba(0, 70, 67, 0.16)'
+                ? withAlpha(Colors.CyprusTeal, 0.16)
                 : isDarkMode
-                ? '#000000'
-                : 'rgba(131, 131, 214, 0.12)',
+                ? Colors.PureBlack
+                : withAlpha(Colors.LavenderPurple, 0.12),
           },
         ]}
       >
@@ -99,10 +100,10 @@ export const MilestoneSection: React.FC<MilestoneSectionProps> = ({
                 {
                   backgroundColor:
                     activeThemeId === 'cyprus_sand'
-                      ? '#FAF6ED'
+                      ? Colors.MilestoneCreamBg
                       : isDarkMode
-                      ? '#272B33'
-                      : '#FFF9E0',
+                      ? Colors.DarkCardBevelSurface
+                      : Colors.WorkSoftHighlight,
                   borderColor: currentTier.accentColor,
                 },
               ]}
@@ -176,14 +177,18 @@ export const MilestoneSection: React.FC<MilestoneSectionProps> = ({
           accessibilityLabel="Explore milestone rewards and unlocked themes"
         >
           <View style={styles.exploreLeft}>
-            <Sparkles size={16} color="#F5C518" strokeWidth={2.2} />
+            <Sparkles size={16} color={Colors.AccentYellow} strokeWidth={2.2} />
             <Text style={[styles.exploreText, { color: textPrimary }]}>
               View Pro Rewards & Tier Roadmap
             </Text>
           </View>
           <View style={styles.exploreRightBadge}>
             <Text style={styles.exploreBadgeText}>5 Tiers</Text>
-            <ChevronRight size={15} color="#8E95A5" strokeWidth={2} />
+            <ChevronRight
+              size={15}
+              color={Colors.MilestoneSlate}
+              strokeWidth={2}
+            />
           </View>
         </TouchableOpacity>
       </View>
@@ -281,7 +286,7 @@ const styles = StyleSheet.create({
   progressBarTrack: {
     height: 6,
     borderRadius: 3,
-    backgroundColor: 'rgba(128, 128, 128, 0.18)',
+    backgroundColor: withAlpha(Colors.NeutralGray500, 0.18),
     overflow: 'hidden',
   },
   progressBarFill: {
@@ -315,7 +320,7 @@ const styles = StyleSheet.create({
   exploreBadgeText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 11,
-    color: '#8E95A5',
+    color: Colors.MilestoneSlate,
   },
 });
 

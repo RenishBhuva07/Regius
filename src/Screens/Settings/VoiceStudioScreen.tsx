@@ -12,7 +12,7 @@ import { Mic, Play, Square, RadioTower } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../../Theme/fonts';
-import { Colors } from '../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import { Badge } from '../../Common/Badge';
 import {
   SubScreenHeader,
@@ -193,21 +193,26 @@ export const VoiceStudioScreen: React.FC = () => {
   };
 
   const bgMain =
-    themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
+    themeColors.Background ||
+    (isDarkMode ? Colors.DarkBackground : Colors.CreamBackground);
   const cardBg =
-    themeColors.CardBackground || (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
+    themeColors.CardBackground ||
+    (isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite);
   const textPrimary =
     themeColors.PrimaryText ||
-    (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
+    (isDarkMode ? Colors.PureWhite : Colors.PureBlack);
   const textSecondary =
-    themeColors.SecondaryText || (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+    themeColors.SecondaryText ||
+    (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray);
   const canvasTextSecondary =
     themeColors.CanvasTextSecondary ||
-    (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+    (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray);
   const borderLight =
-    themeColors.BorderLight || (isDarkMode ? '#2C3035' : '#E8E2D5');
+    themeColors.BorderLight ||
+    (isDarkMode ? Colors.CarbonSlate : Colors.RingBorder);
   const surfaceAlt =
-    themeColors.SurfaceAlt || (isDarkMode ? '#171A1F' : '#FAF8F5');
+    themeColors.SurfaceAlt ||
+    (isDarkMode ? Colors.DarkSurfaceAlt : Colors.CreamSurfaceAlt);
   const themeAccent =
     themeColors.AccentLight ||
     themeColors.Accent ||
@@ -246,7 +251,11 @@ export const VoiceStudioScreen: React.FC = () => {
           <View style={styles.heroCard}>
             <View style={styles.heroHeaderRow}>
               <View style={styles.heroTagRow}>
-                <RadioTower size={13} color="#8383D6" strokeWidth={2.4} />
+                <RadioTower
+                  size={13}
+                  color={Colors.LavenderPurple}
+                  strokeWidth={2.4}
+                />
                 <Text style={styles.heroTagText}>ACOUSTIC MASTER CONSOLE</Text>
               </View>
               <Badge label="ACTIVE PERSONA" variant="green" size="sm" />
@@ -254,7 +263,11 @@ export const VoiceStudioScreen: React.FC = () => {
 
             <View style={styles.heroTopRow}>
               <View style={styles.personaAvatarBox}>
-                <Mic size={22} color="#8383D6" strokeWidth={2.4} />
+                <Mic
+                  size={22}
+                  color={Colors.LavenderPurple}
+                  strokeWidth={2.4}
+                />
               </View>
 
               <View style={styles.heroVoiceInfo}>
@@ -272,9 +285,17 @@ export const VoiceStudioScreen: React.FC = () => {
                 accessibilityLabel={`Play preview for ${selectedVoice.name}`}
               >
                 {isPlayingPreview && playingVoiceId === selectedVoice.id ? (
-                  <Square size={16} color="#FFFFFF" fill="#FFFFFF" />
+                  <Square
+                    size={16}
+                    color={Colors.PureWhite}
+                    fill={Colors.PureWhite}
+                  />
                 ) : (
-                  <Play size={16} color="#FFFFFF" fill="#FFFFFF" />
+                  <Play
+                    size={16}
+                    color={Colors.PureWhite}
+                    fill={Colors.PureWhite}
+                  />
                 )}
               </TouchableOpacity>
             </View>
@@ -423,8 +444,8 @@ const styles = StyleSheet.create({
   },
   heroCardShadowWrapper: {
     borderRadius: 24,
-    backgroundColor: '#000000',
-    shadowColor: '#000000',
+    backgroundColor: Colors.PureBlack,
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.28,
     shadowRadius: 18,
@@ -434,7 +455,7 @@ const styles = StyleSheet.create({
   heroCard: {
     borderRadius: 24,
     borderWidth: 4,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: withAlpha(Colors.PureWhite, 0.9),
     backgroundColor: Colors.NeroBlack,
     padding: 20,
     overflow: 'hidden',
@@ -454,7 +475,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.bold,
     fontSize: 10.5,
     letterSpacing: 0.8,
-    color: '#8383D6',
+    color: Colors.LavenderPurple,
   },
   heroTopRow: {
     flexDirection: 'row',
@@ -465,9 +486,9 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: 'rgba(131, 131, 214, 0.15)',
+    backgroundColor: withAlpha(Colors.LavenderPurple, 0.15),
     borderWidth: 1.5,
-    borderColor: 'rgba(131, 131, 214, 0.3)',
+    borderColor: withAlpha(Colors.LavenderPurple, 0.3),
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: 14,
@@ -478,13 +499,13 @@ const styles = StyleSheet.create({
   heroVoiceName: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 20,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     letterSpacing: -0.4,
   },
   heroVoiceDescription: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 12,
-    color: '#A3A8B1',
+    color: Colors.SteelMist,
     marginTop: 2,
   },
   heroPreviewPlayBtn: {
@@ -517,7 +538,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     padding: 16,
     marginBottom: 26,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
     shadowRadius: 8,
@@ -530,7 +551,7 @@ const styles = StyleSheet.create({
   voiceListCard: {
     borderRadius: 20,
     borderWidth: 1.5,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
     shadowRadius: 8,

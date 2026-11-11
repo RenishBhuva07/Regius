@@ -17,9 +17,9 @@ export interface ThemeFilterTabsProps {
 
 export const ThemeFilterTabs: React.FC<ThemeFilterTabsProps> = React.memo(
   ({ activeTab, onSelectTab, totalThemes, unlockedCount, isDarkMode }) => {
-    const cardBg = isDarkMode ? '#1E2228' : Colors.DefaultWhite;
-    const borderLight = isDarkMode ? '#2C3035' : '#E8E2D5';
-    const textSecondary = isDarkMode ? '#A3A8B1' : Colors.SubtitleGray;
+    const cardBg = isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite;
+    const borderLight = isDarkMode ? Colors.CarbonSlate : Colors.RingBorder;
+    const textSecondary = isDarkMode ? Colors.SteelMist : Colors.SubtitleGray;
 
     return (
       <View style={styles.filterTabsContainer}>
@@ -43,10 +43,10 @@ export const ThemeFilterTabs: React.FC<ThemeFilterTabsProps> = React.memo(
                 {
                   backgroundColor: isActive
                     ? isDarkMode
-                      ? '#FFFFFF'
+                      ? Colors.PureWhite
                       : Colors.MidnightCharcoal
                     : cardBg,
-                  borderColor: isActive ? 'transparent' : borderLight,
+                  borderColor: isActive ? Colors.Transparent : borderLight,
                 },
               ]}
               accessibilityRole="button"
@@ -58,8 +58,8 @@ export const ThemeFilterTabs: React.FC<ThemeFilterTabsProps> = React.memo(
                   {
                     color: isActive
                       ? isDarkMode
-                        ? '#000000'
-                        : Colors.PureWhiteText
+                        ? Colors.PureBlack
+                        : Colors.PureWhite
                       : textSecondary,
                     fontFamily: isActive
                       ? Fonts.poppins.bold
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   filterTabPillActive: {
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.12,
     shadowRadius: 4,

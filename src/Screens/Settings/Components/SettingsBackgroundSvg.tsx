@@ -12,6 +12,7 @@ import Svg, {
   Line,
 } from 'react-native-svg';
 import { useSettingsTheme } from './types';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -70,22 +71,22 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             >
               <Stop
                 offset="0%"
-                stopColor={isDarkMode ? bgMain : '#FFFDF2'}
+                stopColor={isDarkMode ? bgMain : Colors.SvgWarmIvoryMist}
                 stopOpacity={1}
               />
               <Stop
                 offset="30%"
-                stopColor={isDarkMode ? bgMain : '#FFFCE8'}
+                stopColor={isDarkMode ? bgMain : Colors.SvgSettingsCreamGlow}
                 stopOpacity={1}
               />
               <Stop
                 offset="70%"
-                stopColor={isDarkMode ? bgMain : '#FAF5E8'}
+                stopColor={isDarkMode ? bgMain : Colors.KeepsakeLightMid}
                 stopOpacity={1}
               />
               <Stop
                 offset="100%"
-                stopColor={isDarkMode ? bgMain : '#F5EFE0'}
+                stopColor={isDarkMode ? bgMain : Colors.FaqChevronIdleLightBg}
                 stopOpacity={1}
               />
             </LinearGradient>
@@ -98,22 +99,22 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             >
               <Stop
                 offset="0%"
-                stopColor="#F5C518"
+                stopColor={Colors.AccentYellow}
                 stopOpacity={isDarkMode ? 0.32 : 0.38}
               />
               <Stop
                 offset="45%"
-                stopColor="#DEAA14"
+                stopColor={Colors.WorkDarkBorder}
                 stopOpacity={isDarkMode ? 0.16 : 0.22}
               />
               <Stop
                 offset="80%"
-                stopColor="#B47804"
+                stopColor={Colors.BadgeYellowText}
                 stopOpacity={isDarkMode ? 0.05 : 0.08}
               />
               <Stop
                 offset="100%"
-                stopColor={isDarkMode ? bgMain : '#FFFCE8'}
+                stopColor={isDarkMode ? bgMain : Colors.SvgSettingsCreamGlow}
                 stopOpacity={0}
               />
             </RadialGradient>
@@ -126,17 +127,17 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             >
               <Stop
                 offset="0%"
-                stopColor="#9C9CE3"
+                stopColor={Colors.PeriwinkleSoft}
                 stopOpacity={isDarkMode ? 0.28 : 0.32}
               />
               <Stop
                 offset="50%"
-                stopColor="#8383D6"
+                stopColor={Colors.LavenderPurple}
                 stopOpacity={isDarkMode ? 0.12 : 0.16}
               />
               <Stop
                 offset="100%"
-                stopColor={isDarkMode ? bgMain : '#FAF5E8'}
+                stopColor={isDarkMode ? bgMain : Colors.KeepsakeLightMid}
                 stopOpacity={0}
               />
             </RadialGradient>
@@ -149,17 +150,17 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             >
               <Stop
                 offset="0%"
-                stopColor="#52D22E"
+                stopColor={Colors.AccentGreen}
                 stopOpacity={isDarkMode ? 0.18 : 0.24}
               />
               <Stop
                 offset="60%"
-                stopColor="#1B9A72"
+                stopColor={Colors.GreenGracious}
                 stopOpacity={isDarkMode ? 0.06 : 0.09}
               />
               <Stop
                 offset="100%"
-                stopColor={isDarkMode ? bgMain : '#FAF5E8'}
+                stopColor={isDarkMode ? bgMain : Colors.KeepsakeLightMid}
                 stopOpacity={0}
               />
             </RadialGradient>
@@ -170,9 +171,9 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
               x2="100%"
               y2="100%"
             >
-              <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.95} />
-              <Stop offset="30%" stopColor="#FFFCE3" stopOpacity={0.9} />
-              <Stop offset="100%" stopColor="#F5C518" stopOpacity={0.8} />
+              <Stop offset="0%" stopColor={Colors.PureWhite} stopOpacity={0.95} />
+              <Stop offset="30%" stopColor={Colors.CreamBackground} stopOpacity={0.9} />
+              <Stop offset="100%" stopColor={Colors.AccentYellow} stopOpacity={0.8} />
             </LinearGradient>
           </Defs>
           <Rect width={W} height={H} fill="url(#extraBgBase)" />
@@ -185,8 +186,8 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             r={100}
             stroke={
               isDarkMode
-                ? 'rgba(245, 197, 24, 0.28)'
-                : 'rgba(217, 155, 15, 0.35)'
+                ? withAlpha(Colors.AccentYellow, 0.28)
+                : withAlpha(Colors.SvgDoodleGoldShadow, 0.35)
             }
             strokeWidth={1.5}
             strokeDasharray="5 7"
@@ -198,8 +199,8 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             r={160}
             stroke={
               isDarkMode
-                ? 'rgba(245, 197, 24, 0.18)'
-                : 'rgba(217, 155, 15, 0.25)'
+                ? withAlpha(Colors.AccentYellow, 0.18)
+                : withAlpha(Colors.SvgDoodleGoldShadow, 0.25)
             }
             strokeWidth={1.2}
             fill="none"
@@ -210,8 +211,8 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             r={230}
             stroke={
               isDarkMode
-                ? 'rgba(156, 156, 227, 0.16)'
-                : 'rgba(131, 131, 214, 0.22)'
+                ? withAlpha(Colors.PeriwinkleSoft, 0.16)
+                : withAlpha(Colors.LavenderPurple, 0.22)
             }
             strokeWidth={1.2}
             strokeDasharray="3 9"
@@ -224,8 +225,8 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             y2={130}
             stroke={
               isDarkMode
-                ? 'rgba(245, 197, 24, 0.15)'
-                : 'rgba(217, 155, 15, 0.20)'
+                ? withAlpha(Colors.AccentYellow, 0.15)
+                : withAlpha(Colors.SvgDoodleGoldShadow, 0.2)
             }
             strokeWidth={1}
             strokeDasharray="4 8"
@@ -237,8 +238,8 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             y2={130}
             stroke={
               isDarkMode
-                ? 'rgba(245, 197, 24, 0.15)'
-                : 'rgba(217, 155, 15, 0.20)'
+                ? withAlpha(Colors.AccentYellow, 0.15)
+                : withAlpha(Colors.SvgDoodleGoldShadow, 0.2)
             }
             strokeWidth={1}
             strokeDasharray="4 8"
@@ -247,8 +248,8 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             d={`M -30 290 C ${W * 0.25} 230, ${W * 0.65} 350, ${W + 30} 270`}
             stroke={
               isDarkMode
-                ? 'rgba(156, 156, 227, 0.26)'
-                : 'rgba(131, 131, 214, 0.35)'
+                ? withAlpha(Colors.PeriwinkleSoft, 0.26)
+                : withAlpha(Colors.LavenderPurple, 0.35)
             }
             strokeWidth={2}
             strokeLinecap="round"
@@ -258,8 +259,8 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             d={`M -30 330 C ${W * 0.35} 380, ${W * 0.75} 270, ${W + 30} 340`}
             stroke={
               isDarkMode
-                ? 'rgba(245, 197, 24, 0.22)'
-                : 'rgba(217, 155, 15, 0.30)'
+                ? withAlpha(Colors.AccentYellow, 0.22)
+                : withAlpha(Colors.SvgDoodleGoldShadow, 0.3)
             }
             strokeWidth={1.6}
             strokeDasharray="6 7"
@@ -270,8 +271,8 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             d={`M -20 740 C ${W * 0.3} 680, ${W * 0.7} 790, ${W + 20} 720`}
             stroke={
               isDarkMode
-                ? 'rgba(82, 210, 46, 0.20)'
-                : 'rgba(27, 154, 114, 0.28)'
+                ? withAlpha(Colors.AccentGreen, 0.2)
+                : withAlpha(Colors.GreenGracious, 0.28)
             }
             strokeWidth={1.8}
             strokeLinecap="round"
@@ -284,8 +285,8 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             y2={500}
             stroke={
               isDarkMode
-                ? 'rgba(255, 255, 255, 0.08)'
-                : 'rgba(216, 185, 92, 0.22)'
+                ? withAlpha(Colors.PureWhite, 0.08)
+                : withAlpha(Colors.SvgWarmHoneyGold, 0.22)
             }
             strokeWidth={1}
             strokeDasharray="3 9"
@@ -297,8 +298,8 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             y2={860}
             stroke={
               isDarkMode
-                ? 'rgba(255, 255, 255, 0.08)'
-                : 'rgba(216, 185, 92, 0.20)'
+                ? withAlpha(Colors.PureWhite, 0.08)
+                : withAlpha(Colors.SvgWarmHoneyGold, 0.2)
             }
             strokeWidth={1}
             strokeDasharray="3 9"
@@ -318,7 +319,7 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
           <G transform={`translate(${W - 42}, 640)`}>
             <Path
               d="M 7 0 Q 7 7, 14 7 Q 7 7, 7 14 Q 7 7, 0 7 Q 7 7, 7 0 Z"
-              fill="#9C9CE3"
+              fill={Colors.PeriwinkleSoft}
               opacity={0.85}
             />
           </G>
@@ -333,28 +334,34 @@ export const SettingsBackgroundSvg: React.FC<SettingsBackgroundSvgProps> =
             cx={44}
             cy={115}
             r={3}
-            fill={isDarkMode ? '#F5C518' : '#D99B0F'}
+            fill={
+              isDarkMode ? Colors.AccentYellow : Colors.SvgDoodleGoldShadow
+            }
             opacity={0.85}
           />
           <Circle
             cx={W - 86}
             cy={430}
             r={2.8}
-            fill={isDarkMode ? '#9C9CE3' : '#8383D6'}
+            fill={
+              isDarkMode ? Colors.PeriwinkleSoft : Colors.LavenderPurple
+            }
             opacity={0.8}
           />
           <Circle
             cx={36}
             cy={660}
             r={3.2}
-            fill={isDarkMode ? '#52D22E' : '#22C55E'}
+            fill={isDarkMode ? Colors.AccentGreen : Colors.Green500}
             opacity={0.8}
           />
           <Circle
             cx={W - 68}
             cy={880}
             r={2.8}
-            fill={isDarkMode ? '#F5C518' : '#D99B0F'}
+            fill={
+              isDarkMode ? Colors.AccentYellow : Colors.SvgDoodleGoldShadow
+            }
             opacity={0.75}
           />
         </Svg>

@@ -14,6 +14,7 @@ import {
 import { Typography } from '../../../Theme/Typographys';
 import { Fonts } from '../../../Theme/fonts';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
+import Colors, { withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { Badge } from '../../../Common/Badge';
 import { ProBadge } from '../../../Common/ProBadge';
 import { useSettingsTheme } from './types';
@@ -42,7 +43,7 @@ export const SubscriptionSection: React.FC<SubscriptionSectionProps> = ({
     <View style={styles.container}>
       <View style={styles.sectionHeaderRow}>
         <View style={styles.sectionTitleWithIcon}>
-          <Crown size={18} color="#F5C518" strokeWidth={2.4} />
+          <Crown size={18} color={Colors.AccentYellow} strokeWidth={2.4} />
           <Text style={[styles.sectionTitle, { color: canvasTextPrimary }]}>
             Membership & Subscription
           </Text>
@@ -62,22 +63,22 @@ export const SubscriptionSection: React.FC<SubscriptionSectionProps> = ({
             backgroundColor: cardBg,
             borderColor:
               activeThemeId === 'cyprus_sand'
-                ? '#DDD7CB'
+                ? Colors.CyprusBorderDarkCard
                 : isDarkMode
-                ? 'rgba(255, 255, 255, 0.12)'
-                : '#FFFFFF',
+                ? withAlpha(Colors.PureWhite, 0.12)
+                : Colors.PureWhite,
             borderBottomColor:
               activeThemeId === 'cyprus_sand'
-                ? '#C8C2B4'
+                ? Colors.SandstoneBorder
                 : isDarkMode
-                ? '#171A20'
-                : '#E2DCD0',
+                ? Colors.DarkSurfaceDeep
+                : Colors.WarmStoneBorder,
             shadowColor:
               activeThemeId === 'cyprus_sand'
-                ? 'rgba(0, 70, 67, 0.16)'
+                ? withAlpha(Colors.CyprusTeal, 0.16)
                 : isDarkMode
-                ? '#000000'
-                : 'rgba(245, 197, 24, 0.15)',
+                ? Colors.PureBlack
+                : withAlpha(Colors.AccentYellow, 0.15),
           },
         ]}
       >
@@ -100,22 +101,24 @@ export const SubscriptionSection: React.FC<SubscriptionSectionProps> = ({
                 {
                   backgroundColor:
                     activeThemeId === 'cyprus_sand'
-                      ? '#FAF6ED'
+                      ? Colors.MilestoneCreamBg
                       : isPremium
                       ? isDarkMode
-                        ? '#2A2615'
-                        : '#FFF9E0'
+                        ? Colors.SubscriptionDarkGoldBg
+                        : Colors.WorkSoftHighlight
                       : isDarkMode
-                      ? '#22252A'
-                      : '#FFFCEB',
-                  borderColor: isPremium ? '#F5C518' : '#FDE68A',
+                      ? Colors.DarkCharcoalSurface
+                      : Colors.WorkLightBg,
+                  borderColor: isPremium
+                    ? Colors.AccentYellow
+                    : Colors.VoiceMichaelBorder,
                 },
               ]}
             >
               <Crown
                 size={22}
-                color="#F5C518"
-                fill={isPremium ? '#F5C518' : 'none'}
+                color={Colors.AccentYellow}
+                fill={isPremium ? Colors.AccentYellow : 'none'}
                 strokeWidth={2.2}
               />
             </View>
@@ -132,7 +135,11 @@ export const SubscriptionSection: React.FC<SubscriptionSectionProps> = ({
                     : 'Regius Royal Membership'}
                 </Text>
                 {isPremium && (
-                  <CheckCircle2 size={16} color="#21AF85" strokeWidth={2.4} />
+                  <CheckCircle2
+                    size={16}
+                    color={Colors.LuminousGreen}
+                    strokeWidth={2.4}
+                  />
                 )}
               </View>
 
@@ -176,7 +183,11 @@ export const SubscriptionSection: React.FC<SubscriptionSectionProps> = ({
             ]}
           >
             <View style={styles.actionPillLeft}>
-              <Sparkles size={13} color="#F5C518" strokeWidth={2.2} />
+              <Sparkles
+                size={13}
+                color={Colors.AccentYellow}
+                strokeWidth={2.2}
+              />
               <Text style={[styles.actionPillText, { color: textPrimary }]}>
                 {isPremium
                   ? 'Manage Plan & Billing'
@@ -187,14 +198,16 @@ export const SubscriptionSection: React.FC<SubscriptionSectionProps> = ({
               <Text
                 style={[
                   styles.viewDetailsText,
-                  { color: isPremium ? textSecondary : '#B47804' },
+                  {
+                    color: isPremium ? textSecondary : Colors.BadgeYellowText,
+                  },
                 ]}
               >
                 {isPremium ? 'View' : 'Upgrade'}
               </Text>
               <ChevronRight
                 size={14}
-                color={isPremium ? textSecondary : '#B47804'}
+                color={isPremium ? textSecondary : Colors.BadgeYellowText}
                 strokeWidth={2.2}
               />
             </View>

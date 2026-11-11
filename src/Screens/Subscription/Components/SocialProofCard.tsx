@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Star } from 'lucide-react-native';
 
 import { Fonts } from '../../../Theme/fonts';
+import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import { useTheme } from '../../../Theme/ThemeContext';
 
 export interface SocialProofCardProps {
@@ -13,13 +14,17 @@ export const SocialProofCard: React.FC<SocialProofCardProps> = React.memo(
   ({ isDarkMode }) => {
     const { Colors: themeColors } = useTheme();
     const cardBg =
-      themeColors.CardBackground || (isDarkMode ? '#1E2228' : '#FFFFFF');
+      themeColors.CardBackground ||
+      (isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite);
     const textPrimary =
-      themeColors.PrimaryText || (isDarkMode ? '#FFFFFF' : '#111111');
+      themeColors.PrimaryText ||
+      (isDarkMode ? Colors.PureWhite : Colors.NoirBlack);
     const textSecondary =
-      themeColors.SecondaryText || (isDarkMode ? '#A3A8B1' : '#666665');
+      themeColors.SecondaryText ||
+      (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray);
     const borderLight =
-      themeColors.BorderLight || (isDarkMode ? '#2C3035' : '#EAE5D9');
+      themeColors.BorderLight ||
+      (isDarkMode ? Colors.CarbonSlate : Colors.WarmParchmentBorder);
 
     return (
       <View
@@ -36,8 +41,8 @@ export const SocialProofCard: React.FC<SocialProofCardProps> = React.memo(
             <Star
               key={i}
               size={14}
-              color="#F5C518"
-              fill="#F5C518"
+              color={Colors.AccentYellow}
+              fill={Colors.AccentYellow}
               strokeWidth={2}
             />
           ))}
@@ -63,7 +68,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     padding: 16,
     marginBottom: 20,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.04,
     shadowRadius: 5,

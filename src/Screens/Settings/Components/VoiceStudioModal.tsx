@@ -128,7 +128,11 @@ export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
       <View
         style={[
           styles.modalContainer,
-          { backgroundColor: isDarkMode ? '#121417' : '#FFFFFF' },
+          {
+            backgroundColor: isDarkMode
+              ? StaticColors.DarkBackground
+              : StaticColors.PureWhite,
+          },
         ]}
       >
         <View style={[styles.modalHeader, { borderBottomColor: borderLight }]}>
@@ -242,7 +246,7 @@ export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
                     {
                       color:
                         synthesisState === 'error'
-                          ? '#EF4444'
+                          ? StaticColors.CategoryRedAccent
                           : selectedVoice.accentColor,
                     },
                   ]}
@@ -264,9 +268,16 @@ export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
                 onPress={handleGenerateAndSpeak}
               >
                 {synthesisState === 'synthesizing' ? (
-                  <ActivityIndicator size="small" color="#FFFFFF" />
+                  <ActivityIndicator
+                    size="small"
+                    color={StaticColors.PureWhite}
+                  />
                 ) : (
-                  <Play size={14} color="#FFFFFF" fill="#FFFFFF" />
+                  <Play
+                    size={14}
+                    color={StaticColors.PureWhite}
+                    fill={StaticColors.PureWhite}
+                  />
                 )}
                 <Text style={styles.generateBtnText}>
                   {synthesisState === 'synthesizing'
@@ -282,7 +293,7 @@ export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
                   style={styles.stopBtn}
                   onPress={handleStopSpeech}
                 >
-                  <StopCircle size={15} color="#FFFFFF" />
+                  <StopCircle size={15} color={StaticColors.PureWhite} />
                   <Text style={styles.stopBtnText}>Stop</Text>
                 </TouchableOpacity>
               )}
@@ -385,7 +396,7 @@ export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
                       styles.voicePreviewCircleBtn,
                       {
                         backgroundColor: isPlaying
-                          ? '#1F2228'
+                          ? StaticColors.MidnightCharcoal
                           : voice.accentColor,
                       },
                     ]}
@@ -395,9 +406,17 @@ export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
                     }}
                   >
                     {isPlaying ? (
-                      <Square size={13} color="#FFFFFF" fill="#FFFFFF" />
+                      <Square
+                        size={13}
+                        color={StaticColors.PureWhite}
+                        fill={StaticColors.PureWhite}
+                      />
                     ) : (
-                      <Play size={13} color="#FFFFFF" fill="#FFFFFF" />
+                      <Play
+                        size={13}
+                        color={StaticColors.PureWhite}
+                        fill={StaticColors.PureWhite}
+                      />
                     )}
                   </TouchableOpacity>
                 </View>
@@ -405,7 +424,11 @@ export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
                 <View
                   style={[
                     styles.sampleQuoteBox,
-                    { backgroundColor: isSelected ? '#FFFFFF' : surfaceAlt },
+                    {
+                      backgroundColor: isSelected
+                        ? StaticColors.PureWhite
+                        : surfaceAlt,
+                    },
                   ]}
                 >
                   <Text
@@ -599,7 +622,7 @@ const styles = StyleSheet.create({
   },
   generateBtnText: {
     ...Typography.bodySmallPoppinsSemiBold,
-    color: '#FFFFFF',
+    color: StaticColors.PureWhite,
     fontSize: 13,
   },
   stopBtn: {
@@ -607,14 +630,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 6,
-    backgroundColor: '#EF4444',
+    backgroundColor: StaticColors.CategoryRedAccent,
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 12,
   },
   stopBtnText: {
     ...Typography.bodySmallPoppinsSemiBold,
-    color: '#FFFFFF',
+    color: StaticColors.PureWhite,
     fontSize: 13,
   },
   voiceListHeaderTitle: {
@@ -675,7 +698,7 @@ const styles = StyleSheet.create({
   activeBadgePillText: {
     fontFamily: Typography.bodySmallRanadeBold.fontFamily,
     fontSize: 9,
-    color: '#FFFFFF',
+    color: StaticColors.PureWhite,
     fontWeight: '700',
   },
   voiceDetailedMeta: {
@@ -743,7 +766,7 @@ const styles = StyleSheet.create({
   },
   modalDoneBtnText: {
     ...Typography.bodyLargePoppinsSemiBold,
-    color: '#FFFFFF',
+    color: StaticColors.PureWhite,
     fontSize: 15,
   },
 });

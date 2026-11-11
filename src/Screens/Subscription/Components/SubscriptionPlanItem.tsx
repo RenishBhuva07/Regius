@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Check } from 'lucide-react-native';
 
+import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import { Fonts } from '../../../Theme/fonts';
 import { Badge } from '../../../Common/Badge';
 import { useTheme } from '../../../Theme/ThemeContext';
@@ -21,13 +22,17 @@ export const SubscriptionPlanItem: React.FC<SubscriptionPlanItemProps> =
   React.memo(({ plan, isSelected, isDarkMode, onSelect }) => {
     const { Colors: themeColors } = useTheme();
     const cardBg =
-      themeColors.CardBackground || (isDarkMode ? '#1E2228' : '#FFFFFF');
+      themeColors.CardBackground ||
+      (isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite);
     const textPrimary =
-      themeColors.PrimaryText || (isDarkMode ? '#FFFFFF' : '#111111');
+      themeColors.PrimaryText ||
+      (isDarkMode ? Colors.PureWhite : Colors.NoirBlack);
     const textSecondary =
-      themeColors.SecondaryText || (isDarkMode ? '#A3A8B1' : '#666665');
+      themeColors.SecondaryText ||
+      (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray);
     const borderLight =
-      themeColors.BorderLight || (isDarkMode ? '#2C3035' : '#EAE5D9');
+      themeColors.BorderLight ||
+      (isDarkMode ? Colors.CarbonSlate : Colors.WarmParchmentBorder);
 
     return (
       <TouchableOpacity
@@ -38,10 +43,10 @@ export const SubscriptionPlanItem: React.FC<SubscriptionPlanItemProps> =
           {
             backgroundColor: isSelected
               ? isDarkMode
-                ? '#26241D'
-                : '#FFFDF0'
+                ? Colors.SubscriptionPlanSelectedDarkBg
+                : Colors.ObsidianTextLight
               : cardBg,
-            borderColor: isSelected ? '#F5C518' : borderLight,
+            borderColor: isSelected ? Colors.AccentYellow : borderLight,
             borderWidth: isSelected ? 2.5 : 1.5,
           },
           isSelected && styles.selectedPlanGlow,
@@ -68,15 +73,19 @@ export const SubscriptionPlanItem: React.FC<SubscriptionPlanItemProps> =
               styles.selectionCircle,
               {
                 borderColor: isSelected
-                  ? '#F5C518'
+                  ? Colors.AccentYellow
                   : isDarkMode
-                  ? '#4B5563'
-                  : '#D1D5DB',
-                backgroundColor: isSelected ? '#F5C518' : 'transparent',
+                  ? Colors.Gray600
+                  : Colors.Gray300,
+                backgroundColor: isSelected
+                  ? Colors.AccentYellow
+                  : Colors.Transparent,
               },
             ]}
           >
-            {isSelected && <Check size={12} color="#1F2228" strokeWidth={3} />}
+            {isSelected && (
+              <Check size={12} color={Colors.MidnightCharcoal} strokeWidth={3} />
+            )}
           </View>
 
           <View style={styles.planNameColumn}>
@@ -115,14 +124,14 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 16,
     position: 'relative',
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.06,
     shadowRadius: 6,
     elevation: 2,
   },
   selectedPlanGlow: {
-    shadowColor: '#F5C518',
+    shadowColor: Colors.AccentYellow,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.25,
     shadowRadius: 10,

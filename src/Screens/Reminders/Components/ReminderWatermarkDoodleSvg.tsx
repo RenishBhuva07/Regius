@@ -10,6 +10,7 @@ import Svg, {
   Stop,
   Line,
 } from 'react-native-svg';
+import { Colors, IllustrationColors } from '../../../Assets/StyleUtilities/Colors';
 
 export interface ReminderWatermarkDoodleSvgProps {
   width?: number;
@@ -31,9 +32,9 @@ export const ReminderWatermarkDoodleSvg: React.FC<
             x2="100%"
             y2="100%"
           >
-            <Stop offset="0%" stopColor="#FFFCE3" />
-            <Stop offset="40%" stopColor="#F5C518" />
-            <Stop offset="100%" stopColor="#D99B0F" />
+            <Stop offset="0%" stopColor={Colors.CreamBackground} />
+            <Stop offset="40%" stopColor={Colors.AccentYellow} />
+            <Stop offset="100%" stopColor={Colors.SvgDoodleGoldShadow} />
           </LinearGradient>
           <LinearGradient
             id="remDoodleLavender"
@@ -42,9 +43,9 @@ export const ReminderWatermarkDoodleSvg: React.FC<
             x2="100%"
             y2="100%"
           >
-            <Stop offset="0%" stopColor="#D8DBFF" />
-            <Stop offset="50%" stopColor="#8383D6" />
-            <Stop offset="100%" stopColor="#5E5EB2" />
+            <Stop offset="0%" stopColor={Colors.MindfulLightBorder} />
+            <Stop offset="50%" stopColor={Colors.LavenderPurple} />
+            <Stop offset="100%" stopColor={Colors.BentoVioletStopDeep} />
           </LinearGradient>
           <LinearGradient
             id="remDoodleMint"
@@ -53,18 +54,22 @@ export const ReminderWatermarkDoodleSvg: React.FC<
             x2="100%"
             y2="100%"
           >
-            <Stop offset="0%" stopColor="#86EFAC" />
-            <Stop offset="50%" stopColor="#22C55E" />
-            <Stop offset="100%" stopColor="#15803D" />
+            <Stop offset="0%" stopColor={Colors.Green300} />
+            <Stop offset="50%" stopColor={Colors.Green500} />
+            <Stop offset="100%" stopColor={Colors.Green700} />
           </LinearGradient>
           <LinearGradient id="remDialGlow" x1="0%" y1="0%" x2="0%" y2="100%">
-            <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.95} />
-            <Stop offset="100%" stopColor="#F8F6EF" stopOpacity={0.9} />
+            <Stop offset="0%" stopColor={Colors.PureWhite} stopOpacity={0.95} />
+            <Stop
+              offset="100%"
+              stopColor={IllustrationColors.ReminderDoodlePaper}
+              stopOpacity={0.9}
+            />
           </LinearGradient>
         </Defs>
         <Path
           d="M 14 115 C 2 75, 30 30, 78 18"
-          stroke="#D4CCA8"
+          stroke={Colors.BentoWarmGoldMuted}
           strokeWidth={1.2}
           strokeDasharray="3 4"
           opacity={0.6}
@@ -85,13 +90,13 @@ export const ReminderWatermarkDoodleSvg: React.FC<
         <G transform="translate(12, 122)" opacity={0.65}>
           <Path
             d="M 4 0 Q 4 4, 8 4 Q 4 4, 4 8 Q 4 4, 0 4 Q 4 4, 4 0 Z"
-            fill="#8383D6"
+            fill={Colors.LavenderPurple}
           />
         </G>
         <G transform="translate(24, 26) rotate(8, 42, 50)">
           <Path
             d="M 28 6 C 28 -2, 56 -2, 56 6"
-            stroke="#2A2E39"
+            stroke={Colors.SvgGraphiteContour}
             strokeWidth={3}
             strokeLinecap="round"
             fill="none"
@@ -104,7 +109,7 @@ export const ReminderWatermarkDoodleSvg: React.FC<
               height={14}
               rx={7}
               fill="url(#remDoodleGold)"
-              stroke="#D99B0F"
+              stroke={Colors.SvgDoodleGoldShadow}
               strokeWidth={1.2}
             />
           </G>
@@ -116,17 +121,17 @@ export const ReminderWatermarkDoodleSvg: React.FC<
               height={14}
               rx={7}
               fill="url(#remDoodleGold)"
-              stroke="#D99B0F"
+              stroke={Colors.SvgDoodleGoldShadow}
               strokeWidth={1.2}
             />
           </G>
-          <Circle cx={42} cy={8} r={3} fill="#2A2E39" />
+          <Circle cx={42} cy={8} r={3} fill={Colors.SvgGraphiteContour} />
           <Line
             x1={20}
             y1={76}
             x2={14}
             y2={86}
-            stroke="#2A2E39"
+            stroke={Colors.SvgGraphiteContour}
             strokeWidth={3}
             strokeLinecap="round"
           />
@@ -135,7 +140,7 @@ export const ReminderWatermarkDoodleSvg: React.FC<
             y1={76}
             x2={70}
             y2={86}
-            stroke="#2A2E39"
+            stroke={Colors.SvgGraphiteContour}
             strokeWidth={3}
             strokeLinecap="round"
           />
@@ -143,8 +148,8 @@ export const ReminderWatermarkDoodleSvg: React.FC<
             cx={42}
             cy={46}
             r={36}
-            fill="#2A2E39"
-            stroke="#4A4E5C"
+            fill={Colors.SvgGraphiteContour}
+            stroke={Colors.DarkBevelTop}
             strokeWidth={1.8}
           />
           <Circle
@@ -155,16 +160,16 @@ export const ReminderWatermarkDoodleSvg: React.FC<
             stroke="url(#remDoodleGold)"
             strokeWidth={1.6}
           />
-          <Circle cx={42} cy={19} r={1.6} fill="#2A2E39" />
-          <Circle cx={69} cy={46} r={1.6} fill="#2A2E39" />
-          <Circle cx={42} cy={73} r={1.6} fill="#2A2E39" />
-          <Circle cx={15} cy={46} r={1.6} fill="#2A2E39" />
+          <Circle cx={42} cy={19} r={1.6} fill={Colors.SvgGraphiteContour} />
+          <Circle cx={69} cy={46} r={1.6} fill={Colors.SvgGraphiteContour} />
+          <Circle cx={42} cy={73} r={1.6} fill={Colors.SvgGraphiteContour} />
+          <Circle cx={15} cy={46} r={1.6} fill={Colors.SvgGraphiteContour} />
           <Line
             x1={42}
             y1={46}
             x2={26}
             y2={32}
-            stroke="#2A2E39"
+            stroke={Colors.SvgGraphiteContour}
             strokeWidth={2.4}
             strokeLinecap="round"
           />
@@ -173,7 +178,7 @@ export const ReminderWatermarkDoodleSvg: React.FC<
             y1={46}
             x2={58}
             y2={30}
-            stroke="#8383D6"
+            stroke={Colors.LavenderPurple}
             strokeWidth={2}
             strokeLinecap="round"
           />
@@ -182,11 +187,11 @@ export const ReminderWatermarkDoodleSvg: React.FC<
             y1={46}
             x2={42}
             y2={62}
-            stroke="#F5C518"
+            stroke={Colors.AccentYellow}
             strokeWidth={1.2}
             strokeLinecap="round"
           />
-          <Circle cx={42} cy={46} r={3} fill="#F5C518" />
+          <Circle cx={42} cy={46} r={3} fill={Colors.AccentYellow} />
         </G>
         <G opacity={0.8}>
           <Path
@@ -225,22 +230,22 @@ export const ReminderWatermarkDoodleSvg: React.FC<
             cx={18}
             cy={18}
             r={18}
-            fill="#FFFFFF"
-            stroke="#86EFAC"
+            fill={Colors.PureWhite}
+            stroke={Colors.Green300}
             strokeWidth={1.5}
           />
           <Circle
             cx={18}
             cy={18}
             r={15}
-            fill="#ECFDF5"
-            stroke="#22C55E"
+            fill={Colors.RadarEmeraldLightBg}
+            stroke={Colors.Green500}
             strokeWidth={1}
             strokeDasharray="2 2"
           />
           <Path
             d="M 11 18 L 16 23 L 26 12"
-            stroke="#16A34A"
+            stroke={Colors.Green600}
             strokeWidth={2.4}
             strokeLinecap="round"
             strokeLinejoin="round"

@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import { Colors, IllustrationColors } from '../../../Assets/StyleUtilities/Colors';
 import Svg, {
   Path,
   Circle,
@@ -26,23 +27,27 @@ export const TaskCompleteDoodleSvg: React.FC<TaskCompleteDoodleSvgProps> = ({
       <Svg width={width} height={height} viewBox="0 0 135 145" fill="none">
         <Defs>
           <LinearGradient id="doodleGold" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#FFFCE3" />
-            <Stop offset="40%" stopColor="#F5C518" />
-            <Stop offset="100%" stopColor="#D99B0F" />
+            <Stop offset="0%" stopColor={Colors.CreamBackground} />
+            <Stop offset="40%" stopColor={Colors.AccentYellow} />
+            <Stop offset="100%" stopColor={Colors.SvgDoodleGoldShadow} />
           </LinearGradient>
           <LinearGradient id="doodleMint" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#86EFAC" />
-            <Stop offset="50%" stopColor="#22C55E" />
-            <Stop offset="100%" stopColor="#15803D" />
+            <Stop offset="0%" stopColor={Colors.Green300} />
+            <Stop offset="50%" stopColor={Colors.Green500} />
+            <Stop offset="100%" stopColor={Colors.Green700} />
           </LinearGradient>
           <LinearGradient id="paperGlow" x1="0%" y1="0%" x2="0%" y2="100%">
-            <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.9} />
-            <Stop offset="100%" stopColor="#F9F6EE" stopOpacity={0.8} />
+            <Stop offset="0%" stopColor={Colors.PureWhite} stopOpacity={0.9} />
+            <Stop
+              offset="100%"
+              stopColor={IllustrationColors.TaskDoodlePaper}
+              stopOpacity={0.8}
+            />
           </LinearGradient>
         </Defs>
         <Path
           d="M 12 110 C 2 70, 35 30, 80 18"
-          stroke="#D4CCA8"
+          stroke={Colors.BentoWarmGoldMuted}
           strokeWidth={1.2}
           strokeDasharray="3 4"
           opacity={0.6}
@@ -63,7 +68,7 @@ export const TaskCompleteDoodleSvg: React.FC<TaskCompleteDoodleSvgProps> = ({
         <G transform="translate(14, 122)" opacity={0.65}>
           <Path
             d="M 4 0 Q 4 4, 8 4 Q 4 4, 4 8 Q 4 4, 0 4 Q 4 4, 4 0 Z"
-            fill="#8383D6"
+            fill={Colors.LavenderPurple}
           />
         </G>
         <G transform="translate(24, 22) rotate(6, 42, 52)">
@@ -74,7 +79,7 @@ export const TaskCompleteDoodleSvg: React.FC<TaskCompleteDoodleSvgProps> = ({
             height={94}
             rx={10}
             fill="url(#paperGlow)"
-            stroke="#CFC6B2"
+            stroke={IllustrationColors.TaskRuleBeige}
             strokeWidth={1.5}
           />
           <Rect
@@ -83,11 +88,11 @@ export const TaskCompleteDoodleSvg: React.FC<TaskCompleteDoodleSvgProps> = ({
             width={30}
             height={9}
             rx={3}
-            fill="#2A2E39"
-            stroke="#4A4E5C"
+            fill={Colors.SvgGraphiteContour}
+            stroke={Colors.DarkBevelTop}
             strokeWidth={1}
           />
-          <Circle cx={37} cy={-1.5} r={1.8} fill="#F5C518" />
+          <Circle cx={37} cy={-1.5} r={1.8} fill={Colors.AccentYellow} />
           <G transform="translate(10, 18)">
             <Rect
               x={0}
@@ -95,13 +100,13 @@ export const TaskCompleteDoodleSvg: React.FC<TaskCompleteDoodleSvgProps> = ({
               width={14}
               height={14}
               rx={4}
-              fill="#ECFDF5"
-              stroke="#86EFAC"
+              fill={Colors.RadarEmeraldLightBg}
+              stroke={Colors.Green300}
               strokeWidth={1.2}
             />
             <Path
               d="M 3.5 7 L 6 9.5 L 10.5 4"
-              stroke="#16A34A"
+              stroke={Colors.Green600}
               strokeWidth={1.8}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -111,7 +116,7 @@ export const TaskCompleteDoodleSvg: React.FC<TaskCompleteDoodleSvgProps> = ({
               y1={7}
               x2={48}
               y2={7}
-              stroke="#A8A29E"
+              stroke={IllustrationColors.TaskRuleStone}
               strokeWidth={1.5}
               strokeLinecap="round"
             />
@@ -123,13 +128,13 @@ export const TaskCompleteDoodleSvg: React.FC<TaskCompleteDoodleSvgProps> = ({
               width={14}
               height={14}
               rx={4}
-              fill="#ECFDF5"
-              stroke="#86EFAC"
+              fill={Colors.RadarEmeraldLightBg}
+              stroke={Colors.Green300}
               strokeWidth={1.2}
             />
             <Path
               d="M 3.5 7 L 6 9.5 L 10.5 4"
-              stroke="#16A34A"
+              stroke={Colors.Green600}
               strokeWidth={1.8}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -139,7 +144,7 @@ export const TaskCompleteDoodleSvg: React.FC<TaskCompleteDoodleSvgProps> = ({
               y1={7}
               x2={44}
               y2={7}
-              stroke="#A8A29E"
+              stroke={IllustrationColors.TaskRuleStone}
               strokeWidth={1.5}
               strokeLinecap="round"
             />
@@ -151,13 +156,13 @@ export const TaskCompleteDoodleSvg: React.FC<TaskCompleteDoodleSvgProps> = ({
               width={14}
               height={14}
               rx={4}
-              fill="#FEF9C3"
-              stroke="#FDE047"
+              fill={Colors.Yellow100}
+              stroke={Colors.ToastWarningCardBorderLight}
               strokeWidth={1.2}
             />
             <Path
               d="M 3.5 7 L 6 9.5 L 10.5 4"
-              stroke="#CA8A04"
+              stroke={Colors.Yellow600}
               strokeWidth={1.8}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -167,7 +172,7 @@ export const TaskCompleteDoodleSvg: React.FC<TaskCompleteDoodleSvgProps> = ({
               y1={7}
               x2={50}
               y2={7}
-              stroke="#A8A29E"
+              stroke={IllustrationColors.TaskRuleStone}
               strokeWidth={1.5}
               strokeLinecap="round"
             />
@@ -178,42 +183,48 @@ export const TaskCompleteDoodleSvg: React.FC<TaskCompleteDoodleSvgProps> = ({
             cx={22}
             cy={22}
             r={19}
-            fill="#1E232E"
-            stroke="#F5C518"
+            fill={IllustrationColors.TaskInkDeep}
+            stroke={Colors.AccentYellow}
             strokeWidth={1.8}
           />
           <Circle
             cx={22}
             cy={22}
             r={23}
-            stroke="#EAB308"
+            stroke={Colors.Yellow500}
             strokeWidth={1}
             strokeDasharray="2 3"
             opacity={0.7}
           />
           <Path
             d="M 13 22 L 19 28 L 31 15"
-            stroke="#22C55E"
+            stroke={Colors.Green500}
             strokeWidth={2.8}
             strokeLinecap="round"
             strokeLinejoin="round"
           />
-          <Circle cx={33} cy={13} r={1.5} fill="#F5C518" />
+          <Circle cx={33} cy={13} r={1.5} fill={Colors.AccentYellow} />
         </G>
-        <Circle cx={100} cy={14} r={2} fill="#52D22E" opacity={0.7} />
-        <Circle cx={124} cy={64} r={2.2} fill="#F5C518" opacity={0.65} />
-        <Circle cx={118} cy={124} r={1.8} fill="#8383D6" opacity={0.5} />
-        <Circle cx={28} cy={6} r={1.6} fill="#F5C518" opacity={0.55} />
+        <Circle cx={100} cy={14} r={2} fill={Colors.AccentGreen} opacity={0.7} />
+        <Circle cx={124} cy={64} r={2.2} fill={Colors.AccentYellow} opacity={0.65} />
+        <Circle
+          cx={118}
+          cy={124}
+          r={1.8}
+          fill={Colors.LavenderPurple}
+          opacity={0.5}
+        />
+        <Circle cx={28} cy={6} r={1.6} fill={Colors.AccentYellow} opacity={0.55} />
         <Path
           d="M 112 78 Q 118 84 116 92"
-          stroke="#C8BE9E"
+          stroke={Colors.SvgSketchVellum}
           strokeWidth={1.4}
           strokeLinecap="round"
           opacity={0.6}
         />
         <Path
           d="M 120 75 Q 128 82 125 93"
-          stroke="#C8BE9E"
+          stroke={Colors.SvgSketchVellum}
           strokeWidth={1.4}
           strokeLinecap="round"
           opacity={0.4}

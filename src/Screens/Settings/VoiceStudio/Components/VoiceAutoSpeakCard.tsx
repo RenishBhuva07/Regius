@@ -17,7 +17,7 @@ export const VoiceAutoSpeakCard: React.FC<VoiceAutoSpeakCardProps> = React.memo(
     autoSpeakReplies,
     onToggleAutoSpeak,
     isDarkMode = false,
-    textPrimary = Colors.MidnightInkText,
+    textPrimary = Colors.PureBlack,
     textSecondary = Colors.SubtitleGray,
   }) => {
     const { Colors: themeColors } = useTheme();
@@ -38,10 +38,10 @@ export const VoiceAutoSpeakCard: React.FC<VoiceAutoSpeakCardProps> = React.memo(
           value={autoSpeakReplies}
           onValueChange={onToggleAutoSpeak}
           trackColor={{
-            false: isDarkMode ? '#3A3F46' : '#D9D9D9',
+            false: isDarkMode ? Colors.DarkSoftLinen : Colors.FogGrey,
             true: themeAccent,
           }}
-          thumbColor="#FFFFFF"
+          thumbColor={Colors.PureWhite}
         />
       </View>
     );

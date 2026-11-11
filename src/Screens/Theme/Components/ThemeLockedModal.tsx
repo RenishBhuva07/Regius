@@ -11,7 +11,7 @@ import { Trophy, X, Crown } from 'lucide-react-native';
 
 import { Fonts } from '../../../Theme/fonts';
 import { Typography } from '../../../Theme/Typographys';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../../Common/Badge';
 import CustomButton from '../../../Common/CustomButton';
@@ -42,13 +42,13 @@ export const ThemeLockedModal: React.FC<ThemeLockedModalProps> = React.memo(
   }) => {
     if (!theme) return null;
 
-    const cardBg = isDarkMode ? '#1E2228' : Colors.DefaultWhite;
-    const textPrimary = isDarkMode
-      ? Colors.PureWhiteText
-      : Colors.MidnightInkText;
-    const textSecondary = isDarkMode ? '#A3A8B1' : Colors.SubtitleGray;
-    const borderLight = isDarkMode ? '#2C3035' : '#E8E2D5';
-    const surfaceAlt = isDarkMode ? '#171A1F' : '#FAF8F5';
+    const cardBg = isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite;
+    const textPrimary = isDarkMode ? Colors.PureWhite : Colors.PureBlack;
+    const textSecondary = isDarkMode ? Colors.SteelMist : Colors.SubtitleGray;
+    const borderLight = isDarkMode ? Colors.CarbonSlate : Colors.RingBorder;
+    const surfaceAlt = isDarkMode
+      ? Colors.DarkSurfaceAlt
+      : Colors.CreamSurfaceAlt;
 
     const reqTier = allTiers.find(t => t.level === theme.requiredTierLevel);
     const minXp = reqTier?.minXp || 1;
@@ -68,15 +68,19 @@ export const ThemeLockedModal: React.FC<ThemeLockedModalProps> = React.memo(
               {
                 backgroundColor: cardBg,
                 borderColor: isDarkMode
-                  ? 'rgba(255, 255, 255, 0.15)'
-                  : '#FFFFFF',
+                  ? withAlpha(Colors.PureWhite, 0.15)
+                  : Colors.PureWhite,
               },
             ]}
           >
             {/* Modal Header */}
             <View style={styles.modalHeader}>
               <View style={styles.modalIconWrap}>
-                <Trophy size={20} color="#F5C518" strokeWidth={2.2} />
+                <Trophy
+                  size={20}
+                  color={Colors.AccentYellow}
+                  strokeWidth={2.2}
+                />
               </View>
               <TouchableOpacity
                 activeOpacity={0.7}
@@ -114,8 +118,8 @@ export const ThemeLockedModal: React.FC<ThemeLockedModalProps> = React.memo(
                       {
                         backgroundColor: col.hex,
                         borderColor: isLightColor(col.hex)
-                          ? 'rgba(0, 0, 0, 0.18)'
-                          : 'rgba(255, 255, 255, 0.3)',
+                          ? withAlpha(Colors.PureBlack, 0.18)
+                          : withAlpha(Colors.PureWhite, 0.3),
                       },
                     ]}
                   />
@@ -187,8 +191,8 @@ export const ThemeLockedModal: React.FC<ThemeLockedModalProps> = React.memo(
               >
                 <Crown
                   size={18}
-                  color="#1F2228"
-                  fill="#F5C518"
+                  color={Colors.MidnightCharcoal}
+                  fill={Colors.AccentYellow}
                   strokeWidth={2.4}
                 />
                 <Text style={styles.royalUpgradeBtnText}>
@@ -214,7 +218,7 @@ export const ThemeLockedModal: React.FC<ThemeLockedModalProps> = React.memo(
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    backgroundColor: withAlpha(Colors.PureBlack, 0.65),
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
@@ -225,7 +229,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     borderWidth: 1.5,
     padding: 20,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.35,
     shadowRadius: 18,
@@ -241,7 +245,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(245, 197, 24, 0.15)',
+    backgroundColor: withAlpha(Colors.AccentYellow, 0.15),
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -280,7 +284,7 @@ const styles = StyleSheet.create({
     height: 28,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+    borderColor: withAlpha(Colors.PureWhite, 0.3),
   },
   modalColorCode: {
     fontFamily: Fonts.poppins.bold,
@@ -318,14 +322,14 @@ const styles = StyleSheet.create({
   modalProgressBarBg: {
     height: 6,
     borderRadius: 3,
-    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+    backgroundColor: withAlpha(Colors.PureBlack, 0.15),
     overflow: 'hidden',
     marginBottom: 8,
   },
   modalProgressBarFill: {
     height: '100%',
     borderRadius: 3,
-    backgroundColor: '#F5C518',
+    backgroundColor: Colors.AccentYellow,
   },
   modalHintText: {
     fontFamily: Fonts.poppins.regular,
@@ -336,7 +340,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   royalUpgradeBtn: {
-    backgroundColor: '#F5C518',
+    backgroundColor: Colors.AccentYellow,
     borderRadius: 28,
     paddingVertical: ResponsivePixels.size14,
     flexDirection: 'row',
@@ -344,10 +348,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 8,
     borderBottomWidth: 3,
-    borderBottomColor: '#D97706',
+    borderBottomColor: Colors.HabitBurnishedAmber,
     ...Platform.select({
       ios: {
-        shadowColor: '#F5C518',
+        shadowColor: Colors.AccentYellow,
         shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.35,
         shadowRadius: 6,
@@ -360,7 +364,7 @@ const styles = StyleSheet.create({
   royalUpgradeBtnText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 14,
-    color: '#1F2228',
+    color: Colors.MidnightCharcoal,
   },
 });
 

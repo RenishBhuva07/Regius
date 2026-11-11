@@ -10,6 +10,7 @@ import Svg, {
   G,
   SvgProps,
 } from 'react-native-svg';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -46,17 +47,19 @@ export const SplashAestheticBackgroundSvg: React.FC<
         >
           <Stop
             offset="0%"
-            stopColor={isDark ? '#F5C518' : '#FFF9D2'}
+            stopColor={isDark ? Colors.AccentYellow : Colors.WorkPillLight}
             stopOpacity={isDark ? 0.22 : 0.75}
           />
           <Stop
             offset="55%"
-            stopColor={isDark ? '#8383D6' : '#FFF3B8'}
+            stopColor={
+              isDark ? Colors.LavenderPurple : Colors.SvgWarmSunbeamTint
+            }
             stopOpacity={isDark ? 0.1 : 0.35}
           />
           <Stop
             offset="100%"
-            stopColor={isDark ? '#121417' : '#FFFCE3'}
+            stopColor={isDark ? Colors.DarkBackground : Colors.CreamBackground}
             stopOpacity={0}
           />
         </RadialGradient>
@@ -65,20 +68,20 @@ export const SplashAestheticBackgroundSvg: React.FC<
         <RadialGradient id="splashLavenderAura" cx="50%" cy="50%" r="50%">
           <Stop
             offset="0%"
-            stopColor="#8383D6"
+            stopColor={Colors.LavenderPurple}
             stopOpacity={isDark ? 0.18 : 0.32}
           />
-          <Stop offset="100%" stopColor="#8383D6" stopOpacity={0} />
+          <Stop offset="100%" stopColor={Colors.LavenderPurple} stopOpacity={0} />
         </RadialGradient>
 
         {/* Diagonal Mint Productivity Accent Aura */}
         <RadialGradient id="splashMintAura" cx="50%" cy="50%" r="50%">
           <Stop
             offset="0%"
-            stopColor="#52D22E"
+            stopColor={Colors.AccentGreen}
             stopOpacity={isDark ? 0.14 : 0.22}
           />
-          <Stop offset="100%" stopColor="#52D22E" stopOpacity={0} />
+          <Stop offset="100%" stopColor={Colors.AccentGreen} stopOpacity={0} />
         </RadialGradient>
 
         {/* Subtle Wave Ribbon Gradient */}
@@ -92,12 +95,16 @@ export const SplashAestheticBackgroundSvg: React.FC<
         >
           <Stop
             offset="0%"
-            stopColor={isDark ? '#2C3038' : '#F2ECE0'}
+            stopColor={
+              isDark ? Colors.DarkSteelBorder : Colors.SvgSplashCreamMid
+            }
             stopOpacity={isDark ? 0.35 : 0.55}
           />
           <Stop
             offset="100%"
-            stopColor={isDark ? '#1E2228' : '#FAF6ED'}
+            stopColor={
+              isDark ? Colors.DarkCardBackground : Colors.MilestoneCreamBg
+            }
             stopOpacity={0.05}
           />
         </LinearGradient>
@@ -119,14 +126,16 @@ export const SplashAestheticBackgroundSvg: React.FC<
           cx={CX}
           cy={CY}
           r={98}
-          stroke={isDark ? '#FFFFFF' : '#E8E1D3'}
+          stroke={isDark ? Colors.PureWhite : Colors.SvgPaperBeigeRim}
           strokeWidth={1.2}
         />
         <Circle
           cx={CX}
           cy={CY}
           r={138}
-          stroke={isDark ? '#8383D6' : '#DDD6C6'}
+          stroke={
+            isDark ? Colors.LavenderPurple : Colors.WarmHeaderBottomBevel
+          }
           strokeWidth={1}
           strokeDasharray="4 6"
         />
@@ -134,14 +143,14 @@ export const SplashAestheticBackgroundSvg: React.FC<
           cx={CX}
           cy={CY}
           r={185}
-          stroke={isDark ? '#FFFFFF' : '#EAE4D7'}
+          stroke={isDark ? Colors.PureWhite : Colors.LoginInputLightBevel}
           strokeWidth={1.2}
         />
         <Circle
           cx={CX}
           cy={CY}
           r={235}
-          stroke={isDark ? '#F5C518' : '#E0D8C8'}
+          stroke={isDark ? Colors.AccentYellow : Colors.SvgPaperWarmRim}
           strokeWidth={1}
           strokeDasharray="6 8"
         />
@@ -152,7 +161,11 @@ export const SplashAestheticBackgroundSvg: React.FC<
         d={`M -20 ${CY - 160} Q ${W * 0.25} ${CY - 220} ${CX} ${CY - 170} T ${
           W + 20
         } ${CY - 190}`}
-        stroke={isDark ? 'rgba(255,255,255,0.08)' : 'rgba(131, 131, 214, 0.16)'}
+        stroke={
+          isDark
+            ? withAlpha(Colors.PureWhite, 0.08)
+            : withAlpha(Colors.LavenderPurple, 0.16)
+        }
         strokeWidth={1.4}
         fill="none"
       />
@@ -160,7 +173,11 @@ export const SplashAestheticBackgroundSvg: React.FC<
         d={`M -20 ${CY + 190} Q ${W * 0.35} ${CY + 240} ${CX} ${CY + 180} T ${
           W + 20
         } ${CY + 210}`}
-        stroke={isDark ? 'rgba(245, 197, 24, 0.1)' : 'rgba(245, 197, 24, 0.2)'}
+        stroke={
+          isDark
+            ? withAlpha(Colors.AccentYellow, 0.1)
+            : withAlpha(Colors.AccentYellow, 0.2)
+        }
         strokeWidth={1.2}
         fill="none"
       />
@@ -175,10 +192,10 @@ export const SplashAestheticBackgroundSvg: React.FC<
         } ${CX - 133} ${CY - 120} Q ${CX - 128} ${CY - 120} ${CX - 128} ${
           CY - 125
         } Z`}
-        fill="#F5C518"
+        fill={Colors.AccentYellow}
         opacity={isDark ? 0.85 : 0.75}
       />
-      <Circle cx={CX - 128} cy={CY - 120} r={1.2} fill="#FFFFFF" />
+      <Circle cx={CX - 128} cy={CY - 120} r={1.2} fill={Colors.PureWhite} />
 
       {/* Top Right Lavender Star */}
       <Path
@@ -189,10 +206,10 @@ export const SplashAestheticBackgroundSvg: React.FC<
         } ${CX + 127} ${CY - 100} Q ${CX + 132} ${CY - 100} ${CX + 132} ${
           CY - 105
         } Z`}
-        fill="#8383D6"
+        fill={Colors.LavenderPurple}
         opacity={isDark ? 0.9 : 0.8}
       />
-      <Circle cx={CX + 132} cy={CY - 100} r={1.2} fill="#FFFFFF" />
+      <Circle cx={CX + 132} cy={CY - 100} r={1.2} fill={Colors.PureWhite} />
 
       {/* Bottom Right Mint Star */}
       <Path
@@ -203,7 +220,7 @@ export const SplashAestheticBackgroundSvg: React.FC<
         } ${CX + 115} ${CY + 135} Q ${CX + 120} ${CY + 135} ${CX + 120} ${
           CY + 130
         } Z`}
-        fill="#10B981"
+        fill={Colors.ToastSuccessAccent}
         opacity={isDark ? 0.85 : 0.75}
       />
 
@@ -216,7 +233,7 @@ export const SplashAestheticBackgroundSvg: React.FC<
         } ${CX - 119} ${CY + 149} Q ${CX - 115} ${CY + 149} ${CX - 115} ${
           CY + 145
         } Z`}
-        fill="#F5C518"
+        fill={Colors.AccentYellow}
         opacity={isDark ? 0.8 : 0.7}
       />
 
@@ -225,35 +242,35 @@ export const SplashAestheticBackgroundSvg: React.FC<
         cx={CX - 85}
         cy={CY - 165}
         r={1.5}
-        fill={isDark ? '#F5C518' : '#B48216'}
+        fill={isDark ? Colors.AccentYellow : Colors.WorkTextAccent}
         opacity={0.65}
       />
       <Circle
         cx={CX + 95}
         cy={CY - 155}
         r={1.8}
-        fill={isDark ? '#FFFFFF' : '#8383D6'}
+        fill={isDark ? Colors.PureWhite : Colors.LavenderPurple}
         opacity={0.6}
       />
       <Circle
         cx={CX - 145}
         cy={CY + 50}
         r={1.4}
-        fill={isDark ? '#10B981' : '#1B9A72'}
+        fill={isDark ? Colors.ToastSuccessAccent : Colors.GreenGracious}
         opacity={0.55}
       />
       <Circle
         cx={CX + 148}
         cy={CY + 60}
         r={1.6}
-        fill={isDark ? '#F5C518' : '#D97706'}
+        fill={isDark ? Colors.AccentYellow : Colors.HabitBurnishedAmber}
         opacity={0.6}
       />
       <Circle
         cx={CX}
         cy={CY + 215}
         r={2}
-        fill={isDark ? '#8383D6' : '#8383D6'}
+        fill={Colors.LavenderPurple}
         opacity={0.5}
       />
     </Svg>

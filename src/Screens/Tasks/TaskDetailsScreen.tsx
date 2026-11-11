@@ -48,7 +48,7 @@ import Svg, {
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../../Theme/fonts';
-import { Colors } from '../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { useTheme } from '../../Theme/ThemeContext';
 import { useTaskReminder } from '../../Context/TaskReminderContext';
@@ -92,9 +92,9 @@ const BentoHeroBg: React.FC<{ accentColor: string }> = React.memo(
             x2="100%"
             y2="100%"
           >
-            <Stop offset="0%" stopColor="#252733" stopOpacity={0.85} />
-            <Stop offset="50%" stopColor="#1B1D25" stopOpacity={0.5} />
-            <Stop offset="100%" stopColor="#121318" stopOpacity={0.92} />
+            <Stop offset="0%" stopColor={Colors.BentoStopSlate} stopOpacity={0.85} />
+            <Stop offset="50%" stopColor={Colors.DetailStopMid} stopOpacity={0.5} />
+            <Stop offset="100%" stopColor={Colors.BentoStopDeep} stopOpacity={0.92} />
           </LinearGradient>
 
           <RadialGradient
@@ -106,7 +106,7 @@ const BentoHeroBg: React.FC<{ accentColor: string }> = React.memo(
           >
             <Stop offset="0%" stopColor={accentColor} stopOpacity={0.35} />
             <Stop offset="50%" stopColor={accentColor} stopOpacity={0.12} />
-            <Stop offset="100%" stopColor="#121318" stopOpacity={0} />
+            <Stop offset="100%" stopColor={Colors.BentoStopDeep} stopOpacity={0} />
           </RadialGradient>
         </Defs>
 
@@ -117,7 +117,7 @@ const BentoHeroBg: React.FC<{ accentColor: string }> = React.memo(
           cx={300}
           cy={40}
           r={50}
-          stroke="rgba(255, 255, 255, 0.12)"
+          stroke={withAlpha(Colors.PureWhite, 0.12)}
           strokeWidth={1}
           fill="none"
         />
@@ -125,12 +125,12 @@ const BentoHeroBg: React.FC<{ accentColor: string }> = React.memo(
           cx={300}
           cy={40}
           r={85}
-          stroke="rgba(255, 255, 255, 0.05)"
+          stroke={withAlpha(Colors.PureWhite, 0.05)}
           strokeWidth={1}
           strokeDasharray="4 6"
           fill="none"
         />
-        <Circle cx={285} cy={18} r={1.6} fill="#FFFFFF" opacity={0.65} />
+        <Circle cx={285} cy={18} r={1.6} fill={Colors.PureWhite} opacity={0.65} />
         <Circle cx={35} cy={165} r={1.4} fill={accentColor} opacity={0.5} />
       </Svg>
     </View>
@@ -179,43 +179,43 @@ export const TaskDetailsScreen: React.FC = () => {
       return {
         label: 'HEALTH & SPORT',
         badgeVariant: 'green' as BadgeVariant,
-        accent: '#52D22E',
-        bgTint: '#F5FDF9',
-        borderColor: '#C6FFDD',
+        accent: Colors.AccentGreen,
+        bgTint: Colors.WellnessTintLight,
+        borderColor: Colors.WellnessLightBorder,
         icon: Heart,
-        iconColor: '#1B9A72',
+        iconColor: Colors.GreenGracious,
       };
     }
     if (task?.category === 'habits') {
       return {
         label: 'MINDFUL HABITS',
         badgeVariant: 'purple' as BadgeVariant,
-        accent: '#8383D6',
-        bgTint: '#F7F8FE',
-        borderColor: '#D8DBFF',
+        accent: Colors.LavenderPurple,
+        bgTint: Colors.MindfulTintLight,
+        borderColor: Colors.MindfulLightBorder,
         icon: Sparkles,
-        iconColor: '#7059C8',
+        iconColor: Colors.MindfulTextAccent,
       };
     }
     if (task?.category === 'works' || !task?.category) {
       return {
         label: 'WORKS & EXECUTION',
         badgeVariant: 'yellow' as BadgeVariant,
-        accent: '#F5C518',
-        bgTint: '#FFFCEB',
-        borderColor: '#FFF5B8',
+        accent: Colors.AccentYellow,
+        bgTint: Colors.WorkLightBg,
+        borderColor: Colors.WorkLightBorder,
         icon: Briefcase,
-        iconColor: '#B47804',
+        iconColor: Colors.BadgeYellowText,
       };
     }
     return {
       label: (task.category || 'COLLABORATION').toUpperCase(),
       badgeVariant: 'neutral' as BadgeVariant,
-      accent: '#8E8E93',
-      bgTint: '#F5F6F8',
-      borderColor: '#E5E5EA',
+      accent: Colors.DisabledGrayText,
+      bgTint: Colors.CoolNeutralSurface,
+      borderColor: Colors.SystemBorderLight,
       icon: Users,
-      iconColor: '#454A53',
+      iconColor: Colors.DarkIconSlate,
     };
   }, [task?.category]);
 
@@ -476,7 +476,7 @@ export const TaskDetailsScreen: React.FC = () => {
                   <View style={styles.metaChip}>
                     <Flame
                       size={ResponsivePixels.size12}
-                      color="#FF9800"
+                      color={Colors.AccentAmber}
                       strokeWidth={2.2}
                     />
                     <Text style={styles.metaChipText}>
@@ -488,7 +488,7 @@ export const TaskDetailsScreen: React.FC = () => {
                 <View style={styles.metaChip}>
                   <Clock
                     size={ResponsivePixels.size12}
-                    color="#8E8E93"
+                    color={Colors.DisabledGrayText}
                     strokeWidth={2.2}
                   />
                   <Text style={styles.metaChipText}>
@@ -500,7 +500,7 @@ export const TaskDetailsScreen: React.FC = () => {
                   <View style={styles.metaChip}>
                     <Target
                       size={ResponsivePixels.size12}
-                      color="#52D22E"
+                      color={Colors.AccentGreen}
                       strokeWidth={2.2}
                     />
                     <Text style={styles.metaChipText}>
@@ -524,7 +524,9 @@ export const TaskDetailsScreen: React.FC = () => {
             >
               <Volume2
                 size={ResponsivePixels.size18}
-                color={isDarkMode ? '#A592F2' : '#7059C8'}
+                color={
+                  isDarkMode ? Colors.SoftVioletAccent : Colors.MindfulTextAccent
+                }
                 strokeWidth={2.4}
               />
             </View>
@@ -538,7 +540,11 @@ export const TaskDetailsScreen: React.FC = () => {
                 {isPlayingBriefing && (
                   <MiniAcousticBars
                     isPlaying={isPlayingBriefing}
-                    accentColor={isDarkMode ? '#A592F2' : '#7059C8'}
+                    accentColor={
+                      isDarkMode
+                        ? Colors.SoftVioletAccent
+                        : Colors.MindfulTextAccent
+                    }
                   />
                 )}
               </View>
@@ -566,13 +572,15 @@ export const TaskDetailsScreen: React.FC = () => {
             {isPlayingBriefing ? (
               <VolumeX
                 size={ResponsivePixels.size15}
-                color="#FFFFFF"
+                color={Colors.PureWhite}
                 strokeWidth={2.4}
               />
             ) : (
               <Volume2
                 size={ResponsivePixels.size15}
-                color={isDarkMode ? '#A592F2' : '#7059C8'}
+                color={
+                  isDarkMode ? Colors.SoftVioletAccent : Colors.MindfulTextAccent
+                }
                 strokeWidth={2.4}
               />
             )}
@@ -590,7 +598,7 @@ export const TaskDetailsScreen: React.FC = () => {
             <View style={styles.noteHeaderRow}>
               <FileText
                 size={ResponsivePixels.size15}
-                color={isDarkMode ? '#F5C518' : '#B48216'}
+                color={isDarkMode ? Colors.AccentYellow : Colors.WorkTextAccent}
                 strokeWidth={2.2}
               />
               <Text
@@ -656,7 +664,7 @@ export const TaskDetailsScreen: React.FC = () => {
                     width: `${subtasksProgress}%`,
                     backgroundColor:
                       subtasksProgress === 100
-                        ? '#1B9A72'
+                        ? Colors.GreenGracious
                         : categoryTheme.accent,
                   },
                 ]}
@@ -693,7 +701,7 @@ export const TaskDetailsScreen: React.FC = () => {
                     {subtask.done && (
                       <Check
                         size={ResponsivePixels.size12}
-                        color="#FFFFFF"
+                        color={Colors.PureWhite}
                         strokeWidth={3}
                       />
                     )}
@@ -719,7 +727,7 @@ export const TaskDetailsScreen: React.FC = () => {
                 >
                   <Trash2
                     size={ResponsivePixels.size13}
-                    color="#EF4444"
+                    color={Colors.CategoryRedAccent}
                     strokeWidth={2}
                   />
                 </TouchableOpacity>
@@ -735,7 +743,9 @@ export const TaskDetailsScreen: React.FC = () => {
                 isDarkMode && styles.addSubtaskInputDark,
               ]}
               placeholder="Add step or milestone..."
-              placeholderTextColor={isDarkMode ? '#6B7280' : '#A3A8B1'}
+              placeholderTextColor={
+                isDarkMode ? Colors.Gray500 : Colors.SteelMist
+              }
               value={newSubtaskText}
               onChangeText={setNewSubtaskText}
               onSubmitEditing={handleAddSubtask}
@@ -750,7 +760,7 @@ export const TaskDetailsScreen: React.FC = () => {
             >
               <Plus
                 size={ResponsivePixels.size16}
-                color="#FFFFFF"
+                color={Colors.PureWhite}
                 strokeWidth={2.4}
               />
             </TouchableOpacity>
@@ -776,7 +786,7 @@ export const TaskDetailsScreen: React.FC = () => {
             <View style={styles.parameterItem}>
               <Calendar
                 size={ResponsivePixels.size14}
-                color="#8E8E93"
+                color={Colors.DisabledGrayText}
                 strokeWidth={2.2}
               />
               <View>
@@ -802,7 +812,7 @@ export const TaskDetailsScreen: React.FC = () => {
             <View style={styles.parameterItem}>
               <Clock
                 size={ResponsivePixels.size14}
-                color="#8E8E93"
+                color={Colors.DisabledGrayText}
                 strokeWidth={2.2}
               />
               <View>
@@ -828,7 +838,9 @@ export const TaskDetailsScreen: React.FC = () => {
             <View style={styles.parameterItem}>
               <Sparkles
                 size={ResponsivePixels.size14}
-                color={isDarkMode ? '#A592F2' : '#7059C8'}
+                color={
+                  isDarkMode ? Colors.SoftVioletAccent : Colors.MindfulTextAccent
+                }
                 strokeWidth={2.2}
               />
               <View>
@@ -864,7 +876,7 @@ export const TaskDetailsScreen: React.FC = () => {
           >
             <Trash2
               size={ResponsivePixels.size16}
-              color="#EF4444"
+              color={Colors.CategoryRedAccent}
               strokeWidth={2.2}
             />
             <Text style={styles.deleteBtnText}>Delete Task Objective</Text>
@@ -882,13 +894,13 @@ export const TaskDetailsScreen: React.FC = () => {
             task.done ? (
               <RotateCw
                 size={ResponsivePixels.size18}
-                color="#FFFFFF"
+                color={Colors.PureWhite}
                 strokeWidth={2.4}
               />
             ) : (
               <Check
                 size={ResponsivePixels.size18}
-                color="#FFFFFF"
+                color={Colors.PureWhite}
                 strokeWidth={2.4}
               />
             )
@@ -935,7 +947,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.CreamBackground,
   },
   containerDark: {
-    backgroundColor: '#121417',
+    backgroundColor: Colors.DarkBackground,
   },
   scroll: {
     flex: 1,
@@ -958,10 +970,10 @@ const styles = StyleSheet.create({
   notFoundText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: ResponsivePixels.size15,
-    color: '#363944',
+    color: Colors.DarkBorder,
   },
   notFoundTextDark: {
-    color: '#D1D5DB',
+    color: Colors.Gray300,
   },
   backBtnFallback: {
     paddingHorizontal: ResponsivePixels.size16,
@@ -972,7 +984,7 @@ const styles = StyleSheet.create({
   backBtnFallbackText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: ResponsivePixels.size13,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
   cardShadowWrapper: {
     width: '100%',
@@ -980,7 +992,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.NeroBlack,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 10 },
         shadowOpacity: 0.28,
         shadowRadius: 18,
@@ -995,7 +1007,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.NeroBlack,
     borderRadius: ResponsivePixels.size24,
     borderWidth: 4,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: withAlpha(Colors.PureWhite, 0.9),
     overflow: 'hidden',
   },
   bentoContent: {
@@ -1011,7 +1023,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: ResponsivePixels.size6,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.12),
     paddingHorizontal: ResponsivePixels.size10,
     paddingVertical: ResponsivePixels.size4,
     borderRadius: ResponsivePixels.size12,
@@ -1024,7 +1036,7 @@ const styles = StyleSheet.create({
   bentoTitle: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size22,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     lineHeight: ResponsivePixels.size28,
   },
   bentoMetaRow: {
@@ -1038,7 +1050,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: ResponsivePixels.size5,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.08),
     paddingHorizontal: ResponsivePixels.size8,
     paddingVertical: ResponsivePixels.size4,
     borderRadius: ResponsivePixels.size8,
@@ -1046,21 +1058,21 @@ const styles = StyleSheet.create({
   metaChipText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: ResponsivePixels.size11,
-    color: '#D1D5DB',
+    color: Colors.Gray300,
     letterSpacing: 0.3,
   },
   vocalCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     padding: ResponsivePixels.size14,
     borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
-    borderColor: '#ECE8FB',
+    borderColor: Colors.MindfulDetailBorder,
     ...Platform.select({
       ios: {
-        shadowColor: '#7059C8',
+        shadowColor: Colors.MindfulTextAccent,
         shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.08,
         shadowRadius: 6,
@@ -1071,8 +1083,8 @@ const styles = StyleSheet.create({
     }),
   },
   vocalCardDark: {
-    backgroundColor: '#1E2228',
-    borderColor: '#2C3035',
+    backgroundColor: Colors.DarkCardBackground,
+    borderColor: Colors.CarbonSlate,
   },
   vocalLeft: {
     flexDirection: 'row',
@@ -1084,15 +1096,15 @@ const styles = StyleSheet.create({
     width: ResponsivePixels.size38,
     height: ResponsivePixels.size38,
     borderRadius: ResponsivePixels.size19,
-    backgroundColor: '#EFF2FE',
+    backgroundColor: Colors.MindfulLightBg,
     borderWidth: 1,
-    borderColor: '#D8DBFF',
+    borderColor: Colors.MindfulLightBorder,
     alignItems: 'center',
     justifyContent: 'center',
   },
   vocalIconAuraDark: {
-    backgroundColor: 'rgba(131, 131, 214, 0.16)',
-    borderColor: 'rgba(131, 131, 214, 0.32)',
+    backgroundColor: withAlpha(Colors.LavenderPurple, 0.16),
+    borderColor: withAlpha(Colors.LavenderPurple, 0.32),
   },
   vocalTextWrap: {
     flex: 1,
@@ -1105,42 +1117,42 @@ const styles = StyleSheet.create({
   vocalTitle: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: ResponsivePixels.size14,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
   },
   vocalSubtitle: {
     fontFamily: Fonts.poppins.regular,
     fontSize: ResponsivePixels.size11,
-    color: '#8E8E93',
+    color: Colors.DisabledGrayText,
   },
   vocalPlayBtn: {
     width: ResponsivePixels.size36,
     height: ResponsivePixels.size36,
     borderRadius: ResponsivePixels.size18,
-    backgroundColor: '#EFF2FE',
+    backgroundColor: Colors.MindfulLightBg,
     borderWidth: 1,
-    borderColor: '#D8DBFF',
+    borderColor: Colors.MindfulLightBorder,
     alignItems: 'center',
     justifyContent: 'center',
   },
   vocalPlayBtnDark: {
-    backgroundColor: 'rgba(131, 131, 214, 0.16)',
-    borderColor: 'rgba(131, 131, 214, 0.32)',
+    backgroundColor: withAlpha(Colors.LavenderPurple, 0.16),
+    borderColor: withAlpha(Colors.LavenderPurple, 0.32),
   },
   vocalPlayBtnActive: {
-    backgroundColor: '#7059C8',
-    borderColor: '#7059C8',
+    backgroundColor: Colors.MindfulTextAccent,
+    borderColor: Colors.MindfulTextAccent,
   },
   noteKeepsakeCard: {
-    backgroundColor: '#FFFDF7',
+    backgroundColor: Colors.WorkTintCream,
     padding: ResponsivePixels.size16,
     borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
-    borderColor: '#FFF5B8',
+    borderColor: Colors.WorkLightBorder,
     gap: ResponsivePixels.size8,
   },
   noteKeepsakeCardDark: {
-    backgroundColor: '#1E2228',
-    borderColor: '#3D3418',
+    backgroundColor: Colors.DarkCardBackground,
+    borderColor: Colors.PriorityMediumDarkBorder,
   },
   noteHeaderRow: {
     flexDirection: 'row',
@@ -1150,32 +1162,32 @@ const styles = StyleSheet.create({
   noteCardTitle: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size11,
-    color: '#B48216',
+    color: Colors.WorkTextAccent,
     letterSpacing: 0.6,
   },
   noteCardTitleDark: {
-    color: '#F5C518',
+    color: Colors.AccentYellow,
   },
   noteContent: {
     fontFamily: Fonts.poppins.regular,
     fontSize: ResponsivePixels.size14,
     lineHeight: ResponsivePixels.size20,
-    color: '#363944',
+    color: Colors.DarkBorder,
   },
   noteContentDark: {
-    color: '#E5E7EB',
+    color: Colors.Gray200,
   },
   subtasksCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     padding: ResponsivePixels.size16,
     borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
-    borderColor: '#EAE6DD',
+    borderColor: Colors.TaskDetailBorderWarm,
     gap: ResponsivePixels.size12,
   },
   subtasksCardDark: {
-    backgroundColor: '#1E2228',
-    borderColor: '#2C3035',
+    backgroundColor: Colors.DarkCardBackground,
+    borderColor: Colors.CarbonSlate,
   },
   subtasksHeaderRow: {
     flexDirection: 'row',
@@ -1189,22 +1201,22 @@ const styles = StyleSheet.create({
   subtasksTitle: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size15,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
   },
   subtasksSubtitle: {
     fontFamily: Fonts.poppins.regular,
     fontSize: ResponsivePixels.size12,
-    color: '#7E838F',
+    color: Colors.MutedSlateSubtext,
     marginTop: 1,
   },
   progressTrack: {
     height: ResponsivePixels.size6,
-    backgroundColor: '#F0ECE1',
+    backgroundColor: Colors.CreamBorderSubtle,
     borderRadius: ResponsivePixels.size3,
     overflow: 'hidden',
   },
   progressTrackDark: {
-    backgroundColor: '#2C3035',
+    backgroundColor: Colors.CarbonSlate,
   },
   progressFill: {
     height: '100%',
@@ -1217,24 +1229,24 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#FAF8F5',
+    backgroundColor: Colors.CreamSurfaceAlt,
     paddingVertical: ResponsivePixels.size10,
     paddingHorizontal: ResponsivePixels.size12,
     borderRadius: ResponsivePixels.size14,
     borderWidth: 1,
-    borderColor: '#EDE9E0',
+    borderColor: Colors.TaskDetailDivider,
   },
   subtaskRowDark: {
-    backgroundColor: '#252932',
-    borderColor: '#333742',
+    backgroundColor: Colors.DarkCheckboxUnchecked,
+    borderColor: Colors.DarkBorderSlate,
   },
   subtaskRowDone: {
-    backgroundColor: '#F5FDF9',
-    borderColor: '#D8F7E7',
+    backgroundColor: Colors.WellnessTintLight,
+    borderColor: Colors.WellnessDetailBorder,
   },
   subtaskRowDoneDark: {
-    backgroundColor: 'rgba(27, 154, 114, 0.12)',
-    borderColor: 'rgba(27, 154, 114, 0.28)',
+    backgroundColor: withAlpha(Colors.GreenGracious, 0.12),
+    borderColor: withAlpha(Colors.GreenGracious, 0.28),
   },
   subtaskInteractiveArea: {
     flexDirection: 'row',
@@ -1247,25 +1259,25 @@ const styles = StyleSheet.create({
     height: ResponsivePixels.size20,
     borderRadius: ResponsivePixels.size6,
     borderWidth: 1.5,
-    borderColor: '#B0ACA2',
+    borderColor: Colors.WarmBorderMuted,
     alignItems: 'center',
     justifyContent: 'center',
   },
   subtaskCheckboxDark: {
-    borderColor: '#555A67',
+    borderColor: Colors.DarkBorderElevatedMuted,
   },
   subtaskCheckboxDone: {
-    backgroundColor: '#1B9A72',
-    borderColor: '#1B9A72',
+    backgroundColor: Colors.GreenGracious,
+    borderColor: Colors.GreenGracious,
   },
   subtaskText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: ResponsivePixels.size13,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     flex: 1,
   },
   subtaskTextDone: {
-    color: '#8E8E93',
+    color: Colors.DisabledGrayText,
     textDecorationLine: 'line-through',
   },
   subtaskDeleteBtn: {
@@ -1282,18 +1294,18 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: Fonts.poppins.regular,
     fontSize: ResponsivePixels.size13,
-    color: '#1B1C19',
-    backgroundColor: '#FAF8F5',
+    color: Colors.RegiusInk,
+    backgroundColor: Colors.CreamSurfaceAlt,
     borderWidth: 1,
-    borderColor: '#EDE9E0',
+    borderColor: Colors.TaskDetailDivider,
     paddingHorizontal: ResponsivePixels.size12,
     paddingVertical: ResponsivePixels.size8,
     borderRadius: ResponsivePixels.size12,
   },
   addSubtaskInputDark: {
-    backgroundColor: '#252932',
-    borderColor: '#333742',
-    color: '#FFFFFF',
+    backgroundColor: Colors.DarkCheckboxUnchecked,
+    borderColor: Colors.DarkBorderSlate,
+    color: Colors.PureWhite,
   },
   addSubtaskBtn: {
     width: ResponsivePixels.size36,
@@ -1304,25 +1316,25 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   parametersCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     padding: ResponsivePixels.size16,
     borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
-    borderColor: '#EAE6DD',
+    borderColor: Colors.TaskDetailBorderWarm,
     gap: ResponsivePixels.size12,
   },
   parametersCardDark: {
-    backgroundColor: '#1E2228',
-    borderColor: '#2C3035',
+    backgroundColor: Colors.DarkCardBackground,
+    borderColor: Colors.CarbonSlate,
   },
   parametersTitle: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size11,
-    color: '#7E838F',
+    color: Colors.MutedSlateSubtext,
     letterSpacing: 0.6,
   },
   parametersTitleDark: {
-    color: '#A3A8B1',
+    color: Colors.SteelMist,
   },
   parametersGrid: {
     flexDirection: 'row',
@@ -1340,12 +1352,12 @@ const styles = StyleSheet.create({
   parameterLabel: {
     fontFamily: Fonts.poppins.regular,
     fontSize: ResponsivePixels.size11,
-    color: '#8E8E93',
+    color: Colors.DisabledGrayText,
   },
   parameterValue: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: ResponsivePixels.size13,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
   },
   deleteSection: {
     marginTop: ResponsivePixels.size4,
@@ -1356,14 +1368,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: ResponsivePixels.size8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
-    borderColor: '#FECDD3',
+    borderColor: Colors.CategoryRoseBorder,
     paddingVertical: ResponsivePixels.size13,
     borderRadius: ResponsivePixels.size18,
     ...Platform.select({
       ios: {
-        shadowColor: '#EF4444',
+        shadowColor: Colors.CategoryRedAccent,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.08,
         shadowRadius: 6,
@@ -1374,22 +1386,22 @@ const styles = StyleSheet.create({
     }),
   },
   deleteBtnDark: {
-    backgroundColor: '#1E2228',
-    borderColor: '#5C2227',
+    backgroundColor: Colors.DarkCardBackground,
+    borderColor: Colors.TaskDangerDarkBorder,
   },
   deleteBtnText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: ResponsivePixels.size13,
-    color: '#EF4444',
+    color: Colors.CategoryRedAccent,
   },
   textWhite: {
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
   textLight: {
-    color: '#D1D5DB',
+    color: Colors.Gray300,
   },
   textMuted: {
-    color: '#8E8E93',
+    color: Colors.DisabledGrayText,
   },
 });
 

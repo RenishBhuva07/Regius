@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Mic, Play, Square, Check } from 'lucide-react-native';
 import { Fonts } from '../../../../Theme/fonts';
-import { Colors } from '../../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../../Assets/StyleUtilities/Colors';
 import { Badge } from '../../../../Common/Badge';
 import { VoiceOption } from '../../Components/types';
 import { isLightColor } from '../../../../Theme/ThemeContext';
@@ -30,10 +30,10 @@ export const VoiceCardItem: React.FC<VoiceCardItemProps> = React.memo(
     onSelectVoice,
     onTogglePreview,
     isDarkMode = false,
-    textPrimary = Colors.MidnightInkText,
+    textPrimary = Colors.PureBlack,
     textSecondary = Colors.SubtitleGray,
-    borderLight = '#E8E2D5',
-    surfaceAlt = '#FAF8F5',
+    borderLight = Colors.RingBorder,
+    surfaceAlt = Colors.CreamSurfaceAlt,
     themeAccent = Colors.LavenderPurple,
     cardBg,
   }) => {
@@ -45,8 +45,8 @@ export const VoiceCardItem: React.FC<VoiceCardItemProps> = React.memo(
           styles.voiceItemRow,
           isSelected && {
             backgroundColor: isCardLight
-              ? 'rgba(0, 70, 67, 0.08)'
-              : '#22283A',
+              ? withAlpha(Colors.CyprusTeal, 0.08)
+              : Colors.VoiceCardDarkSelectedBg,
           },
         ]}
       >
@@ -62,7 +62,7 @@ export const VoiceCardItem: React.FC<VoiceCardItemProps> = React.memo(
                 backgroundColor: isSelected
                   ? themeAccent
                   : surfaceAlt,
-                borderColor: isSelected ? '#FFFFFF' : borderLight,
+                borderColor: isSelected ? Colors.PureWhite : borderLight,
               },
             ]}
           >
@@ -71,8 +71,8 @@ export const VoiceCardItem: React.FC<VoiceCardItemProps> = React.memo(
               color={
                 isSelected
                   ? isLightColor(themeAccent)
-                    ? '#000000'
-                    : '#FFFFFF'
+                    ? Colors.PureBlack
+                    : Colors.PureWhite
                   : textSecondary
               }
               strokeWidth={2.2}
@@ -133,7 +133,7 @@ export const VoiceCardItem: React.FC<VoiceCardItemProps> = React.memo(
 
           {isSelected && (
             <View style={styles.activeCheckBadge}>
-              <Check size={14} color="#FFFFFF" strokeWidth={3} />
+              <Check size={14} color={Colors.PureWhite} strokeWidth={3} />
             </View>
           )}
         </View>

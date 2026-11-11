@@ -9,7 +9,10 @@ import {
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 import { Typography } from '../../../Theme/Typographys';
-import { Colors as StaticColors } from '../../../Assets/StyleUtilities/Colors';
+import {
+  Colors as StaticColors,
+  withAlpha,
+} from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { useSettingsTheme } from './types';
 
@@ -62,22 +65,22 @@ export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
             backgroundColor: cardBg,
             borderColor:
               activeThemeId === 'cyprus_sand'
-                ? '#DDD7CB'
+                ? StaticColors.CyprusBorderDarkCard
                 : isDarkMode
-                ? 'rgba(255, 255, 255, 0.12)'
-                : '#FFFFFF',
+                ? withAlpha(StaticColors.PureWhite, 0.12)
+                : StaticColors.PureWhite,
             borderBottomColor:
               activeThemeId === 'cyprus_sand'
-                ? '#C8C2B4'
+                ? StaticColors.SandstoneBorder
                 : isDarkMode
-                ? '#171A20'
-                : '#E2DCD0',
+                ? StaticColors.DarkSurfaceDeep
+                : StaticColors.WarmStoneBorder,
             shadowColor:
               activeThemeId === 'cyprus_sand'
-                ? 'rgba(0, 70, 67, 0.16)'
+                ? withAlpha(StaticColors.CyprusTeal, 0.16)
                 : isDarkMode
-                ? '#000000'
-                : 'rgba(131, 131, 214, 0.12)',
+                ? StaticColors.PureBlack
+                : withAlpha(StaticColors.LavenderPurple, 0.12),
           },
         ]}
       >
@@ -99,7 +102,11 @@ export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
             <View
               style={[
                 styles.iconSquare,
-                { backgroundColor: isDarkMode ? '#2C3035' : '#EFF2FE' },
+                {
+                  backgroundColor: isDarkMode
+                    ? StaticColors.CarbonSlate
+                    : StaticColors.MindfulLightBg,
+                },
               ]}
             >
               <HelpCircle
@@ -140,10 +147,18 @@ export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
             <View
               style={[
                 styles.iconSquare,
-                { backgroundColor: isDarkMode ? '#2C3035' : '#EDFDF5' },
+                {
+                  backgroundColor: isDarkMode
+                    ? StaticColors.CarbonSlate
+                    : StaticColors.WellnessLightBg,
+                },
               ]}
             >
-              <Shield size={18} color="#21AF85" strokeWidth={2.2} />
+              <Shield
+                size={18}
+                color={StaticColors.LuminousGreen}
+                strokeWidth={2.2}
+              />
             </View>
             <View style={styles.settingItemMeta}>
               <Text style={[styles.settingItemTitle, { color: textPrimary }]}>
@@ -177,10 +192,18 @@ export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
             <View
               style={[
                 styles.iconSquare,
-                { backgroundColor: isDarkMode ? '#2C3035' : '#FFFCEB' },
+                {
+                  backgroundColor: isDarkMode
+                    ? StaticColors.CarbonSlate
+                    : StaticColors.WorkLightBg,
+                },
               ]}
             >
-              <Crown size={18} color="#F5C518" strokeWidth={2.2} />
+              <Crown
+                size={18}
+                color={StaticColors.AccentYellow}
+                strokeWidth={2.2}
+              />
             </View>
             <View style={styles.settingItemMeta}>
               <Text style={[styles.settingItemTitle, { color: textPrimary }]}>
@@ -205,13 +228,26 @@ export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
             <View
               style={[
                 styles.iconSquare,
-                { backgroundColor: isDarkMode ? '#2C3035' : '#FFF0F0' },
+                {
+                  backgroundColor: isDarkMode
+                    ? StaticColors.CarbonSlate
+                    : StaticColors.VoiceBellaBg,
+                },
               ]}
             >
-              <LogOut size={18} color="#FF3B30" strokeWidth={2.2} />
+              <LogOut
+                size={18}
+                color={StaticColors.CrimsonPulse}
+                strokeWidth={2.2}
+              />
             </View>
             <View style={styles.settingItemMeta}>
-              <Text style={[styles.settingItemTitle, { color: '#FF3B30' }]}>
+              <Text
+                style={[
+                  styles.settingItemTitle,
+                  { color: StaticColors.CrimsonPulse },
+                ]}
+              >
                 Sign Out of Regius
               </Text>
               <Text style={[styles.settingItemDesc, { color: textSecondary }]}>

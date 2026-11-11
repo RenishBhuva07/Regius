@@ -295,9 +295,17 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
             ListEmptyComponent={
               <View style={styles.emptyContainer}>
                 {activeTab === 'completed' ? (
-                  <CheckCircle2 size={38} color="#10B981" strokeWidth={1.6} />
+                  <CheckCircle2
+                    size={38}
+                    color={Colors.ToastSuccessAccent}
+                    strokeWidth={1.6}
+                  />
                 ) : (
-                  <CheckSquare size={38} color="#D1D5DB" strokeWidth={1.5} />
+                  <CheckSquare
+                    size={38}
+                    color={Colors.Gray300}
+                    strokeWidth={1.5}
+                  />
                 )}
                 <Text style={[styles.emptyTitle, { color: textPrimary }]}>
                   {activeTab === 'completed'
@@ -315,7 +323,11 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
                     style={styles.addEmptyBtn}
                     onPress={openTaskModal}
                   >
-                    <Plus size={14} color="#FFFFFF" strokeWidth={2.4} />
+                    <Plus
+                      size={14}
+                      color={Colors.PureWhite}
+                      strokeWidth={2.4}
+                    />
                     <Text style={styles.addEmptyBtnText}>Add Task</Text>
                   </TouchableOpacity>
                 )}
@@ -410,7 +422,7 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.DefaultWhite,
+    backgroundColor: Colors.PureWhite,
   },
   scroll: {
     flex: 1,
@@ -430,9 +442,9 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     borderWidth: 1.5,
-    borderTopColor: '#FAF6EE',
-    borderLeftColor: '#EFE9DE',
-    borderRightColor: '#EFE9DE',
+    borderTopColor: Colors.WarmNavBevelTop,
+    borderLeftColor: Colors.WarmNavBevelSide,
+    borderRightColor: Colors.WarmNavBevelSide,
     borderBottomWidth: 0,
     paddingHorizontal: 8,
     paddingTop: 40,
@@ -441,7 +453,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     ...Platform.select({
       ios: {
-        shadowColor: '#1B1C19',
+        shadowColor: Colors.RegiusInk,
         shadowOffset: { width: 0, height: -4 },
         shadowOpacity: 0.12,
         shadowRadius: 12,
@@ -468,14 +480,14 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     borderRadius: 22,
     borderWidth: 1.5,
-    borderTopColor: '#4A4E5C',
-    borderLeftColor: '#363944',
-    borderRightColor: '#363944',
+    borderTopColor: Colors.DarkBevelTop,
+    borderLeftColor: Colors.DarkBorder,
+    borderRightColor: Colors.DarkBorder,
     borderBottomWidth: 4,
-    borderBottomColor: '#090A0D',
+    borderBottomColor: Colors.DarkBevelAbyss,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#0B0D11',
+    shadowColor: Colors.DarkShadowAnchor,
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.32,
     shadowRadius: 8,
@@ -486,14 +498,14 @@ const styles = StyleSheet.create({
   flowTitle: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 14.5,
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
     letterSpacing: -0.1,
     textAlign: 'center',
   },
   flowSubtitle: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 10.5,
-    color: '#B6B9C3',
+    color: Colors.CoolSilverSubtitle,
     marginTop: 1,
     textAlign: 'center',
   },
@@ -508,14 +520,14 @@ const styles = StyleSheet.create({
     borderRadius: 21,
     backgroundColor: Colors.NeroBlack,
     borderWidth: 1.5,
-    borderTopColor: '#4A4E5C',
-    borderLeftColor: '#363944',
-    borderRightColor: '#363944',
+    borderTopColor: Colors.DarkBevelTop,
+    borderLeftColor: Colors.DarkBorder,
+    borderRightColor: Colors.DarkBorder,
     borderBottomWidth: 3.5,
-    borderBottomColor: '#090A0D',
+    borderBottomColor: Colors.DarkBevelAbyss,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#0B0D11',
+    shadowColor: Colors.DarkShadowAnchor,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.32,
     shadowRadius: 6,
@@ -539,7 +551,7 @@ const styles = StyleSheet.create({
 
   // Select All Tasks Button
   selectAllBtn: {
-    backgroundColor: '#1F2228',
+    backgroundColor: Colors.MidnightCharcoal,
     borderRadius: 50,
     paddingVertical: ResponsivePixels.size14,
     paddingHorizontal: ResponsivePixels.size36,
@@ -550,7 +562,7 @@ const styles = StyleSheet.create({
     marginBottom: ResponsivePixels.size24,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.15,
         shadowRadius: 8,
@@ -562,7 +574,7 @@ const styles = StyleSheet.create({
   },
   selectAllText: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     fontSize: 13.5,
   },
 
@@ -586,7 +598,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.bold,
     fontSize: 34,
     lineHeight: 42,
-    color: '#8E95A5',
+    color: Colors.MilestoneSlate,
     letterSpacing: -1.2,
   },
   craftedWithRow: {
@@ -598,7 +610,7 @@ const styles = StyleSheet.create({
   craftedWithText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 14,
-    color: '#8E95A5',
+    color: Colors.MilestoneSlate,
   },
   craftedWithHeart: {
     fontSize: 13.5,
@@ -620,13 +632,13 @@ const styles = StyleSheet.create({
   },
   emptyTitle: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    color: '#374151',
+    color: Colors.Gray700,
     fontSize: 15,
     marginTop: 6,
   },
   emptySubtitle: {
     ...Typography.bodySmallPoppinsRegular,
-    color: '#9CA3AF',
+    color: Colors.Gray400,
     textAlign: 'center',
     paddingHorizontal: 20,
     lineHeight: 18,
@@ -635,7 +647,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
-    backgroundColor: '#1F2228',
+    backgroundColor: Colors.MidnightCharcoal,
     paddingHorizontal: ResponsivePixels.size20,
     paddingVertical: ResponsivePixels.size10,
     borderRadius: 50,
@@ -643,7 +655,7 @@ const styles = StyleSheet.create({
   },
   addEmptyBtnText: {
     ...Typography.bodySmallPoppinsSemiBold,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     fontSize: 12.5,
   },
 });

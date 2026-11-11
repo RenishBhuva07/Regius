@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Fonts } from '../../../../Theme/fonts';
-import { Colors } from '../../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../../Assets/StyleUtilities/Colors';
 import { Typography } from '../../../../Theme/Typographys';
 import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../../../Common/Badge';
@@ -24,12 +24,12 @@ export const WakeWordPresetCard: React.FC<WakeWordPresetCardProps> = React.memo(
     preset,
     isSelected,
     onSelect,
-    cardBg = Colors.DefaultWhite,
+    cardBg = Colors.PureWhite,
     isDarkMode = false,
-    textPrimary = Colors.MidnightInkText,
+    textPrimary = Colors.PureBlack,
     textSecondary = Colors.SubtitleGray,
-    borderLight = '#E8E2D5',
-    surfaceAlt = '#FAF8F5',
+    borderLight = Colors.RingBorder,
+    surfaceAlt = Colors.CreamSurfaceAlt,
   }) => {
     return (
       <TouchableOpacity
@@ -41,18 +41,18 @@ export const WakeWordPresetCard: React.FC<WakeWordPresetCardProps> = React.memo(
             borderColor: isSelected
               ? Colors.LavenderPurple
               : isDarkMode
-              ? 'rgba(255, 255, 255, 0.08)'
-              : '#FFFFFF',
+              ? withAlpha(Colors.PureWhite, 0.08)
+              : Colors.PureWhite,
             borderBottomColor: isSelected
-              ? '#4D4DB8'
+              ? Colors.LavenderDeepFallback
               : isDarkMode
-              ? '#171A20'
-              : '#E2DCD0',
+              ? Colors.DarkSurfaceDeep
+              : Colors.WarmStoneBorder,
             shadowColor: isSelected
               ? Colors.LavenderPurple
               : isDarkMode
-              ? '#000000'
-              : 'rgba(131, 131, 214, 0.1)',
+              ? Colors.PureBlack
+              : withAlpha(Colors.LavenderPurple, 0.1),
           },
         ]}
         onPress={onSelect}

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 import { Fonts } from '../../../../Theme/fonts';
+import { Colors, withAlpha } from '../../../../Assets/StyleUtilities/Colors';
 
 export interface VoiceWaveVisualizerProps {
   isActive: boolean;
@@ -18,13 +19,13 @@ export const VoiceWaveVisualizer: React.FC<VoiceWaveVisualizerProps> =
     const waveAnim7 = useRef(new Animated.Value(0.35)).current;
 
     const waveAnims = [
-      { anim: waveAnim1, color: '#8383D6' },
-      { anim: waveAnim2, color: '#F5C518' },
-      { anim: waveAnim3, color: '#FF8772' },
-      { anim: waveAnim4, color: '#10B981' },
-      { anim: waveAnim5, color: '#8383D6' },
-      { anim: waveAnim6, color: '#F5C518' },
-      { anim: waveAnim7, color: '#FF8772' },
+      { anim: waveAnim1, color: Colors.LavenderPurple },
+      { anim: waveAnim2, color: Colors.AccentYellow },
+      { anim: waveAnim3, color: Colors.CoralWarmth },
+      { anim: waveAnim4, color: Colors.ToastSuccessAccent },
+      { anim: waveAnim5, color: Colors.LavenderPurple },
+      { anim: waveAnim6, color: Colors.AccentYellow },
+      { anim: waveAnim7, color: Colors.CoralWarmth },
     ];
 
     useEffect(() => {
@@ -187,9 +188,9 @@ export const VoiceWaveVisualizer: React.FC<VoiceWaveVisualizerProps> =
 const styles = StyleSheet.create({
   waveVisualizerContainer: {
     borderRadius: 16,
-    backgroundColor: '#16171E',
+    backgroundColor: Colors.VoiceWaveDarkBg,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
+    borderColor: withAlpha(Colors.PureWhite, 0.12),
     paddingVertical: 14,
     paddingHorizontal: 16,
     alignItems: 'center',
@@ -212,7 +213,7 @@ const styles = StyleSheet.create({
   waveStatusLabel: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 11,
-    color: '#A3A8B1',
+    color: Colors.SteelMist,
   },
 });
 

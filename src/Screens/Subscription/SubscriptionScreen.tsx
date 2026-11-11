@@ -58,11 +58,14 @@ export const SubscriptionScreen: React.FC = () => {
   const { scrollY, isScrolled, handleScroll } = useScrollReactiveHeader();
 
   const bgMain =
-    themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
+    themeColors.Background ||
+    (isDarkMode ? Colors.DarkBackground : Colors.CreamBackground);
   const textPrimary =
-    themeColors.PrimaryText || (isDarkMode ? '#FFFFFF' : '#111111');
+    themeColors.PrimaryText ||
+    (isDarkMode ? Colors.PureWhite : Colors.NoirBlack);
   const textSecondary =
-    themeColors.SecondaryText || (isDarkMode ? '#A3A8B1' : '#666665');
+    themeColors.SecondaryText ||
+    (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray);
 
   const selectedPlan = plans.find(p => p.id === selectedPlanId) || plans[0];
 
@@ -185,7 +188,7 @@ export const SubscriptionScreen: React.FC = () => {
             accessibilityLabel="Restore Purchases"
           >
             {isRestoring ? (
-              <ActivityIndicator size="small" color="#F5C518" />
+              <ActivityIndicator size="small" color={Colors.AccentYellow} />
             ) : (
               <Text
                 style={[
@@ -221,7 +224,11 @@ export const SubscriptionScreen: React.FC = () => {
 
         {/* Sculpted Plan Selector */}
         <View style={styles.sectionHeaderRow}>
-          <Sparkles size={18} color="#F5C518" strokeWidth={2.4} />
+          <Sparkles
+            size={18}
+            color={Colors.AccentYellow}
+            strokeWidth={2.4}
+          />
           <Text style={[styles.sectionTitle, { color: textPrimary }]}>
             Choose Your Plan
           </Text>
@@ -270,17 +277,27 @@ export const SubscriptionScreen: React.FC = () => {
           }
           icon={
             isPremium ? (
-              <CheckCircle2 size={18} color="#1F2228" strokeWidth={2.4} />
+              <CheckCircle2
+                size={18}
+                color={Colors.MidnightCharcoal}
+                strokeWidth={2.4}
+              />
             ) : (
-              <Crown size={18} color="#1F2228" strokeWidth={2.4} />
+              <Crown
+                size={18}
+                color={Colors.MidnightCharcoal}
+                strokeWidth={2.4}
+              />
             )
           }
           loading={isProcessing}
           disabled={isProcessing}
           variant="gold"
-          backgroundColor={isPremium ? '#EDFDF5' : '#F5C518'}
-          textColor="#1F2228"
-          shadowColor={isPremium ? '#52D22E' : '#F5C518'}
+          backgroundColor={
+            isPremium ? Colors.WellnessLightBg : Colors.AccentYellow
+          }
+          textColor={Colors.MidnightCharcoal}
+          shadowColor={isPremium ? Colors.AccentGreen : Colors.AccentYellow}
           onPress={handlePurchase}
           accessibilityLabel={
             isPremium
@@ -316,7 +333,7 @@ const styles = StyleSheet.create({
     letterSpacing: -0.3,
   },
   headerTitleScrolled: {
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
   },
   restoreBtn: {
     paddingVertical: 6,
@@ -325,10 +342,10 @@ const styles = StyleSheet.create({
   restoreBtnText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 13,
-    color: '#D4AF37',
+    color: Colors.ObsidianGoldAntique,
   },
   restoreBtnTextScrolled: {
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
   },
   scroll: {
     flex: 1,
@@ -361,15 +378,15 @@ const styles = StyleSheet.create({
   cancelSubBtnText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 12,
-    color: '#EF4444',
+    color: Colors.CategoryRedAccent,
   },
   ctaButton: {
-    backgroundColor: '#F5C518',
+    backgroundColor: Colors.AccentYellow,
     borderRadius: 28,
     paddingVertical: 15,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#F5C518',
+    shadowColor: Colors.AccentYellow,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.35,
     shadowRadius: 8,
@@ -377,8 +394,8 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   ctaButtonActive: {
-    backgroundColor: '#34D399',
-    shadowColor: '#34D399',
+    backgroundColor: Colors.ToastSuccessCardBevelLight,
+    shadowColor: Colors.ToastSuccessCardBevelLight,
   },
   ctaContentRow: {
     flexDirection: 'row',
@@ -388,7 +405,7 @@ const styles = StyleSheet.create({
   ctaButtonText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 15,
-    color: '#1F2228',
+    color: Colors.MidnightCharcoal,
     letterSpacing: 0.2,
   },
   legalMicrocopy: {

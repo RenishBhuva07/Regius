@@ -182,12 +182,14 @@ export const Typography = {
 };
 
 import { Platform } from 'react-native';
-import { Colors } from '../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 
 export const ShadowStyles = {
   shadow: {
     shadowColor:
-      Platform.OS === 'android' ? Colors.FogGrey : 'rgba(0,0,0,0.07)',
+      Platform.OS === 'android'
+        ? Colors.FogGrey
+        : withAlpha(Colors.PureBlack, 0.07),
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 1,
     shadowRadius: 10,

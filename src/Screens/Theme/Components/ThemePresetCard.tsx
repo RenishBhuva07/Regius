@@ -4,7 +4,7 @@ import { CheckCircle2, Lock, Check } from 'lucide-react-native';
 
 import { Fonts } from '../../../Theme/fonts';
 import { Typography } from '../../../Theme/Typographys';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../../Common/Badge';
 import { ThemeOption, isLightColor } from '../../../Theme/ThemeContext';
@@ -31,13 +31,13 @@ export const ThemePresetCard: React.FC<ThemePresetCardProps> = React.memo(
     onPressLocked,
     onPressSwatch,
   }) => {
-    const cardBg = isDarkMode ? '#1E2228' : Colors.DefaultWhite;
-    const textPrimary = isDarkMode
-      ? Colors.PureWhiteText
-      : Colors.MidnightInkText;
-    const textSecondary = isDarkMode ? '#A3A8B1' : Colors.SubtitleGray;
-    const borderLight = isDarkMode ? '#2C3035' : '#E8E2D5';
-    const surfaceAlt = isDarkMode ? '#171A1F' : '#FAF8F5';
+    const cardBg = isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite;
+    const textPrimary = isDarkMode ? Colors.PureWhite : Colors.PureBlack;
+    const textSecondary = isDarkMode ? Colors.SteelMist : Colors.SubtitleGray;
+    const borderLight = isDarkMode ? Colors.CarbonSlate : Colors.RingBorder;
+    const surfaceAlt = isDarkMode
+      ? Colors.DarkSurfaceAlt
+      : Colors.CreamSurfaceAlt;
 
     return (
       <View
@@ -48,18 +48,18 @@ export const ThemePresetCard: React.FC<ThemePresetCardProps> = React.memo(
             borderColor: isSelected
               ? theme.accent
               : isDarkMode
-              ? 'rgba(255, 255, 255, 0.12)'
-              : '#FFFFFF',
+              ? withAlpha(Colors.PureWhite, 0.12)
+              : Colors.PureWhite,
             borderBottomColor: isSelected
               ? theme.accent
               : isDarkMode
-              ? '#171A20'
-              : '#E2DCD0',
+              ? Colors.DarkSurfaceDeep
+              : Colors.WarmStoneBorder,
             shadowColor: isSelected
               ? theme.accent
               : isDarkMode
-              ? '#000000'
-              : 'rgba(131, 131, 214, 0.14)',
+              ? Colors.PureBlack
+              : withAlpha(Colors.LavenderPurple, 0.14),
           },
         ]}
       >
@@ -124,8 +124,8 @@ export const ThemePresetCard: React.FC<ThemePresetCardProps> = React.memo(
                   {
                     backgroundColor: color.hex,
                     borderColor: isLightColor(color.hex)
-                      ? 'rgba(0, 0, 0, 0.18)'
-                      : 'rgba(255, 255, 255, 0.25)',
+                      ? withAlpha(Colors.PureBlack, 0.18)
+                      : withAlpha(Colors.PureWhite, 0.25),
                   },
                 ]}
               />
@@ -149,16 +149,16 @@ export const ThemePresetCard: React.FC<ThemePresetCardProps> = React.memo(
               styles.lockedInfoBanner,
               {
                 backgroundColor: isDarkMode
-                  ? 'rgba(131, 131, 214, 0.12)'
-                  : '#F2F0FF',
+                  ? withAlpha(Colors.LavenderPurple, 0.12)
+                  : Colors.ThemeLockBannerLightBg,
                 borderColor: isDarkMode
-                  ? 'rgba(131, 131, 214, 0.28)'
-                  : '#D7D4F5',
+                  ? withAlpha(Colors.LavenderPurple, 0.28)
+                  : Colors.ThemeLockBannerLightBorder,
               },
             ]}
             onPress={() => onPressLocked(theme)}
           >
-            <Lock size={13} color="#8383D6" strokeWidth={2.4} />
+            <Lock size={13} color={Colors.LavenderPurple} strokeWidth={2.4} />
             <Text style={styles.lockedInfoText}>
               Unlocks at Tier {theme.requiredTierLevel} (
               {reqTierTitle || 'Milestone'}) • Tap for details
@@ -170,7 +170,11 @@ export const ThemePresetCard: React.FC<ThemePresetCardProps> = React.memo(
         <View style={styles.cardActionRow}>
           {isSelected ? (
             <View style={styles.activeAppliedRow}>
-              <CheckCircle2 size={16} color="#21AF85" strokeWidth={2.4} />
+              <CheckCircle2
+                size={16}
+                color={Colors.LuminousGreen}
+                strokeWidth={2.4}
+              />
               <Text style={styles.activeAppliedText}>
                 Active Palette Applied
               </Text>
@@ -182,7 +186,7 @@ export const ThemePresetCard: React.FC<ThemePresetCardProps> = React.memo(
                 styles.applyButtonPill,
                 {
                   backgroundColor: isDarkMode
-                    ? '#FFFFFF'
+                    ? Colors.PureWhite
                     : Colors.MidnightCharcoal,
                 },
               ]}
@@ -192,14 +196,14 @@ export const ThemePresetCard: React.FC<ThemePresetCardProps> = React.memo(
             >
               <Check
                 size={14}
-                color={isDarkMode ? '#000000' : Colors.PureWhiteText}
+                color={isDarkMode ? Colors.PureBlack : Colors.PureWhite}
                 strokeWidth={2.4}
               />
               <Text
                 style={[
                   styles.applyButtonText,
                   {
-                    color: isDarkMode ? '#000000' : Colors.PureWhiteText,
+                    color: isDarkMode ? Colors.PureBlack : Colors.PureWhite,
                   },
                 ]}
               >
@@ -212,15 +216,17 @@ export const ThemePresetCard: React.FC<ThemePresetCardProps> = React.memo(
               style={[
                 styles.unlockButtonPill,
                 {
-                  backgroundColor: isDarkMode ? '#2A263D' : '#F5F3FF',
-                  borderColor: '#8383D6',
+                  backgroundColor: isDarkMode
+                    ? Colors.ThemeUnlockPillDarkBg
+                    : Colors.RadarPurpleLightBg,
+                  borderColor: Colors.LavenderPurple,
                 },
               ]}
               onPress={() => onPressLocked(theme)}
               accessibilityRole="button"
               accessibilityLabel={`View unlock requirements for ${theme.name}`}
             >
-              <Lock size={13} color="#8383D6" strokeWidth={2.4} />
+              <Lock size={13} color={Colors.LavenderPurple} strokeWidth={2.4} />
               <Text style={styles.unlockButtonText}>Unlock Requirements</Text>
             </TouchableOpacity>
           )}
@@ -292,7 +298,7 @@ const styles = StyleSheet.create({
     height: 38,
     borderRadius: 19,
     borderWidth: 1.5,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.18,
     shadowRadius: 3,
@@ -321,7 +327,7 @@ const styles = StyleSheet.create({
   lockedInfoText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 11,
-    color: '#8383D6',
+    color: Colors.LavenderPurple,
     flex: 1,
   },
   cardActionRow: {
@@ -336,12 +342,12 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 20,
-    backgroundColor: 'rgba(33, 175, 133, 0.12)',
+    backgroundColor: withAlpha(Colors.LuminousGreen, 0.12),
   },
   activeAppliedText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 12,
-    color: '#21AF85',
+    color: Colors.LuminousGreen,
   },
   applyButtonPill: {
     flexDirection: 'row',
@@ -350,7 +356,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 20,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 4,
@@ -372,7 +378,7 @@ const styles = StyleSheet.create({
   unlockButtonText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 11.5,
-    color: '#8383D6',
+    color: Colors.LavenderPurple,
   },
 });
 

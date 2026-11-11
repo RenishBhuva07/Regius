@@ -22,6 +22,10 @@ import Toast from 'react-native-toast-message';
 import { Typography } from '../../../Theme/Typographys';
 import { Fonts } from '../../../Theme/fonts';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
+import {
+  Colors as StaticColors,
+  withAlpha,
+} from '../../../Assets/StyleUtilities/Colors';
 import { useSettingsTheme } from './types';
 
 interface StorageSectionProps {
@@ -106,7 +110,11 @@ export const StorageSection: React.FC<StorageSectionProps> = ({
     <>
       <View style={styles.sectionHeaderRow}>
         <View style={styles.sectionTitleWithIcon}>
-          <Database size={18} color="#165DFF" strokeWidth={2.4} />
+          <Database
+            size={18}
+            color={StaticColors.PrimaryBlue}
+            strokeWidth={2.4}
+          />
           <Text style={[styles.sectionTitle, { color: canvasTextPrimary }]}>
             Cloud & Data Storage
           </Text>
@@ -121,22 +129,22 @@ export const StorageSection: React.FC<StorageSectionProps> = ({
             backgroundColor: cardBg,
             borderColor:
               activeThemeId === 'cyprus_sand'
-                ? '#DDD7CB'
+                ? StaticColors.CyprusBorderDarkCard
                 : isDarkMode
-                ? 'rgba(255, 255, 255, 0.12)'
-                : '#FFFFFF',
+                ? withAlpha(StaticColors.PureWhite, 0.12)
+                : StaticColors.PureWhite,
             borderBottomColor:
               activeThemeId === 'cyprus_sand'
-                ? '#C8C2B4'
+                ? StaticColors.SandstoneBorder
                 : isDarkMode
-                ? '#171A20'
-                : '#E2DCD0',
+                ? StaticColors.DarkSurfaceDeep
+                : StaticColors.WarmStoneBorder,
             shadowColor:
               activeThemeId === 'cyprus_sand'
-                ? 'rgba(0, 70, 67, 0.16)'
+                ? withAlpha(StaticColors.CyprusTeal, 0.16)
                 : isDarkMode
-                ? '#000000'
-                : 'rgba(22, 93, 255, 0.12)',
+                ? StaticColors.PureBlack
+                : withAlpha(StaticColors.PrimaryBlue, 0.12),
           },
         ]}
       >
@@ -146,10 +154,18 @@ export const StorageSection: React.FC<StorageSectionProps> = ({
             <View
               style={[
                 styles.iconSquare,
-                { backgroundColor: isDarkMode ? '#2C3035' : '#EFF4FE' },
+                {
+                  backgroundColor: isDarkMode
+                    ? StaticColors.CarbonSlate
+                    : StaticColors.VoiceGeorgeBg,
+                },
               ]}
             >
-              <Cloud size={18} color="#165DFF" strokeWidth={2.2} />
+              <Cloud
+                size={18}
+                color={StaticColors.PrimaryBlue}
+                strokeWidth={2.2}
+              />
             </View>
             <View style={styles.settingItemMeta}>
               <Text style={[styles.settingItemTitle, { color: textPrimary }]}>
@@ -163,8 +179,11 @@ export const StorageSection: React.FC<StorageSectionProps> = ({
           <Switch
             value={cloudSync}
             onValueChange={onToggleCloudSync}
-            trackColor={{ false: '#D9D9D9', true: '#165DFF' }}
-            thumbColor="#FFFFFF"
+            trackColor={{
+              false: StaticColors.FogGrey,
+              true: StaticColors.PrimaryBlue,
+            }}
+            thumbColor={StaticColors.PureWhite}
           />
         </View>
 
@@ -177,7 +196,11 @@ export const StorageSection: React.FC<StorageSectionProps> = ({
         >
           <View style={styles.lastSyncedInfo}>
             {lastSyncedText === 'just now' ? (
-              <CheckCircle2 size={13} color="#10B981" strokeWidth={2.4} />
+              <CheckCircle2
+                size={13}
+                color={StaticColors.ToastSuccessAccent}
+                strokeWidth={2.4}
+              />
             ) : (
               <Clock size={13} color={textSecondary} strokeWidth={2.2} />
             )}
@@ -186,7 +209,9 @@ export const StorageSection: React.FC<StorageSectionProps> = ({
                 styles.lastSyncedPillText,
                 {
                   color:
-                    lastSyncedText === 'just now' ? '#10B981' : textSecondary,
+                    lastSyncedText === 'just now'
+                      ? StaticColors.ToastSuccessAccent
+                      : textSecondary,
                 },
               ]}
             >
@@ -206,7 +231,11 @@ export const StorageSection: React.FC<StorageSectionProps> = ({
             accessibilityLabel="Sync Now with Cloud"
           >
             <Animated.View style={{ transform: [{ rotate: spin }] }}>
-              <RefreshCw size={12} color="#FFFFFF" strokeWidth={2.4} />
+              <RefreshCw
+                size={12}
+                color={StaticColors.PureWhite}
+                strokeWidth={2.4}
+              />
             </Animated.View>
             <Text style={styles.syncNowBtnText}>
               {isSyncing ? 'Syncing...' : 'Sync Now'}
@@ -226,10 +255,18 @@ export const StorageSection: React.FC<StorageSectionProps> = ({
             <View
               style={[
                 styles.iconSquare,
-                { backgroundColor: isDarkMode ? '#2C3035' : '#FFF0F0' },
+                {
+                  backgroundColor: isDarkMode
+                    ? StaticColors.CarbonSlate
+                    : StaticColors.VoiceBellaBg,
+                },
               ]}
             >
-              <Trash2 size={18} color="#FF3B30" strokeWidth={2.2} />
+              <Trash2
+                size={18}
+                color={StaticColors.CrimsonPulse}
+                strokeWidth={2.2}
+              />
             </View>
             <View style={styles.settingItemMeta}>
               <Text style={[styles.settingItemTitle, { color: textPrimary }]}>
@@ -245,9 +282,15 @@ export const StorageSection: React.FC<StorageSectionProps> = ({
               style={[
                 styles.cachePill,
                 {
-                  backgroundColor: isDarkMode ? '#2C3035' : '#FFFFFF',
-                  borderColor: isDarkMode ? '#3A3F46' : '#FFFFFF',
-                  borderBottomColor: isDarkMode ? '#1E2126' : '#D5D0C5',
+                  backgroundColor: isDarkMode
+                    ? StaticColors.CarbonSlate
+                    : StaticColors.PureWhite,
+                  borderColor: isDarkMode
+                    ? StaticColors.DarkSoftLinen
+                    : StaticColors.PureWhite,
+                  borderBottomColor: isDarkMode
+                    ? StaticColors.DarkSectionDivider
+                    : StaticColors.HomeIndicator,
                 },
               ]}
             >
@@ -346,15 +389,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    backgroundColor: '#165DFF',
-    borderColor: '#FFFFFF',
+    backgroundColor: StaticColors.PrimaryBlue,
+    borderColor: StaticColors.PureWhite,
     borderWidth: 1,
     borderBottomWidth: 2.2,
-    borderBottomColor: '#0E3DA6',
+    borderBottomColor: StaticColors.PrimaryBlueBevel,
     paddingHorizontal: 12,
     paddingVertical: 5.5,
     borderRadius: 16,
-    shadowColor: '#165DFF',
+    shadowColor: StaticColors.PrimaryBlue,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 3.5,
@@ -366,7 +409,7 @@ const styles = StyleSheet.create({
   syncNowBtnText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 11,
-    color: '#FFFFFF',
+    color: StaticColors.PureWhite,
     letterSpacing: 0.2,
   },
   settingItemRight: {
@@ -380,7 +423,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     borderWidth: 1,
     borderBottomWidth: 2,
-    shadowColor: '#000000',
+    shadowColor: StaticColors.PureBlack,
     shadowOffset: { width: 0, height: 1.5 },
     shadowOpacity: 0.1,
     shadowRadius: 2.5,
@@ -389,7 +432,7 @@ const styles = StyleSheet.create({
   cachePillText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 11,
-    color: '#FF3B30',
+    color: StaticColors.CrimsonPulse,
   },
   itemDivider: {
     height: 1,

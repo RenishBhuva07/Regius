@@ -4,6 +4,7 @@ import { Edit3, Award, ChevronRight } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
 import Colors, {
   Colors as StaticColors,
+  withAlpha,
 } from '../../../Assets/StyleUtilities/Colors';
 import { SVGS } from '../../../Assets/Images';
 import { Badge } from '../../../Common/Badge';
@@ -92,7 +93,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
               accessibilityRole="button"
               accessibilityLabel="Edit Profile"
             >
-              <Edit3 size={14} color="#FFFFFF" strokeWidth={2.2} />
+              <Edit3 size={14} color={Colors.PureWhite} strokeWidth={2.2} />
               <Text style={styles.editProfileBtnText}>Edit</Text>
             </TouchableOpacity>
           </View>
@@ -119,7 +120,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
                 <View style={styles.milestoneLeftInfo}>
                   <Award
                     size={15}
-                    color={milestoneTier.accentColor || '#F5C518'}
+                    color={milestoneTier.accentColor || Colors.AccentYellow}
                     strokeWidth={2.4}
                   />
                   <Text style={styles.milestoneLevelText}>
@@ -129,7 +130,11 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
                 </View>
                 <View style={styles.milestoneXpWrapper}>
                   <Text style={styles.milestoneXpText}>{milestoneXp} XP</Text>
-                  <ChevronRight size={13} color="#D4D2D6" strokeWidth={2} />
+                  <ChevronRight
+                    size={13}
+                    color={Colors.BriefingSilverText}
+                    strokeWidth={2}
+                  />
                 </View>
               </View>
 
@@ -143,7 +148,8 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
                         6,
                         Math.min(100, Math.round(milestoneProgress * 100)),
                       )}%`,
-                      backgroundColor: milestoneTier.accentColor || '#F5C518',
+                      backgroundColor:
+                        milestoneTier.accentColor || Colors.AccentYellow,
                     },
                   ]}
                 />
@@ -190,7 +196,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
 
 const styles = StyleSheet.create({
   cardShadowWrapper: {
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.28,
     shadowRadius: 18,
@@ -204,7 +210,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     overflow: 'hidden',
     borderWidth: 4,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: withAlpha(Colors.PureWhite, 0.9),
   },
   cardContent: {
     position: 'relative',
@@ -223,8 +229,8 @@ const styles = StyleSheet.create({
     height: 56,
     borderRadius: 28,
     borderWidth: 2.5,
-    borderColor: '#F5C518',
-    backgroundColor: '#1E2128',
+    borderColor: Colors.AccentYellow,
+    backgroundColor: Colors.DarkProfileCardBg,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
@@ -243,12 +249,12 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.ranade.bold,
     fontSize: 17,
     lineHeight: 22,
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
   },
   profileEmail: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 12,
-    color: '#A19FA3',
+    color: Colors.BriefingMutedSilver,
     marginTop: 1,
   },
   roleBadgeWrapper: {
@@ -262,39 +268,39 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 7,
     borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.12),
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.22)',
+    borderColor: withAlpha(Colors.PureWhite, 0.22),
     alignSelf: 'center',
   },
   editProfileBtnText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 12.5,
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
   },
   bioSnippet: {
     marginTop: 12,
     paddingHorizontal: 14,
     paddingVertical: 9,
     borderRadius: 14,
-    backgroundColor: 'rgba(255, 255, 255, 0.07)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.07),
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: withAlpha(Colors.PureWhite, 0.08),
   },
   bioSnippetText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 12,
     lineHeight: 17,
-    color: '#D4D2D6',
+    color: Colors.BriefingSilverText,
   },
   milestoneBanner: {
     marginTop: 12,
     paddingHorizontal: 12,
     paddingVertical: 10,
     borderRadius: 14,
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.06),
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: withAlpha(Colors.PureWhite, 0.1),
   },
   milestoneTopRow: {
     flexDirection: 'row',
@@ -311,7 +317,7 @@ const styles = StyleSheet.create({
   milestoneLevelText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 11.5,
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
   },
   milestoneXpWrapper: {
     flexDirection: 'row',
@@ -321,12 +327,12 @@ const styles = StyleSheet.create({
   milestoneXpText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 11.5,
-    color: '#F5C518',
+    color: Colors.AccentYellow,
   },
   milestoneBarTrack: {
     height: 5,
     borderRadius: 2.5,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.12),
     overflow: 'hidden',
   },
   milestoneBarFill: {
@@ -340,7 +346,7 @@ const styles = StyleSheet.create({
     marginTop: ResponsivePixels.size14,
     paddingTop: ResponsivePixels.size12,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.12)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.12),
   },
   metricItem: {
     alignItems: 'center',
@@ -349,18 +355,18 @@ const styles = StyleSheet.create({
   metricValue: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 16,
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
   },
   metricLabel: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 11,
-    color: '#8E95A5',
+    color: Colors.MilestoneSlate,
     marginTop: 2,
   },
   metricDivider: {
     width: 1,
     height: 24,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.12),
   },
 });
 

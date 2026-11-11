@@ -12,7 +12,7 @@ import { Fonts } from '../../../Theme/fonts';
 import { Typography } from '../../../Theme/Typographys';
 import { ProBadge } from '../../../Common/ProBadge';
 import { BackButton } from '../../../Common/BackButton';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import HeaderPatternSvg from '../../Dashboard/Components/HeaderPatternSvg';
 import { useSettingsTheme } from './types';
 
@@ -47,7 +47,7 @@ export const SettingsHeader: React.FC<SettingsHeaderProps> = ({
   const headerBgColor = activeScrollY.interpolate({
     inputRange: [0, 30],
     outputRange: [
-      'rgba(0, 0, 0, 0)',
+      withAlpha(Colors.PureBlack, 0),
       accentDeep,
     ],
     extrapolate: 'clamp',
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 100,
-    shadowColor: '#201646',
+    shadowColor: Colors.DeepVioletShadow,
     shadowOffset: { width: 0, height: 6 },
     shadowRadius: 7,
   },
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
     includeFontPadding: false,
   },
   headerTitleScrolled: {
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
   },
   headerSubtitle: {
     fontFamily: Fonts.poppins.regular,
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
     lineHeight: 15,
   },
   headerSubtitleScrolled: {
-    color: 'rgba(255, 255, 255, 0.82)',
+    color: withAlpha(Colors.PureWhite, 0.82),
   },
   badgeWrapper: {
     flexShrink: 0,

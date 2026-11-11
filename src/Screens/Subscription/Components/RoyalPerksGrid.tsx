@@ -10,6 +10,7 @@ import {
   Volume2,
 } from 'lucide-react-native';
 
+import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import { Fonts } from '../../../Theme/fonts';
 import { useTheme } from '../../../Theme/ThemeContext';
 
@@ -22,61 +23,61 @@ const PERKS = [
     icon: Volume2,
     title: 'Unlimited Neural TTS Voice',
     desc: 'Kokoro-82M cloud synthesis with zero rate limits, studio-grade clarity, and all 7 voice personas.',
-    accent: '#8383D6',
-    bgLight: '#EFF2FE',
-    bgDark: '#23273A',
-    borderLight: '#D8DBFF',
-    borderDark: '#484E70',
+    accent: Colors.LavenderPurple,
+    bgLight: Colors.MindfulLightBg,
+    bgDark: Colors.VaultMindfulDarkBg,
+    borderLight: Colors.MindfulLightBorder,
+    borderDark: Colors.PerkLavenderDarkBorder,
   },
   {
     icon: Palette,
     title: 'All 8 Luxury Artisan Themes',
     desc: 'Instantly unlock Imperial Obsidian, Midnight Velvet, Tuscan Amber, and all high-tier palettes.',
-    accent: '#F5C518',
-    bgLight: '#FFFCEB',
-    bgDark: '#332918',
-    borderLight: '#FFF5B8',
-    borderDark: '#665126',
+    accent: Colors.AccentYellow,
+    bgLight: Colors.WorkLightBg,
+    bgDark: Colors.VaultAmberDarkBg,
+    borderLight: Colors.WorkLightBorder,
+    borderDark: Colors.PerkAmberDarkBorder,
   },
   {
     icon: Mic,
     title: 'Custom Wake Word Studio',
     desc: 'Create and train custom wake-word phrases with real-time on-device acoustic sensitivity.',
-    accent: '#FF9800',
-    bgLight: '#FFF0DE',
-    bgDark: '#331F18',
-    borderLight: '#FFB86B',
-    borderDark: '#663B26',
+    accent: Colors.AccentAmber,
+    bgLight: Colors.EventLightBg,
+    bgDark: Colors.EventDarkBg,
+    borderLight: Colors.BadgeOrangeBevel,
+    borderDark: Colors.PerkOrangeDarkBorder,
   },
   {
     icon: Zap,
     title: '2x Milestone XP Multiplier',
     desc: 'Earn double XP for every completed task, reminder, and habit to reach Tier 5 Grand Monarch faster.',
-    accent: '#6366F1',
-    bgLight: '#EEF2FF',
-    bgDark: '#242540',
-    borderLight: '#D5DAFD',
-    borderDark: '#424578',
+    accent: Colors.IndigoAccent,
+    bgLight: Colors.PerkIndigoLightBg,
+    bgDark: Colors.PerkIndigoDarkBg,
+    borderLight: Colors.PerkIndigoLightBorder,
+    borderDark: Colors.PerkIndigoDarkBorder,
   },
   {
     icon: ShieldCheck,
     title: 'Encrypted Cloud Sync & Backup',
     desc: 'Continuous zero-knowledge cloud backup across all your devices with instant recovery.',
-    accent: '#21AF85',
-    bgLight: '#EDFDF5',
-    bgDark: '#172B22',
-    borderLight: '#C6FFDD',
-    borderDark: '#2E5B47',
+    accent: Colors.LuminousGreen,
+    bgLight: Colors.WellnessLightBg,
+    bgDark: Colors.PerkGreenDarkBg,
+    borderLight: Colors.WellnessLightBorder,
+    borderDark: Colors.PerkGreenDarkBorder,
   },
   {
     icon: Sparkles,
     title: 'Executive Spoken Briefing',
     desc: 'Start each morning with an artisanal neural audio digest of your day’s schedule and focus rituals.',
-    accent: '#FF8772',
-    bgLight: '#FFF2F0',
-    bgDark: '#362220',
-    borderLight: '#FFD9D4',
-    borderDark: '#6B3E3A',
+    accent: Colors.CoralWarmth,
+    bgLight: Colors.PerkCoralLightBg,
+    bgDark: Colors.PerkCoralDarkBg,
+    borderLight: Colors.PerkCoralLightBorder,
+    borderDark: Colors.PerkCoralDarkBorder,
   },
 ];
 
@@ -84,18 +85,22 @@ export const RoyalPerksGrid: React.FC<RoyalPerksGridProps> = React.memo(
   ({ isDarkMode }) => {
     const { Colors: themeColors } = useTheme();
     const cardBg =
-      themeColors.CardBackground || (isDarkMode ? '#1E2228' : '#FFFFFF');
+      themeColors.CardBackground ||
+      (isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite);
     const textPrimary =
-      themeColors.PrimaryText || (isDarkMode ? '#FFFFFF' : '#111111');
+      themeColors.PrimaryText ||
+      (isDarkMode ? Colors.PureWhite : Colors.NoirBlack);
     const textSecondary =
-      themeColors.SecondaryText || (isDarkMode ? '#A3A8B1' : '#666665');
+      themeColors.SecondaryText ||
+      (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray);
     const borderLight =
-      themeColors.BorderLight || (isDarkMode ? '#2C3035' : '#EAE5D9');
+      themeColors.BorderLight ||
+      (isDarkMode ? Colors.CarbonSlate : Colors.WarmParchmentBorder);
 
     return (
       <View style={styles.container}>
         <View style={styles.sectionHeaderRow}>
-          <Crown size={18} color="#F5C518" strokeWidth={2.4} />
+          <Crown size={18} color={Colors.AccentYellow} strokeWidth={2.4} />
           <Text style={[styles.sectionTitle, { color: textPrimary }]}>
             Everything Included in Royal
           </Text>
@@ -172,7 +177,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     padding: 14,
     gap: 12,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.04,
     shadowRadius: 5,

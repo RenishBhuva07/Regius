@@ -30,7 +30,7 @@ import {
 } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
 import { Typography } from '../../../Theme/Typographys';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../../Theme/useAppTheme';
 import { Badge } from '../../../Common/Badge';
 import { getCutoutCardPath } from '../../../Common/CutoutCardSvg';
@@ -250,7 +250,13 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
       return (
         <Heart
           size={18}
-          color={localChecked ? (isDarkMode ? '#52D22E' : '#1B9A72') : '#52D22E'}
+          color={
+            localChecked
+              ? isDarkMode
+                ? Colors.AccentGreen
+                : Colors.GreenGracious
+              : Colors.AccentGreen
+          }
           strokeWidth={2.2}
         />
       );
@@ -259,7 +265,13 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
       return (
         <Sparkles
           size={18}
-          color={localChecked ? (isDarkMode ? '#52D22E' : '#1B9A72') : '#8383D6'}
+          color={
+            localChecked
+              ? isDarkMode
+                ? Colors.AccentGreen
+                : Colors.GreenGracious
+              : Colors.LavenderPurple
+          }
           strokeWidth={2.2}
         />
       );
@@ -268,7 +280,15 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
       return (
         <Mail
           size={18}
-          color={localChecked ? (isDarkMode ? '#52D22E' : '#1B9A72') : (isDarkMode ? '#A3A8B1' : '#454A53')}
+          color={
+            localChecked
+              ? isDarkMode
+                ? Colors.AccentGreen
+                : Colors.GreenGracious
+              : isDarkMode
+              ? Colors.SteelMist
+              : Colors.DarkIconSlate
+          }
           strokeWidth={2.2}
         />
       );
@@ -277,7 +297,15 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
       return (
         <Users
           size={18}
-          color={localChecked ? (isDarkMode ? '#52D22E' : '#1B9A72') : (isDarkMode ? '#A3A8B1' : '#454A53')}
+          color={
+            localChecked
+              ? isDarkMode
+                ? Colors.AccentGreen
+                : Colors.GreenGracious
+              : isDarkMode
+              ? Colors.SteelMist
+              : Colors.DarkIconSlate
+          }
           strokeWidth={2.2}
         />
       );
@@ -285,7 +313,15 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
     return (
       <Briefcase
         size={18}
-        color={localChecked ? (isDarkMode ? '#52D22E' : '#1B9A72') : (isDarkMode ? '#F5C518' : '#B48216')}
+        color={
+          localChecked
+            ? isDarkMode
+              ? Colors.AccentGreen
+              : Colors.GreenGracious
+            : isDarkMode
+            ? Colors.AccentYellow
+            : Colors.WorkTextAccent
+        }
         strokeWidth={2.2}
       />
     );
@@ -294,35 +330,35 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
   const getCategoryStyles = () => {
     if (task.category === 'sport') {
       return {
-        bg: isDarkMode ? '#162820' : '#F5FDF9',
-        border: isDarkMode ? '#1B9A72' : '#C6FFDD',
-        accent: '#52D22E',
-        shadow: isDarkMode ? '#000000' : '#52D22E',
-        iconBg: isDarkMode ? '#1F382D' : '#EDFDF5',
-        auraColor: '#52D22E',
+        bg: isDarkMode ? Colors.WellnessDarkBg : Colors.WellnessTintLight,
+        border: isDarkMode ? Colors.GreenGracious : Colors.WellnessLightBorder,
+        accent: Colors.AccentGreen,
+        shadow: isDarkMode ? Colors.PureBlack : Colors.AccentGreen,
+        iconBg: isDarkMode ? Colors.WellnessDarkIconBg : Colors.WellnessLightBg,
+        auraColor: Colors.AccentGreen,
       };
     }
     if (task.category === 'habits') {
       return {
-        bg: isDarkMode ? '#202336' : '#F7F8FE',
-        border: isDarkMode ? '#8383D6' : '#D8DBFF',
-        accent: '#8383D6',
-        shadow: isDarkMode ? '#000000' : '#8383D6',
-        iconBg: isDarkMode ? '#2C304A' : '#EFF2FE',
-        auraColor: '#8383D6',
+        bg: isDarkMode ? Colors.MindfulDarkBg : Colors.MindfulTintLight,
+        border: isDarkMode ? Colors.LavenderPurple : Colors.MindfulLightBorder,
+        accent: Colors.LavenderPurple,
+        shadow: isDarkMode ? Colors.PureBlack : Colors.LavenderPurple,
+        iconBg: isDarkMode ? Colors.MindfulDarkIconBg : Colors.MindfulLightBg,
+        auraColor: Colors.LavenderPurple,
       };
     }
     return {
-      bg: isDarkMode ? '#2A2416' : '#FFFDF7',
-      border: isDarkMode ? '#DEAA14' : '#FFF5B8',
-      accent: '#F5C518',
+      bg: isDarkMode ? Colors.WorkDarkBg : Colors.WorkTintCream,
+      border: isDarkMode ? Colors.WorkDarkBorder : Colors.WorkLightBorder,
+      accent: Colors.AccentYellow,
       shadow: isDarkMode
-        ? '#000000'
+        ? Colors.PureBlack
         : task.priority === 'high'
-        ? '#FF3B30'
-        : '#F5C518',
-      iconBg: isDarkMode ? '#38301D' : '#FFFCEB',
-      auraColor: '#F5C518',
+        ? Colors.CrimsonPulse
+        : Colors.AccentYellow,
+      iconBg: isDarkMode ? Colors.WorkDarkIconBg : Colors.WorkLightBg,
+      auraColor: Colors.AccentYellow,
     };
   };
 
@@ -366,7 +402,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
               accessibilityLabel={`View details for ${task.label}`}
             >
               <View style={styles.actionIconAuraDetails}>
-                <Flame size={14} color="#FF9800" strokeWidth={2.6} />
+                <Flame size={14} color={Colors.AccentAmber} strokeWidth={2.6} />
               </View>
               <Text style={styles.actionBtnText}>DETAILS</Text>
             </TouchableOpacity>
@@ -392,7 +428,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
               accessibilityLabel={`Edit ${task.label}`}
             >
               <View style={styles.actionIconAuraEdit}>
-                <Pencil size={13.5} color="#F5C518" strokeWidth={2.6} />
+                <Pencil size={13.5} color={Colors.AccentYellow} strokeWidth={2.6} />
               </View>
               <Text style={styles.actionBtnText}>EDIT</Text>
             </TouchableOpacity>
@@ -413,11 +449,13 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
         <TouchableOpacity
           activeOpacity={0.88}
           onLayout={handleCardLayout}
-          style={[
+            style={[
             styles.card,
             {
               shadowColor: localChecked
-                ? (isDarkMode ? '#000000' : '#D1D5DB')
+                ? isDarkMode
+                  ? Colors.PureBlack
+                  : Colors.Gray300
                 : catStyle.shadow,
             },
           ]}
@@ -458,8 +496,20 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
             </Defs>
             <Path
               d={getCutoutCardPath(cardSize.width, cardSize.height)}
-              fill={localChecked ? (isDarkMode ? '#171A20' : '#FAFAF8') : catStyle.bg}
-              stroke={localChecked ? (isDarkMode ? '#2C3035' : '#ECEAE4') : catStyle.border}
+              fill={
+                localChecked
+                  ? isDarkMode
+                    ? Colors.DarkSurfaceDeep
+                    : Colors.CompletedCardCream
+                  : catStyle.bg
+              }
+              stroke={
+                localChecked
+                  ? isDarkMode
+                    ? Colors.CarbonSlate
+                    : Colors.TimelineBorderWarm
+                  : catStyle.border
+              }
               strokeWidth={1.5}
               strokeLinejoin="round"
             />
@@ -502,12 +552,17 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
               localChecked
                 ? [
                     styles.floatingCheckboxChecked,
-                    isDarkMode && { backgroundColor: '#13281E', borderColor: '#52D22E' },
+                    isDarkMode && {
+                      backgroundColor: Colors.TaskCompletedDarkBg,
+                      borderColor: Colors.AccentGreen,
+                    },
                   ]
                 : [
                     styles.floatingCheckboxUnchecked,
                     {
-                      backgroundColor: isDarkMode ? '#252932' : '#FFFFFF',
+                      backgroundColor: isDarkMode
+                        ? Colors.DarkCheckboxUnchecked
+                        : Colors.PureWhite,
                       borderColor: catStyle.border,
                     },
                   ],
@@ -521,7 +576,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
             {localChecked && (
               <Check
                 size={14}
-                color={isDarkMode ? '#52D22E' : '#1B9A72'}
+                color={isDarkMode ? Colors.AccentGreen : Colors.GreenGracious}
                 strokeWidth={3}
               />
             )}
@@ -535,7 +590,9 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
                   localChecked
                     ? [
                         styles.iconContainerChecked,
-                        isDarkMode && { backgroundColor: '#13281E' },
+                        isDarkMode && {
+                          backgroundColor: Colors.TaskCompletedDarkBg,
+                        },
                       ]
                     : {
                         backgroundColor: catStyle.iconBg,
@@ -551,8 +608,11 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
                 <Text
                   style={[
                     styles.title,
-                    { color: isDarkMode ? textPrimary : '#1B1C19' },
-                    localChecked && (isDarkMode ? { color: '#5C6270' } : styles.titleCompleted),
+                    { color: isDarkMode ? textPrimary : Colors.RegiusInk },
+                    localChecked &&
+                      (isDarkMode
+                        ? { color: Colors.DarkTitleCompleted }
+                        : styles.titleCompleted),
                   ]}
                   numberOfLines={2}
                 >
@@ -563,8 +623,15 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
                   <Text
                     style={[
                       styles.note,
-                      { color: isDarkMode ? textSecondary : '#7E838F' },
-                      localChecked && (isDarkMode ? { color: '#4A505C' } : styles.noteCompleted),
+                      {
+                        color: isDarkMode
+                          ? textSecondary
+                          : Colors.MutedSlateSubtext,
+                      },
+                      localChecked &&
+                        (isDarkMode
+                          ? { color: Colors.DarkNoteCompleted }
+                          : styles.noteCompleted),
                     ]}
                     numberOfLines={2}
                   >
@@ -580,7 +647,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
             <View
               style={[
                 styles.cardFooter,
-                isDarkMode && { borderTopColor: '#2C3035' },
+                isDarkMode && { borderTopColor: Colors.CarbonSlate },
               ]}
             >
               <View style={styles.footerLeft}>
@@ -588,18 +655,22 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
                   <View
                     style={[
                       styles.timeTag,
-                      isDarkMode && { backgroundColor: '#252932' },
+                      isDarkMode && {
+                        backgroundColor: Colors.DarkCheckboxUnchecked,
+                      },
                     ]}
                   >
                     <Clock
                       size={12}
-                      color={isDarkMode ? '#A3A8B1' : '#7E838F'}
+                      color={
+                        isDarkMode ? Colors.SteelMist : Colors.MutedSlateSubtext
+                      }
                       strokeWidth={2}
                     />
                     <Text
                       style={[
                         styles.timeText,
-                        isDarkMode && { color: '#A3A8B1' },
+                        isDarkMode && { color: Colors.SteelMist },
                       ]}
                     >
                       {task.time}
@@ -668,17 +739,17 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     borderWidth: 1.2,
     borderTopWidth: 1.8,
-    borderTopColor: 'rgba(255, 255, 255, 0.45)',
-    borderLeftColor: 'rgba(255, 255, 255, 0.14)',
-    borderRightColor: 'rgba(255, 255, 255, 0.14)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.45),
+    borderLeftColor: withAlpha(Colors.PureWhite, 0.14),
+    borderRightColor: withAlpha(Colors.PureWhite, 0.14),
     borderBottomWidth: 3.5,
-    borderBottomColor: '#0A0B0E',
+    borderBottomColor: Colors.DarkChipBevelAbyss,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 4,
     ...Platform.select({
       ios: {
-        shadowColor: '#FF9800',
+        shadowColor: Colors.AccentAmber,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.38,
         shadowRadius: 7,
@@ -692,9 +763,9 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: 'rgba(255, 152, 0, 0.22)',
+    backgroundColor: withAlpha(Colors.AccentAmber, 0.22),
     borderWidth: 1.2,
-    borderColor: 'rgba(255, 152, 0, 0.48)',
+    borderColor: withAlpha(Colors.AccentAmber, 0.48),
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 3,
@@ -706,17 +777,17 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     borderWidth: 1.2,
     borderTopWidth: 1.8,
-    borderTopColor: 'rgba(255, 255, 255, 0.45)',
-    borderLeftColor: 'rgba(255, 255, 255, 0.14)',
-    borderRightColor: 'rgba(255, 255, 255, 0.14)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.45),
+    borderLeftColor: withAlpha(Colors.PureWhite, 0.14),
+    borderRightColor: withAlpha(Colors.PureWhite, 0.14),
     borderBottomWidth: 3.5,
-    borderBottomColor: '#0A0B0E',
+    borderBottomColor: Colors.DarkChipBevelAbyss,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 4,
     ...Platform.select({
       ios: {
-        shadowColor: '#F5C518',
+        shadowColor: Colors.AccentYellow,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.38,
         shadowRadius: 7,
@@ -730,9 +801,9 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: 'rgba(245, 197, 24, 0.22)',
+    backgroundColor: withAlpha(Colors.AccentYellow, 0.22),
     borderWidth: 1.2,
-    borderColor: 'rgba(245, 197, 24, 0.48)',
+    borderColor: withAlpha(Colors.AccentYellow, 0.48),
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 3,
@@ -740,7 +811,7 @@ const styles = StyleSheet.create({
   actionBtnText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 9.5,
-    color: '#FFFBF0',
+    color: Colors.WarmActionTextCream,
     letterSpacing: 0.75,
   },
   frontCardContainer: {
@@ -748,13 +819,13 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   card: {
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.Transparent,
     padding: 16,
     gap: 10,
     position: 'relative',
     ...Platform.select({
       ios: {
-        shadowColor: '#F5C518',
+        shadowColor: Colors.AccentYellow,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.12,
         shadowRadius: 8,
@@ -784,7 +855,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.12,
         shadowRadius: 3,
@@ -795,12 +866,12 @@ const styles = StyleSheet.create({
     }),
   },
   floatingCheckboxChecked: {
-    backgroundColor: '#E8FDF0',
-    borderColor: '#52D22E',
+    backgroundColor: Colors.BadgeGreenBg,
+    borderColor: Colors.AccentGreen,
   },
   floatingCheckboxUnchecked: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#ECE8DF',
+    backgroundColor: Colors.PureWhite,
+    borderColor: Colors.WarmCheckboxBorder,
   },
   cardHeaderRow: {
     flexDirection: 'row',
@@ -817,13 +888,13 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#F5F6F8',
+    backgroundColor: Colors.CoolNeutralSurface,
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 2,
   },
   iconContainerChecked: {
-    backgroundColor: '#E8FDF0',
+    backgroundColor: Colors.BadgeGreenBg,
   },
   textBlock: {
     flex: 1,
@@ -831,21 +902,21 @@ const styles = StyleSheet.create({
   },
   title: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     fontSize: 15,
     lineHeight: 21,
   },
   titleCompleted: {
-    color: '#7E838F',
+    color: Colors.MutedSlateSubtext,
   },
   note: {
     ...Typography.bodySmallPoppinsRegular,
-    color: '#7E838F',
+    color: Colors.MutedSlateSubtext,
     fontSize: 12,
     lineHeight: 17,
   },
   noteCompleted: {
-    color: '#AAB0B9',
+    color: Colors.CoolMistText,
   },
   cardFooter: {
     flexDirection: 'row',
@@ -853,7 +924,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: '#F5F2EB',
+    borderTopColor: Colors.TaskDividerCream,
   },
   footerLeft: {
     flexDirection: 'row',
@@ -865,7 +936,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: '#F5F6F8',
+    backgroundColor: Colors.CoolNeutralSurface,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 10,
@@ -873,7 +944,7 @@ const styles = StyleSheet.create({
   timeText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 11,
-    color: '#7E838F',
+    color: Colors.MutedSlateSubtext,
   },
 });
 

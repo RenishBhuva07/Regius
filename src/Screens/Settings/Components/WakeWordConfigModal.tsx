@@ -23,7 +23,10 @@ import {
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 import { Typography } from '../../../Theme/Typographys';
-import { Colors as StaticColors } from '../../../Assets/StyleUtilities/Colors';
+import {
+  Colors as StaticColors,
+  withAlpha,
+} from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { useSettingsTheme } from './types';
 import {
@@ -193,14 +196,18 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
               style={[
                 styles.activeConfigCard,
                 {
-                  backgroundColor: isDarkMode ? '#1A2332' : '#F0F7FF',
-                  borderColor: isDarkMode ? '#2B4365' : '#BAE6FD',
+                  backgroundColor: isDarkMode
+                    ? StaticColors.InfoBannerDarkBg
+                    : StaticColors.InfoBannerLightBg,
+                  borderColor: isDarkMode
+                    ? StaticColors.InfoBannerDarkBorder
+                    : StaticColors.InfoBannerLightBorder,
                 },
               ]}
             >
               <View style={styles.activeConfigTop}>
                 <View style={styles.activeConfigLabelRow}>
-                  <Sparkles size={14} color="#0284C7" />
+                  <Sparkles size={14} color={StaticColors.CategorySkyCheck} />
                   <Text style={styles.activeConfigLabel}>ACTIVE WAKE WORD</Text>
                 </View>
                 <View style={styles.activePulseBadge}>
@@ -243,8 +250,8 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
                       {
                         backgroundColor: isSelected
                           ? isDarkMode
-                            ? '#241D3B'
-                            : '#F5F3FF'
+                            ? StaticColors.RadarPurpleDarkBg
+                            : StaticColors.RadarPurpleLightBg
                           : surfaceAlt,
                         borderColor: isSelected
                           ? themeAccent
@@ -268,7 +275,10 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
                           “{preset.phrase}”
                         </Text>
                         <View style={styles.officialBadge}>
-                          <ShieldCheck size={11} color="#059669" />
+                          <ShieldCheck
+                            size={11}
+                            color={StaticColors.ToastSuccessIcon}
+                          />
                           <Text style={styles.officialBadgeText}>
                             Tuned STT
                           </Text>
@@ -283,12 +293,16 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
                               : borderLight,
                             backgroundColor: isSelected
                               ? themeAccent
-                              : 'transparent',
+                              : StaticColors.Transparent,
                           },
                         ]}
                       >
                         {isSelected && (
-                          <Check size={11} color="#FFFFFF" strokeWidth={3} />
+                          <Check
+                            size={11}
+                            color={StaticColors.PureWhite}
+                            strokeWidth={3}
+                          />
                         )}
                       </View>
                     </View>
@@ -337,7 +351,7 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
                   borderColor: isCustomMode
                     ? validation.isValid
                       ? themeAccent
-                      : '#EF4444'
+                      : StaticColors.CategoryRedAccent
                     : borderLight,
                 },
               ]}
@@ -371,31 +385,38 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
                       backgroundColor: validation.isValid
                         ? validation.warning
                           ? isDarkMode
-                            ? '#332308'
-                            : '#FFFBEB'
+                            ? StaticColors.RadarAmberDarkBg
+                            : StaticColors.VoiceMichaelBg
                           : isDarkMode
-                          ? '#0D2E1C'
-                          : '#ECFDF5'
+                          ? StaticColors.RadarEmeraldDarkBg
+                          : StaticColors.RadarEmeraldLightBg
                         : isDarkMode
-                        ? '#351212'
-                        : '#FEF2F2',
+                        ? StaticColors.RadarDangerDarkBg
+                        : StaticColors.CategoryRedBg,
                       borderColor: validation.isValid
                         ? validation.warning
-                          ? '#F59E0B'
-                          : '#10B981'
-                        : '#EF4444',
+                          ? StaticColors.VoiceMichaelAccent
+                          : StaticColors.ToastSuccessAccent
+                        : StaticColors.CategoryRedAccent,
                     },
                   ]}
                 >
                   <View style={styles.validationRow}>
                     {validation.isValid ? (
                       validation.warning ? (
-                        <AlertTriangle size={15} color="#D97706" />
+                        <AlertTriangle
+                          size={15}
+                          color={StaticColors.HabitBurnishedAmber}
+                        />
                       ) : (
-                        <Check size={15} color="#059669" strokeWidth={2.5} />
+                        <Check
+                          size={15}
+                          color={StaticColors.ToastSuccessIcon}
+                          strokeWidth={2.5}
+                        />
                       )
                     ) : (
-                      <X size={15} color="#DC2626" />
+                      <X size={15} color={StaticColors.CategoryRedCheck} />
                     )}
                     <Text
                       style={[
@@ -403,9 +424,9 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
                         {
                           color: validation.isValid
                             ? validation.warning
-                              ? '#B45309'
-                              : '#047857'
-                            : '#B91C1C',
+                              ? StaticColors.Amber700
+                              : StaticColors.Emerald700
+                            : StaticColors.Red700,
                         },
                       ]}
                     >
@@ -423,13 +444,17 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
               style={[
                 styles.engineInfoCard,
                 {
-                  backgroundColor: isDarkMode ? '#1E252F' : '#F8FAFC',
-                  borderColor: isDarkMode ? '#334155' : '#E2E8F0',
+                  backgroundColor: isDarkMode
+                    ? StaticColors.ConsoleSlateDarkBg
+                    : StaticColors.Slate50,
+                  borderColor: isDarkMode
+                    ? StaticColors.Slate700
+                    : StaticColors.Slate200,
                 },
               ]}
             >
               <View style={styles.engineInfoHeader}>
-                <Info size={16} color="#3B82F6" />
+                <Info size={16} color={StaticColors.AzureRoyal} />
                 <Text style={styles.engineInfoTitle}>
                   Detection Engine Architecture & Limitations
                 </Text>
@@ -457,7 +482,7 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
             {/* Developer Recognition Playground */}
             <View style={styles.sectionHeader}>
               <View style={styles.devBadgeRow}>
-                <Zap size={15} color="#F59E0B" />
+                <Zap size={15} color={StaticColors.VoiceMichaelAccent} />
                 <Text style={[styles.sectionHeading, { color: textPrimary }]}>
                   Developer Recognition Tester
                 </Text>
@@ -525,12 +550,14 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
                   {
                     backgroundColor: testResult.detected
                       ? isDarkMode
-                        ? '#0E3A20'
-                        : '#EDFDF5'
+                        ? StaticColors.RadarActiveDarkBg
+                        : StaticColors.WellnessLightBg
                       : isDarkMode
-                      ? '#2A2A30'
-                      : '#F3F4F6',
-                    borderColor: testResult.detected ? '#10B981' : borderLight,
+                      ? StaticColors.DarkNeutralPillBg
+                      : StaticColors.Gray100,
+                    borderColor: testResult.detected
+                      ? StaticColors.ToastSuccessAccent
+                      : borderLight,
                   },
                 ]}
               >
@@ -541,8 +568,8 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
                       styles.statusPill,
                       {
                         backgroundColor: testResult.detected
-                          ? '#10B981'
-                          : '#6B7280',
+                          ? StaticColors.ToastSuccessAccent
+                          : StaticColors.Gray500,
                       },
                     ]}
                   >
@@ -638,13 +665,17 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
                 {
                   backgroundColor: validation.isValid
                     ? themeAccent
-                    : '#9CA3AF',
+                    : StaticColors.Gray400,
                 },
               ]}
               disabled={!validation.isValid}
               onPress={handleApply}
             >
-              <Check size={16} color="#FFFFFF" strokeWidth={2.5} />
+              <Check
+                size={16}
+                color={StaticColors.PureWhite}
+                strokeWidth={2.5}
+              />
               <Text style={styles.applyButtonText}>
                 Apply “{validation.isValid ? validation.phrase : 'Wake Word'}”
               </Text>
@@ -659,7 +690,7 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    backgroundColor: withAlpha(StaticColors.PureBlack, 0.65),
     justifyContent: 'flex-end',
   },
   modalContainer: {
@@ -686,7 +717,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(131, 131, 214, 0.15)',
+    backgroundColor: withAlpha(StaticColors.LavenderPurple, 0.15),
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -733,14 +764,14 @@ const styles = StyleSheet.create({
   activeConfigLabel: {
     ...Typography.bodySuperSmallPoppinsSemiBoldLoose,
     fontSize: 11,
-    color: '#0284C7',
+    color: StaticColors.CategorySkyCheck,
     letterSpacing: 0.8,
   },
   activePulseBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    backgroundColor: 'rgba(16, 185, 129, 0.12)',
+    backgroundColor: withAlpha(StaticColors.ToastSuccessAccent, 0.12),
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 10,
@@ -749,12 +780,12 @@ const styles = StyleSheet.create({
     width: 6,
     height: 6,
     borderRadius: 3,
-    backgroundColor: '#10B981',
+    backgroundColor: StaticColors.ToastSuccessAccent,
   },
   pulseText: {
     ...Typography.bodySuperSmallPoppinsRegularLoose,
     fontSize: 11,
-    color: '#059669',
+    color: StaticColors.ToastSuccessIcon,
     fontWeight: '600',
   },
   activePhraseText: {
@@ -807,17 +838,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 3,
-    backgroundColor: '#EDFDF5',
+    backgroundColor: StaticColors.WellnessLightBg,
     paddingHorizontal: 6,
     paddingVertical: 2,
     borderRadius: 6,
     borderWidth: 1,
-    borderColor: '#A7F3D0',
+    borderColor: StaticColors.ToastSuccessCardBorderLight,
   },
   officialBadgeText: {
     ...Typography.bodySuperSmallPoppinsRegularLoose,
     fontSize: 10,
-    color: '#059669',
+    color: StaticColors.ToastSuccessIcon,
     fontWeight: '600',
   },
   radioDot: {
@@ -899,7 +930,7 @@ const styles = StyleSheet.create({
   engineInfoTitle: {
     ...Typography.bodySmallPoppinsSemiBold,
     fontSize: 13,
-    color: '#2563EB',
+    color: StaticColors.Blue600,
   },
   engineInfoBody: {
     ...Typography.bodySmallPoppinsRegular,
@@ -968,7 +999,7 @@ const styles = StyleSheet.create({
   resultLabel: {
     ...Typography.bodySuperSmallPoppinsSemiBoldLoose,
     fontSize: 10,
-    color: '#6B7280',
+    color: StaticColors.Gray500,
     letterSpacing: 0.8,
   },
   statusPill: {
@@ -979,7 +1010,7 @@ const styles = StyleSheet.create({
   statusPillText: {
     ...Typography.bodySuperSmallPoppinsSemiBoldLoose,
     fontSize: 10,
-    color: '#FFFFFF',
+    color: StaticColors.PureWhite,
     fontWeight: '700',
   },
   matchDetails: {
@@ -987,7 +1018,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     paddingBottom: 8,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.06)',
+    borderBottomColor: withAlpha(StaticColors.PureBlack, 0.06),
   },
   detailRow: {
     flexDirection: 'row',
@@ -1040,7 +1071,7 @@ const styles = StyleSheet.create({
   applyButtonText: {
     ...Typography.bodyMediumPoppinsSemiBold,
     fontSize: 14,
-    color: '#FFFFFF',
+    color: StaticColors.PureWhite,
   },
 });
 

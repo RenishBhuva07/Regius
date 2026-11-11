@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Sparkles } from 'lucide-react-native';
 
 import { Fonts } from '../../../Theme/fonts';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { Typography } from '../../../Theme/Typographys';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../../Common/Badge';
@@ -41,8 +41,8 @@ export const ThemeHeroCard: React.FC<ThemeHeroCardProps> = React.memo(
               {
                 backgroundColor: activeTheme.previewBg,
                 borderColor: isHeroLight
-                  ? '#E8E2D5'
-                  : 'rgba(255, 255, 255, 0.9)',
+                  ? Colors.RingBorder
+                  : withAlpha(Colors.PureWhite, 0.9),
               },
             ]}
           >
@@ -54,7 +54,7 @@ export const ThemeHeroCard: React.FC<ThemeHeroCardProps> = React.memo(
                 <Text
                   style={[
                     styles.heroThemeName,
-                    { color: isHeroLight ? '#121417' : '#FFFFFF' },
+                    { color: isHeroLight ? Colors.DarkBackground : Colors.PureWhite },
                   ]}
                   numberOfLines={1}
                 >
@@ -70,7 +70,9 @@ export const ThemeHeroCard: React.FC<ThemeHeroCardProps> = React.memo(
                 <Sparkles
                   size={16}
                   color={
-                    isLightColor(activeTheme.accent) ? '#121417' : '#FFFFFF'
+                    isLightColor(activeTheme.accent)
+                      ? Colors.DarkBackground
+                      : Colors.PureWhite
                   }
                   strokeWidth={2.4}
                 />
@@ -81,7 +83,9 @@ export const ThemeHeroCard: React.FC<ThemeHeroCardProps> = React.memo(
               style={[
                 styles.heroTagline,
                 {
-                  color: isHeroLight ? '#444A52' : 'rgba(255, 255, 255, 0.8)',
+                  color: isHeroLight
+                    ? Colors.DarkSilverDust
+                    : withAlpha(Colors.PureWhite, 0.8),
                 },
               ]}
             >
@@ -93,27 +97,36 @@ export const ThemeHeroCard: React.FC<ThemeHeroCardProps> = React.memo(
               style={[
                 styles.heroMockupContainer,
                 isHeroLight && {
-                  backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                  borderColor: 'rgba(0, 0, 0, 0.08)',
+                  backgroundColor: withAlpha(Colors.PureBlack, 0.05),
+                  borderColor: withAlpha(Colors.PureBlack, 0.08),
                 },
               ]}
             >
               <View style={styles.mockupHeader}>
                 <View style={styles.mockupDotsRow}>
                   <View
-                    style={[styles.mockupDot, { backgroundColor: '#FF5F56' }]}
+                    style={[
+                      styles.mockupDot,
+                      { backgroundColor: Colors.MockupDotCloseRed },
+                    ]}
                   />
                   <View
-                    style={[styles.mockupDot, { backgroundColor: '#FFBD2E' }]}
+                    style={[
+                      styles.mockupDot,
+                      { backgroundColor: Colors.MockupDotMinYellow },
+                    ]}
                   />
                   <View
-                    style={[styles.mockupDot, { backgroundColor: '#27C93F' }]}
+                    style={[
+                      styles.mockupDot,
+                      { backgroundColor: Colors.MockupDotMaxGreen },
+                    ]}
                   />
                 </View>
                 <Text
                   style={[
                     styles.mockupHeaderText,
-                    isHeroLight && { color: '#666665' },
+                    isHeroLight && { color: Colors.SubtitleGray },
                   ]}
                 >
                   Live Palette Preview ({isDarkMode ? 'Dark' : 'Light'})
@@ -128,7 +141,7 @@ export const ThemeHeroCard: React.FC<ThemeHeroCardProps> = React.memo(
                     borderWidth: isLightColor(activeTheme.palette[1].hex)
                       ? 1
                       : 0,
-                    borderColor: 'rgba(0, 0, 0, 0.08)',
+                    borderColor: withAlpha(Colors.PureBlack, 0.08),
                   },
                 ]}
               >
@@ -144,8 +157,8 @@ export const ThemeHeroCard: React.FC<ThemeHeroCardProps> = React.memo(
                         styles.mockupChipText,
                         {
                           color: isLightColor(activeTheme.accent)
-                            ? '#121417'
-                            : '#FFFFFF',
+                            ? Colors.DarkBackground
+                            : Colors.PureWhite,
                         },
                       ]}
                     >
@@ -177,14 +190,16 @@ export const ThemeHeroCard: React.FC<ThemeHeroCardProps> = React.memo(
             <View
               style={[
                 styles.heroFooter,
-                isHeroLight && { borderTopColor: 'rgba(0, 0, 0, 0.08)' },
+                isHeroLight && {
+                  borderTopColor: withAlpha(Colors.PureBlack, 0.08),
+                },
               ]}
             >
               <View style={styles.heroStatItem}>
                 <Text
                   style={[
                     styles.heroStatLabel,
-                    isHeroLight && { color: '#77767B' },
+                    isHeroLight && { color: Colors.Grey },
                   ]}
                 >
                   PROGRESS
@@ -192,7 +207,7 @@ export const ThemeHeroCard: React.FC<ThemeHeroCardProps> = React.memo(
                 <Text
                   style={[
                     styles.heroStatValue,
-                    isHeroLight && { color: '#121417' },
+                    isHeroLight && { color: Colors.DarkBackground },
                   ]}
                 >
                   {unlockedCount} of {totalThemes} Unlocked
@@ -201,14 +216,16 @@ export const ThemeHeroCard: React.FC<ThemeHeroCardProps> = React.memo(
               <View
                 style={[
                   styles.heroDivider,
-                  isHeroLight && { backgroundColor: 'rgba(0, 0, 0, 0.12)' },
+                  isHeroLight && {
+                    backgroundColor: withAlpha(Colors.PureBlack, 0.12),
+                  },
                 ]}
               />
               <View style={styles.heroStatItem}>
                 <Text
                   style={[
                     styles.heroStatLabel,
-                    isHeroLight && { color: '#77767B' },
+                    isHeroLight && { color: Colors.Grey },
                   ]}
                 >
                   CURRENT TIER
@@ -216,7 +233,7 @@ export const ThemeHeroCard: React.FC<ThemeHeroCardProps> = React.memo(
                 <Text
                   style={[
                     styles.heroStatValue,
-                    isHeroLight && { color: '#121417' },
+                    isHeroLight && { color: Colors.DarkBackground },
                   ]}
                 >
                   Tier {currentTier.level}: {currentTier.title}
@@ -238,7 +255,7 @@ const styles = StyleSheet.create({
   cardShadowWrapper: {
     backgroundColor: Colors.NeroBlack,
     borderRadius: 24,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.28,
     shadowRadius: 18,
@@ -247,7 +264,7 @@ const styles = StyleSheet.create({
   heroCardInner: {
     borderRadius: 24,
     borderWidth: 4,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: withAlpha(Colors.PureWhite, 0.9),
     padding: ResponsivePixels.size16,
     overflow: 'hidden',
     position: 'relative',
@@ -263,7 +280,7 @@ const styles = StyleSheet.create({
   },
   heroThemeName: {
     ...Typography.h1RanadeBold,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     fontSize: 22,
   },
   heroAccentOrb: {
@@ -272,7 +289,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
     shadowRadius: 4,
@@ -280,15 +297,15 @@ const styles = StyleSheet.create({
   },
   heroTagline: {
     ...Typography.bodySmallPoppinsRegular,
-    color: 'rgba(255, 255, 255, 0.8)',
+    color: withAlpha(Colors.PureWhite, 0.8),
     fontSize: 12,
     marginBottom: 14,
   },
   heroMockupContainer: {
-    backgroundColor: 'rgba(0, 0, 0, 0.35)',
+    backgroundColor: withAlpha(Colors.PureBlack, 0.35),
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
+    borderColor: withAlpha(Colors.PureWhite, 0.12),
     padding: 12,
     marginBottom: 14,
   },
@@ -310,7 +327,7 @@ const styles = StyleSheet.create({
   mockupHeaderText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 10,
-    color: 'rgba(255, 255, 255, 0.65)',
+    color: withAlpha(Colors.PureWhite, 0.65),
     letterSpacing: 0.5,
   },
   mockupSurface: {
@@ -331,7 +348,7 @@ const styles = StyleSheet.create({
   mockupChipText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 8.5,
-    color: '#000000',
+    color: Colors.PureBlack,
   },
   mockupCardTitle: {
     fontFamily: Fonts.poppins.semiBold,
@@ -340,7 +357,7 @@ const styles = StyleSheet.create({
   mockupProgressTrack: {
     height: 4,
     borderRadius: 2,
-    backgroundColor: 'rgba(0, 0, 0, 0.15)',
+    backgroundColor: withAlpha(Colors.PureBlack, 0.15),
     overflow: 'hidden',
   },
   mockupProgressBar: {
@@ -353,7 +370,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingTop: 10,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.15)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.15),
   },
   heroStatItem: {
     flex: 1,
@@ -361,19 +378,19 @@ const styles = StyleSheet.create({
   heroStatLabel: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 9,
-    color: 'rgba(255, 255, 255, 0.6)',
+    color: withAlpha(Colors.PureWhite, 0.6),
     letterSpacing: 0.8,
   },
   heroStatValue: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 12,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     marginTop: 2,
   },
   heroDivider: {
     width: 1,
     height: 24,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.2),
     marginHorizontal: 10,
   },
 });

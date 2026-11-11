@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { Sliders, ShieldCheck, AlertTriangle } from 'lucide-react-native';
 import { Fonts } from '../../../../Theme/fonts';
-import { Colors } from '../../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 import { WakeWordValidationResult } from '../../../../Services/WakeWord/WakeWordService';
 
@@ -34,12 +34,12 @@ export const WakeWordCustomInput: React.FC<WakeWordCustomInputProps> =
       customInput,
       onChangeCustomInput,
       validation,
-      cardBg = Colors.DefaultWhite,
+      cardBg = Colors.PureWhite,
       isDarkMode = false,
-      textPrimary = Colors.MidnightInkText,
+      textPrimary = Colors.PureBlack,
       textSecondary = Colors.SubtitleGray,
-      borderLight = '#E8E2D5',
-      surfaceAlt = '#FAF8F5',
+      borderLight = Colors.RingBorder,
+      surfaceAlt = Colors.CreamSurfaceAlt,
     }) => {
       return (
         <View
@@ -50,14 +50,16 @@ export const WakeWordCustomInput: React.FC<WakeWordCustomInputProps> =
               borderColor: isCustomMode
                 ? Colors.LavenderPurple
                 : isDarkMode
-                ? 'rgba(255, 255, 255, 0.08)'
-                : '#FFFFFF',
+                ? withAlpha(Colors.PureWhite, 0.08)
+                : Colors.PureWhite,
               borderBottomColor: isCustomMode
-                ? '#4D4DB8'
+                ? Colors.LavenderDeepFallback
                 : isDarkMode
-                ? '#171A20'
-                : '#E2DCD0',
-              shadowColor: isDarkMode ? '#000000' : 'rgba(131, 131, 214, 0.1)',
+                ? Colors.DarkSurfaceDeep
+                : Colors.WarmStoneBorder,
+              shadowColor: isDarkMode
+                ? Colors.PureBlack
+                : withAlpha(Colors.LavenderPurple, 0.1),
             },
           ]}
         >
@@ -127,7 +129,11 @@ export const WakeWordCustomInput: React.FC<WakeWordCustomInputProps> =
               <View style={styles.validationRow}>
                 {validation.isValid ? (
                   <View style={styles.validStatus}>
-                    <ShieldCheck size={16} color="#21AF85" strokeWidth={2.4} />
+                    <ShieldCheck
+                      size={16}
+                      color={Colors.LuminousGreen}
+                      strokeWidth={2.4}
+                    />
                     <Text style={styles.validText}>
                       Acoustic criteria met (Syllables & length optimal)
                     </Text>
@@ -136,7 +142,7 @@ export const WakeWordCustomInput: React.FC<WakeWordCustomInputProps> =
                   <View style={styles.invalidStatus}>
                     <AlertTriangle
                       size={16}
-                      color="#FF3B30"
+                      color={Colors.CrimsonPulse}
                       strokeWidth={2.4}
                     />
                     <Text style={styles.invalidText}>
@@ -209,7 +215,7 @@ const styles = StyleSheet.create({
     marginTop: ResponsivePixels.size14,
     paddingTop: ResponsivePixels.size12,
     borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: '#E8E2D5',
+    borderTopColor: Colors.RingBorder,
   },
   customInputWrap: {
     borderRadius: 14,
@@ -235,7 +241,7 @@ const styles = StyleSheet.create({
   validText: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 11,
-    color: '#21AF85',
+    color: Colors.LuminousGreen,
   },
   invalidStatus: {
     flexDirection: 'row',
@@ -245,7 +251,7 @@ const styles = StyleSheet.create({
   invalidText: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 11,
-    color: '#FF3B30',
+    color: Colors.CrimsonPulse,
   },
 });
 

@@ -19,9 +19,9 @@ export const VoiceSpeedSelector: React.FC<VoiceSpeedSelectorProps> = React.memo(
   ({
     speechSpeed,
     onChangeSpeed,
-    borderLight = '#E8E2D5',
-    surfaceAlt = '#FAF8F5',
-    textPrimary = Colors.MidnightInkText,
+    borderLight = Colors.RingBorder,
+    surfaceAlt = Colors.CreamSurfaceAlt,
+    textPrimary = Colors.PureBlack,
     themeAccent = Colors.LavenderPurple,
   }) => {
     return (
@@ -46,7 +46,7 @@ export const VoiceSpeedSelector: React.FC<VoiceSpeedSelectorProps> = React.memo(
                     backgroundColor: isActive
                       ? themeAccent
                       : surfaceAlt,
-                    borderColor: isActive ? '#FFFFFF' : borderLight,
+                    borderColor: isActive ? Colors.PureWhite : borderLight,
                   },
                 ]}
                 onPress={() => onChangeSpeed(speed)}
@@ -57,8 +57,8 @@ export const VoiceSpeedSelector: React.FC<VoiceSpeedSelectorProps> = React.memo(
                     {
                       color: isActive
                         ? isLightColor(themeAccent)
-                          ? '#000000'
-                          : '#FFFFFF'
+                          ? Colors.PureBlack
+                          : Colors.PureWhite
                         : textPrimary,
                     },
                   ]}

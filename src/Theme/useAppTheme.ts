@@ -1,6 +1,9 @@
 import { useMemo } from 'react';
 import { useTheme, ThemePresetId, ThemeOption } from './ThemeContext';
-import { Colors as StaticColors } from '../Assets/StyleUtilities/Colors';
+import {
+  Colors as StaticColors,
+  withAlpha,
+} from '../Assets/StyleUtilities/Colors';
 
 export interface CategoryThemeTokens {
   bg: string;
@@ -50,30 +53,52 @@ export const useAppTheme = (): AppThemeTokens => {
 
   const bgMain =
     Colors.Background ||
-    (isDarkMode ? '#121417' : StaticColors.CreamBackground);
-  const cardBg = Colors.CardBackground || (isDarkMode ? '#1E2228' : '#FFFFFF');
-  const surfaceAlt = Colors.SurfaceAlt || (isDarkMode ? '#181B20' : '#FAF8F5');
-  const inputBg = isDarkMode ? Colors.SurfaceAlt || '#171A1F' : '#FFFFFF';
+    (isDarkMode ? StaticColors.DarkBackground : StaticColors.CreamBackground);
+  const cardBg =
+    Colors.CardBackground ||
+    (isDarkMode ? StaticColors.DarkCardBackground : StaticColors.PureWhite);
+  const surfaceAlt =
+    Colors.SurfaceAlt ||
+    (isDarkMode ? StaticColors.DarkSurfacePressed : StaticColors.CreamSurfaceAlt);
+  const inputBg = isDarkMode
+    ? Colors.SurfaceAlt || StaticColors.DarkSurfaceAlt
+    : StaticColors.PureWhite;
   const textPrimary =
-    Colors.PrimaryText || (isDarkMode ? '#FFFFFF' : '#111111');
+    Colors.PrimaryText ||
+    (isDarkMode ? StaticColors.PureWhite : StaticColors.NoirBlack);
   const textSecondary =
-    Colors.SecondaryText || (isDarkMode ? '#A3A8B1' : '#666665');
+    Colors.SecondaryText ||
+    (isDarkMode ? StaticColors.SteelMist : StaticColors.SubtitleGray);
   const canvasTextPrimary =
-    Colors.CanvasTextPrimary || (isDarkMode ? '#FFFFFF' : '#111111');
+    Colors.CanvasTextPrimary ||
+    (isDarkMode ? StaticColors.PureWhite : StaticColors.NoirBlack);
   const canvasTextSecondary =
-    Colors.CanvasTextSecondary || (isDarkMode ? '#A3A8B1' : '#666665');
+    Colors.CanvasTextSecondary ||
+    (isDarkMode ? StaticColors.SteelMist : StaticColors.SubtitleGray);
   const borderLight =
-    Colors.BorderLight || (isDarkMode ? '#2C3035' : '#EAE5D9');
-  const borderSubtle = isDarkMode ? '#22252B' : '#F0ECE1';
+    Colors.BorderLight ||
+    (isDarkMode ? StaticColors.CarbonSlate : StaticColors.WarmParchmentBorder);
+  const borderSubtle = isDarkMode
+    ? StaticColors.DarkBorderSubtle
+    : StaticColors.CreamBorderSubtle;
 
-  const accent = Colors.Accent || (isDarkMode ? '#F5C518' : '#8383D6');
+  const accent =
+    Colors.Accent ||
+    (isDarkMode ? StaticColors.AccentYellow : StaticColors.LavenderPurple);
   const accentDeep =
-    Colors.AccentDeep || (isDarkMode ? '#282048' : StaticColors.LavenderPurple);
-  const accentLight = Colors.AccentLight || (isDarkMode ? '#F5C518' : '#9494EC');
-  const accentDark = Colors.AccentDark || (isDarkMode ? '#14151C' : '#6C6CC4');
+    Colors.AccentDeep ||
+    (isDarkMode ? StaticColors.MidnightIndigo : StaticColors.LavenderPurple);
+  const accentLight =
+    Colors.AccentLight ||
+    (isDarkMode ? StaticColors.AccentYellow : StaticColors.LavenderSoftHighlight);
+  const accentDark =
+    Colors.AccentDark ||
+    (isDarkMode ? StaticColors.ObsidianNight : StaticColors.LavenderDeep);
   const accentAura =
     Colors.AccentAura ||
-    (isDarkMode ? 'rgba(245, 197, 24, 0.2)' : 'rgba(131, 131, 214, 0.25)');
+    (isDarkMode
+      ? withAlpha(StaticColors.AccentYellow, 0.2)
+      : withAlpha(StaticColors.LavenderPurple, 0.25));
 
   const getCategoryTheme = useMemo(() => {
     return (category?: string): CategoryThemeTokens => {
@@ -88,13 +113,21 @@ export const useAppTheme = (): AppThemeTokens => {
         cat === 'daily'
       ) {
         return {
-          bg: isDarkMode ? '#162820' : '#EDFDF5',
-          border: isDarkMode ? '#1B9A72' : '#C6FFDD',
-          accent: '#52D22E',
-          text: isDarkMode ? '#FFFFFF' : '#1B9A72',
-          shadow: isDarkMode ? '#000000' : '#52D22E',
-          aura: '#52D22E',
-          iconBg: isDarkMode ? '#1F382D' : '#EDFDF5',
+          bg: isDarkMode
+            ? StaticColors.WellnessDarkBg
+            : StaticColors.WellnessLightBg,
+          border: isDarkMode
+            ? StaticColors.GreenGracious
+            : StaticColors.WellnessLightBorder,
+          accent: StaticColors.AccentGreen,
+          text: isDarkMode ? StaticColors.PureWhite : StaticColors.GreenGracious,
+          shadow: isDarkMode
+            ? StaticColors.PureBlack
+            : StaticColors.AccentGreen,
+          aura: StaticColors.AccentGreen,
+          iconBg: isDarkMode
+            ? StaticColors.WellnessDarkIconBg
+            : StaticColors.WellnessLightBg,
         };
       }
 
@@ -106,38 +139,62 @@ export const useAppTheme = (): AppThemeTokens => {
         cat === 'evening'
       ) {
         return {
-          bg: isDarkMode ? '#202336' : '#EFF2FE',
-          border: isDarkMode ? '#8383D6' : '#D8DBFF',
-          accent: '#8383D6',
-          text: isDarkMode ? '#FFFFFF' : '#7059C8',
-          shadow: isDarkMode ? '#000000' : '#8383D6',
-          aura: '#8383D6',
-          iconBg: isDarkMode ? '#2C304A' : '#EFF2FE',
+          bg: isDarkMode
+            ? StaticColors.MindfulDarkBg
+            : StaticColors.MindfulLightBg,
+          border: isDarkMode
+            ? StaticColors.LavenderPurple
+            : StaticColors.MindfulLightBorder,
+          accent: StaticColors.LavenderPurple,
+          text: isDarkMode
+            ? StaticColors.PureWhite
+            : StaticColors.MindfulTextAccent,
+          shadow: isDarkMode
+            ? StaticColors.PureBlack
+            : StaticColors.LavenderPurple,
+          aura: StaticColors.LavenderPurple,
+          iconBg: isDarkMode
+            ? StaticColors.MindfulDarkIconBg
+            : StaticColors.MindfulLightBg,
         };
       }
 
       // 3. Events / Amber
       if (cat === 'events' || cat === 'event' || cat === 'alert') {
         return {
-          bg: isDarkMode ? '#331F18' : '#FFF0DE',
-          border: isDarkMode ? '#FF9800' : '#FFE0B2',
-          accent: '#FF9800',
-          text: isDarkMode ? '#FFFFFF' : '#E65100',
-          shadow: isDarkMode ? '#000000' : '#FF9800',
-          aura: '#FF9800',
-          iconBg: isDarkMode ? '#442A20' : '#FFF0DE',
+          bg: isDarkMode ? StaticColors.EventDarkBg : StaticColors.EventLightBg,
+          border: isDarkMode
+            ? StaticColors.AccentAmber
+            : StaticColors.EventLightBorder,
+          accent: StaticColors.AccentAmber,
+          text: isDarkMode
+            ? StaticColors.PureWhite
+            : StaticColors.EventTextAccent,
+          shadow: isDarkMode
+            ? StaticColors.PureBlack
+            : StaticColors.AccentAmber,
+          aura: StaticColors.AccentAmber,
+          iconBg: isDarkMode
+            ? StaticColors.EventDarkIconBg
+            : StaticColors.EventLightBg,
         };
       }
 
       // 4. Default: Works / Tasks (Imperial Gold)
       return {
-        bg: isDarkMode ? '#2A2416' : '#FFFCEB',
-        border: isDarkMode ? '#DEAA14' : '#FFF5B8',
-        accent: '#F5C518',
-        text: isDarkMode ? '#FFFFFF' : '#B48216',
-        shadow: isDarkMode ? '#000000' : '#F5C518',
-        aura: '#F5C518',
-        iconBg: isDarkMode ? '#38301D' : '#FFFCEB',
+        bg: isDarkMode ? StaticColors.WorkDarkBg : StaticColors.WorkLightBg,
+        border: isDarkMode
+          ? StaticColors.WorkDarkBorder
+          : StaticColors.WorkLightBorder,
+        accent: StaticColors.AccentYellow,
+        text: isDarkMode ? StaticColors.PureWhite : StaticColors.WorkTextAccent,
+        shadow: isDarkMode
+          ? StaticColors.PureBlack
+          : StaticColors.AccentYellow,
+        aura: StaticColors.AccentYellow,
+        iconBg: isDarkMode
+          ? StaticColors.WorkDarkIconBg
+          : StaticColors.WorkLightBg,
       };
     };
   }, [isDarkMode]);

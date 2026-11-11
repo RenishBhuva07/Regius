@@ -89,7 +89,11 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
       <View
         style={[
           styles.modalContainer,
-          { backgroundColor: isDarkMode ? '#121417' : '#FFFFFF' },
+          {
+            backgroundColor: isDarkMode
+              ? StaticColors.DarkBackground
+              : StaticColors.PureWhite,
+          },
         ]}
       >
         <View style={[styles.modalHeader, { borderBottomColor: borderLight }]}>
@@ -116,7 +120,12 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.modalAvatarSection}>
-            <View style={[styles.modalAvatarRing, { borderColor: '#F5C518' }]}>
+            <View
+              style={[
+                styles.modalAvatarRing,
+                { borderColor: StaticColors.AccentYellow },
+              ]}
+            >
               <SVGS.RegiusAvatar width={64} height={64} />
             </View>
             <Text style={[styles.modalAvatarHelp, { color: textSecondary }]}>
@@ -140,7 +149,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
               value={editName}
               onChangeText={setEditName}
               placeholder="Your full name"
-              placeholderTextColor="#999999"
+              placeholderTextColor={StaticColors.PlaceholderSilverGray}
             />
           </View>
 
@@ -160,7 +169,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
               value={editEmail}
               onChangeText={setEditEmail}
               placeholder="name@example.com"
-              placeholderTextColor="#999999"
+              placeholderTextColor={StaticColors.PlaceholderSilverGray}
               keyboardType="email-address"
               autoCapitalize="none"
             />
@@ -182,7 +191,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
               value={editRole}
               onChangeText={setEditRole}
               placeholder="e.g. Regius Pro Member"
-              placeholderTextColor="#999999"
+              placeholderTextColor={StaticColors.PlaceholderSilverGray}
             />
           </View>
 
@@ -202,7 +211,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
               value={editBio}
               onChangeText={setEditBio}
               placeholder="What are your main goals this month?"
-              placeholderTextColor="#999999"
+              placeholderTextColor={StaticColors.PlaceholderSilverGray}
               multiline
               numberOfLines={3}
             />
@@ -291,7 +300,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    backgroundColor: '#FFFCEB',
+    backgroundColor: StaticColors.WorkLightBg,
   },
   modalAvatarHelp: {
     ...Typography.bodySmallPoppinsRegular,
@@ -354,7 +363,7 @@ const styles = StyleSheet.create({
   modalSaveBtnText: {
     ...Typography.bodyMediumPoppinsSemiBold,
     fontSize: 14,
-    color: '#FFFFFF',
+    color: StaticColors.PureWhite,
   },
 });
 

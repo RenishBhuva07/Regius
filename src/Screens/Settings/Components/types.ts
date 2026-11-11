@@ -29,9 +29,9 @@ export const VOICES: VoiceOption[] = [
     gender: 'Female',
     accent: 'American',
     sampleText: DEFAULT_VOICE_SAMPLE_LINE,
-    accentColor: '#FF5B65',
-    bgColor: '#FFF0F0',
-    borderColor: '#FFD6D6',
+    accentColor: StaticColors.SunburstFlame,
+    bgColor: StaticColors.VoiceBellaBg,
+    borderColor: StaticColors.VoiceBellaBorder,
     personality: 'Supportive & Friendly',
     previewUrl: VOICE_AUDIO_ASSETS.af_bella,
   },
@@ -43,9 +43,9 @@ export const VOICES: VoiceOption[] = [
     gender: 'Female',
     accent: 'American',
     sampleText: DEFAULT_VOICE_SAMPLE_LINE,
-    accentColor: '#A855F7',
-    bgColor: '#FAF5FF',
-    borderColor: '#E9D5FF',
+    accentColor: StaticColors.VoiceNicoleAccent,
+    bgColor: StaticColors.VoiceNicoleBg,
+    borderColor: StaticColors.VoiceNicoleBorder,
     personality: 'Smart & Expressive',
     previewUrl: VOICE_AUDIO_ASSETS.af_nicole,
   },
@@ -57,9 +57,9 @@ export const VOICES: VoiceOption[] = [
     gender: 'Male',
     accent: 'American',
     sampleText: DEFAULT_VOICE_SAMPLE_LINE,
-    accentColor: '#1F2228',
-    bgColor: '#FFFCEB',
-    borderColor: '#FFF5B8',
+    accentColor: StaticColors.MidnightCharcoal,
+    bgColor: StaticColors.WorkLightBg,
+    borderColor: StaticColors.WorkLightBorder,
     personality: 'Focused & Decisive',
     previewUrl: VOICE_AUDIO_ASSETS.am_adam,
   },
@@ -71,9 +71,9 @@ export const VOICES: VoiceOption[] = [
     gender: 'Male',
     accent: 'American',
     sampleText: DEFAULT_VOICE_SAMPLE_LINE,
-    accentColor: '#F59E0B',
-    bgColor: '#FFFBEB',
-    borderColor: '#FDE68A',
+    accentColor: StaticColors.VoiceMichaelAccent,
+    bgColor: StaticColors.VoiceMichaelBg,
+    borderColor: StaticColors.VoiceMichaelBorder,
     personality: 'Analytical & Swift',
     previewUrl: VOICE_AUDIO_ASSETS.am_michael,
   },
@@ -85,9 +85,9 @@ export const VOICES: VoiceOption[] = [
     gender: 'Female',
     accent: 'British',
     sampleText: DEFAULT_VOICE_SAMPLE_LINE,
-    accentColor: '#21AF85',
-    bgColor: '#EDFDF5',
-    borderColor: '#C6FFDD',
+    accentColor: StaticColors.LuminousGreen,
+    bgColor: StaticColors.WellnessLightBg,
+    borderColor: StaticColors.WellnessLightBorder,
     personality: 'Calm & Grounded',
     previewUrl: VOICE_AUDIO_ASSETS.bf_emma,
   },
@@ -99,9 +99,9 @@ export const VOICES: VoiceOption[] = [
     gender: 'Male',
     accent: 'British',
     sampleText: DEFAULT_VOICE_SAMPLE_LINE,
-    accentColor: '#165DFF',
-    bgColor: '#EFF4FE',
-    borderColor: '#CFDEFE',
+    accentColor: StaticColors.PrimaryBlue,
+    bgColor: StaticColors.VoiceGeorgeBg,
+    borderColor: StaticColors.VoiceGeorgeBorder,
     personality: 'Refined & Sharp',
     previewUrl: VOICE_AUDIO_ASSETS.bm_george,
   },
@@ -113,9 +113,9 @@ export const VOICES: VoiceOption[] = [
     gender: 'Female',
     accent: 'American',
     sampleText: DEFAULT_VOICE_SAMPLE_LINE,
-    accentColor: '#8383D6',
-    bgColor: '#EFF2FE',
-    borderColor: '#D8DBFF',
+    accentColor: StaticColors.LavenderPurple,
+    bgColor: StaticColors.MindfulLightBg,
+    borderColor: StaticColors.MindfulLightBorder,
     personality: 'Inspiring & Vibrant',
     previewUrl: VOICE_AUDIO_ASSETS.af_heart,
   },
@@ -126,22 +126,36 @@ export const useSettingsTheme = () => {
 
   const bgMain =
     Colors.Background ||
-    (isDarkMode ? '#121417' : StaticColors.CreamBackground);
-  const cardBg = Colors.CardBackground || (isDarkMode ? '#1E2228' : '#FFFFFF');
+    (isDarkMode ? StaticColors.DarkBackground : StaticColors.CreamBackground);
+  const cardBg =
+    Colors.CardBackground ||
+    (isDarkMode ? StaticColors.DarkCardBackground : StaticColors.PureWhite);
   const textPrimary =
-    Colors.PrimaryText || (isDarkMode ? '#FFFFFF' : '#111111');
+    Colors.PrimaryText ||
+    (isDarkMode ? StaticColors.PureWhite : StaticColors.NoirBlack);
   const textSecondary =
-    Colors.SecondaryText || (isDarkMode ? '#A3A8B1' : '#666665');
+    Colors.SecondaryText ||
+    (isDarkMode ? StaticColors.SteelMist : StaticColors.SubtitleGray);
   const canvasTextPrimary =
-    Colors.CanvasTextPrimary || (isDarkMode ? '#FFFFFF' : '#111111');
+    Colors.CanvasTextPrimary ||
+    (isDarkMode ? StaticColors.PureWhite : StaticColors.NoirBlack);
   const canvasTextSecondary =
-    Colors.CanvasTextSecondary || (isDarkMode ? '#A3A8B1' : '#666665');
+    Colors.CanvasTextSecondary ||
+    (isDarkMode ? StaticColors.SteelMist : StaticColors.SubtitleGray);
   const borderLight =
-    Colors.BorderLight || (isDarkMode ? '#2C3035' : '#EAE5D9');
-  const surfaceAlt = Colors.SurfaceAlt || (isDarkMode ? '#181B20' : '#F7F5EC');
-  const accent = Colors.Accent || (isDarkMode ? '#F5C518' : '#8383D6');
+    Colors.BorderLight ||
+    (isDarkMode ? StaticColors.CarbonSlate : StaticColors.WarmParchmentBorder);
+  const surfaceAlt =
+    Colors.SurfaceAlt ||
+    (isDarkMode
+      ? StaticColors.DarkSurfacePressed
+      : StaticColors.CreamSurfaceMuted);
+  const accent =
+    Colors.Accent ||
+    (isDarkMode ? StaticColors.AccentYellow : StaticColors.LavenderPurple);
   const accentDeep =
-    Colors.AccentDeep || (isDarkMode ? '#282048' : StaticColors.LavenderPurple);
+    Colors.AccentDeep ||
+    (isDarkMode ? StaticColors.MidnightIndigo : StaticColors.LavenderPurple);
 
   return {
     Colors,

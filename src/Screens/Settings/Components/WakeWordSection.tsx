@@ -9,7 +9,10 @@ import {
 import Toast from 'react-native-toast-message';
 import { Typography } from '../../../Theme/Typographys';
 import { Fonts } from '../../../Theme/fonts';
-import { Colors as StaticColors } from '../../../Assets/StyleUtilities/Colors';
+import {
+  Colors as StaticColors,
+  withAlpha,
+} from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { HeaderActionButton } from '../../../Common/HeaderActionButton';
 import { useTheme } from '../../../Theme/ThemeContext';
@@ -52,8 +55,8 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
   const themeAccent =
     activeThemeId === 'cyprus_sand'
       ? isDarkMode
-        ? '#0A6B66'
-        : '#004643'
+        ? StaticColors.CyprusTealLight
+        : StaticColors.CyprusTeal
       : accent;
 
   return (
@@ -90,22 +93,22 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
             backgroundColor: cardBg,
             borderColor:
               activeThemeId === 'cyprus_sand'
-                ? '#DDD7CB'
+                ? StaticColors.CyprusBorderDarkCard
                 : isDarkMode
-                ? 'rgba(255, 255, 255, 0.12)'
-                : '#FFFFFF',
+                ? withAlpha(StaticColors.PureWhite, 0.12)
+                : StaticColors.PureWhite,
             borderBottomColor:
               activeThemeId === 'cyprus_sand'
-                ? '#C8C2B4'
+                ? StaticColors.SandstoneBorder
                 : isDarkMode
-                ? '#171A20'
-                : '#E2DCD0',
+                ? StaticColors.DarkSurfaceDeep
+                : StaticColors.WarmStoneBorder,
             shadowColor:
               activeThemeId === 'cyprus_sand'
-                ? 'rgba(0, 70, 67, 0.16)'
+                ? withAlpha(StaticColors.CyprusTeal, 0.16)
                 : isDarkMode
-                ? '#000000'
-                : 'rgba(131, 131, 214, 0.14)',
+                ? StaticColors.PureBlack
+                : withAlpha(StaticColors.LavenderPurple, 0.14),
           },
         ]}
       >
@@ -122,16 +125,16 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
                   {
                     backgroundColor:
                       activeThemeId === 'cyprus_sand'
-                        ? '#E6E1D5'
+                        ? StaticColors.WakeWarmLightBorder
                         : isDarkMode
-                        ? '#2A243D'
-                        : '#F4EEFF',
+                        ? StaticColors.WakeVioletDarkBg
+                        : StaticColors.WakeVioletLightBg,
                     borderColor:
                       activeThemeId === 'cyprus_sand'
-                        ? '#DDD7CB'
+                        ? StaticColors.CyprusBorderDarkCard
                         : isDarkMode
-                        ? '#473668'
-                        : '#D8CBFF',
+                        ? StaticColors.WakeVioletDarkBorder
+                        : StaticColors.WakeVioletLightBorder,
                   },
                 ]}
               >
@@ -149,10 +152,10 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
             value={wakeWordEnabled}
             onValueChange={onToggleWakeWord}
             trackColor={{
-              false: '#D9D9D9',
+              false: StaticColors.FogGrey,
               true: themeAccent,
             }}
-            thumbColor="#FFFFFF"
+            thumbColor={StaticColors.PureWhite}
           />
         </View>
 
@@ -163,13 +166,13 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
             {
               backgroundColor: wakeWordEnabled
                 ? isDarkMode
-                  ? '#0E281C'
-                  : '#EDFDF5'
+                  ? StaticColors.WakeGreenDarkBg
+                  : StaticColors.WellnessLightBg
                 : surfaceAlt,
               borderColor: wakeWordEnabled
                 ? isDarkMode
-                  ? '#164E34'
-                  : '#A7F3D0'
+                  ? StaticColors.WakeGreenDarkBorder
+                  : StaticColors.ToastSuccessCardBorderLight
                 : borderLight,
             },
           ]}
@@ -178,8 +181,12 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
             style={[
               styles.statusDot,
               {
-                backgroundColor: wakeWordEnabled ? '#10B981' : '#9CA3AF',
-                shadowColor: wakeWordEnabled ? '#10B981' : 'transparent',
+                backgroundColor: wakeWordEnabled
+                  ? StaticColors.ToastSuccessAccent
+                  : StaticColors.Gray400,
+                shadowColor: wakeWordEnabled
+                  ? StaticColors.ToastSuccessAccent
+                  : StaticColors.Transparent,
               },
             ]}
           />
@@ -189,8 +196,8 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
               {
                 color: wakeWordEnabled
                   ? isDarkMode
-                    ? '#6EE7B7'
-                    : '#065F46'
+                    ? StaticColors.ToastSuccessBadgeBevelLight
+                    : StaticColors.Emerald800
                   : textSecondary,
               },
             ]}
@@ -224,11 +231,11 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
                         backgroundColor: isActive
                           ? isDarkMode
                             ? activeThemeId === 'cyprus_sand'
-                              ? '#003835'
-                              : '#2E2248'
+                              ? StaticColors.CyprusTealDark
+                              : StaticColors.WakeChipDarkVioletBg
                             : activeThemeId === 'cyprus_sand'
-                            ? '#EAE5DB'
-                            : '#F3E8FF'
+                            ? StaticColors.WarmCreamBorder
+                            : StaticColors.Purple100
                           : surfaceAlt,
                         borderColor: isActive
                           ? themeAccent
@@ -424,7 +431,7 @@ const styles = StyleSheet.create({
     marginTop: 14,
     paddingTop: 12,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(0,0,0,0.05)',
+    borderTopColor: withAlpha(StaticColors.PureBlack, 0.05),
   },
   presetsTitle: {
     fontFamily: Fonts.poppins.medium,

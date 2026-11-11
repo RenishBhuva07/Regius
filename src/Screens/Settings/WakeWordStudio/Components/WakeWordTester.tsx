@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { Fonts } from '../../../../Theme/fonts';
 import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
+import Colors, { withAlpha } from '../../../../Assets/StyleUtilities/Colors';
 import { Badge } from '../../../../Common/Badge';
 import { WakeWordTestResult } from '../../../../Services/WakeWord/WakeWordService';
 
@@ -39,12 +40,12 @@ export const WakeWordTester: React.FC<WakeWordTesterProps> = React.memo(
     targetPhrase,
     testResult,
     sampleChips = DEFAULT_SAMPLE_TEST_CHIPS,
-    cardBg = '#FFFFFF',
+    cardBg = Colors.PureWhite,
     isDarkMode = false,
-    textPrimary = '#1B1C19',
-    textSecondary = '#77767B',
-    borderLight = '#E8E2D5',
-    surfaceAlt = '#FAF8F5',
+    textPrimary = Colors.RegiusInk,
+    textSecondary = Colors.Grey,
+    borderLight = Colors.RingBorder,
+    surfaceAlt = Colors.CreamSurfaceAlt,
   }) => {
     return (
       <View
@@ -52,9 +53,15 @@ export const WakeWordTester: React.FC<WakeWordTesterProps> = React.memo(
           styles.simulatorCard,
           {
             backgroundColor: cardBg,
-            borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : '#FFFFFF',
-            borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
-            shadowColor: isDarkMode ? '#000000' : 'rgba(131, 131, 214, 0.1)',
+            borderColor: isDarkMode
+              ? withAlpha(Colors.PureWhite, 0.08)
+              : Colors.PureWhite,
+            borderBottomColor: isDarkMode
+              ? Colors.DarkSurfaceDeep
+              : Colors.WarmStoneBorder,
+            shadowColor: isDarkMode
+              ? Colors.PureBlack
+              : withAlpha(Colors.LavenderPurple, 0.1),
           },
         ]}
       >
@@ -89,8 +96,8 @@ export const WakeWordTester: React.FC<WakeWordTesterProps> = React.memo(
                   backgroundColor:
                     testTranscript === chip
                       ? isDarkMode
-                        ? '#2C3038'
-                        : '#EEE7D9'
+                        ? Colors.DarkSteelBorder
+                        : Colors.TesterCreamBorder
                       : surfaceAlt,
                   borderColor: borderLight,
                 },
@@ -111,14 +118,14 @@ export const WakeWordTester: React.FC<WakeWordTesterProps> = React.memo(
             {
               backgroundColor: testResult.detected
                 ? isDarkMode
-                  ? 'rgba(33, 175, 133, 0.15)'
-                  : '#EDFDF5'
+                  ? withAlpha(Colors.LuminousGreen, 0.15)
+                  : Colors.WellnessLightBg
                 : isDarkMode
-                ? 'rgba(255, 59, 48, 0.12)'
-                : '#FFF0F0',
+                ? withAlpha(Colors.CrimsonPulse, 0.12)
+                : Colors.VoiceBellaBg,
               borderColor: testResult.detected
-                ? 'rgba(33, 175, 133, 0.4)'
-                : 'rgba(255, 59, 48, 0.3)',
+                ? withAlpha(Colors.LuminousGreen, 0.4)
+                : withAlpha(Colors.CrimsonPulse, 0.3),
             },
           ]}
         >
@@ -131,7 +138,11 @@ export const WakeWordTester: React.FC<WakeWordTesterProps> = React.memo(
             <Text
               style={[
                 styles.confidenceScore,
-                { color: testResult.detected ? '#21AF85' : '#FF3B30' },
+                {
+                  color: testResult.detected
+                    ? Colors.LuminousGreen
+                    : Colors.CrimsonPulse,
+                },
               ]}
             >
               Target: "{targetPhrase}"
@@ -143,11 +154,11 @@ export const WakeWordTester: React.FC<WakeWordTesterProps> = React.memo(
               {
                 color: testResult.detected
                   ? isDarkMode
-                    ? '#A7F3D0'
-                    : '#1B9A72'
+                    ? Colors.ToastSuccessCardBorderLight
+                    : Colors.GreenGracious
                   : isDarkMode
-                  ? '#FCA5A5'
-                  : '#D92A0F',
+                  ? Colors.ToastErrorBadgeBevelLight
+                  : Colors.MoltenRust,
               },
             ]}
           >
