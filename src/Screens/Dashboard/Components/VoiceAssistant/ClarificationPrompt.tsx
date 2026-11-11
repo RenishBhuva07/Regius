@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { HelpCircle } from 'lucide-react-native';
 import { Fonts } from '../../../../Theme/fonts';
+import { Colors } from '../../../../Assets/StyleUtilities/Colors';
 import { VoiceAssistantTheme } from './types';
 import { PendingClarification } from '../../../../Services/Voice/VoiceTypes';
 
@@ -36,7 +37,9 @@ export const ClarificationPrompt: React.FC<ClarificationPromptProps> = ({
           style={[
             styles.contextTag,
             {
-              backgroundColor: theme.isDarkMode ? '#242832' : '#F1EFEA',
+              backgroundColor: theme.isDarkMode
+                ? Colors.VoicePromptDarkBg
+                : Colors.VoicePromptSurface,
             },
           ]}
         >
@@ -60,7 +63,7 @@ export const ClarificationPrompt: React.FC<ClarificationPromptProps> = ({
             { backgroundColor: theme.accent },
           ]}
         >
-          <HelpCircle size={15} color="#FFFFFF" strokeWidth={2.4} />
+          <HelpCircle size={15} color={Colors.PureWhite} strokeWidth={2.4} />
         </View>
         <Text
           style={[styles.questionText, { color: theme.textPrimary }]}

@@ -18,7 +18,7 @@ import Svg, {
 } from 'react-native-svg';
 import { Fonts } from '../../../Theme/fonts';
 import { Typography } from '../../../Theme/Typographys';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../../Theme/useAppTheme';
 import { Badge } from '../../../Common/Badge';
 import { HabitItem } from '../../../Context/TaskReminderContext';
@@ -46,30 +46,30 @@ const BentoBackgroundSvg: React.FC = React.memo(() => (
     >
       <Defs>
         <LinearGradient id="bentoBg" x1="0%" y1="0%" x2="100%" y2="100%">
-          <Stop offset="0%" stopColor="#252733" stopOpacity={0.7} />
-          <Stop offset="50%" stopColor="#1C1E26" stopOpacity={0.3} />
-          <Stop offset="100%" stopColor="#141519" stopOpacity={0.8} />
+          <Stop offset="0%" stopColor={Colors.BentoStopSlate} stopOpacity={0.7} />
+          <Stop offset="50%" stopColor={Colors.BentoStopMid} stopOpacity={0.3} />
+          <Stop offset="100%" stopColor={Colors.BentoStopAbyss} stopOpacity={0.8} />
         </LinearGradient>
 
         {/* Fiery Amber Glow (Bottom-Left behind fire icon) */}
         <RadialGradient id="flameGlow" cx="20%" cy="45%" rx="55%" ry="55%">
-          <Stop offset="0%" stopColor="#FF9800" stopOpacity={0.28} />
-          <Stop offset="40%" stopColor="#E65100" stopOpacity={0.12} />
-          <Stop offset="100%" stopColor="#141519" stopOpacity={0} />
+          <Stop offset="0%" stopColor={Colors.AccentAmber} stopOpacity={0.28} />
+          <Stop offset="40%" stopColor={Colors.EventTextAccent} stopOpacity={0.12} />
+          <Stop offset="100%" stopColor={Colors.BentoStopAbyss} stopOpacity={0} />
         </RadialGradient>
 
         {/* Top-Right Lavender / Purple Aura */}
         <RadialGradient id="lavenderAura" cx="85%" cy="15%" rx="65%" ry="65%">
-          <Stop offset="0%" stopColor="#9C9CE3" stopOpacity={0.35} />
-          <Stop offset="45%" stopColor="#8383D6" stopOpacity={0.15} />
-          <Stop offset="100%" stopColor="#141519" stopOpacity={0} />
+          <Stop offset="0%" stopColor={Colors.PeriwinkleSoft} stopOpacity={0.35} />
+          <Stop offset="45%" stopColor={Colors.LavenderPurple} stopOpacity={0.15} />
+          <Stop offset="100%" stopColor={Colors.BentoStopAbyss} stopOpacity={0} />
         </RadialGradient>
 
         {/* Mint Glow on bottom right */}
         <RadialGradient id="mintGlow" cx="75%" cy="85%" rx="45%" ry="45%">
-          <Stop offset="0%" stopColor="#52D22E" stopOpacity={0.14} />
-          <Stop offset="60%" stopColor="#1B9A72" stopOpacity={0.03} />
-          <Stop offset="100%" stopColor="#141519" stopOpacity={0} />
+          <Stop offset="0%" stopColor={Colors.AccentGreen} stopOpacity={0.14} />
+          <Stop offset="60%" stopColor={Colors.GreenGracious} stopOpacity={0.03} />
+          <Stop offset="100%" stopColor={Colors.BentoStopAbyss} stopOpacity={0} />
         </RadialGradient>
       </Defs>
 
@@ -83,7 +83,7 @@ const BentoBackgroundSvg: React.FC = React.memo(() => (
         cx={310}
         cy={30}
         r={40}
-        stroke="rgba(216, 219, 255, 0.14)"
+        stroke={withAlpha(Colors.MindfulLightBorder, 0.14)}
         strokeWidth={1}
         fill="none"
       />
@@ -91,7 +91,7 @@ const BentoBackgroundSvg: React.FC = React.memo(() => (
         cx={310}
         cy={30}
         r={70}
-        stroke="rgba(216, 219, 255, 0.06)"
+        stroke={withAlpha(Colors.MindfulLightBorder, 0.06)}
         strokeWidth={1}
         strokeDasharray="4 6"
         fill="none"
@@ -147,7 +147,7 @@ export const HabitConsistencyBento: React.FC<HabitConsistencyBentoProps> = ({
       <View
         style={[
           styles.card,
-          isDarkMode && { borderColor: 'rgba(255, 255, 255, 0.22)' },
+          isDarkMode && { borderColor: withAlpha(Colors.PureWhite, 0.22) },
         ]}
       >
         {/* Luxury Dark Ambient Background matching DailyBriefingCard */}
@@ -160,7 +160,13 @@ export const HabitConsistencyBento: React.FC<HabitConsistencyBentoProps> = ({
               label="ACTIVE STREAK"
               variant="orange"
               size="sm"
-              icon={<Flame size={12} color="#E65100" strokeWidth={2.4} />}
+              icon={
+                <Flame
+                  size={12}
+                  color={Colors.EventTextAccent}
+                  strokeWidth={2.4}
+                />
+              }
             />
             <Badge
               label="TOP 5% CONSISTENCY"
@@ -181,9 +187,9 @@ export const HabitConsistencyBento: React.FC<HabitConsistencyBentoProps> = ({
               >
                 <Flame
                   size={60}
-                  color="#FF9800"
+                  color={Colors.AccentAmber}
                   strokeWidth={2.2}
-                  fill="#FF9800"
+                  fill={Colors.AccentAmber}
                 />
               </Animated.View>
 
@@ -218,8 +224,8 @@ export const HabitConsistencyBento: React.FC<HabitConsistencyBentoProps> = ({
             <View style={styles.weekStripHeader}>
               <Flame
                 size={ResponsivePixels.size12}
-                color="#FF9800"
-                fill="#FF9800"
+                color={Colors.AccentAmber}
+                fill={Colors.AccentAmber}
                 strokeWidth={2}
               />
               <Text style={styles.weekStripLabel}>WEEKLY MOMENTUM</Text>
@@ -260,12 +266,12 @@ export const HabitConsistencyBento: React.FC<HabitConsistencyBentoProps> = ({
                           size={ResponsivePixels.size15}
                           color={
                             isFilled
-                              ? '#FFA726'
+                              ? Colors.StreakFlameOrangeTop
                               : isToday
-                              ? '#FFA726'
-                              : 'rgba(255, 255, 255, 0.28)'
+                              ? Colors.StreakFlameOrangeTop
+                              : withAlpha(Colors.PureWhite, 0.28)
                           }
-                          fill={isFilled ? '#FF9800' : 'none'}
+                          fill={isFilled ? Colors.AccentAmber : 'none'}
                           strokeWidth={isToday && !isFilled ? 2 : 1.7}
                         />
                       </View>
@@ -305,7 +311,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.NeroBlack,
     ...Platform.select({
       ios: {
-        shadowColor: Colors.DefaultBlack,
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 10 },
         shadowOpacity: 0.28,
         shadowRadius: 18,
@@ -319,7 +325,7 @@ const styles = StyleSheet.create({
     borderRadius: ResponsivePixels.size24,
     overflow: 'hidden',
     borderWidth: 4,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: withAlpha(Colors.PureWhite, 0.9),
     position: 'relative',
     backgroundColor: Colors.NeroBlack,
   },
@@ -358,14 +364,14 @@ const styles = StyleSheet.create({
     fontSize: ResponsivePixels.size32,
     lineHeight: ResponsivePixels.size40,
     paddingTop: ResponsivePixels.size4,
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
     letterSpacing: -0.5,
     includeFontPadding: false,
   },
   metricLabel: {
     fontFamily: Fonts.poppins.regular,
     fontSize: ResponsivePixels.size12,
-    color: '#A3A8B1',
+    color: Colors.SteelMist,
     marginTop: ResponsivePixels.size1,
   },
   metricRight: {
@@ -373,9 +379,9 @@ const styles = StyleSheet.create({
     gap: ResponsivePixels.size4,
   },
   percentBadge: {
-    backgroundColor: 'rgba(82, 210, 46, 0.18)',
+    backgroundColor: withAlpha(Colors.AccentGreen, 0.18),
     borderWidth: 1,
-    borderColor: 'rgba(82, 210, 46, 0.45)',
+    borderColor: withAlpha(Colors.AccentGreen, 0.45),
     paddingHorizontal: ResponsivePixels.size12,
     paddingVertical: ResponsivePixels.size4,
     borderRadius: ResponsivePixels.size14,
@@ -383,27 +389,27 @@ const styles = StyleSheet.create({
   percentText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size18,
-    color: '#52D22E',
+    color: Colors.AccentGreen,
   },
   progressSubtext: {
     fontFamily: Fonts.poppins.medium,
     fontSize: ResponsivePixels.size11,
-    color: '#A3A8B1',
+    color: Colors.SteelMist,
   },
   progressBarTrack: {
     height: ResponsivePixels.size8,
     borderRadius: ResponsivePixels.size4,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.1),
     overflow: 'hidden',
   },
   progressBarFill: {
     height: '100%',
     borderRadius: ResponsivePixels.size4,
-    backgroundColor: '#52D22E',
+    backgroundColor: Colors.AccentGreen,
   },
   weekStrip: {
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.08)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.08),
     paddingTop: ResponsivePixels.size12,
     gap: ResponsivePixels.size10,
   },
@@ -415,7 +421,7 @@ const styles = StyleSheet.create({
   weekStripLabel: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: ResponsivePixels.size10,
-    color: '#8A8E99',
+    color: Colors.ConsistencyLabelGray,
     letterSpacing: 0.8,
   },
   weekDaysRow: {
@@ -432,18 +438,18 @@ const styles = StyleSheet.create({
     width: ResponsivePixels.size30,
     height: ResponsivePixels.size30,
     borderRadius: ResponsivePixels.size15,
-    backgroundColor: 'rgba(255, 255, 255, 0.04)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.04),
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.09)',
+    borderColor: withAlpha(Colors.PureWhite, 0.09),
   },
   dayBubbleFilled: {
-    backgroundColor: 'rgba(255, 152, 0, 0.14)',
-    borderColor: 'rgba(255, 152, 0, 0.45)',
+    backgroundColor: withAlpha(Colors.AccentAmber, 0.14),
+    borderColor: withAlpha(Colors.AccentAmber, 0.45),
     ...Platform.select({
       ios: {
-        shadowColor: '#FF9800',
+        shadowColor: Colors.AccentAmber,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.32,
         shadowRadius: 4,
@@ -454,12 +460,12 @@ const styles = StyleSheet.create({
     }),
   },
   dayBubbleToday: {
-    borderColor: '#FFA726',
+    borderColor: Colors.StreakFlameOrangeTop,
     borderWidth: 1.6,
-    backgroundColor: 'rgba(255, 152, 0, 0.18)',
+    backgroundColor: withAlpha(Colors.AccentAmber, 0.18),
     ...Platform.select({
       ios: {
-        shadowColor: '#FFA726',
+        shadowColor: Colors.StreakFlameOrangeTop,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.4,
         shadowRadius: 5,
@@ -472,17 +478,17 @@ const styles = StyleSheet.create({
   flowConnector: {
     flex: 1,
     height: ResponsivePixels.size2,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.08),
     marginTop: ResponsivePixels.size14,
     borderRadius: ResponsivePixels.size1,
     zIndex: 1,
   },
   flowConnectorFilled: {
-    backgroundColor: '#FF9800',
+    backgroundColor: Colors.AccentAmber,
     height: ResponsivePixels.size2,
     ...Platform.select({
       ios: {
-        shadowColor: '#FF9800',
+        shadowColor: Colors.AccentAmber,
         shadowOffset: { width: 0, height: 1 },
         shadowOpacity: 0.5,
         shadowRadius: 3,
@@ -495,15 +501,15 @@ const styles = StyleSheet.create({
   dayText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: ResponsivePixels.size11,
-    color: '#8A8E99',
+    color: Colors.ConsistencyLabelGray,
   },
   dayTextFilled: {
     fontFamily: Fonts.poppins.semiBold,
-    color: '#FFE0B2',
+    color: Colors.EventLightBorder,
   },
   dayTextToday: {
     fontFamily: Fonts.poppins.bold,
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
   },
 });
 

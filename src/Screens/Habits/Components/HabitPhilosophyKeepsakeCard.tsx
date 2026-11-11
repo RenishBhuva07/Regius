@@ -19,6 +19,7 @@ import Svg, {
 
 import { Fonts } from '../../../Theme/fonts';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { useTheme } from '../../../Theme/ThemeContext';
 
 export interface HabitPhilosophyKeepsakeCardProps {
@@ -108,17 +109,17 @@ const ManuscriptBackgroundSvg: React.FC<{
         <LinearGradient id="keepsakeBg" x1="0%" y1="0%" x2="100%" y2="100%">
           <Stop
             offset="0%"
-            stopColor={isDark ? '#1B1E28' : '#FFFDF5'}
+            stopColor={isDark ? Colors.KeepsakeDarkTop : Colors.KeepsakeLightTop}
             stopOpacity={isDark ? 0.98 : 0.99}
           />
           <Stop
             offset="50%"
-            stopColor={isDark ? '#141720' : '#FAF5E8'}
+            stopColor={isDark ? Colors.KeepsakeDarkMid : Colors.KeepsakeLightMid}
             stopOpacity={isDark ? 0.95 : 0.97}
           />
           <Stop
             offset="100%"
-            stopColor={isDark ? '#0F1017' : '#F5ECE0'}
+            stopColor={isDark ? Colors.KeepsakeDarkBottom : Colors.KeepsakeLightBottom}
             stopOpacity={isDark ? 0.99 : 0.99}
           />
         </LinearGradient>
@@ -130,7 +131,7 @@ const ManuscriptBackgroundSvg: React.FC<{
             stopOpacity={isDark ? 0.15 : 0.08}
           />
           <Stop offset="65%" stopColor={accentColor} stopOpacity={0.02} />
-          <Stop offset="100%" stopColor="#000000" stopOpacity={0} />
+          <Stop offset="100%" stopColor={Colors.PureBlack} stopOpacity={0} />
         </RadialGradient>
       </Defs>
 
@@ -205,7 +206,11 @@ export const HabitPhilosophyKeepsakeCard: React.FC<HabitPhilosophyKeepsakeCardPr
           style={[
             styles.keepsakeCard,
             isDarkMode && styles.keepsakeCardDark,
-            { borderColor: isDarkMode ? '#2B2F3D' : '#E8DFCE' },
+            {
+              borderColor: isDarkMode
+                ? Colors.KeepsakeDarkBorder
+                : Colors.KeepsakeWarmBorder,
+            },
           ]}
         >
           <ManuscriptBackgroundSvg
@@ -217,7 +222,7 @@ export const HabitPhilosophyKeepsakeCard: React.FC<HabitPhilosophyKeepsakeCardPr
           <View style={styles.waxSealDisc}>
             <Crown
               size={ResponsivePixels.size13}
-              color="#B47804"
+              color={Colors.BadgeYellowText}
               strokeWidth={2.4}
             />
           </View>
@@ -228,8 +233,8 @@ export const HabitPhilosophyKeepsakeCard: React.FC<HabitPhilosophyKeepsakeCardPr
               styles.watermarkQuoteMark,
               {
                 color: isDarkMode
-                  ? 'rgba(255,255,255,0.04)'
-                  : 'rgba(180, 120, 4, 0.08)',
+                  ? withAlpha(Colors.PureWhite, 0.04)
+                  : withAlpha(Colors.BadgeYellowText, 0.08),
               },
             ]}
           >
@@ -281,7 +286,9 @@ export const HabitPhilosophyKeepsakeCard: React.FC<HabitPhilosophyKeepsakeCardPr
                 <Animated.View style={{ transform: [{ rotate: spin }] }}>
                   <Sparkles
                     size={ResponsivePixels.size11}
-                    color={isDarkMode ? '#F5C518' : '#B47804'}
+                    color={
+                      isDarkMode ? Colors.AccentYellow : Colors.BadgeYellowText
+                    }
                     strokeWidth={2.4}
                   />
                 </Animated.View>
@@ -326,7 +333,7 @@ const styles = StyleSheet.create({
     borderRadius: ResponsivePixels.size22,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 5 },
         shadowOpacity: 0.12,
         shadowRadius: 8,
@@ -339,7 +346,7 @@ const styles = StyleSheet.create({
   },
   keepsakeCard: {
     position: 'relative',
-    backgroundColor: '#FAF7EE',
+    backgroundColor: Colors.KeepsakeWarmCream,
     borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
     paddingHorizontal: ResponsivePixels.size16,
@@ -350,7 +357,7 @@ const styles = StyleSheet.create({
     gap: ResponsivePixels.size12,
   },
   keepsakeCardDark: {
-    backgroundColor: '#161922',
+    backgroundColor: Colors.DetailDarkElevatedCard,
   },
   waxSealDisc: {
     position: 'absolute',
@@ -360,17 +367,17 @@ const styles = StyleSheet.create({
     height: ResponsivePixels.size20,
     borderBottomLeftRadius: ResponsivePixels.size16,
     borderBottomRightRadius: ResponsivePixels.size16,
-    backgroundColor: '#FFF8D0',
+    backgroundColor: Colors.BadgeYellowBg,
     borderWidth: 1,
     borderTopWidth: 0,
-    borderColor: '#FFFFFF',
-    borderBottomColor: '#DEAA14',
+    borderColor: Colors.PureWhite,
+    borderBottomColor: Colors.WorkDarkBorder,
     borderBottomWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
     ...Platform.select({
       ios: {
-        shadowColor: '#D97706',
+        shadowColor: Colors.HabitBurnishedAmber,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 3,
@@ -399,13 +406,13 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.ranade.medium,
     fontSize: ResponsivePixels.size13,
     lineHeight: ResponsivePixels.size20,
-    color: '#34322C',
+    color: Colors.KeepsakeTextLight,
     textAlign: 'center',
     fontStyle: 'italic',
     paddingHorizontal: ResponsivePixels.size8,
   },
   editorialQuoteTextDark: {
-    color: '#E0E3EC',
+    color: Colors.KeepsakeTextDark,
   },
   attributionRow: {
     flexDirection: 'row',
@@ -424,41 +431,41 @@ const styles = StyleSheet.create({
   authorName: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size12,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     letterSpacing: 0.2,
   },
   authorNameDark: {
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
   authorEra: {
     fontFamily: Fonts.poppins.regular,
     fontSize: ResponsivePixels.size9,
-    color: '#8E95A5',
+    color: Colors.MilestoneSlate,
   },
   shuffleButton: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: ResponsivePixels.size4,
-    backgroundColor: '#FFF2D6',
+    backgroundColor: Colors.KeepsakeAmberPillLight,
     paddingHorizontal: ResponsivePixels.size10,
     paddingVertical: ResponsivePixels.size5,
     borderRadius: ResponsivePixels.size14,
     borderWidth: 1,
-    borderColor: '#FFE099',
+    borderColor: Colors.KeepsakeAmberBorderLight,
     flexShrink: 0,
   },
   shuffleButtonDark: {
-    backgroundColor: 'rgba(245, 197, 24, 0.15)',
-    borderColor: 'rgba(245, 197, 24, 0.3)',
+    backgroundColor: withAlpha(Colors.AccentYellow, 0.15),
+    borderColor: withAlpha(Colors.AccentYellow, 0.3),
   },
   shuffleText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size9,
-    color: '#B47804',
+    color: Colors.BadgeYellowText,
     letterSpacing: 0.4,
   },
   shuffleTextDark: {
-    color: '#F5C518',
+    color: Colors.AccentYellow,
   },
   codexStampRow: {
     flexDirection: 'row',
@@ -470,15 +477,15 @@ const styles = StyleSheet.create({
   stampDivider: {
     flex: 1,
     height: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.08)',
+    backgroundColor: withAlpha(Colors.PureBlack, 0.08),
   },
   stampDividerDark: {
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.08),
   },
   codexStampText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size8,
-    color: '#9E9A90',
+    color: Colors.KeepsakeAuthorMuted,
     letterSpacing: 0.8,
   },
 });

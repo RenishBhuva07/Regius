@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import Svg, { Line } from 'react-native-svg';
 import { Crown, Lock, Check } from 'lucide-react-native';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { Fonts } from '../../../Theme/fonts';
 import { MilestoneTier } from '../../../Services/Milestone/MilestoneService';
 
@@ -24,33 +25,41 @@ export const GameRoadCheckpoint: React.FC<GameRoadCheckpointProps> = ({
   isDarkMode,
 }) => {
   // Road colors
-  const roadBg = isDarkMode ? '#1A1E24' : '#2C323D';
-  const curbBorder = isDarkMode ? 'rgba(255, 255, 255, 0.15)' : '#D0C9BA';
-  const curbEdge = isDarkMode ? '#101216' : '#20242B';
-  const dashColor = isUnlocked ? '#F5C518' : 'rgba(255, 255, 255, 0.2)';
+  const roadBg = isDarkMode
+    ? Colors.RoadAsphaltDarkBg
+    : Colors.RoadAsphaltAltLight;
+  const curbBorder = isDarkMode
+    ? withAlpha(Colors.PureWhite, 0.15)
+    : Colors.RoadCurbLightBorder;
+  const curbEdge = isDarkMode
+    ? Colors.RoadCurbEdgeDark
+    : Colors.DarkInputBevelCharcoal;
+  const dashColor = isUnlocked
+    ? Colors.AccentYellow
+    : withAlpha(Colors.PureWhite, 0.2);
 
   // Disc colors
   const discBg = isCurrent
-    ? '#F59E0B'
+    ? Colors.VoiceMichaelAccent
     : isUnlocked
-    ? tier.accentColor || '#10B981'
+    ? tier.accentColor || Colors.ToastSuccessAccent
     : isDarkMode
-    ? '#242933'
-    : '#3A4250';
+    ? Colors.RoadNodeLockedDarkBg
+    : Colors.RoadNodeLockedLightBg;
 
   const discBorderBottom = isCurrent
-    ? '#B45309'
+    ? Colors.Amber700
     : isUnlocked
-    ? '#065F46'
+    ? Colors.Emerald800
     : isDarkMode
-    ? '#14171D'
-    : '#20252E';
+    ? Colors.RoadDiscLockedDarkBevel
+    : Colors.RoadDiscLockedLightBevel;
 
   const shadowColor = isCurrent
-    ? '#F59E0B'
+    ? Colors.VoiceMichaelAccent
     : isUnlocked
-    ? tier.accentColor || '#10B981'
-    : '#000000';
+    ? tier.accentColor || Colors.ToastSuccessAccent
+    : Colors.PureBlack;
 
   return (
     <View style={styles.container}>
@@ -136,17 +145,17 @@ export const GameRoadCheckpoint: React.FC<GameRoadCheckpointProps> = ({
                 <Text style={styles.discLevelText}>{tier.level}</Text>
                 {/* 3D Mini Right Sign Seal at bottom-right */}
                 <View style={styles.miniRightSignSeal}>
-                  <Check size={9} color="#FFFFFF" strokeWidth={3.2} />
+                  <Check size={9} color={Colors.PureWhite} strokeWidth={3.2} />
                 </View>
               </View>
             ) : isCurrent ? (
               <View style={styles.currentCenter}>
-                <Crown size={18} color="#FFFFFF" strokeWidth={2.4} />
+                <Crown size={18} color={Colors.PureWhite} strokeWidth={2.4} />
                 <Text style={styles.currentLevelSubText}>LVL {tier.level}</Text>
               </View>
             ) : (
               <View style={styles.lockedCenter}>
-                <Lock size={15} color="#94A3B8" strokeWidth={2.4} />
+                <Lock size={15} color={Colors.Slate400} strokeWidth={2.4} />
                 <Text style={styles.lockedLevelText}>{tier.level}</Text>
               </View>
             )}
@@ -174,7 +183,11 @@ export const GameRoadCheckpoint: React.FC<GameRoadCheckpointProps> = ({
                 y1="0"
                 x2="3"
                 y2="100%"
-                stroke={isUnlocked ? '#F5C518' : 'rgba(255, 255, 255, 0.2)'}
+                stroke={
+                  isUnlocked
+                    ? Colors.AccentYellow
+                    : withAlpha(Colors.PureWhite, 0.2)
+                }
                 strokeWidth="2.5"
                 strokeDasharray="6 5"
               />
@@ -266,17 +279,17 @@ const styles = StyleSheet.create({
     bottom: -6,
     borderRadius: 32,
     borderWidth: 2,
-    borderColor: 'rgba(245, 158, 11, 0.65)',
-    backgroundColor: 'rgba(245, 158, 11, 0.12)',
+    borderColor: withAlpha(Colors.VoiceMichaelAccent, 0.65),
+    backgroundColor: withAlpha(Colors.VoiceMichaelAccent, 0.12),
   },
   discBody: {
     width: 48,
     height: 48,
     borderRadius: 24,
     borderWidth: 2,
-    borderTopColor: 'rgba(255, 255, 255, 0.8)',
-    borderLeftColor: 'rgba(255, 255, 255, 0.4)',
-    borderRightColor: 'rgba(255, 255, 255, 0.2)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.8),
+    borderLeftColor: withAlpha(Colors.PureWhite, 0.4),
+    borderRightColor: withAlpha(Colors.PureWhite, 0.2),
     borderBottomWidth: 5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -290,7 +303,7 @@ const styles = StyleSheet.create({
     right: 4,
     height: 10,
     borderRadius: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.35)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.35),
   },
   unlockedCenter: {
     alignItems: 'center',
@@ -302,8 +315,8 @@ const styles = StyleSheet.create({
   discLevelText: {
     fontFamily: Fonts.ranade.bold,
     fontSize: 18,
-    color: '#FFFFFF',
-    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    color: Colors.PureWhite,
+    textShadowColor: withAlpha(Colors.PureBlack, 0.4),
     textShadowOffset: { width: 0, height: 1.5 },
     textShadowRadius: 2,
   },
@@ -314,9 +327,9 @@ const styles = StyleSheet.create({
     width: 14,
     height: 14,
     borderRadius: 7,
-    backgroundColor: '#047857',
+    backgroundColor: Colors.Emerald700,
     borderWidth: 1,
-    borderColor: '#FFFFFF',
+    borderColor: Colors.PureWhite,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -327,7 +340,7 @@ const styles = StyleSheet.create({
   currentLevelSubText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 8,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     marginTop: 1,
     letterSpacing: 0.5,
   },
@@ -338,7 +351,7 @@ const styles = StyleSheet.create({
   lockedLevelText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 9,
-    color: '#94A3B8',
+    color: Colors.Slate400,
     marginTop: 1,
   },
 });

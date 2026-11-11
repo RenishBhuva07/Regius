@@ -10,6 +10,7 @@ import Svg, {
   Stop,
   Polygon,
 } from 'react-native-svg';
+import { Colors, IllustrationColors } from '../../../Assets/StyleUtilities/Colors';
 
 export interface MilestoneWatermarkDoodleSvgProps {
   width?: number;
@@ -20,19 +21,27 @@ export interface MilestoneWatermarkDoodleSvgProps {
 export const MilestoneWatermarkDoodleSvg: React.FC<
   MilestoneWatermarkDoodleSvgProps
 > = ({ width = 140, height = 148, isDarkMode = false }) => {
-  const mountainBaseColor = isDarkMode ? '#1E232B' : '#E8E2D2';
-  const mountainStroke = isDarkMode ? '#3A4250' : '#C8C0AC';
-  const dashStroke = isDarkMode ? '#4D586B' : '#B5AD98';
-  const flagPoleColor = isDarkMode ? '#F5C518' : '#D99B0F';
+  const mountainBaseColor = isDarkMode
+    ? Colors.RoadLabelDarkBg
+    : IllustrationColors.MilestoneBaseWarm;
+  const mountainStroke = isDarkMode
+    ? Colors.RoadNodeLockedLightBg
+    : IllustrationColors.MilestoneStrokeWarm;
+  const dashStroke = isDarkMode
+    ? IllustrationColors.MilestoneDashSlate
+    : IllustrationColors.MilestoneDashWarm;
+  const flagPoleColor = isDarkMode
+    ? Colors.AccentYellow
+    : Colors.SvgDoodleGoldShadow;
 
   return (
     <View style={[styles.container, { width, height }]} pointerEvents="none">
       <Svg width={width} height={height} viewBox="0 0 140 148" fill="none">
         <Defs>
           <RadialGradient id="summitAura" cx="50%" cy="50%" r="50%">
-            <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.25} />
-            <Stop offset="60%" stopColor="#8383D6" stopOpacity={0.08} />
-            <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={0} />
+            <Stop offset="0%" stopColor={Colors.AccentYellow} stopOpacity={0.25} />
+            <Stop offset="60%" stopColor={Colors.LavenderPurple} stopOpacity={0.08} />
+            <Stop offset="100%" stopColor={Colors.WarmParchment} stopOpacity={0} />
           </RadialGradient>
           <LinearGradient
             id="milestoneGold"
@@ -41,15 +50,15 @@ export const MilestoneWatermarkDoodleSvg: React.FC<
             x2="100%"
             y2="100%"
           >
-            <Stop offset="0%" stopColor="#FFFCE3" />
-            <Stop offset="35%" stopColor="#F5C518" />
-            <Stop offset="75%" stopColor="#D97706" />
-            <Stop offset="100%" stopColor="#92400E" />
+            <Stop offset="0%" stopColor={Colors.CreamBackground} />
+            <Stop offset="35%" stopColor={Colors.AccentYellow} />
+            <Stop offset="75%" stopColor={Colors.HabitBurnishedAmber} />
+            <Stop offset="100%" stopColor={Colors.Amber800} />
           </LinearGradient>
           <LinearGradient id="flagGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <Stop offset="0%" stopColor="#F5C518" />
-            <Stop offset="50%" stopColor="#FBBF24" />
-            <Stop offset="100%" stopColor="#D97706" />
+            <Stop offset="0%" stopColor={Colors.AccentYellow} />
+            <Stop offset="50%" stopColor={Colors.Amber400} />
+            <Stop offset="100%" stopColor={Colors.HabitBurnishedAmber} />
           </LinearGradient>
           <LinearGradient
             id="accentLavender"
@@ -58,8 +67,8 @@ export const MilestoneWatermarkDoodleSvg: React.FC<
             x2="100%"
             y2="100%"
           >
-            <Stop offset="0%" stopColor="#C4B5FD" />
-            <Stop offset="100%" stopColor="#8383D6" />
+            <Stop offset="0%" stopColor={IllustrationColors.Violet300} />
+            <Stop offset="100%" stopColor={Colors.LavenderPurple} />
           </LinearGradient>
         </Defs>
         <Circle cx="80" cy="46" r="38" fill="url(#summitAura)" />
@@ -80,7 +89,11 @@ export const MilestoneWatermarkDoodleSvg: React.FC<
         />
         <Polygon
           points="46,134 82,48 122,134"
-          fill={isDarkMode ? '#242A35' : '#DDD6C4'}
+          fill={
+            isDarkMode
+              ? Colors.MilestoneCloseBtnDarkBg
+              : IllustrationColors.MilestonePeakWarm
+          }
           stroke={mountainStroke}
           strokeWidth={1.5}
           strokeLinejoin="round"
@@ -99,7 +112,7 @@ export const MilestoneWatermarkDoodleSvg: React.FC<
         <Path
           d="M 82 22 C 94 18, 100 28, 114 23 C 104 31, 96 26, 82 34 Z"
           fill="url(#flagGrad)"
-          stroke="#B45309"
+          stroke={Colors.Amber700}
           strokeWidth={0.8}
         />
         <Circle cx="82" cy="19" r="2.4" fill="url(#milestoneGold)" />
@@ -108,7 +121,7 @@ export const MilestoneWatermarkDoodleSvg: React.FC<
             d="M 0 -8 Q 0 0 8 0 Q 0 0 0 8 Q 0 0 -8 0 Q 0 0 0 -8 Z"
             fill="url(#milestoneGold)"
           />
-          <Circle cx="0" cy="0" r="1.6" fill="#FFFFFF" />
+          <Circle cx="0" cy="0" r="1.6" fill={Colors.PureWhite} />
         </G>
         <G transform="translate(42, 34)">
           <Path
@@ -125,7 +138,13 @@ export const MilestoneWatermarkDoodleSvg: React.FC<
         <Circle cx="30" cy="56" r="1.3" fill={dashStroke} />
         <Circle cx="104" cy="74" r="1.4" fill={dashStroke} />
         <Circle cx="58" cy="22" r="1.2" fill={dashStroke} />
-        <Circle cx="126" cy="30" r="1.5" fill="#F5C518" opacity={0.8} />
+        <Circle
+          cx="126"
+          cy="30"
+          r="1.5"
+          fill={Colors.AccentYellow}
+          opacity={0.8}
+        />
         <Path
           d="M 10 134 Q 72 138 132 134"
           stroke={mountainStroke}

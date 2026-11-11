@@ -24,7 +24,7 @@ import {
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../../Theme/fonts';
-import { Colors } from '../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import { Badge } from '../../Common/Badge';
 import { ProBadge } from '../../Common/ProBadge';
 import CustomButton from '../../Common/CustomButton';
@@ -151,16 +151,20 @@ export const HelpFaqScreen: React.FC = () => {
   };
 
   const bgMain =
-    themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
+    themeColors.Background ||
+    (isDarkMode ? Colors.DarkBackground : Colors.CreamBackground);
   const cardBg =
-    themeColors.CardBackground || (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
+    themeColors.CardBackground ||
+    (isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite);
   const textPrimary =
     themeColors.PrimaryText ||
-    (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
+    (isDarkMode ? Colors.PureWhite : Colors.PureBlack);
   const textSecondary =
-    themeColors.SecondaryText || (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+    themeColors.SecondaryText ||
+    (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray);
   const borderLight =
-    themeColors.BorderLight || (isDarkMode ? '#2C3035' : '#E8E2D5');
+    themeColors.BorderLight ||
+    (isDarkMode ? Colors.CarbonSlate : Colors.RingBorder);
 
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>
@@ -196,7 +200,11 @@ export const HelpFaqScreen: React.FC = () => {
           <View style={styles.heroCard}>
             <View style={styles.heroHeaderRow}>
               <View style={styles.heroTagRow}>
-                <Sparkles size={13} color="#F5C518" strokeWidth={2.4} />
+                <Sparkles
+                  size={13}
+                  color={Colors.AccentYellow}
+                  strokeWidth={2.4}
+                />
                 <Text style={styles.heroTagText}>
                   VIP CONCIERGE & DIAGNOSTICS
                 </Text>
@@ -219,7 +227,11 @@ export const HelpFaqScreen: React.FC = () => {
                 accessibilityRole="button"
                 accessibilityLabel="Ask Voice Assistant"
               >
-                <Mic size={15} color="#8383D6" strokeWidth={2.4} />
+                <Mic
+                  size={15}
+                  color={Colors.LavenderPurple}
+                  strokeWidth={2.4}
+                />
                 <Text style={styles.heroVoiceBtnText}>Ask Sia</Text>
               </TouchableOpacity>
 
@@ -230,7 +242,11 @@ export const HelpFaqScreen: React.FC = () => {
                 accessibilityRole="button"
                 accessibilityLabel="Contact Concierge Desk"
               >
-                <Mail size={15} color="#F5C518" strokeWidth={2.4} />
+                <Mail
+                  size={15}
+                  color={Colors.AccentYellow}
+                  strokeWidth={2.4}
+                />
                 <Text style={styles.heroEmailBtnText}>Email Concierge</Text>
               </TouchableOpacity>
             </View>
@@ -258,36 +274,46 @@ export const HelpFaqScreen: React.FC = () => {
                 label: 'Voice Assistant',
                 count: '3 Guides',
                 icon: Mic,
-                accent: '#8383D6',
-                bg: isDarkMode ? '#23273A' : '#EFF2FE',
-                border: isDarkMode ? '#484E70' : '#D8DBFF',
+                accent: Colors.LavenderPurple,
+                bg: isDarkMode
+                  ? Colors.VaultMindfulDarkBg
+                  : Colors.MindfulLightBg,
+                border: isDarkMode
+                  ? Colors.PerkLavenderDarkBorder
+                  : Colors.MindfulLightBorder,
               },
               {
                 id: 'Tasks' as const,
                 label: 'Works & Tasks',
                 count: '2 Guides',
                 icon: CheckSquare,
-                accent: '#D97706',
-                bg: isDarkMode ? '#332918' : '#FFFCEB',
-                border: isDarkMode ? '#665126' : '#FFF5B8',
+                accent: Colors.HabitBurnishedAmber,
+                bg: isDarkMode ? Colors.VaultAmberDarkBg : Colors.WorkLightBg,
+                border: isDarkMode
+                  ? Colors.PerkAmberDarkBorder
+                  : Colors.WorkLightBorder,
               },
               {
                 id: 'Gestures' as const,
                 label: 'Ritual Gestures',
                 count: '2 Guides',
                 icon: Flame,
-                accent: '#1B9A72',
-                bg: isDarkMode ? '#172B22' : '#EDFDF5',
-                border: isDarkMode ? '#2E5B47' : '#C6FFDD',
+                accent: Colors.GreenGracious,
+                bg: isDarkMode ? Colors.PerkGreenDarkBg : Colors.WellnessLightBg,
+                border: isDarkMode
+                  ? Colors.PerkGreenDarkBorder
+                  : Colors.WellnessLightBorder,
               },
               {
                 id: 'Privacy' as const,
                 label: 'Vault & Privacy',
                 count: '1 Guide',
                 icon: Shield,
-                accent: '#E65100',
-                bg: isDarkMode ? '#331F18' : '#FFF0DE',
-                border: isDarkMode ? '#663B26' : '#FFB86B',
+                accent: Colors.EventTextAccent,
+                bg: isDarkMode ? Colors.EventDarkBg : Colors.EventLightBg,
+                border: isDarkMode
+                  ? Colors.PerkOrangeDarkBorder
+                  : Colors.BadgeOrangeBevel,
               },
             ].map(domain => {
               const isSelected = activeCategory === domain.id;
@@ -317,7 +343,7 @@ export const HelpFaqScreen: React.FC = () => {
                     style={[
                       styles.domainIconCircle,
                       {
-                        backgroundColor: '#FFFFFF',
+                        backgroundColor: Colors.PureWhite,
                         borderColor: domain.border,
                       },
                     ]}
@@ -362,12 +388,12 @@ export const HelpFaqScreen: React.FC = () => {
               const isExpanded = expandedId === item.id;
               const accentColor =
                 item.category === 'Voice'
-                  ? '#8383D6'
+                  ? Colors.LavenderPurple
                   : item.category === 'Tasks'
-                  ? '#F5C518'
+                  ? Colors.AccentYellow
                   : item.category === 'Gestures'
-                  ? '#1B9A72'
-                  : '#FF9800';
+                  ? Colors.GreenGracious
+                  : Colors.AccentAmber;
 
               return (
                 <View
@@ -377,7 +403,7 @@ export const HelpFaqScreen: React.FC = () => {
                     {
                       backgroundColor: cardBg,
                       borderColor: isExpanded ? accentColor : borderLight,
-                      shadowColor: isExpanded ? accentColor : '#000000',
+                      shadowColor: isExpanded ? accentColor : Colors.PureBlack,
                     },
                   ]}
                 >
@@ -422,11 +448,11 @@ export const HelpFaqScreen: React.FC = () => {
                         {
                           backgroundColor: isExpanded
                             ? isDarkMode
-                              ? '#272935'
-                              : '#EFF2FE'
+                              ? Colors.LanguageAuditionDarkBg
+                              : Colors.MindfulLightBg
                             : isDarkMode
-                            ? '#242830'
-                            : '#F5EFE0',
+                            ? Colors.DarkSocialButtonBg
+                            : Colors.FaqChevronIdleLightBg,
                           borderColor: borderLight,
                         },
                       ]}
@@ -466,15 +492,17 @@ export const HelpFaqScreen: React.FC = () => {
                             styles.tipCard,
                             {
                               backgroundColor: isDarkMode
-                                ? '#22283A'
-                                : '#FAF8F5',
-                              borderColor: isDarkMode ? '#394060' : '#ECE8DF',
+                                ? Colors.VoiceCardDarkSelectedBg
+                                : Colors.CreamSurfaceAlt,
+                              borderColor: isDarkMode
+                                ? Colors.FaqTipDarkBorder
+                                : Colors.WarmCheckboxBorder,
                             },
                           ]}
                         >
                           <Sparkles
                             size={14}
-                            color="#8383D6"
+                            color={Colors.LavenderPurple}
                             strokeWidth={2.4}
                           />
                           <Text
@@ -507,7 +535,11 @@ export const HelpFaqScreen: React.FC = () => {
             <View
               style={[
                 styles.deskIconCircle,
-                { backgroundColor: isDarkMode ? '#2C3035' : '#EFF2FE' },
+                {
+                  backgroundColor: isDarkMode
+                    ? Colors.CarbonSlate
+                    : Colors.MindfulLightBg,
+                },
               ]}
             >
               <MessageSquare
@@ -558,7 +590,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 10 },
         shadowOpacity: 0.28,
         shadowRadius: 18,
@@ -572,7 +604,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.NeroBlack,
     borderRadius: 24,
     borderWidth: 4,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: withAlpha(Colors.PureWhite, 0.9),
     overflow: 'hidden',
     padding: 18,
   },
@@ -590,13 +622,13 @@ const styles = StyleSheet.create({
   heroTagText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 10,
-    color: '#F5C518',
+    color: Colors.AccentYellow,
     letterSpacing: 1,
   },
   heroTitle: {
     fontFamily: Fonts.ranade.bold,
     fontSize: 21,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     letterSpacing: -0.4,
     lineHeight: 26,
     marginBottom: 6,
@@ -604,7 +636,7 @@ const styles = StyleSheet.create({
   heroSubtitle: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 12,
-    color: '#A3A8B1',
+    color: Colors.SteelMist,
     lineHeight: 18,
     marginBottom: 16,
   },
@@ -619,16 +651,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#272935',
+    backgroundColor: Colors.LanguageAuditionDarkBg,
     borderWidth: 1,
-    borderColor: 'rgba(131, 131, 214, 0.35)',
+    borderColor: withAlpha(Colors.LavenderPurple, 0.35),
     borderRadius: 20,
     paddingVertical: 10,
   },
   heroVoiceBtnText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 12.5,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
   heroEmailBtn: {
     flex: 1,
@@ -636,16 +668,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#272935',
+    backgroundColor: Colors.LanguageAuditionDarkBg,
     borderWidth: 1,
-    borderColor: 'rgba(245, 197, 24, 0.35)',
+    borderColor: withAlpha(Colors.AccentYellow, 0.35),
     borderRadius: 20,
     paddingVertical: 10,
   },
   heroEmailBtnText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 12.5,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
   /* Search input */
   searchWrap: {
@@ -657,7 +689,7 @@ const styles = StyleSheet.create({
     height: 48,
     gap: 10,
     marginBottom: 16,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.04,
     shadowRadius: 5,
@@ -813,7 +845,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1.5,
     padding: 16,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
     shadowRadius: 8,

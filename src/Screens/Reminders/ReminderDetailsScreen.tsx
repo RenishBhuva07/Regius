@@ -46,7 +46,7 @@ import Svg, {
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../../Theme/fonts';
-import { Colors } from '../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { useTheme } from '../../Theme/ThemeContext';
 import { useTaskReminder } from '../../Context/TaskReminderContext';
@@ -90,9 +90,9 @@ const BentoHeroBg: React.FC<{ accentColor: string }> = React.memo(
             x2="100%"
             y2="100%"
           >
-            <Stop offset="0%" stopColor="#252733" stopOpacity={0.85} />
-            <Stop offset="50%" stopColor="#1B1D25" stopOpacity={0.5} />
-            <Stop offset="100%" stopColor="#121318" stopOpacity={0.92} />
+            <Stop offset="0%" stopColor={Colors.BentoStopSlate} stopOpacity={0.85} />
+            <Stop offset="50%" stopColor={Colors.DetailStopMid} stopOpacity={0.5} />
+            <Stop offset="100%" stopColor={Colors.BentoStopDeep} stopOpacity={0.92} />
           </LinearGradient>
 
           <RadialGradient
@@ -104,7 +104,7 @@ const BentoHeroBg: React.FC<{ accentColor: string }> = React.memo(
           >
             <Stop offset="0%" stopColor={accentColor} stopOpacity={0.35} />
             <Stop offset="50%" stopColor={accentColor} stopOpacity={0.12} />
-            <Stop offset="100%" stopColor="#121318" stopOpacity={0} />
+            <Stop offset="100%" stopColor={Colors.BentoStopDeep} stopOpacity={0} />
           </RadialGradient>
         </Defs>
 
@@ -119,7 +119,7 @@ const BentoHeroBg: React.FC<{ accentColor: string }> = React.memo(
           cx={300}
           cy={40}
           r={50}
-          stroke="rgba(255, 255, 255, 0.12)"
+          stroke={withAlpha(Colors.PureWhite, 0.12)}
           strokeWidth={1}
           fill="none"
         />
@@ -127,12 +127,12 @@ const BentoHeroBg: React.FC<{ accentColor: string }> = React.memo(
           cx={300}
           cy={40}
           r={85}
-          stroke="rgba(255, 255, 255, 0.05)"
+          stroke={withAlpha(Colors.PureWhite, 0.05)}
           strokeWidth={1}
           strokeDasharray="4 6"
           fill="none"
         />
-        <Circle cx={285} cy={18} r={1.6} fill="#FFFFFF" opacity={0.65} />
+        <Circle cx={285} cy={18} r={1.6} fill={Colors.PureWhite} opacity={0.65} />
         <Circle cx={35} cy={165} r={1.4} fill={accentColor} opacity={0.5} />
       </Svg>
     </View>
@@ -187,42 +187,42 @@ export const ReminderDetailsScreen: React.FC = () => {
         return {
           label: 'WORK & PROJECTS',
           badgeVariant: 'purple' as BadgeVariant,
-          accent: '#8383D6',
-          bgTint: '#F7F8FE',
-          borderColor: '#D8DBFF',
+          accent: Colors.LavenderPurple,
+          bgTint: Colors.MindfulTintLight,
+          borderColor: Colors.MindfulLightBorder,
           icon: Briefcase,
-          iconColor: '#7059C8',
+          iconColor: Colors.MindfulTextAccent,
         };
       case 'events':
         return {
           label: 'EVENTS & SCHEDULE',
           badgeVariant: 'orange' as BadgeVariant,
-          accent: '#FF9800',
-          bgTint: '#FFF9F0',
-          borderColor: '#FFE0B2',
+          accent: Colors.AccentAmber,
+          bgTint: Colors.CategoryOrangeSoftBg,
+          borderColor: Colors.EventLightBorder,
           icon: CalendarCheck,
-          iconColor: '#D97706',
+          iconColor: Colors.HabitBurnishedAmber,
         };
       case 'health':
         return {
           label: 'HEALTH & VITALITY',
           badgeVariant: 'green' as BadgeVariant,
-          accent: '#1B9A72',
-          bgTint: '#F5FDF9',
-          borderColor: '#C6FFDD',
+          accent: Colors.GreenGracious,
+          bgTint: Colors.WellnessTintLight,
+          borderColor: Colors.WellnessLightBorder,
           icon: Heart,
-          iconColor: '#1B9A72',
+          iconColor: Colors.GreenGracious,
         };
       case 'daily':
       default:
         return {
           label: 'DAILY ROUTINE',
           badgeVariant: 'yellow' as BadgeVariant,
-          accent: '#F5C518',
-          bgTint: '#FFFCEB',
-          borderColor: '#FFF5B8',
+          accent: Colors.AccentYellow,
+          bgTint: Colors.WorkLightBg,
+          borderColor: Colors.WorkLightBorder,
           icon: Bell,
-          iconColor: '#B47804',
+          iconColor: Colors.BadgeYellowText,
         };
     }
   }, [reminder?.category]);
@@ -443,7 +443,7 @@ export const ReminderDetailsScreen: React.FC = () => {
                 <View style={styles.metaChip}>
                   <Clock
                     size={ResponsivePixels.size12}
-                    color="#F5C518"
+                    color={Colors.AccentYellow}
                     strokeWidth={2.2}
                   />
                   <Text style={styles.metaChipText}>{reminder.time}</Text>
@@ -452,7 +452,7 @@ export const ReminderDetailsScreen: React.FC = () => {
                 <View style={styles.metaChip}>
                   <Calendar
                     size={ResponsivePixels.size12}
-                    color="#D1D5DB"
+                    color={Colors.Gray300}
                     strokeWidth={2.2}
                   />
                   <Text style={styles.metaChipText}>{reminder.date}</Text>
@@ -462,7 +462,7 @@ export const ReminderDetailsScreen: React.FC = () => {
                   <View style={styles.metaChip}>
                     <RotateCw
                       size={ResponsivePixels.size12}
-                      color="#8383D6"
+                      color={Colors.LavenderPurple}
                       strokeWidth={2.2}
                     />
                     <Text style={styles.metaChipText}>{reminder.repeat}</Text>
@@ -473,7 +473,7 @@ export const ReminderDetailsScreen: React.FC = () => {
                   <View style={[styles.metaChip, styles.urgentChip]}>
                     <AlertTriangle
                       size={ResponsivePixels.size12}
-                      color="#EF4444"
+                      color={Colors.CategoryRedAccent}
                       strokeWidth={2.2}
                     />
                     <Text style={styles.urgentChipText}>URGENT ALARM</Text>
@@ -495,7 +495,11 @@ export const ReminderDetailsScreen: React.FC = () => {
             >
               <Volume2
                 size={ResponsivePixels.size18}
-                color={isDarkMode ? '#34D399' : '#1B9A72'}
+                color={
+                  isDarkMode
+                    ? Colors.ToastSuccessCardBevelLight
+                    : Colors.GreenGracious
+                }
                 strokeWidth={2.4}
               />
             </View>
@@ -509,7 +513,11 @@ export const ReminderDetailsScreen: React.FC = () => {
                 {isPlayingAlert && (
                   <MiniAcousticBars
                     isPlaying={isPlayingAlert}
-                    accentColor={isDarkMode ? '#34D399' : '#1B9A72'}
+                    accentColor={
+                      isDarkMode
+                        ? Colors.ToastSuccessCardBevelLight
+                        : Colors.GreenGracious
+                    }
                   />
                 )}
               </View>
@@ -537,13 +545,17 @@ export const ReminderDetailsScreen: React.FC = () => {
             {isPlayingAlert ? (
               <VolumeX
                 size={ResponsivePixels.size15}
-                color="#FFFFFF"
+                color={Colors.PureWhite}
                 strokeWidth={2.4}
               />
             ) : (
               <Volume2
                 size={ResponsivePixels.size15}
-                color={isDarkMode ? '#34D399' : '#1B9A72'}
+                color={
+                  isDarkMode
+                    ? Colors.ToastSuccessCardBevelLight
+                    : Colors.GreenGracious
+                }
                 strokeWidth={2.4}
               />
             )}
@@ -561,7 +573,11 @@ export const ReminderDetailsScreen: React.FC = () => {
             <View style={styles.noteHeaderRow}>
               <FileText
                 size={ResponsivePixels.size15}
-                color={isDarkMode ? '#34D399' : '#1B9A72'}
+                color={
+                  isDarkMode
+                    ? Colors.ToastSuccessCardBevelLight
+                    : Colors.GreenGracious
+                }
                 strokeWidth={2.2}
               />
               <Text
@@ -600,7 +616,7 @@ export const ReminderDetailsScreen: React.FC = () => {
             <View style={styles.parameterItem}>
               <Clock
                 size={ResponsivePixels.size14}
-                color="#8E8E93"
+                color={Colors.DisabledGrayText}
                 strokeWidth={2.2}
               />
               <View>
@@ -626,7 +642,7 @@ export const ReminderDetailsScreen: React.FC = () => {
             <View style={styles.parameterItem}>
               <Calendar
                 size={ResponsivePixels.size14}
-                color="#8E8E93"
+                color={Colors.DisabledGrayText}
                 strokeWidth={2.2}
               />
               <View>
@@ -652,7 +668,7 @@ export const ReminderDetailsScreen: React.FC = () => {
             <View style={styles.parameterItem}>
               <RotateCw
                 size={ResponsivePixels.size14}
-                color="#8383D6"
+                color={Colors.LavenderPurple}
                 strokeWidth={2.2}
               />
               <View>
@@ -678,7 +694,7 @@ export const ReminderDetailsScreen: React.FC = () => {
             <View style={styles.parameterItem}>
               <Bell
                 size={ResponsivePixels.size14}
-                color="#FF9800"
+                color={Colors.AccentAmber}
                 strokeWidth={2.2}
               />
               <View>
@@ -704,7 +720,7 @@ export const ReminderDetailsScreen: React.FC = () => {
             <View style={styles.parameterItem}>
               <Music
                 size={ResponsivePixels.size14}
-                color="#7059C8"
+                color={Colors.MindfulTextAccent}
                 strokeWidth={2.2}
               />
               <View>
@@ -730,7 +746,11 @@ export const ReminderDetailsScreen: React.FC = () => {
             <View style={styles.parameterItem}>
               <AlertTriangle
                 size={ResponsivePixels.size14}
-                color={reminder.urgentAlarm ? '#EF4444' : '#8E8E93'}
+                color={
+                  reminder.urgentAlarm
+                    ? Colors.CategoryRedAccent
+                    : Colors.DisabledGrayText
+                }
                 strokeWidth={2.2}
               />
               <View>
@@ -745,7 +765,7 @@ export const ReminderDetailsScreen: React.FC = () => {
                 <Text
                   style={[
                     styles.parameterValue,
-                    reminder.urgentAlarm && { color: '#EF4444' },
+                    reminder.urgentAlarm && { color: Colors.CategoryRedAccent },
                     !reminder.urgentAlarm && isDarkMode && styles.textWhite,
                   ]}
                 >
@@ -767,7 +787,7 @@ export const ReminderDetailsScreen: React.FC = () => {
           >
             <Trash2
               size={ResponsivePixels.size16}
-              color="#EF4444"
+              color={Colors.CategoryRedAccent}
               strokeWidth={2.2}
             />
             <Text style={styles.deleteBtnText}>Delete Scheduled Alert</Text>
@@ -787,13 +807,13 @@ export const ReminderDetailsScreen: React.FC = () => {
             reminder.done ? (
               <RotateCw
                 size={ResponsivePixels.size18}
-                color="#FFFFFF"
+                color={Colors.PureWhite}
                 strokeWidth={2.4}
               />
             ) : (
               <Check
                 size={ResponsivePixels.size18}
-                color="#FFFFFF"
+                color={Colors.PureWhite}
                 strokeWidth={2.4}
               />
             )
@@ -837,7 +857,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.CreamBackground,
   },
   containerDark: {
-    backgroundColor: '#121417',
+    backgroundColor: Colors.DarkBackground,
   },
   scroll: {
     flex: 1,
@@ -860,10 +880,10 @@ const styles = StyleSheet.create({
   notFoundText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: ResponsivePixels.size15,
-    color: '#363944',
+    color: Colors.DarkBorder,
   },
   notFoundTextDark: {
-    color: '#D1D5DB',
+    color: Colors.Gray300,
   },
   backBtnFallback: {
     paddingHorizontal: ResponsivePixels.size16,
@@ -874,7 +894,7 @@ const styles = StyleSheet.create({
   backBtnFallbackText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: ResponsivePixels.size13,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
   cardShadowWrapper: {
     width: '100%',
@@ -882,7 +902,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.NeroBlack,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 10 },
         shadowOpacity: 0.28,
         shadowRadius: 18,
@@ -897,7 +917,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.NeroBlack,
     borderRadius: ResponsivePixels.size24,
     borderWidth: 4,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: withAlpha(Colors.PureWhite, 0.9),
     overflow: 'hidden',
   },
   bentoContent: {
@@ -913,7 +933,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: ResponsivePixels.size6,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.12),
     paddingHorizontal: ResponsivePixels.size10,
     paddingVertical: ResponsivePixels.size4,
     borderRadius: ResponsivePixels.size12,
@@ -926,7 +946,7 @@ const styles = StyleSheet.create({
   bentoTitle: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size22,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     lineHeight: ResponsivePixels.size28,
   },
   bentoMetaRow: {
@@ -940,7 +960,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: ResponsivePixels.size5,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.08),
     paddingHorizontal: ResponsivePixels.size8,
     paddingVertical: ResponsivePixels.size4,
     borderRadius: ResponsivePixels.size8,
@@ -948,30 +968,30 @@ const styles = StyleSheet.create({
   metaChipText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: ResponsivePixels.size11,
-    color: '#D1D5DB',
+    color: Colors.Gray300,
     letterSpacing: 0.3,
   },
   urgentChip: {
-    backgroundColor: 'rgba(239, 68, 68, 0.18)',
+    backgroundColor: withAlpha(Colors.CategoryRedAccent, 0.18),
   },
   urgentChipText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size10,
-    color: '#EF4444',
+    color: Colors.CategoryRedAccent,
     letterSpacing: 0.4,
   },
   vocalCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     padding: ResponsivePixels.size14,
     borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
-    borderColor: '#D8F7E7',
+    borderColor: Colors.WellnessDetailBorder,
     ...Platform.select({
       ios: {
-        shadowColor: '#1B9A72',
+        shadowColor: Colors.GreenGracious,
         shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.08,
         shadowRadius: 6,
@@ -982,8 +1002,8 @@ const styles = StyleSheet.create({
     }),
   },
   vocalCardDark: {
-    backgroundColor: '#1E2228',
-    borderColor: '#2C3035',
+    backgroundColor: Colors.DarkCardBackground,
+    borderColor: Colors.DarkBorderSubtle,
   },
   vocalLeft: {
     flexDirection: 'row',
@@ -995,15 +1015,15 @@ const styles = StyleSheet.create({
     width: ResponsivePixels.size38,
     height: ResponsivePixels.size38,
     borderRadius: ResponsivePixels.size19,
-    backgroundColor: '#EDFDF5',
+    backgroundColor: Colors.WellnessLightBg,
     borderWidth: 1,
-    borderColor: '#C6FFDD',
+    borderColor: Colors.WellnessLightBorder,
     alignItems: 'center',
     justifyContent: 'center',
   },
   vocalIconAuraDark: {
-    backgroundColor: 'rgba(27, 154, 114, 0.16)',
-    borderColor: 'rgba(27, 154, 114, 0.32)',
+    backgroundColor: withAlpha(Colors.GreenGracious, 0.16),
+    borderColor: withAlpha(Colors.GreenGracious, 0.32),
   },
   vocalTextWrap: {
     flex: 1,
@@ -1016,42 +1036,42 @@ const styles = StyleSheet.create({
   vocalTitle: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: ResponsivePixels.size14,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
   },
   vocalSubtitle: {
     fontFamily: Fonts.poppins.regular,
     fontSize: ResponsivePixels.size11,
-    color: '#8E8E93',
+    color: Colors.DisabledGrayText,
   },
   vocalPlayBtn: {
     width: ResponsivePixels.size36,
     height: ResponsivePixels.size36,
     borderRadius: ResponsivePixels.size18,
-    backgroundColor: '#EDFDF5',
+    backgroundColor: Colors.WellnessLightBg,
     borderWidth: 1,
-    borderColor: '#C6FFDD',
+    borderColor: Colors.WellnessLightBorder,
     alignItems: 'center',
     justifyContent: 'center',
   },
   vocalPlayBtnDark: {
-    backgroundColor: 'rgba(27, 154, 114, 0.16)',
-    borderColor: 'rgba(27, 154, 114, 0.32)',
+    backgroundColor: withAlpha(Colors.GreenGracious, 0.16),
+    borderColor: withAlpha(Colors.GreenGracious, 0.32),
   },
   vocalPlayBtnActive: {
-    backgroundColor: '#1B9A72',
-    borderColor: '#1B9A72',
+    backgroundColor: Colors.GreenGracious,
+    borderColor: Colors.GreenGracious,
   },
   noteKeepsakeCard: {
-    backgroundColor: '#F5FDF9',
+    backgroundColor: Colors.WellnessTintLight,
     padding: ResponsivePixels.size16,
     borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
-    borderColor: '#C6FFDD',
+    borderColor: Colors.WellnessLightBorder,
     gap: ResponsivePixels.size8,
   },
   noteKeepsakeCardDark: {
-    backgroundColor: '#1E2228',
-    borderColor: '#1D3B2D',
+    backgroundColor: Colors.DarkCardBackground,
+    borderColor: Colors.ReminderDoneDarkBorder,
   },
   noteHeaderRow: {
     flexDirection: 'row',
@@ -1061,41 +1081,41 @@ const styles = StyleSheet.create({
   noteCardTitle: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size11,
-    color: '#1B9A72',
+    color: Colors.GreenGracious,
     letterSpacing: 0.6,
   },
   noteCardTitleDark: {
-    color: '#34D399',
+    color: Colors.ToastSuccessCardBevelLight,
   },
   noteContent: {
     fontFamily: Fonts.poppins.regular,
     fontSize: ResponsivePixels.size14,
     lineHeight: ResponsivePixels.size20,
-    color: '#363944',
+    color: Colors.DarkBorder,
   },
   noteContentDark: {
-    color: '#E5E7EB',
+    color: Colors.Gray200,
   },
   parametersCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     padding: ResponsivePixels.size16,
     borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
-    borderColor: '#EAE6DD',
+    borderColor: Colors.TaskDetailBorderWarm,
     gap: ResponsivePixels.size12,
   },
   parametersCardDark: {
-    backgroundColor: '#1E2228',
-    borderColor: '#2C3035',
+    backgroundColor: Colors.DarkCardBackground,
+    borderColor: Colors.DarkBorderSubtle,
   },
   parametersTitle: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size11,
-    color: '#7E838F',
+    color: Colors.MutedSlateSubtext,
     letterSpacing: 0.6,
   },
   parametersTitleDark: {
-    color: '#A3A8B1',
+    color: Colors.SteelMist,
   },
   parametersGrid: {
     flexDirection: 'row',
@@ -1113,12 +1133,12 @@ const styles = StyleSheet.create({
   parameterLabel: {
     fontFamily: Fonts.poppins.regular,
     fontSize: ResponsivePixels.size11,
-    color: '#8E8E93',
+    color: Colors.DisabledGrayText,
   },
   parameterValue: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: ResponsivePixels.size13,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
   },
   deleteSection: {
     marginTop: ResponsivePixels.size4,
@@ -1129,14 +1149,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: ResponsivePixels.size8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
-    borderColor: '#FECDD3',
+    borderColor: Colors.CategoryRoseBorder,
     paddingVertical: ResponsivePixels.size13,
     borderRadius: ResponsivePixels.size18,
     ...Platform.select({
       ios: {
-        shadowColor: '#EF4444',
+        shadowColor: Colors.CategoryRedAccent,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.08,
         shadowRadius: 6,
@@ -1147,19 +1167,19 @@ const styles = StyleSheet.create({
     }),
   },
   deleteBtnDark: {
-    backgroundColor: '#1E2228',
-    borderColor: '#5C2227',
+    backgroundColor: Colors.DarkCardBackground,
+    borderColor: Colors.TaskDangerDarkBorder,
   },
   deleteBtnText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: ResponsivePixels.size13,
-    color: '#EF4444',
+    color: Colors.CategoryRedAccent,
   },
   textWhite: {
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
   textMuted: {
-    color: '#8E8E93',
+    color: Colors.DisabledGrayText,
   },
 });
 

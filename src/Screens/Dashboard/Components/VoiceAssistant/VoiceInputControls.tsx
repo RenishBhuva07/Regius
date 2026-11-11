@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { Mic, X, MessageSquare, Square, RotateCcw } from 'lucide-react-native';
+import { Colors, withAlpha } from '../../../../Assets/StyleUtilities/Colors';
 import { VoiceAssistantTheme } from './types';
 import { VoiceAssistantState } from '../../../../Services/Voice/VoiceStateMachine';
 
@@ -132,38 +133,46 @@ export const VoiceInputControls: React.FC<VoiceInputControlsProps> = ({
     }
   }, [isListening, pulseAnim1, pulseOpacity1, pulseAnim2, pulseOpacity2]);
 
-  const secondaryBtnBg = theme.isDarkMode ? '#1E2228' : '#FFFFFF';
+  const secondaryBtnBg = theme.isDarkMode
+    ? Colors.DarkCardBackground
+    : Colors.PureWhite;
   const secondaryBorder = theme.isDarkMode
-    ? 'rgba(255, 255, 255, 0.16)'
-    : '#FFFFFF';
+    ? withAlpha(Colors.PureWhite, 0.16)
+    : Colors.PureWhite;
   const secondaryBottomBorder = theme.isDarkMode
-    ? 'rgba(0, 0, 0, 0.5)'
-    : '#D5D0C5';
+    ? withAlpha(Colors.PureBlack, 0.5)
+    : Colors.HomeIndicator;
 
   // Center Mic button background & icon
   let micBg = theme.accent;
-  let micIcon = <Mic size={28} color="#FFFFFF" strokeWidth={2.4} />;
+  let micIcon = <Mic size={28} color={Colors.PureWhite} strokeWidth={2.4} />;
   let micLabel = 'Start speaking';
 
   if (isListening) {
     micBg = theme.accent;
-    micIcon = <Mic size={28} color="#FFFFFF" strokeWidth={2.4} />;
+    micIcon = <Mic size={28} color={Colors.PureWhite} strokeWidth={2.4} />;
     micLabel = 'Recording active. Tap to finish';
   } else if (isThinking) {
-    micBg = theme.isDarkMode ? '#282C35' : '#E8E5DF';
+    micBg = theme.isDarkMode
+      ? Colors.VoiceMicDarkSurface
+      : Colors.VoiceMicNeutralSurface;
     micIcon = <ActivityIndicator size="small" color={theme.accent} />;
     micLabel = 'Processing request';
   } else if (isSpeaking) {
-    micBg = theme.isDarkMode ? '#3A2E4C' : '#EDE8F5';
+    micBg = theme.isDarkMode
+      ? Colors.VoiceMicDarkViolet
+      : Colors.VoiceMicLilacSurface;
     micIcon = <Square size={20} color={theme.accent} fill={theme.accent} />;
     micLabel = 'Interrupt speech';
   } else if (isErrorOrUnrecognized) {
     micBg = theme.accent;
-    micIcon = <RotateCcw size={24} color="#FFFFFF" strokeWidth={2.4} />;
+    micIcon = (
+      <RotateCcw size={24} color={Colors.PureWhite} strokeWidth={2.4} />
+    );
     micLabel = 'Retry speaking';
   } else if (isCompleted) {
     micBg = theme.accent;
-    micIcon = <Mic size={26} color="#FFFFFF" strokeWidth={2.4} />;
+    micIcon = <Mic size={26} color={Colors.PureWhite} strokeWidth={2.4} />;
     micLabel = 'Speak another command';
   }
 
@@ -179,7 +188,9 @@ export const VoiceInputControls: React.FC<VoiceInputControlsProps> = ({
             borderColor: secondaryBorder,
             borderBottomColor: secondaryBottomBorder,
             opacity: pressed ? 0.75 : 1,
-            shadowColor: theme.isDarkMode ? '#000000' : '#8383D6',
+            shadowColor: theme.isDarkMode
+              ? Colors.PureBlack
+              : Colors.LavenderPurple,
           },
         ]}
         hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
@@ -248,7 +259,9 @@ export const VoiceInputControls: React.FC<VoiceInputControlsProps> = ({
             borderColor: secondaryBorder,
             borderBottomColor: secondaryBottomBorder,
             opacity: pressed ? 0.75 : 1,
-            shadowColor: theme.isDarkMode ? '#000000' : '#8383D6',
+            shadowColor: theme.isDarkMode
+              ? Colors.PureBlack
+              : Colors.LavenderPurple,
           },
         ]}
         hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
@@ -306,9 +319,9 @@ const styles = StyleSheet.create({
     height: 72,
     borderRadius: 36,
     borderWidth: 2,
-    borderColor: 'rgba(255, 255, 255, 0.45)',
+    borderColor: withAlpha(Colors.PureWhite, 0.45),
     borderBottomWidth: 4,
-    borderBottomColor: 'rgba(0, 0, 0, 0.28)',
+    borderBottomColor: withAlpha(Colors.PureBlack, 0.28),
     alignItems: 'center',
     justifyContent: 'center',
     shadowOffset: { width: 0, height: 6 },

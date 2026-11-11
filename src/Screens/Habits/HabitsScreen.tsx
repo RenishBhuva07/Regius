@@ -206,12 +206,20 @@ export const HabitsScreen: React.FC = () => {
                 style={[
                   styles.emptyCard,
                   isDarkMode && {
-                    backgroundColor: '#1E2228',
-                    borderColor: '#2C3035',
+                    backgroundColor: Colors.DarkCardBackground,
+                    borderColor: Colors.DarkBorderSubtle,
                   },
                 ]}
               >
-                <Flame size={32} color={isDarkMode ? '#5C6270' : '#D8D4CA'} strokeWidth={1.5} />
+                <Flame
+                  size={32}
+                  color={
+                    isDarkMode
+                      ? Colors.DarkTitleCompleted
+                      : Colors.EmptyFlameWarmGray
+                  }
+                  strokeWidth={1.5}
+                />
                 <Text style={[styles.emptyTitle, { color: textPrimary }]}>
                   No Rituals In This Flow
                 </Text>
@@ -223,7 +231,7 @@ export const HabitsScreen: React.FC = () => {
                   onPress={openHabitModal}
                   style={styles.emptyCreateBtn}
                 >
-                  <Plus size={14} color="#FFFFFF" strokeWidth={2.4} />
+                  <Plus size={14} color={Colors.PureWhite} strokeWidth={2.4} />
                   <Text style={styles.emptyCreateText}>Add Habit</Text>
                 </TouchableOpacity>
               </View>
@@ -238,7 +246,7 @@ export const HabitsScreen: React.FC = () => {
                 <Text
                   style={[
                     styles.footerWatermarkText,
-                    isDarkMode && { color: '#5C6270' },
+                    isDarkMode && { color: Colors.DarkTitleCompleted },
                   ]}
                 >
                   {dailyQuote}
@@ -247,7 +255,7 @@ export const HabitsScreen: React.FC = () => {
                   <Text
                     style={[
                       styles.craftedWithText,
-                      isDarkMode && { color: '#5C6270' },
+                      isDarkMode && { color: Colors.DarkTitleCompleted },
                     ]}
                   >
                     Crafted with{' '}
@@ -256,7 +264,7 @@ export const HabitsScreen: React.FC = () => {
                   <Text
                     style={[
                       styles.craftedWithText,
-                      isDarkMode && { color: '#5C6270' },
+                      isDarkMode && { color: Colors.DarkTitleCompleted },
                     ]}
                   >
                     {' '}
@@ -302,7 +310,7 @@ export const HabitsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.DefaultWhite,
+    backgroundColor: Colors.PureWhite,
   },
   scroll: {
     flex: 1,
@@ -319,10 +327,10 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     borderWidth: 1.5,
-    borderTopColor: '#FAF6EE',
-    borderLeftColor: '#EFE9DE',
-    borderRightColor: '#EFE9DE',
-    borderBottomColor: '#DDD6C6',
+    borderTopColor: Colors.WarmNavBevelTop,
+    borderLeftColor: Colors.WarmNavBevelSide,
+    borderRightColor: Colors.WarmNavBevelSide,
+    borderBottomColor: Colors.WarmHeaderBottomBevel,
     paddingHorizontal: 8,
     paddingTop: 40,
     marginTop: 26,
@@ -330,7 +338,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     ...Platform.select({
       ios: {
-        shadowColor: '#1B1C19',
+        shadowColor: Colors.RegiusInk,
         shadowOffset: { width: 0, height: -4 },
         shadowOpacity: 0.12,
         shadowRadius: 12,
@@ -355,14 +363,14 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     borderRadius: 22,
     borderWidth: 1.5,
-    borderTopColor: '#4A4E5C',
-    borderLeftColor: '#363944',
-    borderRightColor: '#363944',
+    borderTopColor: Colors.DarkBevelTop,
+    borderLeftColor: Colors.DarkBorder,
+    borderRightColor: Colors.DarkBorder,
     borderBottomWidth: 4,
-    borderBottomColor: '#090A0D',
+    borderBottomColor: Colors.DarkBevelAbyss,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#0B0D11',
+    shadowColor: Colors.DarkShadowAnchor,
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.32,
     shadowRadius: 8,
@@ -373,14 +381,14 @@ const styles = StyleSheet.create({
   flowTitle: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 14.5,
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
     letterSpacing: -0.1,
     textAlign: 'center',
   },
   flowSubtitle: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 10.5,
-    color: '#B6B9C3',
+    color: Colors.CoolSilverSubtitle,
     marginTop: 1,
     textAlign: 'center',
   },
@@ -393,14 +401,14 @@ const styles = StyleSheet.create({
     borderRadius: 21,
     backgroundColor: Colors.NeroBlack,
     borderWidth: 1.5,
-    borderTopColor: '#4A4E5C',
-    borderLeftColor: '#363944',
-    borderRightColor: '#363944',
+    borderTopColor: Colors.DarkBevelTop,
+    borderLeftColor: Colors.DarkBorder,
+    borderRightColor: Colors.DarkBorder,
     borderBottomWidth: 3.5,
-    borderBottomColor: '#090A0D',
+    borderBottomColor: Colors.DarkBevelAbyss,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#0B0D11',
+    shadowColor: Colors.DarkShadowAnchor,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.32,
     shadowRadius: 6,
@@ -415,26 +423,26 @@ const styles = StyleSheet.create({
     height: 12,
   },
   emptyCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderRadius: 22,
     padding: 30,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.5,
-    borderColor: '#ECE7DC',
+    borderColor: Colors.DetailWarmBorder,
     gap: 8,
     marginHorizontal: 0,
   },
   emptyTitle: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 15,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     marginTop: 4,
   },
   emptySubtitle: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 12,
-    color: '#8E8E93',
+    color: Colors.DisabledGrayText,
     textAlign: 'center',
     paddingHorizontal: 20,
   },
@@ -451,7 +459,7 @@ const styles = StyleSheet.create({
   emptyCreateText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 12,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
 
   // Footer watermark styles
@@ -474,7 +482,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.bold,
     fontSize: 34,
     lineHeight: 42,
-    color: '#8E95A5',
+    color: Colors.MilestoneSlate,
     letterSpacing: -1.2,
   },
   craftedWithRow: {
@@ -485,7 +493,7 @@ const styles = StyleSheet.create({
   craftedWithText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 14,
-    color: '#8E95A5',
+    color: Colors.MilestoneSlate,
   },
   craftedWithHeart: {
     fontSize: 13.5,

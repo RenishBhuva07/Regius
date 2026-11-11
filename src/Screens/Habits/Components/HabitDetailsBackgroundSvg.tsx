@@ -11,6 +11,7 @@ import Svg, {
   G,
 } from 'react-native-svg';
 import { useTheme } from '../../../Theme/ThemeContext';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -27,7 +28,11 @@ export interface HabitDetailsBackgroundSvgProps {
  */
 export const HabitDetailsBackgroundSvg: React.FC<HabitDetailsBackgroundSvgProps> =
   React.memo(
-    ({ accentColor = '#8383D6', width: propWidth, height: propHeight }) => {
+    ({
+      accentColor = Colors.LavenderPurple,
+      width: propWidth,
+      height: propHeight,
+    }) => {
       const { isDarkMode, Colors: themeColors } = useTheme();
       const [dimensions, setDimensions] = useState<{
         width: number;
@@ -73,26 +78,38 @@ export const HabitDetailsBackgroundSvg: React.FC<HabitDetailsBackgroundSvgProps>
               >
                 <Stop
                   offset="0%"
-                  stopColor={isDarkMode ? '#161821' : '#FFFDF6'}
+                  stopColor={
+                    isDarkMode
+                      ? Colors.DetailDarkSectionBg
+                      : Colors.SvgCreamHighlight
+                  }
                   stopOpacity={0.98}
                 />
                 <Stop
                   offset="35%"
                   stopColor={
                     isDarkMode
-                      ? themeColors.Background || '#121417'
-                      : '#FAF7EF'
+                      ? themeColors.Background || Colors.DarkBackground
+                      : Colors.WarmParchment
                   }
                   stopOpacity={isDarkMode ? 0.99 : 0.96}
                 />
                 <Stop
                   offset="70%"
-                  stopColor={isDarkMode ? '#0F1014' : '#F5ECE0'}
+                  stopColor={
+                    isDarkMode
+                      ? Colors.SvgCanvasAbyssMid
+                      : Colors.KeepsakeLightBottom
+                  }
                   stopOpacity={isDarkMode ? 0.99 : 0.95}
                 />
                 <Stop
                   offset="100%"
-                  stopColor={isDarkMode ? '#0B0C0E' : '#ECE3D3'}
+                  stopColor={
+                    isDarkMode
+                      ? Colors.SvgCanvasAbyss
+                      : Colors.SvgDetailsParchment
+                  }
                   stopOpacity={isDarkMode ? 1 : 0.98}
                 />
               </LinearGradient>
@@ -115,7 +132,7 @@ export const HabitDetailsBackgroundSvg: React.FC<HabitDetailsBackgroundSvgProps>
                   stopColor={accentColor}
                   stopOpacity={isDarkMode ? 0.05 : 0.03}
                 />
-                <Stop offset="100%" stopColor="#000000" stopOpacity={0} />
+                <Stop offset="100%" stopColor={Colors.PureBlack} stopOpacity={0} />
               </RadialGradient>
 
               {/* Streak Amber Glow (Top Left) */}
@@ -128,15 +145,15 @@ export const HabitDetailsBackgroundSvg: React.FC<HabitDetailsBackgroundSvgProps>
               >
                 <Stop
                   offset="0%"
-                  stopColor="#FF9800"
+                  stopColor={Colors.AccentAmber}
                   stopOpacity={isDarkMode ? 0.16 : 0.11}
                 />
                 <Stop
                   offset="55%"
-                  stopColor="#FF9800"
+                  stopColor={Colors.AccentAmber}
                   stopOpacity={isDarkMode ? 0.04 : 0.02}
                 />
-                <Stop offset="100%" stopColor="#000000" stopOpacity={0} />
+                <Stop offset="100%" stopColor={Colors.PureBlack} stopOpacity={0} />
               </RadialGradient>
 
               {/* Mid-Canvas Violet Ambient Aura */}
@@ -149,10 +166,10 @@ export const HabitDetailsBackgroundSvg: React.FC<HabitDetailsBackgroundSvgProps>
               >
                 <Stop
                   offset="0%"
-                  stopColor="#8383D6"
+                  stopColor={Colors.LavenderPurple}
                   stopOpacity={isDarkMode ? 0.12 : 0.08}
                 />
-                <Stop offset="100%" stopColor="#000000" stopOpacity={0} />
+                <Stop offset="100%" stopColor={Colors.PureBlack} stopOpacity={0} />
               </RadialGradient>
             </Defs>
 
@@ -170,8 +187,8 @@ export const HabitDetailsBackgroundSvg: React.FC<HabitDetailsBackgroundSvgProps>
                 r={90}
                 stroke={
                   isDarkMode
-                    ? 'rgba(255,255,255,0.07)'
-                    : 'rgba(131,131,214,0.18)'
+                    ? withAlpha(Colors.PureWhite, 0.07)
+                    : withAlpha(Colors.LavenderPurple, 0.18)
                 }
                 strokeWidth={1}
                 strokeDasharray="4 6"
@@ -183,8 +200,8 @@ export const HabitDetailsBackgroundSvg: React.FC<HabitDetailsBackgroundSvgProps>
                 r={140}
                 stroke={
                   isDarkMode
-                    ? 'rgba(255,255,255,0.04)'
-                    : 'rgba(131,131,214,0.1)'
+                    ? withAlpha(Colors.PureWhite, 0.04)
+                    : withAlpha(Colors.LavenderPurple, 0.1)
                 }
                 strokeWidth={1}
                 fill="none"
@@ -197,8 +214,8 @@ export const HabitDetailsBackgroundSvg: React.FC<HabitDetailsBackgroundSvgProps>
                 } T ${W + 20} ${H * 0.44}`}
                 stroke={
                   isDarkMode
-                    ? 'rgba(255,255,255,0.05)'
-                    : 'rgba(131,131,214,0.12)'
+                    ? withAlpha(Colors.PureWhite, 0.05)
+                    : withAlpha(Colors.LavenderPurple, 0.12)
                 }
                 strokeWidth={1}
                 fill="none"
@@ -209,8 +226,8 @@ export const HabitDetailsBackgroundSvg: React.FC<HabitDetailsBackgroundSvgProps>
                 } T ${W + 20} ${H * 0.46}`}
                 stroke={
                   isDarkMode
-                    ? 'rgba(255,255,255,0.03)'
-                    : 'rgba(131,131,214,0.08)'
+                    ? withAlpha(Colors.PureWhite, 0.03)
+                    : withAlpha(Colors.LavenderPurple, 0.08)
                 }
                 strokeWidth={0.8}
                 strokeDasharray="3 5"
@@ -222,28 +239,34 @@ export const HabitDetailsBackgroundSvg: React.FC<HabitDetailsBackgroundSvgProps>
                 cx={W * 0.18}
                 cy={170}
                 r={1.8}
-                fill={isDarkMode ? '#FFA726' : '#E65100'}
+                fill={
+                  isDarkMode
+                    ? Colors.StreakFlameOrangeTop
+                    : Colors.EventTextAccent
+                }
                 opacity={0.6}
               />
               <Circle
                 cx={W * 0.82}
                 cy={260}
                 r={1.5}
-                fill={isDarkMode ? '#FFFFFF' : accentColor}
+                fill={isDarkMode ? Colors.PureWhite : accentColor}
                 opacity={0.5}
               />
               <Circle
                 cx={W * 0.12}
                 cy={H * 0.72}
                 r={1.4}
-                fill={isDarkMode ? '#FFFFFF' : '#8383D6'}
+                fill={isDarkMode ? Colors.PureWhite : Colors.LavenderPurple}
                 opacity={0.4}
               />
               <Circle
                 cx={W * 0.88}
                 cy={H * 0.82}
                 r={1.6}
-                fill={isDarkMode ? '#FFA726' : '#FF9800'}
+                fill={
+                  isDarkMode ? Colors.StreakFlameOrangeTop : Colors.AccentAmber
+                }
                 opacity={0.5}
               />
             </G>

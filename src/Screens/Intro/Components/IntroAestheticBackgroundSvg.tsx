@@ -10,6 +10,7 @@ import Svg, {
   G,
   SvgProps,
 } from 'react-native-svg';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -23,7 +24,7 @@ const IntroAestheticBackgroundSvgComponent: React.FC<
   IntroAestheticBackgroundSvgProps
 > = ({
   isDark = false,
-  accentColor = '#F5C518',
+  accentColor = Colors.AccentYellow,
   canvasColor,
   ...props
 }) => {
@@ -57,7 +58,10 @@ const IntroAestheticBackgroundSvgComponent: React.FC<
           />
           <Stop
             offset="100%"
-            stopColor={canvasColor || (isDark ? '#121417' : '#FFFCE3')}
+            stopColor={
+              canvasColor ||
+              (isDark ? Colors.DarkBackground : Colors.CreamBackground)
+            }
             stopOpacity={0}
           />
         </RadialGradient>
@@ -66,12 +70,15 @@ const IntroAestheticBackgroundSvgComponent: React.FC<
         <RadialGradient id="introDawnHalo" cx="50%" cy="50%" r="50%">
           <Stop
             offset="0%"
-            stopColor={isDark ? '#F5C518' : '#FFF8D0'}
+            stopColor={isDark ? Colors.AccentYellow : Colors.BadgeYellowBg}
             stopOpacity={isDark ? 0.25 : 0.65}
           />
           <Stop
             offset="100%"
-            stopColor={canvasColor || (isDark ? '#121417' : '#FFFCE3')}
+            stopColor={
+              canvasColor ||
+              (isDark ? Colors.DarkBackground : Colors.CreamBackground)
+            }
             stopOpacity={0}
           />
         </RadialGradient>
@@ -92,7 +99,7 @@ const IntroAestheticBackgroundSvgComponent: React.FC<
           />
           <Stop
             offset="50%"
-            stopColor={isDark ? '#8383D6' : '#E8E2D5'}
+            stopColor={isDark ? Colors.LavenderPurple : Colors.RingBorder}
             stopOpacity={isDark ? 0.1 : 0.2}
           />
           <Stop offset="100%" stopColor={accentColor} stopOpacity={0.05} />
@@ -116,7 +123,7 @@ const IntroAestheticBackgroundSvgComponent: React.FC<
           cx={CX}
           cy={DOCK_CY}
           r={86}
-          stroke={isDark ? '#FFFFFF' : '#E0D8C8'}
+          stroke={isDark ? Colors.PureWhite : Colors.SvgPaperWarmRim}
           strokeWidth={1}
           strokeDasharray="4 6"
         />
@@ -124,7 +131,7 @@ const IntroAestheticBackgroundSvgComponent: React.FC<
           cx={CX}
           cy={DOCK_CY}
           r={128}
-          stroke={isDark ? '#8383D6' : '#EAE4D7'}
+          stroke={isDark ? Colors.LavenderPurple : Colors.LoginInputLightBevel}
           strokeWidth={1.2}
         />
       </G>
@@ -142,7 +149,11 @@ const IntroAestheticBackgroundSvgComponent: React.FC<
         d={`M -20 ${CARD_CY + 85} Q ${W * 0.38} ${CARD_CY + 130} ${CX} ${
           CARD_CY + 80
         } T ${W + 20} ${CARD_CY + 105}`}
-        stroke={isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)'}
+        stroke={
+          isDark
+            ? withAlpha(Colors.PureWhite, 0.06)
+            : withAlpha(Colors.PureBlack, 0.04)
+        }
         strokeWidth={1.2}
         fill="none"
       />
@@ -167,7 +178,7 @@ const IntroAestheticBackgroundSvgComponent: React.FC<
         } Q ${CX + 140} ${CARD_CY - 26} ${CX + 136} ${CARD_CY - 26} Q ${
           CX + 140
         } ${CARD_CY - 26} ${CX + 140} ${CARD_CY - 30} Z`}
-        fill="#F5C518"
+        fill={Colors.AccentYellow}
         opacity={isDark ? 0.85 : 0.75}
       />
       <Path
@@ -194,14 +205,14 @@ const IntroAestheticBackgroundSvgComponent: React.FC<
         cx={CX + 125}
         cy={CARD_CY + 60}
         r={1.8}
-        fill={isDark ? '#FFFFFF' : '#8383D6'}
+        fill={isDark ? Colors.PureWhite : Colors.LavenderPurple}
         opacity={0.6}
       />
       <Circle
         cx={CX - 90}
         cy={DOCK_CY - 35}
         r={1.5}
-        fill={isDark ? '#F5C518' : '#B48216'}
+        fill={isDark ? Colors.AccentYellow : Colors.WorkTextAccent}
         opacity={0.55}
       />
       <Circle

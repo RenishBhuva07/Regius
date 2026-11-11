@@ -1,6 +1,7 @@
 import React from 'react';
 import Svg, { Circle, Path, SvgProps } from 'react-native-svg';
 import { useTheme } from '../../../Theme/ThemeContext';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 
 export interface IntroNextArrowButtonProps extends SvgProps {
   size?: number;
@@ -18,28 +19,28 @@ export const IntroNextArrowButton: React.FC<IntroNextArrowButtonProps> = ({
 
   // Dynamic Theme Palette derivation
   const outerRingStroke = isCyprusSand
-    ? 'rgba(240, 237, 229, 0.28)'
+    ? withAlpha(Colors.CyprusSandPaper, 0.28)
     : isDark
-    ? 'rgba(255, 255, 255, 0.22)'
-    : '#B0B0B0';
+    ? withAlpha(Colors.PureWhite, 0.22)
+    : Colors.IntroArrowMutedStroke;
 
   const discFill = isCyprusSand
-    ? '#F0EDE5' // Coastal Sand Ivory button disc
+    ? Colors.CyprusSandPaper // Coastal Sand Ivory button disc
     : isDark
-    ? themeColors.ButtonBackground || '#1E2228'
-    : '#242424';
+    ? themeColors.ButtonBackground || Colors.DarkCardBackground
+    : Colors.ButtonDark;
 
   const discStroke = isCyprusSand
-    ? '#DDD7CB'
+    ? Colors.CyprusBorderDarkCard
     : isDark
-    ? 'rgba(255, 255, 255, 0.12)'
-    : 'transparent';
+    ? withAlpha(Colors.PureWhite, 0.12)
+    : Colors.Transparent;
 
   const arrowFill = isCyprusSand
-    ? '#002B28' // Deep Cyprus Ink arrow
+    ? Colors.CyprusInkDark // Deep Cyprus Ink arrow
     : isDark
-    ? themeColors.ButtonText || '#FFFFFF'
-    : '#FFFFFF';
+    ? themeColors.ButtonText || Colors.PureWhite
+    : Colors.PureWhite;
 
   return (
     <Svg width={size} height={size} viewBox="0 0 84 84" fill="none" {...props}>
@@ -59,7 +60,7 @@ export const IntroNextArrowButton: React.FC<IntroNextArrowButtonProps> = ({
         r={33.4444}
         fill={discFill}
         stroke={discStroke}
-        strokeWidth={discStroke === 'transparent' ? 0 : 1}
+        strokeWidth={discStroke === Colors.Transparent ? 0 : 1}
       />
 
       {/* ── Arrow Left Tail Line ── */}

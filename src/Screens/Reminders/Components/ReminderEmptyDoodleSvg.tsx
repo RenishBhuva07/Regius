@@ -8,6 +8,7 @@ import Svg, {
   LinearGradient,
   Stop,
 } from 'react-native-svg';
+import { Colors, IllustrationColors } from '../../../Assets/StyleUtilities/Colors';
 
 export interface ReminderEmptyDoodleSvgProps {
   width?: number;
@@ -29,9 +30,9 @@ export const ReminderEmptyDoodleSvg: React.FC<ReminderEmptyDoodleSvgProps> = ({
             x2="100%"
             y2="100%"
           >
-            <Stop offset="0%" stopColor="#FFF5B8" />
-            <Stop offset="50%" stopColor="#F5C518" />
-            <Stop offset="100%" stopColor="#D99B0F" />
+            <Stop offset="0%" stopColor={Colors.WorkLightBorder} />
+            <Stop offset="50%" stopColor={Colors.AccentYellow} />
+            <Stop offset="100%" stopColor={Colors.SvgDoodleGoldShadow} />
           </LinearGradient>
           <LinearGradient
             id="remDoodlePurple"
@@ -40,16 +41,16 @@ export const ReminderEmptyDoodleSvg: React.FC<ReminderEmptyDoodleSvgProps> = ({
             x2="100%"
             y2="100%"
           >
-            <Stop offset="0%" stopColor="#D8DBFF" />
-            <Stop offset="50%" stopColor="#8383D6" />
-            <Stop offset="100%" stopColor="#5E5EB2" />
+            <Stop offset="0%" stopColor={Colors.MindfulLightBorder} />
+            <Stop offset="50%" stopColor={Colors.LavenderPurple} />
+            <Stop offset="100%" stopColor={Colors.BentoVioletStopDeep} />
           </LinearGradient>
         </Defs>
         <Circle
           cx={65}
           cy={70}
           r={52}
-          stroke="#EDE8DF"
+          stroke={IllustrationColors.ReminderDoodleLinen}
           strokeWidth={1.5}
           strokeDasharray="4 4"
         />
@@ -68,9 +69,9 @@ export const ReminderEmptyDoodleSvg: React.FC<ReminderEmptyDoodleSvgProps> = ({
           />
           <Path
             d="M 0 46 C 0 44, 50 44, 50 46 C 50 49, 0 49, 0 46 Z"
-            fill="#D99B0F"
+            fill={Colors.SvgDoodleGoldShadow}
           />
-          <Circle cx={25} cy={52} r={4.5} fill="#8383D6" />
+          <Circle cx={25} cy={52} r={4.5} fill={Colors.LavenderPurple} />
         </G>
         <Path
           d="M 24 55 C 20 62, 20 78, 24 85"
@@ -104,13 +105,13 @@ export const ReminderEmptyDoodleSvg: React.FC<ReminderEmptyDoodleSvgProps> = ({
         />
         <Path
           d="M 92 24 L 94 30 L 100 32 L 94 34 L 92 40 L 90 34 L 84 32 L 90 30 Z"
-          fill="#F5C518"
+          fill={Colors.AccentYellow}
         />
         <Path
           d="M 32 20 L 33 24 L 37 25 L 33 26 L 32 30 L 31 26 L 27 25 L 31 24 Z"
-          fill="#8383D6"
+          fill={Colors.LavenderPurple}
         />
-        <Circle cx={96} cy={95} r={3} fill="#52D22E" opacity={0.7} />
+        <Circle cx={96} cy={95} r={3} fill={Colors.AccentGreen} opacity={0.7} />
       </Svg>
     </View>
   );

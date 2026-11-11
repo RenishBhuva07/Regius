@@ -28,17 +28,17 @@ const OfficeBagIcon: React.FC<{ width?: number; height?: number }> = ({
     <Path
       opacity={0.4}
       d="M25.0002 30.0785C25.0502 32.4165 25.1902 36.4155 25.2102 36.8565C25.2812 37.7995 25.6422 38.7525 26.2042 39.4245C26.9862 40.3675 27.9492 40.7885 29.2922 40.7885C31.1482 40.7985 33.1942 40.7985 35.1812 40.7985C37.1762 40.7985 39.1122 40.7985 40.7472 40.7885C42.0712 40.7885 43.0642 40.3565 43.8362 39.4245C44.3982 38.7525 44.7592 37.7895 44.8102 36.8565C44.8302 36.4855 44.9302 32.1445 44.9902 30.0785H25.0002Z"
-      fill="#FFE600"
+      fill={Colors.WorkDarkLabelGold}
     />
     <Path
       d="M34.2454 34.3842V35.6782C34.2454 36.0922 34.5814 36.4282 34.9954 36.4282C35.4094 36.4282 35.7454 36.0922 35.7454 35.6782V34.3842C35.7454 33.9702 35.4094 33.6342 34.9954 33.6342C35.4094 33.6342 34.2454 33.9702 34.2454 34.3842Z"
-      fill="#FFE600"
+      fill={Colors.WorkDarkLabelGold}
     />
     <Path
       fillRule="evenodd"
       clipRule="evenodd"
       d="M33.2113 33.5564C33.1113 33.9194 32.7623 34.1514 32.3843 34.1014C29.8333 33.7454 27.3953 32.8404 25.3373 31.4814C25.1263 31.3434 25.0003 31.1074 25.0003 30.8554V27.3894C25.0003 25.2894 26.7123 23.5814 28.8173 23.5814H30.7843C30.9723 22.1294 32.2023 21.0004 33.7043 21.0004H36.2863C37.7873 21.0004 39.0183 22.1294 39.2063 23.5814H41.1833C43.2823 23.5814 44.9903 25.2894 44.9903 27.3894V30.8554C44.9903 31.1074 44.8633 31.3424 44.6543 31.4814C42.5923 32.8464 40.1443 33.7554 37.5763 34.1104C37.5413 34.1154 37.5073 34.1174 37.4733 34.1174C37.1343 34.1174 36.8313 33.8884 36.7463 33.5524C36.5443 32.7564 35.8213 32.1994 34.9903 32.1994C34.1483 32.1994 33.4333 32.7444 33.2113 33.5564ZM36.2863 22.5004H33.7043C33.0313 22.5004 32.4693 22.9604 32.3013 23.5814H37.6883C37.5203 22.9604 36.9583 22.5004 36.2863 22.5004Z"
-      fill="#FFE600"
+      fill={Colors.WorkDarkLabelGold}
     />
   </Svg>
 );
@@ -65,31 +65,31 @@ const CATEGORIES: Category[] = [
     id: 'works',
     label: 'Works',
     taskCount: '+03 task',
-    bgColor: '#FFFCEB',
-    borderColor: '#FFF5B8',
-    shadowColor: '#F5C518',
+    bgColor: Colors.WorkLightBg,
+    borderColor: Colors.WorkLightBorder,
+    shadowColor: Colors.AccentYellow,
     Icon: OfficeBagIcon,
-    accentColor: '#FDD835',
+    accentColor: Colors.TaskGoldVivid,
   },
   {
     id: 'sport',
     label: 'Sport',
     taskCount: '+10 task',
-    bgColor: '#EDFDF5',
-    borderColor: '#C6FFDD',
-    shadowColor: '#52D22E',
+    bgColor: Colors.WellnessLightBg,
+    borderColor: Colors.WellnessLightBorder,
+    shadowColor: Colors.AccentGreen,
     Icon: SVGS.FloatHeart,
-    accentColor: '#52D22E',
+    accentColor: Colors.AccentGreen,
   },
   {
     id: 'habits',
     label: 'Habits',
     taskCount: '+4 task',
-    bgColor: '#EFF2FE',
-    borderColor: '#D8DBFF',
-    shadowColor: '#8383D6',
+    bgColor: Colors.MindfulLightBg,
+    borderColor: Colors.MindfulLightBorder,
+    shadowColor: Colors.LavenderPurple,
     Icon: SVGS.FloatPicture,
-    accentColor: '#8383D6',
+    accentColor: Colors.LavenderPurple,
   },
 ];
 
@@ -106,7 +106,7 @@ const HomeScreen: React.FC = () => {
       <StatusBar
         barStyle="dark-content"
         {...(Platform.OS === 'android'
-          ? { backgroundColor: '#FFFFFF', translucent: true }
+          ? { backgroundColor: Colors.PureWhite, translucent: true }
           : {})}
       />
 
@@ -177,7 +177,11 @@ const HomeScreen: React.FC = () => {
           <Text style={styles.sectionTitle}>Categories</Text>
           <View style={styles.sectionActions}>
             <TouchableOpacity activeOpacity={0.7} style={styles.filterBtn}>
-              <Filter size={16} color="#1F2228" strokeWidth={2.2} />
+              <Filter
+                size={16}
+                color={Colors.MidnightCharcoal}
+                strokeWidth={2.2}
+              />
             </TouchableOpacity>
             <TouchableOpacity activeOpacity={0.85} style={styles.addBtn}>
               <Text style={styles.addBtnText}>Add</Text>
@@ -236,7 +240,7 @@ const HomeScreen: React.FC = () => {
           }}
         />
 
-        {/* ── Task List (same as Figma with #FAFAFA background) ── */}
+        {/* ── Task List (same as Figma with LightGrey background) ── */}
         <View style={styles.taskSection}>
           <View style={styles.taskSectionHeader}>
             <Text style={styles.taskSectionTitle}>Task List</Text>
@@ -262,9 +266,17 @@ const HomeScreen: React.FC = () => {
                   <View style={styles.taskCardLeft}>
                     <View style={styles.taskIconContainer}>
                       {task.iconType === 'mail' ? (
-                        <Mail size={19} color="#454A53" strokeWidth={2.2} />
+                        <Mail
+                          size={19}
+                          color={Colors.DarkIconSlate}
+                          strokeWidth={2.2}
+                        />
                       ) : (
-                        <Users size={19} color="#454A53" strokeWidth={2.2} />
+                        <Users
+                          size={19}
+                          color={Colors.DarkIconSlate}
+                          strokeWidth={2.2}
+                        />
                       )}
                     </View>
                     <Text style={styles.taskLabel}>{task.label}</Text>
@@ -279,7 +291,11 @@ const HomeScreen: React.FC = () => {
                     ]}
                   >
                     {isChecked ? (
-                      <Check size={14} color="#52D22E" strokeWidth={3} />
+                      <Check
+                        size={14}
+                        color={Colors.AccentGreen}
+                        strokeWidth={3}
+                      />
                     ) : null}
                   </View>
                 </TouchableOpacity>
@@ -306,7 +322,7 @@ const HomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
   },
   scroll: {
     flex: 1,
@@ -337,12 +353,12 @@ const styles = StyleSheet.create({
   menuLine: {
     width: 18,
     height: 2.2,
-    backgroundColor: '#1F2228',
+    backgroundColor: Colors.MidnightCharcoal,
     borderRadius: 2,
   },
   headerTitle: {
     ...Typography.h1RanadeBold,
-    color: '#000000',
+    color: Colors.PureBlack,
     fontSize: 26,
   },
   avatarRing: {
@@ -361,7 +377,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginHorizontal: ResponsivePixels.size20,
     marginTop: ResponsivePixels.size16,
-    backgroundColor: '#1F2228',
+    backgroundColor: Colors.MidnightCharcoal,
     borderRadius: 50,
     padding: 4,
   },
@@ -373,17 +389,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   toggleTabActive: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
   },
   toggleText: {
     ...Typography.bodyMediumPoppinsSemiBold,
     fontSize: 14,
   },
   toggleTextActive: {
-    color: '#1F2228',
+    color: Colors.MidnightCharcoal,
   },
   toggleTextInactive: {
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
 
   // Section Header
@@ -397,7 +413,7 @@ const styles = StyleSheet.create({
   },
   sectionTitle: {
     ...Typography.h6Bold,
-    color: '#000000',
+    color: Colors.PureBlack,
     fontSize: 18,
   },
   sectionActions: {
@@ -409,19 +425,19 @@ const styles = StyleSheet.create({
     width: 34,
     height: 34,
     borderRadius: 17,
-    backgroundColor: '#F5F6F8',
+    backgroundColor: Colors.CoolNeutralSurface,
     alignItems: 'center',
     justifyContent: 'center',
   },
   addBtn: {
-    backgroundColor: '#1F2228',
+    backgroundColor: Colors.MidnightCharcoal,
     paddingHorizontal: ResponsivePixels.size16,
     paddingVertical: ResponsivePixels.size8,
     borderRadius: 50,
   },
   addBtnText: {
     ...Typography.bodySmallPoppinsSemiBold,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     fontSize: 12,
   },
 
@@ -445,10 +461,10 @@ const styles = StyleSheet.create({
     gap: ResponsivePixels.size6,
     position: 'relative',
     borderWidth: 2,
-    borderColor: 'transparent',
+    borderColor: Colors.Transparent,
   },
   categoryCardSelected: {
-    borderColor: '#FFFFFF',
+    borderColor: Colors.PureWhite,
     ...Platform.select({
       ios: {
         shadowOffset: { width: 0, height: 8 },
@@ -464,7 +480,7 @@ const styles = StyleSheet.create({
     width: 46,
     height: 46,
     borderRadius: 23,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -482,7 +498,7 @@ const styles = StyleSheet.create({
   },
   categoryLabel: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    color: '#000000',
+    color: Colors.PureBlack,
     fontSize: 15,
   },
   categoryCount: {
@@ -504,9 +520,9 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 3,
   },
 
-  // Task Section (#FAFAFA background)
+  // Task Section (LightGrey surface background)
   taskSection: {
-    backgroundColor: '#FAFAFA',
+    backgroundColor: Colors.LightGrey,
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     paddingHorizontal: ResponsivePixels.size20,
@@ -522,18 +538,18 @@ const styles = StyleSheet.create({
   },
   taskSectionTitle: {
     ...Typography.h6Bold,
-    color: '#000000',
+    color: Colors.PureBlack,
     fontSize: 18,
   },
   addTaskBtn: {
-    backgroundColor: '#1F2228',
+    backgroundColor: Colors.MidnightCharcoal,
     paddingHorizontal: ResponsivePixels.size16,
     paddingVertical: ResponsivePixels.size8,
     borderRadius: 50,
   },
   addTaskBtnText: {
     ...Typography.bodySmallPoppinsSemiBold,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     fontSize: 12,
   },
 
@@ -542,7 +558,7 @@ const styles = StyleSheet.create({
     gap: ResponsivePixels.size12,
   },
   taskCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderRadius: 18,
     paddingHorizontal: ResponsivePixels.size16,
     paddingVertical: ResponsivePixels.size16,
@@ -551,7 +567,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     ...Platform.select({
       ios: {
-        shadowColor: '#000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.04,
         shadowRadius: 8,
@@ -575,7 +591,7 @@ const styles = StyleSheet.create({
   },
   taskLabel: {
     ...Typography.bodyMediumPoppinsMedium,
-    color: '#000000',
+    color: Colors.PureBlack,
     fontSize: 15,
   },
 
@@ -588,15 +604,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   taskCheckboxChecked: {
-    backgroundColor: '#E8FDF0',
+    backgroundColor: Colors.BadgeGreenBg,
   },
   taskCheckboxUnchecked: {
-    backgroundColor: '#EFF1F4',
+    backgroundColor: Colors.GrayPillSurface,
   },
 
   // Select All Task
   selectAllBtn: {
-    backgroundColor: '#1F2228',
+    backgroundColor: Colors.MidnightCharcoal,
     borderRadius: 50,
     paddingVertical: ResponsivePixels.size14,
     paddingHorizontal: ResponsivePixels.size36,
@@ -607,7 +623,7 @@ const styles = StyleSheet.create({
   },
   selectAllText: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     fontSize: 14,
   },
 });

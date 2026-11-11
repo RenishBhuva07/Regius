@@ -33,7 +33,7 @@ import {
 } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
 import { Typography } from '../../../Theme/Typographys';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../../Theme/useAppTheme';
 import { Badge } from '../../../Common/Badge';
 import { getCutoutCardPath } from '../../../Common/CutoutCardSvg';
@@ -255,43 +255,43 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
     switch (reminder.category) {
       case 'work':
         return {
-          bg: isDarkMode ? '#202336' : '#F7F8FE',
-          border: isDarkMode ? '#8383D6' : '#D8DBFF',
-          accent: '#8383D6',
-          shadow: isDarkMode ? '#000000' : '#8383D6',
-          iconBg: isDarkMode ? '#2C304A' : '#EFF2FE',
-          auraColor: '#8383D6',
+          bg: isDarkMode ? Colors.MindfulDarkBg : Colors.MindfulTintLight,
+          border: isDarkMode ? Colors.LavenderPurple : Colors.MindfulLightBorder,
+          accent: Colors.LavenderPurple,
+          shadow: isDarkMode ? Colors.PureBlack : Colors.LavenderPurple,
+          iconBg: isDarkMode ? Colors.MindfulDarkIconBg : Colors.MindfulLightBg,
+          auraColor: Colors.LavenderPurple,
           Icon: Briefcase,
         };
       case 'events':
         return {
-          bg: isDarkMode ? '#331F18' : '#FFF9F0',
-          border: isDarkMode ? '#FF9800' : '#FFE0B2',
-          accent: '#FF9800',
-          shadow: isDarkMode ? '#000000' : '#FF9800',
-          iconBg: isDarkMode ? '#452A20' : '#FFF3E0',
-          auraColor: '#FF9800',
+          bg: isDarkMode ? Colors.EventDarkBg : Colors.CategoryOrangeSoftBg,
+          border: isDarkMode ? Colors.AccentAmber : Colors.EventLightBorder,
+          accent: Colors.AccentAmber,
+          shadow: isDarkMode ? Colors.PureBlack : Colors.AccentAmber,
+          iconBg: isDarkMode ? Colors.EventDarkIconBgDeep : Colors.EventIconBgLight,
+          auraColor: Colors.AccentAmber,
           Icon: CalendarCheck,
         };
       case 'health':
         return {
-          bg: isDarkMode ? '#162820' : '#F5FDF9',
-          border: isDarkMode ? '#1B9A72' : '#C6FFDD',
-          accent: '#1B9A72',
-          shadow: isDarkMode ? '#000000' : '#52D22E',
-          iconBg: isDarkMode ? '#1F382D' : '#EDFDF5',
-          auraColor: '#52D22E',
+          bg: isDarkMode ? Colors.WellnessDarkBg : Colors.WellnessTintLight,
+          border: isDarkMode ? Colors.GreenGracious : Colors.WellnessLightBorder,
+          accent: Colors.GreenGracious,
+          shadow: isDarkMode ? Colors.PureBlack : Colors.AccentGreen,
+          iconBg: isDarkMode ? Colors.WellnessDarkIconBg : Colors.WellnessLightBg,
+          auraColor: Colors.AccentGreen,
           Icon: Heart,
         };
       case 'daily':
       default:
         return {
-          bg: isDarkMode ? '#2A2416' : '#F5FDF9',
-          border: isDarkMode ? '#DEAA14' : '#C6FFDD',
-          accent: isDarkMode ? '#F5C518' : '#1B9A72',
-          shadow: isDarkMode ? '#000000' : '#52D22E',
-          iconBg: isDarkMode ? '#38301D' : '#EDFDF5',
-          auraColor: isDarkMode ? '#F5C518' : '#52D22E',
+          bg: isDarkMode ? Colors.WorkDarkBg : Colors.WellnessTintLight,
+          border: isDarkMode ? Colors.WorkDarkBorder : Colors.WellnessLightBorder,
+          accent: isDarkMode ? Colors.AccentYellow : Colors.GreenGracious,
+          shadow: isDarkMode ? Colors.PureBlack : Colors.AccentGreen,
+          iconBg: isDarkMode ? Colors.WorkDarkIconBg : Colors.WellnessLightBg,
+          auraColor: isDarkMode ? Colors.AccentYellow : Colors.AccentGreen,
           Icon: Bell,
         };
     }
@@ -337,7 +337,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
               accessibilityLabel={`View details for ${reminder.title}`}
             >
               <View style={styles.actionIconAuraDetails}>
-                <Flame size={14} color="#FF9800" strokeWidth={2.6} />
+                <Flame size={14} color={Colors.AccentAmber} strokeWidth={2.6} />
               </View>
               <Text style={styles.actionBtnText}>DETAILS</Text>
             </TouchableOpacity>
@@ -363,7 +363,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
               accessibilityLabel={`Edit ${reminder.title}`}
             >
               <View style={styles.actionIconAuraEdit}>
-                <Pencil size={13.5} color="#F5C518" strokeWidth={2.6} />
+                <Pencil size={13.5} color={Colors.AccentYellow} strokeWidth={2.6} />
               </View>
               <Text style={styles.actionBtnText}>EDIT</Text>
             </TouchableOpacity>
@@ -388,7 +388,9 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
             styles.card,
             {
               shadowColor: localChecked
-                ? (isDarkMode ? '#000000' : '#D1D5DB')
+                ? isDarkMode
+                  ? Colors.PureBlack
+                  : Colors.Gray300
                 : theme.shadow,
             },
           ]}
@@ -429,8 +431,20 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
             </Defs>
             <Path
               d={getCutoutCardPath(cardSize.width, cardSize.height)}
-              fill={localChecked ? (isDarkMode ? '#171A20' : '#FAFAF8') : theme.bg}
-              stroke={localChecked ? (isDarkMode ? '#2C3035' : '#ECEAE4') : theme.border}
+              fill={
+                localChecked
+                  ? isDarkMode
+                    ? Colors.DarkSurfaceDeep
+                    : Colors.CompletedCardCream
+                  : theme.bg
+              }
+              stroke={
+                localChecked
+                  ? isDarkMode
+                    ? Colors.DarkBorderSubtle
+                    : Colors.TimelineBorderWarm
+                  : theme.border
+              }
               strokeWidth={1.5}
               strokeLinejoin="round"
             />
@@ -473,12 +487,17 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
               localChecked
                 ? [
                     styles.floatingCheckboxChecked,
-                    isDarkMode && { backgroundColor: '#13281E', borderColor: '#52D22E' },
+                    isDarkMode && {
+                      backgroundColor: Colors.TaskCompletedDarkBg,
+                      borderColor: Colors.AccentGreen,
+                    },
                   ]
                 : [
                     styles.floatingCheckboxUnchecked,
                     {
-                      backgroundColor: isDarkMode ? '#252932' : '#FFFFFF',
+                      backgroundColor: isDarkMode
+                        ? Colors.DarkCheckboxUnchecked
+                        : Colors.PureWhite,
                       borderColor: theme.border,
                     },
                   ],
@@ -492,7 +511,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
             {localChecked && (
               <Check
                 size={14}
-                color={isDarkMode ? '#52D22E' : '#1B9A72'}
+                color={isDarkMode ? Colors.AccentGreen : Colors.GreenGracious}
                 strokeWidth={3}
               />
             )}
@@ -506,7 +525,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                   localChecked
                     ? [
                         styles.iconContainerChecked,
-                        isDarkMode && { backgroundColor: '#13281E' },
+                        isDarkMode && { backgroundColor: Colors.TaskCompletedDarkBg },
                       ]
                     : {
                         backgroundColor: theme.iconBg,
@@ -519,7 +538,9 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                   size={18}
                   color={
                     localChecked
-                      ? (isDarkMode ? '#52D22E' : '#1B9A72')
+                      ? isDarkMode
+                        ? Colors.AccentGreen
+                        : Colors.GreenGracious
                       : theme.accent
                   }
                   strokeWidth={2.2}
@@ -530,8 +551,11 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                 <Text
                   style={[
                     styles.title,
-                    { color: isDarkMode ? textPrimary : '#1B1C19' },
-                    localChecked && (isDarkMode ? { color: '#5C6270' } : styles.titleCompleted),
+                    { color: isDarkMode ? textPrimary : Colors.RegiusInk },
+                    localChecked &&
+                      (isDarkMode
+                        ? { color: Colors.DarkTitleCompleted }
+                        : styles.titleCompleted),
                   ]}
                   numberOfLines={2}
                 >
@@ -542,8 +566,11 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                   <Text
                     style={[
                       styles.notes,
-                      { color: isDarkMode ? textSecondary : '#7E838F' },
-                      localChecked && (isDarkMode ? { color: '#4A505C' } : styles.notesCompleted),
+                      { color: isDarkMode ? textSecondary : Colors.MutedSlateSubtext },
+                      localChecked &&
+                        (isDarkMode
+                          ? { color: Colors.DarkNoteCompleted }
+                          : styles.notesCompleted),
                     ]}
                     numberOfLines={2}
                   >
@@ -560,7 +587,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                 style={[
                   styles.speakBtn,
                   { borderColor: theme.border },
-                  isDarkMode && { backgroundColor: '#1E2228' },
+                  isDarkMode && { backgroundColor: Colors.DarkCardBackground },
                   isSpeaking && styles.speakBtnActive,
                 ]}
                 onPress={e => onSpeak(reminder, e)}
@@ -575,13 +602,13 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                 {isSpeaking ? (
                   <VolumeX
                     size={15}
-                    color={isDarkMode ? '#52D22E' : '#1B9A72'}
+                    color={isDarkMode ? Colors.AccentGreen : Colors.GreenGracious}
                     strokeWidth={2.4}
                   />
                 ) : (
                   <Volume2
                     size={15}
-                    color={isDarkMode ? '#A3A8B1' : '#7E838F'}
+                    color={isDarkMode ? Colors.SteelMist : Colors.MutedSlateSubtext}
                     strokeWidth={2.2}
                   />
                 )}
@@ -594,7 +621,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
             <View
               style={[
                 styles.cardFooter,
-                isDarkMode && { borderTopColor: '#2C3035' },
+                isDarkMode && { borderTopColor: Colors.DarkBorderSubtle },
               ]}
             >
               <View style={styles.footerLeft}>
@@ -602,18 +629,18 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                   <View
                     style={[
                       styles.metaTag,
-                      isDarkMode && { backgroundColor: '#252932' },
+                      isDarkMode && { backgroundColor: Colors.DarkCheckboxUnchecked },
                     ]}
                   >
                     <Clock
                       size={11.5}
-                      color={isDarkMode ? '#A3A8B1' : '#7E838F'}
+                      color={isDarkMode ? Colors.SteelMist : Colors.MutedSlateSubtext}
                       strokeWidth={2}
                     />
                     <Text
                       style={[
                         styles.metaText,
-                        isDarkMode && { color: '#A3A8B1' },
+                        isDarkMode && { color: Colors.SteelMist },
                       ]}
                     >
                       {reminder.time}
@@ -625,18 +652,18 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                   <View
                     style={[
                       styles.metaTag,
-                      isDarkMode && { backgroundColor: '#252932' },
+                      isDarkMode && { backgroundColor: Colors.DarkCheckboxUnchecked },
                     ]}
                   >
                     <Calendar
                       size={11.5}
-                      color={isDarkMode ? '#A3A8B1' : '#7E838F'}
+                      color={isDarkMode ? Colors.SteelMist : Colors.MutedSlateSubtext}
                       strokeWidth={2}
                     />
                     <Text
                       style={[
                         styles.metaText,
-                        isDarkMode && { color: '#A3A8B1' },
+                        isDarkMode && { color: Colors.SteelMist },
                       ]}
                     >
                       {reminder.date}
@@ -650,12 +677,16 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                       styles.metaTag,
                       styles.repeatTag,
                       isDarkMode && {
-                        backgroundColor: '#24273E',
-                        borderColor: '#434770',
+                        backgroundColor: Colors.MindfulTimePillDarkBg,
+                        borderColor: Colors.MindfulTimePillDarkBorder,
                       },
                     ]}
                   >
-                    <RotateCw size={11} color="#8383D6" strokeWidth={2.2} />
+                    <RotateCw
+                      size={11}
+                      color={Colors.LavenderPurple}
+                      strokeWidth={2.2}
+                    />
                     <Text style={styles.repeatText}>{reminder.repeat}</Text>
                   </View>
                 ) : null}
@@ -701,17 +732,17 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     borderWidth: 1.2,
     borderTopWidth: 1.8,
-    borderTopColor: 'rgba(255, 255, 255, 0.45)',
-    borderLeftColor: 'rgba(255, 255, 255, 0.14)',
-    borderRightColor: 'rgba(255, 255, 255, 0.14)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.45),
+    borderLeftColor: withAlpha(Colors.PureWhite, 0.14),
+    borderRightColor: withAlpha(Colors.PureWhite, 0.14),
     borderBottomWidth: 3.5,
-    borderBottomColor: '#0A0B0E',
+    borderBottomColor: Colors.DarkChipBevelAbyss,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 4,
     ...Platform.select({
       ios: {
-        shadowColor: '#FF9800',
+        shadowColor: Colors.AccentAmber,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.38,
         shadowRadius: 7,
@@ -725,9 +756,9 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: 'rgba(255, 152, 0, 0.22)',
+    backgroundColor: withAlpha(Colors.AccentAmber, 0.22),
     borderWidth: 1.2,
-    borderColor: 'rgba(255, 152, 0, 0.48)',
+    borderColor: withAlpha(Colors.AccentAmber, 0.48),
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 3,
@@ -739,17 +770,17 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     borderWidth: 1.2,
     borderTopWidth: 1.8,
-    borderTopColor: 'rgba(255, 255, 255, 0.45)',
-    borderLeftColor: 'rgba(255, 255, 255, 0.14)',
-    borderRightColor: 'rgba(255, 255, 255, 0.14)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.45),
+    borderLeftColor: withAlpha(Colors.PureWhite, 0.14),
+    borderRightColor: withAlpha(Colors.PureWhite, 0.14),
     borderBottomWidth: 3.5,
-    borderBottomColor: '#0A0B0E',
+    borderBottomColor: Colors.DarkChipBevelAbyss,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 4,
     ...Platform.select({
       ios: {
-        shadowColor: '#F5C518',
+        shadowColor: Colors.AccentYellow,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.38,
         shadowRadius: 7,
@@ -763,9 +794,9 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: 'rgba(245, 197, 24, 0.22)',
+    backgroundColor: withAlpha(Colors.AccentYellow, 0.22),
     borderWidth: 1.2,
-    borderColor: 'rgba(245, 197, 24, 0.48)',
+    borderColor: withAlpha(Colors.AccentYellow, 0.48),
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 3,
@@ -773,7 +804,7 @@ const styles = StyleSheet.create({
   actionBtnText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 9.5,
-    color: '#FFFBF0',
+    color: Colors.WarmActionTextCream,
     letterSpacing: 0.75,
   },
   frontCardContainer: {
@@ -781,13 +812,13 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   card: {
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.Transparent,
     padding: 16,
     gap: 10,
     position: 'relative',
     ...Platform.select({
       ios: {
-        shadowColor: '#52D22E',
+        shadowColor: Colors.AccentGreen,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.12,
         shadowRadius: 8,
@@ -817,7 +848,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.12,
         shadowRadius: 3,
@@ -828,12 +859,12 @@ const styles = StyleSheet.create({
     }),
   },
   floatingCheckboxChecked: {
-    backgroundColor: '#E8FDF0',
-    borderColor: '#52D22E',
+    backgroundColor: Colors.BadgeGreenBg,
+    borderColor: Colors.AccentGreen,
   },
   floatingCheckboxUnchecked: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#ECE8DF',
+    backgroundColor: Colors.PureWhite,
+    borderColor: Colors.WarmCheckboxBorder,
   },
   cardHeaderRow: {
     flexDirection: 'row',
@@ -856,7 +887,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   iconContainerChecked: {
-    backgroundColor: '#E8FDF0',
+    backgroundColor: Colors.BadgeGreenBg,
   },
   textBlock: {
     flex: 1,
@@ -864,21 +895,21 @@ const styles = StyleSheet.create({
   },
   title: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     fontSize: 15,
     lineHeight: 21,
   },
   titleCompleted: {
-    color: '#7E838F',
+    color: Colors.MutedSlateSubtext,
   },
   notes: {
     ...Typography.bodySmallPoppinsRegular,
-    color: '#7E838F',
+    color: Colors.MutedSlateSubtext,
     fontSize: 12,
     lineHeight: 17,
   },
   notesCompleted: {
-    color: '#AAB0B9',
+    color: Colors.CoolMistText,
   },
   rightControls: {
     flexDirection: 'row',
@@ -890,14 +921,14 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#EDFDF5',
+    backgroundColor: Colors.WellnessLightBg,
     borderWidth: 1,
-    borderColor: '#C6FFDD',
+    borderColor: Colors.WellnessLightBorder,
     alignItems: 'center',
     justifyContent: 'center',
   },
   speakBtnActive: {
-    backgroundColor: '#C6FFDD',
+    backgroundColor: Colors.WellnessLightBorder,
   },
   cardFooter: {
     flexDirection: 'row',
@@ -905,7 +936,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingTop: 8,
     borderTopWidth: 1,
-    borderTopColor: '#E6F5EC',
+    borderTopColor: Colors.WellnessCardTopBorder,
   },
   footerLeft: {
     flexDirection: 'row',
@@ -917,7 +948,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: '#F5F6F8',
+    backgroundColor: Colors.CoolNeutralSurface,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 10,
@@ -925,15 +956,15 @@ const styles = StyleSheet.create({
   metaText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 11,
-    color: '#7E838F',
+    color: Colors.MutedSlateSubtext,
   },
   repeatTag: {
-    backgroundColor: '#EFF2FE',
+    backgroundColor: Colors.MindfulLightBg,
   },
   repeatText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 11,
-    color: '#8383D6',
+    color: Colors.LavenderPurple,
   },
 });
 

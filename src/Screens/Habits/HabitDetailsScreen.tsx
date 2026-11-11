@@ -45,7 +45,7 @@ import Svg, {
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../../Theme/fonts';
-import { Colors } from '../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { useTheme } from '../../Theme/ThemeContext';
 import { useTaskReminder } from '../../Context/TaskReminderContext';
@@ -86,9 +86,9 @@ const BentoHeroBg: React.FC<{ accentColor: string }> = React.memo(
       >
         <Defs>
           <LinearGradient id="heroBentoBg" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#252733" stopOpacity={0.8} />
-            <Stop offset="50%" stopColor="#1B1D25" stopOpacity={0.4} />
-            <Stop offset="100%" stopColor="#121318" stopOpacity={0.9} />
+            <Stop offset="0%" stopColor={Colors.BentoStopSlate} stopOpacity={0.8} />
+            <Stop offset="50%" stopColor={Colors.DetailStopMid} stopOpacity={0.4} />
+            <Stop offset="100%" stopColor={Colors.BentoStopDeep} stopOpacity={0.9} />
           </LinearGradient>
 
           {/* Fiery Flame Aura */}
@@ -99,9 +99,9 @@ const BentoHeroBg: React.FC<{ accentColor: string }> = React.memo(
             rx="60%"
             ry="60%"
           >
-            <Stop offset="0%" stopColor="#FF9800" stopOpacity={0.32} />
-            <Stop offset="45%" stopColor="#E65100" stopOpacity={0.14} />
-            <Stop offset="100%" stopColor="#121318" stopOpacity={0} />
+            <Stop offset="0%" stopColor={Colors.AccentAmber} stopOpacity={0.32} />
+            <Stop offset="45%" stopColor={Colors.EventTextAccent} stopOpacity={0.14} />
+            <Stop offset="100%" stopColor={Colors.BentoStopDeep} stopOpacity={0} />
           </RadialGradient>
 
           {/* Dynamic Category Accent Aura */}
@@ -114,7 +114,7 @@ const BentoHeroBg: React.FC<{ accentColor: string }> = React.memo(
           >
             <Stop offset="0%" stopColor={accentColor} stopOpacity={0.35} />
             <Stop offset="50%" stopColor={accentColor} stopOpacity={0.12} />
-            <Stop offset="100%" stopColor="#121318" stopOpacity={0} />
+            <Stop offset="100%" stopColor={Colors.BentoStopDeep} stopOpacity={0} />
           </RadialGradient>
         </Defs>
 
@@ -126,7 +126,7 @@ const BentoHeroBg: React.FC<{ accentColor: string }> = React.memo(
           cx={300}
           cy={40}
           r={50}
-          stroke="rgba(255, 255, 255, 0.12)"
+          stroke={withAlpha(Colors.PureWhite, 0.12)}
           strokeWidth={1}
           fill="none"
         />
@@ -134,7 +134,7 @@ const BentoHeroBg: React.FC<{ accentColor: string }> = React.memo(
           cx={300}
           cy={40}
           r={85}
-          stroke="rgba(255, 255, 255, 0.05)"
+          stroke={withAlpha(Colors.PureWhite, 0.05)}
           strokeWidth={1}
           strokeDasharray="4 6"
           fill="none"
@@ -166,9 +166,9 @@ const CupboardAestheticBg: React.FC<{ accentColor: string }> = React.memo(
             x2="100%"
             y2="100%"
           >
-            <Stop offset="0%" stopColor="#252733" stopOpacity={0.92} />
-            <Stop offset="50%" stopColor="#1B1D25" stopOpacity={0.65} />
-            <Stop offset="100%" stopColor="#121318" stopOpacity={0.96} />
+            <Stop offset="0%" stopColor={Colors.BentoStopSlate} stopOpacity={0.92} />
+            <Stop offset="50%" stopColor={Colors.DetailStopMid} stopOpacity={0.65} />
+            <Stop offset="100%" stopColor={Colors.BentoStopDeep} stopOpacity={0.96} />
           </LinearGradient>
 
           {/* Fiery Amber Glow behind Streak Showcase */}
@@ -179,9 +179,9 @@ const CupboardAestheticBg: React.FC<{ accentColor: string }> = React.memo(
             rx="60%"
             ry="55%"
           >
-            <Stop offset="0%" stopColor="#FF9800" stopOpacity={0.25} />
-            <Stop offset="55%" stopColor="#E65100" stopOpacity={0.08} />
-            <Stop offset="100%" stopColor="#121318" stopOpacity={0} />
+            <Stop offset="0%" stopColor={Colors.AccentAmber} stopOpacity={0.25} />
+            <Stop offset="55%" stopColor={Colors.EventTextAccent} stopOpacity={0.08} />
+            <Stop offset="100%" stopColor={Colors.BentoStopDeep} stopOpacity={0} />
           </RadialGradient>
 
           {/* Dynamic Category Accent Aura */}
@@ -194,7 +194,7 @@ const CupboardAestheticBg: React.FC<{ accentColor: string }> = React.memo(
           >
             <Stop offset="0%" stopColor={accentColor} stopOpacity={0.28} />
             <Stop offset="50%" stopColor={accentColor} stopOpacity={0.08} />
-            <Stop offset="100%" stopColor="#121318" stopOpacity={0} />
+            <Stop offset="100%" stopColor={Colors.BentoStopDeep} stopOpacity={0} />
           </RadialGradient>
         </Defs>
 
@@ -207,7 +207,7 @@ const CupboardAestheticBg: React.FC<{ accentColor: string }> = React.memo(
           cx={310}
           cy={35}
           r={55}
-          stroke="rgba(255, 255, 255, 0.12)"
+          stroke={withAlpha(Colors.PureWhite, 0.12)}
           strokeWidth={1}
           fill="none"
         />
@@ -215,13 +215,13 @@ const CupboardAestheticBg: React.FC<{ accentColor: string }> = React.memo(
           cx={310}
           cy={35}
           r={90}
-          stroke="rgba(255, 255, 255, 0.05)"
+          stroke={withAlpha(Colors.PureWhite, 0.05)}
           strokeWidth={1}
           strokeDasharray="4 6"
           fill="none"
         />
-        <Circle cx={285} cy={18} r={1.6} fill="#FFFFFF" opacity={0.65} />
-        <Circle cx={35} cy={165} r={1.4} fill="#F5C518" opacity={0.5} />
+        <Circle cx={285} cy={18} r={1.6} fill={Colors.PureWhite} opacity={0.65} />
+        <Circle cx={35} cy={165} r={1.4} fill={Colors.AccentYellow} opacity={0.5} />
       </Svg>
     </View>
   ),
@@ -252,14 +252,14 @@ const StreakDayIcon: React.FC<{
             x2="0%"
             y2="100%"
           >
-            <Stop offset="0%" stopColor="#FFA726" />
-            <Stop offset="100%" stopColor="#FF9800" />
+            <Stop offset="0%" stopColor={Colors.StreakFlameOrangeTop} />
+            <Stop offset="100%" stopColor={Colors.AccentAmber} />
           </LinearGradient>
         </Defs>
         <Path
           d={flamePath}
           fill="url(#streakFlameFilledGrad)"
-          stroke="#E65100"
+          stroke={Colors.EventTextAccent}
           strokeWidth={1}
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -270,10 +270,10 @@ const StreakDayIcon: React.FC<{
 
   // Pending / Incomplete day: ONLY bordered streak flame icon
   const pendingStroke = isToday
-    ? '#FF9800'
+    ? Colors.AccentAmber
     : isDarkMode
-    ? '#4A4E5C'
-    : '#C8C4B7';
+    ? Colors.DarkBevelTop
+    : Colors.DetailWarmBorderMuted;
 
   return (
     <Svg width={iconSize} height={iconSize} viewBox="0 0 24 24" fill="none">
@@ -336,10 +336,10 @@ export const HabitDetailsScreen: React.FC = () => {
       label: 'MINDFUL HABITS',
       badgeVariant: 'purple' as BadgeVariant,
       accent: Colors.LavenderPurple,
-      bgTint: '#EFF2FE',
-      borderColor: '#D8DBFF',
+      bgTint: Colors.MindfulLightBg,
+      borderColor: Colors.MindfulLightBorder,
       icon: Sparkles,
-      iconColor: '#7059C8',
+      iconColor: Colors.MindfulTextAccent,
       quote:
         '“We are what we repeatedly do. Excellence, then, is not an act, but a daily habit.”',
       sublabel: 'Midday Mindful Routine',
@@ -349,11 +349,11 @@ export const HabitDetailsScreen: React.FC = () => {
       return {
         label: 'MORNING RITUAL',
         badgeVariant: 'yellow' as BadgeVariant,
-        accent: '#F5C518',
-        bgTint: '#FFF8D0',
-        borderColor: '#FFF5B8',
+        accent: Colors.AccentYellow,
+        bgTint: Colors.BadgeYellowBg,
+        borderColor: Colors.WorkLightBorder,
         icon: Sun,
-        iconColor: '#B47804',
+        iconColor: Colors.BadgeYellowText,
         quote:
           '“The secret of your future is hidden in your daily routine. Own the morning.”',
         sublabel: 'Dawn Circadian Ritual',
@@ -363,11 +363,11 @@ export const HabitDetailsScreen: React.FC = () => {
       return {
         label: 'EVENING RITUAL',
         badgeVariant: 'orange' as BadgeVariant,
-        accent: '#EA580C',
-        bgTint: '#FFF2E6',
-        borderColor: '#FFE0D3',
+        accent: Colors.CategoryOrangeCheck,
+        bgTint: Colors.EventTintSoftLight,
+        borderColor: Colors.CategoryPeachBorder,
         icon: Moon,
-        iconColor: '#D95D0F',
+        iconColor: Colors.EventDeepOrangeIcon,
         quote:
           '“Consistent evening reflection restores clarity and pre-aligns tomorrow’s victories.”',
         sublabel: 'Evening Wind-down Flow',
@@ -613,8 +613,8 @@ export const HabitDetailsScreen: React.FC = () => {
                 <View style={styles.flameAuraContainer}>
                   <Flame
                     size={ResponsivePixels.size18}
-                    color="#FF9800"
-                    fill="#FF9800"
+                    color={Colors.AccentAmber}
+                    fill={Colors.AccentAmber}
                     strokeWidth={2.2}
                   />
                 </View>
@@ -640,7 +640,9 @@ export const HabitDetailsScreen: React.FC = () => {
             <View style={styles.sectionHeaderLeft}>
               <Calendar
                 size={ResponsivePixels.size15}
-                color={isDarkMode ? '#A3A8B1' : '#7A766E'}
+                color={
+                  isDarkMode ? Colors.SteelMist : Colors.WarmMutedTextLight
+                }
                 strokeWidth={2.2}
               />
               <Text
@@ -675,8 +677,8 @@ export const HabitDetailsScreen: React.FC = () => {
                   <View style={styles.streakWindowHeaderLeft}>
                     <Flame
                       size={ResponsivePixels.size12}
-                      color="#FF9800"
-                      fill="#FF9800"
+                      color={Colors.AccentAmber}
+                      fill={Colors.AccentAmber}
                       strokeWidth={2}
                     />
                     <Text
@@ -756,8 +758,8 @@ export const HabitDetailsScreen: React.FC = () => {
                   <View style={[styles.cubby3DDisc, styles.streakDisc]}>
                     <Flame
                       size={ResponsivePixels.size13}
-                      color="#E65100"
-                      fill="#FF9800"
+                      color={Colors.EventTextAccent}
+                      fill={Colors.AccentAmber}
                       strokeWidth={2.2}
                     />
                   </View>
@@ -813,8 +815,8 @@ export const HabitDetailsScreen: React.FC = () => {
                       icon={
                         <Flame
                           size={ResponsivePixels.size10}
-                          color="#E65100"
-                          fill="#FF9800"
+                          color={Colors.EventTextAccent}
+                          fill={Colors.AccentAmber}
                           strokeWidth={2}
                         />
                       }
@@ -908,7 +910,7 @@ export const HabitDetailsScreen: React.FC = () => {
                   <View style={[styles.cubby3DDisc, styles.cadenceDisc]}>
                     <Repeat
                       size={ResponsivePixels.size13}
-                      color="#1B9A72"
+                      color={Colors.GreenGracious}
                       strokeWidth={2.4}
                     />
                   </View>
@@ -965,7 +967,7 @@ export const HabitDetailsScreen: React.FC = () => {
                       icon={
                         <Repeat
                           size={ResponsivePixels.size10}
-                          color="#1B9A72"
+                          color={Colors.GreenGracious}
                           strokeWidth={2.4}
                         />
                       }
@@ -983,7 +985,9 @@ export const HabitDetailsScreen: React.FC = () => {
             <View style={styles.sectionHeaderLeft}>
               <Clock
                 size={ResponsivePixels.size15}
-                color={isDarkMode ? '#A3A8B1' : '#7A766E'}
+                color={
+                  isDarkMode ? Colors.SteelMist : Colors.WarmMutedTextLight
+                }
                 strokeWidth={2.2}
               />
               <Text
@@ -1057,7 +1061,10 @@ export const HabitDetailsScreen: React.FC = () => {
               <View
                 style={[
                   styles.protocolIconAura3D,
-                  { backgroundColor: '#EFF2FE', borderColor: '#D8DBFF' },
+                  {
+                    backgroundColor: Colors.MindfulLightBg,
+                    borderColor: Colors.MindfulLightBorder,
+                  },
                   isDarkMode && styles.protocolIconAura3DDark,
                 ]}
               >
@@ -1132,7 +1139,9 @@ export const HabitDetailsScreen: React.FC = () => {
             <View style={styles.sectionHeaderLeft}>
               <Volume2
                 size={ResponsivePixels.size15}
-                color={isDarkMode ? '#A3A8B1' : '#7A766E'}
+                color={
+                  isDarkMode ? Colors.SteelMist : Colors.WarmMutedTextLight
+                }
                 strokeWidth={2.2}
               />
               <Text
@@ -1167,7 +1176,9 @@ export const HabitDetailsScreen: React.FC = () => {
             <View style={styles.sectionHeaderLeft}>
               <Quote
                 size={ResponsivePixels.size15}
-                color={isDarkMode ? '#A3A8B1' : '#7A766E'}
+                color={
+                  isDarkMode ? Colors.SteelMist : Colors.WarmMutedTextLight
+                }
                 strokeWidth={2.2}
               />
               <Text
@@ -1201,7 +1212,7 @@ export const HabitDetailsScreen: React.FC = () => {
           >
             <Trash2
               size={ResponsivePixels.size16}
-              color="#EF4444"
+              color={Colors.CategoryRedAccent}
               strokeWidth={2.2}
             />
             <Text style={styles.deleteBtnText}>Delete Habit Ritual</Text>
@@ -1219,13 +1230,13 @@ export const HabitDetailsScreen: React.FC = () => {
             isCompleted ? (
               <RotateCw
                 size={ResponsivePixels.size18}
-                color="#FFFFFF"
+                color={Colors.PureWhite}
                 strokeWidth={2.4}
               />
             ) : (
               <Flame
                 size={ResponsivePixels.size18}
-                color="#FFFFFF"
+                color={Colors.PureWhite}
                 strokeWidth={2.4}
               />
             )
@@ -1269,7 +1280,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.CreamBackground,
   },
   containerDark: {
-    backgroundColor: '#121417',
+    backgroundColor: Colors.DarkBackground,
   },
   scroll: {
     flex: 1,
@@ -1292,10 +1303,10 @@ const styles = StyleSheet.create({
   notFoundText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: ResponsivePixels.size15,
-    color: '#363944',
+    color: Colors.DarkBorder,
   },
   notFoundTextDark: {
-    color: '#D1D5DB',
+    color: Colors.Gray300,
   },
   backBtnFallback: {
     paddingHorizontal: ResponsivePixels.size16,
@@ -1306,7 +1317,7 @@ const styles = StyleSheet.create({
   backBtnFallbackText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: ResponsivePixels.size13,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
 
   // 2-Layer Hero Bento Card Architecture (DESIGN_SYSTEM.md § 4.3.1)
@@ -1316,7 +1327,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.NeroBlack,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 10 },
         shadowOpacity: 0.28,
         shadowRadius: 18,
@@ -1331,7 +1342,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.NeroBlack,
     borderRadius: ResponsivePixels.size24,
     borderWidth: 4,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: withAlpha(Colors.PureWhite, 0.9),
     overflow: 'hidden',
   },
   bentoContent: {
@@ -1347,12 +1358,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: ResponsivePixels.size5,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.12),
     paddingHorizontal: ResponsivePixels.size8,
     paddingVertical: ResponsivePixels.size4,
     borderRadius: ResponsivePixels.size12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.18)',
+    borderColor: withAlpha(Colors.PureWhite, 0.18),
   },
   frostedDomainText: {
     fontFamily: Fonts.poppins.semiBold,
@@ -1362,16 +1373,16 @@ const styles = StyleSheet.create({
   bentoTitle: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size22,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     lineHeight: ResponsivePixels.size28,
   },
   streakShowcaseRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.07)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.07),
     borderRadius: ResponsivePixels.size14,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.12)',
+    borderColor: withAlpha(Colors.PureWhite, 0.12),
     paddingHorizontal: ResponsivePixels.size12,
     paddingVertical: ResponsivePixels.size8,
     gap: ResponsivePixels.size10,
@@ -1380,9 +1391,9 @@ const styles = StyleSheet.create({
     width: ResponsivePixels.size34,
     height: ResponsivePixels.size34,
     borderRadius: ResponsivePixels.size17,
-    backgroundColor: 'rgba(255, 152, 0, 0.18)',
+    backgroundColor: withAlpha(Colors.AccentAmber, 0.18),
     borderWidth: 1.5,
-    borderColor: 'rgba(255, 152, 0, 0.35)',
+    borderColor: withAlpha(Colors.AccentAmber, 0.35),
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -1398,19 +1409,19 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.ranade.bold,
     fontSize: ResponsivePixels.size22,
     lineHeight: ResponsivePixels.size25,
-    color: '#F5C518',
+    color: Colors.AccentYellow,
     letterSpacing: -0.4,
   },
   streakUnit: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size10,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     letterSpacing: 0.5,
   },
   streakSublabel: {
     fontFamily: Fonts.poppins.regular,
     fontSize: ResponsivePixels.size10,
-    color: '#B6B9C3',
+    color: Colors.CoolSilverSubtitle,
     marginTop: ResponsivePixels.size1,
   },
 
@@ -1433,11 +1444,11 @@ const styles = StyleSheet.create({
   sectionHeaderTitle: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size14,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     letterSpacing: 0.1,
   },
   sectionHeaderCapsule: {
-    backgroundColor: 'rgba(131, 131, 214, 0.12)',
+    backgroundColor: withAlpha(Colors.LavenderPurple, 0.12),
     paddingHorizontal: ResponsivePixels.size8,
     paddingVertical: ResponsivePixels.size3,
     borderRadius: ResponsivePixels.size10,
@@ -1454,7 +1465,7 @@ const styles = StyleSheet.create({
     width: '100%',
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 10 },
         shadowOpacity: 0.28,
         shadowRadius: 18,
@@ -1470,28 +1481,28 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.NeroBlack,
     borderRadius: ResponsivePixels.size24,
     borderWidth: 3.5,
-    borderColor: 'rgba(255, 255, 255, 0.88)',
+    borderColor: withAlpha(Colors.PureWhite, 0.88),
     overflow: 'hidden',
     padding: ResponsivePixels.size12,
     gap: ResponsivePixels.size10,
   },
   streakWindowBox: {
-    backgroundColor: '#FAF9F6',
+    backgroundColor: Colors.DetailLightSurface,
     borderRadius: ResponsivePixels.size16,
     borderTopWidth: 1.5,
-    borderTopColor: '#FFFFFF',
+    borderTopColor: Colors.PureWhite,
     borderBottomWidth: 3,
-    borderBottomColor: '#D8D1C2',
+    borderBottomColor: Colors.DetailWarmBevelBottom,
     borderLeftWidth: 1.2,
     borderRightWidth: 1.2,
-    borderLeftColor: '#E8E2D4',
-    borderRightColor: '#E8E2D4',
+    borderLeftColor: Colors.DetailWarmBevelSide,
+    borderRightColor: Colors.DetailWarmBevelSide,
     paddingTop: ResponsivePixels.size10,
     paddingBottom: ResponsivePixels.size8,
     paddingHorizontal: ResponsivePixels.size8,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.18,
         shadowRadius: 8,
@@ -1502,11 +1513,11 @@ const styles = StyleSheet.create({
     }),
   },
   cupboardWindowDark: {
-    backgroundColor: '#161821',
-    borderTopColor: '#363C4E',
-    borderBottomColor: '#101116',
-    borderLeftColor: '#282C38',
-    borderRightColor: '#282C38',
+    backgroundColor: Colors.DetailDarkSectionBg,
+    borderTopColor: Colors.DetailDarkTopBevel,
+    borderBottomColor: Colors.DetailDarkBevelBottom,
+    borderLeftColor: Colors.DetailDarkSideBevel,
+    borderRightColor: Colors.DetailDarkSideBevel,
   },
   streakWindowHeader: {
     flexDirection: 'row',
@@ -1523,7 +1534,7 @@ const styles = StyleSheet.create({
   streakWindowHeaderTitle: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size9,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     letterSpacing: 0.6,
   },
   weekdaysRow: {
@@ -1548,20 +1559,20 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   dayCapsuleCompleted: {
-    backgroundColor: 'rgba(0, 0, 0, 0.04)',
+    backgroundColor: withAlpha(Colors.PureBlack, 0.04),
   },
   dayCapsulePending: {
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.Transparent,
   },
   dayCapsuleToday: {
-    backgroundColor: '#FFF0DE',
+    backgroundColor: Colors.EventLightBg,
     borderWidth: 1,
-    borderColor: '#FFA726',
+    borderColor: Colors.StreakFlameOrangeTop,
     borderBottomWidth: 2,
-    borderBottomColor: '#E65100',
+    borderBottomColor: Colors.EventTextAccent,
     ...Platform.select({
       ios: {
-        shadowColor: '#FF9800',
+        shadowColor: Colors.AccentAmber,
         shadowOffset: { width: 0, height: 1.5 },
         shadowOpacity: 0.22,
         shadowRadius: 2.5,
@@ -1572,30 +1583,30 @@ const styles = StyleSheet.create({
     }),
   },
   dayCapsuleDark: {
-    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.06),
   },
   dayCapsuleTodayDark: {
-    backgroundColor: 'rgba(255, 152, 0, 0.2)',
-    borderColor: '#FFA726',
-    borderBottomColor: '#E65100',
+    backgroundColor: withAlpha(Colors.AccentAmber, 0.2),
+    borderColor: Colors.StreakFlameOrangeTop,
+    borderBottomColor: Colors.EventTextAccent,
   },
   dayName: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: ResponsivePixels.size9,
-    color: '#7A808C',
+    color: Colors.DetailMutedSlate,
     letterSpacing: 0.2,
   },
   dayNameDark: {
-    color: '#A3A8B1',
+    color: Colors.SteelMist,
   },
   dayNameToday: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size9,
-    color: '#B47804',
+    color: Colors.BadgeYellowText,
     letterSpacing: 0.3,
   },
   dayNameTodayDark: {
-    color: '#FFA726',
+    color: Colors.StreakFlameOrangeTop,
   },
   dayIconWrap: {
     width: ResponsivePixels.size30,
@@ -1610,16 +1621,16 @@ const styles = StyleSheet.create({
   },
   statCubbyBox: {
     flex: 1,
-    backgroundColor: '#FAF9F6',
+    backgroundColor: Colors.DetailLightSurface,
     borderRadius: ResponsivePixels.size16,
     borderTopWidth: 1.5,
-    borderTopColor: '#FFFFFF',
+    borderTopColor: Colors.PureWhite,
     borderBottomWidth: 3,
-    borderBottomColor: '#D8D1C2',
+    borderBottomColor: Colors.DetailWarmBevelBottom,
     borderLeftWidth: 1.2,
     borderRightWidth: 1.2,
-    borderLeftColor: '#E8E2D4',
-    borderRightColor: '#E8E2D4',
+    borderLeftColor: Colors.DetailWarmBevelSide,
+    borderRightColor: Colors.DetailWarmBevelSide,
     paddingTop: ResponsivePixels.size12,
     paddingBottom: ResponsivePixels.size12,
     paddingHorizontal: ResponsivePixels.size6,
@@ -1628,7 +1639,7 @@ const styles = StyleSheet.create({
     minHeight: ResponsivePixels.size122,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.18,
         shadowRadius: 8,
@@ -1646,7 +1657,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     borderWidth: 1,
-    borderColor: '#FFFFFF',
+    borderColor: Colors.PureWhite,
     borderBottomWidth: 2,
     ...Platform.select({
       ios: {
@@ -1660,19 +1671,19 @@ const styles = StyleSheet.create({
     }),
   },
   streakDisc: {
-    backgroundColor: '#FFF0DE',
-    borderBottomColor: '#FFB86B',
-    shadowColor: '#FF9800',
+    backgroundColor: Colors.EventLightBg,
+    borderBottomColor: Colors.BadgeOrangeBevel,
+    shadowColor: Colors.AccentAmber,
   },
   consistencyDisc: {
-    backgroundColor: '#EEF0FD',
-    borderBottomColor: '#B6BEF5',
+    backgroundColor: Colors.BadgePurpleBg,
+    borderBottomColor: Colors.BadgePurpleBevel,
     shadowColor: Colors.LavenderPurple,
   },
   cadenceDisc: {
-    backgroundColor: '#E8FDF0',
-    borderBottomColor: '#82E8A6',
-    shadowColor: '#1B9A72',
+    backgroundColor: Colors.BadgeGreenBg,
+    borderBottomColor: Colors.BadgeGreenBevel,
+    shadowColor: Colors.GreenGracious,
   },
   cubbyMetricCluster: {
     width: '100%',
@@ -1690,7 +1701,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.ranade.bold,
     fontSize: ResponsivePixels.size20,
     lineHeight: ResponsivePixels.size23,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     letterSpacing: -0.3,
     textAlign: 'center',
   },
@@ -1698,13 +1709,13 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.ranade.bold,
     fontSize: ResponsivePixels.size16,
     lineHeight: ResponsivePixels.size23,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     textAlign: 'center',
   },
   cubbyLabel: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: ResponsivePixels.size8,
-    color: '#8E95A5',
+    color: Colors.MilestoneSlate,
     letterSpacing: 0.3,
     textAlign: 'center',
     alignSelf: 'center',
@@ -1719,26 +1730,26 @@ const styles = StyleSheet.create({
     marginTop: ResponsivePixels.size2,
   },
   miniMeterTrackAmber: {
-    backgroundColor: '#FFE9D4',
+    backgroundColor: Colors.EventPillSoftLight,
   },
   miniMeterTrackPurple: {
-    backgroundColor: '#EAE8FA',
+    backgroundColor: Colors.MindfulPillTintLight,
   },
   miniMeterTrackGreen: {
-    backgroundColor: '#DCF7E7',
+    backgroundColor: Colors.WellnessPillLightBg,
   },
   miniMeterFill: {
     height: '100%',
     borderRadius: ResponsivePixels.size2,
   },
   miniMeterFillAmber: {
-    backgroundColor: '#FF9800',
+    backgroundColor: Colors.AccentAmber,
   },
   miniMeterFillPurple: {
     backgroundColor: Colors.LavenderPurple,
   },
   miniMeterFillGreen: {
-    backgroundColor: '#1B9A72',
+    backgroundColor: Colors.GreenGracious,
   },
   cubbyBadgeWrap: {
     width: '100%',
@@ -1750,11 +1761,11 @@ const styles = StyleSheet.create({
   },
   matrixDivider: {
     height: 1,
-    backgroundColor: '#F0ECE1',
+    backgroundColor: Colors.CreamBorderSubtle,
     marginVertical: ResponsivePixels.size10,
   },
   matrixDividerDark: {
-    backgroundColor: '#2C3035',
+    backgroundColor: Colors.CarbonSlate,
   },
 
   // Protocol Depth Architecture - Inset Box Flow
@@ -1764,20 +1775,20 @@ const styles = StyleSheet.create({
   protocolDepthBox: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FAF9F6',
+    backgroundColor: Colors.DetailLightSurface,
     borderRadius: ResponsivePixels.size18,
     borderWidth: 1.2,
     borderTopWidth: 1.5,
-    borderTopColor: '#FFFFFF',
+    borderTopColor: Colors.PureWhite,
     borderBottomWidth: 3.5,
-    borderBottomColor: '#D8D1C2',
-    borderColor: '#ECE7DC',
+    borderBottomColor: Colors.DetailWarmBevelBottom,
+    borderColor: Colors.DetailWarmBorder,
     paddingVertical: ResponsivePixels.size12,
     paddingHorizontal: ResponsivePixels.size14,
     gap: ResponsivePixels.size12,
     ...Platform.select({
       ios: {
-        shadowColor: '#1B1C19',
+        shadowColor: Colors.RegiusInk,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.08,
         shadowRadius: 8,
@@ -1788,10 +1799,10 @@ const styles = StyleSheet.create({
     }),
   },
   protocolDepthBoxDark: {
-    backgroundColor: '#161922',
-    borderTopColor: 'rgba(255, 255, 255, 0.12)',
-    borderBottomColor: '#0E1016',
-    borderColor: '#262A36',
+    backgroundColor: Colors.DetailDarkElevatedCard,
+    borderTopColor: withAlpha(Colors.PureWhite, 0.12),
+    borderBottomColor: Colors.DetailCardBottomBevel,
+    borderColor: Colors.DetailDarkBorder,
   },
   protocolIconAura3D: {
     width: ResponsivePixels.size38,
@@ -1802,7 +1813,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.15,
         shadowRadius: 3,
@@ -1813,8 +1824,8 @@ const styles = StyleSheet.create({
     }),
   },
   protocolIconAura3DDark: {
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    borderColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.08),
+    borderColor: withAlpha(Colors.PureWhite, 0.15),
   },
   protocolDepthInfo: {
     flex: 1,
@@ -1823,13 +1834,13 @@ const styles = StyleSheet.create({
   protocolMicroLabel: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size9,
-    color: '#8E95A5',
+    color: Colors.MilestoneSlate,
     letterSpacing: 0.6,
   },
   protocolBoldValue: {
     fontFamily: Fonts.ranade.bold,
     fontSize: ResponsivePixels.size15,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     letterSpacing: -0.2,
   },
 
@@ -1843,14 +1854,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: ResponsivePixels.size8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
-    borderColor: '#FECDD3',
+    borderColor: Colors.CategoryRoseBorder,
     paddingVertical: ResponsivePixels.size13,
     borderRadius: ResponsivePixels.size18,
     ...Platform.select({
       ios: {
-        shadowColor: '#EF4444',
+        shadowColor: Colors.CategoryRedAccent,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.08,
         shadowRadius: 6,
@@ -1861,18 +1872,18 @@ const styles = StyleSheet.create({
     }),
   },
   deleteBtnDark: {
-    backgroundColor: '#1E2228',
-    borderColor: '#5C2227',
+    backgroundColor: Colors.DarkCardBackground,
+    borderColor: Colors.TaskDangerDarkBorder,
   },
   deleteBtnText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: ResponsivePixels.size13,
-    color: '#EF4444',
+    color: Colors.CategoryRedAccent,
   },
 
   // Helper Utility
   textWhite: {
-    color: Colors.PureWhiteText,
+    color: Colors.PureWhite,
   },
 });
 

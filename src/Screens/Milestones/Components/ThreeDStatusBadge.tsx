@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Platform } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { Lock, Crown, Sparkles } from 'lucide-react-native';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { Fonts } from '../../../Theme/fonts';
 
 export type MilestoneBadgeState = 'unlocked' | 'current' | 'next_goal' | 'locked';
@@ -17,21 +18,21 @@ const ThreeDRightSignSvg: React.FC<{ size?: number }> = ({ size = 16 }) => {
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <Path
         d="M20 7.5L9.5 18L4 12.5"
-        stroke="#064E3B"
+        stroke={Colors.Emerald900}
         strokeWidth="3.8"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <Path
         d="M20 6.8L9.5 17.3L4 11.8"
-        stroke="#059669"
+        stroke={Colors.ToastSuccessIcon}
         strokeWidth="3.2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
       <Path
         d="M20 6L9.5 16.5L4 11"
-        stroke="#FFFFFF"
+        stroke={Colors.PureWhite}
         strokeWidth="2.8"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -68,7 +69,7 @@ export const ThreeDStatusBadge: React.FC<ThreeDStatusBadgeProps> = ({
           <View style={styles.glossHighlight} />
           <View style={styles.contentRow}>
             <View style={styles.currentIconWrap}>
-              <Crown size={13} color="#FFFFFF" strokeWidth={2.6} />
+              <Crown size={13} color={Colors.PureWhite} strokeWidth={2.6} />
             </View>
             <Text style={styles.currentText}>CURRENT</Text>
           </View>
@@ -83,7 +84,11 @@ export const ThreeDStatusBadge: React.FC<ThreeDStatusBadgeProps> = ({
         <View style={styles.nextGoalBadge}>
           <View style={styles.glossHighlightDim} />
           <View style={styles.contentRow}>
-            <Sparkles size={12} color="#D97706" strokeWidth={2.4} />
+            <Sparkles
+              size={12}
+              color={Colors.HabitBurnishedAmber}
+              strokeWidth={2.4}
+            />
             <Text style={styles.nextGoalText}>NEXT GOAL</Text>
           </View>
         </View>
@@ -96,7 +101,7 @@ export const ThreeDStatusBadge: React.FC<ThreeDStatusBadgeProps> = ({
       <View style={styles.lockedBadge}>
         <View style={styles.glossHighlightDark} />
         <View style={styles.contentRow}>
-          <Lock size={12} color="#94A3B8" strokeWidth={2.4} />
+          <Lock size={12} color={Colors.Slate400} strokeWidth={2.4} />
           <Text style={styles.lockedText}>
             {requiredXp ? `LOCKED` : 'LOCKED'}
           </Text>
@@ -112,7 +117,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     ...Platform.select({
       ios: {
-        shadowColor: '#059669',
+        shadowColor: Colors.ToastSuccessIcon,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.38,
         shadowRadius: 6,
@@ -123,14 +128,14 @@ const styles = StyleSheet.create({
     }),
   },
   unlockedBadge: {
-    backgroundColor: '#10B981',
+    backgroundColor: Colors.ToastSuccessAccent,
     borderRadius: 14,
     borderWidth: 1.5,
-    borderTopColor: 'rgba(255, 255, 255, 0.75)',
-    borderLeftColor: 'rgba(255, 255, 255, 0.4)',
-    borderRightColor: 'rgba(255, 255, 255, 0.25)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.75),
+    borderLeftColor: withAlpha(Colors.PureWhite, 0.4),
+    borderRightColor: withAlpha(Colors.PureWhite, 0.25),
     borderBottomWidth: 3.5,
-    borderBottomColor: '#047857',
+    borderBottomColor: Colors.Emerald700,
     paddingHorizontal: 9,
     paddingVertical: 4,
     position: 'relative',
@@ -140,8 +145,8 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.bold,
     fontSize: 10,
     letterSpacing: 0.8,
-    color: '#FFFFFF',
-    textShadowColor: 'rgba(4, 120, 87, 0.75)',
+    color: Colors.PureWhite,
+    textShadowColor: withAlpha(Colors.Emerald700, 0.75),
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
   },
@@ -156,7 +161,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     ...Platform.select({
       ios: {
-        shadowColor: '#D97706',
+        shadowColor: Colors.HabitBurnishedAmber,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.35,
         shadowRadius: 6,
@@ -167,14 +172,14 @@ const styles = StyleSheet.create({
     }),
   },
   currentBadge: {
-    backgroundColor: '#F59E0B',
+    backgroundColor: Colors.VoiceMichaelAccent,
     borderRadius: 14,
     borderWidth: 1.5,
-    borderTopColor: 'rgba(255, 255, 255, 0.8)',
-    borderLeftColor: 'rgba(255, 255, 255, 0.4)',
-    borderRightColor: 'rgba(255, 255, 255, 0.25)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.8),
+    borderLeftColor: withAlpha(Colors.PureWhite, 0.4),
+    borderRightColor: withAlpha(Colors.PureWhite, 0.25),
     borderBottomWidth: 3.5,
-    borderBottomColor: '#B45309',
+    borderBottomColor: Colors.Amber700,
     paddingHorizontal: 9,
     paddingVertical: 4,
     position: 'relative',
@@ -188,8 +193,8 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.bold,
     fontSize: 10,
     letterSpacing: 0.8,
-    color: '#FFFFFF',
-    textShadowColor: 'rgba(180, 83, 9, 0.75)',
+    color: Colors.PureWhite,
+    textShadowColor: withAlpha(Colors.Amber700, 0.75),
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
   },
@@ -199,7 +204,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.1,
         shadowRadius: 3,
@@ -210,14 +215,14 @@ const styles = StyleSheet.create({
     }),
   },
   nextGoalBadge: {
-    backgroundColor: '#FEF3C7',
+    backgroundColor: Colors.ToastWarningBadgeBgLight,
     borderRadius: 12,
     borderWidth: 1.2,
-    borderTopColor: '#FFFFFF',
-    borderLeftColor: '#FDE68A',
-    borderRightColor: '#FDE68A',
+    borderTopColor: Colors.PureWhite,
+    borderLeftColor: Colors.VoiceMichaelBorder,
+    borderRightColor: Colors.VoiceMichaelBorder,
     borderBottomWidth: 2.8,
-    borderBottomColor: '#D97706',
+    borderBottomColor: Colors.HabitBurnishedAmber,
     paddingHorizontal: 8,
     paddingVertical: 3,
     position: 'relative',
@@ -227,7 +232,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.bold,
     fontSize: 9.5,
     letterSpacing: 0.7,
-    color: '#92400E',
+    color: Colors.Amber800,
   },
 
   // --- 3D LOCKED BADGE ---
@@ -235,7 +240,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.12,
         shadowRadius: 3,
@@ -246,14 +251,14 @@ const styles = StyleSheet.create({
     }),
   },
   lockedBadge: {
-    backgroundColor: '#334155',
+    backgroundColor: Colors.Slate700,
     borderRadius: 12,
     borderWidth: 1.2,
-    borderTopColor: 'rgba(255, 255, 255, 0.25)',
-    borderLeftColor: 'rgba(255, 255, 255, 0.1)',
-    borderRightColor: 'rgba(255, 255, 255, 0.08)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.25),
+    borderLeftColor: withAlpha(Colors.PureWhite, 0.1),
+    borderRightColor: withAlpha(Colors.PureWhite, 0.08),
     borderBottomWidth: 2.8,
-    borderBottomColor: '#1E293B',
+    borderBottomColor: Colors.Slate800,
     paddingHorizontal: 8,
     paddingVertical: 3,
     position: 'relative',
@@ -263,7 +268,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 9.5,
     letterSpacing: 0.7,
-    color: '#CBD5E1',
+    color: Colors.Slate300,
   },
 
   // Common inner layout
@@ -278,7 +283,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 4,
-    backgroundColor: 'rgba(255, 255, 255, 0.35)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.35),
   },
   glossHighlightDim: {
     position: 'absolute',
@@ -286,7 +291,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 3,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.5),
   },
   glossHighlightDark: {
     position: 'absolute',
@@ -294,6 +299,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     height: 3,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.12),
   },
 });

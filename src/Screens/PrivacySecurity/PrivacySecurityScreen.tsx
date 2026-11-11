@@ -27,7 +27,7 @@ import {
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../../Theme/fonts';
-import { Colors } from '../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import { Badge } from '../../Common/Badge';
 import {
   SubScreenHeader,
@@ -108,18 +108,23 @@ export const PrivacySecurityScreen: React.FC = () => {
   };
 
   const bgMain =
-    themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
+    themeColors.Background ||
+    (isDarkMode ? Colors.DarkBackground : Colors.CreamBackground);
   const cardBg =
-    themeColors.CardBackground || (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
+    themeColors.CardBackground ||
+    (isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite);
   const textPrimary =
     themeColors.PrimaryText ||
-    (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
+    (isDarkMode ? Colors.PureWhite : Colors.PureBlack);
   const textSecondary =
-    themeColors.SecondaryText || (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+    themeColors.SecondaryText ||
+    (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray);
   const borderLight =
-    themeColors.BorderLight || (isDarkMode ? '#2C3035' : '#E8E2D5');
+    themeColors.BorderLight ||
+    (isDarkMode ? Colors.CarbonSlate : Colors.RingBorder);
   const surfaceAlt =
-    themeColors.SurfaceAlt || (isDarkMode ? '#171A1F' : '#FAF8F5');
+    themeColors.SurfaceAlt ||
+    (isDarkMode ? Colors.DarkSurfaceAlt : Colors.CreamSurfaceAlt);
 
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>
@@ -155,7 +160,11 @@ export const PrivacySecurityScreen: React.FC = () => {
           <View style={styles.heroCard}>
             <View style={styles.heroHeaderRow}>
               <View style={styles.heroTagRow}>
-                <Sparkles size={13} color="#21AF85" strokeWidth={2.4} />
+                <Sparkles
+                  size={13}
+                  color={Colors.LuminousGreen}
+                  strokeWidth={2.4}
+                />
                 <Text style={styles.heroTagText}>ZERO-COMPROMISE VAULT</Text>
               </View>
               <Badge label="VERIFIED" variant="green" size="sm" />
@@ -163,7 +172,11 @@ export const PrivacySecurityScreen: React.FC = () => {
 
             <View style={styles.heroMainRow}>
               <View style={styles.heroShieldCircle}>
-                <ShieldCheck size={28} color="#21AF85" strokeWidth={2.4} />
+                <ShieldCheck
+                  size={28}
+                  color={Colors.LuminousGreen}
+                  strokeWidth={2.4}
+                />
               </View>
               <View style={styles.heroDetails}>
                 <Text style={styles.heroTitle}>Zero-Knowledge Architecture</Text>
@@ -180,7 +193,11 @@ export const PrivacySecurityScreen: React.FC = () => {
             <View style={styles.heroPillarsRow}>
               <View style={styles.pillarItem}>
                 <View style={styles.pillarIconCircle}>
-                  <Key size={14} color="#21AF85" strokeWidth={2.2} />
+                  <Key
+                    size={14}
+                    color={Colors.LuminousGreen}
+                    strokeWidth={2.2}
+                  />
                 </View>
                 <Text style={styles.pillarTitle}>AES-256 Bit</Text>
                 <Text style={styles.pillarSub}>Client Vault</Text>
@@ -200,7 +217,11 @@ export const PrivacySecurityScreen: React.FC = () => {
 
               <View style={styles.pillarItem}>
                 <View style={styles.pillarIconCircle}>
-                  <Lock size={14} color="#F5C518" strokeWidth={2.2} />
+                  <Lock
+                    size={14}
+                    color={Colors.AccentYellow}
+                    strokeWidth={2.2}
+                  />
                 </View>
                 <Text style={styles.pillarTitle}>On-Device Speech</Text>
                 <Text style={styles.pillarSub}>Local STT</Text>
@@ -229,10 +250,14 @@ export const PrivacySecurityScreen: React.FC = () => {
               <View
                 style={[
                   styles.iconSquare,
-                  { backgroundColor: isDarkMode ? '#1E2C24' : '#EDFDF5' },
+                  {
+                    backgroundColor: isDarkMode
+                      ? Colors.VaultGreenDarkBg
+                      : Colors.WellnessLightBg,
+                  },
                 ]}
               >
-                <Lock size={18} color="#21AF85" strokeWidth={2.2} />
+                <Lock size={18} color={Colors.LuminousGreen} strokeWidth={2.2} />
               </View>
               <View style={styles.settingItemMeta}>
                 <Text style={[styles.settingItemTitle, { color: textPrimary }]}>
@@ -252,10 +277,10 @@ export const PrivacySecurityScreen: React.FC = () => {
                 setOnDeviceSpeech(val);
               }}
               trackColor={{
-                false: isDarkMode ? '#3A3F46' : '#D9D9D9',
-                true: '#21AF85',
+                false: isDarkMode ? Colors.DarkSoftLinen : Colors.FogGrey,
+                true: Colors.LuminousGreen,
               }}
-              thumbColor="#FFFFFF"
+              thumbColor={Colors.PureWhite}
             />
           </View>
 
@@ -267,7 +292,11 @@ export const PrivacySecurityScreen: React.FC = () => {
               <View
                 style={[
                   styles.iconSquare,
-                  { backgroundColor: isDarkMode ? '#23273A' : '#EFF2FE' },
+                  {
+                    backgroundColor: isDarkMode
+                      ? Colors.VaultMindfulDarkBg
+                      : Colors.MindfulLightBg,
+                  },
                 ]}
               >
                 <Server
@@ -294,10 +323,10 @@ export const PrivacySecurityScreen: React.FC = () => {
                 setCloudSync(val);
               }}
               trackColor={{
-                false: isDarkMode ? '#3A3F46' : '#D9D9D9',
+                false: isDarkMode ? Colors.DarkSoftLinen : Colors.FogGrey,
                 true: themeAccent,
               }}
-              thumbColor="#FFFFFF"
+              thumbColor={Colors.PureWhite}
             />
           </View>
 
@@ -309,10 +338,18 @@ export const PrivacySecurityScreen: React.FC = () => {
               <View
                 style={[
                   styles.iconSquare,
-                  { backgroundColor: isDarkMode ? '#332918' : '#FFFCEB' },
+                  {
+                    backgroundColor: isDarkMode
+                      ? Colors.VaultAmberDarkBg
+                      : Colors.WorkLightBg,
+                  },
                 ]}
               >
-                <CheckCircle2 size={18} color="#F5C518" strokeWidth={2.2} />
+                <CheckCircle2
+                  size={18}
+                  color={Colors.AccentYellow}
+                  strokeWidth={2.2}
+                />
               </View>
               <View style={styles.settingItemMeta}>
                 <Text style={[styles.settingItemTitle, { color: textPrimary }]}>
@@ -332,10 +369,10 @@ export const PrivacySecurityScreen: React.FC = () => {
                 setPersonalizedContext(val);
               }}
               trackColor={{
-                false: isDarkMode ? '#3A3F46' : '#D9D9D9',
-                true: '#F5C518',
+                false: isDarkMode ? Colors.DarkSoftLinen : Colors.FogGrey,
+                true: Colors.AccentYellow,
               }}
-              thumbColor="#FFFFFF"
+              thumbColor={Colors.PureWhite}
             />
           </View>
 
@@ -347,7 +384,11 @@ export const PrivacySecurityScreen: React.FC = () => {
               <View
                 style={[
                   styles.iconSquare,
-                  { backgroundColor: isDarkMode ? '#282C35' : '#FAF8F5' },
+                  {
+                    backgroundColor: isDarkMode
+                      ? Colors.VoiceMicDarkSurface
+                      : Colors.CreamSurfaceAlt,
+                  },
                 ]}
               >
                 <EyeOff size={18} color={textSecondary} strokeWidth={2.2} />
@@ -370,10 +411,10 @@ export const PrivacySecurityScreen: React.FC = () => {
                 setAnonymousTelemetry(val);
               }}
               trackColor={{
-                false: isDarkMode ? '#3A3F46' : '#D9D9D9',
+                false: isDarkMode ? Colors.DarkSoftLinen : Colors.FogGrey,
                 true: themeAccent,
               }}
-              thumbColor="#FFFFFF"
+              thumbColor={Colors.PureWhite}
             />
           </View>
         </View>
@@ -402,7 +443,11 @@ export const PrivacySecurityScreen: React.FC = () => {
               <View
                 style={[
                   styles.iconSquare,
-                  { backgroundColor: isDarkMode ? '#23273A' : '#EFF2FE' },
+                  {
+                    backgroundColor: isDarkMode
+                      ? Colors.VaultMindfulDarkBg
+                      : Colors.MindfulLightBg,
+                  },
                 ]}
               >
                 <Download
@@ -435,10 +480,18 @@ export const PrivacySecurityScreen: React.FC = () => {
               <View
                 style={[
                   styles.iconSquare,
-                  { backgroundColor: isDarkMode ? '#33241A' : '#FFF0DE' },
+                  {
+                    backgroundColor: isDarkMode
+                      ? Colors.VaultOrangeDarkBg
+                      : Colors.EventLightBg,
+                  },
                 ]}
               >
-                <HardDrive size={18} color="#FF9800" strokeWidth={2.2} />
+                <HardDrive
+                  size={18}
+                  color={Colors.AccentAmber}
+                  strokeWidth={2.2}
+                />
               </View>
               <View style={styles.actionMeta}>
                 <Text style={[styles.actionTitle, { color: textPrimary }]}>
@@ -464,13 +517,17 @@ export const PrivacySecurityScreen: React.FC = () => {
               <View
                 style={[
                   styles.iconSquare,
-                  { backgroundColor: isDarkMode ? '#331D1D' : '#FEEFEF' },
+                  {
+                    backgroundColor: isDarkMode
+                      ? Colors.VaultDangerDarkBg
+                      : Colors.BadgeRedBg,
+                  },
                 ]}
               >
-                <Trash2 size={18} color="#FF3B30" strokeWidth={2.2} />
+                <Trash2 size={18} color={Colors.CrimsonPulse} strokeWidth={2.2} />
               </View>
               <View style={styles.actionMeta}>
-                <Text style={[styles.actionTitle, { color: '#FF3B30' }]}>
+                <Text style={[styles.actionTitle, { color: Colors.CrimsonPulse }]}>
                   Delete Account & All Records
                 </Text>
                 <Text style={[styles.actionDesc, { color: textSecondary }]}>
@@ -523,7 +580,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 10 },
         shadowOpacity: 0.28,
         shadowRadius: 18,
@@ -537,7 +594,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.NeroBlack,
     borderRadius: 24,
     borderWidth: 4,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: withAlpha(Colors.PureWhite, 0.9),
     overflow: 'hidden',
     padding: 18,
   },
@@ -555,7 +612,7 @@ const styles = StyleSheet.create({
   heroTagText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 10,
-    color: '#21AF85',
+    color: Colors.LuminousGreen,
     letterSpacing: 1,
   },
   heroMainRow: {
@@ -568,9 +625,9 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#1E2C24',
+    backgroundColor: Colors.VaultGreenDarkBg,
     borderWidth: 1.5,
-    borderColor: 'rgba(33, 175, 133, 0.4)',
+    borderColor: withAlpha(Colors.LuminousGreen, 0.4),
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -580,7 +637,7 @@ const styles = StyleSheet.create({
   heroTitle: {
     fontFamily: Fonts.ranade.bold,
     fontSize: 19,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     letterSpacing: -0.4,
     lineHeight: 24,
     marginBottom: 4,
@@ -588,12 +645,12 @@ const styles = StyleSheet.create({
   heroSubtitle: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 11.5,
-    color: '#A3A8B1',
+    color: Colors.SteelMist,
     lineHeight: 17,
   },
   heroDivider: {
     height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.1),
     marginBottom: 14,
   },
   heroPillarsRow: {
@@ -609,7 +666,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#262933',
+    backgroundColor: Colors.VaultPillarDarkBg,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 6,
@@ -617,20 +674,20 @@ const styles = StyleSheet.create({
   pillarTitle: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 11.5,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     marginBottom: 1,
     textAlign: 'center',
   },
   pillarSub: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 10,
-    color: '#A3A8B1',
+    color: Colors.SteelMist,
     textAlign: 'center',
   },
   pillarSeparator: {
     width: 1,
     height: 32,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.12),
   },
   sectionHeading: {
     fontFamily: Fonts.poppins.semiBold,
@@ -644,7 +701,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderWidth: 1.5,
     padding: 14,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
     shadowRadius: 8,

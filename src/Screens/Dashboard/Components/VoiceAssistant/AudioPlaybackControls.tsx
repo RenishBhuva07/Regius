@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { Square, RotateCcw } from 'lucide-react-native';
 import { Fonts } from '../../../../Theme/fonts';
+import { Colors } from '../../../../Assets/StyleUtilities/Colors';
 import { VoiceAssistantTheme } from './types';
 
 export interface AudioPlaybackControlsProps {
@@ -48,7 +49,9 @@ export const AudioPlaybackControls: React.FC<AudioPlaybackControlsProps> = ({
           style={({ pressed }) => [
             styles.replayBtn,
             {
-              backgroundColor: theme.isDarkMode ? '#22262E' : '#EFECE6',
+              backgroundColor: theme.isDarkMode
+                ? Colors.VoiceControlDarkBg
+                : Colors.VoiceControlCream,
               opacity: pressed ? 0.75 : 1,
             },
           ]}
@@ -80,7 +83,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     ...Platform.select({
       ios: {
-        shadowColor: '#000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.12,
         shadowRadius: 4,

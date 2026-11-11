@@ -19,7 +19,7 @@ import Svg, {
 } from 'react-native-svg';
 
 import { Fonts } from '../../../Theme/fonts';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../../Common/Badge';
 import { useTheme } from '../../../Theme/ThemeContext';
@@ -200,13 +200,13 @@ const MiniAcousticBars: React.FC<{
   }, [isPlaying, bar1, bar2, bar3, bar4, bar5, bar6, bar7]);
 
   const bars = [
-    { anim: bar1, color: '#8383D6' },
+    { anim: bar1, color: Colors.LavenderPurple },
     { anim: bar2, color: accentColor },
-    { anim: bar3, color: '#FF9800' },
-    { anim: bar4, color: '#52D22E' },
-    { anim: bar5, color: '#8383D6' },
+    { anim: bar3, color: Colors.AccentAmber },
+    { anim: bar4, color: Colors.AccentGreen },
+    { anim: bar5, color: Colors.LavenderPurple },
     { anim: bar6, color: accentColor },
-    { anim: bar7, color: '#FF9800' },
+    { anim: bar7, color: Colors.AccentAmber },
   ];
 
   return (
@@ -219,7 +219,7 @@ const MiniAcousticBars: React.FC<{
             {
               backgroundColor: isPlaying
                 ? item.color
-                : 'rgba(255, 255, 255, 0.25)',
+                : withAlpha(Colors.PureWhite, 0.25),
               transform: [{ scaleY: item.anim }],
             },
           ]}
@@ -302,11 +302,11 @@ export const HabitVocalMotivationCard: React.FC<HabitVocalMotivationCardProps> =
                     x2="100%"
                     y2="100%"
                   >
-                    <Stop offset="0%" stopColor="#1E202B" stopOpacity={0.95} />
-                    <Stop offset="50%" stopColor="#161822" stopOpacity={0.92} />
+                    <Stop offset="0%" stopColor={Colors.VocalCardGradientTop} stopOpacity={0.95} />
+                    <Stop offset="50%" stopColor={Colors.VocalCardGradientMid} stopOpacity={0.92} />
                     <Stop
                       offset="100%"
-                      stopColor="#101117"
+                      stopColor={Colors.VocalCardGradientBottom}
                       stopOpacity={0.98}
                     />
                   </LinearGradient>
@@ -322,8 +322,8 @@ export const HabitVocalMotivationCard: React.FC<HabitVocalMotivationCardProps> =
                       stopColor={accentColor}
                       stopOpacity={0.3}
                     />
-                    <Stop offset="60%" stopColor="#8383D6" stopOpacity={0.1} />
-                    <Stop offset="100%" stopColor="#000000" stopOpacity={0} />
+                    <Stop offset="60%" stopColor={Colors.LavenderPurple} stopOpacity={0.1} />
+                    <Stop offset="100%" stopColor={Colors.PureBlack} stopOpacity={0} />
                   </RadialGradient>
                 </Defs>
                 <Rect width="100%" height="100%" fill="url(#vocalBgGrad)" />
@@ -336,7 +336,7 @@ export const HabitVocalMotivationCard: React.FC<HabitVocalMotivationCardProps> =
                   cx={290}
                   cy={35}
                   r={48}
-                  stroke="rgba(255, 255, 255, 0.08)"
+                  stroke={withAlpha(Colors.PureWhite, 0.08)}
                   strokeWidth={1}
                   strokeDasharray="3 4"
                   fill="none"
@@ -350,7 +350,7 @@ export const HabitVocalMotivationCard: React.FC<HabitVocalMotivationCardProps> =
                 <View style={styles.neuralDisc}>
                   <Sparkles
                     size={ResponsivePixels.size12}
-                    color="#F5C518"
+                    color={Colors.AccentYellow}
                     strokeWidth={2.4}
                   />
                 </View>
@@ -368,7 +368,7 @@ export const HabitVocalMotivationCard: React.FC<HabitVocalMotivationCardProps> =
                 icon={
                   <Activity
                     size={ResponsivePixels.size10}
-                    color={isPlaying ? '#B47804' : Colors.LavenderPurple}
+                    color={isPlaying ? Colors.BadgeYellowText : Colors.LavenderPurple}
                     strokeWidth={2.4}
                   />
                 }
@@ -404,8 +404,8 @@ export const HabitVocalMotivationCard: React.FC<HabitVocalMotivationCardProps> =
                     styles.playButton,
                     isPlaying && styles.playButtonActive,
                     {
-                      borderColor: isPlaying ? '#FF3B30' : accentColor,
-                      shadowColor: isPlaying ? '#FF3B30' : accentColor,
+                      borderColor: isPlaying ? Colors.CrimsonPulse : accentColor,
+                      shadowColor: isPlaying ? Colors.CrimsonPulse : accentColor,
                     },
                   ]}
                   accessibilityRole="button"
@@ -419,7 +419,7 @@ export const HabitVocalMotivationCard: React.FC<HabitVocalMotivationCardProps> =
                     <>
                       <VolumeX
                         size={ResponsivePixels.size14}
-                        color="#FFFFFF"
+                        color={Colors.PureWhite}
                         strokeWidth={2.4}
                       />
                       <Text style={styles.playButtonTextActive}>STOP</Text>
@@ -428,7 +428,7 @@ export const HabitVocalMotivationCard: React.FC<HabitVocalMotivationCardProps> =
                     <>
                       <Volume2
                         size={ResponsivePixels.size14}
-                        color="#FFFFFF"
+                        color={Colors.PureWhite}
                         strokeWidth={2.4}
                       />
                       <Text style={styles.playButtonText}>LISTEN</Text>
@@ -448,7 +448,7 @@ const styles = StyleSheet.create({
     width: '100%',
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 0.22,
         shadowRadius: 12,
@@ -461,22 +461,22 @@ const styles = StyleSheet.create({
   },
   cardSurface: {
     position: 'relative',
-    backgroundColor: '#151720',
+    backgroundColor: Colors.VocalPlayPillDarkBg,
     borderRadius: ResponsivePixels.size20,
     borderWidth: 2,
     borderTopWidth: 2,
-    borderTopColor: 'rgba(255, 255, 255, 0.2)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.2),
     borderBottomWidth: 3.5,
-    borderBottomColor: '#0D0E14',
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderBottomColor: Colors.VocalPillBottomBevel,
+    borderColor: withAlpha(Colors.PureWhite, 0.1),
     padding: ResponsivePixels.size14,
     overflow: 'hidden',
     gap: ResponsivePixels.size12,
   },
   cardSurfaceDark: {
-    backgroundColor: '#12141C',
-    borderTopColor: 'rgba(255, 255, 255, 0.15)',
-    borderBottomColor: '#08090C',
+    backgroundColor: Colors.VocalTrackDarkBg,
+    borderTopColor: withAlpha(Colors.PureWhite, 0.15),
+    borderBottomColor: Colors.VocalTrackBottomAbyss,
   },
   cardHeaderRow: {
     flexDirection: 'row',
@@ -492,29 +492,29 @@ const styles = StyleSheet.create({
     width: ResponsivePixels.size28,
     height: ResponsivePixels.size28,
     borderRadius: ResponsivePixels.size14,
-    backgroundColor: 'rgba(245, 197, 24, 0.18)',
+    backgroundColor: withAlpha(Colors.AccentYellow, 0.18),
     borderWidth: 1,
-    borderColor: 'rgba(245, 197, 24, 0.35)',
+    borderColor: withAlpha(Colors.AccentYellow, 0.35),
     alignItems: 'center',
     justifyContent: 'center',
   },
   neuralLabel: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size10,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     letterSpacing: 0.6,
   },
   neuralSub: {
     fontFamily: Fonts.poppins.regular,
     fontSize: ResponsivePixels.size8,
-    color: '#8E95A5',
+    color: Colors.MilestoneSlate,
     letterSpacing: 0.3,
   },
   quoteParchmentBox: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.05),
     borderRadius: ResponsivePixels.size14,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.08)',
+    borderColor: withAlpha(Colors.PureWhite, 0.08),
     paddingHorizontal: ResponsivePixels.size12,
     paddingVertical: ResponsivePixels.size10,
   },
@@ -522,7 +522,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.medium,
     fontSize: ResponsivePixels.size11,
     lineHeight: ResponsivePixels.size17,
-    color: '#D8DBE6',
+    color: Colors.VocalQuoteTextDark,
     fontStyle: 'italic',
   },
   audioDeckRow: {
@@ -549,14 +549,14 @@ const styles = StyleSheet.create({
   fidelityLabel: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: ResponsivePixels.size8,
-    color: '#7D8494',
+    color: Colors.VocalDurationMuted,
     letterSpacing: 0.5,
   },
   playButton: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: ResponsivePixels.size5,
-    backgroundColor: '#1E202B',
+    backgroundColor: Colors.VocalCardGradientTop,
     paddingHorizontal: ResponsivePixels.size12,
     paddingVertical: ResponsivePixels.size7,
     borderRadius: ResponsivePixels.size16,
@@ -573,19 +573,19 @@ const styles = StyleSheet.create({
     }),
   },
   playButtonActive: {
-    backgroundColor: '#D92A0F',
-    borderColor: '#FF3B30',
+    backgroundColor: Colors.MoltenRust,
+    borderColor: Colors.CrimsonPulse,
   },
   playButtonText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size10,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     letterSpacing: 0.6,
   },
   playButtonTextActive: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size10,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     letterSpacing: 0.6,
   },
 });

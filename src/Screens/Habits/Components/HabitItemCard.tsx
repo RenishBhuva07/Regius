@@ -28,7 +28,7 @@ import {
   Flame,
 } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../../Theme/useAppTheme';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge, BadgeVariant } from '../../../Common/Badge';
@@ -265,54 +265,54 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
 
   const getHabitStyles = () => {
     const baseTheme = {
-      bg: isDarkMode ? '#202336' : '#F7F8FE',
-      border: isDarkMode ? '#8383D6' : '#D8DBFF',
+      bg: isDarkMode ? Colors.MindfulDarkBg : Colors.MindfulTintLight,
+      border: isDarkMode ? Colors.LavenderPurple : Colors.MindfulLightBorder,
       accent: Colors.LavenderPurple,
-      shadow: isDarkMode ? '#000000' : Colors.LavenderPurple,
-      iconBg: isDarkMode ? '#2C304A' : '#EFF2FE',
-      iconColor: isDarkMode ? '#8383D6' : '#7059C8',
+      shadow: isDarkMode ? Colors.PureBlack : Colors.LavenderPurple,
+      iconBg: isDarkMode ? Colors.MindfulDarkIconBg : Colors.MindfulLightBg,
+      iconColor: isDarkMode ? Colors.LavenderPurple : Colors.MindfulTextAccent,
       auraColor: Colors.LavenderPurple,
     };
 
     if (habit.category === 'morning') {
       return {
         ...baseTheme,
-        bg: isDarkMode ? '#2A2416' : '#F7F8FE',
-        border: isDarkMode ? '#DEAA14' : '#D8DBFF',
-        shadow: isDarkMode ? '#000000' : '#F5C518',
+        bg: isDarkMode ? Colors.WorkDarkBg : Colors.MindfulTintLight,
+        border: isDarkMode ? Colors.WorkDarkBorder : Colors.MindfulLightBorder,
+        shadow: isDarkMode ? Colors.PureBlack : Colors.AccentYellow,
         label: 'MORNING',
         badgeVariant: 'yellow' as BadgeVariant,
-        timePillBg: isDarkMode ? '#3D3420' : '#FFF8D0',
-        timePillText: isDarkMode ? '#FFE600' : '#B47804',
+        timePillBg: isDarkMode ? Colors.HabitWorkPillDarkBg : Colors.BadgeYellowBg,
+        timePillText: isDarkMode ? Colors.WorkDarkLabelGold : Colors.BadgeYellowText,
         icon: Sun,
-        iconBg: isDarkMode ? '#38301D' : '#FFF8D0',
-        iconColor: isDarkMode ? '#F5C518' : '#B47804',
+        iconBg: isDarkMode ? Colors.WorkDarkIconBg : Colors.BadgeYellowBg,
+        iconColor: isDarkMode ? Colors.AccentYellow : Colors.BadgeYellowText,
       };
     }
     if (habit.category === 'evening') {
       return {
         ...baseTheme,
-        bg: isDarkMode ? '#331F18' : '#F7F8FE',
-        border: isDarkMode ? '#FF9800' : '#D8DBFF',
-        shadow: isDarkMode ? '#000000' : '#FF9800',
+        bg: isDarkMode ? Colors.EventDarkBg : Colors.MindfulTintLight,
+        border: isDarkMode ? Colors.AccentAmber : Colors.MindfulLightBorder,
+        shadow: isDarkMode ? Colors.PureBlack : Colors.AccentAmber,
         label: 'EVENING',
         badgeVariant: 'orange' as BadgeVariant,
-        timePillBg: isDarkMode ? '#4A2B1E' : '#FFF2E6',
-        timePillText: isDarkMode ? '#FFB74D' : '#D95D0F',
+        timePillBg: isDarkMode ? Colors.HabitEventPillDarkBg : Colors.EventTintSoftLight,
+        timePillText: isDarkMode ? Colors.EventDarkLabelAmber : Colors.EventDeepOrangeIcon,
         icon: Moon,
-        iconBg: isDarkMode ? '#452A20' : '#FFF2E6',
-        iconColor: isDarkMode ? '#FF9800' : '#D95D0F',
+        iconBg: isDarkMode ? Colors.EventDarkIconBgDeep : Colors.EventTintSoftLight,
+        iconColor: isDarkMode ? Colors.AccentAmber : Colors.EventDeepOrangeIcon,
       };
     }
     return {
       ...baseTheme,
       label: 'MINDFUL',
       badgeVariant: 'purple' as BadgeVariant,
-      timePillBg: isDarkMode ? '#2D3250' : '#EFF2FE',
-      timePillText: isDarkMode ? '#C2C2FF' : '#7059C8',
+      timePillBg: isDarkMode ? Colors.HabitMindfulPillDarkBg : Colors.MindfulLightBg,
+      timePillText: isDarkMode ? Colors.MindfulDarkLabelPeriwinkle : Colors.MindfulTextAccent,
       icon: Sparkles,
-      iconBg: isDarkMode ? '#2C304A' : '#EFF2FE',
-      iconColor: isDarkMode ? '#8383D6' : '#7059C8',
+      iconBg: isDarkMode ? Colors.MindfulDarkIconBg : Colors.MindfulLightBg,
+      iconColor: isDarkMode ? Colors.LavenderPurple : Colors.MindfulTextAccent,
     };
   };
 
@@ -350,7 +350,7 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
               accessibilityLabel={`View details for ${habit.title}`}
             >
               <View style={styles.actionIconAuraDetails}>
-                <Flame size={14} color="#FF9800" strokeWidth={2.6} />
+                <Flame size={14} color={Colors.AccentAmber} strokeWidth={2.6} />
               </View>
               <Text style={styles.actionBtnText}>DETAILS</Text>
             </TouchableOpacity>
@@ -376,7 +376,7 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
               accessibilityLabel={`Edit ${habit.title}`}
             >
               <View style={styles.actionIconAuraEdit}>
-                <Pencil size={13.5} color="#F5C518" strokeWidth={2.6} />
+                <Pencil size={13.5} color={Colors.AccentYellow} strokeWidth={2.6} />
               </View>
               <Text style={styles.actionBtnText}>EDIT</Text>
             </TouchableOpacity>
@@ -403,8 +403,8 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
             {
               shadowColor: habit.completed
                 ? isDarkMode
-                  ? '#000000'
-                  : '#D1D5DB'
+                  ? Colors.PureBlack
+                  : Colors.Gray300
                 : theme.shadow,
             },
           ]}
@@ -461,15 +461,15 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
               fill={
                 habit.completed
                   ? isDarkMode
-                    ? '#171A20'
-                    : '#FAFAF8'
+                    ? Colors.DarkSurfaceDeep
+                    : Colors.CompletedCardCream
                   : theme.bg
               }
               stroke={
                 habit.completed
                   ? isDarkMode
-                    ? '#2C3035'
-                    : '#ECEAE4'
+                    ? Colors.DarkBorderSubtle
+                    : Colors.TimelineBorderWarm
                   : theme.border
               }
               strokeWidth={1.5}
@@ -527,14 +527,16 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
                 ? [
                     styles.floatingCheckboxChecked,
                     isDarkMode && {
-                      backgroundColor: '#13281E',
-                      borderColor: '#52D22E',
+                      backgroundColor: Colors.TaskCompletedDarkBg,
+                      borderColor: Colors.AccentGreen,
                     },
                   ]
                 : [
                     styles.floatingCheckboxUnchecked,
                     {
-                      backgroundColor: isDarkMode ? '#252932' : '#FFFFFF',
+                      backgroundColor: isDarkMode
+                        ? Colors.DarkCheckboxUnchecked
+                        : Colors.PureWhite,
                       borderColor: theme.border,
                     },
                   ],
@@ -548,7 +550,7 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
             {habit.completed && (
               <Check
                 size={14}
-                color={isDarkMode ? '#52D22E' : '#1B9A72'}
+                color={isDarkMode ? Colors.AccentGreen : Colors.GreenGracious}
                 strokeWidth={3}
               />
             )}
@@ -611,8 +613,11 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
                 <Text
                   style={[
                     styles.title,
-                    { color: isDarkMode ? textPrimary : '#1B1C19' },
-                    habit.completed && (isDarkMode ? { color: '#5C6270' } : styles.titleCompleted),
+                    { color: isDarkMode ? textPrimary : Colors.RegiusInk },
+                    habit.completed &&
+                      (isDarkMode
+                        ? { color: Colors.DarkTitleCompleted }
+                        : styles.titleCompleted),
                   ]}
                   numberOfLines={2}
                 >
@@ -622,12 +627,14 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
                 <View style={styles.frequencyRow}>
                   <Repeat
                     size={11}
-                    color={isDarkMode ? '#A3A8B1' : '#8E8E93'}
+                    color={
+                      isDarkMode ? Colors.SteelMist : Colors.DisabledGrayText
+                    }
                   />
                   <Text
                     style={[
                       styles.frequencyText,
-                      isDarkMode && { color: '#A3A8B1' },
+                      isDarkMode && { color: Colors.SteelMist },
                     ]}
                   >
                     {habit.frequency}
@@ -646,7 +653,7 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
               <Text
                 style={[
                   styles.consistencyLabel,
-                  isDarkMode && { color: '#A3A8B1' },
+                  isDarkMode && { color: Colors.SteelMist },
                 ]}
               >
                 Consistency
@@ -672,14 +679,14 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
                         size={ResponsivePixels.size9}
                         color={
                           isFilled
-                            ? '#E65100'
+                            ? Colors.EventTextAccent
                             : isToday
-                            ? '#FF9800'
+                            ? Colors.AccentAmber
                             : isDarkMode
-                            ? '#3A3F4D'
-                            : '#C8C4B7'
+                            ? Colors.HabitCardMutedBorderDark
+                            : Colors.DetailWarmBorderMuted
                         }
-                        fill={isFilled ? '#FF9800' : 'none'}
+                        fill={isFilled ? Colors.AccentAmber : 'none'}
                         strokeWidth={isToday && !isFilled ? 1.5 : 1.2}
                       />
                     </Animated.View>
@@ -723,17 +730,17 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     borderWidth: 1.2,
     borderTopWidth: 1.8,
-    borderTopColor: 'rgba(255, 255, 255, 0.45)',
-    borderLeftColor: 'rgba(255, 255, 255, 0.14)',
-    borderRightColor: 'rgba(255, 255, 255, 0.14)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.45),
+    borderLeftColor: withAlpha(Colors.PureWhite, 0.14),
+    borderRightColor: withAlpha(Colors.PureWhite, 0.14),
     borderBottomWidth: 3.5,
-    borderBottomColor: '#0A0B0E',
+    borderBottomColor: Colors.DarkChipBevelAbyss,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 4,
     ...Platform.select({
       ios: {
-        shadowColor: '#FF9800',
+        shadowColor: Colors.AccentAmber,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.38,
         shadowRadius: 7,
@@ -747,9 +754,9 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: 'rgba(255, 152, 0, 0.22)',
+    backgroundColor: withAlpha(Colors.AccentAmber, 0.22),
     borderWidth: 1.2,
-    borderColor: 'rgba(255, 152, 0, 0.48)',
+    borderColor: withAlpha(Colors.AccentAmber, 0.48),
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 3,
@@ -761,17 +768,17 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     borderWidth: 1.2,
     borderTopWidth: 1.8,
-    borderTopColor: 'rgba(255, 255, 255, 0.45)',
-    borderLeftColor: 'rgba(255, 255, 255, 0.14)',
-    borderRightColor: 'rgba(255, 255, 255, 0.14)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.45),
+    borderLeftColor: withAlpha(Colors.PureWhite, 0.14),
+    borderRightColor: withAlpha(Colors.PureWhite, 0.14),
     borderBottomWidth: 3.5,
-    borderBottomColor: '#0A0B0E',
+    borderBottomColor: Colors.DarkChipBevelAbyss,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 4,
     ...Platform.select({
       ios: {
-        shadowColor: '#F5C518',
+        shadowColor: Colors.AccentYellow,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.38,
         shadowRadius: 7,
@@ -785,9 +792,9 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: 'rgba(245, 197, 24, 0.22)',
+    backgroundColor: withAlpha(Colors.AccentYellow, 0.22),
     borderWidth: 1.2,
-    borderColor: 'rgba(245, 197, 24, 0.48)',
+    borderColor: withAlpha(Colors.AccentYellow, 0.48),
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 3,
@@ -795,7 +802,7 @@ const styles = StyleSheet.create({
   actionBtnText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 9.5,
-    color: '#FFFBF0',
+    color: Colors.WarmActionTextCream,
     letterSpacing: 0.75,
   },
   frontCardContainer: {
@@ -804,7 +811,7 @@ const styles = StyleSheet.create({
   },
   card: {
     position: 'relative',
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.Transparent,
     ...Platform.select({
       ios: {
         shadowOffset: { width: 0, height: 4 },
@@ -837,7 +844,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.12,
         shadowRadius: 3,
@@ -848,12 +855,12 @@ const styles = StyleSheet.create({
     }),
   },
   floatingCheckboxChecked: {
-    backgroundColor: '#E8FDF0',
-    borderColor: '#52D22E',
+    backgroundColor: Colors.BadgeGreenBg,
+    borderColor: Colors.AccentGreen,
   },
   floatingCheckboxUnchecked: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#ECE8DF',
+    backgroundColor: Colors.PureWhite,
+    borderColor: Colors.WarmCheckboxBorder,
   },
   cardContent: {
     padding: 16,
@@ -900,8 +907,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   iconContainerCompleted: {
-    backgroundColor: '#E8FDF0',
-    borderColor: '#C6FFDD',
+    backgroundColor: Colors.BadgeGreenBg,
+    borderColor: Colors.WellnessLightBorder,
     borderWidth: 1,
   },
   titleWrap: {
@@ -912,11 +919,11 @@ const styles = StyleSheet.create({
   title: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 14.5,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     lineHeight: 20,
   },
   titleCompleted: {
-    color: '#7E838F',
+    color: Colors.MutedSlateSubtext,
   },
   frequencyRow: {
     flexDirection: 'row',
@@ -926,7 +933,7 @@ const styles = StyleSheet.create({
   frequencyText: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 11,
-    color: '#8E8E93',
+    color: Colors.DisabledGrayText,
   },
   consistencyRow: {
     flexDirection: 'row',
@@ -934,12 +941,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: ResponsivePixels.size7,
     borderTopWidth: 1,
-    borderTopColor: '#ECE8FB',
+    borderTopColor: Colors.MindfulDetailBorder,
   },
   consistencyLabel: {
     fontFamily: Fonts.poppins.medium,
     fontSize: ResponsivePixels.size10,
-    color: '#A8A49C',
+    color: Colors.WarmStoneLightText,
     letterSpacing: 0.5,
   },
   streakWrap: {

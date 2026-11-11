@@ -10,6 +10,7 @@ import Svg, {
   G,
   SvgProps,
 } from 'react-native-svg';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -28,9 +29,13 @@ export const LoginAestheticBackgroundSvg: React.FC<
   const CREST_CY = crestCy ?? 96;
   const CARD_CY = H * 0.52;
 
-  const fillColor1 = isDark ? '#1E2228' : '#FAF6E8';
-  const fillColor2 = isDark ? '#262B33' : '#EFF3FE';
-  const fillColor3 = isDark ? '#16191F' : '#FFFDEB';
+  const fillColor1 = isDark
+    ? Colors.DarkCardBackground
+    : Colors.SvgLoginCreamPaper;
+  const fillColor2 = isDark ? Colors.SvgLoginSlateTop : Colors.SvgLoginIceTint;
+  const fillColor3 = isDark
+    ? Colors.LoginCardBottomDarkBevel
+    : Colors.SvgLoginCreamTop;
 
   return (
     <Svg
@@ -71,17 +76,20 @@ export const LoginAestheticBackgroundSvg: React.FC<
         <RadialGradient id="loginCrestHalo" cx="50%" cy="50%" r="50%">
           <Stop
             offset="0%"
-            stopColor={isDark ? '#F5C518' : '#FFF8D0'}
+            stopColor={isDark ? Colors.AccentYellow : Colors.BadgeYellowBg}
             stopOpacity={isDark ? 0.22 : 0.7}
           />
           <Stop
             offset="60%"
-            stopColor={isDark ? '#8383D6' : '#FFF3B8'}
+            stopColor={isDark ? Colors.LavenderPurple : Colors.SvgWarmSunbeamTint}
             stopOpacity={isDark ? 0.08 : 0.25}
           />
           <Stop
             offset="100%"
-            stopColor={canvasColor || (isDark ? '#121417' : '#FFFCE3')}
+            stopColor={
+              canvasColor ||
+              (isDark ? Colors.DarkBackground : Colors.CreamBackground)
+            }
             stopOpacity={0}
           />
         </RadialGradient>
@@ -90,20 +98,20 @@ export const LoginAestheticBackgroundSvg: React.FC<
         <RadialGradient id="loginLavenderAura" cx="50%" cy="50%" r="50%">
           <Stop
             offset="0%"
-            stopColor="#8383D6"
+            stopColor={Colors.LavenderPurple}
             stopOpacity={isDark ? 0.18 : 0.28}
           />
-          <Stop offset="100%" stopColor="#8383D6" stopOpacity={0} />
+          <Stop offset="100%" stopColor={Colors.LavenderPurple} stopOpacity={0} />
         </RadialGradient>
 
         {/* Bottom Mint Accent Aura */}
         <RadialGradient id="loginMintAura" cx="50%" cy="50%" r="50%">
           <Stop
             offset="0%"
-            stopColor="#52D22E"
+            stopColor={Colors.AccentGreen}
             stopOpacity={isDark ? 0.12 : 0.2}
           />
-          <Stop offset="100%" stopColor="#52D22E" stopOpacity={0} />
+          <Stop offset="100%" stopColor={Colors.AccentGreen} stopOpacity={0} />
         </RadialGradient>
       </Defs>
 
@@ -137,14 +145,16 @@ export const LoginAestheticBackgroundSvg: React.FC<
           cx={CX}
           cy={CREST_CY}
           r={58}
-          stroke={isDark ? '#FFFFFF' : '#EAE4D7'}
+          stroke={isDark ? Colors.PureWhite : Colors.LoginInputLightBevel}
           strokeWidth={1.2}
         />
         <Circle
           cx={CX}
           cy={CREST_CY}
           r={82}
-          stroke={isDark ? '#8383D6' : '#DDD6C6'}
+          stroke={
+            isDark ? Colors.LavenderPurple : Colors.WarmHeaderBottomBevel
+          }
           strokeWidth={1}
           strokeDasharray="4 6"
         />
@@ -152,7 +162,7 @@ export const LoginAestheticBackgroundSvg: React.FC<
           cx={CX}
           cy={CREST_CY}
           r={112}
-          stroke={isDark ? '#F5C518' : '#E8E1D3'}
+          stroke={isDark ? Colors.AccentYellow : Colors.SvgPaperBeigeRim}
           strokeWidth={1.2}
         />
       </G>
@@ -162,7 +172,11 @@ export const LoginAestheticBackgroundSvg: React.FC<
         d={`M -20 ${H * 0.82} Q ${W * 0.3} ${H * 0.86} ${CX} ${H * 0.81} T ${
           W + 20
         } ${H * 0.84}`}
-        stroke={isDark ? 'rgba(255,255,255,0.06)' : 'rgba(131, 131, 214, 0.14)'}
+        stroke={
+          isDark
+            ? withAlpha(Colors.PureWhite, 0.06)
+            : withAlpha(Colors.LavenderPurple, 0.14)
+        }
         strokeWidth={1.2}
         fill="none"
       />
@@ -176,7 +190,7 @@ export const LoginAestheticBackgroundSvg: React.FC<
         } Q ${CX - 120} ${CREST_CY - 21} ${CX - 124} ${CREST_CY - 21} Q ${
           CX - 120
         } ${CREST_CY - 21} ${CX - 120} ${CREST_CY - 25} Z`}
-        fill="#F5C518"
+        fill={Colors.AccentYellow}
         opacity={isDark ? 0.85 : 0.75}
       />
       <Path
@@ -187,7 +201,7 @@ export const LoginAestheticBackgroundSvg: React.FC<
         } Q ${CX + 122} ${CREST_CY - 11} ${CX + 118} ${CREST_CY - 11} Q ${
           CX + 122
         } ${CREST_CY - 11} ${CX + 122} ${CREST_CY - 15} Z`}
-        fill="#8383D6"
+        fill={Colors.LavenderPurple}
         opacity={isDark ? 0.9 : 0.8}
       />
       <Path
@@ -198,7 +212,7 @@ export const LoginAestheticBackgroundSvg: React.FC<
         } Q ${W - 35} ${CARD_CY + 184} ${W - 39} ${CARD_CY + 184} Q ${W - 35} ${
           CARD_CY + 184
         } ${W - 35} ${CARD_CY + 180} Z`}
-        fill="#52D22E"
+        fill={Colors.AccentGreen}
         opacity={isDark ? 0.8 : 0.7}
       />
 
@@ -207,35 +221,35 @@ export const LoginAestheticBackgroundSvg: React.FC<
         cx={CX - 80}
         cy={CREST_CY + 65}
         r={1.6}
-        fill={isDark ? '#F5C518' : '#B48216'}
+        fill={isDark ? Colors.AccentYellow : Colors.WorkTextAccent}
         opacity={0.6}
       />
       <Circle
         cx={CX + 90}
         cy={CREST_CY + 55}
         r={1.8}
-        fill={isDark ? '#FFFFFF' : '#8383D6'}
+        fill={isDark ? Colors.PureWhite : Colors.LavenderPurple}
         opacity={0.65}
       />
       <Circle
         cx={35}
         cy={CARD_CY + 180}
         r={1.5}
-        fill={isDark ? '#F5C518' : '#D97706'}
+        fill={isDark ? Colors.AccentYellow : Colors.HabitBurnishedAmber}
         opacity={0.55}
       />
       <Circle
         cx={W - 45}
         cy={CARD_CY - 110}
         r={1.6}
-        fill={isDark ? '#8383D6' : '#8383D6'}
+        fill={Colors.LavenderPurple}
         opacity={0.6}
       />
       <Circle
         cx={CX}
         cy={H * 0.92}
         r={1.8}
-        fill={isDark ? '#8383D6' : '#B48216'}
+        fill={isDark ? Colors.LavenderPurple : Colors.WorkTextAccent}
         opacity={0.5}
       />
     </Svg>

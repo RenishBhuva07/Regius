@@ -26,10 +26,7 @@ import {
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../../Theme/fonts';
-import {
-  Colors as StaticColors,
-  Colors,
-} from '../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { Badge } from '../../Common/Badge';
 import { ProBadge } from '../../Common/ProBadge';
@@ -96,12 +93,15 @@ export const MilestoneFullScreenSheet: React.FC = () => {
   );
 
   const scrolledBg =
-    themeColors.AccentDeep || (isDarkMode ? '#282048' : Colors.LavenderPurple);
+    themeColors.AccentDeep ||
+    (isDarkMode ? Colors.MidnightIndigo : Colors.LavenderPurple);
 
   const headerBgColor = scrollY.interpolate({
     inputRange: [0, 30],
     outputRange: [
-      isDarkMode ? 'rgba(18, 20, 23, 0)' : 'rgba(255, 252, 227, 0)',
+      isDarkMode
+        ? withAlpha(Colors.DarkBackground, 0)
+        : withAlpha(Colors.CreamBackground, 0),
       scrolledBg,
     ],
     extrapolate: 'clamp',
@@ -140,16 +140,19 @@ export const MilestoneFullScreenSheet: React.FC = () => {
   // Dynamic theme tokens
   const sheetBg =
     themeColors.Background ||
-    (isDarkMode ? '#121417' : StaticColors.CreamBackground);
+    (isDarkMode ? Colors.DarkBackground : Colors.CreamBackground);
   const cardBg =
-    themeColors.CardBackground || (isDarkMode ? '#1E2228' : '#FFFFFF');
+    themeColors.CardBackground ||
+    (isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite);
   const cardBorder =
     themeColors.BorderLight ||
-    (isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#E8E2D5');
+    (isDarkMode ? withAlpha(Colors.PureWhite, 0.12) : Colors.RingBorder);
   const textPrimary =
-    themeColors.PrimaryText || (isDarkMode ? '#FFFFFF' : '#121417');
+    themeColors.PrimaryText ||
+    (isDarkMode ? Colors.PureWhite : Colors.DarkBackground);
   const textSecondary =
-    themeColors.SecondaryText || (isDarkMode ? '#8E95A5' : '#6B7280');
+    themeColors.SecondaryText ||
+    (isDarkMode ? Colors.MilestoneSlate : Colors.Gray500);
 
   const handleApplyTheme = (themeId: string, themeName: string) => {
     Vibration.vibrate(25);
@@ -229,12 +232,16 @@ export const MilestoneFullScreenSheet: React.FC = () => {
               <View
                 style={[
                   styles.headerIconBadge,
-                  isScrolled && { backgroundColor: 'rgba(255, 255, 255, 0.2)' },
+                  isScrolled && {
+                    backgroundColor: withAlpha(Colors.PureWhite, 0.2),
+                  },
                 ]}
               >
                 <Crown
                   size={18}
-                  color={isScrolled ? '#F5C518' : '#D97706'}
+                  color={
+                    isScrolled ? Colors.AccentYellow : Colors.HabitBurnishedAmber
+                  }
                   strokeWidth={2.4}
                 />
               </View>
@@ -275,12 +282,14 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                   : {
                       backgroundColor: cardBg,
                       borderColor: isDarkMode
-                        ? 'rgba(255, 255, 255, 0.12)'
-                        : '#FFFFFF',
-                      borderBottomColor: isDarkMode ? '#14161A' : '#DCD6CA',
+                        ? withAlpha(Colors.PureWhite, 0.12)
+                        : Colors.PureWhite,
+                      borderBottomColor: isDarkMode
+                        ? Colors.DarkCanvasRich
+                        : Colors.WarmBtnBottomBevel,
                       shadowColor: isDarkMode
-                        ? '#000000'
-                        : 'rgba(0, 0, 0, 0.08)',
+                        ? Colors.PureBlack
+                        : withAlpha(Colors.PureBlack, 0.08),
                     },
               ]}
               onPress={closeMilestoneModal}
@@ -290,7 +299,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
             >
               <X
                 size={18}
-                color={isScrolled ? Colors.DefaultWhite : textPrimary}
+                color={isScrolled ? Colors.PureWhite : textPrimary}
                 strokeWidth={2.4}
               />
             </TouchableOpacity>
@@ -355,7 +364,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                             {
                               width: `${Math.round(tierProgress * 100)}%`,
                               backgroundColor:
-                                currentTier.accentColor || '#F5C518',
+                                currentTier.accentColor || Colors.AccentYellow,
                             },
                           ]}
                         />
@@ -363,7 +372,11 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                     </View>
                   ) : (
                     <View style={styles.maxTierSection}>
-                      <Sparkles size={16} color="#F5C518" strokeWidth={2} />
+                      <Sparkles
+                        size={16}
+                        color={Colors.AccentYellow}
+                        strokeWidth={2}
+                      />
                       <Text style={styles.maxTierText}>
                         Supreme Sovereign Rank Achieved
                       </Text>
@@ -375,7 +388,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                     <View style={styles.statSummaryItem}>
                       <CheckSquare
                         size={16}
-                        color="#F5C518"
+                        color={Colors.AccentYellow}
                         strokeWidth={2.4}
                       />
                       <Text style={styles.statSummaryVal}>
@@ -385,7 +398,11 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                     </View>
                     <View style={styles.statDivider} />
                     <View style={styles.statSummaryItem}>
-                      <Bell size={16} color="#52D22E" strokeWidth={2.4} />
+                      <Bell
+                        size={16}
+                        color={Colors.AccentGreen}
+                        strokeWidth={2.4}
+                      />
                       <Text style={styles.statSummaryVal}>
                         {completedRemindersCount}
                       </Text>
@@ -393,7 +410,11 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                     </View>
                     <View style={styles.statDivider} />
                     <View style={styles.statSummaryItem}>
-                      <Activity size={16} color="#8383D6" strokeWidth={2.4} />
+                      <Activity
+                        size={16}
+                        color={Colors.LavenderPurple}
+                        strokeWidth={2.4}
+                      />
                       <Text style={styles.statSummaryVal}>
                         {habitsFollowedCount}
                       </Text>
@@ -412,15 +433,21 @@ export const MilestoneFullScreenSheet: React.FC = () => {
               {
                 backgroundColor: cardBg,
                 borderColor: cardBorder,
-                borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
+                borderBottomColor: isDarkMode
+                  ? Colors.DarkSurfaceDeep
+                  : Colors.WarmStoneBorder,
                 shadowColor: isDarkMode
-                  ? '#000000'
-                  : 'rgba(131, 131, 214, 0.1)',
+                  ? Colors.PureBlack
+                  : withAlpha(Colors.LavenderPurple, 0.1),
               },
             ]}
           >
             <View style={styles.xpGuideHeader}>
-              <Zap size={15} color="#D97706" strokeWidth={2.4} />
+              <Zap
+                size={15}
+                color={Colors.HabitBurnishedAmber}
+                strokeWidth={2.4}
+              />
               <Text style={[styles.xpGuideTitle, { color: textPrimary }]}>
                 How to Earn Discipline XP
               </Text>
@@ -471,12 +498,16 @@ export const MilestoneFullScreenSheet: React.FC = () => {
               style={[
                 styles.totalXpPill,
                 {
-                  backgroundColor: isDarkMode ? '#1E232A' : '#EDE8DC',
-                  borderColor: isDarkMode ? '#2D3440' : '#DDD6C7',
+                  backgroundColor: isDarkMode
+                    ? Colors.MilestoneXpPillDarkBg
+                    : Colors.MilestoneXpPillLightBg,
+                  borderColor: isDarkMode
+                    ? Colors.MilestoneXpPillDarkBorder
+                    : Colors.MilestoneXpPillLightBorder,
                 },
               ]}
             >
-              <Zap size={11} color="#F5C518" strokeWidth={2.6} />
+              <Zap size={11} color={Colors.AccentYellow} strokeWidth={2.6} />
               <Text style={[styles.totalXpPillText, { color: textPrimary }]}>
                 {totalXp} XP
               </Text>
@@ -501,7 +532,11 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                 <Text
                   style={[
                     styles.footerWatermarkText,
-                    { color: isDarkMode ? '#5E6472' : '#8E95A5' },
+                    {
+                      color: isDarkMode
+                        ? Colors.DarkWatermarkSlate
+                        : Colors.MilestoneSlate,
+                    },
                   ]}
                 >
                   {dailyQuote}
@@ -510,7 +545,11 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                   <Text
                     style={[
                       styles.craftedWithText,
-                      { color: isDarkMode ? '#828896' : '#8E95A5' },
+                      {
+                        color: isDarkMode
+                          ? Colors.DarkSubtextCoolGray
+                          : Colors.MilestoneSlate,
+                      },
                     ]}
                   >
                     Crafted with{' '}
@@ -519,7 +558,11 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                   <Text
                     style={[
                       styles.craftedWithText,
-                      { color: isDarkMode ? '#828896' : '#8E95A5' },
+                      {
+                        color: isDarkMode
+                          ? Colors.DarkSubtextCoolGray
+                          : Colors.MilestoneSlate,
+                      },
                     ]}
                   >
                     {' '}
@@ -587,7 +630,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: '#FEF3C7',
+    backgroundColor: Colors.ToastWarningBadgeBgLight,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -601,7 +644,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   headerTitleScrolled: {
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
   },
   headerSubtitle: {
     fontFamily: Fonts.poppins.regular,
@@ -609,7 +652,7 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   headerSubtitleScrolled: {
-    color: 'rgba(255, 255, 255, 0.85)',
+    color: withAlpha(Colors.PureWhite, 0.85),
   },
   closeBtn: {
     width: 38,
@@ -625,9 +668,9 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   closeBtnScrolled: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderColor: 'rgba(255, 255, 255, 0.4)',
-    borderBottomColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.2),
+    borderColor: withAlpha(Colors.PureWhite, 0.4),
+    borderBottomColor: withAlpha(Colors.PureWhite, 0.3),
   },
   scrollArea: {
     flex: 1,
@@ -641,19 +684,19 @@ const styles = StyleSheet.create({
     marginBottom: ResponsivePixels.size20,
   },
   cardShadowWrapper: {
-    backgroundColor: StaticColors.NeroBlack,
+    backgroundColor: Colors.NeroBlack,
     borderRadius: 24,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.28,
     shadowRadius: 18,
     elevation: 8,
   },
   card: {
-    backgroundColor: StaticColors.NeroBlack,
+    backgroundColor: Colors.NeroBlack,
     borderRadius: 24,
     borderWidth: 4,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: withAlpha(Colors.PureWhite, 0.9),
     overflow: 'hidden',
     position: 'relative',
   },
@@ -679,33 +722,33 @@ const styles = StyleSheet.create({
   heroTierTitle: {
     fontFamily: Fonts.ranade.bold,
     fontSize: 20,
-    color: '#FFFCE3',
+    color: Colors.CreamBackground,
   },
   heroSubtitle: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 12,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: withAlpha(Colors.PureWhite, 0.7),
     lineHeight: 16,
   },
   xpCircleBadge: {
     width: 68,
     height: 68,
     borderRadius: 34,
-    backgroundColor: 'rgba(245, 197, 24, 0.15)',
+    backgroundColor: withAlpha(Colors.AccentYellow, 0.15),
     borderWidth: 2,
-    borderColor: '#F5C518',
+    borderColor: Colors.AccentYellow,
     alignItems: 'center',
     justifyContent: 'center',
   },
   xpAmountText: {
     fontFamily: Fonts.ranade.bold,
     fontSize: 18,
-    color: '#F5C518',
+    color: Colors.AccentYellow,
   },
   xpUnitText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 10,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: withAlpha(Colors.PureWhite, 0.7),
   },
   progressSection: {
     marginBottom: ResponsivePixels.size16,
@@ -718,17 +761,17 @@ const styles = StyleSheet.create({
   progressLabelLeft: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 11,
-    color: 'rgba(255, 255, 255, 0.75)',
+    color: withAlpha(Colors.PureWhite, 0.75),
   },
   progressLabelRight: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 11,
-    color: '#F5C518',
+    color: Colors.AccentYellow,
   },
   progressBarTrack: {
     height: 6,
     borderRadius: 3,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.15),
     overflow: 'hidden',
   },
   progressBarFill: {
@@ -744,7 +787,7 @@ const styles = StyleSheet.create({
   maxTierText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 12,
-    color: '#F5C518',
+    color: Colors.AccentYellow,
   },
   statsSummaryGrid: {
     flexDirection: 'row',
@@ -752,7 +795,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingTop: ResponsivePixels.size14,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.12)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.12),
   },
   statSummaryItem: {
     flex: 1,
@@ -761,19 +804,19 @@ const styles = StyleSheet.create({
   statSummaryVal: {
     fontFamily: Fonts.ranade.bold,
     fontSize: 16,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     marginTop: 4,
     marginBottom: 1,
   },
   statSummaryLbl: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 10,
-    color: 'rgba(255, 255, 255, 0.65)',
+    color: withAlpha(Colors.PureWhite, 0.65),
   },
   statDivider: {
     width: 1,
     height: 24,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.15),
   },
   xpGuideBox: {
     marginHorizontal: ResponsivePixels.size16,

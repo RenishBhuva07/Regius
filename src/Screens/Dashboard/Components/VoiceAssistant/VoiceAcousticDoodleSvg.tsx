@@ -12,6 +12,11 @@ import Svg, {
   Polygon,
 } from 'react-native-svg';
 import { VoiceAssistantState } from '../../../../Services/Voice/VoiceStateMachine';
+import {
+  Colors,
+  IllustrationColors,
+  withAlpha,
+} from '../../../../Assets/StyleUtilities/Colors';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -34,13 +39,21 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
   const orbCenterY = Math.round(Math.min(SCREEN_HEIGHT * 0.38, 318));
 
   // Theme-adaptive color accents
-  const auraColor1 = isDarkMode ? '#8383D6' : '#9D9BF0';
-  const auraColor2 = isDarkMode ? '#F5C518' : '#FDE68A';
-  const dashColor = isDarkMode ? 'rgba(255, 255, 255, 0.22)' : '#D4CCA8';
-  const goldColor = isDarkMode ? '#FBBF24' : '#F5C518';
-  const lavenderColor = isDarkMode ? '#A78BFA' : '#8383D6';
-  const mintColor = isDarkMode ? '#34D399' : '#10B981';
-  const coralColor = isDarkMode ? '#FB7185' : '#FF8772';
+  const auraColor1 = isDarkMode ? Colors.LavenderPurple : Colors.SiaOrbViolet;
+  const auraColor2 = isDarkMode
+    ? Colors.AccentYellow
+    : Colors.VoiceMichaelBorder;
+  const dashColor = isDarkMode
+    ? withAlpha(Colors.PureWhite, 0.22)
+    : Colors.BentoWarmGoldMuted;
+  const goldColor = isDarkMode ? Colors.Amber400 : Colors.AccentYellow;
+  const lavenderColor = isDarkMode ? Colors.Violet400 : Colors.LavenderPurple;
+  const mintColor = isDarkMode
+    ? Colors.ToastSuccessCardBevelLight
+    : Colors.ToastSuccessAccent;
+  const coralColor = isDarkMode
+    ? Colors.CategoryRoseAccent
+    : Colors.CoralWarmth;
 
   return (
     <View style={[styles.container, { width, height }]} pointerEvents="none">
@@ -64,29 +77,31 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
             />
             <Stop
               offset="100%"
-              stopColor={isDarkMode ? '#111317' : '#FAF8F5'}
+              stopColor={
+                isDarkMode ? Colors.VoiceSheetDarkBg : Colors.CreamSurfaceAlt
+              }
               stopOpacity={0}
             />
           </RadialGradient>
           <LinearGradient id="vadGold" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#FFFCE3" />
-            <Stop offset="45%" stopColor="#F5C518" />
-            <Stop offset="100%" stopColor="#D97706" />
+            <Stop offset="0%" stopColor={Colors.CreamBackground} />
+            <Stop offset="45%" stopColor={Colors.AccentYellow} />
+            <Stop offset="100%" stopColor={Colors.HabitBurnishedAmber} />
           </LinearGradient>
           <LinearGradient id="vadLavender" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#EEF0FD" />
-            <Stop offset="50%" stopColor="#8383D6" />
-            <Stop offset="100%" stopColor="#5B58E6" />
+            <Stop offset="0%" stopColor={Colors.BadgePurpleBg} />
+            <Stop offset="50%" stopColor={Colors.LavenderPurple} />
+            <Stop offset="100%" stopColor={IllustrationColors.AcousticIndigo} />
           </LinearGradient>
           <LinearGradient id="vadMint" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#D1FAE5" />
-            <Stop offset="50%" stopColor="#10B981" />
-            <Stop offset="100%" stopColor="#047857" />
+            <Stop offset="0%" stopColor={Colors.ToastSuccessBadgeBgLight} />
+            <Stop offset="50%" stopColor={Colors.ToastSuccessAccent} />
+            <Stop offset="100%" stopColor={Colors.Emerald700} />
           </LinearGradient>
           <LinearGradient id="vadCoral" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#FFE4E6" />
-            <Stop offset="50%" stopColor="#FF8772" />
-            <Stop offset="100%" stopColor="#E11D48" />
+            <Stop offset="0%" stopColor={IllustrationColors.AcousticRoseMist} />
+            <Stop offset="50%" stopColor={Colors.CoralWarmth} />
+            <Stop offset="100%" stopColor={Colors.CategoryRoseCheck} />
           </LinearGradient>
         </Defs>
         <Circle
@@ -201,7 +216,7 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
             d="M 10 0 Q 10 10, 20 10 Q 10 10, 10 20 Q 10 10, 0 10 Q 10 10, 10 0 Z"
             fill="url(#vadGold)"
           />
-          <Circle cx={10} cy={10} r={1.8} fill="#FFFFFF" />
+          <Circle cx={10} cy={10} r={1.8} fill={Colors.PureWhite} />
         </G>
         <G
           transform={`translate(${width - 48}, ${Math.max(
@@ -214,14 +229,14 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
             d="M 9 0 Q 9 9, 18 9 Q 9 9, 9 18 Q 9 9, 0 9 Q 9 9, 9 0 Z"
             fill="url(#vadLavender)"
           />
-          <Circle cx={9} cy={9} r={1.6} fill="#FFFFFF" />
+          <Circle cx={9} cy={9} r={1.6} fill={Colors.PureWhite} />
         </G>
         <G transform={`translate(22, ${orbCenterY + 70})`} opacity={0.85}>
           <Path
             d="M 6.5 0 Q 6.5 6.5, 13 6.5 Q 6.5 6.5, 6.5 13 Q 6.5 6.5, 0 6.5 Q 6.5 6.5, 6.5 0 Z"
             fill="url(#vadMint)"
           />
-          <Circle cx={6.5} cy={6.5} r={1.2} fill="#FFFFFF" />
+          <Circle cx={6.5} cy={6.5} r={1.2} fill={Colors.PureWhite} />
         </G>
         <G
           transform={`translate(${width - 42}, ${orbCenterY + 65})`}
@@ -231,7 +246,7 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
             d="M 6 0 Q 6 6, 12 6 Q 6 6, 6 12 Q 6 6, 0 6 Q 6 6, 6 0 Z"
             fill="url(#vadCoral)"
           />
-          <Circle cx={6} cy={6} r={1.2} fill="#FFFFFF" />
+          <Circle cx={6} cy={6} r={1.2} fill={Colors.PureWhite} />
         </G>
         <G
           transform={`translate(${orbCenterX + 70}, ${Math.max(
@@ -254,24 +269,24 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
         >
           <Path
             d="M 4 20 C 8 10, 24 10, 28 20 Z"
-            fill={isDarkMode ? '#311068' : '#EEF0FD'}
+            fill={isDarkMode ? Colors.SvgRoyalPlumDeep : Colors.BadgePurpleBg}
             stroke={lavenderColor}
             strokeWidth={0.8}
           />
           <Path
             d="M 2 20 L 5 8 L 11 14 L 16 5 L 21 14 L 27 8 L 30 20 Z"
             fill="url(#vadGold)"
-            stroke="#92400E"
+            stroke={Colors.Amber800}
             strokeWidth={0.8}
             strokeLinejoin="round"
           />
-          <Circle cx={5} cy={8} r={1.5} fill="#FFFCE3" />
-          <Circle cx={16} cy={5} r={1.8} fill="#FFFCE3" />
-          <Circle cx={27} cy={8} r={1.5} fill="#FFFCE3" />
+          <Circle cx={5} cy={8} r={1.5} fill={Colors.CreamBackground} />
+          <Circle cx={16} cy={5} r={1.8} fill={Colors.CreamBackground} />
+          <Circle cx={27} cy={8} r={1.5} fill={Colors.CreamBackground} />
           <Path
             d="M 1 20 C 10 23, 22 23, 31 20 L 31 23 C 22 26, 10 26, 1 23 Z"
             fill="url(#vadGold)"
-            stroke="#78350F"
+            stroke={Colors.Amber900}
             strokeWidth={0.7}
           />
           <Circle cx={16} cy={22} r={1.2} fill="url(#vadCoral)" />
@@ -280,7 +295,7 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
             y1={1}
             x2={16}
             y2={3}
-            stroke="#F5C518"
+            stroke={Colors.AccentYellow}
             strokeWidth={1}
             strokeLinecap="round"
           />
@@ -323,7 +338,7 @@ export const VoiceAcousticDoodleSvg: React.FC<VoiceAcousticDoodleSvgProps> = ({
           <Polygon
             points="6,0 0,8 4.5,8 1,16 9,7 4.5,7"
             fill="url(#vadGold)"
-            stroke="#D97706"
+            stroke={Colors.HabitBurnishedAmber}
             strokeWidth={0.8}
             strokeLinejoin="round"
           />

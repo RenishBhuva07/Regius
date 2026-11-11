@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { CheckSquare, Flame, Calendar } from 'lucide-react-native';
 
 import { Fonts } from '../../../Theme/fonts';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { Typography } from '../../../Theme/Typographys';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { useTheme } from '../../../Theme/ThemeContext';
@@ -25,15 +25,16 @@ export const ProfileStatsMatrix: React.FC<ProfileStatsMatrixProps> = React.memo(
     const { Colors: themeColors } = useTheme();
     const cardBg =
       themeColors.CardBackground ||
-      (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
+      (isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite);
     const textPrimary =
       themeColors.PrimaryText ||
-      (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
+      (isDarkMode ? Colors.PureWhite : Colors.PureBlack);
     const textSecondary =
       themeColors.SecondaryText ||
-      (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+      (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray);
     const borderLight =
-      themeColors.BorderLight || (isDarkMode ? '#2C3035' : '#E8E2D5');
+      themeColors.BorderLight ||
+      (isDarkMode ? Colors.CarbonSlate : Colors.RingBorder);
 
     return (
       <View
@@ -41,9 +42,15 @@ export const ProfileStatsMatrix: React.FC<ProfileStatsMatrixProps> = React.memo(
           styles.statsGridCard,
           {
             backgroundColor: cardBg,
-            borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#FFFFFF',
-            borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
-            shadowColor: isDarkMode ? '#000000' : 'rgba(131, 131, 214, 0.14)',
+            borderColor: isDarkMode
+              ? withAlpha(Colors.PureWhite, 0.12)
+              : Colors.PureWhite,
+            borderBottomColor: isDarkMode
+              ? Colors.DarkSurfaceDeep
+              : Colors.WarmStoneBorder,
+            shadowColor: isDarkMode
+              ? Colors.PureBlack
+              : withAlpha(Colors.LavenderPurple, 0.14),
           },
         ]}
       >
@@ -51,10 +58,18 @@ export const ProfileStatsMatrix: React.FC<ProfileStatsMatrixProps> = React.memo(
           <View
             style={[
               styles.statIconWrap,
-              { backgroundColor: isDarkMode ? '#2A2416' : '#FFFCEB' },
+              {
+                backgroundColor: isDarkMode
+                  ? Colors.WorkDarkBg
+                  : Colors.WorkLightBg,
+              },
             ]}
           >
-            <CheckSquare size={16} color="#B48216" strokeWidth={2.4} />
+            <CheckSquare
+              size={16}
+              color={Colors.WorkTextAccent}
+              strokeWidth={2.4}
+            />
           </View>
           <Text style={[styles.statValue, { color: textPrimary }]}>
             {completedTasksCount}
@@ -70,7 +85,11 @@ export const ProfileStatsMatrix: React.FC<ProfileStatsMatrixProps> = React.memo(
           <View
             style={[
               styles.statIconWrap,
-              { backgroundColor: isDarkMode ? '#202336' : '#EFF2FE' },
+              {
+                backgroundColor: isDarkMode
+                  ? Colors.MindfulDarkBg
+                  : Colors.MindfulLightBg,
+              },
             ]}
           >
             <Flame size={16} color={Colors.LavenderPurple} strokeWidth={2.4} />
@@ -89,10 +108,18 @@ export const ProfileStatsMatrix: React.FC<ProfileStatsMatrixProps> = React.memo(
           <View
             style={[
               styles.statIconWrap,
-              { backgroundColor: isDarkMode ? '#162820' : '#EDFDF5' },
+              {
+                backgroundColor: isDarkMode
+                  ? Colors.WellnessDarkBg
+                  : Colors.WellnessLightBg,
+              },
             ]}
           >
-            <Calendar size={16} color="#1B9A72" strokeWidth={2.4} />
+            <Calendar
+              size={16}
+              color={Colors.GreenGracious}
+              strokeWidth={2.4}
+            />
           </View>
           <Text style={[styles.statValue, { color: textPrimary }]}>
             {memberSince}

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Fonts } from '../../../../Theme/fonts';
+import { Colors, withAlpha } from '../../../../Assets/StyleUtilities/Colors';
 import { VoiceAssistantTheme } from './types';
 import { VoiceAssistantState } from '../../../../Services/Voice/VoiceStateMachine';
 import { PendingClarification } from '../../../../Services/Voice/VoiceTypes';
@@ -206,12 +207,14 @@ export const ConversationSurface: React.FC<ConversationSurfaceProps> = ({
             styles.capsuleCard,
             {
               backgroundColor: theme.isDarkMode
-                ? 'rgba(27, 30, 36, 0.82)'
-                : 'rgba(255, 255, 255, 0.88)',
+                ? withAlpha(Colors.VoiceCardDarkBg, 0.82)
+                : withAlpha(Colors.PureWhite, 0.88),
               borderColor: theme.isDarkMode
-                ? 'rgba(255, 255, 255, 0.12)'
-                : 'rgba(131, 131, 214, 0.16)',
-              shadowColor: theme.isDarkMode ? '#000000' : '#8383D6',
+                ? withAlpha(Colors.PureWhite, 0.12)
+                : withAlpha(Colors.LavenderPurple, 0.16),
+              shadowColor: theme.isDarkMode
+                ? Colors.PureBlack
+                : Colors.LavenderPurple,
             },
           ]}
         >
@@ -256,23 +259,27 @@ export const ConversationSurface: React.FC<ConversationSurfaceProps> = ({
                 styles.confirmationBadge,
                 {
                   backgroundColor: theme.isDarkMode
-                    ? 'rgba(52, 211, 153, 0.14)'
-                    : 'rgba(5, 150, 105, 0.08)',
+                    ? withAlpha(Colors.ToastSuccessCardBevelLight, 0.14)
+                    : withAlpha(Colors.ToastSuccessIcon, 0.08),
                   borderColor: theme.isDarkMode
-                    ? 'rgba(52, 211, 153, 0.35)'
-                    : 'rgba(5, 150, 105, 0.22)',
+                    ? withAlpha(Colors.ToastSuccessCardBevelLight, 0.35)
+                    : withAlpha(Colors.ToastSuccessIcon, 0.22),
                 },
               ]}
             >
               <View
                 style={[styles.checkCircle, { backgroundColor: theme.success }]}
               >
-                <Check size={12} color="#FFFFFF" strokeWidth={3} />
+                <Check size={12} color={Colors.PureWhite} strokeWidth={3} />
               </View>
               <Text
                 style={[
                   styles.confirmationText,
-                  { color: theme.isDarkMode ? '#34D399' : '#059669' },
+                  {
+                    color: theme.isDarkMode
+                      ? Colors.ToastSuccessCardBevelLight
+                      : Colors.ToastSuccessIcon,
+                  },
                 ]}
               >
                 {getConfirmationBadgeText(confirmedActionTitle)}
@@ -286,43 +293,51 @@ export const ConversationSurface: React.FC<ConversationSurfaceProps> = ({
               <View style={styles.suggestionsRow}>
                 {QUICK_SUGGESTIONS.map((item, idx) => {
                   let pillBg = theme.isDarkMode
-                    ? 'rgba(255, 255, 255, 0.07)'
-                    : 'rgba(0, 0, 0, 0.04)';
+                    ? withAlpha(Colors.PureWhite, 0.07)
+                    : withAlpha(Colors.PureBlack, 0.04);
                   let pillBorder = theme.cardBorder;
                   let pillText = theme.textSecondary;
 
                   if (item.category === 'task') {
                     pillBg = theme.isDarkMode
-                      ? 'rgba(245, 197, 24, 0.12)'
-                      : '#FFF8D0';
+                      ? withAlpha(Colors.AccentYellow, 0.12)
+                      : Colors.BadgeYellowBg;
                     pillBorder = theme.isDarkMode
-                      ? 'rgba(245, 197, 24, 0.3)'
-                      : '#DEAA14';
-                    pillText = theme.isDarkMode ? '#FBBF24' : '#B47804';
+                      ? withAlpha(Colors.AccentYellow, 0.3)
+                      : Colors.WorkDarkBorder;
+                    pillText = theme.isDarkMode
+                      ? Colors.Amber400
+                      : Colors.BadgeYellowText;
                   } else if (item.category === 'reminder') {
                     pillBg = theme.isDarkMode
-                      ? 'rgba(16, 185, 129, 0.12)'
-                      : '#E8FDF0';
+                      ? withAlpha(Colors.ToastSuccessAccent, 0.12)
+                      : Colors.BadgeGreenBg;
                     pillBorder = theme.isDarkMode
-                      ? 'rgba(16, 185, 129, 0.3)'
-                      : '#82E8A6';
-                    pillText = theme.isDarkMode ? '#34D399' : '#1B9A72';
+                      ? withAlpha(Colors.ToastSuccessAccent, 0.3)
+                      : Colors.BadgeGreenBevel;
+                    pillText = theme.isDarkMode
+                      ? Colors.ToastSuccessCardBevelLight
+                      : Colors.GreenGracious;
                   } else if (item.category === 'habit') {
                     pillBg = theme.isDarkMode
-                      ? 'rgba(131, 131, 214, 0.12)'
-                      : '#EEF0FD';
+                      ? withAlpha(Colors.LavenderPurple, 0.12)
+                      : Colors.BadgePurpleBg;
                     pillBorder = theme.isDarkMode
-                      ? 'rgba(131, 131, 214, 0.3)'
-                      : '#B6BEF5';
-                    pillText = theme.isDarkMode ? '#A78BFA' : '#8383D6';
+                      ? withAlpha(Colors.LavenderPurple, 0.3)
+                      : Colors.BadgePurpleBevel;
+                    pillText = theme.isDarkMode
+                      ? Colors.Violet400
+                      : Colors.LavenderPurple;
                   } else if (item.category === 'focus') {
                     pillBg = theme.isDarkMode
-                      ? 'rgba(255, 135, 114, 0.12)'
-                      : '#FFF0DE';
+                      ? withAlpha(Colors.CoralWarmth, 0.12)
+                      : Colors.EventLightBg;
                     pillBorder = theme.isDarkMode
-                      ? 'rgba(255, 135, 114, 0.3)'
-                      : '#FFB86B';
-                    pillText = theme.isDarkMode ? '#FB7185' : '#E65100';
+                      ? withAlpha(Colors.CoralWarmth, 0.3)
+                      : Colors.BadgeOrangeBevel;
+                    pillText = theme.isDarkMode
+                      ? Colors.CategoryRoseAccent
+                      : Colors.EventTextAccent;
                   }
 
                   return (

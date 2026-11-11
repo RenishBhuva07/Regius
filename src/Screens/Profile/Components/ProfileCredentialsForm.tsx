@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TextInput } from 'react-native';
 import { User, Mail, FileText, ShieldCheck } from 'lucide-react-native';
 
 import { Fonts } from '../../../Theme/fonts';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { Typography } from '../../../Theme/Typographys';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { useTheme } from '../../../Theme/ThemeContext';
@@ -38,20 +38,22 @@ export const ProfileCredentialsForm: React.FC<ProfileCredentialsFormProps> =
 
       const cardBg =
         themeColors.CardBackground ||
-        (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
+        (isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite);
       const textPrimary =
         themeColors.PrimaryText ||
-        (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
+        (isDarkMode ? Colors.PureWhite : Colors.PureBlack);
       const textSecondary =
         themeColors.SecondaryText ||
-        (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+        (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray);
       const canvasTextSecondary =
         themeColors.CanvasTextSecondary ||
-        (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+        (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray);
       const borderLight =
-        themeColors.BorderLight || (isDarkMode ? '#2C3035' : '#E8E2D5');
+        themeColors.BorderLight ||
+        (isDarkMode ? Colors.CarbonSlate : Colors.RingBorder);
       const inputBg =
-        themeColors.SurfaceAlt || (isDarkMode ? '#171A1F' : '#FAF8F5');
+        themeColors.SurfaceAlt ||
+        (isDarkMode ? Colors.DarkSurfaceAlt : Colors.CreamSurfaceAlt);
       const themeAccent =
         themeColors.AccentLight ||
         themeColors.Accent ||
@@ -69,12 +71,14 @@ export const ProfileCredentialsForm: React.FC<ProfileCredentialsFormProps> =
               {
                 backgroundColor: cardBg,
                 borderColor: isDarkMode
-                  ? 'rgba(255, 255, 255, 0.12)'
-                  : '#FFFFFF',
-                borderBottomColor: isDarkMode ? '#171A20' : '#E2DCD0',
+                  ? withAlpha(Colors.PureWhite, 0.12)
+                  : Colors.PureWhite,
+                borderBottomColor: isDarkMode
+                  ? Colors.DarkSurfaceDeep
+                  : Colors.WarmStoneBorder,
                 shadowColor: isDarkMode
-                  ? '#000000'
-                  : 'rgba(131, 131, 214, 0.14)',
+                  ? Colors.PureBlack
+                  : withAlpha(Colors.LavenderPurple, 0.14),
               },
             ]}
           >

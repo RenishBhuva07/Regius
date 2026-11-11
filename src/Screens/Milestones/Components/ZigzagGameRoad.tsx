@@ -17,6 +17,7 @@ import Svg, {
 } from 'react-native-svg';
 import { Crown, Lock, Check, Flag, Compass } from 'lucide-react-native';
 
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { Fonts } from '../../../Theme/fonts';
 import { MilestoneTier } from '../../../Services/Milestone/MilestoneService';
 import { ThreeDStatusBadge } from './ThreeDStatusBadge';
@@ -64,10 +65,14 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
   };
 
   // Road styling colors
-  const curbColor = isDarkMode ? 'rgba(255, 255, 255, 0.22)' : '#DDD6C6';
-  const asphaltColor = isDarkMode ? '#1E232B' : '#2A303C';
-  const textPrimary = isDarkMode ? '#FFFFFF' : '#121417';
-  const textSecondary = isDarkMode ? '#8E95A5' : '#6B7280';
+  const curbColor = isDarkMode
+    ? withAlpha(Colors.PureWhite, 0.22)
+    : Colors.WarmHeaderBottomBevel;
+  const asphaltColor = isDarkMode
+    ? Colors.RoadLabelDarkBg
+    : Colors.RoadAsphaltLight;
+  const textPrimary = isDarkMode ? Colors.PureWhite : Colors.DarkBackground;
+  const textSecondary = isDarkMode ? Colors.MilestoneSlate : Colors.Gray500;
 
   return (
     <View
@@ -82,8 +87,8 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
       >
         <Defs>
           <LinearGradient id="goldHighway" x1="0%" y1="0%" x2="0%" y2="100%">
-            <Stop offset="0%" stopColor="#F5C518" />
-            <Stop offset="100%" stopColor="#D97706" />
+            <Stop offset="0%" stopColor={Colors.AccentYellow} />
+            <Stop offset="100%" stopColor={Colors.HabitBurnishedAmber} />
           </LinearGradient>
         </Defs>
 
@@ -116,7 +121,9 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
               <Path
                 d={pathD}
                 stroke={
-                  segmentUnlocked ? '#F5C518' : 'rgba(255, 255, 255, 0.24)'
+                  segmentUnlocked
+                    ? Colors.AccentYellow
+                    : withAlpha(Colors.PureWhite, 0.24)
                 }
                 strokeWidth={segmentUnlocked ? 3.2 : 2.5}
                 strokeDasharray="8 6"
@@ -132,7 +139,7 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
           cx={nodeCoords[4].x}
           cy={nodeCoords[4].y}
           r={44}
-          stroke="rgba(245, 197, 24, 0.35)"
+          stroke={withAlpha(Colors.AccentYellow, 0.35)}
           strokeWidth={3}
           strokeDasharray="4 4"
           fill="none"
@@ -143,7 +150,11 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
       <View
         style={[styles.startGateBanner, { top: 16, left: trackWidth * 0.08 }]}
       >
-        <Compass size={11} color="#D97706" strokeWidth={2.4} />
+        <Compass
+          size={11}
+          color={Colors.HabitBurnishedAmber}
+          strokeWidth={2.4}
+        />
         <Text style={[styles.gateBannerText, { color: textSecondary }]}>
           START · NOVICE GATE
         </Text>
@@ -152,8 +163,8 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
       <View
         style={[styles.summitGateBanner, { top: 595, alignSelf: 'center' }]}
       >
-        <Flag size={12} color="#F5C518" strokeWidth={2.5} />
-        <Text style={[styles.gateBannerText, { color: '#F5C518' }]}>
+        <Flag size={12} color={Colors.AccentYellow} strokeWidth={2.5} />
+        <Text style={[styles.gateBannerText, { color: Colors.AccentYellow }]}>
           ROYAL SUMMIT · 1000 XP
         </Text>
       </View>
@@ -174,26 +185,26 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
           : 'locked';
 
         const discBg = isCurrent
-          ? '#F59E0B'
+          ? Colors.VoiceMichaelAccent
           : isUnlocked
-          ? tier.accentColor || '#10B981'
+          ? tier.accentColor || Colors.ToastSuccessAccent
           : isDarkMode
-          ? '#282E39'
-          : '#3B4454';
+          ? Colors.RoadNodeLockedZigzagDarkBg
+          : Colors.RoadNodeLockedZigzagLightBg;
 
         const discBorderBottom = isCurrent
-          ? '#B45309'
+          ? Colors.Amber700
           : isUnlocked
-          ? '#047857'
+          ? Colors.Emerald700
           : isDarkMode
-          ? '#151921'
-          : '#20252F';
+          ? Colors.RoadDiscLockedZigzagDarkBevel
+          : Colors.RoadDiscLockedZigzagLightBevel;
 
         const discShadowColor = isCurrent
-          ? '#F59E0B'
+          ? Colors.VoiceMichaelAccent
           : isUnlocked
-          ? tier.accentColor || '#10B981'
-          : '#000000';
+          ? tier.accentColor || Colors.ToastSuccessAccent
+          : Colors.PureBlack;
 
         // Placement of title pill (alternating left or right matching 10:47 pattern)
         const isLeftAligned = coord.x < trackWidth * 0.45;
@@ -245,7 +256,11 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
 
                 {isCurrent ? (
                   <View style={styles.discCenterCol}>
-                    <Crown size={20} color="#FFFFFF" strokeWidth={2.4} />
+                    <Crown
+                      size={20}
+                      color={Colors.PureWhite}
+                      strokeWidth={2.4}
+                    />
                     <Text style={styles.discCurrentLevelText}>
                       LVL {tier.level}
                     </Text>
@@ -255,12 +270,16 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
                     <Text style={styles.discLevelNumber}>{tier.level}</Text>
                     {/* Floating 3D Checkmark Seal */}
                     <View style={styles.floatingRightSignSeal}>
-                      <Check size={9} color="#FFFFFF" strokeWidth={3.5} />
+                      <Check
+                        size={9}
+                        color={Colors.PureWhite}
+                        strokeWidth={3.5}
+                      />
                     </View>
                   </View>
                 ) : (
                   <View style={styles.discCenterCol}>
-                    <Lock size={17} color="#94A3B8" strokeWidth={2.4} />
+                    <Lock size={17} color={Colors.Slate400} strokeWidth={2.4} />
                     <Text style={styles.discLockedText}>LVL {tier.level}</Text>
                   </View>
                 )}
@@ -277,17 +296,19 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
               style={[
                 styles.stageLabelCard,
                 {
-                  backgroundColor: isDarkMode ? '#1E232B' : '#FFFFFF',
+                  backgroundColor: isDarkMode
+                    ? Colors.RoadLabelDarkBg
+                    : Colors.PureWhite,
                   borderColor: isCurrent
-                    ? '#F5C518'
+                    ? Colors.AccentYellow
                     : isDarkMode
-                    ? 'rgba(255, 255, 255, 0.14)'
-                    : '#E6E0D2',
+                    ? withAlpha(Colors.PureWhite, 0.14)
+                    : Colors.RoadLabelLightBorder,
                   borderBottomColor: isCurrent
-                    ? '#D97706'
+                    ? Colors.HabitBurnishedAmber
                     : isDarkMode
-                    ? '#14181F'
-                    : '#D5CDBE',
+                    ? Colors.RoadLabelDarkBevel
+                    : Colors.RoadLabelLightBevel,
                 },
                 isCenterAligned
                   ? styles.labelCenterPos
@@ -333,7 +354,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 4,
-    backgroundColor: 'rgba(0, 0, 0, 0.05)',
+    backgroundColor: withAlpha(Colors.PureBlack, 0.05),
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 10,
@@ -344,12 +365,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 5,
-    backgroundColor: 'rgba(245, 197, 24, 0.15)',
+    backgroundColor: withAlpha(Colors.AccentYellow, 0.15),
     paddingHorizontal: 10,
     paddingVertical: 3.5,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(245, 197, 24, 0.4)',
+    borderColor: withAlpha(Colors.AccentYellow, 0.4),
     zIndex: 1,
   },
   gateBannerText: {
@@ -387,17 +408,17 @@ const styles = StyleSheet.create({
     bottom: -7,
     borderRadius: 36,
     borderWidth: 2.5,
-    borderColor: 'rgba(245, 158, 11, 0.85)',
-    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+    borderColor: withAlpha(Colors.VoiceMichaelAccent, 0.85),
+    backgroundColor: withAlpha(Colors.VoiceMichaelAccent, 0.15),
   },
   discBody: {
     width: 58,
     height: 58,
     borderRadius: 29,
     borderWidth: 2,
-    borderTopColor: 'rgba(255, 255, 255, 0.85)',
-    borderLeftColor: 'rgba(255, 255, 255, 0.45)',
-    borderRightColor: 'rgba(255, 255, 255, 0.25)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.85),
+    borderLeftColor: withAlpha(Colors.PureWhite, 0.45),
+    borderRightColor: withAlpha(Colors.PureWhite, 0.25),
     borderBottomWidth: 5.5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -411,7 +432,7 @@ const styles = StyleSheet.create({
     right: 6,
     height: 12,
     borderRadius: 12,
-    backgroundColor: 'rgba(255, 255, 255, 0.38)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.38),
   },
   discCenterCol: {
     alignItems: 'center',
@@ -422,8 +443,8 @@ const styles = StyleSheet.create({
   discLevelNumber: {
     fontFamily: Fonts.ranade.bold,
     fontSize: 22,
-    color: '#FFFFFF',
-    textShadowColor: 'rgba(0, 0, 0, 0.35)',
+    color: Colors.PureWhite,
+    textShadowColor: withAlpha(Colors.PureBlack, 0.35),
     textShadowOffset: { width: 0, height: 1.5 },
     textShadowRadius: 2,
   },
@@ -434,23 +455,23 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     borderRadius: 8,
-    backgroundColor: '#047857',
+    backgroundColor: Colors.Emerald700,
     borderWidth: 1.2,
-    borderColor: '#FFFFFF',
+    borderColor: Colors.PureWhite,
     alignItems: 'center',
     justifyContent: 'center',
   },
   discCurrentLevelText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 8.5,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     marginTop: 1,
     letterSpacing: 0.5,
   },
   discLockedText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 9,
-    color: '#94A3B8',
+    color: Colors.Slate400,
     marginTop: 1,
   },
 
@@ -468,7 +489,7 @@ const styles = StyleSheet.create({
     zIndex: 4,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.14,
         shadowRadius: 6,

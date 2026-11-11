@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Fonts } from '../../../../Theme/fonts';
+import { Colors } from '../../../../Assets/StyleUtilities/Colors';
 import { VoiceAssistantTheme } from './types';
 
 export interface ContextualSuggestionsProps {
@@ -31,7 +32,9 @@ export const ContextualSuggestions: React.FC<ContextualSuggestionsProps> = ({
             style={({ pressed }) => [
               styles.pill,
               {
-                backgroundColor: theme.isDarkMode ? '#22262E' : '#F1EFEA',
+                backgroundColor: theme.isDarkMode
+                  ? Colors.VoiceControlDarkBg
+                  : Colors.VoicePromptSurface,
                 borderColor: theme.cardBorder,
                 opacity: pressed ? 0.75 : 1,
               },

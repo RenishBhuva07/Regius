@@ -19,6 +19,7 @@ import {
 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { Fonts } from '../../../Theme/fonts';
 import { Badge } from '../../../Common/Badge';
 import { MilestoneTier } from '../../../Services/Milestone/MilestoneService';
@@ -69,10 +70,12 @@ export const MilestoneLevelDetailModal: React.FC<
     ? 'next_goal'
     : 'locked';
 
-  const modalBg = isDarkMode ? '#1A1D24' : '#FFFFFF';
-  const textPrimary = isDarkMode ? '#FFFFFF' : '#121417';
-  const textSecondary = isDarkMode ? '#8E95A5' : '#6B7280';
-  const cardBorder = isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#E8E2D5';
+  const modalBg = isDarkMode ? Colors.MilestoneModalDarkBg : Colors.PureWhite;
+  const textPrimary = isDarkMode ? Colors.PureWhite : Colors.DarkBackground;
+  const textSecondary = isDarkMode ? Colors.MilestoneSlate : Colors.Gray500;
+  const cardBorder = isDarkMode
+    ? withAlpha(Colors.PureWhite, 0.12)
+    : Colors.RingBorder;
 
   const xpRemaining = Math.max(0, tier.minXp - totalXp);
 
@@ -100,12 +103,12 @@ export const MilestoneLevelDetailModal: React.FC<
                 {
                   backgroundColor: modalBg,
                   borderColor: isCurrent
-                    ? '#F5C518'
+                    ? Colors.AccentYellow
                     : isUnlocked
-                    ? 'rgba(255, 255, 255, 0.9)'
+                    ? withAlpha(Colors.PureWhite, 0.9)
                     : isDarkMode
-                    ? 'rgba(255, 255, 255, 0.2)'
-                    : '#E2DCD0',
+                    ? withAlpha(Colors.PureWhite, 0.2)
+                    : Colors.WarmStoneBorder,
                 },
               ]}
             >
@@ -113,7 +116,7 @@ export const MilestoneLevelDetailModal: React.FC<
               <View
                 style={[
                   styles.topAccentStrip,
-                  { backgroundColor: tier.accentColor || '#F5C518' },
+                  { backgroundColor: tier.accentColor || Colors.AccentYellow },
                 ]}
               />
 
@@ -126,27 +129,31 @@ export const MilestoneLevelDetailModal: React.FC<
                       styles.disc3D,
                       {
                         backgroundColor: isCurrent
-                          ? '#F59E0B'
+                          ? Colors.VoiceMichaelAccent
                           : isUnlocked
-                          ? tier.accentColor || '#10B981'
+                          ? tier.accentColor || Colors.ToastSuccessAccent
                           : isDarkMode
-                          ? '#2A303C'
-                          : '#475569',
+                          ? Colors.RoadAsphaltLight
+                          : Colors.Slate600,
                         borderBottomColor: isCurrent
-                          ? '#B45309'
+                          ? Colors.Amber700
                           : isUnlocked
-                          ? '#065F46'
-                          : '#1E293B',
+                          ? Colors.Emerald800
+                          : Colors.Slate800,
                       },
                     ]}
                   >
                     <View style={styles.discGlossHighlight} />
                     {isCurrent ? (
-                      <Crown size={20} color="#FFFFFF" strokeWidth={2.4} />
+                      <Crown
+                        size={20}
+                        color={Colors.PureWhite}
+                        strokeWidth={2.4}
+                      />
                     ) : isUnlocked ? (
                       <Text style={styles.discLevelText}>{tier.level}</Text>
                     ) : (
-                      <Lock size={18} color="#CBD5E1" strokeWidth={2.4} />
+                      <Lock size={18} color={Colors.Slate300} strokeWidth={2.4} />
                     )}
                   </View>
 
@@ -172,7 +179,9 @@ export const MilestoneLevelDetailModal: React.FC<
                   style={[
                     styles.closeButton,
                     {
-                      backgroundColor: isDarkMode ? '#242A35' : '#F1EFEA',
+                      backgroundColor: isDarkMode
+                        ? Colors.MilestoneCloseBtnDarkBg
+                        : Colors.VoicePromptSurface,
                       borderColor: cardBorder,
                     },
                   ]}
@@ -215,7 +224,7 @@ export const MilestoneLevelDetailModal: React.FC<
                     <Text
                       style={[
                         styles.progressLabelRight,
-                        { color: tier.accentColor || '#F5C518' },
+                        { color: tier.accentColor || Colors.AccentYellow },
                       ]}
                     >
                       {currentInTier} / {requiredForTier} XP
@@ -227,7 +236,8 @@ export const MilestoneLevelDetailModal: React.FC<
                         styles.progressBarFill,
                         {
                           width: `${Math.round(tierProgress * 100)}%`,
-                          backgroundColor: tier.accentColor || '#F5C518',
+                          backgroundColor:
+                            tier.accentColor || Colors.AccentYellow,
                         },
                       ]}
                     />
@@ -246,8 +256,8 @@ export const MilestoneLevelDetailModal: React.FC<
                       styles.sectionBox,
                       {
                         backgroundColor: isDarkMode
-                          ? 'rgba(255, 255, 255, 0.04)'
-                          : '#FAF8F2',
+                          ? withAlpha(Colors.PureWhite, 0.04)
+                          : Colors.MilestoneDetailSectionLightBg,
                         borderColor: cardBorder,
                       },
                     ]}
@@ -255,7 +265,7 @@ export const MilestoneLevelDetailModal: React.FC<
                     <View style={styles.sectionHeader}>
                       <Palette
                         size={14}
-                        color={tier.accentColor || '#F5C518'}
+                        color={tier.accentColor || Colors.AccentYellow}
                       />
                       <Text
                         style={[styles.sectionHeading, { color: textPrimary }]}
@@ -274,10 +284,10 @@ export const MilestoneLevelDetailModal: React.FC<
                               styles.themeChip,
                               {
                                 backgroundColor: isDarkMode
-                                  ? 'rgba(255, 255, 255, 0.08)'
-                                  : '#FFFFFF',
+                                  ? withAlpha(Colors.PureWhite, 0.08)
+                                  : Colors.PureWhite,
                                 borderColor: isThemeActive
-                                  ? tier.accentColor || '#F5C518'
+                                  ? tier.accentColor || Colors.AccentYellow
                                   : cardBorder,
                               },
                               isThemeActive && styles.themeChipActive,
@@ -332,13 +342,19 @@ export const MilestoneLevelDetailModal: React.FC<
                                 <View style={styles.activePill}>
                                   <CheckCircle2
                                     size={13}
-                                    color={tier.accentColor || '#F5C518'}
+                                    color={
+                                      tier.accentColor || Colors.AccentYellow
+                                    }
                                     strokeWidth={2.5}
                                   />
                                   <Text
                                     style={[
                                       styles.activePillText,
-                                      { color: tier.accentColor || '#F5C518' },
+                                      {
+                                        color:
+                                          tier.accentColor ||
+                                          Colors.AccentYellow,
+                                      },
                                     ]}
                                   >
                                     Active
@@ -350,15 +366,19 @@ export const MilestoneLevelDetailModal: React.FC<
                                     styles.applyBtnPill,
                                     {
                                       backgroundColor: isDarkMode
-                                        ? 'rgba(255, 255, 255, 0.1)'
-                                        : '#F0ECE1',
+                                        ? withAlpha(Colors.PureWhite, 0.1)
+                                        : Colors.CreamBorderSubtle,
                                     },
                                   ]}
                                 >
                                   <Text
                                     style={[
                                       styles.applyBtnText,
-                                      { color: tier.accentColor || '#B47804' },
+                                      {
+                                        color:
+                                          tier.accentColor ||
+                                          Colors.BadgeYellowText,
+                                      },
                                     ]}
                                   >
                                     Apply
@@ -382,8 +402,8 @@ export const MilestoneLevelDetailModal: React.FC<
                       styles.sectionBox,
                       {
                         backgroundColor: isDarkMode
-                          ? 'rgba(255, 255, 255, 0.04)'
-                          : '#FAF8F2',
+                          ? withAlpha(Colors.PureWhite, 0.04)
+                          : Colors.MilestoneDetailSectionLightBg,
                         borderColor: cardBorder,
                         marginTop: 10,
                       },
@@ -392,7 +412,7 @@ export const MilestoneLevelDetailModal: React.FC<
                     <View style={styles.sectionHeader}>
                       <Sparkles
                         size={14}
-                        color={tier.accentColor || '#F5C518'}
+                        color={tier.accentColor || Colors.AccentYellow}
                       />
                       <Text
                         style={[styles.sectionHeading, { color: textPrimary }]}
@@ -408,7 +428,7 @@ export const MilestoneLevelDetailModal: React.FC<
                             styles.featureBullet,
                             {
                               backgroundColor: isUnlocked
-                                ? tier.accentColor || '#10B981'
+                                ? tier.accentColor || Colors.ToastSuccessAccent
                                 : textSecondary,
                             },
                           ]}
@@ -440,10 +460,10 @@ export const MilestoneLevelDetailModal: React.FC<
                   styles.dismissButton,
                   {
                     backgroundColor: isUnlocked
-                      ? '#10B981'
+                      ? Colors.ToastSuccessAccent
                       : isDarkMode
-                      ? '#2A303C'
-                      : '#374151',
+                      ? Colors.RoadAsphaltLight
+                      : Colors.Gray700,
                   },
                 ]}
                 onPress={onClose}
@@ -464,7 +484,7 @@ export const MilestoneLevelDetailModal: React.FC<
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.65)',
+    backgroundColor: withAlpha(Colors.PureBlack, 0.65),
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 16,
@@ -475,7 +495,7 @@ const styles = StyleSheet.create({
   },
   cardShadowWrapper: {
     borderRadius: 24,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 12 },
     shadowOpacity: 0.35,
     shadowRadius: 20,
@@ -514,9 +534,9 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     borderWidth: 2,
-    borderTopColor: 'rgba(255, 255, 255, 0.8)',
-    borderLeftColor: 'rgba(255, 255, 255, 0.4)',
-    borderRightColor: 'rgba(255, 255, 255, 0.2)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.8),
+    borderLeftColor: withAlpha(Colors.PureWhite, 0.4),
+    borderRightColor: withAlpha(Colors.PureWhite, 0.2),
     borderBottomWidth: 5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -530,13 +550,13 @@ const styles = StyleSheet.create({
     right: 4,
     height: 10,
     borderRadius: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.35)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.35),
   },
   discLevelText: {
     fontFamily: Fonts.ranade.bold,
     fontSize: 20,
-    color: '#FFFFFF',
-    textShadowColor: 'rgba(0, 0, 0, 0.35)',
+    color: Colors.PureWhite,
+    textShadowColor: withAlpha(Colors.PureBlack, 0.35),
     textShadowOffset: { width: 0, height: 1.5 },
     textShadowRadius: 2,
   },
@@ -574,7 +594,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: 'rgba(0, 0, 0, 0.08)',
+    borderColor: withAlpha(Colors.PureBlack, 0.08),
     marginBottom: 10,
   },
   xpPill: {
@@ -605,7 +625,7 @@ const styles = StyleSheet.create({
   progressBarTrack: {
     height: 6,
     borderRadius: 3,
-    backgroundColor: 'rgba(0, 0, 0, 0.08)',
+    backgroundColor: withAlpha(Colors.PureBlack, 0.08),
     overflow: 'hidden',
   },
   progressBarFill: {
@@ -651,7 +671,7 @@ const styles = StyleSheet.create({
     height: 14,
     borderRadius: 7,
     borderWidth: 1,
-    borderColor: 'rgba(0, 0, 0, 0.1)',
+    borderColor: withAlpha(Colors.PureBlack, 0.1),
   },
   themeNameCol: {
     flex: 1,
@@ -716,14 +736,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.3)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.3),
     borderBottomWidth: 3,
-    borderBottomColor: 'rgba(0, 0, 0, 0.25)',
+    borderBottomColor: withAlpha(Colors.PureBlack, 0.25),
   },
   dismissButtonText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 13,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     letterSpacing: 0.5,
   },
 });

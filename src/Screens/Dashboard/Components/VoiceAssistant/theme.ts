@@ -4,15 +4,23 @@ import { VoiceAssistantTheme } from './types';
 export function getAssistantTheme(isDarkMode: boolean): VoiceAssistantTheme {
   return {
     isDarkMode,
-    background: isDarkMode ? '#111317' : '#FAF8F5',
-    cardBg: isDarkMode ? '#1B1E24' : '#FFFFFF',
-    cardBorder: isDarkMode ? '#282C34' : '#E8E2D5',
-    textPrimary: isDarkMode ? Colors.PureWhiteText : '#181A1F',
-    textSecondary: isDarkMode ? '#A5ABB5' : '#5E6470',
-    textMuted: isDarkMode ? '#6C727F' : '#8A919E',
-    accent: isDarkMode ? '#9D9BF0' : Colors.LavenderPurple,
-    success: isDarkMode ? '#34D399' : '#10B981',
-    warning: isDarkMode ? '#FBBF24' : '#F5C518',
-    error: isDarkMode ? '#F87171' : '#DC2626',
+    background: isDarkMode ? Colors.VoiceSheetDarkBg : Colors.CreamSurfaceAlt,
+    cardBg: isDarkMode ? Colors.VoiceCardDarkBg : Colors.PureWhite,
+    cardBorder: isDarkMode ? Colors.DarkSegmentedBorder : Colors.RingBorder,
+    textPrimary: isDarkMode ? Colors.PureWhite : Colors.VoiceInkText,
+    textSecondary: isDarkMode
+      ? Colors.VoiceTextSecondaryDark
+      : Colors.VoiceTextSecondaryLight,
+    textMuted: isDarkMode
+      ? Colors.VoiceTextMutedDark
+      : Colors.VoiceTextMutedLight,
+    accent: isDarkMode ? Colors.SiaOrbViolet : Colors.LavenderPurple,
+    success: isDarkMode
+      ? Colors.ToastSuccessCardBevelLight
+      : Colors.ToastSuccessAccent,
+    warning: isDarkMode ? Colors.Amber400 : Colors.AccentYellow,
+    error: isDarkMode
+      ? Colors.ToastErrorCardBevelLight
+      : Colors.CategoryRedCheck,
   };
 }

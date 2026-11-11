@@ -14,7 +14,7 @@ import {
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { Colors } from '../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { Typography } from '../../Theme/Typographys';
 import { Fonts } from '../../Theme/fonts';
@@ -88,43 +88,52 @@ export const LoginScreen: React.FC = () => {
 
   // Color Tokens based on Theme
   const bgCanvas =
-    themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
-  const surfaceCardBg = isDarkMode ? '#1E2228' : Colors.DefaultWhite;
-  const textPrimary = isDarkMode
-    ? Colors.PureWhiteText
-    : Colors.MidnightInkText;
-  const textSecondary = isDarkMode ? '#A3A8B1' : Colors.SubtitleGray;
+    themeColors.Background ||
+    (isDarkMode ? Colors.DarkBackground : Colors.CreamBackground);
+  const surfaceCardBg = isDarkMode
+    ? Colors.DarkCardBackground
+    : Colors.PureWhite;
+  const textPrimary = isDarkMode ? Colors.PureWhite : Colors.PureBlack;
+  const textSecondary = isDarkMode ? Colors.SteelMist : Colors.SubtitleGray;
   const canvasTextPrimary =
     themeColors.CanvasTextPrimary || textPrimary;
   const canvasTextSecondary =
     themeColors.CanvasTextSecondary || textSecondary;
   const borderLight =
-    themeColors.BorderLight || (isDarkMode ? '#2C3035' : Colors.RingBorder);
+    themeColors.BorderLight ||
+    (isDarkMode ? Colors.CarbonSlate : Colors.RingBorder);
   const inputBg =
-    themeColors.SurfaceAlt || (isDarkMode ? '#171A1F' : '#FAF8F5');
+    themeColors.SurfaceAlt ||
+    (isDarkMode ? Colors.DarkSurfaceAlt : Colors.CreamSurfaceAlt);
   const ctaBg =
     themeColors.ButtonBackground ||
-    (isDarkMode ? Colors.PureWhiteText : Colors.MidnightCharcoal);
+    (isDarkMode ? Colors.PureWhite : Colors.MidnightCharcoal);
   const ctaTextColor =
     themeColors.ButtonText ||
-    (isDarkMode ? Colors.MidnightInkText : Colors.PureWhiteText);
+    (isDarkMode ? Colors.PureBlack : Colors.PureWhite);
   const themeAccent =
     themeColors.AccentLight ||
     themeColors.Accent ||
     Colors.LavenderPurple;
 
   // Segmented Switcher Color Tokens
-  const switcherTrackBg = isDarkMode ? '#14171C' : '#FAF5E4';
-  const switcherTrackBorder = isDarkMode ? '#282C34' : borderLight;
-  const switcherTrackBottomBorder = isDarkMode ? '#0F1115' : '#DFD9CB';
-  const switcherIndicatorBg = Colors.DefaultWhite;
+  const switcherTrackBg = isDarkMode
+    ? Colors.DarkCanvasDeep
+    : Colors.WarmSandTrack;
+  const switcherTrackBorder = isDarkMode
+    ? Colors.DarkSegmentedBorder
+    : borderLight;
+  const switcherTrackBottomBorder = isDarkMode
+    ? Colors.DarkSegmentedBottom
+    : Colors.WarmBevelLight;
+  const switcherIndicatorBg = Colors.PureWhite;
   const switcherIndicatorBorder = isDarkMode
-    ? 'rgba(255, 255, 255, 0.95)'
-    : '#E8E2D5';
-  const switcherIndicatorTopBorder = '#FFFFFF';
-  const switcherIndicatorBottomBorder = '#DFD9CB';
-  const tabActiveColor = Colors.MidnightInkText;
-  const tabInactiveColor = isDarkMode ? '#8E94A0' : textSecondary;
+    ? withAlpha(Colors.PureWhite, 0.95)
+    : Colors.RingBorder;
+  const switcherIndicatorTopBorder = Colors.PureWhite;
+  const switcherIndicatorBottomBorder = Colors.WarmBevelLight;
+  const tabActiveColor = Colors.PureBlack;
+  const tabInactiveColor = isDarkMode ? Colors.DarkMutedCool : textSecondary;
 
   // Tab indicator slide calculation (accounting for 4px padding on each side)
   const tabWidth = switcherWidth > 0 ? (switcherWidth - 8) / 2 : 0;
@@ -230,7 +239,7 @@ export const LoginScreen: React.FC = () => {
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         {...(Platform.OS === 'android'
-          ? { backgroundColor: 'transparent', translucent: true }
+          ? { backgroundColor: Colors.Transparent, translucent: true }
           : {})}
       />
 
@@ -377,9 +386,11 @@ export const LoginScreen: React.FC = () => {
                   backgroundColor: surfaceCardBg,
                   borderColor: borderLight,
                   borderTopColor: isDarkMode
-                    ? 'rgba(255, 255, 255, 0.12)'
-                    : '#FFFFFF',
-                  borderBottomColor: isDarkMode ? '#16191F' : '#E2DCD0',
+                    ? withAlpha(Colors.PureWhite, 0.12)
+                    : Colors.PureWhite,
+                  borderBottomColor: isDarkMode
+                    ? Colors.LoginCardBottomDarkBevel
+                    : Colors.WarmStoneBorder,
                 },
               ]}
             >
@@ -403,8 +414,8 @@ export const LoginScreen: React.FC = () => {
                           focusedField === 'name'
                             ? themeAccent
                             : isDarkMode
-                            ? '#20242B'
-                            : '#EAE4D7',
+                            ? Colors.DarkInputBevelCharcoal
+                            : Colors.LoginInputLightBevel,
                       },
                       focusedField === 'name' && styles.inputWrapperFocused,
                     ]}
@@ -452,8 +463,8 @@ export const LoginScreen: React.FC = () => {
                         focusedField === 'email'
                           ? themeAccent
                           : isDarkMode
-                          ? '#20242B'
-                          : '#EAE4D7',
+                          ? Colors.DarkInputBevelCharcoal
+                          : Colors.LoginInputLightBevel,
                     },
                     focusedField === 'email' && styles.inputWrapperFocused,
                   ]}
@@ -512,8 +523,8 @@ export const LoginScreen: React.FC = () => {
                         focusedField === 'password'
                           ? themeAccent
                           : isDarkMode
-                          ? '#20242B'
-                          : '#EAE4D7',
+                          ? Colors.DarkInputBevelCharcoal
+                          : Colors.LoginInputLightBevel,
                     },
                     focusedField === 'password' && styles.inputWrapperFocused,
                   ]}
@@ -567,25 +578,25 @@ export const LoginScreen: React.FC = () => {
                       {
                         backgroundColor: rememberMe
                           ? isDarkMode
-                            ? '#13281E'
-                            : '#E8FDF0'
+                            ? Colors.TaskCompletedDarkBg
+                            : Colors.BadgeGreenBg
                           : isDarkMode
-                          ? '#252932'
-                          : '#EFF1F4',
+                          ? Colors.DarkCheckboxUnchecked
+                          : Colors.GrayPillSurface,
                         borderColor: rememberMe
                           ? isDarkMode
-                            ? '#52D22E'
-                            : '#C6FFDD'
+                            ? Colors.AccentGreen
+                            : Colors.WellnessLightBorder
                           : isDarkMode
-                          ? '#363944'
+                          ? Colors.DarkBorder
                           : borderLight,
                         borderBottomColor: rememberMe
                           ? isDarkMode
-                            ? '#1B9A72'
-                            : '#82E8A6'
+                            ? Colors.GreenGracious
+                            : Colors.BadgeGreenBevel
                           : isDarkMode
-                          ? '#20242B'
-                          : '#DFD9CB',
+                          ? Colors.DarkInputBevelCharcoal
+                          : Colors.WarmBevelLight,
                       },
                       rememberMe && styles.checkboxCheckedGlow,
                     ]}
@@ -614,25 +625,25 @@ export const LoginScreen: React.FC = () => {
                       {
                         backgroundColor: agreeTerms
                           ? isDarkMode
-                            ? '#13281E'
-                            : '#E8FDF0'
+                            ? Colors.TaskCompletedDarkBg
+                            : Colors.BadgeGreenBg
                           : isDarkMode
-                          ? '#252932'
-                          : '#EFF1F4',
+                          ? Colors.DarkCheckboxUnchecked
+                          : Colors.GrayPillSurface,
                         borderColor: agreeTerms
                           ? isDarkMode
-                            ? '#52D22E'
-                            : '#C6FFDD'
+                            ? Colors.AccentGreen
+                            : Colors.WellnessLightBorder
                           : isDarkMode
-                          ? '#363944'
+                          ? Colors.DarkBorder
                           : borderLight,
                         borderBottomColor: agreeTerms
                           ? isDarkMode
-                            ? '#1B9A72'
-                            : '#82E8A6'
+                            ? Colors.GreenGracious
+                            : Colors.BadgeGreenBevel
                           : isDarkMode
-                          ? '#20242B'
-                          : '#DFD9CB',
+                          ? Colors.DarkInputBevelCharcoal
+                          : Colors.WarmBevelLight,
                       },
                       agreeTerms && styles.checkboxCheckedGlow,
                     ]}
@@ -672,11 +683,13 @@ export const LoginScreen: React.FC = () => {
                     borderTopWidth: isDarkMode ? 0 : 1.2,
                     borderBottomWidth: isDarkMode ? 0 : 3.5,
                     borderTopColor: isDarkMode
-                      ? 'transparent'
-                      : 'rgba(255, 255, 255, 0.3)',
-                    borderBottomColor: isDarkMode ? 'transparent' : '#0E1013',
+                      ? Colors.Transparent
+                      : withAlpha(Colors.PureWhite, 0.3),
+                    borderBottomColor: isDarkMode
+                      ? Colors.Transparent
+                      : Colors.IntroCtaBottomDarkBevel,
                     shadowColor: isDarkMode
-                      ? '#000000'
+                      ? Colors.PureBlack
                       : Colors.MidnightCharcoal,
                     shadowOpacity: isDarkMode ? 0.25 : 0.3,
                     shadowOffset: { width: 0, height: isDarkMode ? 3 : 4 },
@@ -700,7 +713,11 @@ export const LoginScreen: React.FC = () => {
                     <View style={styles.ctaSparkle}>
                       <SparkleSvg
                         size={14}
-                        color={isDarkMode ? '#DDA006' : Colors.AccentYellow}
+                        color={
+                          isDarkMode
+                            ? Colors.WarmGoldDarkModeAccent
+                            : Colors.AccentYellow
+                        }
                       />
                     </View>
                   </View>
@@ -727,7 +744,9 @@ export const LoginScreen: React.FC = () => {
                   style={[
                     styles.socialBtn,
                     {
-                      backgroundColor: isDarkMode ? '#242830' : '#FAF8F5',
+                      backgroundColor: isDarkMode
+                        ? Colors.DarkSocialButtonBg
+                        : Colors.CreamSurfaceAlt,
                       borderColor: borderLight,
                     },
                   ]}
@@ -744,17 +763,21 @@ export const LoginScreen: React.FC = () => {
                   style={[
                     styles.socialBtn,
                     {
-                      backgroundColor: isDarkMode ? '#242830' : '#1F2228',
-                      borderColor: isDarkMode ? borderLight : '#1F2228',
+                      backgroundColor: isDarkMode
+                        ? Colors.DarkSocialButtonBg
+                        : Colors.MidnightCharcoal,
+                      borderColor: isDarkMode
+                        ? borderLight
+                        : Colors.MidnightCharcoal,
                     },
                   ]}
                   onPress={() => handleSocialAuth('Apple')}
                 >
-                  <AppleLogoSvg size={20} color={Colors.PureWhiteText} />
+                  <AppleLogoSvg size={20} color={Colors.PureWhite} />
                   <Text
                     style={[
                       styles.socialBtnText,
-                      { color: Colors.PureWhiteText },
+                      { color: Colors.PureWhite },
                     ]}
                   >
                     Apple
@@ -878,7 +901,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderTopWidth: 1.2,
     borderBottomWidth: 2.5,
-    shadowColor: '#000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 5,
     elevation: 4,
@@ -897,7 +920,7 @@ const styles = StyleSheet.create({
   formCardShadowWrapper: {
     width: '100%',
     borderRadius: ResponsivePixels.size24,
-    shadowColor: '#121417',
+    shadowColor: Colors.DarkBackground,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.1,
     shadowRadius: 18,
@@ -1047,7 +1070,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: ResponsivePixels.size6,
-    shadowColor: '#000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
     shadowRadius: 4,

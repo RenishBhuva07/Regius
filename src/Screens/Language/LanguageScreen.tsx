@@ -24,7 +24,7 @@ import Toast from 'react-native-toast-message';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { Fonts } from '../../Theme/fonts';
-import { Colors } from '../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import { Badge } from '../../Common/Badge';
 import {
   SubScreenHeader,
@@ -254,16 +254,20 @@ export const LanguageScreen: React.FC = () => {
   };
 
   const bgMain =
-    themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
+    themeColors.Background ||
+    (isDarkMode ? Colors.DarkBackground : Colors.CreamBackground);
   const cardBg =
-    themeColors.CardBackground || (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
+    themeColors.CardBackground ||
+    (isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite);
   const textPrimary =
     themeColors.PrimaryText ||
-    (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
+    (isDarkMode ? Colors.PureWhite : Colors.PureBlack);
   const textSecondary =
-    themeColors.SecondaryText || (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+    themeColors.SecondaryText ||
+    (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray);
   const borderLight =
-    themeColors.BorderLight || (isDarkMode ? '#2C3035' : '#E8E2D5');
+    themeColors.BorderLight ||
+    (isDarkMode ? Colors.CarbonSlate : Colors.RingBorder);
 
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>
@@ -300,7 +304,11 @@ export const LanguageScreen: React.FC = () => {
             {/* Header info row */}
             <View style={styles.heroHeaderRow}>
               <View style={styles.heroTagRow}>
-                <Sparkles size={13} color="#F5C518" strokeWidth={2.4} />
+                <Sparkles
+                  size={13}
+                  color={Colors.AccentYellow}
+                  strokeWidth={2.4}
+                />
                 <Text style={styles.heroTagText}>ACTIVE REGIONAL LOCALE</Text>
               </View>
               <Badge
@@ -339,7 +347,11 @@ export const LanguageScreen: React.FC = () => {
               accessibilityRole="button"
               accessibilityLabel="Audition spoken greeting"
             >
-              <Volume2 size={16} color="#8383D6" strokeWidth={2.4} />
+              <Volume2
+                size={16}
+                color={Colors.LavenderPurple}
+                strokeWidth={2.4}
+              />
               <Text style={styles.auditionPillText}>
                 {isAuditioning
                   ? 'Auditioning Speech...'
@@ -352,7 +364,11 @@ export const LanguageScreen: React.FC = () => {
             <View style={styles.autoDetectRow}>
               <View style={styles.autoDetectLeft}>
                 <View style={styles.globeWrap}>
-                  <Globe size={18} color="#8383D6" strokeWidth={2.2} />
+                  <Globe
+                    size={18}
+                    color={Colors.LavenderPurple}
+                    strokeWidth={2.2}
+                  />
                 </View>
                 <View style={styles.autoDetectMeta}>
                   <Text style={styles.autoDetectTitle}>
@@ -371,10 +387,10 @@ export const LanguageScreen: React.FC = () => {
                   setAutoDetect(val);
                 }}
                 trackColor={{
-                  false: isDarkMode ? '#3A3F46' : '#D9D9D9',
+                  false: isDarkMode ? Colors.DarkSoftLinen : Colors.FogGrey,
                   true: Colors.LavenderPurple,
                 }}
-                thumbColor="#FFFFFF"
+                thumbColor={Colors.PureWhite}
               />
             </View>
           </View>
@@ -463,19 +479,19 @@ export const LanguageScreen: React.FC = () => {
                   {
                     backgroundColor: isSelected
                       ? isDarkMode
-                        ? '#22283A'
-                        : '#EFF2FE'
+                        ? Colors.VoiceCardDarkSelectedBg
+                        : Colors.MindfulLightBg
                       : cardBg,
                     borderColor: isSelected
                       ? isDarkMode
-                        ? '#4E5785'
-                        : '#D8DBFF'
+                        ? Colors.LanguageSelectedDarkBorder
+                        : Colors.MindfulLightBorder
                       : borderLight,
                     shadowColor: isSelected
                       ? Colors.LavenderPurple
                       : isDarkMode
-                      ? '#000000'
-                      : '#D5D0C5',
+                      ? Colors.PureBlack
+                      : Colors.HomeIndicator,
                   },
                 ]}
               >
@@ -484,7 +500,9 @@ export const LanguageScreen: React.FC = () => {
                     style={[
                       styles.langFlagPill,
                       {
-                        backgroundColor: isDarkMode ? '#2A2E36' : '#FFFFFF',
+                        backgroundColor: isDarkMode
+                          ? Colors.LanguageFlagDarkBg
+                          : Colors.PureWhite,
                         borderColor: borderLight,
                       },
                     ]}
@@ -579,7 +597,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 10 },
         shadowOpacity: 0.28,
         shadowRadius: 18,
@@ -593,7 +611,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.NeroBlack, // #1C1D22
     borderRadius: 24,
     borderWidth: 4, // Bold luxury specular border
-    borderColor: 'rgba(255, 255, 255, 0.9)', // Ceramic white rim
+    borderColor: withAlpha(Colors.PureWhite, 0.9), // Ceramic white rim
     overflow: 'hidden',
     padding: 18,
   },
@@ -611,7 +629,7 @@ const styles = StyleSheet.create({
   heroTagText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 10,
-    color: '#F5C518',
+    color: Colors.AccentYellow,
     letterSpacing: 1,
   },
   heroBodyRow: {
@@ -624,12 +642,12 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: withAlpha(Colors.PureWhite, 0.9),
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 6,
@@ -644,7 +662,7 @@ const styles = StyleSheet.create({
   heroNativeTitle: {
     fontFamily: Fonts.ranade.bold,
     fontSize: 20,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     letterSpacing: -0.4,
     lineHeight: 24,
     marginBottom: 2,
@@ -652,16 +670,16 @@ const styles = StyleSheet.create({
   heroEnglishSub: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 12,
-    color: '#A3A8B1',
+    color: Colors.SteelMist,
   },
   auditionPillBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#272935',
+    backgroundColor: Colors.LanguageAuditionDarkBg,
     borderWidth: 1,
-    borderColor: 'rgba(131, 131, 214, 0.35)',
+    borderColor: withAlpha(Colors.LavenderPurple, 0.35),
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 16,
@@ -670,11 +688,11 @@ const styles = StyleSheet.create({
   auditionPillText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 12,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
   heroDivider: {
     height: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.1),
     marginBottom: 14,
   },
   autoDetectRow: {
@@ -693,7 +711,7 @@ const styles = StyleSheet.create({
     width: 34,
     height: 34,
     borderRadius: 17,
-    backgroundColor: '#292B38',
+    backgroundColor: Colors.LanguageGlobeDarkBg,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -703,12 +721,12 @@ const styles = StyleSheet.create({
   autoDetectTitle: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 12.5,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
   autoDetectDesc: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 10.5,
-    color: '#A3A8B1',
+    color: Colors.SteelMist,
     marginTop: 1,
   },
   /* Search input */
@@ -721,7 +739,7 @@ const styles = StyleSheet.create({
     height: 48,
     gap: 10,
     marginBottom: 12,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.04,
     shadowRadius: 5,
@@ -756,7 +774,7 @@ const styles = StyleSheet.create({
     fontSize: 11.5,
   },
   filterChipTextActive: {
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
     fontFamily: Fonts.poppins.bold,
   },
   sectionHeaderRow: {
@@ -830,7 +848,7 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.Transparent,
   },
   radioVesselActive: {
     borderColor: Colors.LavenderPurple,
@@ -849,7 +867,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     paddingTop: 12,
     paddingHorizontal: 20,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.08,
     shadowRadius: 10,

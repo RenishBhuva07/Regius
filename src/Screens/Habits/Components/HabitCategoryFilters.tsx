@@ -66,9 +66,9 @@ export const HabitCategoryFilters: React.FC<HabitCategoryFiltersProps> = ({
             style={[
               styles.filterPill,
               isDarkMode && !isActive && {
-                backgroundColor: '#1E2228',
-                borderColor: '#2C3035',
-                borderBottomColor: '#171A1F',
+                backgroundColor: Colors.DarkCardBackground,
+                borderColor: Colors.DarkBorderSubtle,
+                borderBottomColor: Colors.DarkSurfaceAlt,
               },
               isActive && styles.filterPillActive,
             ]}
@@ -77,17 +77,17 @@ export const HabitCategoryFilters: React.FC<HabitCategoryFiltersProps> = ({
               size={14}
               color={
                 isActive
-                  ? Colors.DefaultWhite
+                  ? Colors.PureWhite
                   : isDarkMode
-                  ? '#A3A8B1'
-                  : '#555450'
+                  ? Colors.SteelMist
+                  : Colors.CharcoalStoneText
               }
               strokeWidth={2.2}
             />
             <Text
               style={[
                 styles.filterPillText,
-                isDarkMode && !isActive && { color: '#A3A8B1' },
+                isDarkMode && !isActive && { color: Colors.SteelMist },
                 isActive && styles.filterPillTextActive,
               ]}
             >
@@ -96,7 +96,7 @@ export const HabitCategoryFilters: React.FC<HabitCategoryFiltersProps> = ({
             <View
               style={[
                 styles.countBadge,
-                isDarkMode && !isActive && { backgroundColor: '#2A2D35' },
+                isDarkMode && !isActive && { backgroundColor: Colors.DarkCardElevated },
                 isActive && styles.countBadgeActive,
               ]}
             >
@@ -127,12 +127,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 7,
     borderRadius: 22,
-    backgroundColor: Colors.DefaultWhite,
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
-    borderColor: '#ECE7DB',
+    borderColor: Colors.WarmChipBorder,
     borderBottomWidth: 3.5,
-    borderBottomColor: '#D8D1C0',
-    shadowColor: '#5C5441',
+    borderBottomColor: Colors.WarmHaloBottomBevel,
+    shadowColor: Colors.WarmUmberShadow,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.12,
     shadowRadius: 4,
@@ -141,12 +141,12 @@ const styles = StyleSheet.create({
   filterPillActive: {
     backgroundColor: Colors.NeroBlack,
     borderWidth: 1.5,
-    borderTopColor: '#454955',
-    borderLeftColor: '#333640',
-    borderRightColor: '#333640',
+    borderTopColor: Colors.DarkChipBevelTop,
+    borderLeftColor: Colors.DarkChipBorder,
+    borderRightColor: Colors.DarkChipBorder,
     borderBottomWidth: 3.5,
-    borderBottomColor: '#0A0B0E',
-    shadowColor: '#000000',
+    borderBottomColor: Colors.DarkChipBevelAbyss,
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.28,
     shadowRadius: 5,
@@ -155,15 +155,15 @@ const styles = StyleSheet.create({
   filterPillText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 12,
-    color: '#555450',
+    color: Colors.CharcoalStoneText,
     letterSpacing: -0.1,
   },
   filterPillTextActive: {
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
     fontFamily: Fonts.poppins.bold,
   },
   countBadge: {
-    backgroundColor: Colors.DefaultBlack,
+    backgroundColor: Colors.PureBlack,
     borderRadius: 10,
     paddingHorizontal: 6,
     paddingVertical: 1,
@@ -176,10 +176,10 @@ const styles = StyleSheet.create({
   countText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 10,
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
   },
   countTextActive: {
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
   },
 });
 

@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { ShieldCheck, X, FileText, Lock } from 'lucide-react-native';
 import { Typography } from '../../../Theme/Typographys';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { Fonts } from '../../../Theme/fonts';
 import { Badge } from '../../../Common/Badge';
@@ -33,14 +33,14 @@ export const TermsPrivacyModal: React.FC<TermsPrivacyModalProps> = ({
     setActiveTab(initialTab);
   }, [initialTab, visible]);
 
-  const cardBg = isDarkMode ? '#1E2228' : Colors.DefaultWhite;
-  const textPrimary = isDarkMode
-    ? Colors.PureWhiteText
-    : Colors.MidnightInkText;
-  const textSecondary = isDarkMode ? '#A3A8B1' : Colors.SubtitleGray;
-  const borderLight = isDarkMode ? '#2C3035' : Colors.RingBorder;
-  const tabTrackBg = isDarkMode ? '#171A1F' : '#FAF5E4';
-  const sectionCardBg = isDarkMode ? '#171A1F' : '#FAF8F5';
+  const cardBg = isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite;
+  const textPrimary = isDarkMode ? Colors.PureWhite : Colors.PureBlack;
+  const textSecondary = isDarkMode ? Colors.SteelMist : Colors.SubtitleGray;
+  const borderLight = isDarkMode ? Colors.CarbonSlate : Colors.RingBorder;
+  const tabTrackBg = isDarkMode ? Colors.DarkSurfaceAlt : Colors.WarmSandTrack;
+  const sectionCardBg = isDarkMode
+    ? Colors.DarkSurfaceAlt
+    : Colors.CreamSurfaceAlt;
 
   return (
     <Modal
@@ -65,7 +65,11 @@ export const TermsPrivacyModal: React.FC<TermsPrivacyModalProps> = ({
               activeOpacity={0.7}
               style={[
                 styles.closeBtn,
-                { backgroundColor: isDarkMode ? '#2C3035' : '#F2EFEB' },
+                {
+                  backgroundColor: isDarkMode
+                    ? Colors.CarbonSlate
+                    : Colors.ModalCloseLightBg,
+                },
               ]}
               onPress={onClose}
             >
@@ -295,7 +299,7 @@ export const TermsPrivacyModal: React.FC<TermsPrivacyModalProps> = ({
               styles.primaryBtn,
               {
                 backgroundColor: isDarkMode
-                  ? Colors.PureWhiteText
+                  ? Colors.PureWhite
                   : Colors.MidnightCharcoal,
               },
             ]}
@@ -305,9 +309,7 @@ export const TermsPrivacyModal: React.FC<TermsPrivacyModalProps> = ({
               style={[
                 styles.primaryBtnText,
                 {
-                  color: isDarkMode
-                    ? Colors.MidnightInkText
-                    : Colors.PureWhiteText,
+                  color: isDarkMode ? Colors.PureBlack : Colors.PureWhite,
                 },
               ]}
             >
@@ -323,7 +325,7 @@ export const TermsPrivacyModal: React.FC<TermsPrivacyModalProps> = ({
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+    backgroundColor: withAlpha(Colors.PureBlack, 0.55),
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: ResponsivePixels.size24,
@@ -334,7 +336,7 @@ const styles = StyleSheet.create({
     borderRadius: ResponsivePixels.size28,
     borderWidth: 1.5,
     padding: ResponsivePixels.size24,
-    shadowColor: '#000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.18,
     shadowRadius: 20,
@@ -378,7 +380,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   switchTabActive: {
-    shadowColor: '#000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.08,
     shadowRadius: 5,
@@ -419,7 +421,7 @@ const styles = StyleSheet.create({
     borderRadius: ResponsivePixels.size24,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 8,

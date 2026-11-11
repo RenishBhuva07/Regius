@@ -121,7 +121,8 @@ export const ProfileScreen: React.FC = () => {
   };
 
   const bgMain =
-    themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
+    themeColors.Background ||
+    (isDarkMode ? Colors.DarkBackground : Colors.CreamBackground);
 
   return (
     <View style={[styles.container, { backgroundColor: bgMain }]}>
@@ -195,7 +196,7 @@ export const ProfileScreen: React.FC = () => {
               size={18}
               color={
                 themeColors.ButtonText ||
-                (isDarkMode ? '#121417' : Colors.PureWhiteText)
+                (isDarkMode ? Colors.DarkBackground : Colors.PureWhite)
               }
               strokeWidth={2.4}
             />

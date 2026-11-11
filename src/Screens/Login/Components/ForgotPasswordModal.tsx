@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { KeyRound, X } from 'lucide-react-native';
 import { Typography } from '../../../Theme/Typographys';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { Fonts } from '../../../Theme/fonts';
 import { ToastHelper } from '../../../Common/ToastHelper';
@@ -32,13 +32,11 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const cardBg = isDarkMode ? '#1E2228' : Colors.DefaultWhite;
-  const textPrimary = isDarkMode
-    ? Colors.PureWhiteText
-    : Colors.MidnightInkText;
-  const textSecondary = isDarkMode ? '#A3A8B1' : Colors.SubtitleGray;
-  const borderLight = isDarkMode ? '#2C3035' : Colors.RingBorder;
-  const inputBg = isDarkMode ? '#121417' : '#FAF8F5';
+  const cardBg = isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite;
+  const textPrimary = isDarkMode ? Colors.PureWhite : Colors.PureBlack;
+  const textSecondary = isDarkMode ? Colors.SteelMist : Colors.SubtitleGray;
+  const borderLight = isDarkMode ? Colors.CarbonSlate : Colors.RingBorder;
+  const inputBg = isDarkMode ? Colors.DarkBackground : Colors.CreamSurfaceAlt;
 
   const handleSendResetLink = () => {
     if (!email.trim()) {
@@ -85,7 +83,11 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
             activeOpacity={0.7}
             style={[
               styles.closeBtn,
-              { backgroundColor: isDarkMode ? '#2C3035' : '#F2EFEB' },
+              {
+                backgroundColor: isDarkMode
+                  ? Colors.CarbonSlate
+                  : Colors.ModalCloseLightBg,
+              },
             ]}
             onPress={onClose}
           >
@@ -138,7 +140,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
               styles.primaryBtn,
               {
                 backgroundColor: isDarkMode
-                  ? Colors.PureWhiteText
+                  ? Colors.PureWhite
                   : Colors.MidnightCharcoal,
               },
             ]}
@@ -148,18 +150,14 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
             {isSubmitting ? (
               <ActivityIndicator
                 size="small"
-                color={
-                  isDarkMode ? Colors.MidnightInkText : Colors.PureWhiteText
-                }
+                color={isDarkMode ? Colors.PureBlack : Colors.PureWhite}
               />
             ) : (
               <Text
                 style={[
                   styles.primaryBtnText,
                   {
-                    color: isDarkMode
-                      ? Colors.MidnightInkText
-                      : Colors.PureWhiteText,
+                    color: isDarkMode ? Colors.PureBlack : Colors.PureWhite,
                   },
                 ]}
               >
@@ -186,7 +184,7 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
 const styles = StyleSheet.create({
   backdrop: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.55)',
+    backgroundColor: withAlpha(Colors.PureBlack, 0.55),
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: ResponsivePixels.size24,
@@ -198,7 +196,7 @@ const styles = StyleSheet.create({
     padding: ResponsivePixels.size24,
     alignItems: 'center',
     position: 'relative',
-    shadowColor: '#000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.15,
     shadowRadius: 20,
@@ -218,9 +216,9 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#EFF2FE',
+    backgroundColor: Colors.MindfulLightBg,
     borderWidth: 1.5,
-    borderColor: '#D8DBFF',
+    borderColor: Colors.MindfulLightBorder,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: ResponsivePixels.size16,
@@ -267,7 +265,7 @@ const styles = StyleSheet.create({
     borderRadius: ResponsivePixels.size26,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 8,

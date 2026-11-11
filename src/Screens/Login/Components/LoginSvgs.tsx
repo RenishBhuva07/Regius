@@ -8,6 +8,10 @@ import Svg, {
   Stop,
   SvgProps,
 } from 'react-native-svg';
+import {
+  Colors,
+  IllustrationColors,
+} from '../../../Assets/StyleUtilities/Colors';
 
 // Auth SVG icons and illustrations
 export const RegiusCrownCrestSvg: React.FC<
@@ -24,8 +28,18 @@ export const RegiusCrownCrestSvg: React.FC<
           y2="96"
           gradientUnits="userSpaceOnUse"
         >
-          <Stop offset="0%" stopColor={isDark ? '#282C35' : '#FFFFFF'} />
-          <Stop offset="100%" stopColor={isDark ? '#1A1D23' : '#FFFCE3'} />
+          <Stop
+            offset="0%"
+            stopColor={isDark ? Colors.VoiceMicDarkSurface : Colors.PureWhite}
+          />
+          <Stop
+            offset="100%"
+            stopColor={
+              isDark
+                ? IllustrationColors.LoginGlyphDarkInk
+                : Colors.CreamBackground
+            }
+          />
         </LinearGradient>
         <LinearGradient
           id="purpleGrad"
@@ -35,8 +49,22 @@ export const RegiusCrownCrestSvg: React.FC<
           y2="80"
           gradientUnits="userSpaceOnUse"
         >
-          <Stop offset="0%" stopColor={isDark ? '#9A9AE6' : '#9C9CE8'} />
-          <Stop offset="100%" stopColor={isDark ? '#6B6BD0' : '#8383D6'} />
+          <Stop
+            offset="0%"
+            stopColor={
+              isDark
+                ? IllustrationColors.LoginVaultStopLight
+                : IllustrationColors.LoginVaultPeriwinkle
+            }
+          />
+          <Stop
+            offset="100%"
+            stopColor={
+              isDark
+                ? IllustrationColors.LoginVaultStopDeep
+                : Colors.LavenderPurple
+            }
+          />
         </LinearGradient>
         <LinearGradient
           id="goldGrad"
@@ -46,22 +74,22 @@ export const RegiusCrownCrestSvg: React.FC<
           y2="68"
           gradientUnits="userSpaceOnUse"
         >
-          <Stop offset="0%" stopColor="#FFE066" />
-          <Stop offset="100%" stopColor="#F5C518" />
+          <Stop offset="0%" stopColor={Colors.SvgGoldSheenLight} />
+          <Stop offset="100%" stopColor={Colors.AccentYellow} />
         </LinearGradient>
       </Defs>
       <Circle
         cx={48}
         cy={48}
         r={46}
-        fill={isDark ? '#1E2228' : '#FFFFFF'}
+        fill={isDark ? Colors.DarkCardBackground : Colors.PureWhite}
         fillOpacity={isDark ? 0.92 : 0.7}
       />
       <Circle
         cx={48}
         cy={48}
         r={45}
-        stroke={isDark ? '#363944' : '#E8E2D5'}
+        stroke={isDark ? Colors.DarkBorder : Colors.RingBorder}
         strokeWidth={1.5}
       />
       <Circle cx={48} cy={48} r={38} fill="url(#crestGrad)" />
@@ -69,33 +97,39 @@ export const RegiusCrownCrestSvg: React.FC<
         cx={48}
         cy={48}
         r={38}
-        stroke={isDark ? '#4D5366' : '#D8DBFF'}
+        stroke={
+          isDark
+            ? IllustrationColors.LoginStrokeSlate
+            : Colors.MindfulLightBorder
+        }
         strokeWidth={1.5}
       />
       <Circle cx={48} cy={48} r={28} fill="url(#purpleGrad)" />
       <Path
         d="M36 56H60L58 45L52 50L48 40L44 50L38 45L36 56Z"
         fill="url(#goldGrad)"
-        stroke="#FFF"
+        stroke={Colors.PureWhite}
         strokeWidth={1}
         strokeLinejoin="round"
       />
-      <Circle cx={38} cy={43} r={2} fill="#FFFFFF" />
-      <Circle cx={48} cy={38} r={2.5} fill="#FFFFFF" />
-      <Circle cx={58} cy={43} r={2} fill="#FFFFFF" />
+      <Circle cx={38} cy={43} r={2} fill={Colors.PureWhite} />
+      <Circle cx={48} cy={38} r={2.5} fill={Colors.PureWhite} />
+      <Circle cx={58} cy={43} r={2} fill={Colors.PureWhite} />
       <Path
         d="M35 58H61"
-        stroke="#FFFFFF"
+        stroke={Colors.PureWhite}
         strokeWidth={2}
         strokeLinecap="round"
       />
       <Path
         d="M68 28L69.5 32.5L74 34L69.5 35.5L68 40L66.5 35.5L62 34L66.5 32.5L68 28Z"
-        fill="#F5C518"
+        fill={Colors.AccentYellow}
       />
       <Path
         d="M26 62L27 65L30 66L27 67L26 70L25 67L22 66L25 65L26 62Z"
-        fill={isDark ? '#9A9AE6' : '#8383D6'}
+        fill={
+          isDark ? IllustrationColors.LoginVaultStopLight : Colors.LavenderPurple
+        }
       />
     </Svg>
   );
@@ -104,9 +138,13 @@ export const RegiusCrownCrestSvg: React.FC<
 export const DecorativeHeaderWavesSvg: React.FC<
   SvgProps & { isDark?: boolean }
 > = ({ isDark = false, ...props }) => {
-  const fillColor1 = isDark ? '#1E2228' : '#FAF6E8';
-  const fillColor2 = isDark ? '#262B33' : '#EFF3FE';
-  const fillColor3 = isDark ? '#16191F' : '#FFFDEB';
+  const fillColor1 = isDark
+    ? Colors.DarkCardBackground
+    : Colors.SvgLoginCreamPaper;
+  const fillColor2 = isDark ? Colors.SvgLoginSlateTop : Colors.SvgLoginIceTint;
+  const fillColor3 = isDark
+    ? Colors.LoginCardBottomDarkBevel
+    : Colors.SvgLoginCreamTop;
 
   return (
     <Svg
@@ -153,21 +191,29 @@ export const DecorativeHeaderWavesSvg: React.FC<
         cx={315}
         cy={65}
         r={28}
-        fill={isDark ? '#2E3540' : '#EDFDF5'}
+        fill={
+          isDark
+            ? IllustrationColors.LoginCardDarkEmerald
+            : Colors.WellnessLightBg
+        }
         fillOpacity={0.55}
       />
       <Circle
         cx={55}
         cy={125}
         r={18}
-        fill={isDark ? '#2C3038' : '#FFFCEB'}
+        fill={isDark ? Colors.DarkSteelBorder : Colors.WorkLightBg}
         fillOpacity={0.8}
       />
       <Circle
         cx={338}
         cy={155}
         r={8}
-        fill={isDark ? '#3A424F' : '#D8DBFF'}
+        fill={
+          isDark
+            ? IllustrationColors.LoginCardDarkIndigo
+            : Colors.MindfulLightBorder
+        }
         fillOpacity={0.75}
       />
     </Svg>
@@ -175,7 +221,7 @@ export const DecorativeHeaderWavesSvg: React.FC<
 };
 
 export const MailFieldSvg: React.FC<SvgProps & { color?: string }> = ({
-  color = '#8383D6',
+  color = Colors.LavenderPurple,
   ...props
 }) => (
   <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" {...props}>
@@ -201,7 +247,7 @@ export const MailFieldSvg: React.FC<SvgProps & { color?: string }> = ({
 );
 
 export const LockFieldSvg: React.FC<SvgProps & { color?: string }> = ({
-  color = '#8383D6',
+  color = Colors.LavenderPurple,
   ...props
 }) => (
   <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" {...props}>
@@ -228,7 +274,7 @@ export const LockFieldSvg: React.FC<SvgProps & { color?: string }> = ({
 );
 
 export const UserFieldSvg: React.FC<SvgProps & { color?: string }> = ({
-  color = '#8383D6',
+  color = Colors.LavenderPurple,
   ...props
 }) => (
   <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" {...props}>
@@ -243,7 +289,7 @@ export const UserFieldSvg: React.FC<SvgProps & { color?: string }> = ({
 );
 
 export const EyeOpenSvg: React.FC<SvgProps & { color?: string }> = ({
-  color = '#7E838F',
+  color = Colors.MutedSlateSubtext,
   ...props
 }) => (
   <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" {...props}>
@@ -259,7 +305,7 @@ export const EyeOpenSvg: React.FC<SvgProps & { color?: string }> = ({
 );
 
 export const EyeClosedSvg: React.FC<SvgProps & { color?: string }> = ({
-  color = '#7E838F',
+  color = Colors.MutedSlateSubtext,
   ...props
 }) => (
   <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" {...props}>
@@ -281,7 +327,7 @@ export const EyeClosedSvg: React.FC<SvgProps & { color?: string }> = ({
 );
 
 export const TactileCheckmarkSvg: React.FC<SvgProps & { color?: string }> = ({
-  color = '#52D22E',
+  color = Colors.AccentGreen,
   ...props
 }) => (
   <Svg width={14} height={14} viewBox="0 0 24 24" fill="none" {...props}>
@@ -301,19 +347,19 @@ export const GoogleLogoSvg: React.FC<SvgProps & { size?: number }> = ({
 }) => (
   <Svg width={size} height={size} viewBox="0 0 48 48" {...props}>
     <Path
-      fill="#EA4335"
+      fill={Colors.GoogleRed}
       d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.7 17.74 9.5 24 9.5z"
     />
     <Path
-      fill="#4285F4"
+      fill={Colors.GoogleBlue}
       d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
     />
     <Path
-      fill="#FBBC05"
+      fill={Colors.GoogleYellow}
       d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
     />
     <Path
-      fill="#34A853"
+      fill={Colors.GoogleGreen}
       d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
     />
   </Svg>
@@ -321,7 +367,7 @@ export const GoogleLogoSvg: React.FC<SvgProps & { size?: number }> = ({
 
 export const AppleLogoSvg: React.FC<
   SvgProps & { size?: number; color?: string }
-> = ({ size = 20, color = '#FFFFFF', ...props }) => (
+> = ({ size = 20, color = Colors.PureWhite, ...props }) => (
   <Svg width={size} height={size} viewBox="0 0 384 512" {...props}>
     <Path
       fill={color}
@@ -332,7 +378,7 @@ export const AppleLogoSvg: React.FC<
 
 export const SparkleSvg: React.FC<
   SvgProps & { color?: string; size?: number }
-> = ({ color = '#F5C518', size = 18, ...props }) => (
+> = ({ color = Colors.AccentYellow, size = 18, ...props }) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>
     <Path
       d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"

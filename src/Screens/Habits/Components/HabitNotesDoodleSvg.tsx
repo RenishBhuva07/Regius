@@ -11,6 +11,7 @@ import Svg, {
   Stop,
   Line,
 } from 'react-native-svg';
+import { Colors, IllustrationColors } from '../../../Assets/StyleUtilities/Colors';
 
 export interface HabitNotesDoodleSvgProps {
   width?: number;
@@ -27,49 +28,65 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
       <Svg width={width} height={height} viewBox="0 0 142 150" fill="none">
         <Defs>
           <LinearGradient id="hbLeather" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#2D3342" />
-            <Stop offset="55%" stopColor="#1B1E28" />
-            <Stop offset="100%" stopColor="#10121A" />
+            <Stop offset="0%" stopColor={IllustrationColors.SketchGradientTop} />
+            <Stop offset="55%" stopColor={Colors.KeepsakeDarkTop} />
+            <Stop offset="100%" stopColor={IllustrationColors.SketchAbyss} />
           </LinearGradient>
           <LinearGradient id="hbPaper" x1="0%" y1="0%" x2="0%" y2="100%">
-            <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.98} />
-            <Stop offset="100%" stopColor="#FAF6ED" stopOpacity={0.94} />
+            <Stop offset="0%" stopColor={Colors.PureWhite} stopOpacity={0.98} />
+            <Stop
+              offset="100%"
+              stopColor={Colors.MilestoneCreamBg}
+              stopOpacity={0.94}
+            />
           </LinearGradient>
           <LinearGradient id="hbGold" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#FFFCE3" />
-            <Stop offset="40%" stopColor="#F5C518" />
-            <Stop offset="100%" stopColor="#D99B0F" />
+            <Stop offset="0%" stopColor={Colors.CreamBackground} />
+            <Stop offset="40%" stopColor={Colors.AccentYellow} />
+            <Stop offset="100%" stopColor={Colors.SvgDoodleGoldShadow} />
           </LinearGradient>
           <LinearGradient id="hbPenMetal" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#FFFCE3" />
-            <Stop offset="45%" stopColor="#EAB308" />
-            <Stop offset="100%" stopColor="#A16207" />
+            <Stop offset="0%" stopColor={Colors.CreamBackground} />
+            <Stop offset="45%" stopColor={Colors.Yellow500} />
+            <Stop offset="100%" stopColor={Colors.Yellow700} />
           </LinearGradient>
           <LinearGradient id="hbPenBody" x1="0%" y1="0%" x2="100%" y2="0%">
-            <Stop offset="0%" stopColor="#1A1D27" />
-            <Stop offset="45%" stopColor="#2E364A" />
-            <Stop offset="100%" stopColor="#141722" />
+            <Stop offset="0%" stopColor={IllustrationColors.SketchJournalDark} />
+            <Stop offset="45%" stopColor={IllustrationColors.SketchGradientMid} />
+            <Stop offset="100%" stopColor={IllustrationColors.SketchNightSlate} />
           </LinearGradient>
           <LinearGradient id="hbEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#86EFAC" />
-            <Stop offset="50%" stopColor="#10B981" />
-            <Stop offset="100%" stopColor="#047857" />
+            <Stop offset="0%" stopColor={Colors.Green300} />
+            <Stop offset="50%" stopColor={Colors.ToastSuccessAccent} />
+            <Stop offset="100%" stopColor={Colors.Emerald700} />
           </LinearGradient>
           <LinearGradient id="hbFlame" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#FDE047" />
-            <Stop offset="45%" stopColor="#F97316" />
-            <Stop offset="100%" stopColor="#EA580C" />
+            <Stop offset="0%" stopColor={Colors.ToastWarningCardBorderLight} />
+            <Stop offset="45%" stopColor={IllustrationColors.Orange500} />
+            <Stop offset="100%" stopColor={Colors.CategoryOrangeCheck} />
           </LinearGradient>
           <RadialGradient id="hbCelestialGlow" cx="50%" cy="50%" r="50%">
-            <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.25} />
-            <Stop offset="60%" stopColor="#10B981" stopOpacity={0.08} />
-            <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={0} />
+            <Stop
+              offset="0%"
+              stopColor={Colors.AccentYellow}
+              stopOpacity={0.25}
+            />
+            <Stop
+              offset="60%"
+              stopColor={Colors.ToastSuccessAccent}
+              stopOpacity={0.08}
+            />
+            <Stop
+              offset="100%"
+              stopColor={Colors.WarmParchment}
+              stopOpacity={0}
+            />
           </RadialGradient>
         </Defs>
         <Circle cx={70} cy={75} r={65} fill="url(#hbCelestialGlow)" />
         <Path
           d="M 12 118 C -4 68, 38 22, 90 14"
-          stroke="#D4CCA8"
+          stroke={Colors.BentoWarmGoldMuted}
           strokeWidth={1.2}
           strokeDasharray="3 4"
           opacity={0.65}
@@ -77,7 +94,7 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
         />
         <Path
           d="M 82 14 C 114 8, 138 28, 132 64"
-          stroke="#F5C518"
+          stroke={Colors.AccentYellow}
           strokeWidth={1.2}
           strokeDasharray="2 3"
           opacity={0.7}
@@ -98,7 +115,7 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
         <G transform="translate(10, 124)" opacity={0.65}>
           <Path
             d="M 5 0 Q 5 5, 10 5 Q 5 5, 5 10 Q 5 5, 0 5 Q 5 5, 5 0 Z"
-            fill="#8383D6"
+            fill={Colors.LavenderPurple}
           />
         </G>
         <G transform="translate(26, 4)" opacity={0.7}>
@@ -114,7 +131,7 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
             width={76}
             height={96}
             rx={12}
-            fill="#000000"
+            fill={Colors.PureBlack}
             opacity={0.09}
           />
           <Rect
@@ -124,7 +141,7 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
             height={96}
             rx={12}
             fill="url(#hbLeather)"
-            stroke="#3E4456"
+            stroke={IllustrationColors.SketchLineSlate}
             strokeWidth={1.4}
           />
           <Path
@@ -154,8 +171,8 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
             width={69}
             height={90}
             rx={9}
-            fill="#F3EBE0"
-            stroke="#D8CFBE"
+            fill={IllustrationColors.SketchFillIvory}
+            stroke={IllustrationColors.SketchFrameBeige}
             strokeWidth={1}
           />
           <Rect
@@ -165,12 +182,12 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
             height={90}
             rx={9}
             fill="url(#hbPaper)"
-            stroke="#DFD7C7"
+            stroke={IllustrationColors.SketchDividerCream}
             strokeWidth={1.2}
           />
           {[16, 29, 42, 55].map(x => (
             <G key={`spiral-${x}`}>
-              <Circle cx={x} cy={5} r={2} fill="#1E222E" />
+              <Circle cx={x} cy={5} r={2} fill={IllustrationColors.SketchPinDark} />
               <Path
                 d={`M ${x - 2} 5 C ${x - 2} -4, ${x + 2} -4, ${x + 2} 5`}
                 stroke="url(#hbGold)"
@@ -190,7 +207,7 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
             y1={-2}
             x2={48.5}
             y2={90}
-            stroke="#A7F3D0"
+            stroke={Colors.ToastSuccessCardBorderLight}
             strokeWidth={0.8}
             opacity={0.6}
           />
@@ -204,7 +221,7 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
               y1={4}
               x2={32}
               y2={4}
-              stroke="#D4CCA8"
+              stroke={Colors.BentoWarmGoldMuted}
               strokeWidth={1.2}
               strokeLinecap="round"
             />
@@ -216,13 +233,13 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
               width={13}
               height={13}
               rx={3.5}
-              fill="#ECFDF5"
-              stroke="#86EFAC"
+              fill={Colors.RadarEmeraldLightBg}
+              stroke={Colors.Green300}
               strokeWidth={1.2}
             />
             <Path
               d="M 3 6.5 L 5.5 9 L 10 3.5"
-              stroke="#10B981"
+              stroke={Colors.ToastSuccessAccent}
               strokeWidth={1.8}
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -232,7 +249,7 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
               y1={6.5}
               x2={56}
               y2={6.5}
-              stroke="#9CA3AF"
+              stroke={Colors.Gray400}
               strokeWidth={1.5}
               strokeLinecap="round"
             />
@@ -244,8 +261,8 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
               width={13}
               height={13}
               rx={3.5}
-              fill="#FFFBEB"
-              stroke="#FDE047"
+              fill={Colors.VoiceMichaelBg}
+              stroke={Colors.ToastWarningCardBorderLight}
               strokeWidth={1.2}
             />
             <Path
@@ -257,7 +274,7 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
               y1={6.5}
               x2={50}
               y2={6.5}
-              stroke="#9CA3AF"
+              stroke={Colors.Gray400}
               strokeWidth={1.5}
               strokeLinecap="round"
             />
@@ -269,14 +286,14 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
               width={13}
               height={13}
               rx={3.5}
-              fill="#FEF9C3"
-              stroke="#FDE047"
+              fill={Colors.Yellow100}
+              stroke={Colors.ToastWarningCardBorderLight}
               strokeWidth={1.2}
             />
-            <Circle cx={6.5} cy={6.5} r={2.2} fill="#CA8A04" />
+            <Circle cx={6.5} cy={6.5} r={2.2} fill={Colors.Yellow600} />
             <Path
               d="M 17 6 Q 21 3 25 6 T 33 6 T 41 6 T 49 5 T 57 6"
-              stroke="#CA8A04"
+              stroke={Colors.Yellow600}
               strokeWidth={1.6}
               strokeLinecap="round"
               fill="none"
@@ -288,7 +305,7 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
               y1={3}
               x2={40}
               y2={3}
-              stroke="#D5CEBC"
+              stroke={IllustrationColors.SketchLineLight}
               strokeWidth={1.2}
               strokeDasharray="3 3"
               strokeLinecap="round"
@@ -298,7 +315,7 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
         <G transform="translate(86, 92) rotate(-38)">
           <Path
             d="M 2 12 L 2 52"
-            stroke="#000000"
+            stroke={Colors.PureBlack}
             strokeWidth={4}
             strokeLinecap="round"
             opacity={0.12}
@@ -306,7 +323,7 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
           <Path
             d="M 0 0 L -4.5 11 L 4.5 11 Z"
             fill="url(#hbPenMetal)"
-            stroke="#854D0E"
+            stroke={IllustrationColors.Yellow800}
             strokeWidth={0.6}
           />
           <Line
@@ -314,11 +331,11 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
             y1={0}
             x2={0}
             y2={7}
-            stroke="#1E2330"
+            stroke={IllustrationColors.SketchStrokeDeep}
             strokeWidth={0.8}
             strokeLinecap="round"
           />
-          <Circle cx={0} cy={7} r={1} fill="#1E2330" />
+          <Circle cx={0} cy={7} r={1} fill={IllustrationColors.SketchStrokeDeep} />
           <Rect
             x={-5}
             y={11}
@@ -326,13 +343,13 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
             height={3.5}
             rx={1}
             fill="url(#hbGold)"
-            stroke="#B48216"
+            stroke={Colors.WorkTextAccent}
             strokeWidth={0.5}
           />
           <Path
             d="M -5 14.5 L -6 45 L 6 45 L 5 14.5 Z"
             fill="url(#hbPenBody)"
-            stroke="#3C4459"
+            stroke={IllustrationColors.SketchOutlineMuted}
             strokeWidth={0.8}
           />
           <Rect
@@ -346,7 +363,7 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
           <Path
             d="M -5 45 Q 0 50 5 45 Z"
             fill="url(#hbPenMetal)"
-            stroke="#B48216"
+            stroke={Colors.WorkTextAccent}
             strokeWidth={0.5}
           />
           <Path
@@ -356,15 +373,15 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
             strokeLinecap="round"
             fill="none"
           />
-          <Circle cx={0} cy={-1} r={2.2} fill="#F5C518" opacity={0.9} />
-          <Circle cx={0} cy={-1} r={1.2} fill="#FFFFFF" />
+          <Circle cx={0} cy={-1} r={2.2} fill={Colors.AccentYellow} opacity={0.9} />
+          <Circle cx={0} cy={-1} r={1.2} fill={Colors.PureWhite} />
         </G>
         <G transform="translate(80, 88)">
           <Circle
             cx={22}
             cy={22}
             r={23}
-            stroke="#EAB308"
+            stroke={Colors.Yellow500}
             strokeWidth={1.1}
             strokeDasharray="2.5 3.5"
             opacity={0.75}
@@ -373,7 +390,7 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
             cx={22}
             cy={22}
             r={19}
-            fill="#181B24"
+            fill={IllustrationColors.SketchCharcoal}
             stroke="url(#hbGold)"
             strokeWidth={1.8}
           />
@@ -381,23 +398,47 @@ export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
             d="M 22 10 C 18 15 15 18 17 22 C 18 21 19 21 20 22 C 20 19 22 17 24 14 C 25 17 27 19 27 23 C 27 27 24 30 22 30 C 18.5 30 16.5 27.5 16.5 24 C 16.5 20.5 19 16.5 22 10 Z"
             fill="url(#hbFlame)"
           />
-          <Circle cx={33} cy={13} r={1.6} fill="#F5C518" />
+          <Circle cx={33} cy={13} r={1.6} fill={Colors.AccentYellow} />
         </G>
-        <Circle cx={106} cy={12} r={2.2} fill="#10B981" opacity={0.75} />
-        <Circle cx={134} cy={56} r={2.4} fill="#F5C518" opacity={0.7} />
-        <Circle cx={124} cy={126} r={1.8} fill="#8383D6" opacity={0.6} />
-        <Circle cx={24} cy={8} r={1.8} fill="#F97316" opacity={0.65} />
-        <Circle cx={8} cy={66} r={1.6} fill="#34D399" opacity={0.5} />
+        <Circle
+          cx={106}
+          cy={12}
+          r={2.2}
+          fill={Colors.ToastSuccessAccent}
+          opacity={0.75}
+        />
+        <Circle cx={134} cy={56} r={2.4} fill={Colors.AccentYellow} opacity={0.7} />
+        <Circle
+          cx={124}
+          cy={126}
+          r={1.8}
+          fill={Colors.LavenderPurple}
+          opacity={0.6}
+        />
+        <Circle
+          cx={24}
+          cy={8}
+          r={1.8}
+          fill={IllustrationColors.Orange500}
+          opacity={0.65}
+        />
+        <Circle
+          cx={8}
+          cy={66}
+          r={1.6}
+          fill={Colors.ToastSuccessCardBevelLight}
+          opacity={0.5}
+        />
         <Path
           d="M 118 72 Q 126 78 124 88"
-          stroke="#C8BE9E"
+          stroke={Colors.SvgSketchVellum}
           strokeWidth={1.4}
           strokeLinecap="round"
           opacity={0.6}
         />
         <Path
           d="M 126 68 Q 135 76 132 89"
-          stroke="#C8BE9E"
+          stroke={Colors.SvgSketchVellum}
           strokeWidth={1.4}
           strokeLinecap="round"
           opacity={0.4}

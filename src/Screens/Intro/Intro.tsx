@@ -14,7 +14,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowRight } from 'lucide-react-native';
-import { Colors } from '../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { Typography } from '../../Theme/Typographys';
 import { useTheme } from '../../Theme/ThemeContext';
@@ -111,10 +111,10 @@ const IntroBottomControls = React.memo<IntroBottomControlsProps>(
                       ]
                     : {
                         backgroundColor: isCyprusSand
-                          ? 'rgba(240, 237, 229, 0.35)'
+                          ? withAlpha(Colors.CyprusSandPaper, 0.35)
                           : isDarkMode
-                          ? borderLight || 'rgba(255, 255, 255, 0.25)'
-                          : '#DDD6C6',
+                          ? borderLight || withAlpha(Colors.PureWhite, 0.25)
+                          : Colors.WarmHeaderBottomBevel,
                       },
                 ]}
               />
@@ -152,7 +152,7 @@ const IntroBottomControls = React.memo<IntroBottomControlsProps>(
                   { backgroundColor: currentStep.accentColor },
                 ]}
               >
-                <ArrowRight size={18} color="#FFFFFF" />
+                <ArrowRight size={18} color={Colors.PureWhite} />
               </View>
             </TouchableOpacity>
           ) : (
@@ -257,20 +257,27 @@ const Intro: React.FC = () => {
     (isDarkMode ? Colors.NeroBlack : Colors.CreamBackground);
 
   const cardBg = isCyprusSand
-    ? 'rgba(240, 237, 229, 0.70)' // Sand with lower opacity (frosted glass)
+    ? withAlpha(Colors.CyprusSandPaper, 0.7) // Sand with lower opacity (frosted glass)
     : themeColors.CardBackground ||
-      (isDarkMode ? 'rgba(30, 34, 40, 0.65)' : 'rgba(255, 255, 255, 0.58)');
+      (isDarkMode
+        ? withAlpha(Colors.DarkCardBackground, 0.65)
+        : withAlpha(Colors.PureWhite, 0.58));
   const cardBorder = isCyprusSand
-    ? 'rgba(255, 255, 255, 0.55)'
+    ? withAlpha(Colors.PureWhite, 0.55)
     : themeColors.BorderLight ||
-      (isDarkMode ? 'rgba(255, 255, 255, 0.12)' : '#DDD6C6');
+      (isDarkMode
+        ? withAlpha(Colors.PureWhite, 0.12)
+        : Colors.WarmHeaderBottomBevel);
   const cardTitleColor =
     themeColors.PrimaryText ||
-    (isDarkMode ? '#FFFFFF' : Colors.MidnightInkText);
+    (isDarkMode ? Colors.PureWhite : Colors.PureBlack);
   const cardSubtitleColor =
-    themeColors.SecondaryText || (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+    themeColors.SecondaryText ||
+    (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray);
 
-  const heroAccentColor = isCyprusSand ? '#0A6B66' : Colors.AccentYellow;
+  const heroAccentColor = isCyprusSand
+    ? Colors.CyprusTealLight
+    : Colors.AccentYellow;
 
   const isLastStep = activeIndex === INTRO_STEPS.length - 1;
   const currentStep = INTRO_STEPS[activeIndex];
@@ -285,7 +292,7 @@ const Intro: React.FC = () => {
               {
                 backgroundColor: cardBg,
                 borderColor: cardBorder,
-                borderTopColor: '#FFFFFF',
+                borderTopColor: Colors.PureWhite,
                 borderBottomColor: item.accentColor,
               },
             ]}
@@ -331,7 +338,7 @@ const Intro: React.FC = () => {
       <StatusBar
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         {...(Platform.OS === 'android'
-          ? { backgroundColor: 'transparent', translucent: true }
+          ? { backgroundColor: Colors.Transparent, translucent: true }
           : {})}
       />
 
@@ -376,20 +383,20 @@ const Intro: React.FC = () => {
           {
             top: Math.max(insets.top, ResponsivePixels.size16),
             backgroundColor: isCyprusSand
-              ? themeColors.CardBackground || '#F0EDE5'
+              ? themeColors.CardBackground || Colors.CyprusSandPaper
               : isDarkMode
-              ? 'rgba(255, 255, 255, 0.08)'
-              : 'rgba(255, 255, 255, 0.75)',
+              ? withAlpha(Colors.PureWhite, 0.08)
+              : withAlpha(Colors.PureWhite, 0.75),
             borderColor: isCyprusSand
-              ? themeColors.BorderLight || '#DDD7CB'
+              ? themeColors.BorderLight || Colors.CyprusBorderDarkCard
               : isDarkMode
-              ? '#2C3035'
-              : '#EAE4D6',
+              ? Colors.CarbonSlate
+              : Colors.SkipBtnLightBorder,
             borderBottomColor: isCyprusSand
-              ? '#C8C2B5'
+              ? Colors.IntroSkipBevelSand
               : isDarkMode
-              ? '#1E2228'
-              : '#DED6C7',
+              ? Colors.DarkCardBackground
+              : Colors.SplashAvatarBevelLight,
           },
         ]}
         accessibilityRole="button"
@@ -400,7 +407,7 @@ const Intro: React.FC = () => {
             styles.skipText,
             {
               color: isCyprusSand
-                ? themeColors.PrimaryText || '#002B28'
+                ? themeColors.PrimaryText || Colors.CyprusInkDark
                 : isDarkMode
                 ? themeColors.CanvasTextSecondary || Colors.SteelMist
                 : Colors.SubtitleGray,
@@ -498,7 +505,7 @@ const styles = StyleSheet.create({
     borderRadius: ResponsivePixels.size16,
     borderWidth: 1,
     borderBottomWidth: 2.2,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.06,
     shadowRadius: 4,
@@ -539,9 +546,9 @@ const styles = StyleSheet.create({
     paddingVertical: ResponsivePixels.size14,
     borderRadius: ResponsivePixels.size24,
     borderWidth: 1.2,
-    borderTopColor: '#FFFFFF',
+    borderTopColor: Colors.PureWhite,
     borderBottomWidth: 2.8,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 6 },
     shadowOpacity: 0.06,
     shadowRadius: 14,
@@ -586,7 +593,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 4,
     borderTopWidth: 0.8,
-    borderTopColor: 'rgba(255, 255, 255, 0.6)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.6),
   },
   buttonWrapper: {
     alignItems: 'center',
@@ -611,10 +618,10 @@ const styles = StyleSheet.create({
     borderRadius: ResponsivePixels.size29,
     borderWidth: 1,
     borderTopWidth: 1.5,
-    borderTopColor: 'rgba(255, 255, 255, 0.45)',
-    borderColor: 'rgba(255, 255, 255, 0.15)',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.45),
+    borderColor: withAlpha(Colors.PureWhite, 0.15),
     borderBottomWidth: 4,
-    borderBottomColor: '#0E1013',
+    borderBottomColor: Colors.IntroCtaBottomDarkBevel,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.38,
     shadowRadius: 18,
@@ -622,7 +629,7 @@ const styles = StyleSheet.create({
   },
   getStartedText: {
     ...Typography.bodyLargePoppinsSemiBold,
-    color: Colors.PureWhiteText,
+    color: Colors.PureWhite,
     letterSpacing: 0.5,
     marginRight: ResponsivePixels.size14,
   },
@@ -633,10 +640,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.5)',
-    borderColor: 'transparent',
+    borderTopColor: withAlpha(Colors.PureWhite, 0.5),
+    borderColor: Colors.Transparent,
     borderBottomWidth: 2,
-    borderBottomColor: 'rgba(0, 0, 0, 0.2)',
+    borderBottomColor: withAlpha(Colors.PureBlack, 0.2),
   },
 });
 

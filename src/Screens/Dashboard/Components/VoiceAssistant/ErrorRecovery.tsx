@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { AlertCircle, HelpCircle } from 'lucide-react-native';
 import { Fonts } from '../../../../Theme/fonts';
+import { Colors } from '../../../../Assets/StyleUtilities/Colors';
 import { VoiceAssistantTheme } from './types';
 
 export interface ErrorRecoveryProps {
@@ -28,7 +29,9 @@ export const ErrorRecovery: React.FC<ErrorRecoveryProps> = ({
         style={[
           styles.iconBadge,
           {
-            backgroundColor: theme.isDarkMode ? '#272018' : '#FEF3C7',
+            backgroundColor: theme.isDarkMode
+              ? Colors.VoiceWarningDarkBg
+              : Colors.ToastWarningBadgeBgLight,
           },
         ]}
       >
@@ -51,7 +54,9 @@ export const ErrorRecovery: React.FC<ErrorRecoveryProps> = ({
           style={[
             styles.heardBubble,
             {
-              backgroundColor: theme.isDarkMode ? '#22262E' : '#F3F1EC',
+              backgroundColor: theme.isDarkMode
+                ? Colors.VoiceControlDarkBg
+                : Colors.VoiceSurfaceMuted,
             },
           ]}
         >

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated, Easing } from 'react-native';
+import { Colors, withAlpha } from '../../../../Assets/StyleUtilities/Colors';
 
 export interface VoiceWaveVisualizerProps {
   isActive?: boolean;
@@ -8,11 +9,11 @@ export interface VoiceWaveVisualizerProps {
 }
 
 const BAR_PALETTE = [
-  '#8383D6', // Lavender Purple (Habits/Mindful)
-  '#F5C518', // Imperial Gold (Works/Tasks)
-  '#FF8772', // Coral Warmth (Energy/Events)
-  '#10B981', // Fresh Mint (Sport/Reminders)
-  '#8383D6', // Lavender Purple
+  Colors.LavenderPurple,
+  Colors.AccentYellow,
+  Colors.CoralWarmth,
+  Colors.ToastSuccessAccent,
+  Colors.LavenderPurple,
 ];
 
 // Animated waveform visualizer for voice states.
@@ -78,11 +79,11 @@ export const VoiceWaveVisualizer: React.FC<VoiceWaveVisualizerProps> = ({
         styles.container,
         {
           backgroundColor: isDarkMode
-            ? 'rgba(255, 255, 255, 0.06)'
-            : 'rgba(131, 131, 214, 0.08)',
+            ? withAlpha(Colors.PureWhite, 0.06)
+            : withAlpha(Colors.LavenderPurple, 0.08),
           borderColor: isDarkMode
-            ? 'rgba(255, 255, 255, 0.1)'
-            : 'rgba(131, 131, 214, 0.16)',
+            ? withAlpha(Colors.PureWhite, 0.1)
+            : withAlpha(Colors.LavenderPurple, 0.16),
         },
       ]}
       accessibilityRole="image"

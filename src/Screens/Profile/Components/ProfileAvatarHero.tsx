@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Camera, Sparkles } from 'lucide-react-native';
 
 import { Fonts } from '../../../Theme/fonts';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { Typography } from '../../../Theme/Typographys';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import { SVGS } from '../../../Assets/Images';
@@ -30,7 +30,11 @@ export const ProfileAvatarHero: React.FC<ProfileAvatarHeroProps> = React.memo(
               {/* Aura Status Pill */}
               <View style={styles.heroStatusRow}>
                 <View style={styles.heroStatusLeft}>
-                  <Sparkles size={14} color="#F5C518" strokeWidth={2.4} />
+                  <Sparkles
+                    size={14}
+                    color={Colors.AccentYellow}
+                    strokeWidth={2.4}
+                  />
                   <Text style={styles.heroStatusLabel}>SOVEREIGN IDENTITY</Text>
                 </View>
                 <Badge label="TIER 5 VERIFIED" variant="yellow" size="sm" />
@@ -53,7 +57,11 @@ export const ProfileAvatarHero: React.FC<ProfileAvatarHeroProps> = React.memo(
                   accessibilityRole="button"
                   accessibilityLabel="Change avatar image"
                 >
-                  <Camera size={14} color="#FFFFFF" strokeWidth={2.4} />
+                  <Camera
+                    size={14}
+                    color={Colors.PureWhite}
+                    strokeWidth={2.4}
+                  />
                 </TouchableOpacity>
               </View>
 
@@ -85,7 +93,7 @@ const styles = StyleSheet.create({
   cardShadowWrapper: {
     backgroundColor: Colors.NeroBlack,
     borderRadius: 24,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.28,
     shadowRadius: 18,
@@ -95,7 +103,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.NeroBlack,
     borderRadius: 24,
     borderWidth: 4,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: withAlpha(Colors.PureWhite, 0.9),
     overflow: 'hidden',
     position: 'relative',
   },
@@ -118,7 +126,7 @@ const styles = StyleSheet.create({
   heroStatusLabel: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 11,
-    color: '#F5C518',
+    color: Colors.AccentYellow,
     letterSpacing: 1.2,
   },
   avatarWrapper: {
@@ -128,17 +136,17 @@ const styles = StyleSheet.create({
   avatarGlowHalo: {
     padding: 3,
     borderRadius: 50,
-    backgroundColor: 'rgba(245, 197, 24, 0.25)',
+    backgroundColor: withAlpha(Colors.AccentYellow, 0.25),
   },
   avatarRing: {
     width: ResponsivePixels.size90,
     height: ResponsivePixels.size90,
     borderRadius: ResponsivePixels.size45,
     borderWidth: 3,
-    borderColor: '#F5C518',
+    borderColor: Colors.AccentYellow,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FAF8F5',
+    backgroundColor: Colors.CreamSurfaceAlt,
   },
   cameraBadge: {
     position: 'absolute',
@@ -151,18 +159,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
-    borderColor: '#FFFFFF',
+    borderColor: Colors.PureWhite,
     elevation: 4,
   },
   heroName: {
     fontFamily: Fonts.ranade.bold,
     fontSize: 22,
-    color: '#FFFCE3',
+    color: Colors.CreamBackground,
     marginBottom: 4,
   },
   heroEmail: {
     ...Typography.bodySmallPoppinsRegular,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: withAlpha(Colors.PureWhite, 0.7),
     fontSize: 13,
     marginBottom: ResponsivePixels.size12,
   },
