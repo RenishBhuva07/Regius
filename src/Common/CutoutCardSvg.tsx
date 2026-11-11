@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleProp, ViewStyle, StyleSheet } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
+import { Colors } from '../Assets/StyleUtilities/Colors';
 
 export interface CutoutCardSvgProps {
   width: number;
@@ -52,8 +53,8 @@ export const CutoutCardSvg: React.FC<CutoutCardSvgProps> = React.memo(
   ({
     width,
     height,
-    fill = '#FFFFFF',
-    stroke = 'transparent',
+    fill = Colors.PureWhite,
+    stroke = Colors.Transparent,
     strokeWidth = 1.5,
     style,
     children,

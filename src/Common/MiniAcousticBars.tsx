@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated, Easing } from 'react-native';
 import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 
 export interface MiniAcousticBarsProps {
   isPlaying: boolean;
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
     width: ResponsivePixels.size3,
     height: ResponsivePixels.size16,
     borderRadius: ResponsivePixels.size2,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.12),
     overflow: 'hidden',
     justifyContent: 'center',
     alignItems: 'center',

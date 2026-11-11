@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { Crown } from 'lucide-react-native';
 import { Fonts } from '../Theme/fonts';
+import { Colors } from '../Assets/StyleUtilities/Colors';
 
 export interface ProBadgeProps {
   size?: 'sm' | 'md' | 'lg';
@@ -40,7 +41,7 @@ export const ProBadge: React.FC<ProBadgeProps> = ({
         style,
       ]}
     >
-      <Crown size={iconSize} color="#B47804" fill="#F5C518" strokeWidth={2.4} />
+      <Crown size={iconSize} color={Colors.BadgeYellowText} fill={Colors.AccentYellow} strokeWidth={2.4} />
       <Text
         style={[
           styles.label,
@@ -74,14 +75,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFF8D0',
-    borderColor: '#FFFFFF',
+    backgroundColor: Colors.BadgeYellowBg,
+    borderColor: Colors.PureWhite,
     borderWidth: 1,
     borderBottomWidth: 2.2,
-    borderBottomColor: '#DEAA14',
+    borderBottomColor: Colors.WorkDarkBorder,
     ...Platform.select({
       ios: {
-        shadowColor: '#D97706',
+        shadowColor: Colors.HabitBurnishedAmber,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 3.5,
@@ -111,7 +112,7 @@ const styles = StyleSheet.create({
   },
   label: {
     fontFamily: Fonts.poppins.bold,
-    color: '#B47804',
+    color: Colors.BadgeYellowText,
     includeFontPadding: false,
     textTransform: 'uppercase',
   },

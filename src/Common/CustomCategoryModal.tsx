@@ -16,6 +16,7 @@ import { Check, Sparkles, Plus } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../Theme/fonts';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../Theme/useAppTheme';
 import { Badge, BadgeVariant } from './Badge';
 import {
@@ -42,65 +43,65 @@ export interface CategoryPreset {
 export const CATEGORY_PRESETS: CategoryPreset[] = [
   {
     name: 'Imperial Gold',
-    bgColor: '#FFFCEB',
-    borderColor: '#FFF5B8',
-    shadowColor: '#F5C518',
-    accentColor: '#FDD835',
-    checkColor: '#D97706',
+    bgColor: Colors.WorkLightBg,
+    borderColor: Colors.WorkLightBorder,
+    shadowColor: Colors.AccentYellow,
+    accentColor: Colors.TaskGoldVivid,
+    checkColor: Colors.HabitBurnishedAmber,
     badgeVariant: 'yellow',
   },
   {
     name: 'Emerald Mint',
-    bgColor: '#EDFDF5',
-    borderColor: '#C6FFDD',
-    shadowColor: '#52D22E',
-    accentColor: '#52D22E',
-    checkColor: '#1B9A72',
+    bgColor: Colors.WellnessLightBg,
+    borderColor: Colors.WellnessLightBorder,
+    shadowColor: Colors.AccentGreen,
+    accentColor: Colors.AccentGreen,
+    checkColor: Colors.GreenGracious,
     badgeVariant: 'green',
   },
   {
     name: 'Lavender Orchid',
-    bgColor: '#EFF2FE',
-    borderColor: '#D8DBFF',
-    shadowColor: '#8383D6',
-    accentColor: '#8383D6',
-    checkColor: '#7059C8',
+    bgColor: Colors.MindfulLightBg,
+    borderColor: Colors.MindfulLightBorder,
+    shadowColor: Colors.LavenderPurple,
+    accentColor: Colors.LavenderPurple,
+    checkColor: Colors.MindfulTextAccent,
     badgeVariant: 'purple',
   },
   {
     name: 'Amber Sunset',
-    bgColor: '#FFF7ED',
-    borderColor: '#FFEDD5',
-    shadowColor: '#FB923C',
-    accentColor: '#FB923C',
-    checkColor: '#EA580C',
+    bgColor: Colors.CategoryOrangeBg,
+    borderColor: Colors.CategoryOrangeBorder,
+    shadowColor: Colors.CategoryOrangeAccent,
+    accentColor: Colors.CategoryOrangeAccent,
+    checkColor: Colors.CategoryOrangeCheck,
     badgeVariant: 'orange',
   },
   {
     name: 'Crimson Rose',
-    bgColor: '#FEF2F2',
-    borderColor: '#FEE2E2',
-    shadowColor: '#EF4444',
-    accentColor: '#EF4444',
-    checkColor: '#DC2626',
+    bgColor: Colors.CategoryRedBg,
+    borderColor: Colors.CategoryRedBorder,
+    shadowColor: Colors.CategoryRedAccent,
+    accentColor: Colors.CategoryRedAccent,
+    checkColor: Colors.CategoryRedCheck,
     badgeVariant: 'red',
   },
   {
     name: 'Ocean Azure',
-    bgColor: '#F0F9FF',
-    borderColor: '#E0F2FE',
-    shadowColor: '#38BDF8',
-    accentColor: '#38BDF8',
-    checkColor: '#0284C7',
+    bgColor: Colors.CategorySkyBg,
+    borderColor: Colors.CategorySkyBorder,
+    shadowColor: Colors.CategorySkyAccent,
+    accentColor: Colors.CategorySkyAccent,
+    checkColor: Colors.CategorySkyCheck,
     badgeVariant: 'purple',
   },
   {
     name: 'Rose',
-    bgColor: '#FFF1F2',
-    borderColor: '#FECDD3',
-    shadowColor: '#FB7185',
-    accentColor: '#FB7185',
-    checkColor: '#E11D48',
+    bgColor: Colors.CategoryRoseBg,
+    borderColor: Colors.CategoryRoseBorder,
+    shadowColor: Colors.CategoryRoseAccent,
+    accentColor: Colors.CategoryRoseAccent,
+    checkColor: Colors.CategoryRoseCheck,
     badgeVariant: 'purple',
   },
 ];
@@ -110,26 +111,31 @@ export const CATEGORY_ICON_CHOICES = [
     id: 'picture',
     label: 'Art',
     Icon: PictureEmblemIcon,
-    defaultColor: '#6270F0',
+    defaultColor: Colors.EmblemCobaltBlue,
   },
-  { id: 'bag', label: 'Work', Icon: OfficeBagIcon, defaultColor: '#F5C518' },
+  {
+    id: 'bag',
+    label: 'Work',
+    Icon: OfficeBagIcon,
+    defaultColor: Colors.AccentYellow,
+  },
   {
     id: 'heart',
     label: 'Life',
     Icon: HeartEmblemIcon,
-    defaultColor: '#52D22E',
+    defaultColor: Colors.AccentGreen,
   },
   {
     id: 'sparkles',
     label: 'Focus',
     Icon: SparkleEmblemIcon,
-    defaultColor: '#FB923C',
+    defaultColor: Colors.CategoryOrangeAccent,
   },
   {
     id: 'flame',
     label: 'Habit',
     Icon: FlameEmblemIcon,
-    defaultColor: '#EF4444',
+    defaultColor: Colors.CategoryRedAccent,
   },
 ];
 
@@ -203,17 +209,17 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                 style={[
                   styles.modalCard,
                   isDarkMode && {
-                    backgroundColor: '#1E2228',
-                    borderTopColor: '#2C3035',
-                    borderLeftColor: '#2C3035',
-                    borderRightColor: '#2C3035',
+                    backgroundColor: Colors.DarkCardBackground,
+                    borderTopColor: Colors.CarbonSlate,
+                    borderLeftColor: Colors.CarbonSlate,
+                    borderRightColor: Colors.CarbonSlate,
                   },
                 ]}
               >
                 <View
                   style={[
                     styles.modalDragHandle,
-                    isDarkMode && { backgroundColor: '#363944' },
+                    isDarkMode && { backgroundColor: Colors.DarkBorder },
                   ]}
                 />
 
@@ -224,12 +230,14 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                       variant="yellow"
                       size="sm"
                       label="CATEGORY STUDIO"
-                      icon={<Sparkles size={10} color="#D97706" />}
+                      icon={
+                        <Sparkles size={10} color={Colors.HabitBurnishedAmber} />
+                      }
                     />
                     <Text
                       style={[
                         styles.modalHeading,
-                        isDarkMode && { color: '#FFFFFF' },
+                        isDarkMode && { color: Colors.PureWhite },
                       ]}
                     >
                       Craft Category
@@ -237,7 +245,7 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                     <Text
                       style={[
                         styles.modalSubtitle,
-                        isDarkMode && { color: '#A3A8B1' },
+                        isDarkMode && { color: Colors.SteelMist },
                       ]}
                     >
                       Curate an iconic visual signature for your focus
@@ -341,7 +349,7 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                   <Text
                     style={[
                       styles.inputLabel,
-                      isDarkMode && { color: '#A3A8B1' },
+                      isDarkMode && { color: Colors.SteelMist },
                     ]}
                   >
                     CATEGORY LABEL
@@ -350,13 +358,13 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                     style={[
                       styles.textInput,
                       isDarkMode && {
-                        backgroundColor: '#171A1F',
-                        borderColor: '#2C3035',
-                        color: '#FFFFFF',
+                        backgroundColor: Colors.DarkSurfaceAlt,
+                        borderColor: Colors.CarbonSlate,
+                        color: Colors.PureWhite,
                       },
                     ]}
                     placeholder="e.g. Finance, Wellness, Client X"
-                    placeholderTextColor="#A3A8B1"
+                    placeholderTextColor={Colors.SteelMist}
                     value={newCatName}
                     onChangeText={setNewCatName}
                     maxLength={24}
@@ -369,7 +377,7 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                   <Text
                     style={[
                       styles.inputLabel,
-                      isDarkMode && { color: '#A3A8B1' },
+                      isDarkMode && { color: Colors.SteelMist },
                     ]}
                   >
                     CHOOSE ICON
@@ -386,8 +394,8 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                           style={[
                             styles.iconChoiceBtn,
                             isDarkMode && {
-                              backgroundColor: '#171A1F',
-                              borderColor: '#2C3035',
+                              backgroundColor: Colors.DarkSurfaceAlt,
+                              borderColor: Colors.CarbonSlate,
                             },
                             isSel && styles.iconChoiceBtnActive,
                           ]}
@@ -397,10 +405,10 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                             size={18}
                             color={
                               isSel
-                                ? '#1F2228'
+                                ? Colors.MidnightCharcoal
                                 : isDarkMode
-                                ? '#A3A8B1'
-                                : '#77767B'
+                                ? Colors.SteelMist
+                                : Colors.Grey
                             }
                           />
                         </TouchableOpacity>
@@ -414,7 +422,7 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                   <Text
                     style={[
                       styles.inputLabel,
-                      isDarkMode && { color: '#A3A8B1' },
+                      isDarkMode && { color: Colors.SteelMist },
                     ]}
                   >
                     CHOOSE COLOR HARMONY
@@ -460,14 +468,16 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                     activeOpacity={0.8}
                     style={[
                       styles.cancelBtn,
-                      isDarkMode && { backgroundColor: '#252932' },
+                      isDarkMode && {
+                        backgroundColor: Colors.DarkCheckboxUnchecked,
+                      },
                     ]}
                     onPress={onClose}
                   >
                     <Text
                       style={[
                         styles.cancelBtnText,
-                        isDarkMode && { color: '#A3A8B1' },
+                        isDarkMode && { color: Colors.SteelMist },
                       ]}
                     >
                       Cancel
@@ -479,7 +489,11 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                     style={styles.createBtn}
                     onPress={handleCreate}
                   >
-                    <Plus size={16} color="#FFFFFF" strokeWidth={2.4} />
+                    <Plus
+                      size={16}
+                      color={Colors.PureWhite}
+                      strokeWidth={2.4}
+                    />
                     <Text style={styles.createBtnText}>Create Category</Text>
                   </TouchableOpacity>
                 </View>
@@ -494,24 +508,24 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
 const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(18, 20, 23, 0.45)',
+    backgroundColor: withAlpha(Colors.DarkBackground, 0.45),
     justifyContent: 'flex-end',
   },
   modalCard: {
-    backgroundColor: '#FAF8F5',
+    backgroundColor: Colors.CreamSurfaceAlt,
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     paddingTop: 12,
     paddingBottom: 32,
     paddingHorizontal: 20,
     borderWidth: 1.5,
-    borderTopColor: '#FFFFFF',
-    borderLeftColor: '#F0ECE1',
-    borderRightColor: '#F0ECE1',
+    borderTopColor: Colors.PureWhite,
+    borderLeftColor: Colors.CreamBorderSubtle,
+    borderRightColor: Colors.CreamBorderSubtle,
     borderBottomWidth: 0,
     ...Platform.select({
       ios: {
-        shadowColor: '#121417',
+        shadowColor: Colors.DarkBackground,
         shadowOffset: { width: 0, height: -4 },
         shadowOpacity: 0.16,
         shadowRadius: 16,
@@ -525,7 +539,7 @@ const styles = StyleSheet.create({
     width: 38,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#DCD6C8',
+    backgroundColor: Colors.WarmDragHandle,
     alignSelf: 'center',
     marginBottom: 12,
   },
@@ -538,13 +552,13 @@ const styles = StyleSheet.create({
   modalHeading: {
     fontFamily: Fonts.ranade.bold,
     fontSize: 20,
-    color: '#121417',
+    color: Colors.DarkBackground,
     marginTop: 4,
   },
   modalSubtitle: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 12,
-    color: '#77767B',
+    color: Colors.Grey,
   },
   showcaseOuterWrap: {
     alignItems: 'center',
@@ -582,7 +596,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -605,7 +619,7 @@ const styles = StyleSheet.create({
   categoryCardCountExact: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 10,
-    color: '#8A8D98',
+    color: Colors.MutedNeutralCount,
   },
   categoryBottomIndicator: {
     position: 'absolute',
@@ -622,20 +636,20 @@ const styles = StyleSheet.create({
   inputLabel: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 10,
-    color: '#77767B',
+    color: Colors.Grey,
     letterSpacing: 0.8,
     marginBottom: 6,
   },
   textInput: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderRadius: 14,
     borderWidth: 1.5,
-    borderColor: '#E8E2D5',
+    borderColor: Colors.RingBorder,
     paddingHorizontal: 14,
     paddingVertical: 10,
     fontFamily: Fonts.poppins.medium,
     fontSize: 14,
-    color: '#121417',
+    color: Colors.DarkBackground,
   },
   iconChoiceRow: {
     flexDirection: 'row',
@@ -645,15 +659,15 @@ const styles = StyleSheet.create({
     width: 42,
     height: 42,
     borderRadius: 21,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
-    borderColor: '#E8E2D5',
+    borderColor: Colors.RingBorder,
     alignItems: 'center',
     justifyContent: 'center',
   },
   iconChoiceBtnActive: {
-    borderColor: '#1F2228',
-    backgroundColor: '#FFF8D0',
+    borderColor: Colors.MidnightCharcoal,
+    backgroundColor: Colors.BadgeYellowBg,
   },
   presetScrollContent: {
     gap: 10,
@@ -677,33 +691,33 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 24,
     borderWidth: 1.5,
-    borderColor: '#DCD6C8',
+    borderColor: Colors.WarmDragHandle,
     alignItems: 'center',
     justifyContent: 'center',
   },
   cancelBtnText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 13,
-    color: '#77767B',
+    color: Colors.Grey,
   },
   createBtn: {
     flex: 2,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1E2028',
+    backgroundColor: Colors.DarkElevatedNero,
     paddingVertical: 12,
     borderRadius: 24,
     gap: 6,
     borderWidth: 1,
-    borderColor: '#4A4E5C',
+    borderColor: Colors.DarkBevelTop,
     borderBottomWidth: 3,
-    borderBottomColor: '#0E1015',
+    borderBottomColor: Colors.DarkModalBtnBottom,
   },
   createBtnText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 13,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
 });
 

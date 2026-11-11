@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ChevronLeft } from 'lucide-react-native';
-import { Colors } from '../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import { useTheme } from '../Theme/ThemeContext';
 
 export interface BackButtonProps {
@@ -36,16 +36,16 @@ export const BackButton: React.FC<BackButtonProps> = ({
   };
 
   const cardBg = isCyprusSand
-    ? '#003835'
+    ? Colors.CyprusTealDark
     : themeColors.CardBackground ||
-      (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
+      (isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite);
   const textPrimary =
     themeColors.PrimaryText ||
-    (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
+    (isDarkMode ? Colors.PureWhite : Colors.PureBlack);
   const chevronColor = isScrolled
-    ? Colors.DefaultWhite
+    ? Colors.PureWhite
     : themeColors.CanvasTextPrimary ||
-      (isDarkMode ? Colors.PureWhiteText : textPrimary);
+      (isDarkMode ? Colors.PureWhite : textPrimary);
 
   return (
     <TouchableOpacity
@@ -58,16 +58,18 @@ export const BackButton: React.FC<BackButtonProps> = ({
           : {
               backgroundColor: cardBg,
               borderColor: isCyprusSand
-                ? '#0A6B66'
+                ? Colors.CyprusTealLight
                 : isDarkMode
-                ? 'rgba(255, 255, 255, 0.12)'
-                : '#FFFFFF',
+                ? withAlpha(Colors.PureWhite, 0.12)
+                : Colors.PureWhite,
               borderBottomColor: isCyprusSand
-                ? '#001A18'
+                ? Colors.CyprusTealAbyss
                 : isDarkMode
-                ? '#14161A'
-                : '#DCD6CA',
-              shadowColor: isDarkMode ? '#000000' : 'rgba(0, 0, 0, 0.08)',
+                ? Colors.DarkCanvasRich
+                : Colors.WarmBtnBottomBevel,
+              shadowColor: isDarkMode
+                ? Colors.PureBlack
+                : withAlpha(Colors.PureBlack, 0.08),
             },
         style,
       ]}
@@ -98,9 +100,9 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   backButtonScrolled: {
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderColor: 'rgba(255, 255, 255, 0.4)',
-    borderBottomColor: 'rgba(255, 255, 255, 0.3)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.2),
+    borderColor: withAlpha(Colors.PureWhite, 0.4),
+    borderBottomColor: withAlpha(Colors.PureWhite, 0.3),
   },
 });
 

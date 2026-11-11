@@ -13,6 +13,7 @@ import { MilestoneProvider } from './src/Context/MilestoneContext';
 import { MilestoneFullScreenSheet } from './src/Screens/Milestones';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from './src/Common/ToastConfig';
+import { Colors } from './src/Assets/StyleUtilities/Colors';
 
 const ThemedStatusBar: React.FC = () => {
   const { isDarkMode } = useTheme();
@@ -21,7 +22,7 @@ const ThemedStatusBar: React.FC = () => {
       barStyle={isDarkMode ? 'light-content' : 'dark-content'}
       {...(Platform.OS === 'android'
         ? {
-            backgroundColor: 'transparent',
+            backgroundColor: Colors.Transparent,
             translucent: true,
           }
         : {})}

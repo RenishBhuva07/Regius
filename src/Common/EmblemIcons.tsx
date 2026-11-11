@@ -1,5 +1,6 @@
 import React from 'react';
 import Svg, { Path, SvgProps } from 'react-native-svg';
+import { Colors } from '../Assets/StyleUtilities/Colors';
 
 export interface EmblemIconProps extends SvgProps {
   size?: number;
@@ -14,7 +15,7 @@ export const PictureEmblemIcon: React.FC<EmblemIconProps> = ({
 }) => {
   const w = width ?? size;
   const h = height ?? size;
-  const c = color || '#6270F0';
+  const c = color || Colors.EmblemCobaltBlue;
   return (
     <Svg width={w} height={h} viewBox="0 0 14 14" fill="none" {...rest}>
       <Path
@@ -41,7 +42,7 @@ export const OfficeBagIcon: React.FC<EmblemIconProps> = ({
 }) => {
   const w = width ?? size;
   const h = height ?? size;
-  const c = color || '#F5C518';
+  const c = color || Colors.AccentYellow;
   return (
     <Svg width={w} height={h} viewBox="23 19 24 24" fill="none" {...rest}>
       <Path
@@ -72,7 +73,7 @@ export const HeartEmblemIcon: React.FC<EmblemIconProps> = ({
 }) => {
   const w = width ?? size;
   const h = height ?? size;
-  const c = color || '#52D22E';
+  const c = color || Colors.AccentGreen;
   return (
     <Svg width={w} height={h} viewBox="0 0 14 14" fill="none" {...rest}>
       <Path
@@ -101,7 +102,7 @@ export const SparkleEmblemIcon: React.FC<EmblemIconProps> = ({
 }) => {
   const w = width ?? size;
   const h = height ?? size;
-  const c = color || '#FB923C';
+  const c = color || Colors.CategoryOrangeAccent;
   return (
     <Svg width={w} height={h} viewBox="0 0 24 24" fill="none" {...rest}>
       <Path
@@ -126,7 +127,7 @@ export const FlameEmblemIcon: React.FC<EmblemIconProps> = ({
 }) => {
   const w = width ?? size;
   const h = height ?? size;
-  const c = color || '#EF4444';
+  const c = color || Colors.CategoryRedAccent;
   return (
     <Svg width={w} height={h} viewBox="0 0 24 24" fill="none" {...rest}>
       <Path

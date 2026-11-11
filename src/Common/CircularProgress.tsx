@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import { Fonts } from '../Theme/fonts';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 
 export interface CircularProgressProps {
   percent: number;
@@ -39,7 +40,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = React.memo(
             width: size,
             height: size,
             borderRadius: size / 2,
-            shadowColor: shadowColor || 'rgba(0, 0, 0, 0.1)',
+            shadowColor: shadowColor || withAlpha(Colors.PureBlack, 0.1),
           },
         ]}
         accessibilityRole="image"
@@ -54,7 +55,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = React.memo(
               r={radius}
               stroke={trackColor}
               strokeWidth={strokeWidth}
-              fill="#FFFFFF"
+              fill={Colors.PureWhite}
             />
             {/* Foreground progress arc indicating percentage */}
             {clampedPercent > 0 && (
@@ -67,7 +68,7 @@ export const CircularProgress: React.FC<CircularProgressProps> = React.memo(
                 strokeDasharray={`${circumference} ${circumference}`}
                 strokeDashoffset={strokeDashoffset}
                 strokeLinecap="round"
-                fill="transparent"
+                fill={Colors.Transparent}
               />
             )}
           </Svg>
@@ -96,7 +97,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 3,

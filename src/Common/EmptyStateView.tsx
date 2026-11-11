@@ -30,10 +30,8 @@ export const EmptyStateView: React.FC<EmptyStateViewProps> = React.memo(
   ({ illustration, title, subtitle, action, containerStyle }) => {
     const { isDarkMode } = useTheme();
 
-    const titleColor = isDarkMode
-      ? Colors.PureWhiteText
-      : Colors.MidnightInkText;
-    const subtitleColor = isDarkMode ? '#A3A8B1' : Colors.SubtitleGray;
+    const titleColor = isDarkMode ? Colors.PureWhite : Colors.PureBlack;
+    const subtitleColor = isDarkMode ? Colors.SteelMist : Colors.SubtitleGray;
 
     return (
       <View style={[styles.emptyContainer, containerStyle]}>
@@ -99,18 +97,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1F2228',
+    backgroundColor: Colors.MidnightCharcoal,
     paddingHorizontal: 18,
     paddingVertical: 9,
     borderRadius: 24,
     borderWidth: 1,
-    borderColor: '#383C44',
+    borderColor: Colors.DarkButtonBorder,
     borderBottomWidth: 2.5,
-    borderBottomColor: '#0A0C0E',
+    borderBottomColor: Colors.DarkButtonBottom,
     gap: 6,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.18,
         shadowRadius: 5,
@@ -126,7 +124,7 @@ const styles = StyleSheet.create({
   actionBtnText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 13,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     letterSpacing: 0.1,
   },
 });

@@ -10,6 +10,7 @@ import {
   AccessibilityRole,
 } from 'react-native';
 import { Fonts } from '../Theme/fonts';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 
 export interface HeaderActionButtonProps {
   label: string;
@@ -34,26 +35,15 @@ export interface HeaderActionButtonProps {
   disabled?: boolean;
 }
 
-const hexToRgba = (hex: string, alpha: number): string => {
-  const cleanHex = hex.replace('#', '');
-  if (cleanHex.length === 6) {
-    const r = parseInt(cleanHex.substring(0, 2), 16);
-    const g = parseInt(cleanHex.substring(2, 4), 16);
-    const b = parseInt(cleanHex.substring(4, 6), 16);
-    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
-  }
-  return `rgba(245, 197, 24, ${alpha})`;
-};
-
 export const HeaderActionButton: React.FC<HeaderActionButtonProps> = ({
   label,
   icon,
   iconPosition = 'left',
   onPress,
-  accentColor = '#F5C518',
+  accentColor = Colors.AccentYellow,
   iconBgColor,
-  backgroundColor = '#1E2028',
-  borderColor = '#363944',
+  backgroundColor = Colors.DarkElevatedNero,
+  borderColor = Colors.DarkBorder,
   activeOpacity = 0.8,
   accessibilityLabel,
   accessibilityRole = 'button',
@@ -63,9 +53,9 @@ export const HeaderActionButton: React.FC<HeaderActionButtonProps> = ({
 }) => {
   const resolvedIconBg =
     iconBgColor ||
-    (accentColor === '#F5C518'
-      ? 'rgba(245, 197, 24, 0.15)'
-      : hexToRgba(accentColor, 0.15));
+    (accentColor === Colors.AccentYellow
+      ? withAlpha(Colors.AccentYellow, 0.15)
+      : withAlpha(accentColor, 0.15));
 
   const renderIcon = () => {
     if (!icon) return null;
@@ -126,9 +116,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 4.5,
     borderRadius: 20,
-    backgroundColor: '#1E2028',
+    backgroundColor: Colors.DarkElevatedNero,
     borderWidth: 1,
-    borderColor: '#363944',
+    borderColor: Colors.DarkBorder,
   },
   iconWrap: {
     width: 14,

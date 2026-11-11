@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../Theme/ThemeContext';
+import { Colors as StaticColors } from '../Assets/StyleUtilities/Colors';
 
 interface IMainContainerProps {
   children: any;
@@ -30,11 +31,11 @@ const MainContainer = (props: IMainContainerProps) => {
   const {
     children,
     statusBarStyle = isDarkMode ? 'light-content' : 'dark-content',
-    statusBarBackgroundColor = 'transparent',
+    statusBarBackgroundColor = StaticColors.Transparent,
     statusBarHidden = false,
     keyboardVerticalOffset = 0,
     containerBackgroundColor = Colors.Background ||
-      (isDarkMode ? '#121417' : Colors.CreamBackground),
+      (isDarkMode ? StaticColors.DarkBackground : Colors.CreamBackground),
     translucent = true,
   } = props;
 

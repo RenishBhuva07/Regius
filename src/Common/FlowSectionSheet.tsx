@@ -53,10 +53,10 @@ export const FlowSectionSheet: React.FC<FlowSectionSheetProps> = React.memo(
               borderRightColor: borderLight,
             },
           isSandSheet && {
-            backgroundColor: '#F0EDE5',
-            borderTopColor: '#FFFFFF',
-            borderLeftColor: '#E6E2D8',
-            borderRightColor: '#E6E2D8',
+            backgroundColor: Colors.CyprusSandPaper,
+            borderTopColor: Colors.PureWhite,
+            borderLeftColor: Colors.CyprusSandAlt,
+            borderRightColor: Colors.CyprusSandAlt,
           },
           { paddingBottom: bottomPadding },
         ]}
@@ -100,7 +100,7 @@ export const FlowSectionSheet: React.FC<FlowSectionSheetProps> = React.memo(
           >
             <Plus
               size={ResponsivePixels.size18}
-              color={Colors.DefaultWhite}
+              color={Colors.PureWhite}
               strokeWidth={2.6}
             />
           </TouchableOpacity>
@@ -115,7 +115,7 @@ export const FlowSectionSheet: React.FC<FlowSectionSheetProps> = React.memo(
 
 const styles = StyleSheet.create({
   sectionContainer: {
-    backgroundColor: '#FAF8F5',
+    backgroundColor: Colors.CreamSurfaceAlt,
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     paddingTop: 36,
@@ -123,13 +123,13 @@ const styles = StyleSheet.create({
     position: 'relative',
     marginTop: 24,
     borderWidth: 1.5,
-    borderTopColor: '#FFFFFF',
-    borderLeftColor: '#F0ECE1',
-    borderRightColor: '#F0ECE1',
+    borderTopColor: Colors.PureWhite,
+    borderLeftColor: Colors.CreamBorderSubtle,
+    borderRightColor: Colors.CreamBorderSubtle,
     borderBottomWidth: 0,
     ...Platform.select({
       ios: {
-        shadowColor: '#121417',
+        shadowColor: Colors.DarkBackground,
         shadowOffset: { width: 0, height: -4 },
         shadowOpacity: 0.08,
         shadowRadius: 12,
@@ -154,14 +154,14 @@ const styles = StyleSheet.create({
     paddingVertical: ResponsivePixels.size7,
     borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
-    borderTopColor: '#4A4E5C',
-    borderLeftColor: '#363944',
-    borderRightColor: '#363944',
+    borderTopColor: Colors.DarkBevelTop,
+    borderLeftColor: Colors.DarkBorder,
+    borderRightColor: Colors.DarkBorder,
     borderBottomWidth: 4,
-    borderBottomColor: '#090A0D',
+    borderBottomColor: Colors.DarkBevelAbyss,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#0B0D11',
+    shadowColor: Colors.DarkShadowAnchor,
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.32,
     shadowRadius: 8,
@@ -172,14 +172,14 @@ const styles = StyleSheet.create({
   flowTitle: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 14.5,
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
     letterSpacing: -0.1,
     textAlign: 'center',
   },
   flowSubtitle: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 10.5,
-    color: '#B6B9C3',
+    color: Colors.CoolSilverSubtitle,
     marginTop: 1,
     textAlign: 'center',
   },
@@ -194,14 +194,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.5,
-    borderTopColor: '#4A4E5C',
-    borderLeftColor: '#363944',
-    borderRightColor: '#363944',
+    borderTopColor: Colors.DarkBevelTop,
+    borderLeftColor: Colors.DarkBorder,
+    borderRightColor: Colors.DarkBorder,
     borderBottomWidth: 3.5,
-    borderBottomColor: '#090A0D',
+    borderBottomColor: Colors.DarkBevelAbyss,
     ...Platform.select({
       ios: {
-        shadowColor: '#0B0D11',
+        shadowColor: Colors.DarkShadowAnchor,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.32,
         shadowRadius: 6,

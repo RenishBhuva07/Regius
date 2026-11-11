@@ -110,25 +110,25 @@ const CustomButton: React.FC<CustomButtonProps> = ({
 const GoogleLogo = ({ size = 20 }) => (
   <Svg width={size} height={size} viewBox="0 0 48 48">
     <Path
-      fill="#EA4335"
+      fill={Colors.GoogleRed}
       d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.7 17.74 9.5 24 9.5z"
     />
     <Path
-      fill="#4285F4"
+      fill={Colors.GoogleBlue}
       d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
     />
     <Path
-      fill="#FBBC05"
+      fill={Colors.GoogleYellow}
       d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
     />
     <Path
-      fill="#34A853"
+      fill={Colors.GoogleGreen}
       d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
     />
   </Svg>
 );
 
-const FacebookLogo = ({ size = 20, color = '#fff' }) => (
+const FacebookLogo = ({ size = 20, color = Colors.PureWhite }) => (
   <Svg width={size} height={size} viewBox="0 0 320 512">
     <Path
       fill={color}
@@ -137,7 +137,7 @@ const FacebookLogo = ({ size = 20, color = '#fff' }) => (
   </Svg>
 );
 
-const AppleLogo = ({ size = 20, color = '#fff' }) => (
+const AppleLogo = ({ size = 20, color = Colors.PureWhite }) => (
   <Svg width={size} height={size} viewBox="0 0 384 512">
     <Path
       fill={color}
@@ -151,10 +151,10 @@ const getBrandIcon = (variant: ButtonVariant) => {
     return <GoogleLogo size={ResponsivePixels.size24} />;
   }
   if (variant === 'facebook') {
-    return <FacebookLogo color={Colors.DefaultWhite} size={ResponsivePixels.size24} />;
+    return <FacebookLogo color={Colors.PureWhite} size={ResponsivePixels.size24} />;
   }
   if (variant === 'apple') {
-    return <AppleLogo color={Colors.DefaultWhite} size={ResponsivePixels.size24} />;
+    return <AppleLogo color={Colors.PureWhite} size={ResponsivePixels.size24} />;
   }
   return null;
 };
@@ -172,35 +172,35 @@ const getVariantStyles = (
       return {
         container: styles.outlinedContainer,
         text: styles.outlinedText,
-        iconColor: Colors.MidnightInkText,
+        iconColor: Colors.PureBlack,
         textTransform: 'none',
       };
     case 'dark':
       return {
         container: styles.darkContainer,
         text: styles.darkText,
-        iconColor: Colors.PureWhiteText,
+        iconColor: Colors.PureWhite,
         textTransform: 'none',
       };
     case 'google':
       return {
         container: styles.googleContainer,
         text: styles.googleText,
-        iconColor: Colors.MidnightInkText,
+        iconColor: Colors.PureBlack,
         textTransform: 'none',
       };
     case 'facebook':
       return {
         container: styles.facebookContainer,
         text: styles.socialLightText,
-        iconColor: Colors.DefaultWhite,
+        iconColor: Colors.PureWhite,
         textTransform: 'none',
       };
     case 'apple':
       return {
         container: styles.appleContainer,
         text: styles.socialLightText,
-        iconColor: Colors.DefaultWhite,
+        iconColor: Colors.PureWhite,
         textTransform: 'none',
       };
     case 'primary':
@@ -208,7 +208,7 @@ const getVariantStyles = (
       return {
         container: styles.primaryContainer,
         text: styles.primaryText,
-        iconColor: Colors.PureWhiteText,
+        iconColor: Colors.PureWhite,
         textTransform: 'none',
       };
   }
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     borderWidth: 0,
   },
   outlinedContainer: {
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.Transparent,
     borderWidth: 1.5,
     borderColor: Colors.ButtonDark,
   },
@@ -240,10 +240,10 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.IvoryMist,
   },
   facebookContainer: {
-    backgroundColor: '#2374E1',
+    backgroundColor: Colors.FacebookBlue,
   },
   appleContainer: {
-    backgroundColor: Colors.TrueBlackText,
+    backgroundColor: Colors.PureBlack,
   },
   disabled: {
     opacity: 0.45,
@@ -254,19 +254,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   primaryText: {
-    color: Colors.PureWhiteText,
+    color: Colors.PureWhite,
   },
   darkText: {
-    color: Colors.PureWhiteText,
+    color: Colors.PureWhite,
   },
   outlinedText: {
-    color: Colors.MidnightInkText,
+    color: Colors.PureBlack,
   },
   googleText: {
-    color: Colors.MidnightInkText,
+    color: Colors.PureBlack,
   },
   socialLightText: {
-    color: Colors.PureWhiteText,
+    color: Colors.PureWhite,
   },
   iconWrapper: {
     marginRight: ResponsivePixels.size8,

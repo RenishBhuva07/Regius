@@ -24,14 +24,20 @@ Regius embraces **Modern Warm Luxury & Mindful Productivity** (_"Plan Your Day I
 
 ## 2. Complete Color Architecture & Design Tokens
 
+All application and vector colors are centralized in `src/Assets/StyleUtilities/Colors.tsx` (zero hardcoded color literals outside that module):
+
+- **`Colors`**: Flat `PascalCase` token dictionary organized into 10 semantic categories: (1) Core Brand & Neutrals, (2) Canvas & Surface Neutrals (Light), (3) Canvas & Surface Neutrals (Dark), (4) Text & Iconography Neutrals, (5) Brand & UI Accents, (6) Semantic Status, (7) Category Themes, (8) Prestige Theme Palettes, (9) Habit Seeds, Milestone Swatches & Voice Studio Accents, and (10) SVG Surface, Gradient & Pattern Stops.
+- **`IllustrationColors`**: Bespoke single-use character artwork, mascot, and doodle vector stops kept separate from core UI semantic tokens.
+- **`withAlpha(hex, alpha)`**: Runtime opacity helper that converts any `Colors` or `IllustrationColors` hex token into an `rgba(...)` string for translucent glass rims, auras, and overlays.
+
 ### 2.1 Canvas & Surface Tokens
 
 | Token Name         | Hex Value | Semantic Role & Usage                                                               |
 | :----------------- | :-------- | :---------------------------------------------------------------------------------- |
 | `CreamBackground`  | `#FFFCE3` | **Signature Brand Canvas**. Used across Splash, Intro, Dashboard, Tasks, Reminders. |
-| `SheetSurface`     | `#FAF8F5` | Background for modal dialogs, bottom sheets, and form surfaces.                     |
-| `TaskSectionBg`    | `#FAFAFA` | Home / Tasks inner list rounded container sheet.                                    |
-| `DefaultWhite`     | `#FFFFFF` | Elevated cards, inner circular icon backdrops, active pill backgrounds.             |
+| `CreamSurfaceAlt`  | `#FAF8F5` | Background for modal dialogs, bottom sheets, and form surfaces.                     |
+| `LightGrey`        | `#FAFAFA` | Home / Tasks inner list rounded container sheet.                                    |
+| `PureWhite`        | `#FFFFFF` | Elevated cards, inner circular icon backdrops, active pill backgrounds.             |
 | `MidnightCharcoal` | `#1F2228` | Primary dark surface, pill toggles, high-emphasis text, dark CTA buttons.           |
 | `ButtonDark`       | `#242424` | Primary button background in light mode.                                            |
 | `RingBorder`       | `#E8E2D5` | Subtle divider border for avatar rings, input cards, and hairline borders.          |
@@ -45,15 +51,15 @@ Regius features an app-wide Obsidian Dark Theme that maintains artisanal luxury 
 | :---------------------- | :-------------------- | :---------------------------------------------------------------------------------- |
 | `DarkBackground`        | `#121417`             | Deep midnight canvas for all screens (`Dashboard`, `Tasks`, `Reminders`, `Habits`). |
 | `DarkCardBackground`    | `#1E2228`             | Elevated modal cards, quick action cards, and bento cards in dark theme.            |
-| `DarkSectionSurface`    | `#181B20`             | Flow section rounded sheet containers and canopy docks.                             |
-| `DarkInputBg`           | `#171A1F`             | Deep input fields, search bars, and subtask text inputs.                            |
-| `DarkCardFill`          | `#171A20`             | Asymmetric cutout SVG card fill color in dark mode.                                 |
-| `DarkCardStroke`        | `#2C3035`             | Asymmetric cutout SVG card hairline perimeter border.                               |
+| `DarkSurfacePressed`    | `#181B20`             | Flow section rounded sheet containers and canopy docks.                             |
+| `DarkSurfaceAlt`        | `#171A1F`             | Deep input fields, search bars, and subtask text inputs.                            |
+| `DarkSurfaceDeep`       | `#171A20`             | Asymmetric cutout SVG card fill color in dark mode.                                 |
+| `CarbonSlate`           | `#2C3035`             | Asymmetric cutout SVG card hairline perimeter border.                               |
 | `DarkCheckboxUnchecked` | `#252932`             | Floating checkbox button surface when unchecked.                                    |
-| `DarkCheckboxChecked`   | `#13281E`             | Floating checkbox button surface when checked (border: `#52D22E`).                  |
-| `DarkSecondaryText`     | `#A3A8B1`             | Subdued secondary copy, metadata stamps, and unselected filter chips.               |
-| `DarkBorder`            | `#2C3035` / `#363944` | Subtle hairline borders, divider lines, and card bevels.                            |
-| `PureWhiteText`         | `#FFFFFF`             | High-contrast titles, headers, active tab icons, and primary inputs.                |
+| `TaskCompletedDarkBg`   | `#13281E`             | Floating checkbox button surface when checked (border: `#52D22E`).                  |
+| `SteelMist`             | `#A3A8B1`             | Subdued secondary copy, metadata stamps, and unselected filter chips.               |
+| `CarbonSlate` / `DarkBorder` | `#2C3035` / `#363944` | Subtle hairline borders, divider lines, and card bevels.                       |
+| `PureWhite`             | `#FFFFFF`             | High-contrast titles, headers, active tab icons, and primary inputs.                |
 
 ### 2.3 Category Trios & Semantic Accents (Dual Light & Dark Harmonized System)
 
@@ -109,12 +115,12 @@ const {
 
 ### 2.4 Typography Foregrounds
 
-| Token Name                        | Hex Value             | Purpose & Visual Weight                                       |
-| :-------------------------------- | :-------------------- | :------------------------------------------------------------ |
-| `MidnightInkText` / `TrueBlack`   | `#000000`             | Hero screen headers, brand display, high-emphasis titles.     |
-| `SlateGraphiteText`               | `#1F2228` / `#3F454D` | Body copy, section headers, prominent input text.             |
-| `SubtitleGray` / `MutedSteelText` | `#666665` / `#7E838F` | Secondary descriptions, task counts, metadata stamps.         |
-| `PureWhiteText`                   | `#FFFFFF`             | Text on dark buttons, active tab indicators, floating badges. |
+| Token Name                              | Hex Value             | Purpose & Visual Weight                                       |
+| :-------------------------------------- | :-------------------- | :------------------------------------------------------------ |
+| `PureBlack`                             | `#000000`             | Hero screen headers, brand display, high-emphasis titles.     |
+| `MidnightCharcoal` / `SlateGraphiteText` | `#1F2228` / `#3F454D` | Body copy, section headers, prominent input text.             |
+| `SubtitleGray` / `MutedSlateSubtext`    | `#666665` / `#7E838F` | Secondary descriptions, task counts, metadata stamps.         |
+| `PureWhite`                             | `#FFFFFF`             | Text on dark buttons, active tab indicators, floating badges. |
 
 ### 2.5 Prestige Theme Palettes (Dual Light & Dark Harmonic Systems)
 
@@ -293,11 +299,11 @@ Primary buttons follow full-pill geometry (`borderRadius: 28`) and tactile debou
 - **Primary / Dark Button**:
   - `backgroundColor: Colors.ButtonDark` (`#242424`)
   - `paddingHorizontal: 24`, `paddingVertical: 16`
-  - Text: `PureWhiteText` (`#FFFFFF`), `Fonts.poppins.semiBold`, `fontSize: 16`
+  - Text: `Colors.PureWhite` (`#FFFFFF`), `Fonts.poppins.semiBold`, `fontSize: 16`
   - Optional left icon slot (e.g. ShoppingCart, Sparkles, Plus).
 - **Outlined Button**:
   - `backgroundColor: 'transparent'`, `borderWidth: 1.5`, `borderColor: '#242424'`
-  - Text: `MidnightInkText` (`#000000`).
+  - Text: `Colors.PureBlack` (`#000000`).
 - **Social Buttons**:
   - `google`: `backgroundColor: '#EEEEED'`, text `#000000` with official multi-color SVG Google logo.
   - `apple`: `backgroundColor: '#000000'`, text `#FFFFFF` with official Apple logo.
@@ -589,8 +595,8 @@ Regius employs a signature dual-tier luxury header architecture where scrolling 
   - Golden 4-point diamond sparkle stars and celestial starlight micro-dots.
   - Crisp `4px` `CreamBackground` (`#FFFCE3`) outer border outline on top layer.
 - **Tab Items & Labels**:
-  - Sliding Indicator: A single animated black pill (`Colors.DefaultBlack`, `width: 66`, `height: 50`, `borderRadius: 16`) with `FocusedTabPatternSvg` rendered behind the tab items that smoothly glides along the bar (`translateX`) to the newly selected tab.
-  - Focused State: Enclosed over the sliding black container pill with `PureWhiteText` (`#FFFFFF`) icon (strokeWidth `2.4`) and centered bold label.
+  - Sliding Indicator: A single animated black pill (`Colors.PureBlack`, `width: 66`, `height: 50`, `borderRadius: 16`) with `FocusedTabPatternSvg` rendered behind the tab items that smoothly glides along the bar (`translateX`) to the newly selected tab.
+  - Focused State: Enclosed over the sliding black container pill with `Colors.PureWhite` (`#FFFFFF`) icon (strokeWidth `2.4`) and centered bold label.
   - Inactive State: Transparent background with translucent white icon (`rgba(255, 255, 255, 0.65)`, strokeWidth `1.7`) and medium label (`rgba(255, 255, 255, 0.7)`).
 - **Center Floating FAB Button (`PlusButtonPatternSvg.tsx`)**:
   - Size: `54x54` circle with multi-tone royal lavender gradient (`#A2A2F8` → `#8A8AE6` → `#7171CE` → `#5656B2`).
