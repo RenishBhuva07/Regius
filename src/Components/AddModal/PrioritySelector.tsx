@@ -7,6 +7,7 @@ import {
   Platform,
 } from 'react-native';
 import { Fonts } from '../../Theme/fonts';
+import { Colors } from '../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../Theme/useAppTheme';
 
 export type PriorityLevel = 'low' | 'medium' | 'high';
@@ -23,9 +24,9 @@ const PRIORITY_OPTIONS: Array<{
   label: string;
   dotColor: string;
 }> = [
-  { key: 'low', label: 'Low', dotColor: '#10B981' },
-  { key: 'medium', label: 'Medium', dotColor: '#F59E0B' },
-  { key: 'high', label: 'High', dotColor: '#EF4444' },
+  { key: 'low', label: 'Low', dotColor: Colors.ToastSuccessAccent },
+  { key: 'medium', label: 'Medium', dotColor: Colors.VoiceMichaelAccent },
+  { key: 'high', label: 'High', dotColor: Colors.CategoryRedAccent },
 ];
 
 export const PrioritySelector: React.FC<PrioritySelectorProps> = React.memo(
@@ -64,8 +65,8 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = React.memo(
           style={[
             styles.priorityBarContainer,
             isDarkMode && {
-              backgroundColor: '#1E2228',
-              borderColor: '#2C3035',
+              backgroundColor: Colors.DarkCardBackground,
+              borderColor: Colors.CarbonSlate,
             },
           ]}
         >
@@ -80,7 +81,7 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = React.memo(
                   styles.priorityTab,
                   isActive && [
                     styles.priorityTabActive,
-                    isDarkMode && { backgroundColor: '#2C3035' },
+                    isDarkMode && { backgroundColor: Colors.CarbonSlate },
                   ],
                 ]}
                 accessibilityRole="radio"
@@ -100,7 +101,7 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = React.memo(
                       ? styles.priorityTabTextActive
                       : [
                           styles.priorityTabTextInactive,
-                          isDarkMode && { color: '#A3A8B1' },
+                          isDarkMode && { color: Colors.SteelMist },
                         ],
                   ]}
                 >
@@ -128,21 +129,21 @@ const styles = StyleSheet.create({
   sectionHeading: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 13.5,
-    color: '#121417',
+    color: Colors.DarkBackground,
     letterSpacing: -0.2,
   },
   sectionSubtext: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 11.5,
-    color: '#77767B',
+    color: Colors.Grey,
   },
   priorityBarContainer: {
     flexDirection: 'row',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderRadius: 20,
     padding: 4,
     borderWidth: 1.5,
-    borderColor: '#E8E2D5',
+    borderColor: Colors.RingBorder,
   },
   priorityTab: {
     flex: 1,
@@ -154,10 +155,10 @@ const styles = StyleSheet.create({
     gap: 6,
   },
   priorityTabActive: {
-    backgroundColor: '#1E2028',
+    backgroundColor: Colors.DarkElevatedNero,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.15,
         shadowRadius: 3,
@@ -178,10 +179,10 @@ const styles = StyleSheet.create({
   },
   priorityTabTextActive: {
     fontFamily: Fonts.poppins.bold,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
   priorityTabTextInactive: {
-    color: '#77767B',
+    color: Colors.Grey,
   },
 });
 

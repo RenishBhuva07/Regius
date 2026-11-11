@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Platform, StyleProp, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import { useTheme } from '../Theme/ThemeContext';
 
 export interface StickyActionDockProps {
@@ -23,9 +24,11 @@ export const StickyActionDock: React.FC<StickyActionDockProps> = React.memo(
     const { isDarkMode } = useTheme();
 
     const defaultBg = isDarkMode
-      ? 'rgba(18, 20, 23, 0.95)'
-      : 'rgba(255, 252, 227, 0.96)';
-    const defaultBorder = isDarkMode ? '#2C3035' : '#EAE5D9';
+      ? withAlpha(Colors.DarkBackground, 0.95)
+      : withAlpha(Colors.CreamBackground, 0.96);
+    const defaultBorder = isDarkMode
+      ? Colors.CarbonSlate
+      : Colors.WarmParchmentBorder;
 
     return (
       <View
@@ -56,7 +59,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 1,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: -4 },
         shadowOpacity: 0.12,
         shadowRadius: 10,

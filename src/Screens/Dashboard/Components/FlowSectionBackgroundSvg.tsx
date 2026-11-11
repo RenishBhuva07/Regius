@@ -11,6 +11,7 @@ import Svg, {
   Stop,
 } from 'react-native-svg';
 import { useTheme } from '../../../Theme/ThemeContext';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -51,13 +52,28 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
     const centerX = W / 2;
 
     const isSandTheme = !isDarkMode || activeThemeId === 'cyprus_sand';
-    const bgStop0 = isSandTheme ? '#FFFDF7' : (themeColors.SurfaceAlt || '#181B20');
-    const bgStop25 = isSandTheme ? '#FAF6ED' : (themeColors.Background || '#14171C');
-    const bgStop75 = isSandTheme ? '#F5EFE3' : (themeColors.AccentDeep || '#101216');
-    const bgStop100 = isSandTheme ? '#EDE5D6' : (themeColors.AccentDark || '#0D0E12');
-    const fadeColor = isSandTheme ? '#FAF6ED' : (themeColors.SurfaceAlt || '#181B20');
-    const fadeColorBottom = isSandTheme ? '#EDE5D6' : (themeColors.AccentDeep || '#101216');
-    const themeAura = activeThemeId === 'cyprus_sand' ? '#004643' : (themeColors.Accent || '#8383D6');
+    const bgStop0 = isSandTheme
+      ? Colors.WorkTintCream
+      : themeColors.SurfaceAlt || Colors.DarkSurfacePressed;
+    const bgStop25 = isSandTheme
+      ? Colors.MilestoneCreamBg
+      : themeColors.Background || Colors.DarkCanvasDeep;
+    const bgStop75 = isSandTheme
+      ? Colors.SvgSectionCreamBase
+      : themeColors.AccentDeep || Colors.RoadCurbEdgeDark;
+    const bgStop100 = isSandTheme
+      ? Colors.SvgFlowCreamMid
+      : themeColors.AccentDark || Colors.SvgSectionVoid;
+    const fadeColor = isSandTheme
+      ? Colors.MilestoneCreamBg
+      : themeColors.SurfaceAlt || Colors.DarkSurfacePressed;
+    const fadeColorBottom = isSandTheme
+      ? Colors.SvgFlowCreamMid
+      : themeColors.AccentDeep || Colors.RoadCurbEdgeDark;
+    const themeAura =
+      activeThemeId === 'cyprus_sand'
+        ? Colors.CyprusTeal
+        : themeColors.Accent || Colors.LavenderPurple;
 
     // Symmetrical 4-point diamond star generator (fixed pixel geometry)
     const star = (cx: number, cy: number, s: number) =>
@@ -93,8 +109,8 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               r={160}
               gradientUnits="userSpaceOnUse"
             >
-              <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.18} />
-              <Stop offset="45%" stopColor="#E2A612" stopOpacity={0.06} />
+              <Stop offset="0%" stopColor={Colors.AccentYellow} stopOpacity={0.18} />
+              <Stop offset="45%" stopColor={Colors.SvgGoldAuraMid} stopOpacity={0.06} />
               <Stop offset="100%" stopColor={fadeColor} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
@@ -115,8 +131,8 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               r={110}
               gradientUnits="userSpaceOnUse"
             >
-              <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.12} />
-              <Stop offset="50%" stopColor="#E2A612" stopOpacity={0.04} />
+              <Stop offset="0%" stopColor={Colors.AccentYellow} stopOpacity={0.12} />
+              <Stop offset="50%" stopColor={Colors.SvgGoldAuraMid} stopOpacity={0.04} />
               <Stop offset="100%" stopColor={fadeColor} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
@@ -126,8 +142,8 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               r={120}
               gradientUnits="userSpaceOnUse"
             >
-              <Stop offset="0%" stopColor="#52D22E" stopOpacity={0.08} />
-              <Stop offset="50%" stopColor="#1B9A72" stopOpacity={0.03} />
+              <Stop offset="0%" stopColor={Colors.AccentGreen} stopOpacity={0.08} />
+              <Stop offset="50%" stopColor={Colors.GreenGracious} stopOpacity={0.03} />
               <Stop offset="100%" stopColor={fadeColorBottom} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
@@ -137,8 +153,8 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               r={120}
               gradientUnits="userSpaceOnUse"
             >
-              <Stop offset="0%" stopColor="#E87A5D" stopOpacity={0.07} />
-              <Stop offset="55%" stopColor="#D96E52" stopOpacity={0.02} />
+              <Stop offset="0%" stopColor={Colors.SvgCoralMist} stopOpacity={0.07} />
+              <Stop offset="55%" stopColor={Colors.SvgTerracottaSoft} stopOpacity={0.02} />
               <Stop offset="100%" stopColor={fadeColorBottom} stopOpacity={0} />
             </RadialGradient>
             <LinearGradient
@@ -148,9 +164,9 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               x2="100%"
               y2="100%"
             >
-              <Stop offset="0%" stopColor="#FFFCE3" stopOpacity={0.98} />
-              <Stop offset="50%" stopColor="#F5C518" stopOpacity={0.88} />
-              <Stop offset="100%" stopColor="#B48216" stopOpacity={0.7} />
+              <Stop offset="0%" stopColor={Colors.CreamBackground} stopOpacity={0.98} />
+              <Stop offset="50%" stopColor={Colors.AccentYellow} stopOpacity={0.88} />
+              <Stop offset="100%" stopColor={Colors.WorkTextAccent} stopOpacity={0.7} />
             </LinearGradient>
             <LinearGradient
               id="flowRimHighlight"
@@ -162,17 +178,19 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
             >
               <Stop
                 offset="0%"
-                stopColor="#FFFFFF"
+                stopColor={Colors.PureWhite}
                 stopOpacity={isDarkMode ? 0.15 : 0.9}
               />
               <Stop
                 offset="30%"
-                stopColor="#FFFFFF"
+                stopColor={Colors.PureWhite}
                 stopOpacity={isDarkMode ? 0.05 : 0.25}
               />
               <Stop
                 offset="100%"
-                stopColor={isDarkMode ? '#000000' : '#DDD4C4'}
+                stopColor={
+                  isDarkMode ? Colors.PureBlack : Colors.SvgFlowWarmStone
+                }
                 stopOpacity={isDarkMode ? 0.2 : 0.4}
               />
             </LinearGradient>
@@ -187,7 +205,7 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
             cx={centerX}
             cy={0}
             r={46}
-            stroke="rgba(180, 130, 22, 0.12)"
+            stroke={withAlpha(Colors.WorkTextAccent, 0.12)}
             strokeWidth={1}
             fill="none"
           />
@@ -195,7 +213,7 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
             cx={centerX}
             cy={0}
             r={78}
-            stroke="rgba(180, 130, 22, 0.08)"
+            stroke={withAlpha(Colors.WorkTextAccent, 0.08)}
             strokeWidth={1}
             strokeDasharray="4 5"
             fill="none"
@@ -204,7 +222,7 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
             cx={centerX}
             cy={0}
             r={116}
-            stroke="rgba(131, 131, 214, 0.07)"
+            stroke={withAlpha(Colors.LavenderPurple, 0.07)}
             strokeWidth={1.1}
             fill="none"
           />
@@ -212,7 +230,7 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
             cx={centerX}
             cy={0}
             r={160}
-            stroke="rgba(131, 131, 214, 0.05)"
+            stroke={withAlpha(Colors.LavenderPurple, 0.05)}
             strokeWidth={1}
             strokeDasharray="5 6"
             fill="none"
@@ -221,7 +239,7 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
             cx={W - 24}
             cy={32}
             r={24}
-            stroke="rgba(131, 131, 214, 0.12)"
+            stroke={withAlpha(Colors.LavenderPurple, 0.12)}
             strokeWidth={1}
             fill="none"
           />
@@ -229,7 +247,7 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
             cx={W - 24}
             cy={32}
             r={40}
-            stroke="rgba(131, 131, 214, 0.06)"
+            stroke={withAlpha(Colors.LavenderPurple, 0.06)}
             strokeWidth={1}
             strokeDasharray="3 4"
             fill="none"
@@ -238,7 +256,7 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
             cx={24}
             cy={32}
             r={24}
-            stroke="rgba(180, 130, 22, 0.1)"
+            stroke={withAlpha(Colors.WorkTextAccent, 0.1)}
             strokeWidth={1}
             fill="none"
           />
@@ -246,7 +264,7 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
             cx={24}
             cy={32}
             r={40}
-            stroke="rgba(180, 130, 22, 0.05)"
+            stroke={withAlpha(Colors.WorkTextAccent, 0.05)}
             strokeWidth={1}
             strokeDasharray="3 4"
             fill="none"
@@ -257,7 +275,7 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
                 cx={28}
                 cy={H - 32}
                 r={26}
-                stroke="rgba(27, 154, 114, 0.08)"
+                stroke={withAlpha(Colors.GreenGracious, 0.08)}
                 strokeWidth={1}
                 strokeDasharray="3 4"
                 fill="none"
@@ -266,7 +284,7 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
                 cx={W - 28}
                 cy={H - 32}
                 r={26}
-                stroke="rgba(232, 122, 93, 0.08)"
+                stroke={withAlpha(Colors.SvgCoralMist, 0.08)}
                 strokeWidth={1}
                 strokeDasharray="3 4"
                 fill="none"
@@ -275,14 +293,14 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
           )}
           <Path
             d="M -4 70 Q 22 130, 6 200 T 12 280"
-            stroke="rgba(131, 131, 214, 0.07)"
+            stroke={withAlpha(Colors.LavenderPurple, 0.07)}
             strokeWidth={1.2}
             strokeLinecap="round"
             fill="none"
           />
           <Path
             d={`M ${W + 4} 70 Q ${W - 22} 130, ${W - 6} 200 T ${W - 12} 280`}
-            stroke="rgba(131, 131, 214, 0.08)"
+            stroke={withAlpha(Colors.LavenderPurple, 0.08)}
             strokeWidth={1.2}
             strokeLinecap="round"
             fill="none"
@@ -293,7 +311,7 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
                 d={`M 12 ${H - 260} Q 6 ${H - 180}, 20 ${H - 100} T -4 ${
                   H - 40
                 }`}
-                stroke="rgba(180, 130, 22, 0.06)"
+                stroke={withAlpha(Colors.WorkTextAccent, 0.06)}
                 strokeWidth={1.1}
                 strokeLinecap="round"
                 fill="none"
@@ -302,7 +320,7 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
                 d={`M ${W - 12} ${H - 260} Q ${W - 6} ${H - 180}, ${W - 20} ${
                   H - 100
                 } T ${W + 4} ${H - 40}`}
-                stroke="rgba(131, 131, 214, 0.06)"
+                stroke={withAlpha(Colors.LavenderPurple, 0.06)}
                 strokeWidth={1.1}
                 strokeLinecap="round"
                 fill="none"
@@ -316,7 +334,7 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
                 y1={90}
                 x2={12}
                 y2={H - 90}
-                stroke="rgba(180, 130, 22, 0.04)"
+                stroke={withAlpha(Colors.WorkTextAccent, 0.04)}
                 strokeWidth={0.8}
                 strokeDasharray="3 6"
               />
@@ -325,7 +343,7 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
                 y1={90}
                 x2={W - 12}
                 y2={H - 90}
-                stroke="rgba(131, 131, 214, 0.04)"
+                stroke={withAlpha(Colors.LavenderPurple, 0.04)}
                 strokeWidth={0.8}
                 strokeDasharray="3 6"
               />
@@ -353,23 +371,43 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
               <Path d={star(W - 34, H - 36, 3.6)} fill="url(#flowGoldStar)" />
             </>
           )}
-          <Circle cx={44} cy={30} r={1.2} fill="rgba(180, 130, 22, 0.28)" />
-          <Circle cx={22} cy={68} r={1} fill="rgba(180, 130, 22, 0.2)" />
-          <Circle cx={W - 44} cy={30} r={1.2} fill="rgba(131, 131, 214, 0.3)" />
-          <Circle cx={W - 22} cy={68} r={1} fill="rgba(131, 131, 214, 0.2)" />
+          <Circle
+            cx={44}
+            cy={30}
+            r={1.2}
+            fill={withAlpha(Colors.WorkTextAccent, 0.28)}
+          />
+          <Circle
+            cx={22}
+            cy={68}
+            r={1}
+            fill={withAlpha(Colors.WorkTextAccent, 0.2)}
+          />
+          <Circle
+            cx={W - 44}
+            cy={30}
+            r={1.2}
+            fill={withAlpha(Colors.LavenderPurple, 0.3)}
+          />
+          <Circle
+            cx={W - 22}
+            cy={68}
+            r={1}
+            fill={withAlpha(Colors.LavenderPurple, 0.2)}
+          />
           {H > 300 && (
             <>
               <Circle
                 cx={12}
                 cy={Math.min(340, H * 0.4) + 18}
                 r={1}
-                fill="rgba(180, 130, 22, 0.2)"
+                fill={withAlpha(Colors.WorkTextAccent, 0.2)}
               />
               <Circle
                 cx={W - 12}
                 cy={Math.min(480, H * 0.62) + 18}
                 r={1}
-                fill="rgba(131, 131, 214, 0.2)"
+                fill={withAlpha(Colors.LavenderPurple, 0.2)}
               />
             </>
           )}
@@ -379,13 +417,13 @@ export const FlowSectionBackgroundSvg: React.FC<FlowSectionBackgroundSvgProps> =
                 cx={24}
                 cy={H - 52}
                 r={1.2}
-                fill="rgba(27, 154, 114, 0.25)"
+                fill={withAlpha(Colors.GreenGracious, 0.25)}
               />
               <Circle
                 cx={W - 24}
                 cy={H - 52}
                 r={1.2}
-                fill="rgba(232, 122, 93, 0.25)"
+                fill={withAlpha(Colors.SvgCoralMist, 0.25)}
               />
             </>
           )}

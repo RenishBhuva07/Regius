@@ -11,7 +11,7 @@ import Svg, {
   RadialGradient,
   Stop,
 } from 'react-native-svg';
-import { Colors } from '../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import { useTheme } from '../Theme/ThemeContext';
 
 interface BottomTabPatternSvgProps {
@@ -37,58 +37,59 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
     }) => {
       const { isDarkMode, activeThemeId, Colors: themeColors } = useTheme();
       const strokeColor =
-        themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
+        themeColors.Background ||
+        (isDarkMode ? Colors.DarkBackground : Colors.CreamBackground);
       const cx = W / 2;
 
       const getBarGradient = () => {
         if (activeThemeId === 'cyprus_sand') {
           return {
-            top: '#0A6B66',
-            mid: '#004643',
-            bot: '#001A18',
-            aura: 'rgba(0, 70, 67, 0.4)',
-            leftAura: '#0D7E78',
-            haloGold: '#F0EDE5',
+            top: Colors.CyprusTealLight,
+            mid: Colors.CyprusTeal,
+            bot: Colors.CyprusTealAbyss,
+            aura: withAlpha(Colors.CyprusTeal, 0.4),
+            leftAura: Colors.SvgCyprusTealGlow,
+            haloGold: Colors.CyprusSandPaper,
           };
         }
         if (activeThemeId === 'emerald_velvet') {
           return {
-            top: '#1B9A72',
-            mid: '#0F1A15',
-            bot: '#070D0A',
-            aura: 'rgba(46, 204, 113, 0.35)',
-            leftAura: '#2ECC71',
-            haloGold: '#E3F7EE',
+            top: Colors.GreenGracious,
+            mid: Colors.EmeraldDarkCanvas,
+            bot: Colors.SvgNavEmeraldFade,
+            aura: withAlpha(Colors.EmeraldVibrant, 0.35),
+            leftAura: Colors.EmeraldVibrant,
+            haloGold: Colors.EmeraldTextLight,
           };
         }
         if (activeThemeId === 'celestial_azure') {
           return {
-            top: '#2563EB',
-            mid: '#0D1424',
-            bot: '#060A14',
-            aura: 'rgba(96, 165, 250, 0.35)',
-            leftAura: '#60A5FA',
-            haloGold: '#E6EEFA',
+            top: Colors.Blue600,
+            mid: Colors.AzureDarkCanvas,
+            bot: Colors.SvgNavAzureFade,
+            aura: withAlpha(Colors.AzureSkyAccent, 0.35),
+            leftAura: Colors.AzureSkyAccent,
+            haloGold: Colors.AzureTextLight,
           };
         }
         if (activeThemeId === 'classic_dark' || activeThemeId === 'obsidian_gold') {
           return {
-            top: '#252932',
-            mid: '#15171D',
-            bot: '#0B0C0F',
-            aura: 'rgba(245, 197, 24, 0.25)',
-            leftAura: '#323742',
-            haloGold: '#F5C518',
+            top: Colors.DarkCheckboxUnchecked,
+            mid: Colors.SvgNavMidDark,
+            bot: Colors.SvgSurfaceVoid,
+            aura: withAlpha(Colors.AccentYellow, 0.25),
+            leftAura: Colors.SvgNavTopSlate,
+            haloGold: Colors.AccentYellow,
           };
         }
         // Default: Warm Cream (classic_light)
         return {
-          top: '#9494EC',
-          mid: '#8383D6',
-          bot: '#6C6CC4',
-          aura: '#8383D6',
-          leftAura: '#B2B2FF',
-          haloGold: '#FFFCE3',
+          top: Colors.LavenderSoftHighlight,
+          mid: Colors.LavenderPurple,
+          bot: Colors.LavenderDeep,
+          aura: Colors.LavenderPurple,
+          leftAura: Colors.SvgNavLavenderAura,
+          haloGold: Colors.CreamBackground,
         };
       };
 
@@ -165,7 +166,7 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 ry="80%"
               >
                 <Stop offset="0%" stopColor={barGrad.haloGold} stopOpacity={0.32} />
-                <Stop offset="45%" stopColor="#F5C518" stopOpacity={0.12} />
+                <Stop offset="45%" stopColor={Colors.AccentYellow} stopOpacity={0.12} />
                 <Stop offset="100%" stopColor={barGrad.mid} stopOpacity={0} />
               </RadialGradient>
               <RadialGradient
@@ -185,13 +186,13 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 rx="35%"
                 ry="70%"
               >
-                <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.16} />
+                <Stop offset="0%" stopColor={Colors.AccentYellow} stopOpacity={0.16} />
                 <Stop offset="100%" stopColor={barGrad.mid} stopOpacity={0} />
               </RadialGradient>
               <LinearGradient id="barTopRim" x1="0%" y1="0%" x2="100%" y2="0%">
-                <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.06} />
-                <Stop offset="50%" stopColor="#FFFFFF" stopOpacity={0.42} />
-                <Stop offset="100%" stopColor="#FFFFFF" stopOpacity={0.06} />
+                <Stop offset="0%" stopColor={Colors.PureWhite} stopOpacity={0.06} />
+                <Stop offset="50%" stopColor={Colors.PureWhite} stopOpacity={0.42} />
+                <Stop offset="100%" stopColor={Colors.PureWhite} stopOpacity={0.06} />
               </LinearGradient>
               <LinearGradient
                 id="barGoldStar"
@@ -200,8 +201,8 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 x2="100%"
                 y2="100%"
               >
-                <Stop offset="0%" stopColor="#FFFCE3" stopOpacity={0.95} />
-                <Stop offset="100%" stopColor="#F5C518" stopOpacity={0.8} />
+                <Stop offset="0%" stopColor={Colors.CreamBackground} stopOpacity={0.95} />
+                <Stop offset="100%" stopColor={Colors.AccentYellow} stopOpacity={0.8} />
               </LinearGradient>
             </Defs>
             <G clipPath="url(#curvedBarClip)">
@@ -231,7 +232,7 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 cx={32}
                 cy={H * 0.52}
                 r={16}
-                stroke="rgba(255, 255, 255, 0.14)"
+                stroke={withAlpha(Colors.PureWhite, 0.14)}
                 strokeWidth={1}
                 fill="none"
               />
@@ -239,7 +240,7 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 cx={32}
                 cy={H * 0.52}
                 r={28}
-                stroke="rgba(255, 255, 255, 0.08)"
+                stroke={withAlpha(Colors.PureWhite, 0.08)}
                 strokeWidth={1}
                 strokeDasharray="3 4"
                 fill="none"
@@ -248,7 +249,7 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 cx={32}
                 cy={H * 0.52}
                 r={44}
-                stroke="rgba(255, 255, 255, 0.04)"
+                stroke={withAlpha(Colors.PureWhite, 0.04)}
                 strokeWidth={1}
                 fill="none"
               />
@@ -256,7 +257,7 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 cx={W - 32}
                 cy={H * 0.52}
                 r={16}
-                stroke="rgba(255, 255, 255, 0.14)"
+                stroke={withAlpha(Colors.PureWhite, 0.14)}
                 strokeWidth={1}
                 fill="none"
               />
@@ -264,7 +265,7 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 cx={W - 32}
                 cy={H * 0.52}
                 r={28}
-                stroke="rgba(255, 255, 255, 0.08)"
+                stroke={withAlpha(Colors.PureWhite, 0.08)}
                 strokeWidth={1}
                 strokeDasharray="3 4"
                 fill="none"
@@ -273,7 +274,7 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 cx={W - 32}
                 cy={H * 0.52}
                 r={44}
-                stroke="rgba(255, 255, 255, 0.04)"
+                stroke={withAlpha(Colors.PureWhite, 0.04)}
                 strokeWidth={1}
                 fill="none"
               />
@@ -281,7 +282,7 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 d={`M ${cx - 26} ${NOTCH_DEEP + 6} Q ${cx} ${
                   NOTCH_DEEP + 16
                 }, ${cx + 26} ${NOTCH_DEEP + 6}`}
-                stroke="rgba(255, 252, 227, 0.22)"
+                stroke={withAlpha(Colors.CreamBackground, 0.22)}
                 strokeWidth={1.2}
                 strokeDasharray="3 3"
                 fill="none"
@@ -290,7 +291,7 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 d={`M ${cx - 40} ${NOTCH_DEEP + 14} Q ${cx} ${
                   NOTCH_DEEP + 27
                 }, ${cx + 40} ${NOTCH_DEEP + 14}`}
-                stroke="rgba(255, 252, 227, 0.12)"
+                stroke={withAlpha(Colors.CreamBackground, 0.12)}
                 strokeWidth={1}
                 fill="none"
               />
@@ -300,7 +301,7 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 } ${H * 0.5} T ${cx + NOTCH_W + 6} ${H * 0.5} Q ${W * 0.78} ${
                   H * 0.2
                 }, ${W + 15} ${H * 0.44}`}
-                stroke="rgba(255, 255, 255, 0.15)"
+                stroke={withAlpha(Colors.PureWhite, 0.15)}
                 strokeWidth={1.2}
                 strokeLinecap="round"
                 fill="none"
@@ -309,7 +310,7 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 d={`M -10 ${H * 0.64} Q ${W * 0.26} ${H * 0.8}, ${cx} ${
                   H * 0.58
                 } Q ${W * 0.74} ${H * 0.8}, ${W + 10} ${H * 0.64}`}
-                stroke="rgba(255, 255, 255, 0.08)"
+                stroke={withAlpha(Colors.PureWhite, 0.08)}
                 strokeWidth={1}
                 strokeDasharray="4 5"
                 fill="none"
@@ -346,42 +347,42 @@ export const BottomTabPatternSvg: React.FC<BottomTabPatternSvgProps> =
                 cx={W * 0.08}
                 cy={H * 0.34}
                 r={1.2}
-                fill="#FFFCE3"
+                fill={Colors.CreamBackground}
                 opacity={0.65}
               />
               <Circle
                 cx={W * 0.23}
                 cy={H * 0.68}
                 r={1.0}
-                fill="#FFFCE3"
+                fill={Colors.CreamBackground}
                 opacity={0.5}
               />
               <Circle
                 cx={W * 0.41}
                 cy={H * 0.24}
                 r={1.1}
-                fill="#FFFCE3"
+                fill={Colors.CreamBackground}
                 opacity={0.6}
               />
               <Circle
                 cx={W * 0.59}
                 cy={H * 0.24}
                 r={1.1}
-                fill="#FFFCE3"
+                fill={Colors.CreamBackground}
                 opacity={0.6}
               />
               <Circle
                 cx={W * 0.77}
                 cy={H * 0.68}
                 r={1.0}
-                fill="#FFFCE3"
+                fill={Colors.CreamBackground}
                 opacity={0.5}
               />
               <Circle
                 cx={W * 0.92}
                 cy={H * 0.34}
                 r={1.2}
-                fill="#FFFCE3"
+                fill={Colors.CreamBackground}
                 opacity={0.65}
               />
             </G>

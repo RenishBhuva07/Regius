@@ -14,7 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { Fonts } from '../Theme/fonts';
 import { useTheme } from '../Theme/ThemeContext';
-import { Colors } from '../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import HeaderPatternSvg from '../Screens/Dashboard/Components/HeaderPatternSvg';
 import { BackButton } from './BackButton';
 import { Badge, BadgeVariant } from './Badge';
@@ -63,22 +63,26 @@ export const SubScreenHeader: React.FC<SubScreenHeaderProps> = ({
   const { width: screenWidth } = Dimensions.get('window');
 
   const bgMain =
-    themeColors.Background || (isDarkMode ? '#121417' : Colors.CreamBackground);
+    themeColors.Background ||
+    (isDarkMode ? Colors.DarkBackground : Colors.CreamBackground);
   const canvasTextPrimary =
     themeColors.CanvasTextPrimary ||
-    (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
+    (isDarkMode ? Colors.PureWhite : Colors.PureBlack);
   const canvasTextSecondary =
     themeColors.CanvasTextSecondary ||
-    (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+    (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray);
 
   const scrolledBg =
-    themeColors.AccentDeep || (isDarkMode ? '#282048' : Colors.LavenderPurple);
+    themeColors.AccentDeep ||
+    (isDarkMode ? Colors.MidnightIndigo : Colors.LavenderPurple);
 
   // Interpolate header visual styles based on scroll position (0 to 30px)
   const headerBgColor = scrollY.interpolate({
     inputRange: [0, 30],
     outputRange: [
-      isDarkMode ? 'rgba(18, 20, 23, 0)' : 'rgba(255, 252, 227, 0)',
+      isDarkMode
+        ? withAlpha(Colors.DarkBackground, 0)
+        : withAlpha(Colors.CreamBackground, 0),
       scrolledBg,
     ],
     extrapolate: 'clamp',
@@ -240,7 +244,7 @@ export const SubScreenHeader: React.FC<SubScreenHeaderProps> = ({
 
 const styles = StyleSheet.create({
   headerContainer: {
-    shadowColor: '#201646',
+    shadowColor: Colors.DeepVioletShadow,
     shadowOffset: { width: 0, height: 6 },
     shadowRadius: 7,
   },
@@ -275,7 +279,7 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   headerTitleScrolled: {
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
   },
   headerSubtitle: {
     fontFamily: Fonts.poppins.regular,
@@ -283,7 +287,7 @@ const styles = StyleSheet.create({
     marginTop: 1,
   },
   headerSubtitleScrolled: {
-    color: 'rgba(255, 255, 255, 0.82)',
+    color: withAlpha(Colors.PureWhite, 0.82),
   },
 });
 

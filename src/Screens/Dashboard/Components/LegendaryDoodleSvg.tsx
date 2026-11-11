@@ -11,6 +11,7 @@ import Svg, {
   Line,
   Polygon,
 } from 'react-native-svg';
+import { Colors, IllustrationColors } from '../../../Assets/StyleUtilities/Colors';
 
 export interface LegendaryDoodleSvgProps {
   width?: number;
@@ -28,81 +29,101 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
         <Defs>
           {/* Ambient Royal Triumph Glow Aura */}
           <RadialGradient id="lgAura" cx="50%" cy="50%" r="50%">
-            <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.28} />
-            <Stop offset="45%" stopColor="#8383D6" stopOpacity={0.12} />
-            <Stop offset="100%" stopColor="#FAF7EF" stopOpacity={0} />
+            <Stop
+              offset="0%"
+              stopColor={Colors.AccentYellow}
+              stopOpacity={0.28}
+            />
+            <Stop
+              offset="45%"
+              stopColor={Colors.LavenderPurple}
+              stopOpacity={0.12}
+            />
+            <Stop
+              offset="100%"
+              stopColor={Colors.WarmParchment}
+              stopOpacity={0}
+            />
           </RadialGradient>
 
           {/* Radiant Imperial 24K Gold Gradient */}
           <LinearGradient id="lgGold" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#FFFCE3" />
-            <Stop offset="35%" stopColor="#F5C518" />
-            <Stop offset="75%" stopColor="#D97706" />
-            <Stop offset="100%" stopColor="#92400E" />
+            <Stop offset="0%" stopColor={Colors.CreamBackground} />
+            <Stop offset="35%" stopColor={Colors.AccentYellow} />
+            <Stop offset="75%" stopColor={Colors.HabitBurnishedAmber} />
+            <Stop offset="100%" stopColor={Colors.Amber800} />
           </LinearGradient>
 
           {/* Beveled Deep Gold for 3D Crown Inner Edges */}
           <LinearGradient id="lgGoldDark" x1="0%" y1="0%" x2="0%" y2="100%">
-            <Stop offset="0%" stopColor="#FBBF24" />
-            <Stop offset="50%" stopColor="#D97706" />
-            <Stop offset="100%" stopColor="#78350F" />
+            <Stop offset="0%" stopColor={Colors.Amber400} />
+            <Stop offset="50%" stopColor={Colors.HabitBurnishedAmber} />
+            <Stop offset="100%" stopColor={Colors.Amber900} />
           </LinearGradient>
 
           {/* Royal Regius Velvet Cushion Dome */}
           <LinearGradient id="lgVelvet" x1="0%" y1="0%" x2="0%" y2="100%">
-            <Stop offset="0%" stopColor="#4C1D95" />
-            <Stop offset="50%" stopColor="#311068" />
-            <Stop offset="100%" stopColor="#1E0A40" />
+            <Stop offset="0%" stopColor={IllustrationColors.CosmicIndigo} />
+            <Stop offset="50%" stopColor={Colors.SvgRoyalPlumDeep} />
+            <Stop offset="100%" stopColor={IllustrationColors.CosmicAbyss} />
           </LinearGradient>
 
           {/* Velvet Soft Radial Luster */}
           <RadialGradient id="lgVelvetSheen" cx="50%" cy="30%" r="60%">
-            <Stop offset="0%" stopColor="#A78BFA" stopOpacity={0.7} />
-            <Stop offset="60%" stopColor="#5B21B6" stopOpacity={0.2} />
-            <Stop offset="100%" stopColor="#1E0A40" stopOpacity={0} />
+            <Stop offset="0%" stopColor={Colors.Violet400} stopOpacity={0.7} />
+            <Stop
+              offset="60%"
+              stopColor={IllustrationColors.CosmicViolet}
+              stopOpacity={0.2}
+            />
+            <Stop
+              offset="100%"
+              stopColor={IllustrationColors.CosmicAbyss}
+              stopOpacity={0}
+            />
           </RadialGradient>
 
           {/* Faceted Emerald Gemstone Gradient */}
           <LinearGradient id="lgEmerald" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#A7F3D0" />
-            <Stop offset="40%" stopColor="#10B981" />
-            <Stop offset="100%" stopColor="#064E3B" />
+            <Stop offset="0%" stopColor={Colors.ToastSuccessCardBorderLight} />
+            <Stop offset="40%" stopColor={Colors.ToastSuccessAccent} />
+            <Stop offset="100%" stopColor={Colors.Emerald900} />
           </LinearGradient>
 
           {/* Royal Amethyst Violet Gemstone Gradient */}
           <LinearGradient id="lgAmethyst" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#E9D5FF" />
-            <Stop offset="45%" stopColor="#9333EA" />
-            <Stop offset="100%" stopColor="#581C87" />
+            <Stop offset="0%" stopColor={Colors.VoiceNicoleBorder} />
+            <Stop offset="45%" stopColor={IllustrationColors.NebulaOrchid} />
+            <Stop offset="100%" stopColor={IllustrationColors.CosmicPlum} />
           </LinearGradient>
 
           {/* Ruby Teardrop Accent */}
           <LinearGradient id="lgRuby" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#FECDD3" />
-            <Stop offset="45%" stopColor="#E11D48" />
-            <Stop offset="100%" stopColor="#881337" />
+            <Stop offset="0%" stopColor={Colors.CategoryRoseBorder} />
+            <Stop offset="45%" stopColor={Colors.CategoryRoseCheck} />
+            <Stop offset="100%" stopColor={IllustrationColors.NebulaCrimson} />
           </LinearGradient>
 
           {/* Crystalline 3D Diamond Gemstone Gradient */}
           <LinearGradient id="lgDiamond" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#FFFFFF" />
-            <Stop offset="35%" stopColor="#E0F2FE" />
-            <Stop offset="70%" stopColor="#7DD3FC" />
-            <Stop offset="100%" stopColor="#0284C7" />
+            <Stop offset="0%" stopColor={Colors.PureWhite} />
+            <Stop offset="35%" stopColor={Colors.CategorySkyBorder} />
+            <Stop offset="70%" stopColor={IllustrationColors.StarlightSky} />
+            <Stop offset="100%" stopColor={Colors.CategorySkyCheck} />
           </LinearGradient>
 
           {/* Victory Laurel Leaves Sheen */}
           <LinearGradient id="lgLaurel" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#FEF08A" />
-            <Stop offset="45%" stopColor="#EAB308" />
-            <Stop offset="100%" stopColor="#A16207" />
+            <Stop offset="0%" stopColor={Colors.Yellow200} />
+            <Stop offset="45%" stopColor={Colors.Yellow500} />
+            <Stop offset="100%" stopColor={Colors.Yellow700} />
           </LinearGradient>
 
           {/* Electric Ambition Lightning Bolt */}
           <LinearGradient id="lgBolt" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#FFFCE3" />
-            <Stop offset="50%" stopColor="#FACC15" />
-            <Stop offset="100%" stopColor="#EA580C" />
+            <Stop offset="0%" stopColor={Colors.CreamBackground} />
+            <Stop offset="50%" stopColor={IllustrationColors.SunburstYellow} />
+            <Stop offset="100%" stopColor={Colors.CategoryOrangeCheck} />
           </LinearGradient>
         </Defs>
 
@@ -113,7 +134,7 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
         {/* Main curved orbital sweep from bottom-left to upper-right */}
         <Path
           d="M 12 118 C -2 64, 44 18, 98 12"
-          stroke="#D4CCA8"
+          stroke={Colors.BentoWarmGoldMuted}
           strokeWidth={1.2}
           strokeDasharray="3 4"
           opacity={0.65}
@@ -122,7 +143,7 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
         {/* Counter orbital arc encircling upper-right quadrant */}
         <Path
           d="M 88 12 C 124 10, 142 36, 134 78"
-          stroke="#F5C518"
+          stroke={Colors.AccentYellow}
           strokeWidth={1.2}
           strokeDasharray="2 3"
           opacity={0.75}
@@ -148,7 +169,7 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
         <G transform="translate(10, 126)" opacity={0.7}>
           <Path
             d="M 5 0 Q 5 5, 10 5 Q 5 5, 5 10 Q 5 5, 0 5 Q 5 5, 5 0 Z"
-            fill="#8383D6"
+            fill={Colors.LavenderPurple}
           />
         </G>
         {/* Bottom-Right Emerald Diamond Star */}
@@ -166,7 +187,7 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
             y1={38}
             x2={3}
             y2={34}
-            stroke="#D4CCA8"
+            stroke={Colors.BentoWarmGoldMuted}
             strokeWidth={1.5}
             strokeLinecap="round"
           />
@@ -175,7 +196,7 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
             y1={46}
             x2={6}
             y2={48}
-            stroke="#F5C518"
+            stroke={Colors.AccentYellow}
             strokeWidth={1.5}
             strokeLinecap="round"
           />
@@ -184,7 +205,7 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
             y1={55}
             x2={10}
             y2={60}
-            stroke="#D4CCA8"
+            stroke={Colors.BentoWarmGoldMuted}
             strokeWidth={1.5}
             strokeLinecap="round"
           />
@@ -195,7 +216,7 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
           {/* Subtle drop shadow */}
           <Polygon
             points="7,0 0,9 5,9 1,18 10,8 5,8"
-            fill="#000000"
+            fill={Colors.PureBlack}
             opacity={0.12}
             transform="translate(1.5, 1.5)"
           />
@@ -203,7 +224,7 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
           <Polygon
             points="7,0 0,9 5,9 1,18 10,8 5,8"
             fill="url(#lgBolt)"
-            stroke="#D97706"
+            stroke={Colors.HabitBurnishedAmber}
             strokeWidth={0.8}
             strokeLinejoin="round"
           />
@@ -214,56 +235,56 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
           {/* Diamond Drop Shadow */}
           <Polygon
             points="10,0 20,7 15,20 5,20 0,7"
-            fill="#000000"
+            fill={Colors.PureBlack}
             opacity={0.1}
             transform="translate(2, 3)"
           />
           {/* Diamond Upper Table / Crown Facets */}
           <Polygon
             points="5,4 15,4 20,9 10,9"
-            fill="#E0F2FE"
-            stroke="#93C5FD"
+            fill={Colors.CategorySkyBorder}
+            stroke={IllustrationColors.CelestialBlue}
             strokeWidth={0.6}
           />
           <Polygon
             points="0,9 5,4 10,9"
-            fill="#BAE6FD"
-            stroke="#93C5FD"
+            fill={Colors.InfoBannerLightBorder}
+            stroke={IllustrationColors.CelestialBlue}
             strokeWidth={0.6}
           />
           <Polygon
             points="10,9 15,4 20,9"
-            fill="#FFFFFF"
-            stroke="#93C5FD"
+            fill={Colors.PureWhite}
+            stroke={IllustrationColors.CelestialBlue}
             strokeWidth={0.6}
           />
           {/* Diamond Pavilion Lower Facets */}
           <Polygon
             points="0,9 10,9 10,21"
-            fill="#38BDF8"
-            stroke="#0284C7"
+            fill={Colors.CategorySkyAccent}
+            stroke={Colors.CategorySkyCheck}
             strokeWidth={0.6}
           />
           <Polygon
             points="10,9 20,9 10,21"
-            fill="#0284C7"
-            stroke="#0369A1"
+            fill={Colors.CategorySkyCheck}
+            stroke={IllustrationColors.CometCerulean}
             strokeWidth={0.6}
           />
           <Polygon
             points="5,9 10,9 10,21"
-            fill="#7DD3FC"
-            stroke="#0284C7"
+            fill={IllustrationColors.StarlightSky}
+            stroke={Colors.CategorySkyCheck}
             strokeWidth={0.5}
           />
           {/* Crystalline Starlight Gleam on Diamond Apex */}
-          <Circle cx={10} cy={9} r={1.6} fill="#FFFFFF" />
+          <Circle cx={10} cy={9} r={1.6} fill={Colors.PureWhite} />
           <Line
             x1={8}
             y1={9}
             x2={12}
             y2={9}
-            stroke="#FFFFFF"
+            stroke={Colors.PureWhite}
             strokeWidth={1.2}
             strokeLinecap="round"
           />
@@ -272,7 +293,7 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
             y1={7}
             x2={10}
             y2={11}
-            stroke="#FFFFFF"
+            stroke={Colors.PureWhite}
             strokeWidth={1.2}
             strokeLinecap="round"
           />
@@ -300,43 +321,43 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
           <Path
             d="M 16 18 C 12 12, 18 8, 22 14 C 20 18, 18 19, 16 18 Z"
             fill="url(#lgLaurel)"
-            stroke="#B45309"
+            stroke={Colors.Amber700}
             strokeWidth={0.6}
           />
           <Path
             d="M 28 22 C 26 14, 34 11, 37 18 C 34 22, 31 23, 28 22 Z"
             fill="url(#lgLaurel)"
-            stroke="#B45309"
+            stroke={Colors.Amber700}
             strokeWidth={0.6}
           />
           <Path
             d="M 42 25 C 41 18, 48 16, 51 22 C 48 26, 45 26, 42 25 Z"
             fill="url(#lgLaurel)"
-            stroke="#B45309"
+            stroke={Colors.Amber700}
             strokeWidth={0.6}
           />
           {/* Right Leaves */}
           <Path
             d="M 92 18 C 96 12, 90 8, 86 14 C 88 18, 90 19, 92 18 Z"
             fill="url(#lgLaurel)"
-            stroke="#B45309"
+            stroke={Colors.Amber700}
             strokeWidth={0.6}
           />
           <Path
             d="M 80 22 C 82 14, 74 11, 71 18 C 74 22, 77 23, 80 22 Z"
             fill="url(#lgLaurel)"
-            stroke="#B45309"
+            stroke={Colors.Amber700}
             strokeWidth={0.6}
           />
           <Path
             d="M 66 25 C 67 18, 60 16, 57 22 C 60 26, 63 26, 66 25 Z"
             fill="url(#lgLaurel)"
-            stroke="#B45309"
+            stroke={Colors.Amber700}
             strokeWidth={0.6}
           />
           {/* Center Laurel Tie Bow / Knot */}
           <Circle cx={54} cy={28} r={2.8} fill="url(#lgGold)" />
-          <Circle cx={54} cy={28} r={1.2} fill="#FFFCE3" />
+          <Circle cx={54} cy={28} r={1.2} fill={Colors.CreamBackground} />
         </G>
 
         {/* 8. The 3D Tilted Imperial Regius Crown of Triumph */}
@@ -344,7 +365,7 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
           {/* Soft Ground Shadow underneath the crown */}
           <Path
             d="M 6 82 C 22 92, 74 92, 90 82 C 74 76, 22 76, 6 82 Z"
-            fill="#000000"
+            fill={Colors.PureBlack}
             opacity={0.12}
           />
 
@@ -352,7 +373,7 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
           <Path
             d="M 18 64 C 16 38, 30 22, 48 20 C 66 22, 80 38, 78 64 Z"
             fill="url(#lgVelvet)"
-            stroke="#1E0A40"
+            stroke={IllustrationColors.CosmicAbyss}
             strokeWidth={1}
           />
           {/* Velvet Cushion Radial Sheen */}
@@ -363,7 +384,7 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
           {/* Velvet Cushion Quilted Stitch Lines */}
           <Path
             d="M 32 64 C 34 44, 40 32, 48 21"
-            stroke="#A78BFA"
+            stroke={Colors.Violet400}
             strokeWidth={0.7}
             strokeDasharray="2 3"
             opacity={0.5}
@@ -371,7 +392,7 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
           />
           <Path
             d="M 64 64 C 62 44, 56 32, 48 21"
-            stroke="#A78BFA"
+            stroke={Colors.Violet400}
             strokeWidth={0.7}
             strokeDasharray="2 3"
             opacity={0.5}
@@ -389,20 +410,20 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
 
           {/* Center Finial Monogram Orb & Star Cross on Top Peak */}
           <Circle cx={48} cy={16} r={4.5} fill="url(#lgGold)" />
-          <Circle cx={48} cy={16} r={2.2} fill="#FFFCE3" />
+          <Circle cx={48} cy={16} r={2.2} fill={Colors.CreamBackground} />
           {/* 4-Point Starlight Apex on Crown Peak */}
           <Path
             d="M 48 7 Q 48 11, 52 11 Q 48 11, 48 15 Q 48 11, 44 11 Q 48 11, 48 7 Z"
-            fill="#FFFCE3"
+            fill={Colors.CreamBackground}
           />
-          <Circle cx={48} cy={11} r={1.2} fill="#F5C518" />
+          <Circle cx={48} cy={11} r={1.2} fill={Colors.AccentYellow} />
 
           {/* Crown Filigree Body (Main Front Gold Arches & Peaks) */}
           {/* Left Wing Flared Horn Peak */}
           <Path
             d="M 10 64 L 14 36 L 24 50 L 32 32 L 40 48 L 48 24 L 56 48 L 64 32 L 72 50 L 82 36 L 86 64 Z"
             fill="url(#lgGold)"
-            stroke="#78350F"
+            stroke={Colors.Amber900}
             strokeWidth={1.2}
             strokeLinejoin="round"
           />
@@ -410,7 +431,7 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
           {/* Inner Highlight Filigree Curves */}
           <Path
             d="M 16 42 L 24 52 L 32 38 L 40 50 L 48 29 L 56 50 L 64 38 L 72 52 L 80 42"
-            stroke="#FFFCE3"
+            stroke={Colors.CreamBackground}
             strokeWidth={1}
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -420,36 +441,36 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
 
           {/* Pearl Finials on Peak Tips */}
           {/* Peak 1 (Leftmost) */}
-          <Circle cx={14} cy={36} r={2.4} fill="#FFFCE3" />
-          <Circle cx={14} cy={36} r={1.2} fill="#F5C518" />
+          <Circle cx={14} cy={36} r={2.4} fill={Colors.CreamBackground} />
+          <Circle cx={14} cy={36} r={1.2} fill={Colors.AccentYellow} />
           {/* Peak 2 */}
-          <Circle cx={32} cy={32} r={2.8} fill="#FFFCE3" />
-          <Circle cx={32} cy={32} r={1.4} fill="#F5C518" />
+          <Circle cx={32} cy={32} r={2.8} fill={Colors.CreamBackground} />
+          <Circle cx={32} cy={32} r={1.4} fill={Colors.AccentYellow} />
           {/* Peak 4 */}
-          <Circle cx={64} cy={32} r={2.8} fill="#FFFCE3" />
-          <Circle cx={64} cy={32} r={1.4} fill="#F5C518" />
+          <Circle cx={64} cy={32} r={2.8} fill={Colors.CreamBackground} />
+          <Circle cx={64} cy={32} r={1.4} fill={Colors.AccentYellow} />
           {/* Peak 5 (Rightmost) */}
-          <Circle cx={82} cy={36} r={2.4} fill="#FFFCE3" />
-          <Circle cx={82} cy={36} r={1.2} fill="#F5C518" />
+          <Circle cx={82} cy={36} r={2.4} fill={Colors.CreamBackground} />
+          <Circle cx={82} cy={36} r={1.2} fill={Colors.AccentYellow} />
 
           {/* Lower Crown Circlet Headband (Rich Embossed Gold Band) */}
           <Path
             d="M 8 62 C 26 72, 70 72, 88 62 L 88 74 C 70 84, 26 84, 8 74 Z"
             fill="url(#lgGold)"
-            stroke="#78350F"
+            stroke={Colors.Amber900}
             strokeWidth={1.2}
           />
 
           {/* Band Upper & Lower Trim Bevels */}
           <Path
             d="M 8 62 C 26 72, 70 72, 88 62"
-            stroke="#FFFCE3"
+            stroke={Colors.CreamBackground}
             strokeWidth={1.2}
             fill="none"
           />
           <Path
             d="M 8 74 C 26 84, 70 84, 88 74"
-            stroke="#78350F"
+            stroke={Colors.Amber900}
             strokeWidth={1.2}
             fill="none"
           />
@@ -460,8 +481,8 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
             {/* Setting bezel */}
             <Polygon
               points="0,-5 5,0 0,5 -5,0"
-              fill="#78350F"
-              stroke="#FFFCE3"
+              fill={Colors.Amber900}
+              stroke={Colors.CreamBackground}
               strokeWidth={0.6}
             />
             {/* Gem facet */}
@@ -470,7 +491,7 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
               fill="url(#lgEmerald)"
             />
             {/* Center sparkle */}
-            <Circle cx={0} cy={0} r={1.2} fill="#A7F3D0" />
+            <Circle cx={0} cy={0} r={1.2} fill={Colors.ToastSuccessCardBorderLight} />
           </G>
 
           {/* Left Jewel 1: Amethyst Cabochon */}
@@ -479,12 +500,12 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
               cx={0}
               cy={0}
               r={3.6}
-              fill="#581C87"
-              stroke="#FFFCE3"
+              fill={IllustrationColors.CosmicPlum}
+              stroke={Colors.CreamBackground}
               strokeWidth={0.6}
             />
             <Circle cx={0} cy={0} r={2.8} fill="url(#lgAmethyst)" />
-            <Circle cx={-0.8} cy={-0.8} r={1} fill="#E9D5FF" />
+            <Circle cx={-0.8} cy={-0.8} r={1} fill={Colors.VoiceNicoleBorder} />
           </G>
 
           {/* Right Jewel 1: Amethyst Cabochon */}
@@ -493,12 +514,12 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
               cx={0}
               cy={0}
               r={3.6}
-              fill="#581C87"
-              stroke="#FFFCE3"
+              fill={IllustrationColors.CosmicPlum}
+              stroke={Colors.CreamBackground}
               strokeWidth={0.6}
             />
             <Circle cx={0} cy={0} r={2.8} fill="url(#lgAmethyst)" />
-            <Circle cx={-0.8} cy={-0.8} r={1} fill="#E9D5FF" />
+            <Circle cx={-0.8} cy={-0.8} r={1} fill={Colors.VoiceNicoleBorder} />
           </G>
 
           {/* Left Jewel 2: Ruby Teardrop Spark */}
@@ -508,10 +529,10 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
               cy={0}
               r={2.6}
               fill="url(#lgRuby)"
-              stroke="#881337"
+              stroke={IllustrationColors.NebulaCrimson}
               strokeWidth={0.5}
             />
-            <Circle cx={-0.6} cy={-0.6} r={0.8} fill="#FECDD3" />
+            <Circle cx={-0.6} cy={-0.6} r={0.8} fill={Colors.CategoryRoseBorder} />
           </G>
 
           {/* Right Jewel 2: Ruby Teardrop Spark */}
@@ -521,10 +542,10 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
               cy={0}
               r={2.6}
               fill="url(#lgRuby)"
-              stroke="#881337"
+              stroke={IllustrationColors.NebulaCrimson}
               strokeWidth={0.5}
             />
-            <Circle cx={-0.6} cy={-0.6} r={0.8} fill="#FECDD3" />
+            <Circle cx={-0.6} cy={-0.6} r={0.8} fill={Colors.CategoryRoseBorder} />
           </G>
 
           {/* Ermine/Pearl Dots along Lower Band Rim */}
@@ -534,8 +555,8 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
               cx={x}
               cy={idx < 3 ? 72 + idx * 0.8 : 74 - (idx - 3) * 0.8}
               r={1.2}
-              fill="#FFFCE3"
-              stroke="#D97706"
+              fill={Colors.CreamBackground}
+              stroke={Colors.HabitBurnishedAmber}
               strokeWidth={0.4}
             />
           ))}
@@ -545,7 +566,7 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
         {/* Playful flourish loop-de-loop at bottom-center */}
         <Path
           d="M 28 138 C 42 144, 48 132, 40 128 C 32 124, 28 136, 46 140 C 60 144, 76 138, 88 142"
-          stroke="#D4CCA8"
+          stroke={Colors.BentoWarmGoldMuted}
           strokeWidth={1.3}
           strokeLinecap="round"
           fill="none"
@@ -555,7 +576,7 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
         {/* Speed / Energy Arcs around Crown Apex */}
         <Path
           d="M 52 18 C 58 14, 68 14, 74 18"
-          stroke="#F5C518"
+          stroke={Colors.AccentYellow}
           strokeWidth={1.4}
           strokeLinecap="round"
           fill="none"
@@ -563,7 +584,7 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
         />
         <Path
           d="M 56 12 C 60 8, 66 8, 70 12"
-          stroke="#F5C518"
+          stroke={Colors.AccentYellow}
           strokeWidth={1.2}
           strokeLinecap="round"
           fill="none"
@@ -571,12 +592,18 @@ export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
         />
 
         {/* 10. Ambient Stardust Micro-Dots */}
-        <Circle cx={22} cy={78} r={1.2} fill="#F5C518" opacity={0.6} />
-        <Circle cx={26} cy={92} r={1} fill="#8383D6" opacity={0.7} />
-        <Circle cx={122} cy={96} r={1.2} fill="#F5C518" opacity={0.6} />
-        <Circle cx={128} cy={108} r={1} fill="#10B981" opacity={0.7} />
-        <Circle cx={136} cy={66} r={1.4} fill="#F5C518" opacity={0.7} />
-        <Circle cx={36} cy={12} r={1.1} fill="#F5C518" opacity={0.5} />
+        <Circle cx={22} cy={78} r={1.2} fill={Colors.AccentYellow} opacity={0.6} />
+        <Circle cx={26} cy={92} r={1} fill={Colors.LavenderPurple} opacity={0.7} />
+        <Circle cx={122} cy={96} r={1.2} fill={Colors.AccentYellow} opacity={0.6} />
+        <Circle
+          cx={128}
+          cy={108}
+          r={1}
+          fill={Colors.ToastSuccessAccent}
+          opacity={0.7}
+        />
+        <Circle cx={136} cy={66} r={1.4} fill={Colors.AccentYellow} opacity={0.7} />
+        <Circle cx={36} cy={12} r={1.1} fill={Colors.AccentYellow} opacity={0.5} />
       </Svg>
     </View>
   );

@@ -38,7 +38,7 @@ export default function AppNavigator() {
         ...DefaultTheme.colors,
         background:
           themeColors.Background ||
-          (isDarkMode ? '#121417' : Colors.CreamBackground),
+          (isDarkMode ? Colors.DarkBackground : Colors.CreamBackground),
       },
     }),
     [isDarkMode, themeColors],

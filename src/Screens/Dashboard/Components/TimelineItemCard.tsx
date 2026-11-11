@@ -25,6 +25,7 @@ import {
   Sparkles,
 } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
+import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import { Badge } from '../../../Common/Badge';
 import { StreakBadge } from '../../../Common/StreakBadge';
 import { useAppTheme } from '../../../Theme/useAppTheme';
@@ -103,42 +104,54 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
     switch (item.type) {
       case 'task':
         return {
-          accent: '#F5C518',
-          bgTint: isDarkMode ? '#2A2416' : '#FFFDF7',
-          borderTint: isDarkMode ? '#DEAA14' : '#FFF5B8',
-          shadowColor: isDarkMode ? '#000000' : '#F5C518',
-          auraColor: '#F5C518',
-          pillBg: isDarkMode ? '#38301D' : '#FFF9D2',
-          pillText: isDarkMode ? '#F5C518' : '#B48216',
-          iconBg: isDarkMode ? '#38301D' : '#FFFCEB',
-          iconColor: isDarkMode ? '#F5C518' : '#B48216',
+          accent: Colors.AccentYellow,
+          bgTint: isDarkMode ? Colors.WorkDarkBg : Colors.WorkTintCream,
+          borderTint: isDarkMode
+            ? Colors.WorkDarkBorder
+            : Colors.WorkLightBorder,
+          shadowColor: isDarkMode ? Colors.PureBlack : Colors.AccentYellow,
+          auraColor: Colors.AccentYellow,
+          pillBg: isDarkMode ? Colors.WorkDarkIconBg : Colors.WorkPillLight,
+          pillText: isDarkMode ? Colors.AccentYellow : Colors.WorkTextAccent,
+          iconBg: isDarkMode ? Colors.WorkDarkIconBg : Colors.WorkLightBg,
+          iconColor: isDarkMode ? Colors.AccentYellow : Colors.WorkTextAccent,
           badgeVariant: 'yellow' as const,
         };
       case 'reminder':
         return {
-          accent: '#1B9A72',
-          bgTint: isDarkMode ? '#162820' : '#F5FDF9',
-          borderTint: isDarkMode ? '#1B9A72' : '#C6FFDD',
-          shadowColor: isDarkMode ? '#000000' : '#52D22E',
-          auraColor: '#52D22E',
-          pillBg: isDarkMode ? '#1F382D' : '#E8FDF0',
-          pillText: isDarkMode ? '#52D22E' : '#1B9A72',
-          iconBg: isDarkMode ? '#1F382D' : '#EDFDF5',
-          iconColor: isDarkMode ? '#52D22E' : '#1B9A72',
+          accent: Colors.GreenGracious,
+          bgTint: isDarkMode
+            ? Colors.WellnessDarkBg
+            : Colors.WellnessTintLight,
+          borderTint: isDarkMode
+            ? Colors.GreenGracious
+            : Colors.WellnessLightBorder,
+          shadowColor: isDarkMode ? Colors.PureBlack : Colors.AccentGreen,
+          auraColor: Colors.AccentGreen,
+          pillBg: isDarkMode ? Colors.WellnessDarkIconBg : Colors.BadgeGreenBg,
+          pillText: isDarkMode ? Colors.AccentGreen : Colors.GreenGracious,
+          iconBg: isDarkMode ? Colors.WellnessDarkIconBg : Colors.WellnessLightBg,
+          iconColor: isDarkMode ? Colors.AccentGreen : Colors.GreenGracious,
           badgeVariant: 'green' as const,
         };
       case 'habit':
       default:
         return {
-          accent: '#8383D6',
-          bgTint: isDarkMode ? '#202336' : '#F7F8FE',
-          borderTint: isDarkMode ? '#8383D6' : '#D8DBFF',
-          shadowColor: isDarkMode ? '#000000' : '#8383D6',
-          auraColor: '#8383D6',
-          pillBg: isDarkMode ? '#2C304A' : '#EDEAFB',
-          pillText: isDarkMode ? '#8383D6' : '#7059C8',
-          iconBg: isDarkMode ? '#2C304A' : '#EFF2FE',
-          iconColor: isDarkMode ? '#8383D6' : '#7059C8',
+          accent: Colors.LavenderPurple,
+          bgTint: isDarkMode ? Colors.MindfulDarkBg : Colors.MindfulTintLight,
+          borderTint: isDarkMode
+            ? Colors.LavenderPurple
+            : Colors.MindfulLightBorder,
+          shadowColor: isDarkMode ? Colors.PureBlack : Colors.LavenderPurple,
+          auraColor: Colors.LavenderPurple,
+          pillBg: isDarkMode ? Colors.MindfulDarkIconBg : Colors.MindfulPillLight,
+          pillText: isDarkMode
+            ? Colors.LavenderPurple
+            : Colors.MindfulTextAccent,
+          iconBg: isDarkMode ? Colors.MindfulDarkIconBg : Colors.MindfulLightBg,
+          iconColor: isDarkMode
+            ? Colors.LavenderPurple
+            : Colors.MindfulTextAccent,
           badgeVariant: 'purple' as const,
         };
     }
@@ -148,7 +161,9 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
 
   // Category-specific icon below time (always shows category icon, never replaced with a checkbox)
   const renderCategoryIcon = () => {
-    const iconColor = isCompleted ? '#8E8D92' : catStyle.iconColor;
+    const iconColor = isCompleted
+      ? Colors.TimelineMutedGray
+      : catStyle.iconColor;
     if (item.type === 'task') {
       return <CheckCircle2 size={12} color={iconColor} strokeWidth={2.4} />;
     }
@@ -173,7 +188,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
             styles.timelineLine,
             isFirst && styles.timelineLineFirst,
             isLast && styles.timelineLineLast,
-            isDarkMode && { backgroundColor: '#2C3035' },
+            isDarkMode && { backgroundColor: Colors.CarbonSlate },
           ]}
         />
 
@@ -185,8 +200,8 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
               {
                 color: isCompleted
                   ? isDarkMode
-                    ? '#6B7280'
-                    : '#A8A6A4'
+                    ? Colors.Gray500
+                    : Colors.WarmStoneMuted
                   : textPrimary,
               },
             ]}
@@ -207,17 +222,17 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
         <View
           style={[
             styles.nodeCircle,
-            isDarkMode && { borderColor: '#1E2228' },
+            isDarkMode && { borderColor: Colors.DarkCardBackground },
             {
               backgroundColor: isCompleted
                 ? isDarkMode
-                  ? '#252932'
-                  : '#F7F6F2'
+                  ? Colors.DarkCheckboxUnchecked
+                  : Colors.TimelineMutedSurface
                 : catStyle.iconBg,
               borderColor: isCompleted
                 ? isDarkMode
-                  ? '#2C3035'
-                  : '#E8E5DE'
+                  ? Colors.CarbonSlate
+                  : Colors.TimelineSubtleDivider
                 : catStyle.borderTint,
             },
           ]}
@@ -238,8 +253,8 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
           {
             shadowColor: isCompleted
               ? isDarkMode
-                ? '#000000'
-                : '#D1D5DB'
+                ? Colors.PureBlack
+                : Colors.Gray300
               : catStyle.shadowColor,
           },
         ]}
@@ -287,15 +302,15 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
             fill={
               isCompleted
                 ? isDarkMode
-                  ? '#171A20'
-                  : '#FAFAF8'
+                  ? Colors.DarkSurfaceDeep
+                  : Colors.CompletedCardCream
                 : catStyle.bgTint
             }
             stroke={
               isCompleted
                 ? isDarkMode
-                  ? '#2C3035'
-                  : '#ECEAE4'
+                  ? Colors.CarbonSlate
+                  : Colors.TimelineBorderWarm
                 : catStyle.borderTint
             }
             strokeWidth={1.5}
@@ -330,7 +345,11 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
         <View
           style={[
             styles.accentBar,
-            { backgroundColor: isCompleted ? '#A0A4A8' : catStyle.accent },
+            {
+              backgroundColor: isCompleted
+                ? Colors.CompletedBarGray
+                : catStyle.accent,
+            },
           ]}
         />
 
@@ -346,7 +365,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
               : [
                   styles.floatingCheckboxUnchecked,
                   { borderColor: catStyle.borderTint },
-                  isDarkMode && { backgroundColor: '#252932' },
+                  isDarkMode && { backgroundColor: Colors.DarkCheckboxUnchecked },
                 ],
           ]}
           accessibilityRole="checkbox"
@@ -356,7 +375,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
           }`}
         >
           {isCompleted ? (
-            <Check size={14} color="#1B9A72" strokeWidth={3} />
+            <Check size={14} color={Colors.GreenGracious} strokeWidth={3} />
           ) : null}
         </TouchableOpacity>
 
@@ -394,18 +413,22 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
             <View
               style={[
                 styles.timePill,
-                { backgroundColor: isCompleted ? '#EEEEEE' : catStyle.pillBg },
+                {
+                  backgroundColor: isCompleted
+                    ? Colors.CompletedPillNeutral
+                    : catStyle.pillBg,
+                },
               ]}
             >
               <Clock
                 size={11}
-                color={isCompleted ? '#77767B' : catStyle.pillText}
+                color={isCompleted ? Colors.Grey : catStyle.pillText}
                 style={{ marginRight: 4 }}
               />
               <Text
                 style={[
                   styles.timePillText,
-                  { color: isCompleted ? '#77767B' : catStyle.pillText },
+                  { color: isCompleted ? Colors.Grey : catStyle.pillText },
                 ]}
               >
                 {item.timeRange || item.time}
@@ -428,7 +451,11 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
                 icon={
                   <Bell
                     size={10}
-                    color={item.category === 'Alert' ? '#D92A0F' : '#1B9A72'}
+                    color={
+                      item.category === 'Alert'
+                        ? Colors.MoltenRust
+                        : Colors.GreenGracious
+                    }
                   />
                 }
               />
@@ -437,7 +464,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
                 label="Voice Nudge"
                 variant="purple"
                 size="sm"
-                icon={<Sparkles size={10} color="#8383D6" />}
+                icon={<Sparkles size={10} color={Colors.LavenderPurple} />}
               />
             ) : (
               <Badge
@@ -473,7 +500,7 @@ const styles = StyleSheet.create({
     bottom: '50%',
     marginBottom: 15,
     alignItems: 'center',
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.Transparent,
     paddingHorizontal: 2,
     borderRadius: 3,
     zIndex: 0,
@@ -481,25 +508,25 @@ const styles = StyleSheet.create({
   timeNumber: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 11.5,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     letterSpacing: -0.2,
     lineHeight: 15,
   },
   timePeriod: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 9,
-    color: '#8E8D92',
+    color: Colors.TimelineMutedGray,
     lineHeight: 12,
   },
   timeCompletedText: {
-    color: '#A8A6A4',
+    color: Colors.WarmStoneMuted,
   },
   timelineLine: {
     position: 'absolute',
     top: 0,
     bottom: -16,
     width: 1.5,
-    backgroundColor: '#E6E3DC',
+    backgroundColor: Colors.TimelineMutedIconBg,
   },
   timelineLineFirst: {
     top: '50%',
@@ -518,8 +545,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     zIndex: 2,
     borderWidth: 1.5,
-    borderColor: '#FFFFFF',
-    shadowColor: '#000000',
+    borderColor: Colors.PureWhite,
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.08,
     shadowRadius: 2,
@@ -531,10 +558,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     position: 'relative',
     minHeight: 88,
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.Transparent,
     ...Platform.select({
       ios: {
-        shadowColor: '#F5C518',
+        shadowColor: Colors.AccentYellow,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.12,
         shadowRadius: 8,
@@ -552,7 +579,7 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   cardCompleted: {
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.Transparent,
   },
   floatingCheckbox: {
     position: 'absolute',
@@ -567,7 +594,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.12,
         shadowRadius: 3,
@@ -578,12 +605,12 @@ const styles = StyleSheet.create({
     }),
   },
   floatingCheckboxChecked: {
-    backgroundColor: '#E8FDF0',
-    borderColor: '#52D22E',
+    backgroundColor: Colors.BadgeGreenBg,
+    borderColor: Colors.AccentGreen,
   },
   floatingCheckboxUnchecked: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#ECE8DF',
+    backgroundColor: Colors.PureWhite,
+    borderColor: Colors.WarmCheckboxBorder,
   },
   // Retained alias for backwards compatibility
   taskCheckbox: {
@@ -595,12 +622,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   taskCheckboxChecked: {
-    backgroundColor: '#E8FDF0',
-    borderColor: '#C6FFDD',
+    backgroundColor: Colors.BadgeGreenBg,
+    borderColor: Colors.WellnessLightBorder,
   },
   taskCheckboxUnchecked: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#ECE8DF',
+    backgroundColor: Colors.PureWhite,
+    borderColor: Colors.WarmCheckboxBorder,
   },
   accentBar: {
     width: 3.5,
@@ -627,22 +654,22 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 14,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     lineHeight: 19,
     letterSpacing: -0.2,
   },
   titleCompleted: {
-    color: '#8E8D92',
+    color: Colors.TimelineMutedGray,
   },
   subtitle: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 12,
-    color: '#666665',
+    color: Colors.SubtitleGray,
     lineHeight: 16,
     paddingRight: 36, // Clears the floating checkbox and scooped cutout notch
   },
   subtitleCompleted: {
-    color: '#A09F9E',
+    color: Colors.WarmSilverMuted,
   },
   metaRow: {
     flexDirection: 'row',
@@ -666,7 +693,7 @@ const styles = StyleSheet.create({
   voicePrepBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F1EFFF',
+    backgroundColor: Colors.MindfulSoftPillLight,
     paddingHorizontal: 7,
     paddingVertical: 3.5,
     borderRadius: 10,
@@ -674,10 +701,10 @@ const styles = StyleSheet.create({
   voicePrepBadgeText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 10.5,
-    color: '#6351B5',
+    color: Colors.VioletDeepAccent,
   },
   categoryBadge: {
-    backgroundColor: '#F4F2EC',
+    backgroundColor: Colors.TimelineEventSoftCream,
     paddingHorizontal: 7,
     paddingVertical: 3.5,
     borderRadius: 10,
@@ -685,7 +712,7 @@ const styles = StyleSheet.create({
   categoryBadgeText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 10.5,
-    color: '#6E6B65',
+    color: Colors.WarmCharcoalMuted,
   },
 });
 

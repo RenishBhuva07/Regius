@@ -11,6 +11,7 @@ import Svg, {
   G,
   Line,
 } from 'react-native-svg';
+import { Colors } from '../Assets/StyleUtilities/Colors';
 
 export interface PickerAestheticBgProps {
   type: 'date' | 'time';
@@ -39,7 +40,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
           y1={60 + 72 * Math.sin(angle)}
           x2={340 + 84 * Math.cos(angle)}
           y2={60 + 84 * Math.sin(angle)}
-          stroke="#D8A21A"
+          stroke={Colors.SolarGoldStroke}
           strokeWidth={1.3}
           strokeLinecap="round"
         />
@@ -59,7 +60,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
           y1={70 + rInner * Math.sin(angle)}
           x2={330 + rOuter * Math.cos(angle)}
           y2={70 + rOuter * Math.sin(angle)}
-          stroke={isCardinal ? '#7059C8' : '#8383D6'}
+          stroke={isCardinal ? Colors.MindfulTextAccent : Colors.LavenderPurple}
           strokeWidth={isCardinal ? 1.6 : 1.1}
           strokeLinecap="round"
         />
@@ -76,7 +77,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
           y1={70 + 84 * Math.sin(angle)}
           x2={330 + 88 * Math.cos(angle)}
           y2={70 + 88 * Math.sin(angle)}
-          stroke="#8383D6"
+          stroke={Colors.LavenderPurple}
           strokeWidth={0.8}
           strokeOpacity={0.4}
         />
@@ -93,7 +94,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
           y1={270 + 35 * Math.sin(angle)}
           x2={50 + 43 * Math.cos(angle)}
           y2={270 + 43 * Math.sin(angle)}
-          stroke="#7059C8"
+          stroke={Colors.MindfulTextAccent}
           strokeWidth={1.2}
           strokeLinecap="round"
         />
@@ -116,15 +117,15 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
               x2="100%"
               y2="100%"
             >
-              <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.99} />
+              <Stop offset="0%" stopColor={Colors.PureWhite} stopOpacity={0.99} />
               <Stop
                 offset="55%"
-                stopColor={isDate ? '#FCF9F2' : '#F9F8FD'}
+                stopColor={isDate ? Colors.PickerDateSheenMid : Colors.PickerTimeSheenMid}
                 stopOpacity={0.96}
               />
               <Stop
                 offset="100%"
-                stopColor={isDate ? '#F7F1E4' : '#EFEBF8'}
+                stopColor={isDate ? Colors.PickerDateSheenEnd : Colors.PickerTimeSheenEnd}
                 stopOpacity={0.98}
               />
             </LinearGradient>
@@ -137,17 +138,17 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
             >
               <Stop
                 offset="0%"
-                stopColor={isDate ? '#F5C518' : '#8383D6'}
+                stopColor={isDate ? Colors.AccentYellow : Colors.LavenderPurple}
                 stopOpacity={isDate ? 0.24 : 0.25}
               />
               <Stop
                 offset="50%"
-                stopColor={isDate ? '#F5C518' : '#8383D6'}
+                stopColor={isDate ? Colors.AccentYellow : Colors.LavenderPurple}
                 stopOpacity={isDate ? 0.06 : 0.07}
               />
               <Stop
                 offset="100%"
-                stopColor={isDate ? '#F5C518' : '#8383D6'}
+                stopColor={isDate ? Colors.AccentYellow : Colors.LavenderPurple}
                 stopOpacity={0}
               />
             </RadialGradient>
@@ -160,17 +161,17 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
             >
               <Stop
                 offset="0%"
-                stopColor={isDate ? '#E5A812' : '#7059C8'}
+                stopColor={isDate ? Colors.SolarGoldAura : Colors.MindfulTextAccent}
                 stopOpacity={isDate ? 0.16 : 0.18}
               />
               <Stop
                 offset="50%"
-                stopColor={isDate ? '#E5A812' : '#7059C8'}
+                stopColor={isDate ? Colors.SolarGoldAura : Colors.MindfulTextAccent}
                 stopOpacity={0.04}
               />
               <Stop
                 offset="100%"
-                stopColor={isDate ? '#E5A812' : '#7059C8'}
+                stopColor={isDate ? Colors.SolarGoldAura : Colors.MindfulTextAccent}
                 stopOpacity={0}
               />
             </RadialGradient>
@@ -203,7 +204,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   cx={340}
                   cy={60}
                   r={50}
-                  stroke="#F5C518"
+                  stroke={Colors.AccentYellow}
                   strokeWidth={1}
                   fill="none"
                 />
@@ -211,7 +212,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   cx={340}
                   cy={60}
                   r={72}
-                  stroke="#D8A21A"
+                  stroke={Colors.SolarGoldStroke}
                   strokeWidth={1}
                   strokeDasharray="4 6"
                   fill="none"
@@ -220,7 +221,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   cx={340}
                   cy={60}
                   r={110}
-                  stroke="#F5C518"
+                  stroke={Colors.AccentYellow}
                   strokeWidth={0.8}
                   fill="none"
                 />
@@ -228,7 +229,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   cx={340}
                   cy={60}
                   r={145}
-                  stroke="#D8A21A"
+                  stroke={Colors.SolarGoldStroke}
                   strokeWidth={0.6}
                   strokeDasharray="3 5"
                   fill="none"
@@ -240,7 +241,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   cx={40}
                   cy={H - 50}
                   r={48}
-                  stroke="#D8A21A"
+                  stroke={Colors.SolarGoldStroke}
                   strokeWidth={1}
                   strokeDasharray="3 4"
                   fill="none"
@@ -249,7 +250,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   cx={40}
                   cy={H - 50}
                   r={80}
-                  stroke="#F5C518"
+                  stroke={Colors.AccentYellow}
                   strokeWidth={0.8}
                   fill="none"
                 />
@@ -257,42 +258,42 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   cx={40}
                   cy={H - 50}
                   r={115}
-                  stroke="#D8A21A"
+                  stroke={Colors.SolarGoldStroke}
                   strokeWidth={0.6}
                   strokeDasharray="4 7"
                   fill="none"
                 />
               </G>
-              <Path d={diamondStar(320, 45, 5)} fill="#E89A14" opacity={0.55} />
+              <Path d={diamondStar(320, 45, 5)} fill={Colors.SolarGoldSpark} opacity={0.55} />
               <Path
                 d={diamondStar(345, 135, 3.5)}
-                fill="#D8A21A"
+                fill={Colors.SolarGoldStroke}
                 opacity={0.45}
               />
               <Path
                 d={diamondStar(70, H - 75, 4.5)}
-                fill="#F5C518"
+                fill={Colors.AccentYellow}
                 opacity={0.5}
               />
               <Path
                 d={diamondStar(120, H - 35, 3)}
-                fill="#E89A14"
+                fill={Colors.SolarGoldSpark}
                 opacity={0.4}
               />
-              <Circle cx={285} cy={40} r={1.6} fill="#F5C518" opacity={0.6} />
-              <Circle cx={365} cy={115} r={1.4} fill="#B48216" opacity={0.45} />
+              <Circle cx={285} cy={40} r={1.6} fill={Colors.AccentYellow} opacity={0.6} />
+              <Circle cx={365} cy={115} r={1.4} fill={Colors.WorkTextAccent} opacity={0.45} />
               <Circle
                 cx={55}
                 cy={H - 110}
                 r={1.5}
-                fill="#F5C518"
+                fill={Colors.AccentYellow}
                 opacity={0.5}
               />
               <Circle
                 cx={145}
                 cy={H - 55}
                 r={1.3}
-                fill="#B48216"
+                fill={Colors.WorkTextAccent}
                 opacity={0.4}
               />
               <G opacity={0.25}>
@@ -301,7 +302,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   y1={16}
                   x2={W - 32}
                   y2={16}
-                  stroke="#B48216"
+                  stroke={Colors.WorkTextAccent}
                   strokeWidth={1.2}
                   strokeLinecap="round"
                 />
@@ -310,7 +311,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   y1={32}
                   x2={W - 16}
                   y2={48}
-                  stroke="#B48216"
+                  stroke={Colors.WorkTextAccent}
                   strokeWidth={1.2}
                   strokeLinecap="round"
                 />
@@ -324,7 +325,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   cx={330}
                   cy={70}
                   r={48}
-                  stroke="#7059C8"
+                  stroke={Colors.MindfulTextAccent}
                   strokeWidth={1}
                   fill="none"
                 />
@@ -332,7 +333,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   cx={330}
                   cy={70}
                   r={64}
-                  stroke="#8383D6"
+                  stroke={Colors.LavenderPurple}
                   strokeWidth={0.8}
                   strokeDasharray="2 3"
                   fill="none"
@@ -341,7 +342,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   cx={330}
                   cy={70}
                   r={74}
-                  stroke="#7059C8"
+                  stroke={Colors.MindfulTextAccent}
                   strokeWidth={1.2}
                   fill="none"
                 />
@@ -349,7 +350,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   cx={330}
                   cy={70}
                   r={88}
-                  stroke="#8383D6"
+                  stroke={Colors.LavenderPurple}
                   strokeWidth={0.7}
                   fill="none"
                 />
@@ -357,7 +358,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   cx={330}
                   cy={70}
                   r={125}
-                  stroke="#9C9CE3"
+                  stroke={Colors.PeriwinkleSoft}
                   strokeWidth={0.6}
                   strokeDasharray="4 6"
                   fill="none"
@@ -367,7 +368,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
               <G opacity={0.35}>{clockMinuteTicks}</G>
               <Path
                 d="M 330 35 A 25 25 0 0 0 355 60 A 30 30 0 0 1 330 35 Z"
-                fill="#8383D6"
+                fill={Colors.LavenderPurple}
                 opacity={0.35}
               />
               <G opacity={0.32}>
@@ -375,7 +376,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   cx={50}
                   cy={270}
                   r={35}
-                  stroke="#7059C8"
+                  stroke={Colors.MindfulTextAccent}
                   strokeWidth={1.2}
                   fill="none"
                 />
@@ -383,7 +384,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   cx={50}
                   cy={270}
                   r={65}
-                  stroke="#8383D6"
+                  stroke={Colors.LavenderPurple}
                   strokeWidth={0.8}
                   strokeDasharray="3 4"
                   fill="none"
@@ -392,42 +393,42 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   cx={50}
                   cy={270}
                   r={98}
-                  stroke="#9C9CE3"
+                  stroke={Colors.PeriwinkleSoft}
                   strokeWidth={0.6}
                   fill="none"
                 />
               </G>
               <G opacity={0.38}>{gearTicks}</G>
-              <Path d={diamondStar(315, 50, 5)} fill="#7059C8" opacity={0.55} />
+              <Path d={diamondStar(315, 50, 5)} fill={Colors.MindfulTextAccent} opacity={0.55} />
               <Path
                 d={diamondStar(340, 150, 3.5)}
-                fill="#9C9CE3"
+                fill={Colors.PeriwinkleSoft}
                 opacity={0.45}
               />
               <Path
                 d={diamondStar(80, H - 75, 4.5)}
-                fill="#8383D6"
+                fill={Colors.LavenderPurple}
                 opacity={0.5}
               />
               <Path
                 d={diamondStar(130, H - 35, 3)}
-                fill="#7059C8"
+                fill={Colors.MindfulTextAccent}
                 opacity={0.4}
               />
-              <Circle cx={275} cy={45} r={1.6} fill="#8383D6" opacity={0.6} />
-              <Circle cx={360} cy={125} r={1.4} fill="#7059C8" opacity={0.45} />
+              <Circle cx={275} cy={45} r={1.6} fill={Colors.LavenderPurple} opacity={0.6} />
+              <Circle cx={360} cy={125} r={1.4} fill={Colors.MindfulTextAccent} opacity={0.45} />
               <Circle
                 cx={65}
                 cy={H - 115}
                 r={1.5}
-                fill="#8383D6"
+                fill={Colors.LavenderPurple}
                 opacity={0.5}
               />
               <Circle
                 cx={155}
                 cy={H - 55}
                 r={1.3}
-                fill="#7059C8"
+                fill={Colors.MindfulTextAccent}
                 opacity={0.4}
               />
               <G opacity={0.25}>
@@ -436,7 +437,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   y1={16}
                   x2={W - 32}
                   y2={16}
-                  stroke="#7059C8"
+                  stroke={Colors.MindfulTextAccent}
                   strokeWidth={1.2}
                   strokeLinecap="round"
                 />
@@ -445,7 +446,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   y1={32}
                   x2={W - 16}
                   y2={48}
-                  stroke="#7059C8"
+                  stroke={Colors.MindfulTextAccent}
                   strokeWidth={1.2}
                   strokeLinecap="round"
                 />

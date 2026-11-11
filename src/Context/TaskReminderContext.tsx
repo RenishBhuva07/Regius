@@ -6,6 +6,7 @@ import React, {
   useCallback,
   ReactNode,
 } from 'react';
+import { Colors } from '../Assets/StyleUtilities/Colors';
 
 export interface Task {
   id: string;
@@ -56,7 +57,7 @@ export const INITIAL_HABITS: HabitItem[] = [
     frequency: 'Daily',
     completed: true,
     timeOfDay: '07:30 AM',
-    accentColor: '#4A7C59',
+    accentColor: Colors.HabitForestSage,
   },
   {
     id: 'h-2',
@@ -66,7 +67,7 @@ export const INITIAL_HABITS: HabitItem[] = [
     frequency: 'Daily',
     completed: false,
     timeOfDay: '01:15 PM',
-    accentColor: '#7C68EE',
+    accentColor: Colors.HabitIrisViolet,
   },
   {
     id: 'h-3',
@@ -76,7 +77,7 @@ export const INITIAL_HABITS: HabitItem[] = [
     frequency: 'Mon, Wed, Fri',
     completed: false,
     timeOfDay: '06:00 PM',
-    accentColor: '#D97706',
+    accentColor: Colors.HabitBurnishedAmber,
   },
   {
     id: 'h-4',
@@ -86,7 +87,7 @@ export const INITIAL_HABITS: HabitItem[] = [
     frequency: 'Daily',
     completed: false,
     timeOfDay: '08:30 PM',
-    accentColor: '#4F46E5',
+    accentColor: Colors.HabitRoyalIndigo,
   },
   {
     id: 'h-5',
@@ -96,7 +97,7 @@ export const INITIAL_HABITS: HabitItem[] = [
     frequency: 'Daily',
     completed: true,
     timeOfDay: '08:00 AM',
-    accentColor: '#0EA5E9',
+    accentColor: Colors.HabitCeruleanSky,
   },
 ];
 
@@ -158,7 +159,7 @@ export const INITIAL_REMINDERS: Reminder[] = [
     category: 'health',
     repeat: 'Daily',
     done: false,
-    color: '#52D22E',
+    color: Colors.AccentGreen,
   },
   {
     id: '2',
@@ -169,7 +170,7 @@ export const INITIAL_REMINDERS: Reminder[] = [
     category: 'work',
     repeat: 'Once',
     done: true,
-    color: '#8383D6',
+    color: Colors.LavenderPurple,
   },
   {
     id: '3',
@@ -180,7 +181,7 @@ export const INITIAL_REMINDERS: Reminder[] = [
     category: 'daily',
     repeat: 'Every 2 hrs',
     done: false,
-    color: '#F5C518',
+    color: Colors.AccentYellow,
   },
   {
     id: '4',
@@ -191,7 +192,7 @@ export const INITIAL_REMINDERS: Reminder[] = [
     category: 'health',
     repeat: 'Daily',
     done: false,
-    color: '#52D22E',
+    color: Colors.AccentGreen,
   },
   {
     id: '5',
@@ -202,7 +203,7 @@ export const INITIAL_REMINDERS: Reminder[] = [
     category: 'events',
     repeat: 'Once',
     done: false,
-    color: '#FF9800',
+    color: Colors.AccentAmber,
   },
 ];
 
@@ -455,12 +456,12 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
       done: false,
       color:
         data.category === 'health' || data.category === 'sport'
-          ? '#52D22E'
+          ? Colors.AccentGreen
           : data.category === 'work' || data.category === 'works'
-          ? '#F5C518'
+          ? Colors.AccentYellow
           : data.category === 'events'
-          ? '#FF9800'
-          : '#8383D6',
+          ? Colors.AccentAmber
+          : Colors.LavenderPurple,
       remindBefore: data.remindBefore || '5 mins before',
       sound: data.sound || 'Gentle Bell',
       urgentAlarm: data.urgentAlarm ?? false,
@@ -552,7 +553,7 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
       frequency: data.frequency || 'Daily',
       completed: false,
       timeOfDay: data.timeOfDay || '08:00 AM',
-      accentColor: data.accentColor || '#4A7C59',
+      accentColor: data.accentColor || Colors.HabitForestSage,
     };
     setHabits(prev => [newHabit, ...prev]);
     return newHabit;

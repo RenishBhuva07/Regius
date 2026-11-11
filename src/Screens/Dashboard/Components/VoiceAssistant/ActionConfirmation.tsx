@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Check } from 'lucide-react-native';
 import { Fonts } from '../../../../Theme/fonts';
+import { Colors } from '../../../../Assets/StyleUtilities/Colors';
 import { VoiceAssistantTheme } from './types';
 
 export interface ActionConfirmationProps {
@@ -28,7 +29,7 @@ export const ActionConfirmation: React.FC<ActionConfirmationProps> = ({
           { backgroundColor: theme.success },
         ]}
       >
-        <Check size={18} color="#FFFFFF" strokeWidth={3} />
+        <Check size={18} color={Colors.PureWhite} strokeWidth={3} />
       </View>
 
       <Text

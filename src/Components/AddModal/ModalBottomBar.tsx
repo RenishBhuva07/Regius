@@ -12,7 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowDown, ArrowRight } from 'lucide-react-native';
 
 import { Fonts } from '../../Theme/fonts';
-import { Colors } from '../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import { useTheme } from '../../Theme/ThemeContext';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import ModalBottomPatternSvg from './ModalBottomPatternSvg';
@@ -36,28 +36,28 @@ const getBottomBarBgColor = (
   if (isDark) {
     switch (themeId) {
       case 'cyprus_sand':
-        return '#003835';
+        return Colors.CyprusTealDark;
       case 'emerald_velvet':
-        return '#12261E';
+        return Colors.EmeraldDarkBar;
       case 'celestial_azure':
-        return '#141E36';
+        return Colors.AzureDarkBar;
       case 'obsidian_gold':
-        return '#1A1810';
+        return Colors.ObsidianDarkBar;
       case 'classic_light':
       case 'classic_dark':
       default:
-        return '#282048';
+        return Colors.MidnightIndigo;
     }
   } else {
     switch (themeId) {
       case 'cyprus_sand':
-        return '#004643';
+        return Colors.CyprusTeal;
       case 'emerald_velvet':
-        return '#1B9A72';
+        return Colors.GreenGracious;
       case 'celestial_azure':
-        return '#3B82F6';
+        return Colors.AzureRoyal;
       case 'obsidian_gold':
-        return '#D4AF37';
+        return Colors.ObsidianGoldAntique;
       case 'classic_dark':
       case 'classic_light':
       default:
@@ -119,8 +119,8 @@ export const ModalBottomBar: React.FC<ModalBottomBarProps> = ({
           paddingBottom: bottomPadding,
           backgroundColor: barBgColor,
           borderColor: isDarkMode
-            ? 'rgba(255, 255, 255, 0.16)'
-            : 'rgba(255, 255, 255, 0.45)',
+            ? withAlpha(Colors.PureWhite, 0.16)
+            : withAlpha(Colors.PureWhite, 0.45),
         },
       ]}
     >
@@ -138,7 +138,7 @@ export const ModalBottomBar: React.FC<ModalBottomBarProps> = ({
           accessibilityRole="button"
           accessibilityLabel={dismissAccessibilityLabel}
         >
-          <ArrowDown size={20} color="#FFFFFF" strokeWidth={2.4} />
+          <ArrowDown size={20} color={Colors.PureWhite} strokeWidth={2.4} />
         </TouchableOpacity>
 
         {/* Primary Action Button on Right */}
@@ -162,7 +162,7 @@ export const ModalBottomBar: React.FC<ModalBottomBarProps> = ({
             <Text style={styles.heroSubmitBtnText}>{submitText}</Text>
 
             <View style={styles.heroSubmitCircle}>
-              <ArrowRight size={18} color="#FFFFFF" strokeWidth={2.6} />
+              <ArrowRight size={18} color={Colors.PureWhite} strokeWidth={2.6} />
             </View>
           </TouchableOpacity>
         </Animated.View>
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: -4 },
         shadowOpacity: 0.28,
         shadowRadius: 14,
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
     borderRadius: 27,
     backgroundColor: Colors.MidnightCharcoal,
     borderWidth: 1.2,
-    borderColor: '#3A3F48',
+    borderColor: Colors.DarkModalBarBorder,
     alignItems: 'center',
     justifyContent: 'center',
     ...Platform.select({
@@ -236,7 +236,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 10,
     borderWidth: 1.2,
-    borderColor: '#3A3F48',
+    borderColor: Colors.DarkModalBarBorder,
     ...Platform.select({
       ios: {
         shadowColor: Colors.MidnightCharcoal,
@@ -255,14 +255,14 @@ const styles = StyleSheet.create({
   heroSubmitBtnText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 16,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     letterSpacing: -0.2,
   },
   heroSubmitCircle: {
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.18)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.18),
     alignItems: 'center',
     justifyContent: 'center',
   },

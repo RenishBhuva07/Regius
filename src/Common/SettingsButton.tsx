@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Settings } from 'lucide-react-native';
-import { Colors } from '../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import { useTheme } from '../Theme/ThemeContext';
 
 export interface SettingsButtonProps {
@@ -58,16 +58,16 @@ export const SettingsButton: React.FC<SettingsButtonProps> = ({
   };
 
   const cardBg = isCyprusSand
-    ? '#003835'
+    ? Colors.CyprusTealDark
     : themeColors.CardBackground ||
-      (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
+      (isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite);
   const iconColor = isScrolled
-    ? Colors.DefaultWhite
+    ? Colors.PureWhite
     : isCyprusSand
-    ? '#F0EDE5'
+    ? Colors.CyprusSandPaper
     : isDarkMode
-    ? Colors.PureWhiteText
-    : '#1E2028';
+    ? Colors.PureWhite
+    : Colors.DarkElevatedNero;
 
   const dynamicSize = {
     width: size,
@@ -107,10 +107,14 @@ export const SettingsButton: React.FC<SettingsButtonProps> = ({
             : {
                 backgroundColor: cardBg,
                 borderColor: isDarkMode
-                  ? 'rgba(255, 255, 255, 0.12)'
-                  : '#FFFFFF',
-                borderBottomColor: isDarkMode ? '#14161A' : '#D0CAD6',
-                shadowColor: isDarkMode ? '#000000' : '#201646',
+                  ? withAlpha(Colors.PureWhite, 0.12)
+                  : Colors.PureWhite,
+                borderBottomColor: isDarkMode
+                  ? Colors.DarkCanvasRich
+                  : Colors.CoolLavenderBevel,
+                shadowColor: isDarkMode
+                  ? Colors.PureBlack
+                  : Colors.DeepVioletShadow,
               },
           style,
         ]}
@@ -136,12 +140,12 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   buttonScrolled: {
-    backgroundColor: 'rgba(255, 255, 255, 0.22)',
-    borderColor: 'rgba(255, 255, 255, 0.45)',
-    borderBottomColor: 'rgba(255, 255, 255, 0.28)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.22),
+    borderColor: withAlpha(Colors.PureWhite, 0.45),
+    borderBottomColor: withAlpha(Colors.PureWhite, 0.28),
     borderWidth: 1,
     borderBottomWidth: 2,
-    shadowColor: '#201646',
+    shadowColor: Colors.DeepVioletShadow,
     shadowOffset: { width: 0, height: 1.5 },
     shadowOpacity: 0.15,
     shadowRadius: 3,

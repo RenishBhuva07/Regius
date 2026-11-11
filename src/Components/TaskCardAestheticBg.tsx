@@ -11,6 +11,7 @@ import Svg, {
   G,
   Line,
 } from 'react-native-svg';
+import { Colors } from '../Assets/StyleUtilities/Colors';
 
 export interface TaskCardAestheticBgProps {
   category: 'works' | 'sport' | 'habits' | string;
@@ -27,31 +28,31 @@ export const TaskCardAestheticBg: React.FC<TaskCardAestheticBgProps> = ({
     switch (category) {
       case 'sport':
         return {
-          auraColor: '#52D22E',
-          accentColor: '#1B9A72',
-          sheenStart: '#FFFFFF',
-          sheenEnd: '#F2FAF5',
-          sparkleColor: '#1B9A72',
-          starColor: '#52D22E',
+          auraColor: Colors.AccentGreen,
+          accentColor: Colors.GreenGracious,
+          sheenStart: Colors.PureWhite,
+          sheenEnd: Colors.CardSheenGreenEnd,
+          sparkleColor: Colors.GreenGracious,
+          starColor: Colors.AccentGreen,
         };
       case 'habits':
         return {
-          auraColor: '#8383D6',
-          accentColor: '#7059C8',
-          sheenStart: '#FFFFFF',
-          sheenEnd: '#F4F5FD',
-          sparkleColor: '#7059C8',
-          starColor: '#8383D6',
+          auraColor: Colors.LavenderPurple,
+          accentColor: Colors.MindfulTextAccent,
+          sheenStart: Colors.PureWhite,
+          sheenEnd: Colors.CardSheenPurpleEnd,
+          sparkleColor: Colors.MindfulTextAccent,
+          starColor: Colors.LavenderPurple,
         };
       case 'works':
       default:
         return {
-          auraColor: '#F5C518',
-          accentColor: '#B48216',
-          sheenStart: '#FFFFFF',
-          sheenEnd: '#FDFBF4',
-          sparkleColor: '#B48216',
-          starColor: '#F5C518',
+          auraColor: Colors.AccentYellow,
+          accentColor: Colors.WorkTextAccent,
+          sheenStart: Colors.PureWhite,
+          sheenEnd: Colors.CardSheenGoldEnd,
+          sparkleColor: Colors.WorkTextAccent,
+          starColor: Colors.AccentYellow,
         };
     }
   };

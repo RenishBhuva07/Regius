@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { Plus, X } from 'lucide-react-native';
 import { Fonts } from '../../Theme/fonts';
+import { Colors } from '../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../Theme/useAppTheme';
 
 export interface SubtaskItem {
@@ -68,13 +69,13 @@ export const SubtaskListSection: React.FC<SubtaskListSectionProps> = React.memo(
             style={[
               styles.subtaskTextInput,
               isDarkMode && {
-                backgroundColor: '#171A1F',
-                borderColor: '#2C3035',
-                color: '#FFFFFF',
+                backgroundColor: Colors.DarkSurfaceAlt,
+                borderColor: Colors.CarbonSlate,
+                color: Colors.PureWhite,
               },
             ]}
             placeholder={placeholder}
-            placeholderTextColor="#A3A8B1"
+            placeholderTextColor={Colors.SteelMist}
             value={input}
             onChangeText={onChangeInput}
             onSubmitEditing={onAdd}
@@ -87,7 +88,7 @@ export const SubtaskListSection: React.FC<SubtaskListSectionProps> = React.memo(
             accessibilityRole="button"
             accessibilityLabel="Add subtask"
           >
-            <Plus size={14} color="#FFFFFF" strokeWidth={2.4} />
+            <Plus size={14} color={Colors.PureWhite} strokeWidth={2.4} />
             <Text style={styles.addSubtaskBtnText}>Add</Text>
           </TouchableOpacity>
         </View>
@@ -100,8 +101,8 @@ export const SubtaskListSection: React.FC<SubtaskListSectionProps> = React.memo(
                 style={[
                   styles.subtaskItemRow,
                   isDarkMode && {
-                    backgroundColor: '#1E2228',
-                    borderColor: '#2C3035',
+                    backgroundColor: Colors.DarkCardBackground,
+                    borderColor: Colors.CarbonSlate,
                   },
                 ]}
               >
@@ -109,15 +110,15 @@ export const SubtaskListSection: React.FC<SubtaskListSectionProps> = React.memo(
                   style={[
                     styles.subtaskStepIndicator,
                     isDarkMode && {
-                      backgroundColor: '#2A2D35',
-                      borderColor: '#363944',
+                      backgroundColor: Colors.DarkCardElevated,
+                      borderColor: Colors.DarkBorder,
                     },
                   ]}
                 >
                   <Text
                     style={[
                       styles.subtaskStepNumber,
-                      isDarkMode && { color: '#A3A8B1' },
+                      isDarkMode && { color: Colors.SteelMist },
                     ]}
                   >
                     {index + 1}
@@ -127,7 +128,7 @@ export const SubtaskListSection: React.FC<SubtaskListSectionProps> = React.memo(
                 <Text
                   style={[
                     styles.subtaskItemText,
-                    isDarkMode && { color: '#FFFFFF' },
+                    isDarkMode && { color: Colors.PureWhite },
                   ]}
                   numberOfLines={2}
                 >
@@ -143,7 +144,9 @@ export const SubtaskListSection: React.FC<SubtaskListSectionProps> = React.memo(
                 >
                   <X
                     size={13}
-                    color={isDarkMode ? '#A3A8B1' : '#7E838F'}
+                    color={
+                      isDarkMode ? Colors.SteelMist : Colors.MutedSlateSubtext
+                    }
                     strokeWidth={2.2}
                   />
                 </TouchableOpacity>
@@ -169,13 +172,13 @@ const styles = StyleSheet.create({
   sectionHeading: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 13.5,
-    color: '#121417',
+    color: Colors.DarkBackground,
     letterSpacing: -0.2,
   },
   sectionSubtext: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 11.5,
-    color: '#77767B',
+    color: Colors.Grey,
   },
   subtaskInputRow: {
     flexDirection: 'row',
@@ -185,20 +188,20 @@ const styles = StyleSheet.create({
   subtaskTextInput: {
     flex: 1,
     height: 44,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderRadius: 14,
     borderWidth: 1.5,
-    borderColor: '#E8E2D5',
+    borderColor: Colors.RingBorder,
     paddingHorizontal: 14,
     fontFamily: Fonts.poppins.medium,
     fontSize: 13,
-    color: '#121417',
+    color: Colors.DarkBackground,
   },
   addSubtaskBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#1E2028',
+    backgroundColor: Colors.DarkElevatedNero,
     height: 44,
     paddingHorizontal: 14,
     borderRadius: 14,
@@ -207,7 +210,7 @@ const styles = StyleSheet.create({
   addSubtaskBtnText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 12.5,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
   subtasksList: {
     marginTop: 10,
@@ -216,34 +219,34 @@ const styles = StyleSheet.create({
   subtaskItemRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     paddingVertical: 8,
     paddingHorizontal: 12,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#E8E2D5',
+    borderColor: Colors.RingBorder,
     gap: 10,
   },
   subtaskStepIndicator: {
     width: 22,
     height: 22,
     borderRadius: 11,
-    backgroundColor: '#FAF8F5',
+    backgroundColor: Colors.CreamSurfaceAlt,
     borderWidth: 1,
-    borderColor: '#E8E2D5',
+    borderColor: Colors.RingBorder,
     alignItems: 'center',
     justifyContent: 'center',
   },
   subtaskStepNumber: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 10,
-    color: '#77767B',
+    color: Colors.Grey,
   },
   subtaskItemText: {
     flex: 1,
     fontFamily: Fonts.poppins.medium,
     fontSize: 12.5,
-    color: '#121417',
+    color: Colors.DarkBackground,
   },
   removeSubtaskBtn: {
     padding: 2,

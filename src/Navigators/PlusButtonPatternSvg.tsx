@@ -9,6 +9,7 @@ import Svg, {
   Stop,
 } from 'react-native-svg';
 import { useTheme } from '../Theme/ThemeContext';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 
 interface PlusButtonPatternSvgProps {
   size?: number;
@@ -23,52 +24,52 @@ export const PlusButtonPatternSvg: React.FC<PlusButtonPatternSvgProps> =
     const getPlusBtnGradient = () => {
       if (activeThemeId === 'cyprus_sand') {
         return {
-          c0: '#0D7E78',
-          c30: '#0A6B66',
-          c70: '#004643',
-          c100: '#002624',
-          coreAura: '#0A6B66',
-          rimSheen: '#001A18',
+          c0: Colors.SvgCyprusTealGlow,
+          c30: Colors.CyprusTealLight,
+          c70: Colors.CyprusTeal,
+          c100: Colors.CyprusTealDeep,
+          coreAura: Colors.CyprusTealLight,
+          rimSheen: Colors.CyprusTealAbyss,
         };
       }
       if (activeThemeId === 'emerald_velvet') {
         return {
-          c0: '#2ECC71',
-          c30: '#27AE60',
-          c70: '#1B9A72',
-          c100: '#0E5C43',
-          coreAura: '#2ECC71',
-          rimSheen: '#0B1711',
+          c0: Colors.EmeraldVibrant,
+          c30: Colors.SvgEmeraldOrbMid,
+          c70: Colors.GreenGracious,
+          c100: Colors.SvgEmeraldOrbDeep,
+          coreAura: Colors.EmeraldVibrant,
+          rimSheen: Colors.EmeraldButtonTextDark,
         };
       }
       if (activeThemeId === 'celestial_azure') {
         return {
-          c0: '#60A5FA',
-          c30: '#3B82F6',
-          c70: '#2563EB',
-          c100: '#1D4ED8',
-          coreAura: '#60A5FA',
-          rimSheen: '#090F1C',
+          c0: Colors.AzureSkyAccent,
+          c30: Colors.AzureRoyal,
+          c70: Colors.Blue600,
+          c100: Colors.SvgAzureOrbDeep,
+          coreAura: Colors.AzureSkyAccent,
+          rimSheen: Colors.AzureButtonTextDark,
         };
       }
       if (activeThemeId === 'classic_dark' || activeThemeId === 'obsidian_gold') {
         return {
-          c0: '#FFE066',
-          c30: '#F5C518',
-          c70: '#DEAA14',
-          c100: '#B48216',
-          coreAura: '#F5C518',
-          rimSheen: '#1A1810',
+          c0: Colors.SvgGoldSheenLight,
+          c30: Colors.AccentYellow,
+          c70: Colors.WorkDarkBorder,
+          c100: Colors.WorkTextAccent,
+          coreAura: Colors.AccentYellow,
+          rimSheen: Colors.ObsidianDarkBar,
         };
       }
       // Warm Cream
       return {
-        c0: '#A2A2F8',
-        c30: '#8A8AE6',
-        c70: '#7171CE',
-        c100: '#5656B2',
-        coreAura: '#8A8AE6',
-        rimSheen: '#2E2E6E',
+        c0: Colors.SvgOrbLavenderLight,
+        c30: Colors.SvgOrbVioletMid,
+        c70: Colors.SvgOrbIndigoMid,
+        c100: Colors.SvgOrbIndigoDeep,
+        coreAura: Colors.SvgOrbVioletMid,
+        rimSheen: Colors.SvgOrbIndigoRim,
       };
     };
 
@@ -107,8 +108,8 @@ export const PlusButtonPatternSvg: React.FC<PlusButtonPatternSvgProps> =
               rx="46%"
               ry="46%"
             >
-              <Stop offset="0%" stopColor="#FFFCE3" stopOpacity={0.35} />
-              <Stop offset="45%" stopColor="#F5C518" stopOpacity={0.15} />
+              <Stop offset="0%" stopColor={Colors.CreamBackground} stopOpacity={0.35} />
+              <Stop offset="45%" stopColor={Colors.AccentYellow} stopOpacity={0.15} />
               <Stop offset="100%" stopColor={plusGrad.coreAura} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
@@ -118,13 +119,13 @@ export const PlusButtonPatternSvg: React.FC<PlusButtonPatternSvgProps> =
               rx="54%"
               ry="38%"
             >
-              <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.42} />
-              <Stop offset="55%" stopColor="#FFFFFF" stopOpacity={0.08} />
-              <Stop offset="100%" stopColor="#FFFFFF" stopOpacity={0} />
+              <Stop offset="0%" stopColor={Colors.PureWhite} stopOpacity={0.42} />
+              <Stop offset="55%" stopColor={Colors.PureWhite} stopOpacity={0.08} />
+              <Stop offset="100%" stopColor={Colors.PureWhite} stopOpacity={0} />
             </RadialGradient>
             <LinearGradient id="plusRimSheen" x1="0%" y1="0%" x2="0%" y2="100%">
-              <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.55} />
-              <Stop offset="45%" stopColor="#FFFFFF" stopOpacity={0.15} />
+              <Stop offset="0%" stopColor={Colors.PureWhite} stopOpacity={0.55} />
+              <Stop offset="45%" stopColor={Colors.PureWhite} stopOpacity={0.15} />
               <Stop offset="100%" stopColor={plusGrad.rimSheen} stopOpacity={0.45} />
             </LinearGradient>
             <LinearGradient
@@ -134,9 +135,9 @@ export const PlusButtonPatternSvg: React.FC<PlusButtonPatternSvgProps> =
               x2="100%"
               y2="100%"
             >
-              <Stop offset="0%" stopColor="#FFFCE3" stopOpacity={0.98} />
-              <Stop offset="60%" stopColor="#F5C518" stopOpacity={0.85} />
-              <Stop offset="100%" stopColor="#B48216" stopOpacity={0.7} />
+              <Stop offset="0%" stopColor={Colors.CreamBackground} stopOpacity={0.98} />
+              <Stop offset="60%" stopColor={Colors.AccentYellow} stopOpacity={0.85} />
+              <Stop offset="100%" stopColor={Colors.WorkTextAccent} stopOpacity={0.7} />
             </LinearGradient>
           </Defs>
           <Circle cx={center} cy={center} r={center} fill="url(#plusBtnBg)" />
@@ -156,7 +157,7 @@ export const PlusButtonPatternSvg: React.FC<PlusButtonPatternSvgProps> =
             cx={center}
             cy={center}
             r={21.5}
-            stroke="rgba(255, 255, 255, 0.22)"
+            stroke={withAlpha(Colors.PureWhite, 0.22)}
             strokeWidth={0.8}
             strokeDasharray="2.5 3"
             fill="none"
@@ -165,14 +166,14 @@ export const PlusButtonPatternSvg: React.FC<PlusButtonPatternSvgProps> =
             cx={center}
             cy={center}
             r={18}
-            stroke="rgba(255, 255, 255, 0.16)"
+            stroke={withAlpha(Colors.PureWhite, 0.16)}
             strokeWidth={0.7}
             fill="none"
           />
-          <Circle cx={center} cy={center - 21.5} r={0.9} fill="#FFFCE3" />
-          <Circle cx={center + 21.5} cy={center} r={0.9} fill="#FFFCE3" />
-          <Circle cx={center} cy={center + 21.5} r={0.9} fill="#FFFCE3" />
-          <Circle cx={center - 21.5} cy={center} r={0.9} fill="#FFFCE3" />
+          <Circle cx={center} cy={center - 21.5} r={0.9} fill={Colors.CreamBackground} />
+          <Circle cx={center + 21.5} cy={center} r={0.9} fill={Colors.CreamBackground} />
+          <Circle cx={center} cy={center + 21.5} r={0.9} fill={Colors.CreamBackground} />
+          <Circle cx={center - 21.5} cy={center} r={0.9} fill={Colors.CreamBackground} />
           <Path
             d={star(center + diag, center - diag, starSize)}
             fill="url(#plusGoldStar)"

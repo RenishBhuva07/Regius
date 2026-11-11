@@ -36,17 +36,18 @@ export const SearchInputBar: React.FC<SearchInputBarProps> = React.memo(
 
     const cardBg =
       themeColors.CardBackground ||
-      (isDarkMode ? '#1E2228' : Colors.DefaultWhite);
+      (isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite);
     const textPrimary =
       themeColors.PrimaryText ||
-      (isDarkMode ? Colors.PureWhiteText : Colors.MidnightInkText);
+      (isDarkMode ? Colors.PureWhite : Colors.PureBlack);
     const textSecondary =
       themeColors.SecondaryText ||
-      (isDarkMode ? '#A3A8B1' : Colors.SubtitleGray);
+      (isDarkMode ? Colors.SteelMist : Colors.SubtitleGray);
     const borderDefault =
-      themeColors.BorderLight || (isDarkMode ? '#2C3035' : '#EAE5D9');
+      themeColors.BorderLight ||
+      (isDarkMode ? Colors.CarbonSlate : Colors.WarmParchmentBorder);
     const borderActive =
-      themeColors.Accent || (isDarkMode ? '#8383D6' : Colors.LavenderPurple);
+      themeColors.Accent || Colors.LavenderPurple;
 
     const handleClear = () => {
       onChangeText('');
@@ -105,7 +106,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.05,
         shadowRadius: 5,

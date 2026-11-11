@@ -18,7 +18,7 @@ import { AudioPlayerService } from '../../../Services/AudioPlayerService';
 import { KokoroTTSService } from '../../../Services/Kokoro/KokoroTTSService';
 import { VoiceSettingsService } from '../../../Services/VoiceSettingsService';
 import { VOICES } from '../../Settings/Components/types';
-import Colors from '../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { useTheme, isLightColor } from '../../../Theme/ThemeContext';
 import Svg, {
   Path,
@@ -36,14 +36,14 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => {
   const { activeThemeId, Colors: themeColors } = useTheme();
   const auraColor =
     activeThemeId === 'cyprus_sand'
-      ? '#0A6B66'
+      ? Colors.CyprusTealLight
       : activeThemeId === 'emerald_velvet'
-      ? '#1B9A72'
+      ? Colors.GreenGracious
       : activeThemeId === 'celestial_azure'
-      ? '#3B82F6'
+      ? Colors.AzureRoyal
       : activeThemeId === 'classic_dark' || activeThemeId === 'obsidian_gold'
-      ? '#D4AF37'
-      : '#8383D6';
+      ? Colors.ObsidianGoldAntique
+      : Colors.LavenderPurple;
 
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none">
@@ -56,9 +56,9 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => {
       >
         <Defs>
           <LinearGradient id="cardBgSheen" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor="#252733" stopOpacity={0.65} />
+            <Stop offset="0%" stopColor={Colors.BentoStopSlate} stopOpacity={0.65} />
             <Stop offset="50%" stopColor={Colors.NeroBlack} stopOpacity={0.15} />
-            <Stop offset="100%" stopColor="#15161A" stopOpacity={0.7} />
+            <Stop offset="100%" stopColor={Colors.BriefingStopDark} stopOpacity={0.7} />
           </LinearGradient>
           <RadialGradient id="lavenderAura" cx="86%" cy="14%" rx="68%" ry="68%">
             <Stop offset="0%" stopColor={auraColor} stopOpacity={0.42} />
@@ -71,18 +71,18 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => {
             <Stop offset="100%" stopColor={Colors.NeroBlack} stopOpacity={0} />
           </RadialGradient>
         <RadialGradient id="goldDawnGlow" cx="12%" cy="88%" rx="52%" ry="52%">
-          <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.16} />
-          <Stop offset="45%" stopColor="#B48216" stopOpacity={0.06} />
+          <Stop offset="0%" stopColor={Colors.AccentYellow} stopOpacity={0.16} />
+          <Stop offset="45%" stopColor={Colors.WorkTextAccent} stopOpacity={0.06} />
           <Stop offset="100%" stopColor={Colors.NeroBlack} stopOpacity={0} />
         </RadialGradient>
         <RadialGradient id="mintGlow" cx="62%" cy="68%" rx="40%" ry="40%">
-          <Stop offset="0%" stopColor="#52D22E" stopOpacity={0.09} />
-          <Stop offset="60%" stopColor="#1B9A72" stopOpacity={0.02} />
+          <Stop offset="0%" stopColor={Colors.AccentGreen} stopOpacity={0.09} />
+          <Stop offset="60%" stopColor={Colors.GreenGracious} stopOpacity={0.02} />
           <Stop offset="100%" stopColor={Colors.NeroBlack} stopOpacity={0} />
         </RadialGradient>
         <LinearGradient id="goldStar" x1="0%" y1="0%" x2="100%" y2="100%">
-          <Stop offset="0%" stopColor="#FFFCE3" stopOpacity={0.95} />
-          <Stop offset="100%" stopColor="#F5C518" stopOpacity={0.8} />
+          <Stop offset="0%" stopColor={Colors.CreamBackground} stopOpacity={0.95} />
+          <Stop offset="100%" stopColor={Colors.AccentYellow} stopOpacity={0.8} />
         </LinearGradient>
       </Defs>
       <Rect width="100%" height="100%" fill="url(#cardBgSheen)" />
@@ -93,7 +93,7 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => {
         cx={305}
         cy={24}
         r={38}
-        stroke="rgba(216, 219, 255, 0.18)"
+        stroke={withAlpha(Colors.MindfulLightBorder, 0.18)}
         strokeWidth={1}
         fill="none"
       />
@@ -101,7 +101,7 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => {
         cx={305}
         cy={24}
         r={64}
-        stroke="rgba(182, 190, 245, 0.12)"
+        stroke={withAlpha(Colors.BadgePurpleBevel, 0.12)}
         strokeWidth={1.2}
         strokeDasharray="4 5"
         fill="none"
@@ -110,7 +110,7 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => {
         cx={305}
         cy={24}
         r={98}
-        stroke="rgba(255, 255, 255, 0.06)"
+        stroke={withAlpha(Colors.PureWhite, 0.06)}
         strokeWidth={1}
         fill="none"
       />
@@ -118,7 +118,7 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => {
         cx={305}
         cy={24}
         r={140}
-        stroke="rgba(216, 219, 255, 0.035)"
+        stroke={withAlpha(Colors.MindfulLightBorder, 0.035)}
         strokeWidth={1}
         strokeDasharray="5 7"
         fill="none"
@@ -127,7 +127,7 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => {
         cx={42}
         cy={38}
         r={30}
-        stroke="rgba(255, 255, 255, 0.05)"
+        stroke={withAlpha(Colors.PureWhite, 0.05)}
         strokeWidth={1}
         fill="none"
       />
@@ -135,21 +135,21 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => {
         cx={42}
         cy={38}
         r={48}
-        stroke="rgba(131, 131, 214, 0.07)"
+        stroke={withAlpha(Colors.LavenderPurple, 0.07)}
         strokeWidth={1}
         strokeDasharray="3 4"
         fill="none"
       />
       <Path
         d="M -20 62 C 75 22, 155 92, 255 46 S 355 82, 420 52"
-        stroke="rgba(156, 156, 227, 0.22)"
+        stroke={withAlpha(Colors.PeriwinkleSoft, 0.22)}
         strokeWidth={1.4}
         strokeLinecap="round"
         fill="none"
       />
       <Path
         d="M -20 88 C 68 124, 148 44, 248 104 S 348 44, 420 84"
-        stroke="rgba(204, 230, 208, 0.14)"
+        stroke={withAlpha(Colors.BriefingAcousticSage, 0.14)}
         strokeWidth={1.2}
         strokeDasharray="4 5"
         strokeLinecap="round"
@@ -157,20 +157,20 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => {
       />
       <Path
         d="M -10 148 C 88 108, 178 168, 288 128 S 378 158, 420 138"
-        stroke="rgba(245, 197, 24, 0.11)"
+        stroke={withAlpha(Colors.AccentYellow, 0.11)}
         strokeWidth={1}
         strokeLinecap="round"
         fill="none"
       />
       <G opacity={0.06}>
-        <Rect x={278} y={150} width={2.5} height={24} rx={1.2} fill="#FFFFFF" />
-        <Rect x={286} y={142} width={2.5} height={32} rx={1.2} fill="#CCE6D0" />
-        <Rect x={294} y={135} width={2.5} height={39} rx={1.2} fill="#8383D6" />
-        <Rect x={302} y={146} width={2.5} height={28} rx={1.2} fill="#FFFFFF" />
-        <Rect x={310} y={138} width={2.5} height={36} rx={1.2} fill="#CCE6D0" />
-        <Rect x={318} y={148} width={2.5} height={26} rx={1.2} fill="#FFFFFF" />
-        <Rect x={326} y={140} width={2.5} height={34} rx={1.2} fill="#8383D6" />
-        <Rect x={334} y={152} width={2.5} height={22} rx={1.2} fill="#FFFFFF" />
+        <Rect x={278} y={150} width={2.5} height={24} rx={1.2} fill={Colors.PureWhite} />
+        <Rect x={286} y={142} width={2.5} height={32} rx={1.2} fill={Colors.BriefingAcousticSage} />
+        <Rect x={294} y={135} width={2.5} height={39} rx={1.2} fill={Colors.LavenderPurple} />
+        <Rect x={302} y={146} width={2.5} height={28} rx={1.2} fill={Colors.PureWhite} />
+        <Rect x={310} y={138} width={2.5} height={36} rx={1.2} fill={Colors.BriefingAcousticSage} />
+        <Rect x={318} y={148} width={2.5} height={26} rx={1.2} fill={Colors.PureWhite} />
+        <Rect x={326} y={140} width={2.5} height={34} rx={1.2} fill={Colors.LavenderPurple} />
+        <Rect x={334} y={152} width={2.5} height={22} rx={1.2} fill={Colors.PureWhite} />
       </G>
       <G transform="translate(245, 18) scale(0.85)">
         <Path
@@ -181,29 +181,29 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => {
       <G transform="translate(32, 142) scale(0.65)" opacity={0.6}>
         <Path
           d="M6 0L7.5 4.5L12 6L7.5 7.5L6 12L4.5 7.5L0 6L4.5 4.5Z"
-          fill="#FFFCE3"
+          fill={Colors.CreamBackground}
         />
       </G>
       <G transform="translate(326, 86) scale(0.55)" opacity={0.5}>
         <Path
           d="M6 0L7.5 4.5L12 6L7.5 7.5L6 12L4.5 7.5L0 6L4.5 4.5Z"
-          fill="#D8DBFF"
+          fill={Colors.MindfulLightBorder}
         />
       </G>
       <G transform="translate(142, 28) scale(0.48)" opacity={0.45}>
         <Path
           d="M6 0L7.5 4.5L12 6L7.5 7.5L6 12L4.5 7.5L0 6L4.5 4.5Z"
-          fill="#F5C518"
+          fill={Colors.AccentYellow}
         />
       </G>
-      <Circle cx={118} cy={34} r={1.3} fill="#FFFCE3" opacity={0.5} />
-      <Circle cx={192} cy={22} r={1.1} fill="#F5C518" opacity={0.55} />
-      <Circle cx={272} cy={52} r={1.4} fill="#FFFCE3" opacity={0.45} />
-      <Circle cx={338} cy={44} r={1.2} fill="#D8DBFF" opacity={0.5} />
-      <Circle cx={28} cy={102} r={1.2} fill="#FFFCE3" opacity={0.35} />
-      <Circle cx={94} cy={168} r={1.3} fill="#F5C518" opacity={0.4} />
-      <Circle cx={214} cy={182} r={1.1} fill="#FFFCE3" opacity={0.3} />
-      <Circle cx={344} cy={176} r={1.3} fill="#CCE6D0" opacity={0.45} />
+      <Circle cx={118} cy={34} r={1.3} fill={Colors.CreamBackground} opacity={0.5} />
+      <Circle cx={192} cy={22} r={1.1} fill={Colors.AccentYellow} opacity={0.55} />
+      <Circle cx={272} cy={52} r={1.4} fill={Colors.CreamBackground} opacity={0.45} />
+      <Circle cx={338} cy={44} r={1.2} fill={Colors.MindfulLightBorder} opacity={0.5} />
+      <Circle cx={28} cy={102} r={1.2} fill={Colors.CreamBackground} opacity={0.35} />
+      <Circle cx={94} cy={168} r={1.3} fill={Colors.AccentYellow} opacity={0.4} />
+      <Circle cx={214} cy={182} r={1.1} fill={Colors.CreamBackground} opacity={0.3} />
+      <Circle cx={344} cy={176} r={1.3} fill={Colors.BriefingAcousticSage} opacity={0.45} />
     </Svg>
   </View>
   );
@@ -231,24 +231,24 @@ export const DailyBriefingCard: React.FC<DailyBriefingCardProps> = ({
   const playBtnBg =
     activeThemeId === 'cyprus_sand'
       ? isDarkMode
-        ? '#F0EDE5'
-        : '#004643'
+        ? Colors.CyprusSandPaper
+        : Colors.CyprusTeal
       : activeThemeId === 'emerald_velvet'
-      ? '#2ECC71'
+      ? Colors.EmeraldVibrant
       : activeThemeId === 'celestial_azure'
-      ? '#60A5FA'
+      ? Colors.AzureSkyAccent
       : activeThemeId === 'classic_dark' || activeThemeId === 'obsidian_gold'
-      ? '#F5C518'
+      ? Colors.AccentYellow
       : Colors.LavenderPurple;
 
   const playIconColor =
     activeThemeId === 'cyprus_sand'
       ? isDarkMode
-        ? '#004643'
-        : '#F0EDE5'
+        ? Colors.CyprusTeal
+        : Colors.CyprusSandPaper
       : isLightColor(playBtnBg)
-      ? '#000000'
-      : '#FFFFFF';
+      ? Colors.PureBlack
+      : Colors.PureWhite;
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -576,8 +576,8 @@ export const DailyBriefingCard: React.FC<DailyBriefingCardProps> = ({
                       {
                         height: barAnim,
                         backgroundColor: isMint
-                          ? '#CCE6D0'
-                          : 'rgba(255, 255, 255, 0.35)',
+                          ? Colors.BriefingAcousticSage
+                          : withAlpha(Colors.PureWhite, 0.35),
                       },
                     ]}
                   />
@@ -605,7 +605,7 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     borderRadius: 24,
     backgroundColor: Colors.NeroBlack,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.28,
     shadowRadius: 18,
@@ -618,7 +618,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     overflow: 'hidden',
     borderWidth: 4,
-    borderColor: 'rgba(255, 255, 255, 0.9)',
+    borderColor: withAlpha(Colors.PureWhite, 0.9),
   },
   content: {
     position: 'relative',
@@ -649,33 +649,33 @@ const styles = StyleSheet.create({
     width: 38,
     height: 38,
     borderRadius: 19,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.08),
     alignItems: 'center',
     justifyContent: 'center',
   },
   title: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 14,
-    color: '#E4E2E4',
+    color: Colors.BriefingPlatinumText,
     letterSpacing: -0.2,
   },
   subtitle: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 12,
-    color: '#A19FA3',
+    color: Colors.BriefingMutedSilver,
     marginTop: 1,
   },
   playerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#272932',
+    backgroundColor: Colors.BriefingControlDark,
     borderRadius: 30,
     paddingHorizontal: 8,
     paddingVertical: 6,
     gap: 10,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-    shadowColor: '#000000',
+    borderColor: withAlpha(Colors.PureWhite, 0.1),
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 4,
@@ -713,14 +713,14 @@ const styles = StyleSheet.create({
   timerText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 12,
-    color: '#D4D2D6',
+    color: Colors.BriefingSilverText,
     paddingRight: 6,
   },
   quoteText: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 13,
     lineHeight: 19,
-    color: 'rgba(245, 243, 238, 0.88)',
+    color: withAlpha(Colors.BriefingWarmOffWhite, 0.88),
   },
 });
 

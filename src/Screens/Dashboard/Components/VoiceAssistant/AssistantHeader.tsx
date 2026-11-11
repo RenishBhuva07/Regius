@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Settings, Sparkles } from 'lucide-react-native';
 import { Fonts } from '../../../../Theme/fonts';
+import { Colors, withAlpha } from '../../../../Assets/StyleUtilities/Colors';
 import { VoiceAssistantTheme } from './types';
 import { VoiceAssistantState } from '../../../../Services/Voice/VoiceStateMachine';
 
@@ -34,13 +35,15 @@ export const AssistantHeader: React.FC<AssistantHeaderProps> = ({
     }
   };
 
-  const buttonBg = theme.isDarkMode ? 'rgba(255, 255, 255, 0.08)' : '#FFFFFF';
+  const buttonBg = theme.isDarkMode
+    ? withAlpha(Colors.PureWhite, 0.08)
+    : Colors.PureWhite;
   const buttonBorder = theme.isDarkMode
-    ? 'rgba(255, 255, 255, 0.16)'
-    : '#FFFFFF';
+    ? withAlpha(Colors.PureWhite, 0.16)
+    : Colors.PureWhite;
   const buttonBottomBorder = theme.isDarkMode
-    ? 'rgba(0, 0, 0, 0.5)'
-    : '#D5D0C5';
+    ? withAlpha(Colors.PureBlack, 0.5)
+    : Colors.HomeIndicator;
 
   return (
     <View style={styles.header}>
@@ -54,7 +57,9 @@ export const AssistantHeader: React.FC<AssistantHeaderProps> = ({
             borderColor: buttonBorder,
             borderBottomColor: buttonBottomBorder,
             opacity: pressed ? 0.75 : 1,
-            shadowColor: theme.isDarkMode ? '#000000' : '#8383D6',
+            shadowColor: theme.isDarkMode
+              ? Colors.PureBlack
+              : Colors.LavenderPurple,
           },
         ]}
         hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
@@ -87,7 +92,9 @@ export const AssistantHeader: React.FC<AssistantHeaderProps> = ({
             borderColor: buttonBorder,
             borderBottomColor: buttonBottomBorder,
             opacity: pressed ? 0.75 : 1,
-            shadowColor: theme.isDarkMode ? '#000000' : '#8383D6',
+            shadowColor: theme.isDarkMode
+              ? Colors.PureBlack
+              : Colors.LavenderPurple,
           },
         ]}
         hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
@@ -142,7 +149,7 @@ const styles = StyleSheet.create({
     width: 5.5,
     height: 5.5,
     borderRadius: 3,
-    backgroundColor: '#10B981',
+    backgroundColor: Colors.ToastSuccessAccent,
   },
   statusText: {
     fontFamily: Fonts.poppins.semiBold,

@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { Fonts } from '../Theme/fonts';
 import { Typography } from '../Theme/Typographys';
-import { Colors } from '../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import { useTheme } from '../Theme/ThemeContext';
 import { SVGS } from '../Assets/Images';
 import { CustomAnimation } from './CustomAnimation';
@@ -57,13 +57,16 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
   const { width: screenWidth } = Dimensions.get('window');
 
   const scrolledBg =
-    themeColors.AccentDeep || (isDarkMode ? '#282048' : Colors.LavenderPurple);
+    themeColors.AccentDeep ||
+    (isDarkMode ? Colors.MidnightIndigo : Colors.LavenderPurple);
 
   // Interpolate header visual styles based on scroll position (0 to 30px)
   const headerBgColor = scrollY.interpolate({
     inputRange: [0, 30],
     outputRange: [
-      isDarkMode ? 'rgba(18, 20, 23, 0)' : 'rgba(255, 255, 255, 0)',
+      isDarkMode
+        ? withAlpha(Colors.DarkBackground, 0)
+        : withAlpha(Colors.PureWhite, 0),
       scrolledBg,
     ],
     extrapolate: 'clamp',
@@ -145,7 +148,7 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
               styles.screenTitle,
               isScrolled
                 ? styles.screenTitleScrolled
-                : { color: isDarkMode ? '#FFFFFF' : '#1B1C19' },
+                : { color: isDarkMode ? Colors.PureWhite : Colors.RegiusInk },
             ]}
             numberOfLines={1}
           >
@@ -157,7 +160,11 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
                 styles.screenSubtitle,
                 isScrolled
                   ? styles.screenSubtitleScrolled
-                  : { color: isDarkMode ? '#A3A8B1' : '#767772' },
+                  : {
+                      color: isDarkMode
+                        ? Colors.SteelMist
+                        : Colors.HeaderSubtitleOlive,
+                    },
               ]}
               numberOfLines={1}
             >
@@ -223,7 +230,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 100,
-    shadowColor: '#201646',
+    shadowColor: Colors.DeepVioletShadow,
     shadowOffset: { width: 0, height: 6 },
     shadowRadius: 7,
   },
@@ -242,23 +249,23 @@ const styles = StyleSheet.create({
   screenTitle: {
     ...Typography.h1RanadeBold,
     fontSize: 24,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     letterSpacing: -0.5,
     includeFontPadding: false,
     lineHeight: 28,
   },
   screenTitleScrolled: {
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
   },
   screenSubtitle: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 11.5,
-    color: '#767772',
+    color: Colors.HeaderSubtitleOlive,
     includeFontPadding: false,
     lineHeight: 15,
   },
   screenSubtitleScrolled: {
-    color: 'rgba(255, 255, 255, 0.82)',
+    color: withAlpha(Colors.PureWhite, 0.82),
   },
   headerRight: {
     flexDirection: 'row',
@@ -284,17 +291,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
-    backgroundColor: Colors.DefaultWhite,
+    backgroundColor: Colors.PureWhite,
   },
   avatarRingScrolled: {
     borderColor: Colors.RingBorder,
     borderWidth: 2,
-    shadowColor: '#000000',
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.12,
     shadowRadius: 4,
     elevation: 3,
-    backgroundColor: Colors.DefaultWhite,
+    backgroundColor: Colors.PureWhite,
   },
   avatar: {
     position: 'absolute',

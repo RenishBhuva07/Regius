@@ -10,6 +10,7 @@ import {
   Animated,
 } from 'react-native';
 import { Fonts } from '../Theme/fonts';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 import { useTheme } from '../Theme/ThemeContext';
 
@@ -41,8 +42,8 @@ export const TactileSegmentedTabs = <T extends string = string>({
   activeTab,
   onChangeTab,
   containerStyle,
-  activeColor = '#D97706',
-  inactiveColor = '#9EA3B0',
+  activeColor = Colors.HabitBurnishedAmber,
+  inactiveColor = Colors.TabInactiveSilver,
 }: TactileSegmentedTabsProps<T>): React.ReactElement => {
   const { isDarkMode } = useTheme();
   const [containerWidth, setContainerWidth] = useState(0);
@@ -63,18 +64,24 @@ export const TactileSegmentedTabs = <T extends string = string>({
   }, [activeIndex, slideAnim]);
 
   // Color tokens aligned with 3D tactile pill standard
-  const trackBg = isDarkMode ? '#14171C' : '#FAF5E4';
-  const trackBorder = isDarkMode ? '#282C34' : '#E8E2D5';
-  const trackBottomBorder = isDarkMode ? '#0F1115' : '#DFD9CB';
+  const trackBg = isDarkMode ? Colors.DarkCanvasDeep : Colors.WarmSandTrack;
+  const trackBorder = isDarkMode ? Colors.DarkSegmentedBorder : Colors.RingBorder;
+  const trackBottomBorder = isDarkMode
+    ? Colors.DarkSegmentedBottom
+    : Colors.WarmBevelLight;
 
-  const indicatorBg = '#FFFFFF';
-  const indicatorBorder = isDarkMode ? 'rgba(255, 255, 255, 0.95)' : '#E8E2D5';
-  const indicatorTopBorder = '#FFFFFF';
-  const indicatorBottomBorder = '#DFD9CB';
+  const indicatorBg = Colors.PureWhite;
+  const indicatorBorder = isDarkMode
+    ? withAlpha(Colors.PureWhite, 0.95)
+    : Colors.RingBorder;
+  const indicatorTopBorder = Colors.PureWhite;
+  const indicatorBottomBorder = Colors.WarmBevelLight;
 
-  const tabActiveTextColor = '#121417';
-  const tabInactiveTextColor = isDarkMode ? '#8E94A0' : '#737887';
-  const iconInactiveColor = isDarkMode ? '#8E94A0' : inactiveColor;
+  const tabActiveTextColor = Colors.DarkBackground;
+  const tabInactiveTextColor = isDarkMode
+    ? Colors.DarkMutedCool
+    : Colors.MutedCoolText;
+  const iconInactiveColor = isDarkMode ? Colors.DarkMutedCool : inactiveColor;
 
   // Account for 4px padding on left and right = 8px total
   const numTabs = tabs.length;
@@ -168,8 +175,8 @@ export const TactileSegmentedTabs = <T extends string = string>({
                         styles.tabCountPillInactive,
                         {
                           backgroundColor: isDarkMode
-                            ? 'rgba(255, 255, 255, 0.1)'
-                            : 'rgba(0, 0, 0, 0.06)',
+                            ? withAlpha(Colors.PureWhite, 0.1)
+                            : withAlpha(Colors.PureBlack, 0.06),
                         },
                       ],
                 ]}
@@ -182,7 +189,9 @@ export const TactileSegmentedTabs = <T extends string = string>({
                       : [
                           styles.tabCountTextInactive,
                           {
-                            color: isDarkMode ? '#8E94A0' : '#737887',
+                            color: isDarkMode
+                              ? Colors.DarkMutedCool
+                              : Colors.MutedCoolText,
                           },
                         ],
                   ]}
@@ -240,7 +249,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 3,
     ...Platform.select({
       ios: {
-        shadowColor: '#0B0D11',
+        shadowColor: Colors.DarkShadowAnchor,
         shadowOffset: { width: 0, height: 4 },
         shadowRadius: 8,
       },
@@ -260,7 +269,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 2.5,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 2 },
         shadowRadius: 5,
       },
@@ -300,14 +309,14 @@ const styles = StyleSheet.create({
   },
   tabCountTextInactive: {},
   countPillActiveYellow: {
-    backgroundColor: '#FFF8D0',
+    backgroundColor: Colors.BadgeYellowBg,
     borderWidth: 1,
-    borderColor: '#FFFFFF',
+    borderColor: Colors.PureWhite,
     borderBottomWidth: 2,
-    borderBottomColor: '#DEAA14',
+    borderBottomColor: Colors.WorkDarkBorder,
     ...Platform.select({
       ios: {
-        shadowColor: '#D97706',
+        shadowColor: Colors.HabitBurnishedAmber,
         shadowOffset: { width: 0, height: 1.5 },
         shadowOpacity: 0.25,
         shadowRadius: 2.5,
@@ -318,17 +327,17 @@ const styles = StyleSheet.create({
     }),
   },
   countTextActiveYellow: {
-    color: '#B47804',
+    color: Colors.BadgeYellowText,
   },
   countPillActiveGreen: {
-    backgroundColor: '#E8FDF0',
+    backgroundColor: Colors.BadgeGreenBg,
     borderWidth: 1,
-    borderColor: '#FFFFFF',
+    borderColor: Colors.PureWhite,
     borderBottomWidth: 2,
-    borderBottomColor: '#82E8A6',
+    borderBottomColor: Colors.BadgeGreenBevel,
     ...Platform.select({
       ios: {
-        shadowColor: '#52D22E',
+        shadowColor: Colors.AccentGreen,
         shadowOffset: { width: 0, height: 1.5 },
         shadowOpacity: 0.22,
         shadowRadius: 2.5,
@@ -339,17 +348,17 @@ const styles = StyleSheet.create({
     }),
   },
   countTextActiveGreen: {
-    color: '#1B9A72',
+    color: Colors.GreenGracious,
   },
   countPillActivePurple: {
-    backgroundColor: '#EEF0FD',
+    backgroundColor: Colors.BadgePurpleBg,
     borderWidth: 1,
-    borderColor: '#FFFFFF',
+    borderColor: Colors.PureWhite,
     borderBottomWidth: 2,
-    borderBottomColor: '#B6BEF5',
+    borderBottomColor: Colors.BadgePurpleBevel,
     ...Platform.select({
       ios: {
-        shadowColor: '#8383D6',
+        shadowColor: Colors.LavenderPurple,
         shadowOffset: { width: 0, height: 1.5 },
         shadowOpacity: 0.22,
         shadowRadius: 2.5,
@@ -360,17 +369,17 @@ const styles = StyleSheet.create({
     }),
   },
   countTextActivePurple: {
-    color: '#7059C8',
+    color: Colors.MindfulTextAccent,
   },
   countPillActiveNeutral: {
-    backgroundColor: '#F3F4F6',
+    backgroundColor: Colors.Gray100,
     borderWidth: 1,
-    borderColor: '#FFFFFF',
+    borderColor: Colors.PureWhite,
     borderBottomWidth: 2,
-    borderBottomColor: '#D1D5DB',
+    borderBottomColor: Colors.Gray300,
   },
   countTextActiveNeutral: {
-    color: '#1F2937',
+    color: Colors.Gray800,
   },
 });
 

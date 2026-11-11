@@ -20,7 +20,7 @@ import Toast from 'react-native-toast-message';
 import { Reminder } from '../Context/TaskReminderContext';
 
 import { Fonts } from '../Theme/fonts';
-import { Colors } from '../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../Theme/useAppTheme';
 import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 import { useOptionalVoiceWakeWord } from '../Context/VoiceWakeWordContext';
@@ -49,44 +49,44 @@ const DEFAULT_REMINDER_CATEGORIES: CategoryItem[] = [
   {
     id: 'daily',
     label: 'Daily',
-    bgColor: '#FFFCEB',
-    borderColor: '#FFF5B8',
-    shadowColor: '#F5C518',
-    accentColor: '#FDD835',
-    checkColor: '#D97706',
+    bgColor: Colors.WorkLightBg,
+    borderColor: Colors.WorkLightBorder,
+    shadowColor: Colors.AccentYellow,
+    accentColor: Colors.TaskGoldVivid,
+    checkColor: Colors.HabitBurnishedAmber,
     badgeVariant: 'yellow',
     Icon: HeartEmblemIcon,
   },
   {
     id: 'work',
     label: 'Work',
-    bgColor: '#EFF2FE',
-    borderColor: '#D8DBFF',
-    shadowColor: '#8383D6',
-    accentColor: '#8383D6',
-    checkColor: '#7059C8',
+    bgColor: Colors.MindfulLightBg,
+    borderColor: Colors.MindfulLightBorder,
+    shadowColor: Colors.LavenderPurple,
+    accentColor: Colors.LavenderPurple,
+    checkColor: Colors.MindfulTextAccent,
     badgeVariant: 'purple',
     Icon: OfficeBagIcon,
   },
   {
     id: 'health',
     label: 'Health',
-    bgColor: '#EDFDF5',
-    borderColor: '#C6FFDD',
-    shadowColor: '#52D22E',
-    accentColor: '#52D22E',
-    checkColor: '#1B9A72',
+    bgColor: Colors.WellnessLightBg,
+    borderColor: Colors.WellnessLightBorder,
+    shadowColor: Colors.AccentGreen,
+    accentColor: Colors.AccentGreen,
+    checkColor: Colors.GreenGracious,
     badgeVariant: 'green',
     Icon: PictureEmblemIcon,
   },
   {
     id: 'events',
     label: 'Events',
-    bgColor: '#FFF5F0',
-    borderColor: '#FFE0D3',
-    shadowColor: '#FB923C',
-    accentColor: '#FB923C',
-    checkColor: '#EA580C',
+    bgColor: Colors.CategoryPeachBg,
+    borderColor: Colors.CategoryPeachBorder,
+    shadowColor: Colors.CategoryOrangeAccent,
+    accentColor: Colors.CategoryOrangeAccent,
+    checkColor: Colors.CategoryOrangeCheck,
     badgeVariant: 'orange',
     Icon: SparkleEmblemIcon,
   },
@@ -431,7 +431,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
           barStyle={isDarkMode ? 'light-content' : 'dark-content'}
           {...(Platform.OS === 'android'
             ? {
-                backgroundColor: isDarkMode ? bgMain : '#FAF8F5',
+                backgroundColor: isDarkMode ? bgMain : Colors.CreamSurfaceAlt,
                 translucent: true,
               }
             : {})}
@@ -511,11 +511,11 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
                 <TextInput
                   style={[
                     styles.titleInput,
-                    isDarkMode && { color: '#FFFFFF' },
+                    isDarkMode && { color: Colors.PureWhite },
                     titleInputHeight > 48 ? { height: titleInputHeight } : null,
                   ]}
                   placeholder="e.g., Client Follow-up Call..."
-                  placeholderTextColor="#A3A8B1"
+                  placeholderTextColor={Colors.SteelMist}
                   value={reminderTitle}
                   onChangeText={setReminderTitle}
                   onContentSizeChange={handleTitleContentSizeChange}
@@ -523,11 +523,13 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
                   scrollEnabled={true}
                   rejectResponderTermination={true}
                   autoFocus={true}
-                  cursorColor={isDarkMode ? '#FFFFFF' : Colors.MidnightCharcoal}
+                  cursorColor={
+                    isDarkMode ? Colors.PureWhite : Colors.MidnightCharcoal
+                  }
                   selectionColor={
                     isDarkMode
-                      ? 'rgba(255, 255, 255, 0.25)'
-                      : 'rgba(31, 34, 40, 0.25)'
+                      ? withAlpha(Colors.PureWhite, 0.25)
+                      : withAlpha(Colors.MidnightCharcoal, 0.25)
                   }
                 />
 
@@ -535,7 +537,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
                 <Pressable
                   style={[
                     styles.contextRow,
-                    isDarkMode && { borderColor: '#2C3035' },
+                    isDarkMode && { borderColor: Colors.CarbonSlate },
                   ]}
                   onPress={() => noteInputRef.current?.focus()}
                   accessible={false}
@@ -543,7 +545,9 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
                   <View style={styles.contextIconWrap}>
                     <FileText
                       size={16}
-                      color={isDarkMode ? '#A3A8B1' : '#7E838F'}
+                      color={
+                        isDarkMode ? Colors.SteelMist : Colors.MutedSlateSubtext
+                      }
                       strokeWidth={2}
                     />
                   </View>
@@ -551,21 +555,21 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
                     ref={noteInputRef}
                     style={[
                       styles.contextInput,
-                      isDarkMode && { color: '#FFFFFF' },
+                      isDarkMode && { color: Colors.PureWhite },
                     ]}
                     placeholder="Add gentle context or personal memo..."
-                    placeholderTextColor="#A3A8B1"
+                    placeholderTextColor={Colors.SteelMist}
                     value={reminderNotes}
                     onChangeText={setReminderNotes}
                     returnKeyType="done"
                     blurOnSubmit={true}
                     cursorColor={
-                      isDarkMode ? '#FFFFFF' : Colors.MidnightCharcoal
+                      isDarkMode ? Colors.PureWhite : Colors.MidnightCharcoal
                     }
                     selectionColor={
                       isDarkMode
-                        ? 'rgba(255, 255, 255, 0.25)'
-                        : 'rgba(31, 34, 40, 0.25)'
+                        ? withAlpha(Colors.PureWhite, 0.25)
+                        : withAlpha(Colors.MidnightCharcoal, 0.25)
                     }
                   />
                 </Pressable>
@@ -616,14 +620,18 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
                   style={[
                     styles.deleteCardBtn,
                     isDarkMode && {
-                      backgroundColor: '#1E2228',
-                      borderColor: '#5A2528',
+                      backgroundColor: Colors.DarkCardBackground,
+                      borderColor: Colors.UrgentDarkBorder,
                     },
                   ]}
                   accessibilityRole="button"
                   accessibilityLabel="Delete Reminder"
                 >
-                  <Trash2 size={16} color="#EF4444" strokeWidth={2.2} />
+                  <Trash2
+                    size={16}
+                    color={Colors.CategoryRedAccent}
+                    strokeWidth={2.2}
+                  />
                   <Text style={styles.deleteCardBtnText}>Delete Reminder</Text>
                 </TouchableOpacity>
               </View>
@@ -671,7 +679,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
 const styles = StyleSheet.create({
   canvasContainer: {
     flex: 1,
-    backgroundColor: '#FAF8F5',
+    backgroundColor: Colors.CreamSurfaceAlt,
   },
   keyboardWrap: {
     flex: 1,
@@ -691,14 +699,14 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     borderRadius: 22,
     borderWidth: 1.5,
-    borderTopColor: '#4A4E5C',
-    borderLeftColor: '#363944',
-    borderRightColor: '#363944',
+    borderTopColor: Colors.DarkBevelTop,
+    borderLeftColor: Colors.DarkBorder,
+    borderRightColor: Colors.DarkBorder,
     borderBottomWidth: 4,
-    borderBottomColor: '#090A0D',
+    borderBottomColor: Colors.DarkBevelAbyss,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#0B0D11',
+    shadowColor: Colors.DarkShadowAnchor,
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.32,
     shadowRadius: 8,
@@ -709,21 +717,21 @@ const styles = StyleSheet.create({
   flowTitle: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size18,
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
     letterSpacing: -0.1,
     textAlign: 'center',
   },
   flowSubtitle: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 10.5,
-    color: '#B6B9C3',
+    color: Colors.CoolSilverSubtitle,
     marginTop: 1,
     letterSpacing: 0.2,
     textAlign: 'center',
   },
   primaryCardWrapper: {
     borderRadius: 22,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     marginTop: 26,
     marginBottom: 22,
     position: 'relative',
@@ -740,7 +748,7 @@ const styles = StyleSheet.create({
     }),
   },
   primaryCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderRadius: 22,
     borderWidth: 1.5,
     paddingHorizontal: 16,
@@ -760,7 +768,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.bold,
     fontSize: 10.5,
     letterSpacing: 0.8,
-    color: '#7E838F',
+    color: Colors.MutedSlateSubtext,
   },
   titleInput: {
     fontFamily: Fonts.poppins.bold,
@@ -782,7 +790,7 @@ const styles = StyleSheet.create({
     height: 48,
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: 'rgba(0, 0, 0, 0.06)',
+    borderColor: withAlpha(Colors.PureBlack, 0.06),
     paddingHorizontal: 0,
   },
   contextIconWrap: {
@@ -793,7 +801,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: Fonts.poppins.regular,
     fontSize: 13.5,
-    color: '#3F454D',
+    color: Colors.SlateGraphiteText,
     paddingVertical: 0,
     paddingHorizontal: 0,
     margin: 0,
@@ -809,14 +817,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
-    borderColor: '#FECDD3',
+    borderColor: Colors.CategoryRoseBorder,
     paddingVertical: 13,
     borderRadius: 18,
     ...Platform.select({
       ios: {
-        shadowColor: '#EF4444',
+        shadowColor: Colors.CategoryRedAccent,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.08,
         shadowRadius: 6,
@@ -829,7 +837,7 @@ const styles = StyleSheet.create({
   deleteCardBtnText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 13,
-    color: '#EF4444',
+    color: Colors.CategoryRedAccent,
   },
 });
 

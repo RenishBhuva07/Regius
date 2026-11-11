@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Calendar, Clock } from 'lucide-react-native';
 import { Fonts } from '../../Theme/fonts';
+import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../Theme/useAppTheme';
 import { ScheduleButtonBackgroundSvg } from '../../Common/ScheduleButtonBackgroundSvg';
 
@@ -69,8 +70,8 @@ export const ScheduleTriggerRow: React.FC<ScheduleTriggerRowProps> = React.memo(
                     styles.quickDateChip,
                     isDarkMode &&
                       !isSelected && {
-                        backgroundColor: '#1E2228',
-                        borderColor: '#2C3035',
+                        backgroundColor: Colors.DarkCardBackground,
+                        borderColor: Colors.CarbonSlate,
                       },
                     isSelected && styles.quickDateChipSelected,
                   ]}
@@ -80,7 +81,7 @@ export const ScheduleTriggerRow: React.FC<ScheduleTriggerRowProps> = React.memo(
                   <Text
                     style={[
                       styles.quickDateChipText,
-                      isDarkMode && !isSelected && { color: '#A3A8B1' },
+                      isDarkMode && !isSelected && { color: Colors.SteelMist },
                       isSelected && styles.quickDateChipTextSelected,
                     ]}
                   >
@@ -106,7 +107,11 @@ export const ScheduleTriggerRow: React.FC<ScheduleTriggerRowProps> = React.memo(
               <ScheduleButtonBackgroundSvg type="date" />
 
               <View style={[styles.magicIconWrap, styles.magicIconWrapDate]}>
-                <Calendar size={16} color="#F5C518" strokeWidth={2.4} />
+                <Calendar
+                  size={16}
+                  color={Colors.AccentYellow}
+                  strokeWidth={2.4}
+                />
               </View>
 
               <View style={styles.magicScheduleTextGroup}>
@@ -130,7 +135,11 @@ export const ScheduleTriggerRow: React.FC<ScheduleTriggerRowProps> = React.memo(
               <ScheduleButtonBackgroundSvg type="time" />
 
               <View style={[styles.magicIconWrap, styles.magicIconWrapTime]}>
-                <Clock size={16} color="#9C9CE3" strokeWidth={2.4} />
+                <Clock
+                  size={16}
+                  color={Colors.PeriwinkleSoft}
+                  strokeWidth={2.4}
+                />
               </View>
 
               <View style={styles.magicScheduleTextGroup}>
@@ -157,7 +166,7 @@ const styles = StyleSheet.create({
   sectionHeading: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 13.5,
-    color: '#121417',
+    color: Colors.DarkBackground,
     letterSpacing: -0.2,
   },
   quickDateRow: {
@@ -169,22 +178,22 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1,
-    borderColor: '#E8E2D5',
+    borderColor: Colors.RingBorder,
   },
   quickDateChipSelected: {
-    backgroundColor: '#1E2028',
-    borderColor: '#363944',
+    backgroundColor: Colors.DarkElevatedNero,
+    borderColor: Colors.DarkBorder,
   },
   quickDateChipText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 11.5,
-    color: '#77767B',
+    color: Colors.Grey,
   },
   quickDateChipTextSelected: {
     fontFamily: Fonts.poppins.bold,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
   scheduleContainerCard: {
     flexDirection: 'row',
@@ -201,7 +210,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     gap: 10,
     borderWidth: 1.2,
-    borderColor: 'rgba(255, 255, 255, 0.1)',
+    borderColor: withAlpha(Colors.PureWhite, 0.1),
     overflow: 'hidden',
     position: 'relative',
   },
@@ -209,16 +218,16 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.08),
     alignItems: 'center',
     justifyContent: 'center',
   },
   magicIconWrapDate: {
-    borderColor: 'rgba(245, 197, 24, 0.3)',
+    borderColor: withAlpha(Colors.AccentYellow, 0.3),
     borderWidth: 1,
   },
   magicIconWrapTime: {
-    borderColor: 'rgba(156, 156, 227, 0.3)',
+    borderColor: withAlpha(Colors.PeriwinkleSoft, 0.3),
     borderWidth: 1,
   },
   magicScheduleTextGroup: {
@@ -228,13 +237,13 @@ const styles = StyleSheet.create({
   magicScheduleSmallLabel: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 8.5,
-    color: '#B6B9C3',
+    color: Colors.CoolSilverSubtitle,
     letterSpacing: 0.6,
   },
   magicScheduleValue: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 12.5,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
   },
 });
 

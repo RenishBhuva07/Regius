@@ -64,8 +64,8 @@ export const StickyBottomButton: React.FC<StickyBottomButtonProps> = React.memo(
     };
 
     const themeAccent = themeColors.Accent || Colors.LavenderPurple;
-    const themeBg = themeColors.Background || '#121417';
-    const themeShadow = themeColors.AccentDark || (isDarkMode ? '#000000' : '#000000');
+    const themeBg = themeColors.Background || Colors.DarkBackground;
+    const themeShadow = themeColors.AccentDark || Colors.PureBlack;
 
     // Color resolution per DESIGN_SYSTEM.md §4.2 & theme token architecture
     let resolvedBg =
@@ -75,27 +75,27 @@ export const StickyBottomButton: React.FC<StickyBottomButtonProps> = React.memo(
       themeColors.ButtonText ||
       (isDarkMode
         ? isLightColor(resolvedBg)
-          ? '#000000'
-          : '#FFFFFF'
-        : Colors.PureWhiteText);
-    let resolvedShadow = isDarkMode ? themeShadow : '#000000';
+          ? Colors.PureBlack
+          : Colors.PureWhite
+        : Colors.PureWhite);
+    let resolvedShadow = isDarkMode ? themeShadow : Colors.PureBlack;
 
     if (variant === 'dark') {
       resolvedBg = Colors.MidnightCharcoal;
-      resolvedText = Colors.PureWhiteText;
-      resolvedShadow = '#000000';
+      resolvedText = Colors.PureWhite;
+      resolvedShadow = Colors.PureBlack;
     } else if (variant === 'purple') {
       resolvedBg = themeAccent;
-      resolvedText = isLightColor(themeAccent) ? '#000000' : '#FFFFFF';
+      resolvedText = isLightColor(themeAccent) ? Colors.PureBlack : Colors.PureWhite;
       resolvedShadow = themeShadow;
     } else if (variant === 'gold') {
-      resolvedBg = '#F5C518';
-      resolvedText = '#1F2228';
-      resolvedShadow = '#F5C518';
+      resolvedBg = Colors.AccentYellow;
+      resolvedText = Colors.MidnightCharcoal;
+      resolvedShadow = Colors.AccentYellow;
     } else if (variant === 'danger') {
-      resolvedBg = '#D92A0F';
-      resolvedText = '#FFFFFF';
-      resolvedShadow = '#FF3B30';
+      resolvedBg = Colors.MoltenRust;
+      resolvedText = Colors.PureWhite;
+      resolvedShadow = Colors.CrimsonPulse;
     }
 
     if (backgroundColor) resolvedBg = backgroundColor;
@@ -104,7 +104,7 @@ export const StickyBottomButton: React.FC<StickyBottomButtonProps> = React.memo(
 
     // Safety guard: text must never match or blend into button background
     if (resolvedBg.toLowerCase() === resolvedText.toLowerCase()) {
-      resolvedText = isLightColor(resolvedBg) ? '#000000' : '#FFFFFF';
+      resolvedText = isLightColor(resolvedBg) ? Colors.PureBlack : Colors.PureWhite;
     }
 
     return (

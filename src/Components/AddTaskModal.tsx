@@ -21,7 +21,7 @@ import Toast from 'react-native-toast-message';
 import { Task } from '../Context/TaskReminderContext';
 
 import { Fonts } from '../Theme/fonts';
-import { Colors } from '../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../Theme/useAppTheme';
 import { Badge } from '../Common/Badge';
 import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
@@ -52,33 +52,33 @@ const DEFAULT_CATEGORY_ITEMS: CategoryItem[] = [
   {
     id: 'works',
     label: 'Works',
-    bgColor: '#FFFCEB',
-    borderColor: '#FFF5B8',
-    shadowColor: '#F5C518',
-    accentColor: '#FDD835',
-    checkColor: '#D97706',
+    bgColor: Colors.WorkLightBg,
+    borderColor: Colors.WorkLightBorder,
+    shadowColor: Colors.AccentYellow,
+    accentColor: Colors.TaskGoldVivid,
+    checkColor: Colors.HabitBurnishedAmber,
     badgeVariant: 'yellow',
     Icon: OfficeBagIcon,
   },
   {
     id: 'sport',
     label: 'Sport',
-    bgColor: '#EDFDF5',
-    borderColor: '#C6FFDD',
-    shadowColor: '#52D22E',
-    accentColor: '#52D22E',
-    checkColor: '#1B9A72',
+    bgColor: Colors.WellnessLightBg,
+    borderColor: Colors.WellnessLightBorder,
+    shadowColor: Colors.AccentGreen,
+    accentColor: Colors.AccentGreen,
+    checkColor: Colors.GreenGracious,
     badgeVariant: 'green',
     Icon: HeartEmblemIcon,
   },
   {
     id: 'habits',
     label: 'Habits',
-    bgColor: '#EFF2FE',
-    borderColor: '#D8DBFF',
-    shadowColor: '#8383D6',
-    accentColor: '#8383D6',
-    checkColor: '#7059C8',
+    bgColor: Colors.MindfulLightBg,
+    borderColor: Colors.MindfulLightBorder,
+    shadowColor: Colors.LavenderPurple,
+    accentColor: Colors.LavenderPurple,
+    checkColor: Colors.MindfulTextAccent,
     badgeVariant: 'purple',
     Icon: PictureEmblemIcon,
   },
@@ -443,7 +443,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
           barStyle={isDarkMode ? 'light-content' : 'dark-content'}
           {...(Platform.OS === 'android'
             ? {
-                backgroundColor: isDarkMode ? bgMain : '#FAF8F5',
+                backgroundColor: isDarkMode ? bgMain : Colors.CreamSurfaceAlt,
                 translucent: true,
               }
             : {})}
@@ -523,11 +523,11 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                 <TextInput
                   style={[
                     styles.titleInput,
-                    isDarkMode && { color: '#FFFFFF' },
+                    isDarkMode && { color: Colors.PureWhite },
                     titleInputHeight > 48 ? { height: titleInputHeight } : null,
                   ]}
                   placeholder="e.g., Weekly Team Sync & Catchup..."
-                  placeholderTextColor="#A3A8B1"
+                  placeholderTextColor={Colors.SteelMist}
                   value={taskTitle}
                   onChangeText={setTaskTitle}
                   onContentSizeChange={handleTitleContentSizeChange}
@@ -535,11 +535,13 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                   scrollEnabled={true}
                   rejectResponderTermination={true}
                   autoFocus={true}
-                  cursorColor={isDarkMode ? '#FFFFFF' : Colors.MidnightCharcoal}
+                  cursorColor={
+                    isDarkMode ? Colors.PureWhite : Colors.MidnightCharcoal
+                  }
                   selectionColor={
                     isDarkMode
-                      ? 'rgba(255, 255, 255, 0.25)'
-                      : 'rgba(31, 34, 40, 0.25)'
+                      ? withAlpha(Colors.PureWhite, 0.25)
+                      : withAlpha(Colors.MidnightCharcoal, 0.25)
                   }
                 />
 
@@ -547,7 +549,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                 <Pressable
                   style={[
                     styles.contextRow,
-                    isDarkMode && { borderColor: '#2C3035' },
+                    isDarkMode && { borderColor: Colors.CarbonSlate },
                   ]}
                   onPress={() => noteInputRef.current?.focus()}
                   accessible={false}
@@ -555,7 +557,9 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                   <View style={styles.contextIconWrap}>
                     <FileText
                       size={16}
-                      color={isDarkMode ? '#A3A8B1' : '#7E838F'}
+                      color={
+                        isDarkMode ? Colors.SteelMist : Colors.MutedSlateSubtext
+                      }
                       strokeWidth={2}
                     />
                   </View>
@@ -563,21 +567,21 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                     ref={noteInputRef}
                     style={[
                       styles.contextInput,
-                      isDarkMode && { color: '#FFFFFF' },
+                      isDarkMode && { color: Colors.PureWhite },
                     ]}
                     placeholder="Add gentle context or personal memo..."
-                    placeholderTextColor="#A3A8B1"
+                    placeholderTextColor={Colors.SteelMist}
                     value={taskNote}
                     onChangeText={setTaskNote}
                     returnKeyType="done"
                     blurOnSubmit={true}
                     cursorColor={
-                      isDarkMode ? '#FFFFFF' : Colors.MidnightCharcoal
+                      isDarkMode ? Colors.PureWhite : Colors.MidnightCharcoal
                     }
                     selectionColor={
                       isDarkMode
-                        ? 'rgba(255, 255, 255, 0.25)'
-                        : 'rgba(31, 34, 40, 0.25)'
+                        ? withAlpha(Colors.PureWhite, 0.25)
+                        : withAlpha(Colors.MidnightCharcoal, 0.25)
                     }
                   />
                 </Pressable>
@@ -623,8 +627,8 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
               style={[
                 styles.voiceNudgeCard,
                 isDarkMode && {
-                  backgroundColor: '#1E2228',
-                  borderColor: '#2C3035',
+                  backgroundColor: Colors.DarkCardBackground,
+                  borderColor: Colors.CarbonSlate,
                 },
               ]}
             >
@@ -633,12 +637,16 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                   style={[
                     styles.voiceIconBox,
                     isDarkMode && {
-                      backgroundColor: '#1F382D',
-                      borderColor: '#1B9A72',
+                      backgroundColor: Colors.WellnessDarkIconBg,
+                      borderColor: Colors.GreenGracious,
                     },
                   ]}
                 >
-                  <Volume2 size={20} color="#1B9A72" strokeWidth={2.4} />
+                  <Volume2
+                    size={20}
+                    color={Colors.GreenGracious}
+                    strokeWidth={2.4}
+                  />
                 </View>
 
                 <View style={styles.voiceTextGroup}>
@@ -646,7 +654,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                     <Text
                       style={[
                         styles.voiceTitle,
-                        isDarkMode && { color: '#FFFFFF' },
+                        isDarkMode && { color: Colors.PureWhite },
                       ]}
                       numberOfLines={1}
                     >
@@ -656,7 +664,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                       variant="purple"
                       size="sm"
                       label={`${assistantName.toUpperCase()} AI`}
-                      icon={<Sparkles size={9} color="#7059C8" />}
+                      icon={<Sparkles size={9} color={Colors.MindfulTextAccent} />}
                     />
                   </View>
                   <Text style={styles.voiceSubtitle} numberOfLines={1}>
@@ -669,11 +677,13 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                 value={voiceNudgeEnabled}
                 onValueChange={setVoiceNudgeEnabled}
                 trackColor={{
-                  false: isDarkMode ? '#2C3035' : '#E4E2DD',
-                  true: isDarkMode ? '#F5C518' : Colors.MidnightCharcoal,
+                  false: isDarkMode ? Colors.CarbonSlate : Colors.WarmSwitchTrackOff,
+                  true: isDarkMode ? Colors.AccentYellow : Colors.MidnightCharcoal,
                 }}
-                thumbColor="#FFFFFF"
-                ios_backgroundColor={isDarkMode ? '#2C3035' : '#E4E2DD'}
+                thumbColor={Colors.PureWhite}
+                ios_backgroundColor={
+                  isDarkMode ? Colors.CarbonSlate : Colors.WarmSwitchTrackOff
+                }
               />
             </View>
 
@@ -686,14 +696,18 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                   style={[
                     styles.deleteCardBtn,
                     isDarkMode && {
-                      backgroundColor: '#1E2228',
-                      borderColor: '#5A2528',
+                      backgroundColor: Colors.DarkCardBackground,
+                      borderColor: Colors.UrgentDarkBorder,
                     },
                   ]}
                   accessibilityRole="button"
                   accessibilityLabel="Delete Task"
                 >
-                  <Trash2 size={16} color="#EF4444" strokeWidth={2.2} />
+                  <Trash2
+                    size={16}
+                    color={Colors.CategoryRedAccent}
+                    strokeWidth={2.2}
+                  />
                   <Text style={styles.deleteCardBtnText}>Delete Task</Text>
                 </TouchableOpacity>
               </View>
@@ -741,7 +755,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
 const styles = StyleSheet.create({
   canvasContainer: {
     flex: 1,
-    backgroundColor: '#FAF8F5',
+    backgroundColor: Colors.CreamSurfaceAlt,
   },
   keyboardWrap: {
     flex: 1,
@@ -761,14 +775,14 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     borderRadius: 22,
     borderWidth: 1.5,
-    borderTopColor: '#4A4E5C',
-    borderLeftColor: '#363944',
-    borderRightColor: '#363944',
+    borderTopColor: Colors.DarkBevelTop,
+    borderLeftColor: Colors.DarkBorder,
+    borderRightColor: Colors.DarkBorder,
     borderBottomWidth: 4,
-    borderBottomColor: '#090A0D',
+    borderBottomColor: Colors.DarkBevelAbyss,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#0B0D11',
+    shadowColor: Colors.DarkShadowAnchor,
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.32,
     shadowRadius: 8,
@@ -779,21 +793,21 @@ const styles = StyleSheet.create({
   flowTitle: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size18,
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
     letterSpacing: -0.1,
     textAlign: 'center',
   },
   flowSubtitle: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 10.5,
-    color: '#B6B9C3',
+    color: Colors.CoolSilverSubtitle,
     marginTop: 1,
     letterSpacing: 0.2,
     textAlign: 'center',
   },
   primaryTaskCardWrapper: {
     borderRadius: 22,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     marginTop: 26,
     marginBottom: 22,
     position: 'relative',
@@ -810,7 +824,7 @@ const styles = StyleSheet.create({
     }),
   },
   primaryTaskCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderRadius: 22,
     borderWidth: 1.5,
     paddingHorizontal: 16,
@@ -830,7 +844,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.bold,
     fontSize: 10.5,
     letterSpacing: 0.8,
-    color: '#7E838F',
+    color: Colors.MutedSlateSubtext,
   },
   titleInput: {
     fontFamily: Fonts.poppins.bold,
@@ -852,7 +866,7 @@ const styles = StyleSheet.create({
     height: 48,
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: 'rgba(0, 0, 0, 0.06)',
+    borderColor: withAlpha(Colors.PureBlack, 0.06),
     paddingHorizontal: 0,
   },
   contextIconWrap: {
@@ -863,7 +877,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: Fonts.poppins.regular,
     fontSize: 13.5,
-    color: '#3F454D',
+    color: Colors.SlateGraphiteText,
     paddingVertical: 0,
     paddingHorizontal: 0,
     margin: 0,
@@ -871,10 +885,10 @@ const styles = StyleSheet.create({
     includeFontPadding: false,
   },
   voiceNudgeCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderRadius: 20,
     borderWidth: 1.5,
-    borderColor: '#E8E2D5',
+    borderColor: Colors.RingBorder,
     padding: 14,
     flexDirection: 'row',
     alignItems: 'center',
@@ -882,7 +896,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.08,
         shadowRadius: 10,
@@ -903,14 +917,14 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 14,
-    backgroundColor: '#EDFDF5',
+    backgroundColor: Colors.WellnessLightBg,
     borderWidth: 1.5,
-    borderColor: '#C6FFDD',
+    borderColor: Colors.WellnessLightBorder,
     alignItems: 'center',
     justifyContent: 'center',
     ...Platform.select({
       ios: {
-        shadowColor: '#52D22E',
+        shadowColor: Colors.AccentGreen,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 4,
@@ -936,7 +950,7 @@ const styles = StyleSheet.create({
   voiceSubtitle: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 11.5,
-    color: '#7E838F',
+    color: Colors.MutedSlateSubtext,
     marginTop: 2,
   },
   deleteSection: {
@@ -948,14 +962,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
-    borderColor: '#FECDD3',
+    borderColor: Colors.CategoryRoseBorder,
     paddingVertical: 13,
     borderRadius: 18,
     ...Platform.select({
       ios: {
-        shadowColor: '#EF4444',
+        shadowColor: Colors.CategoryRedAccent,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.08,
         shadowRadius: 6,
@@ -968,7 +982,7 @@ const styles = StyleSheet.create({
   deleteCardBtnText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 13,
-    color: '#EF4444',
+    color: Colors.CategoryRedAccent,
   },
 });
 

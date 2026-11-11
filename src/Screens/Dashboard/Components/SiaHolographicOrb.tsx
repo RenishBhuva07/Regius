@@ -8,6 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 import LottieView from 'lottie-react-native';
+import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import CustomAnimation from '../../../Common/CustomAnimation';
 import HolographAnimation from '../../../Assets/JsonAnimations/Holograph.json';
 import { VoiceAssistantState } from '../../../Services/Voice/VoiceStateMachine';
@@ -35,7 +36,7 @@ export const SiaHolographicOrb: React.FC<SiaHolographicOrbProps> = ({
   onPress: _onPress,
   disabled: _disabled = false,
   lottieSource,
-  accentColor: _accentColor = '#9D9BF0',
+  accentColor: _accentColor = Colors.SiaOrbViolet,
   isDarkMode: _isDarkMode = true,
 }) => {
   const [reduceMotion, setReduceMotion] = React.useState(false);

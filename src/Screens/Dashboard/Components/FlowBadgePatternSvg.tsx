@@ -10,6 +10,7 @@ import Svg, {
   RadialGradient,
   Stop,
 } from 'react-native-svg';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 
 export const FlowBadgePatternSvg: React.FC = React.memo(() => {
   return (
@@ -23,9 +24,9 @@ export const FlowBadgePatternSvg: React.FC = React.memo(() => {
       >
         <Defs>
           <LinearGradient id="flowBadgeBg" x1="0%" y1="0%" x2="0%" y2="100%">
-            <Stop offset="0%" stopColor="#282B38" stopOpacity={0.9} />
-            <Stop offset="50%" stopColor="#151720" stopOpacity={0.95} />
-            <Stop offset="100%" stopColor="#0B0C0F" stopOpacity={1} />
+            <Stop offset="0%" stopColor={Colors.SvgBadgeTopSlate} stopOpacity={0.9} />
+            <Stop offset="50%" stopColor={Colors.VocalPlayPillDarkBg} stopOpacity={0.95} />
+            <Stop offset="100%" stopColor={Colors.SvgSurfaceVoid} stopOpacity={1} />
           </LinearGradient>
 
           <RadialGradient
@@ -35,9 +36,9 @@ export const FlowBadgePatternSvg: React.FC = React.memo(() => {
             rx="60%"
             ry="80%"
           >
-            <Stop offset="0%" stopColor="#9C9CE3" stopOpacity={0.22} />
-            <Stop offset="55%" stopColor="#8383D6" stopOpacity={0.07} />
-            <Stop offset="100%" stopColor="#0B0C0F" stopOpacity={0} />
+            <Stop offset="0%" stopColor={Colors.PeriwinkleSoft} stopOpacity={0.22} />
+            <Stop offset="55%" stopColor={Colors.LavenderPurple} stopOpacity={0.07} />
+            <Stop offset="100%" stopColor={Colors.SvgSurfaceVoid} stopOpacity={0} />
           </RadialGradient>
 
           <RadialGradient
@@ -47,9 +48,9 @@ export const FlowBadgePatternSvg: React.FC = React.memo(() => {
             rx="48%"
             ry="55%"
           >
-            <Stop offset="0%" stopColor="#F5C518" stopOpacity={0.16} />
-            <Stop offset="60%" stopColor="#B48216" stopOpacity={0.04} />
-            <Stop offset="100%" stopColor="#0B0C0F" stopOpacity={0} />
+            <Stop offset="0%" stopColor={Colors.AccentYellow} stopOpacity={0.16} />
+            <Stop offset="60%" stopColor={Colors.WorkTextAccent} stopOpacity={0.04} />
+            <Stop offset="100%" stopColor={Colors.SvgSurfaceVoid} stopOpacity={0} />
           </RadialGradient>
 
           <RadialGradient
@@ -59,15 +60,15 @@ export const FlowBadgePatternSvg: React.FC = React.memo(() => {
             rx="48%"
             ry="55%"
           >
-            <Stop offset="0%" stopColor="#52D22E" stopOpacity={0.1} />
-            <Stop offset="60%" stopColor="#1B9A72" stopOpacity={0.02} />
-            <Stop offset="100%" stopColor="#0B0C0F" stopOpacity={0} />
+            <Stop offset="0%" stopColor={Colors.AccentGreen} stopOpacity={0.1} />
+            <Stop offset="60%" stopColor={Colors.GreenGracious} stopOpacity={0.02} />
+            <Stop offset="100%" stopColor={Colors.SvgSurfaceVoid} stopOpacity={0} />
           </RadialGradient>
 
           <LinearGradient id="flowBadgeRim" x1="0%" y1="0%" x2="100%" y2="0%">
-            <Stop offset="0%" stopColor="#FFFFFF" stopOpacity={0.04} />
-            <Stop offset="50%" stopColor="#FFFFFF" stopOpacity={0.32} />
-            <Stop offset="100%" stopColor="#FFFFFF" stopOpacity={0.04} />
+            <Stop offset="0%" stopColor={Colors.PureWhite} stopOpacity={0.04} />
+            <Stop offset="50%" stopColor={Colors.PureWhite} stopOpacity={0.32} />
+            <Stop offset="100%" stopColor={Colors.PureWhite} stopOpacity={0.04} />
           </LinearGradient>
 
           <LinearGradient
@@ -77,8 +78,8 @@ export const FlowBadgePatternSvg: React.FC = React.memo(() => {
             x2="100%"
             y2="100%"
           >
-            <Stop offset="0%" stopColor="#FFFCE3" stopOpacity={0.95} />
-            <Stop offset="100%" stopColor="#F5C518" stopOpacity={0.8} />
+            <Stop offset="0%" stopColor={Colors.CreamBackground} stopOpacity={0.95} />
+            <Stop offset="100%" stopColor={Colors.AccentYellow} stopOpacity={0.8} />
           </LinearGradient>
         </Defs>
         <Rect width="100%" height="100%" fill="url(#flowBadgeBg)" />
@@ -95,7 +96,7 @@ export const FlowBadgePatternSvg: React.FC = React.memo(() => {
           cx={24}
           cy={26}
           r={16}
-          stroke="rgba(255, 255, 255, 0.08)"
+          stroke={withAlpha(Colors.PureWhite, 0.08)}
           strokeWidth={1}
           fill="none"
         />
@@ -103,7 +104,7 @@ export const FlowBadgePatternSvg: React.FC = React.memo(() => {
           cx={24}
           cy={26}
           r={28}
-          stroke="rgba(216, 219, 255, 0.05)"
+          stroke={withAlpha(Colors.MindfulLightBorder, 0.05)}
           strokeWidth={1}
           strokeDasharray="3 4"
           fill="none"
@@ -112,7 +113,7 @@ export const FlowBadgePatternSvg: React.FC = React.memo(() => {
           cx={24}
           cy={26}
           r={42}
-          stroke="rgba(255, 255, 255, 0.03)"
+          stroke={withAlpha(Colors.PureWhite, 0.03)}
           strokeWidth={1}
           fill="none"
         />
@@ -120,7 +121,7 @@ export const FlowBadgePatternSvg: React.FC = React.memo(() => {
           cx={166}
           cy={26}
           r={16}
-          stroke="rgba(255, 255, 255, 0.08)"
+          stroke={withAlpha(Colors.PureWhite, 0.08)}
           strokeWidth={1}
           fill="none"
         />
@@ -128,7 +129,7 @@ export const FlowBadgePatternSvg: React.FC = React.memo(() => {
           cx={166}
           cy={26}
           r={28}
-          stroke="rgba(245, 197, 24, 0.06)"
+          stroke={withAlpha(Colors.AccentYellow, 0.06)}
           strokeWidth={1}
           strokeDasharray="3 4"
           fill="none"
@@ -137,20 +138,20 @@ export const FlowBadgePatternSvg: React.FC = React.memo(() => {
           cx={166}
           cy={26}
           r={42}
-          stroke="rgba(255, 255, 255, 0.03)"
+          stroke={withAlpha(Colors.PureWhite, 0.03)}
           strokeWidth={1}
           fill="none"
         />
         <Path
           d="M -5 34 Q 50 16, 95 32 T 195 24"
-          stroke="rgba(255, 255, 255, 0.09)"
+          stroke={withAlpha(Colors.PureWhite, 0.09)}
           strokeWidth={1.2}
           strokeLinecap="round"
           fill="none"
         />
         <Path
           d="M -5 42 Q 55 24, 100 40 T 195 34"
-          stroke="rgba(216, 219, 255, 0.05)"
+          stroke={withAlpha(Colors.MindfulLightBorder, 0.05)}
           strokeWidth={1}
           strokeDasharray="4 5"
           strokeLinecap="round"
@@ -161,7 +162,7 @@ export const FlowBadgePatternSvg: React.FC = React.memo(() => {
             d="M 0 -4 Q 0 0 4 0 Q 0 0 0 4 Q 0 0 -4 0 Q 0 0 0 -4 Z"
             fill="url(#flowBadgeGoldStar)"
           />
-          <Circle cx={0} cy={0} r={0.65} fill="#FFFFFF" />
+          <Circle cx={0} cy={0} r={0.65} fill={Colors.PureWhite} />
         </G>
 
         <G transform="translate(172, 24)">
@@ -169,12 +170,12 @@ export const FlowBadgePatternSvg: React.FC = React.memo(() => {
             d="M 0 -4 Q 0 0 4 0 Q 0 0 0 4 Q 0 0 -4 0 Q 0 0 0 -4 Z"
             fill="url(#flowBadgeGoldStar)"
           />
-          <Circle cx={0} cy={0} r={0.65} fill="#FFFFFF" />
+          <Circle cx={0} cy={0} r={0.65} fill={Colors.PureWhite} />
         </G>
-        <Circle cx={12} cy={14} r={0.8} fill="#FFFCE3" opacity={0.4} />
-        <Circle cx={24} cy={38} r={0.7} fill="#9C9CE3" opacity={0.35} />
-        <Circle cx={178} cy={14} r={0.8} fill="#FFFCE3" opacity={0.4} />
-        <Circle cx={166} cy={38} r={0.7} fill="#F5C518" opacity={0.35} />
+        <Circle cx={12} cy={14} r={0.8} fill={Colors.CreamBackground} opacity={0.4} />
+        <Circle cx={24} cy={38} r={0.7} fill={Colors.PeriwinkleSoft} opacity={0.35} />
+        <Circle cx={178} cy={14} r={0.8} fill={Colors.CreamBackground} opacity={0.4} />
+        <Circle cx={166} cy={38} r={0.7} fill={Colors.AccentYellow} opacity={0.35} />
       </Svg>
     </View>
   );

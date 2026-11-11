@@ -17,7 +17,7 @@ import { DashboardScreen } from '../Screens/Dashboard';
 import TasksScreen from '../Screens/Tasks/TasksScreen';
 import RemindersScreen from '../Screens/Reminders/RemindersScreen';
 import { HabitsScreen } from '../Screens/Habits';
-import { Colors } from '../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import { useTheme } from '../Theme/ThemeContext';
 import { Typography } from '../Theme/Typographys';
 import { Fonts } from '../Theme/fonts';
@@ -259,7 +259,11 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
         >
           <tab.Icon
             size={22}
-            color={focused ? Colors.PureWhiteText : 'rgba(255, 255, 255, 0.65)'}
+            color={
+              focused
+                ? Colors.PureWhite
+                : withAlpha(Colors.PureWhite, 0.65)
+            }
             strokeWidth={focused ? 2.4 : 1.7}
           />
           <Text
@@ -315,7 +319,8 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
             {
               transform: [{ translateX: indicatorX }],
               backgroundColor:
-                themeColors.Background || (isDarkMode ? '#121417' : '#FFFFFF'),
+                themeColors.Background ||
+                (isDarkMode ? Colors.DarkBackground : Colors.PureWhite),
             },
           ]}
         >
@@ -363,15 +368,18 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
             styles.btnShadow,
             {
               shadowColor: isDarkMode
-                ? (themeColors.AccentDark || '#000000')
-                : (themeColors.Accent || Colors.LavenderPurple),
+                ? themeColors.AccentDark || Colors.PureBlack
+                : themeColors.Accent || Colors.LavenderPurple,
             },
             isDarkMode && {
-              backgroundColor: themeColors.Background || '#121417',
-              borderTopColor: themeColors.BorderLight || '#2C3035',
-              borderLeftColor: themeColors.BorderLight || '#22252B',
-              borderRightColor: themeColors.BorderLight || '#22252B',
-              borderBottomColor: themeColors.SurfaceAlt || '#1A1C20',
+              backgroundColor: themeColors.Background || Colors.DarkBackground,
+              borderTopColor: themeColors.BorderLight || Colors.CarbonSlate,
+              borderLeftColor:
+                themeColors.BorderLight || Colors.DarkBorderSubtle,
+              borderRightColor:
+                themeColors.BorderLight || Colors.DarkBorderSubtle,
+              borderBottomColor:
+                themeColors.SurfaceAlt || Colors.DarkTabHaloBottom,
             },
           ]}
         >
@@ -404,7 +412,7 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
               >
                 <Plus
                   size={26}
-                  color={Colors.PureWhiteText}
+                  color={Colors.PureWhite}
                   strokeWidth={2.6}
                 />
               </Animated.View>
@@ -489,7 +497,7 @@ const styles = StyleSheet.create({
   floatWrapper: {
     position: 'absolute',
     zIndex: 100,
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.Transparent,
   },
 
   // Floating card: SVG handles visual shape to avoid clipping
@@ -499,7 +507,7 @@ const styles = StyleSheet.create({
   shadow: {
     ...Platform.select({
       ios: {
-        shadowColor: '#000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 0.09,
         shadowRadius: 20,
@@ -523,7 +531,7 @@ const styles = StyleSheet.create({
     width: TAB_INNER_W,
     height: TAB_INNER_H,
     borderRadius: 16,
-    backgroundColor: '#121417',
+    backgroundColor: Colors.DarkBackground,
     overflow: 'hidden',
   },
   tabItem: {
@@ -548,7 +556,7 @@ const styles = StyleSheet.create({
     fontSize: 9.5,
     lineHeight: 12,
     textAlign: 'center',
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: withAlpha(Colors.PureWhite, 0.7),
   },
   labelActive: {
     ...Typography.bodySuperSmallPoppinsSemiBoldLoose,
@@ -556,7 +564,7 @@ const styles = StyleSheet.create({
     fontSize: 9.5,
     lineHeight: 12,
     textAlign: 'center',
-    color: Colors.PureWhiteText,
+    color: Colors.PureWhite,
   },
 
   // Plus button
@@ -570,10 +578,10 @@ const styles = StyleSheet.create({
     borderRadius: (BTN_SIZE + BTN_RING) / 2,
     backgroundColor: Colors.CreamBackground,
     borderWidth: 1.5,
-    borderTopColor: '#FFFFFF',
-    borderLeftColor: '#F5F0E6',
-    borderRightColor: '#F5F0E6',
-    borderBottomColor: '#D8D1C0',
+    borderTopColor: Colors.PureWhite,
+    borderLeftColor: Colors.WarmSandSide,
+    borderRightColor: Colors.WarmSandSide,
+    borderBottomColor: Colors.WarmHaloBottomBevel,
     alignItems: 'center',
     justifyContent: 'center',
   },

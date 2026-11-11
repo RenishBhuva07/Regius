@@ -28,7 +28,7 @@ import {
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../../Theme/fonts';
-import { Colors } from '../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import { useTaskReminder } from '../../Context/TaskReminderContext';
 import { useVoiceWakeWord } from '../../Context/VoiceWakeWordContext';
 import DailyBriefingCard from './Components/DailyBriefingCard';
@@ -121,7 +121,9 @@ export const DashboardScreen: React.FC = () => {
   const headerBgColor = scrollY.interpolate({
     inputRange: [0, 30],
     outputRange: [
-      isDarkMode ? 'rgba(18, 20, 23, 0)' : 'rgba(255, 255, 255, 0)',
+      isDarkMode
+        ? withAlpha(Colors.DarkBackground, 0)
+        : withAlpha(Colors.PureWhite, 0),
       accentDeep,
     ],
     extrapolate: 'clamp',
@@ -223,7 +225,7 @@ export const DashboardScreen: React.FC = () => {
         title: t.label,
         subtitle: t.note,
         category: 'Task',
-        accentColor: '#F5C518',
+        accentColor: Colors.AccentYellow,
         completed: t.done,
         isVoiceNudge: !!t.voiceNudge,
       });
@@ -244,7 +246,7 @@ export const DashboardScreen: React.FC = () => {
           : r.urgentAlarm
           ? 'Alert'
           : 'Reminder',
-        accentColor: '#1B9A72',
+        accentColor: Colors.GreenGracious,
         completed: r.done,
         isVoiceNudge: false,
       });
@@ -261,7 +263,7 @@ export const DashboardScreen: React.FC = () => {
         title: h.title,
         subtitle: `${h.frequency} • ${h.streak}d streak`,
         category: 'Habit',
-        accentColor: '#8383D6',
+        accentColor: Colors.LavenderPurple,
         completed: h.completed,
         streak: h.streak,
       });
@@ -393,7 +395,7 @@ export const DashboardScreen: React.FC = () => {
               <View style={styles.ambientStatus}>
                 <Sun
                   size={14}
-                  color={isDarkMode ? '#F5C518' : '#77767B'}
+                  color={isDarkMode ? Colors.AccentYellow : Colors.Grey}
                   strokeWidth={2.2}
                 />
                 <Text
@@ -475,7 +477,7 @@ export const DashboardScreen: React.FC = () => {
                 <View style={styles.unscheduledHeaderRow}>
                   <Calendar
                     size={14}
-                    color="#77767B"
+                    color={Colors.Grey}
                     style={{ marginRight: 6 }}
                   />
                   <Text style={styles.unscheduledHeaderText}>
@@ -518,7 +520,11 @@ export const DashboardScreen: React.FC = () => {
                 <Text
                   style={[
                     styles.footerWatermarkText,
-                    { color: isDarkMode ? '#4A505E' : '#8E95A5' },
+                    {
+                      color: isDarkMode
+                        ? Colors.DarkEmptyCountMuted
+                        : Colors.MilestoneSlate,
+                    },
                   ]}
                 >
                   {dailyQuote}
@@ -554,7 +560,7 @@ export const DashboardScreen: React.FC = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: Colors.DefaultWhite,
+    backgroundColor: Colors.PureWhite,
   },
   scroll: {
     flex: 1,
@@ -582,18 +588,18 @@ const styles = StyleSheet.create({
   ambientStatusText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 11.5,
-    color: '#77767B',
+    color: Colors.Grey,
   },
   dateText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 11.5,
-    color: '#77767B',
+    color: Colors.Grey,
     letterSpacing: 0.8,
   },
   greetingText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 27,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     letterSpacing: -0.5,
   },
   flowSection: {
@@ -601,9 +607,9 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     borderWidth: 1.5,
-    borderTopColor: '#FAF6EE',
-    borderLeftColor: '#EFE9DE',
-    borderRightColor: '#EFE9DE',
+    borderTopColor: Colors.WarmNavBevelTop,
+    borderLeftColor: Colors.WarmNavBevelSide,
+    borderRightColor: Colors.WarmNavBevelSide,
     borderBottomWidth: 0,
     paddingHorizontal: 8,
     paddingTop: 40,
@@ -612,7 +618,7 @@ const styles = StyleSheet.create({
     position: 'relative',
     ...Platform.select({
       ios: {
-        shadowColor: '#1B1C19',
+        shadowColor: Colors.RegiusInk,
         shadowOffset: { width: 0, height: -4 },
         shadowOpacity: 0.12,
         shadowRadius: 12,
@@ -637,14 +643,14 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     borderRadius: 22,
     borderWidth: 1.5,
-    borderTopColor: '#4A4E5C',
-    borderLeftColor: '#363944',
-    borderRightColor: '#363944',
+    borderTopColor: Colors.DarkBevelTop,
+    borderLeftColor: Colors.DarkBorder,
+    borderRightColor: Colors.DarkBorder,
     borderBottomWidth: 4,
-    borderBottomColor: '#090A0D',
+    borderBottomColor: Colors.DarkBevelAbyss,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#0B0D11',
+    shadowColor: Colors.DarkShadowAnchor,
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.32,
     shadowRadius: 8,
@@ -655,14 +661,14 @@ const styles = StyleSheet.create({
   flowTitle: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 14.5,
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
     letterSpacing: -0.1,
     textAlign: 'center',
   },
   flowSubtitle: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 10.5,
-    color: '#B6B9C3',
+    color: Colors.CoolSilverSubtitle,
     marginTop: 1,
     textAlign: 'center',
   },
@@ -690,7 +696,7 @@ const styles = StyleSheet.create({
   unscheduledHeaderText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 12,
-    color: '#77767B',
+    color: Colors.Grey,
   },
   emptyFlowState: {
     paddingVertical: 24,
@@ -700,7 +706,7 @@ const styles = StyleSheet.create({
   emptyFlowText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 13,
-    color: '#8E8D92',
+    color: Colors.TimelineMutedGray,
   },
 
   // Footer watermark styles
@@ -723,7 +729,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.bold,
     fontSize: 34,
     lineHeight: 42,
-    color: '#8E95A5',
+    color: Colors.MilestoneSlate,
     letterSpacing: -1.2,
   },
   craftedWithRow: {
@@ -734,7 +740,7 @@ const styles = StyleSheet.create({
   craftedWithText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 14,
-    color: '#8E95A5',
+    color: Colors.MilestoneSlate,
   },
   craftedWithHeart: {
     fontSize: 13.5,

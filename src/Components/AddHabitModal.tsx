@@ -36,7 +36,7 @@ import {
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../Theme/fonts';
-import { Colors } from '../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../Theme/useAppTheme';
 import { Badge } from '../Common/Badge';
 import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
@@ -67,33 +67,33 @@ export const HABIT_CATEGORIES: HabitCategoryDefinition[] = [
     id: 'morning',
     label: 'Morning',
     sublabel: 'Dawn Rituals',
-    bgColor: '#FFFCEB',
-    borderColor: '#FFF5B8',
-    shadowColor: '#D97706',
-    accentColor: '#B47804',
-    checkColor: '#B47804',
+    bgColor: Colors.WorkLightBg,
+    borderColor: Colors.WorkLightBorder,
+    shadowColor: Colors.HabitBurnishedAmber,
+    accentColor: Colors.BadgeYellowText,
+    checkColor: Colors.BadgeYellowText,
     Icon: Sun,
   },
   {
     id: 'mindful',
     label: 'Mindful',
     sublabel: 'Midday Focus',
-    bgColor: '#EFF2FE',
-    borderColor: '#D8DBFF',
-    shadowColor: '#8383D6',
+    bgColor: Colors.MindfulLightBg,
+    borderColor: Colors.MindfulLightBorder,
+    shadowColor: Colors.LavenderPurple,
     accentColor: Colors.LavenderPurple,
-    checkColor: '#7059C8',
+    checkColor: Colors.MindfulTextAccent,
     Icon: Sparkles,
   },
   {
     id: 'evening',
     label: 'Evening',
     sublabel: 'Night Routine',
-    bgColor: '#FFF5F0',
-    borderColor: '#FFE0D3',
-    shadowColor: '#FB923C',
-    accentColor: '#4F46E5',
-    checkColor: '#EA580C',
+    bgColor: Colors.CategoryPeachBg,
+    borderColor: Colors.CategoryPeachBorder,
+    shadowColor: Colors.CategoryOrangeAccent,
+    accentColor: Colors.HabitRoyalIndigo,
+    checkColor: Colors.CategoryOrangeCheck,
     Icon: Moon,
   },
 ];
@@ -337,7 +337,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
           barStyle={isDarkMode ? 'light-content' : 'dark-content'}
           {...(Platform.OS === 'android'
             ? {
-                backgroundColor: isDarkMode ? bgMain : '#FAF8F5',
+                backgroundColor: isDarkMode ? bgMain : Colors.CreamSurfaceAlt,
                 translucent: true,
               }
             : {})}
@@ -424,18 +424,18 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                       variant="purple"
                       size="sm"
                       label="EDITING"
-                      icon={<Flame size={10} color="#7059C8" />}
+                      icon={<Flame size={10} color={Colors.MindfulTextAccent} />}
                     />
                   )}
                 </View>
                 <TextInput
                   style={[
                     styles.titleInput,
-                    isDarkMode && { color: '#FFFFFF' },
+                    isDarkMode && { color: Colors.PureWhite },
                     titleInputHeight > 48 ? { height: titleInputHeight } : null,
                   ]}
                   placeholder="e.g., Morning Sunlight & 500ml Water..."
-                  placeholderTextColor="#A3A8B1"
+                  placeholderTextColor={Colors.SteelMist}
                   value={title}
                   onChangeText={setTitle}
                   onContentSizeChange={handleTitleContentSizeChange}
@@ -443,11 +443,13 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                   scrollEnabled={true}
                   rejectResponderTermination={true}
                   autoFocus={!isEditing}
-                  cursorColor={isDarkMode ? '#FFFFFF' : Colors.MidnightCharcoal}
+                  cursorColor={
+                    isDarkMode ? Colors.PureWhite : Colors.MidnightCharcoal
+                  }
                   selectionColor={
                     isDarkMode
-                      ? 'rgba(255, 255, 255, 0.25)'
-                      : 'rgba(31, 34, 40, 0.25)'
+                      ? withAlpha(Colors.PureWhite, 0.25)
+                      : withAlpha(Colors.MidnightCharcoal, 0.25)
                   }
                 />
 
@@ -455,7 +457,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                 <Pressable
                   style={[
                     styles.contextRow,
-                    isDarkMode && { borderColor: '#2C3035' },
+                    isDarkMode && { borderColor: Colors.CarbonSlate },
                   ]}
                   onPress={() => noteInputRef.current?.focus()}
                   accessible={false}
@@ -463,7 +465,9 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                   <View style={styles.contextIconWrap}>
                     <FileText
                       size={16}
-                      color={isDarkMode ? '#A3A8B1' : '#7E838F'}
+                      color={
+                        isDarkMode ? Colors.SteelMist : Colors.MutedSlateSubtext
+                      }
                       strokeWidth={2}
                     />
                   </View>
@@ -471,21 +475,21 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                     ref={noteInputRef}
                     style={[
                       styles.contextInput,
-                      isDarkMode && { color: '#FFFFFF' },
+                      isDarkMode && { color: Colors.PureWhite },
                     ]}
                     placeholder="Add routine intention or milestone cue..."
-                    placeholderTextColor="#A3A8B1"
+                    placeholderTextColor={Colors.SteelMist}
                     value={intentionNote}
                     onChangeText={setIntentionNote}
                     returnKeyType="done"
                     blurOnSubmit={true}
                     cursorColor={
-                      isDarkMode ? '#FFFFFF' : Colors.MidnightCharcoal
+                      isDarkMode ? Colors.PureWhite : Colors.MidnightCharcoal
                     }
                     selectionColor={
                       isDarkMode
-                        ? 'rgba(255, 255, 255, 0.25)'
-                        : 'rgba(31, 34, 40, 0.25)'
+                        ? withAlpha(Colors.PureWhite, 0.25)
+                        : withAlpha(Colors.MidnightCharcoal, 0.25)
                     }
                   />
                 </Pressable>
@@ -528,25 +532,25 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
 
                   const cardBg = isDarkMode
                     ? cat.id === 'morning'
-                      ? '#2A2416'
+                      ? Colors.WorkDarkBg
                       : cat.id === 'mindful'
-                      ? '#202336'
-                      : '#331F18'
+                      ? Colors.MindfulDarkBg
+                      : Colors.EventDarkBg
                     : cat.bgColor;
                   const cardBorder = isDarkMode
                     ? cat.id === 'morning'
-                      ? '#DEAA14'
+                      ? Colors.WorkDarkBorder
                       : cat.id === 'mindful'
-                      ? '#8383D6'
-                      : '#FF9800'
+                      ? Colors.LavenderPurple
+                      : Colors.AccentAmber
                     : cat.borderColor;
                   const iconWrapBg = isDarkMode
                     ? cat.id === 'morning'
-                      ? '#38301D'
+                      ? Colors.WorkDarkIconBg
                       : cat.id === 'mindful'
-                      ? '#2C304A'
-                      : '#452A20'
-                    : '#FFFFFF';
+                      ? Colors.MindfulDarkIconBg
+                      : Colors.EventDarkIconBgDeep
+                    : Colors.PureWhite;
 
                   return (
                     <TouchableOpacity
@@ -584,10 +588,10 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                             color={
                               isDarkMode
                                 ? cat.id === 'morning'
-                                  ? '#F5C518'
+                                  ? Colors.AccentYellow
                                   : cat.id === 'mindful'
-                                  ? '#8383D6'
-                                  : '#FF9800'
+                                  ? Colors.LavenderPurple
+                                  : Colors.AccentAmber
                                 : cat.checkColor
                             }
                             strokeWidth={2.4}
@@ -609,7 +613,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                               size={12}
                               color={
                                 isDarkMode
-                                  ? '#52D22E'
+                                  ? Colors.AccentGreen
                                   : cat.checkColor
                               }
                               strokeWidth={3}
@@ -623,8 +627,8 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                               {
                                 borderColor: cardBorder,
                                 backgroundColor: isDarkMode
-                                  ? '#252932'
-                                  : 'rgba(255, 255, 255, 0.4)',
+                                  ? Colors.DarkCheckboxUnchecked
+                                  : withAlpha(Colors.PureWhite, 0.4),
                               },
                             ]}
                           />
@@ -635,7 +639,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                         <Text
                           style={[
                             styles.categoryCardLabel,
-                            isDarkMode && { color: '#FFFFFF' },
+                            isDarkMode && { color: Colors.PureWhite },
                           ]}
                           numberOfLines={1}
                         >
@@ -674,7 +678,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                   variant="green"
                   size="sm"
                   label="Streak Cadence"
-                  icon={<RotateCw size={11} color="#1B9A72" />}
+                  icon={<RotateCw size={11} color={Colors.GreenGracious} />}
                 />
               </View>
 
@@ -690,8 +694,8 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                         styles.frequencyChip,
                         isDarkMode &&
                           !isSelected && {
-                            backgroundColor: '#1E2228',
-                            borderColor: '#2C3035',
+                            backgroundColor: Colors.DarkCardBackground,
+                            borderColor: Colors.CarbonSlate,
                           },
                         isSelected && styles.frequencyChipSelected,
                       ]}
@@ -699,7 +703,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                       <Text
                         style={[
                           styles.frequencyChipText,
-                          isDarkMode && !isSelected && { color: '#A3A8B1' },
+                          isDarkMode && !isSelected && { color: Colors.SteelMist },
                           isSelected && styles.frequencyChipTextSelected,
                         ]}
                       >
@@ -745,8 +749,8 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                         styles.quickTimeChip,
                         isDarkMode &&
                           !isPresetSelected && {
-                            backgroundColor: '#1E2228',
-                            borderColor: '#2C3035',
+                            backgroundColor: Colors.DarkCardBackground,
+                            borderColor: Colors.CarbonSlate,
                           },
                         isPresetSelected && styles.quickTimeChipSelected,
                       ]}
@@ -755,7 +759,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                         style={[
                           styles.quickTimeChipText,
                           isDarkMode &&
-                            !isPresetSelected && { color: '#A3A8B1' },
+                            !isPresetSelected && { color: Colors.SteelMist },
                           isPresetSelected && styles.quickTimeChipTextSelected,
                         ]}
                       >
@@ -781,7 +785,11 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                     <View
                       style={[styles.magicIconWrap, styles.magicIconWrapTime]}
                     >
-                      <Clock size={16} color="#9C9CE3" strokeWidth={2.4} />
+                      <Clock
+                        size={16}
+                        color={Colors.PeriwinkleSoft}
+                        strokeWidth={2.4}
+                      />
                     </View>
 
                     <View style={styles.magicScheduleTextGroup}>
@@ -802,8 +810,8 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
               style={[
                 styles.voiceNudgeCard,
                 isDarkMode && {
-                  backgroundColor: '#1E2228',
-                  borderColor: '#2C3035',
+                  backgroundColor: Colors.DarkCardBackground,
+                  borderColor: Colors.CarbonSlate,
                 },
               ]}
             >
@@ -812,12 +820,16 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                   style={[
                     styles.voiceIconBox,
                     isDarkMode && {
-                      backgroundColor: '#1F382D',
-                      borderColor: '#1B9A72',
+                      backgroundColor: Colors.WellnessDarkIconBg,
+                      borderColor: Colors.GreenGracious,
                     },
                   ]}
                 >
-                  <Volume2 size={20} color="#1B9A72" strokeWidth={2.4} />
+                  <Volume2
+                    size={20}
+                    color={Colors.GreenGracious}
+                    strokeWidth={2.4}
+                  />
                 </View>
 
                 <View style={styles.voiceTextGroup}>
@@ -825,7 +837,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                     <Text
                       style={[
                         styles.voiceTitle,
-                        isDarkMode && { color: '#FFFFFF' },
+                        isDarkMode && { color: Colors.PureWhite },
                       ]}
                       numberOfLines={1}
                     >
@@ -835,7 +847,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                       variant="purple"
                       size="sm"
                       label={`${assistantName.toUpperCase()} AI`}
-                      icon={<Sparkles size={9} color="#7059C8" />}
+                      icon={<Sparkles size={9} color={Colors.MindfulTextAccent} />}
                     />
                   </View>
                   <Text style={styles.voiceSubtitle} numberOfLines={1}>
@@ -848,11 +860,13 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                 value={voiceNudgeEnabled}
                 onValueChange={setVoiceNudgeEnabled}
                 trackColor={{
-                  false: isDarkMode ? '#2C3035' : '#E4E2DD',
-                  true: isDarkMode ? '#8383D6' : Colors.MidnightCharcoal,
+                  false: isDarkMode ? Colors.CarbonSlate : Colors.WarmSwitchTrackOff,
+                  true: isDarkMode ? Colors.LavenderPurple : Colors.MidnightCharcoal,
                 }}
-                thumbColor="#FFFFFF"
-                ios_backgroundColor={isDarkMode ? '#2C3035' : '#E4E2DD'}
+                thumbColor={Colors.PureWhite}
+                ios_backgroundColor={
+                  isDarkMode ? Colors.CarbonSlate : Colors.WarmSwitchTrackOff
+                }
               />
             </View>
 
@@ -865,14 +879,18 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                   style={[
                     styles.deleteCardBtn,
                     isDarkMode && {
-                      backgroundColor: '#1E2228',
-                      borderColor: '#5A2528',
+                      backgroundColor: Colors.DarkCardBackground,
+                      borderColor: Colors.UrgentDarkBorder,
                     },
                   ]}
                   accessibilityRole="button"
                   accessibilityLabel="Delete Habit"
                 >
-                  <Trash2 size={16} color="#EF4444" strokeWidth={2.2} />
+                  <Trash2
+                    size={16}
+                    color={Colors.CategoryRedAccent}
+                    strokeWidth={2.2}
+                  />
                   <Text style={styles.deleteCardBtnText}>
                     Delete Daily Ritual
                   </Text>
@@ -909,7 +927,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
 const styles = StyleSheet.create({
   canvasContainer: {
     flex: 1,
-    backgroundColor: '#FAF8F5',
+    backgroundColor: Colors.CreamSurfaceAlt,
   },
 
   // Header Crest Badge (Centered on Top Border)
@@ -922,14 +940,14 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     borderRadius: 22,
     borderWidth: 1.5,
-    borderTopColor: '#4A4E5C',
-    borderLeftColor: '#363944',
-    borderRightColor: '#363944',
+    borderTopColor: Colors.DarkBevelTop,
+    borderLeftColor: Colors.DarkBorder,
+    borderRightColor: Colors.DarkBorder,
     borderBottomWidth: 4,
-    borderBottomColor: '#090A0D',
+    borderBottomColor: Colors.DarkBevelAbyss,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#0B0D11',
+    shadowColor: Colors.DarkShadowAnchor,
     shadowOffset: { width: 0, height: 5 },
     shadowOpacity: 0.32,
     shadowRadius: 8,
@@ -940,14 +958,14 @@ const styles = StyleSheet.create({
   flowTitle: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size18,
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
     letterSpacing: -0.1,
     textAlign: 'center',
   },
   flowSubtitle: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 10.5,
-    color: '#B6B9C3',
+    color: Colors.CoolSilverSubtitle,
     marginTop: 1,
     letterSpacing: 0.2,
     textAlign: 'center',
@@ -964,7 +982,7 @@ const styles = StyleSheet.create({
   // Primary Card (2-Layer Card Wrapper Pattern)
   primaryCardWrapper: {
     borderRadius: 22,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     marginTop: 26,
     marginBottom: 22,
     position: 'relative',
@@ -981,7 +999,7 @@ const styles = StyleSheet.create({
     }),
   },
   primaryCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderRadius: 22,
     borderWidth: 1.5,
     paddingHorizontal: 16,
@@ -1001,7 +1019,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.bold,
     fontSize: 10.5,
     letterSpacing: 0.8,
-    color: '#7E838F',
+    color: Colors.MutedSlateSubtext,
   },
   titleInput: {
     fontFamily: Fonts.poppins.bold,
@@ -1023,7 +1041,7 @@ const styles = StyleSheet.create({
     height: 48,
     borderTopWidth: 1,
     borderBottomWidth: 1,
-    borderColor: 'rgba(0, 0, 0, 0.06)',
+    borderColor: withAlpha(Colors.PureBlack, 0.06),
     paddingHorizontal: 0,
   },
   contextIconWrap: {
@@ -1034,7 +1052,7 @@ const styles = StyleSheet.create({
     flex: 1,
     fontFamily: Fonts.poppins.regular,
     fontSize: 13.5,
-    color: '#3F454D',
+    color: Colors.SlateGraphiteText,
     paddingVertical: 0,
     paddingHorizontal: 0,
     margin: 0,
@@ -1062,7 +1080,7 @@ const styles = StyleSheet.create({
   sectionSubtext: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 12,
-    color: '#7E838F',
+    color: Colors.MutedSlateSubtext,
   },
 
   // Category Cards (Category cards)
@@ -1083,7 +1101,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: ResponsivePixels.size11,
     position: 'relative',
     borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.4)',
+    borderColor: withAlpha(Colors.PureWhite, 0.4),
     justifyContent: 'space-between',
     ...Platform.select({
       ios: {
@@ -1097,7 +1115,7 @@ const styles = StyleSheet.create({
     }),
   },
   categoryCardExactSelected: {
-    borderColor: '#FFFFFF',
+    borderColor: Colors.PureWhite,
     borderWidth: 2,
     ...Platform.select({
       ios: {
@@ -1120,7 +1138,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -1141,7 +1159,7 @@ const styles = StyleSheet.create({
   categoryCardLabel: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 13,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     letterSpacing: -0.1,
   },
   categoryFloatingCheckbox: {
@@ -1163,11 +1181,11 @@ const styles = StyleSheet.create({
     }),
   },
   categoryFloatingCheckboxChecked: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
   },
   categoryFloatingCheckboxUnchecked: {
-    backgroundColor: '#FFFFFF',
-    borderColor: '#ECE8DF',
+    backgroundColor: Colors.PureWhite,
+    borderColor: Colors.WarmCheckboxBorder,
   },
   categoryAccentWrap: {
     position: 'absolute',
@@ -1193,14 +1211,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 22,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
-    borderColor: '#ECE7DB',
+    borderColor: Colors.WarmChipBorder,
     borderBottomWidth: 3.5,
-    borderBottomColor: '#D8D1C0',
+    borderBottomColor: Colors.WarmHaloBottomBevel,
     ...Platform.select({
       ios: {
-        shadowColor: '#5C5441',
+        shadowColor: Colors.WarmUmberShadow,
         shadowOffset: { width: 0, height: 3 },
         shadowOpacity: 0.12,
         shadowRadius: 4,
@@ -1213,14 +1231,14 @@ const styles = StyleSheet.create({
   frequencyChipSelected: {
     backgroundColor: Colors.NeroBlack,
     borderWidth: 1.5,
-    borderTopColor: '#454955',
-    borderLeftColor: '#333640',
-    borderRightColor: '#333640',
+    borderTopColor: Colors.DarkChipBevelTop,
+    borderLeftColor: Colors.DarkChipBorder,
+    borderRightColor: Colors.DarkChipBorder,
     borderBottomWidth: 3.5,
-    borderBottomColor: '#0A0B0E',
+    borderBottomColor: Colors.DarkChipBevelAbyss,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.28,
         shadowRadius: 5,
@@ -1233,11 +1251,11 @@ const styles = StyleSheet.create({
   frequencyChipText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 12,
-    color: '#555450',
+    color: Colors.CharcoalStoneText,
     letterSpacing: -0.1,
   },
   frequencyChipTextSelected: {
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
     fontFamily: Fonts.poppins.bold,
   },
 
@@ -1252,37 +1270,37 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 18,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1.2,
-    borderColor: '#ECE7DB',
+    borderColor: Colors.WarmChipBorder,
     borderBottomWidth: 2.5,
-    borderBottomColor: '#D8D1C0',
+    borderBottomColor: Colors.WarmHaloBottomBevel,
   },
   quickTimeChipSelected: {
     backgroundColor: Colors.NeroBlack,
-    borderColor: '#333640',
-    borderBottomColor: '#0A0B0E',
+    borderColor: Colors.DarkChipBorder,
+    borderBottomColor: Colors.DarkChipBevelAbyss,
   },
   quickTimeChipText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 11.5,
-    color: '#63625E',
+    color: Colors.SlateAshText,
   },
   quickTimeChipTextSelected: {
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     fontFamily: Fonts.poppins.bold,
   },
 
   // Schedule pickers
   scheduleContainerCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderRadius: 22,
     borderWidth: 1.5,
-    borderColor: '#E8E2D5',
+    borderColor: Colors.RingBorder,
     padding: 8,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.06,
         shadowRadius: 10,
@@ -1297,7 +1315,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.NeroBlack,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 0.28,
         shadowRadius: 10,
@@ -1310,7 +1328,7 @@ const styles = StyleSheet.create({
   magicScheduleBtn: {
     borderRadius: 18,
     borderWidth: 1.2,
-    borderColor: '#2E323D',
+    borderColor: Colors.DarkSegmentedShellBorder,
     overflow: 'hidden',
     paddingVertical: 12,
     paddingHorizontal: 14,
@@ -1327,8 +1345,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   magicIconWrapTime: {
-    backgroundColor: 'rgba(156, 156, 227, 0.12)',
-    borderColor: 'rgba(156, 156, 227, 0.25)',
+    backgroundColor: withAlpha(Colors.PeriwinkleSoft, 0.12),
+    borderColor: withAlpha(Colors.PeriwinkleSoft, 0.25),
   },
   magicScheduleTextGroup: {
     flex: 1,
@@ -1336,22 +1354,22 @@ const styles = StyleSheet.create({
   magicScheduleSmallLabel: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 9.5,
-    color: '#9EA3B0',
+    color: Colors.TabInactiveSilver,
     letterSpacing: 0.6,
   },
   magicScheduleValue: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 14,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     marginTop: 1,
   },
 
   // Voice Nudge Card
   voiceNudgeCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderRadius: 20,
     borderWidth: 1.5,
-    borderColor: '#E8E2D5',
+    borderColor: Colors.RingBorder,
     padding: 14,
     flexDirection: 'row',
     alignItems: 'center',
@@ -1359,7 +1377,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.08,
         shadowRadius: 10,
@@ -1380,14 +1398,14 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 14,
-    backgroundColor: '#EDFDF5',
+    backgroundColor: Colors.WellnessLightBg,
     borderWidth: 1.5,
-    borderColor: '#C6FFDD',
+    borderColor: Colors.WellnessLightBorder,
     alignItems: 'center',
     justifyContent: 'center',
     ...Platform.select({
       ios: {
-        shadowColor: '#52D22E',
+        shadowColor: Colors.AccentGreen,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
         shadowRadius: 4,
@@ -1413,7 +1431,7 @@ const styles = StyleSheet.create({
   voiceSubtitle: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 11.5,
-    color: '#7E838F',
+    color: Colors.MutedSlateSubtext,
     marginTop: 2,
   },
 
@@ -1426,14 +1444,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 8,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
-    borderColor: '#FECDD3',
+    borderColor: Colors.CategoryRoseBorder,
     paddingVertical: 13,
     borderRadius: 18,
     ...Platform.select({
       ios: {
-        shadowColor: '#EF4444',
+        shadowColor: Colors.CategoryRedAccent,
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.08,
         shadowRadius: 6,
@@ -1446,7 +1464,7 @@ const styles = StyleSheet.create({
   deleteCardBtnText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 13.5,
-    color: '#EF4444',
+    color: Colors.CategoryRedAccent,
   },
 });
 

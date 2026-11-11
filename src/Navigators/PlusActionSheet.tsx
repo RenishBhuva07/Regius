@@ -25,7 +25,7 @@ import {
   Sparkles,
   Flame,
 } from 'lucide-react-native';
-import { Colors } from '../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import { Fonts } from '../Theme/fonts';
 import { Badge } from '../Common/Badge';
 import { useTheme } from '../Theme/ThemeContext';
@@ -71,17 +71,25 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
             <LinearGradient id="sheetBgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
               <Stop
                 offset="0%"
-                stopColor={isDarkMode ? '#1E2228' : '#FFFFFF'}
+                stopColor={
+                  isDarkMode ? Colors.DarkCardBackground : Colors.PureWhite
+                }
                 stopOpacity={1}
               />
               <Stop
                 offset="50%"
-                stopColor={isDarkMode ? '#181B20' : '#FFFDF9'}
+                stopColor={
+                  isDarkMode
+                    ? Colors.DarkSurfacePressed
+                    : Colors.WarmCreamHighlight
+                }
                 stopOpacity={0.99}
               />
               <Stop
                 offset="100%"
-                stopColor={isDarkMode ? '#14161A' : '#FAF7EF'}
+                stopColor={
+                  isDarkMode ? Colors.DarkCanvasRich : Colors.WarmParchment
+                }
                 stopOpacity={1}
               />
             </LinearGradient>
@@ -92,8 +100,16 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
               x2="100%"
               y2="100%"
             >
-              <Stop offset="0%" stopColor="#FFF8E7" stopOpacity={1} />
-              <Stop offset="100%" stopColor="#C5A059" stopOpacity={0.85} />
+              <Stop
+                offset="0%"
+                stopColor={Colors.GoldSparkleTint}
+                stopOpacity={1}
+              />
+              <Stop
+                offset="100%"
+                stopColor={Colors.SovereignCrestGold}
+                stopOpacity={0.85}
+              />
             </LinearGradient>
           </Defs>
           <Rect width="100%" height="100%" fill="url(#sheetBgGrad)" />
@@ -105,8 +121,8 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
             rx={22}
             stroke={
               isDarkMode
-                ? 'rgba(255, 255, 255, 0.12)'
-                : 'rgba(232, 226, 213, 0.45)'
+                ? withAlpha(Colors.PureWhite, 0.12)
+                : withAlpha(Colors.RingBorder, 0.45)
             }
             strokeWidth={0.8}
             fill="none"
@@ -115,7 +131,7 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
             cx={cx}
             cy={-14}
             r={58}
-            stroke="rgba(197, 160, 89, 0.16)"
+            stroke={withAlpha(Colors.SovereignCrestGold, 0.16)}
             strokeWidth={0.8}
             fill="none"
           />
@@ -123,7 +139,7 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
             cx={cx}
             cy={-14}
             r={88}
-            stroke="rgba(197, 160, 89, 0.12)"
+            stroke={withAlpha(Colors.SovereignCrestGold, 0.12)}
             strokeWidth={0.75}
             strokeDasharray="3 4"
             fill="none"
@@ -132,7 +148,7 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
             cx={cx}
             cy={-14}
             r={120}
-            stroke="rgba(197, 160, 89, 0.08)"
+            stroke={withAlpha(Colors.SovereignCrestGold, 0.08)}
             strokeWidth={0.7}
             fill="none"
           />
@@ -141,7 +157,7 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
             cx={width - 38}
             cy={22}
             r={1.2}
-            fill="#C5A059"
+            fill={Colors.SovereignCrestGold}
             opacity={0.4}
           />
           <Path
@@ -149,8 +165,20 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
             fill="url(#goldSparkle)"
             opacity={0.7}
           />
-          <Circle cx={34} cy={16} r={1} fill="#C5A059" opacity={0.35} />
-          <Circle cx={cx} cy={218} r={1.5} fill="#D5CEBE" opacity={0.6} />
+          <Circle
+            cx={34}
+            cy={16}
+            r={1}
+            fill={Colors.SovereignCrestGold}
+            opacity={0.35}
+          />
+          <Circle
+            cx={cx}
+            cy={218}
+            r={1.5}
+            fill={Colors.ChampagneDust}
+            opacity={0.6}
+          />
         </Svg>
       </View>
     );
@@ -258,8 +286,8 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
           style={[
             styles.pointerNotch,
             isDarkMode && {
-              backgroundColor: '#14161A',
-              borderColor: '#2C3035',
+              backgroundColor: Colors.DarkCanvasRich,
+              borderColor: Colors.CarbonSlate,
             },
           ]}
         />
@@ -270,9 +298,9 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
             style={[
               styles.card,
               isDarkMode && {
-                backgroundColor: '#1E2228',
-                borderColor: '#2C3035',
-                borderTopColor: '#3A3F46',
+                backgroundColor: Colors.DarkCardBackground,
+                borderColor: Colors.CarbonSlate,
+                borderTopColor: Colors.DarkSoftLinen,
               },
             ]}
           >
@@ -288,7 +316,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                 icon={
                   <Sparkles
                     size={11}
-                    color="#D4AF37"
+                    color={Colors.ObsidianGoldAntique}
                     strokeWidth={2.4}
                   />
                 }
@@ -298,16 +326,20 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                 style={[
                   styles.headerRight,
                   isDarkMode && {
-                    backgroundColor: '#2A2D35',
-                    borderColor: '#363944',
+                    backgroundColor: Colors.DarkCardElevated,
+                    borderColor: Colors.DarkBorder,
                   },
                 ]}
               >
-                <Sparkles size={11} color="#C5A059" strokeWidth={2.2} />
+                <Sparkles
+                  size={11}
+                  color={Colors.SovereignCrestGold}
+                  strokeWidth={2.2}
+                />
                 <Text
                   style={[
                     styles.headerRightLabel,
-                    isDarkMode && { color: '#F5C518' },
+                    isDarkMode && { color: Colors.AccentYellow },
                   ]}
                 >
                   INSTANT
@@ -324,8 +356,8 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                   styles.actionCard,
                   styles.taskCard,
                   isDarkMode && {
-                    backgroundColor: '#2A2416',
-                    borderColor: '#DEAA14',
+                    backgroundColor: Colors.WorkDarkBg,
+                    borderColor: Colors.WorkDarkBorder,
                   },
                 ]}
                 onPress={onPressNewTask}
@@ -337,14 +369,14 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                       styles.iconWrap,
                       styles.taskIconWrap,
                       isDarkMode && {
-                        backgroundColor: '#2A2D35',
-                        borderColor: '#DEAA14',
+                        backgroundColor: Colors.DarkCardElevated,
+                        borderColor: Colors.WorkDarkBorder,
                       },
                     ]}
                   >
                     <CheckSquare
                       size={18}
-                      color="#D97706"
+                      color={Colors.HabitBurnishedAmber}
                       strokeWidth={2.4}
                     />
                   </View>
@@ -355,7 +387,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                   <Text
                     style={[
                       styles.optionTitle,
-                      isDarkMode && { color: '#FFFFFF' },
+                      isDarkMode && { color: Colors.PureWhite },
                     ]}
                   >
                     Add Task
@@ -363,7 +395,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                   <Text
                     style={[
                       styles.optionSubtitle,
-                      isDarkMode && { color: '#A3A8B1' },
+                      isDarkMode && { color: Colors.SteelMist },
                     ]}
                     numberOfLines={2}
                   >
@@ -378,12 +410,12 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                     style={[
                       styles.arrowCircle,
                       styles.taskArrowCircle,
-                      isDarkMode && { backgroundColor: '#2A2D35' },
+                      isDarkMode && { backgroundColor: Colors.DarkCardElevated },
                     ]}
                   >
                     <ChevronRight
                       size={12}
-                      color="#D97706"
+                      color={Colors.HabitBurnishedAmber}
                       strokeWidth={2.4}
                     />
                   </View>
@@ -394,7 +426,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                   <View
                     style={[
                       styles.cardAccent,
-                      { backgroundColor: '#F5C518' },
+                      { backgroundColor: Colors.AccentYellow },
                     ]}
                   />
                 </View>
@@ -407,8 +439,8 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                   styles.actionCard,
                   styles.reminderCard,
                   isDarkMode && {
-                    backgroundColor: '#162820',
-                    borderColor: '#1B9A72',
+                    backgroundColor: Colors.WellnessDarkBg,
+                    borderColor: Colors.GreenGracious,
                   },
                 ]}
                 onPress={onPressNewReminder}
@@ -420,12 +452,16 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                       styles.iconWrap,
                       styles.reminderIconWrap,
                       isDarkMode && {
-                        backgroundColor: '#2A2D35',
-                        borderColor: '#1B9A72',
+                        backgroundColor: Colors.DarkCardElevated,
+                        borderColor: Colors.GreenGracious,
                       },
                     ]}
                   >
-                    <Bell size={18} color="#1B9A72" strokeWidth={2.4} />
+                    <Bell
+                      size={18}
+                      color={Colors.GreenGracious}
+                      strokeWidth={2.4}
+                    />
                   </View>
                 </View>
 
@@ -434,7 +470,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                   <Text
                     style={[
                       styles.optionTitle,
-                      isDarkMode && { color: '#FFFFFF' },
+                      isDarkMode && { color: Colors.PureWhite },
                     ]}
                   >
                     Reminder
@@ -442,7 +478,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                   <Text
                     style={[
                       styles.optionSubtitle,
-                      isDarkMode && { color: '#A3A8B1' },
+                      isDarkMode && { color: Colors.SteelMist },
                     ]}
                     numberOfLines={2}
                   >
@@ -457,17 +493,24 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                     style={[
                       styles.arrowCircle,
                       styles.reminderArrowCircle,
-                      isDarkMode && { backgroundColor: '#2A2D35' },
+                      isDarkMode && { backgroundColor: Colors.DarkCardElevated },
                     ]}
                   >
-                    <ChevronRight size={12} color="#1B9A72" strokeWidth={2.4} />
+                    <ChevronRight
+                      size={12}
+                      color={Colors.GreenGracious}
+                      strokeWidth={2.4}
+                    />
                   </View>
                 </View>
 
                 {/* Signature category bottom accent bar */}
                 <View style={styles.cardAccentWrap}>
                   <View
-                    style={[styles.cardAccent, { backgroundColor: '#52D22E' }]}
+                    style={[
+                      styles.cardAccent,
+                      { backgroundColor: Colors.AccentGreen },
+                    ]}
                   />
                 </View>
               </TouchableOpacity>
@@ -479,8 +522,8 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                   styles.actionCard,
                   styles.habitCard,
                   isDarkMode && {
-                    backgroundColor: '#202336',
-                    borderColor: '#8383D6',
+                    backgroundColor: Colors.MindfulDarkBg,
+                    borderColor: Colors.LavenderPurple,
                   },
                 ]}
                 onPress={onPressNewHabit}
@@ -492,12 +535,16 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                       styles.iconWrap,
                       styles.habitIconWrap,
                       isDarkMode && {
-                        backgroundColor: '#2A2D35',
-                        borderColor: '#8383D6',
+                        backgroundColor: Colors.DarkCardElevated,
+                        borderColor: Colors.LavenderPurple,
                       },
                     ]}
                   >
-                    <Flame size={18} color="#8383D6" strokeWidth={2.4} />
+                    <Flame
+                      size={18}
+                      color={Colors.LavenderPurple}
+                      strokeWidth={2.4}
+                    />
                   </View>
                 </View>
 
@@ -506,7 +553,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                   <Text
                     style={[
                       styles.optionTitle,
-                      isDarkMode && { color: '#FFFFFF' },
+                      isDarkMode && { color: Colors.PureWhite },
                     ]}
                   >
                     Habit
@@ -514,7 +561,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                   <Text
                     style={[
                       styles.optionSubtitle,
-                      isDarkMode && { color: '#A3A8B1' },
+                      isDarkMode && { color: Colors.SteelMist },
                     ]}
                     numberOfLines={2}
                   >
@@ -529,17 +576,24 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                     style={[
                       styles.arrowCircle,
                       styles.habitArrowCircle,
-                      isDarkMode && { backgroundColor: '#2A2D35' },
+                      isDarkMode && { backgroundColor: Colors.DarkCardElevated },
                     ]}
                   >
-                    <ChevronRight size={12} color="#8383D6" strokeWidth={2.4} />
+                    <ChevronRight
+                      size={12}
+                      color={Colors.LavenderPurple}
+                      strokeWidth={2.4}
+                    />
                   </View>
                 </View>
 
                 {/* Signature category bottom accent bar */}
                 <View style={styles.cardAccentWrap}>
                   <View
-                    style={[styles.cardAccent, { backgroundColor: '#8383D6' }]}
+                    style={[
+                      styles.cardAccent,
+                      { backgroundColor: Colors.LavenderPurple },
+                    ]}
                   />
                 </View>
               </TouchableOpacity>
@@ -554,7 +608,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
 const styles = StyleSheet.create({
   backdrop: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: 'rgba(18, 20, 23, 0.42)',
+    backgroundColor: withAlpha(Colors.DarkBackground, 0.42),
     zIndex: 50,
   },
   backdropTouchArea: {
@@ -570,20 +624,20 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: 14,
     height: 14,
-    backgroundColor: '#FAF7EF',
+    backgroundColor: Colors.WarmParchment,
     transform: [{ rotate: '45deg' }],
     borderBottomRightRadius: 3,
     borderRightWidth: 1.5,
     borderBottomWidth: 1.5,
-    borderColor: '#E8E2D5',
+    borderColor: Colors.RingBorder,
     zIndex: 1,
   },
   cardShadowWrapper: {
     borderRadius: 26,
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.Transparent,
     ...Platform.select({
       ios: {
-        shadowColor: '#121417',
+        shadowColor: Colors.DarkBackground,
         shadowOffset: { width: 0, height: 10 },
         shadowOpacity: 0.18,
         shadowRadius: 20,
@@ -594,16 +648,16 @@ const styles = StyleSheet.create({
     }),
   },
   card: {
-    backgroundColor: '#FFFDF9',
+    backgroundColor: Colors.WarmCreamHighlight,
     borderRadius: 26,
     overflow: 'hidden',
     paddingHorizontal: 12,
     paddingTop: 11,
     paddingBottom: 13,
     borderWidth: 1.5,
-    borderColor: '#E8E2D5',
+    borderColor: Colors.RingBorder,
     borderTopWidth: 2,
-    borderTopColor: '#FFFFFF',
+    borderTopColor: Colors.PureWhite,
   },
   header: {
     flexDirection: 'row',
@@ -619,14 +673,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.85),
     borderWidth: 1,
-    borderColor: '#EAE5D9',
+    borderColor: Colors.WarmParchmentBorder,
   },
   headerRightLabel: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 8.5,
-    color: '#8A7B5F',
+    color: Colors.WarmSepiaHint,
     letterSpacing: 0.7,
   },
   optionsRow: {
@@ -658,8 +712,8 @@ const styles = StyleSheet.create({
     }),
   },
   taskCard: {
-    backgroundColor: '#FFFCEB',
-    borderColor: '#FFF5B8',
+    backgroundColor: Colors.WorkLightBg,
+    borderColor: Colors.WorkLightBorder,
     ...Platform.select({
       ios: {
         shadowColor: Colors.AccentYellow,
@@ -667,17 +721,17 @@ const styles = StyleSheet.create({
     }),
   },
   reminderCard: {
-    backgroundColor: '#EDFDF5',
-    borderColor: '#C6FFDD',
+    backgroundColor: Colors.WellnessLightBg,
+    borderColor: Colors.WellnessLightBorder,
     ...Platform.select({
       ios: {
-        shadowColor: '#2E7D32',
+        shadowColor: Colors.LeafGreenShadow,
       },
     }),
   },
   habitCard: {
-    backgroundColor: '#EFF2FE',
-    borderColor: '#D8DBFF',
+    backgroundColor: Colors.MindfulLightBg,
+    borderColor: Colors.MindfulLightBorder,
     ...Platform.select({
       ios: {
         shadowColor: Colors.LavenderPurple,
@@ -693,7 +747,7 @@ const styles = StyleSheet.create({
     width: 35,
     height: 35,
     borderRadius: 12,
-    backgroundColor: Colors.DefaultWhite,
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1.4,
     alignItems: 'center',
     justifyContent: 'center',
@@ -709,7 +763,7 @@ const styles = StyleSheet.create({
     }),
   },
   taskIconWrap: {
-    borderColor: '#FFF5B8',
+    borderColor: Colors.WorkLightBorder,
     ...Platform.select({
       ios: {
         shadowColor: Colors.AccentYellow,
@@ -717,15 +771,15 @@ const styles = StyleSheet.create({
     }),
   },
   reminderIconWrap: {
-    borderColor: '#C6FFDD',
+    borderColor: Colors.WellnessLightBorder,
     ...Platform.select({
       ios: {
-        shadowColor: '#2E7D32',
+        shadowColor: Colors.LeafGreenShadow,
       },
     }),
   },
   habitIconWrap: {
-    borderColor: '#D8DBFF',
+    borderColor: Colors.MindfulLightBorder,
     ...Platform.select({
       ios: {
         shadowColor: Colors.LavenderPurple,
@@ -745,7 +799,7 @@ const styles = StyleSheet.create({
   optionSubtitle: {
     fontFamily: Fonts.poppins.regular,
     fontSize: 9.3,
-    color: Colors.MutedSteelText,
+    color: Colors.SubtitleGray,
     lineHeight: 13,
     marginTop: 1.5,
     minHeight: 26,
@@ -761,7 +815,7 @@ const styles = StyleSheet.create({
     width: 21,
     height: 21,
     borderRadius: 10.5,
-    backgroundColor: Colors.DefaultWhite,
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1.1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -777,23 +831,23 @@ const styles = StyleSheet.create({
     }),
   },
   taskArrowCircle: {
-    borderColor: '#FFF5B8',
+    borderColor: Colors.WorkLightBorder,
     ...Platform.select({
       ios: {
-        shadowColor: '#D97706',
+        shadowColor: Colors.HabitBurnishedAmber,
       },
     }),
   },
   reminderArrowCircle: {
-    borderColor: '#C6FFDD',
+    borderColor: Colors.WellnessLightBorder,
     ...Platform.select({
       ios: {
-        shadowColor: '#2E7D32',
+        shadowColor: Colors.LeafGreenShadow,
       },
     }),
   },
   habitArrowCircle: {
-    borderColor: '#D8DBFF',
+    borderColor: Colors.MindfulLightBorder,
     ...Platform.select({
       ios: {
         shadowColor: Colors.LavenderPurple,

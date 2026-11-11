@@ -16,6 +16,7 @@ import {
   Easing,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import { useTheme } from '../../../Theme/ThemeContext';
 import { VoiceAssistantState } from '../../../Services/Voice/VoiceStateMachine';
 import {
@@ -272,11 +273,11 @@ export const VoiceAssistantSheet: React.FC<VoiceAssistantSheetProps> = ({
 const styles = StyleSheet.create({
   modalRoot: {
     flex: 1,
-    backgroundColor: 'transparent',
+    backgroundColor: Colors.Transparent,
   },
   backdrop: {
     ...StyleSheet.absoluteFill,
-    backgroundColor: '#000000',
+    backgroundColor: Colors.PureBlack,
   },
   sheetContainer: {
     flex: 1,

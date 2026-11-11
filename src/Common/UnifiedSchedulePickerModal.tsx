@@ -13,7 +13,7 @@ import DateTimePicker, {
 } from '@react-native-community/datetimepicker';
 import { Calendar, Clock } from 'lucide-react-native';
 import { Fonts } from '../Theme/fonts';
-import { Colors } from '../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../Theme/useAppTheme';
 import PickerAestheticBg from '../Components/PickerAestheticBg';
 
@@ -62,17 +62,17 @@ export const UnifiedSchedulePickerModal: React.FC<UnifiedSchedulePickerModalProp
                   style={[
                     styles.pickerModalCard,
                     isDarkMode && {
-                      backgroundColor: '#1E2228',
-                      borderTopColor: '#2C3035',
-                      borderLeftColor: '#2C3035',
-                      borderRightColor: '#2C3035',
+                      backgroundColor: Colors.DarkCardBackground,
+                      borderTopColor: Colors.CarbonSlate,
+                      borderLeftColor: Colors.CarbonSlate,
+                      borderRightColor: Colors.CarbonSlate,
                     },
                   ]}
                 >
                   <View
                     style={[
                       styles.pickerDragHandle,
-                      isDarkMode && { backgroundColor: '#363944' },
+                      isDarkMode && { backgroundColor: Colors.DarkBorder },
                     ]}
                   />
                   <PickerAestheticBg type={mode} />
@@ -90,11 +90,15 @@ export const UnifiedSchedulePickerModal: React.FC<UnifiedSchedulePickerModalProp
                         {isDate ? (
                           <Calendar
                             size={12}
-                            color="#B48216"
+                            color={Colors.WorkTextAccent}
                             strokeWidth={2.5}
                           />
                         ) : (
-                          <Clock size={12} color="#7059C8" strokeWidth={2.5} />
+                          <Clock
+                            size={12}
+                            color={Colors.MindfulTextAccent}
+                            strokeWidth={2.5}
+                          />
                         )}
                         <Text
                           style={
@@ -109,7 +113,7 @@ export const UnifiedSchedulePickerModal: React.FC<UnifiedSchedulePickerModalProp
                       <Text
                         style={[
                           styles.pickerModalTitle,
-                          isDarkMode && { color: '#FFFFFF' },
+                          isDarkMode && { color: Colors.PureWhite },
                         ]}
                       >
                         {title || defaultTitle}
@@ -133,7 +137,9 @@ export const UnifiedSchedulePickerModal: React.FC<UnifiedSchedulePickerModalProp
                       mode={mode}
                       display="spinner"
                       onChange={onChange}
-                      textColor={isDarkMode ? '#FFFFFF' : Colors.MidnightCharcoal}
+                      textColor={
+                        isDarkMode ? Colors.PureWhite : Colors.MidnightCharcoal
+                      }
                       themeVariant={isDarkMode ? 'dark' : 'light'}
                     />
                   </View>
@@ -149,24 +155,24 @@ export const UnifiedSchedulePickerModal: React.FC<UnifiedSchedulePickerModalProp
 const styles = StyleSheet.create({
   pickerModalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(18, 20, 23, 0.45)',
+    backgroundColor: withAlpha(Colors.DarkBackground, 0.45),
     justifyContent: 'flex-end',
   },
   pickerModalCard: {
-    backgroundColor: '#FAF8F5',
+    backgroundColor: Colors.CreamSurfaceAlt,
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     paddingTop: 12,
     paddingBottom: 28,
     paddingHorizontal: 20,
     borderWidth: 1.5,
-    borderTopColor: '#FFFFFF',
-    borderLeftColor: '#F0ECE1',
-    borderRightColor: '#F0ECE1',
+    borderTopColor: Colors.PureWhite,
+    borderLeftColor: Colors.CreamBorderSubtle,
+    borderRightColor: Colors.CreamBorderSubtle,
     borderBottomWidth: 0,
     ...Platform.select({
       ios: {
-        shadowColor: '#121417',
+        shadowColor: Colors.DarkBackground,
         shadowOffset: { width: 0, height: -4 },
         shadowOpacity: 0.16,
         shadowRadius: 16,
@@ -182,7 +188,7 @@ const styles = StyleSheet.create({
     width: 38,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#DCD6C8',
+    backgroundColor: Colors.WarmDragHandle,
     alignSelf: 'center',
     marginBottom: 12,
   },
@@ -209,46 +215,46 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   pickerHeaderBadgeDate: {
-    backgroundColor: '#FFF8D0',
-    borderColor: '#FFFFFF',
-    borderBottomColor: '#DEAA14',
+    backgroundColor: Colors.BadgeYellowBg,
+    borderColor: Colors.PureWhite,
+    borderBottomColor: Colors.WorkDarkBorder,
   },
   pickerHeaderBadgeTime: {
-    backgroundColor: '#EEF0FD',
-    borderColor: '#FFFFFF',
-    borderBottomColor: '#B6BEF5',
+    backgroundColor: Colors.BadgePurpleBg,
+    borderColor: Colors.PureWhite,
+    borderBottomColor: Colors.BadgePurpleBevel,
   },
   pickerHeaderBadgeTextDate: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 8.5,
-    color: '#B48216',
+    color: Colors.WorkTextAccent,
     letterSpacing: 0.6,
   },
   pickerHeaderBadgeTextTime: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 8.5,
-    color: '#7059C8',
+    color: Colors.MindfulTextAccent,
     letterSpacing: 0.6,
   },
   pickerModalTitle: {
     fontFamily: Fonts.ranade.bold,
     fontSize: 18,
-    color: '#121417',
+    color: Colors.DarkBackground,
   },
   pickerDoneBtn: {
-    backgroundColor: '#1E2028',
+    backgroundColor: Colors.DarkElevatedNero,
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#4A4E5C',
+    borderColor: Colors.DarkBevelTop,
     borderBottomWidth: 2.5,
-    borderBottomColor: '#0E1015',
+    borderBottomColor: Colors.DarkModalBtnBottom,
   },
   pickerDoneBtnText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 12.5,
-    color: '#FFFFFF',
+    color: Colors.PureWhite,
     letterSpacing: 0.2,
   },
   pickerWheelContainer: {

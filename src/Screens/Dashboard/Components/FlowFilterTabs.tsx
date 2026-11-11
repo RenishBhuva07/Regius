@@ -49,18 +49,22 @@ export const FlowFilterTabs: React.FC<FlowFilterTabsProps> = React.memo(
                   backgroundColor: cardBg,
                   borderColor: borderLight,
                   borderBottomColor:
-                    activeThemeId === 'cyprus_sand' ? '#C8C2B4' : '#171A20',
+                    activeThemeId === 'cyprus_sand'
+                      ? Colors.SandstoneBorder
+                      : Colors.DarkSurfaceDeep,
                   shadowColor:
-                    activeThemeId === 'cyprus_sand' ? '#5C5441' : '#000000',
+                    activeThemeId === 'cyprus_sand'
+                      ? Colors.WarmUmberShadow
+                      : Colors.PureBlack,
                 },
                 isActive && styles.filterPillActive,
                 isActive &&
                   isDarkMode && {
-                    backgroundColor: '#0A0B0E',
-                    borderTopColor: '#454955',
-                    borderLeftColor: '#333640',
-                    borderRightColor: '#333640',
-                    borderBottomColor: '#DEAA14',
+                    backgroundColor: Colors.DarkChipBevelAbyss,
+                    borderTopColor: Colors.DarkChipBevelTop,
+                    borderLeftColor: Colors.DarkChipBorder,
+                    borderRightColor: Colors.DarkChipBorder,
+                    borderBottomColor: Colors.WorkDarkBorder,
                   },
               ]}
               accessibilityRole="tab"
@@ -100,12 +104,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 7,
     borderRadius: 22,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
-    borderColor: '#ECE7DB',
+    borderColor: Colors.WarmChipBorder,
     borderBottomWidth: 3.5,
-    borderBottomColor: '#D8D1C0',
-    shadowColor: '#5C5441',
+    borderBottomColor: Colors.WarmHaloBottomBevel,
+    shadowColor: Colors.WarmUmberShadow,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.12,
     shadowRadius: 4,
@@ -114,12 +118,12 @@ const styles = StyleSheet.create({
   filterPillActive: {
     backgroundColor: Colors.NeroBlack,
     borderWidth: 1.5,
-    borderTopColor: '#454955',
-    borderLeftColor: '#333640',
-    borderRightColor: '#333640',
+    borderTopColor: Colors.DarkChipBevelTop,
+    borderLeftColor: Colors.DarkChipBorder,
+    borderRightColor: Colors.DarkChipBorder,
     borderBottomWidth: 3.5,
-    borderBottomColor: '#0A0B0E',
-    shadowColor: '#000000',
+    borderBottomColor: Colors.DarkChipBevelAbyss,
+    shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.28,
     shadowRadius: 5,
@@ -128,11 +132,11 @@ const styles = StyleSheet.create({
   filterPillText: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 12,
-    color: '#555450',
+    color: Colors.CharcoalStoneText,
     letterSpacing: -0.1,
   },
   filterPillTextActive: {
-    color: Colors.DefaultWhite,
+    color: Colors.PureWhite,
     fontFamily: Fonts.poppins.bold,
   },
 });

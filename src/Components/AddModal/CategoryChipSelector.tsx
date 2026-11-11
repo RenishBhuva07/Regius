@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Plus, Check } from 'lucide-react-native';
 import { Fonts } from '../../Theme/fonts';
+import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../Theme/useAppTheme';
 import { BadgeVariant } from '../../Common/Badge';
 import { HeaderActionButton } from '../../Common/HeaderActionButton';
@@ -53,50 +54,50 @@ export const CategoryChipSelector: React.FC<CategoryChipSelectorProps> =
           return {
             bg: cat.bgColor,
             border: cat.borderColor,
-            iconWrapBg: '#FFFFFF',
-            labelColor: cat.checkColor || '#121417',
+            iconWrapBg: Colors.PureWhite,
+            labelColor: cat.checkColor || Colors.DarkBackground,
           };
         }
         switch (cat.id) {
           case 'works':
           case 'daily':
             return {
-              bg: '#2A2416',
-              border: '#DEAA14',
-              iconWrapBg: '#38301D',
-              labelColor: '#FFE600',
+              bg: Colors.WorkDarkBg,
+              border: Colors.WorkDarkBorder,
+              iconWrapBg: Colors.WorkDarkIconBg,
+              labelColor: Colors.WorkDarkLabelGold,
             };
           case 'sport':
           case 'health':
             return {
-              bg: '#162820',
-              border: '#1B9A72',
-              iconWrapBg: '#1F382D',
-              labelColor: '#52D22E',
+              bg: Colors.WellnessDarkBg,
+              border: Colors.GreenGracious,
+              iconWrapBg: Colors.WellnessDarkIconBg,
+              labelColor: Colors.AccentGreen,
             };
           case 'habits':
           case 'work':
           case 'mindful':
             return {
-              bg: '#202336',
-              border: '#8383D6',
-              iconWrapBg: '#2C304A',
-              labelColor: '#C2C2FF',
+              bg: Colors.MindfulDarkBg,
+              border: Colors.LavenderPurple,
+              iconWrapBg: Colors.MindfulDarkIconBg,
+              labelColor: Colors.MindfulDarkLabelPeriwinkle,
             };
           case 'events':
           case 'evening':
             return {
-              bg: '#331F18',
-              border: '#FF9800',
-              iconWrapBg: '#452A20',
-              labelColor: '#FFB74D',
+              bg: Colors.EventDarkBg,
+              border: Colors.AccentAmber,
+              iconWrapBg: Colors.EventDarkIconBgDeep,
+              labelColor: Colors.EventDarkLabelAmber,
             };
           default:
             return {
-              bg: '#1E2228',
+              bg: Colors.DarkCardBackground,
               border: cat.borderColor,
-              iconWrapBg: '#252932',
-              labelColor: '#FFFFFF',
+              iconWrapBg: Colors.DarkCheckboxUnchecked,
+              labelColor: Colors.PureWhite,
             };
         }
       };
@@ -196,8 +197,8 @@ export const CategoryChipSelector: React.FC<CategoryChipSelectorProps> =
                           {
                             borderColor: catTheme.border,
                             backgroundColor: isDarkMode
-                              ? '#252932'
-                              : 'rgba(255, 255, 255, 0.4)',
+                              ? Colors.DarkCheckboxUnchecked
+                              : withAlpha(Colors.PureWhite, 0.4),
                           },
                         ]}
                       />
@@ -212,10 +213,10 @@ export const CategoryChipSelector: React.FC<CategoryChipSelectorProps> =
                           color: isDarkMode
                             ? isSelected
                               ? catTheme.labelColor
-                              : '#A3A8B1'
+                              : Colors.SteelMist
                             : isSelected
-                            ? cat.checkColor || '#121417'
-                            : '#121417',
+                            ? cat.checkColor || Colors.DarkBackground
+                            : Colors.DarkBackground,
                         },
                       ]}
                       numberOfLines={1}
@@ -256,7 +257,7 @@ const styles = StyleSheet.create({
   sectionHeading: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 13.5,
-    color: '#121417',
+    color: Colors.DarkBackground,
     letterSpacing: -0.2,
   },
   categoryFlatList: {
@@ -274,7 +275,7 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingBottom: 12,
     borderWidth: 1.5,
-    borderColor: 'transparent',
+    borderColor: Colors.Transparent,
     justifyContent: 'space-between',
     position: 'relative',
     overflow: 'hidden',
@@ -310,7 +311,7 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     borderRadius: 15,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -336,7 +337,7 @@ const styles = StyleSheet.create({
     }),
   },
   categoryFloatingCheckboxUnchecked: {
-    backgroundColor: 'rgba(255, 255, 255, 0.4)',
+    backgroundColor: withAlpha(Colors.PureWhite, 0.4),
   },
   categoryCardBottom: {
     gap: 1,
@@ -344,7 +345,7 @@ const styles = StyleSheet.create({
   categoryCardLabel: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 13,
-    color: '#121417',
+    color: Colors.DarkBackground,
   },
   categoryAccentWrap: {
     position: 'absolute',

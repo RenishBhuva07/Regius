@@ -16,6 +16,7 @@ import {
   X,
 } from 'lucide-react-native';
 import { Fonts } from '../Theme/fonts';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import { useTheme } from '../Theme/ThemeContext';
 import {
   ToastAestheticPatternSvg,
@@ -48,66 +49,66 @@ interface VariantConfig {
 const VARIANT_CONFIGS: Record<ToastVariant, VariantConfig> = {
   success: {
     Icon: CheckCircle2,
-    iconColor: '#059669',
-    badgeBgLight: '#D1FAE5',
-    badgeBgDark: '#0D3320',
-    badgeBorderLight: '#FFFFFF',
-    badgeBorderDark: '#10B981',
-    badgeBottomBorderLight: '#6EE7B7',
-    badgeBottomBorderDark: '#05472A',
-    cardBorderLight: '#A7F3D0',
-    cardBottomBorderLight: '#34D399',
-    cardBorderDark: '#1B4D36',
-    cardBottomBorderDark: '#092116',
-    glowColor: '#10B981',
+    iconColor: Colors.ToastSuccessIcon,
+    badgeBgLight: Colors.ToastSuccessBadgeBgLight,
+    badgeBgDark: Colors.ToastSuccessBadgeBgDark,
+    badgeBorderLight: Colors.PureWhite,
+    badgeBorderDark: Colors.ToastSuccessAccent,
+    badgeBottomBorderLight: Colors.ToastSuccessBadgeBevelLight,
+    badgeBottomBorderDark: Colors.ToastSuccessBadgeBevelDark,
+    cardBorderLight: Colors.ToastSuccessCardBorderLight,
+    cardBottomBorderLight: Colors.ToastSuccessCardBevelLight,
+    cardBorderDark: Colors.ToastSuccessCardBorderDark,
+    cardBottomBorderDark: Colors.ToastSuccessCardBevelDark,
+    glowColor: Colors.ToastSuccessAccent,
     defaultTitle: 'Success',
   },
   warning: {
     Icon: AlertTriangle,
-    iconColor: '#B47804',
-    badgeBgLight: '#FEF3C7',
-    badgeBgDark: '#3A2B07',
-    badgeBorderLight: '#FFFFFF',
-    badgeBorderDark: '#F5C518',
-    badgeBottomBorderLight: '#FCD34D',
-    badgeBottomBorderDark: '#5B4109',
-    cardBorderLight: '#FDE047',
-    cardBottomBorderLight: '#DEAA14',
-    cardBorderDark: '#4A370A',
-    cardBottomBorderDark: '#1C1502',
-    glowColor: '#F5C518',
+    iconColor: Colors.BadgeYellowText,
+    badgeBgLight: Colors.ToastWarningBadgeBgLight,
+    badgeBgDark: Colors.ToastWarningBadgeBgDark,
+    badgeBorderLight: Colors.PureWhite,
+    badgeBorderDark: Colors.AccentYellow,
+    badgeBottomBorderLight: Colors.ToastWarningBadgeBevelLight,
+    badgeBottomBorderDark: Colors.ToastWarningBadgeBevelDark,
+    cardBorderLight: Colors.ToastWarningCardBorderLight,
+    cardBottomBorderLight: Colors.WorkDarkBorder,
+    cardBorderDark: Colors.ToastWarningCardBorderDark,
+    cardBottomBorderDark: Colors.ToastWarningCardBevelDark,
+    glowColor: Colors.AccentYellow,
     defaultTitle: 'Warning',
   },
   error: {
     Icon: AlertCircle,
-    iconColor: '#DC2626',
-    badgeBgLight: '#FEE2E2',
-    badgeBgDark: '#3E1317',
-    badgeBorderLight: '#FFFFFF',
-    badgeBorderDark: '#FF3B30',
-    badgeBottomBorderLight: '#FCA5A5',
-    badgeBottomBorderDark: '#5E1B21',
-    cardBorderLight: '#FECACA',
-    cardBottomBorderLight: '#F87171',
-    cardBorderDark: '#501C22',
-    cardBottomBorderDark: '#20080B',
-    glowColor: '#FF3B30',
+    iconColor: Colors.CategoryRedCheck,
+    badgeBgLight: Colors.CategoryRedBorder,
+    badgeBgDark: Colors.ToastErrorBadgeBgDark,
+    badgeBorderLight: Colors.PureWhite,
+    badgeBorderDark: Colors.CrimsonPulse,
+    badgeBottomBorderLight: Colors.ToastErrorBadgeBevelLight,
+    badgeBottomBorderDark: Colors.ToastErrorBadgeBevelDark,
+    cardBorderLight: Colors.ToastErrorCardBorderLight,
+    cardBottomBorderLight: Colors.ToastErrorCardBevelLight,
+    cardBorderDark: Colors.ToastErrorCardBorderDark,
+    cardBottomBorderDark: Colors.ToastErrorCardBevelDark,
+    glowColor: Colors.CrimsonPulse,
     defaultTitle: 'Notice',
   },
   info: {
     Icon: Info,
-    iconColor: '#5551B5',
-    badgeBgLight: '#E0E7FF',
-    badgeBgDark: '#1F1B45',
-    badgeBorderLight: '#FFFFFF',
-    badgeBorderDark: '#8383D6',
-    badgeBottomBorderLight: '#A5B4FC',
-    badgeBottomBorderDark: '#352E75',
-    cardBorderLight: '#C7D2FE',
-    cardBottomBorderLight: '#8383D6',
-    cardBorderDark: '#2F2B61',
-    cardBottomBorderDark: '#110F24',
-    glowColor: '#8383D6',
+    iconColor: Colors.ToastInfoIcon,
+    badgeBgLight: Colors.ToastInfoBadgeBgLight,
+    badgeBgDark: Colors.ToastInfoBadgeBgDark,
+    badgeBorderLight: Colors.PureWhite,
+    badgeBorderDark: Colors.LavenderPurple,
+    badgeBottomBorderLight: Colors.ToastInfoBadgeBevelLight,
+    badgeBottomBorderDark: Colors.ToastInfoBadgeBevelDark,
+    cardBorderLight: Colors.ToastInfoCardBorderLight,
+    cardBottomBorderLight: Colors.LavenderPurple,
+    cardBorderDark: Colors.ToastInfoCardBorderDark,
+    cardBottomBorderDark: Colors.ToastInfoCardBevelDark,
+    glowColor: Colors.LavenderPurple,
     defaultTitle: 'Notice',
   },
 };
@@ -129,18 +130,18 @@ export const RegiusToast: React.FC<RegiusToastProps> = ({
     activeThemeId === 'cyprus_sand' && variant === 'info'
       ? {
           ...baseConfig,
-          iconColor: isDarkMode ? '#F0EDE5' : '#004643',
-          badgeBgDark: '#003835',
-          badgeBorderDark: '#0A6B66',
-          badgeBottomBorderDark: '#001A18',
-          badgeBgLight: '#E6E2D8',
-          badgeBorderLight: '#FFFFFF',
-          badgeBottomBorderLight: '#DDD7CB',
-          cardBorderDark: '#0A6B66',
-          cardBottomBorderDark: '#001A18',
-          cardBorderLight: '#DDD7CB',
-          cardBottomBorderLight: '#C8C2B4',
-          glowColor: '#0A6B66',
+          iconColor: isDarkMode ? Colors.CyprusSandPaper : Colors.CyprusTeal,
+          badgeBgDark: Colors.CyprusTealDark,
+          badgeBorderDark: Colors.CyprusTealLight,
+          badgeBottomBorderDark: Colors.CyprusTealAbyss,
+          badgeBgLight: Colors.CyprusSandAlt,
+          badgeBorderLight: Colors.PureWhite,
+          badgeBottomBorderLight: Colors.CyprusBorderDarkCard,
+          cardBorderDark: Colors.CyprusTealLight,
+          cardBottomBorderDark: Colors.CyprusTealAbyss,
+          cardBorderLight: Colors.CyprusBorderDarkCard,
+          cardBottomBorderLight: Colors.SandstoneBorder,
+          glowColor: Colors.CyprusTealLight,
         }
       : baseConfig;
   const { Icon } = config;
@@ -236,7 +237,7 @@ export const RegiusToast: React.FC<RegiusToastProps> = ({
             numberOfLines={2}
             style={[
               styles.singleText,
-              { color: isDarkMode ? '#FFFFFF' : '#0F172A' },
+              { color: isDarkMode ? Colors.PureWhite : Colors.Slate900 },
             ]}
           >
             {singleText}
@@ -248,7 +249,7 @@ export const RegiusToast: React.FC<RegiusToastProps> = ({
                 numberOfLines={1}
                 style={[
                   styles.titleText,
-                  { color: isDarkMode ? '#FFFFFF' : '#0F172A' },
+                  { color: isDarkMode ? Colors.PureWhite : Colors.Slate900 },
                 ]}
               >
                 {title}
@@ -259,7 +260,7 @@ export const RegiusToast: React.FC<RegiusToastProps> = ({
                 numberOfLines={2}
                 style={[
                   styles.descText,
-                  { color: isDarkMode ? '#D1D5DB' : '#334155' },
+                  { color: isDarkMode ? Colors.Gray300 : Colors.Slate700 },
                 ]}
               >
                 {description}
@@ -278,8 +279,8 @@ export const RegiusToast: React.FC<RegiusToastProps> = ({
           styles.dismissButton,
           {
             backgroundColor: isDarkMode
-              ? 'rgba(255, 255, 255, 0.12)'
-              : 'rgba(0, 0, 0, 0.05)',
+              ? withAlpha(Colors.PureWhite, 0.12)
+              : withAlpha(Colors.PureBlack, 0.05),
           },
         ]}
         accessibilityRole="button"
@@ -287,7 +288,7 @@ export const RegiusToast: React.FC<RegiusToastProps> = ({
       >
         <X
           size={14}
-          color={isDarkMode ? 'rgba(255, 255, 255, 0.7)' : '#64748B'}
+          color={isDarkMode ? withAlpha(Colors.PureWhite, 0.7) : Colors.Slate500}
           strokeWidth={2.4}
         />
       </TouchableOpacity>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleProp, ViewStyle, TextStyle } from 'react-native';
 import { Flame } from 'lucide-react-native';
+import { Colors } from '../Assets/StyleUtilities/Colors';
 import { Badge, BadgeSize, BadgeVariant } from './Badge';
 
 export interface StreakBadgeProps {
@@ -37,7 +38,7 @@ export const StreakBadge: React.FC<StreakBadgeProps> = ({
   const defaultIconSize = size === 'sm' ? 10.5 : size === 'lg' ? 14 : 12;
   const effectiveIconSize = iconSize ?? defaultIconSize;
 
-  const flameColor = isActive ? '#E65100' : '#8E8E93';
+  const flameColor = isActive ? Colors.EventTextAccent : Colors.DisabledGrayText;
   const badgeVariant: BadgeVariant =
     variant ?? (isActive ? 'orange' : 'neutral');
 
@@ -53,7 +54,7 @@ export const StreakBadge: React.FC<StreakBadgeProps> = ({
       onPress={onPress}
       activeOpacity={activeOpacity}
       style={style}
-      textStyle={[!isActive && { color: '#8E8E93' }, textStyle]}
+      textStyle={[!isActive && { color: Colors.DisabledGrayText }, textStyle]}
     />
   );
 };

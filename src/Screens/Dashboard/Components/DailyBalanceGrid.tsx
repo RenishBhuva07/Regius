@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { CheckCircle2, Flame, Bell } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../../Theme/useAppTheme';
 
 export interface DailyBalanceGridProps {
@@ -53,7 +54,7 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
 
   const handlePressReminders = onPressReminders || onPressNudges;
   const { isDarkMode, textPrimary, canvasTextPrimary } = useAppTheme();
-  const cardTextColor = isDarkMode ? '#FFFFFF' : textPrimary;
+  const cardTextColor = isDarkMode ? Colors.PureWhite : textPrimary;
 
   return (
     <View style={styles.container}>
@@ -74,8 +75,8 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
             styles.metricCard,
             styles.tasksCard,
             isDarkMode && {
-              backgroundColor: '#2A2416',
-              borderColor: '#DEAA14',
+              backgroundColor: Colors.WorkDarkBg,
+              borderColor: Colors.WorkDarkBorder,
             },
           ]}
           accessibilityRole="button"
@@ -87,25 +88,31 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
                 styles.iconCircle,
                 styles.tasksIconCircle,
                 isDarkMode && {
-                  backgroundColor: '#38301D',
-                  borderColor: '#DEAA14',
+                  backgroundColor: Colors.WorkDarkIconBg,
+                  borderColor: Colors.WorkDarkBorder,
                 },
               ]}
             >
               <CheckCircle2
                 size={16}
-                color={isDarkMode ? '#F5C518' : '#B48216'}
+                color={isDarkMode ? Colors.AccentYellow : Colors.WorkTextAccent}
                 strokeWidth={2.4}
               />
             </View>
             <CircularProgress
               percent={taskPercent}
               trackColor={
-                isDarkMode ? 'rgba(245, 197, 24, 0.2)' : '#FFF5B8'
+                isDarkMode
+                  ? withAlpha(Colors.AccentYellow, 0.2)
+                  : Colors.WorkLightBorder
               }
-              progressColor={isDarkMode ? '#F5C518' : '#B48216'}
-              textColor={isDarkMode ? '#F5C518' : '#B48216'}
-              shadowColor="#F5C518"
+              progressColor={
+                isDarkMode ? Colors.AccentYellow : Colors.WorkTextAccent
+              }
+              textColor={
+                isDarkMode ? Colors.AccentYellow : Colors.WorkTextAccent
+              }
+              shadowColor={Colors.AccentYellow}
             />
           </View>
           <View style={styles.cardBottom}>
@@ -121,7 +128,12 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
             </Text>
           </View>
           {/* Bottom Accent Pill */}
-          <View style={[styles.accentPill, { backgroundColor: '#FDD835' }]} />
+          <View
+            style={[
+              styles.accentPill,
+              { backgroundColor: Colors.TaskGoldVivid },
+            ]}
+          />
         </TouchableOpacity>
 
         {/* 2. Reminders Metric Card */}
@@ -132,8 +144,8 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
             styles.metricCard,
             styles.remindersCard,
             isDarkMode && {
-              backgroundColor: '#162820',
-              borderColor: '#1B9A72',
+              backgroundColor: Colors.WellnessDarkBg,
+              borderColor: Colors.GreenGracious,
             },
           ]}
           accessibilityRole="button"
@@ -145,25 +157,29 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
                 styles.iconCircle,
                 styles.remindersIconCircle,
                 isDarkMode && {
-                  backgroundColor: '#1F382D',
-                  borderColor: '#1B9A72',
+                  backgroundColor: Colors.WellnessDarkIconBg,
+                  borderColor: Colors.GreenGracious,
                 },
               ]}
             >
               <Bell
                 size={16}
-                color={isDarkMode ? '#52D22E' : '#1B9A72'}
+                color={isDarkMode ? Colors.AccentGreen : Colors.GreenGracious}
                 strokeWidth={2.4}
               />
             </View>
             <CircularProgress
               percent={reminderPercent}
               trackColor={
-                isDarkMode ? 'rgba(82, 210, 46, 0.2)' : '#C6FFDD'
+                isDarkMode
+                  ? withAlpha(Colors.AccentGreen, 0.2)
+                  : Colors.WellnessLightBorder
               }
-              progressColor={isDarkMode ? '#52D22E' : '#1B9A72'}
-              textColor={isDarkMode ? '#52D22E' : '#1B9A72'}
-              shadowColor="#52D22E"
+              progressColor={
+                isDarkMode ? Colors.AccentGreen : Colors.GreenGracious
+              }
+              textColor={isDarkMode ? Colors.AccentGreen : Colors.GreenGracious}
+              shadowColor={Colors.AccentGreen}
             />
           </View>
           <View style={styles.cardBottom}>
@@ -179,7 +195,12 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
             </Text>
           </View>
           {/* Bottom Accent Pill */}
-          <View style={[styles.accentPill, { backgroundColor: '#52D22E' }]} />
+          <View
+            style={[
+              styles.accentPill,
+              { backgroundColor: Colors.AccentGreen },
+            ]}
+          />
         </TouchableOpacity>
 
         {/* 3. Habits Metric Card */}
@@ -190,8 +211,8 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
             styles.metricCard,
             styles.habitsCard,
             isDarkMode && {
-              backgroundColor: '#202336',
-              borderColor: '#8383D6',
+              backgroundColor: Colors.MindfulDarkBg,
+              borderColor: Colors.LavenderPurple,
             },
           ]}
           accessibilityRole="button"
@@ -203,25 +224,33 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
                 styles.iconCircle,
                 styles.habitsIconCircle,
                 isDarkMode && {
-                  backgroundColor: '#2C304A',
-                  borderColor: '#8383D6',
+                  backgroundColor: Colors.MindfulDarkIconBg,
+                  borderColor: Colors.LavenderPurple,
                 },
               ]}
             >
               <Flame
                 size={16}
-                color={isDarkMode ? '#8383D6' : '#7059C8'}
+                color={
+                  isDarkMode ? Colors.LavenderPurple : Colors.MindfulTextAccent
+                }
                 strokeWidth={2.4}
               />
             </View>
             <CircularProgress
               percent={habitPercent}
               trackColor={
-                isDarkMode ? 'rgba(131, 131, 214, 0.2)' : '#D8DBFF'
+                isDarkMode
+                  ? withAlpha(Colors.LavenderPurple, 0.2)
+                  : Colors.MindfulLightBorder
               }
-              progressColor={isDarkMode ? '#8383D6' : '#7059C8'}
-              textColor={isDarkMode ? '#8383D6' : '#7059C8'}
-              shadowColor="#8383D6"
+              progressColor={
+                isDarkMode ? Colors.LavenderPurple : Colors.MindfulTextAccent
+              }
+              textColor={
+                isDarkMode ? Colors.LavenderPurple : Colors.MindfulTextAccent
+              }
+              shadowColor={Colors.LavenderPurple}
             />
           </View>
           <View style={styles.cardBottom}>
@@ -237,7 +266,12 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
             </Text>
           </View>
           {/* Bottom Accent Pill */}
-          <View style={[styles.accentPill, { backgroundColor: '#8383D6' }]} />
+          <View
+            style={[
+              styles.accentPill,
+              { backgroundColor: Colors.LavenderPurple },
+            ]}
+          />
         </TouchableOpacity>
       </View>
     </View>
@@ -257,13 +291,13 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 18,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     letterSpacing: -0.2,
   },
   sectionPace: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 12,
-    color: '#77767B',
+    color: Colors.Grey,
   },
   gridRow: {
     flexDirection: 'row',
@@ -285,9 +319,9 @@ const styles = StyleSheet.create({
   },
   // Tasks palette (Works/Yellow)
   tasksCard: {
-    backgroundColor: '#FFFCEB',
-    borderColor: '#FFF5B8',
-    shadowColor: '#F5C518',
+    backgroundColor: Colors.WorkLightBg,
+    borderColor: Colors.WorkLightBorder,
+    shadowColor: Colors.AccentYellow,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.22,
     shadowRadius: 8,
@@ -295,9 +329,9 @@ const styles = StyleSheet.create({
   },
   // Habits palette (Regius Purple)
   habitsCard: {
-    backgroundColor: '#EFF2FE',
-    borderColor: '#D8DBFF',
-    shadowColor: '#8383D6',
+    backgroundColor: Colors.MindfulLightBg,
+    borderColor: Colors.MindfulLightBorder,
+    shadowColor: Colors.LavenderPurple,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.22,
     shadowRadius: 8,
@@ -305,18 +339,18 @@ const styles = StyleSheet.create({
   },
   // Reminders palette (Sport/Wellness/Reminders Green)
   remindersCard: {
-    backgroundColor: '#EDFDF5',
-    borderColor: '#C6FFDD',
-    shadowColor: '#52D22E',
+    backgroundColor: Colors.WellnessLightBg,
+    borderColor: Colors.WellnessLightBorder,
+    shadowColor: Colors.AccentGreen,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.22,
     shadowRadius: 8,
     elevation: 3,
   },
   nudgesCard: {
-    backgroundColor: '#EDFDF5',
-    borderColor: '#C6FFDD',
-    shadowColor: '#52D22E',
+    backgroundColor: Colors.WellnessLightBg,
+    borderColor: Colors.WellnessLightBorder,
+    shadowColor: Colors.AccentGreen,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.22,
     shadowRadius: 8,
@@ -333,7 +367,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -343,26 +377,26 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   tasksIconCircle: {
-    borderColor: '#FFF5B8',
-    shadowColor: '#F5C518',
+    borderColor: Colors.WorkLightBorder,
+    shadowColor: Colors.AccentYellow,
   },
   habitsIconCircle: {
-    borderColor: '#D8DBFF',
-    shadowColor: '#8383D6',
+    borderColor: Colors.MindfulLightBorder,
+    shadowColor: Colors.LavenderPurple,
   },
   remindersIconCircle: {
-    borderColor: '#C6FFDD',
-    shadowColor: '#52D22E',
+    borderColor: Colors.WellnessLightBorder,
+    shadowColor: Colors.AccentGreen,
   },
   nudgesIconCircle: {
-    borderColor: '#C6FFDD',
-    shadowColor: '#52D22E',
+    borderColor: Colors.WellnessLightBorder,
+    shadowColor: Colors.AccentGreen,
   },
   progressContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 3,
@@ -385,7 +419,7 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 16,
     paddingHorizontal: 4,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -395,16 +429,16 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   tasksPercentIndicator: {
-    borderColor: '#FFF5B8',
-    shadowColor: '#F5C518',
+    borderColor: Colors.WorkLightBorder,
+    shadowColor: Colors.AccentYellow,
   },
   remindersPercentIndicator: {
-    borderColor: '#C6FFDD',
-    shadowColor: '#52D22E',
+    borderColor: Colors.WellnessLightBorder,
+    shadowColor: Colors.AccentGreen,
   },
   habitsPercentIndicator: {
-    borderColor: '#D8DBFF',
-    shadowColor: '#8383D6',
+    borderColor: Colors.MindfulLightBorder,
+    shadowColor: Colors.LavenderPurple,
   },
   percentIndicatorText: {
     fontFamily: Fonts.poppins.bold,
@@ -417,18 +451,18 @@ const styles = StyleSheet.create({
   countText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: 21,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     letterSpacing: -0.4,
   },
   countTotalText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: 13,
-    color: '#8E8D92',
+    color: Colors.TimelineMutedGray,
   },
   label: {
     fontFamily: Fonts.poppins.semiBold,
     fontSize: 13,
-    color: '#1B1C19',
+    color: Colors.RegiusInk,
     letterSpacing: -0.1,
     marginTop: 2,
   },

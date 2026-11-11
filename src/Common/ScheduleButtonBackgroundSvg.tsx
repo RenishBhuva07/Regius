@@ -8,6 +8,7 @@ import Svg, {
   Rect,
   Circle,
 } from 'react-native-svg';
+import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 
 export interface ScheduleButtonBackgroundSvgProps {
   type: 'date' | 'time';
@@ -17,7 +18,7 @@ export interface ScheduleButtonBackgroundSvgProps {
 export const ScheduleButtonBackgroundSvg: React.FC<ScheduleButtonBackgroundSvgProps> =
   React.memo(({ type, idPrefix = 'sched' }) => {
     const isDate = type === 'date';
-    const auraColor = isDate ? '#F5C518' : '#9C9CE3';
+    const auraColor = isDate ? Colors.AccentYellow : Colors.PeriwinkleSoft;
     const auraOpacity = isDate ? 0.22 : 0.26;
     const bgGradId = `${idPrefix}-bgGrad-${type}`;
     const auraId = `${idPrefix}-aura-${type}`;
@@ -33,9 +34,9 @@ export const ScheduleButtonBackgroundSvg: React.FC<ScheduleButtonBackgroundSvgPr
         >
           <Defs>
             <LinearGradient id={bgGradId} x1="0%" y1="0%" x2="100%" y2="100%">
-              <Stop offset="0%" stopColor="#252733" stopOpacity={0.96} />
-              <Stop offset="50%" stopColor="#1B1D26" stopOpacity={0.92} />
-              <Stop offset="100%" stopColor="#131419" stopOpacity={0.98} />
+              <Stop offset="0%" stopColor={Colors.BentoStopSlate} stopOpacity={0.96} />
+              <Stop offset="50%" stopColor={Colors.SvgPillSlateMid} stopOpacity={0.92} />
+              <Stop offset="100%" stopColor={Colors.SvgPillAbyss} stopOpacity={0.98} />
             </LinearGradient>
 
             <RadialGradient id={auraId} cx="85%" cy="25%" rx="55%" ry="75%">
@@ -45,7 +46,7 @@ export const ScheduleButtonBackgroundSvg: React.FC<ScheduleButtonBackgroundSvgPr
                 stopOpacity={auraOpacity}
               />
               <Stop offset="50%" stopColor={auraColor} stopOpacity={0.06} />
-              <Stop offset="100%" stopColor="#131419" stopOpacity={0} />
+              <Stop offset="100%" stopColor={Colors.SvgPillAbyss} stopOpacity={0} />
             </RadialGradient>
           </Defs>
 
@@ -57,7 +58,9 @@ export const ScheduleButtonBackgroundSvg: React.FC<ScheduleButtonBackgroundSvgPr
             cy={18}
             r={28}
             stroke={
-              isDate ? 'rgba(245, 197, 24, 0.16)' : 'rgba(156, 156, 227, 0.18)'
+              isDate
+                ? withAlpha(Colors.AccentYellow, 0.16)
+                : withAlpha(Colors.PeriwinkleSoft, 0.18)
             }
             strokeWidth={1}
             fill="none"
@@ -67,7 +70,9 @@ export const ScheduleButtonBackgroundSvg: React.FC<ScheduleButtonBackgroundSvgPr
             cy={18}
             r={42}
             stroke={
-              isDate ? 'rgba(245, 197, 24, 0.08)' : 'rgba(156, 156, 227, 0.1)'
+              isDate
+                ? withAlpha(Colors.AccentYellow, 0.08)
+                : withAlpha(Colors.PeriwinkleSoft, 0.1)
             }
             strokeWidth={0.8}
             strokeDasharray="3 4"
@@ -78,14 +83,14 @@ export const ScheduleButtonBackgroundSvg: React.FC<ScheduleButtonBackgroundSvgPr
             cx={130}
             cy={10}
             r={1.2}
-            fill={isDate ? '#FFF8D0' : '#E0E0FF'}
+            fill={isDate ? Colors.BadgeYellowBg : Colors.SvgPillLavenderTint}
             opacity={0.7}
           />
           <Circle
             cx={155}
             cy={32}
             r={1}
-            fill={isDate ? '#F5C518' : '#9C9CE3'}
+            fill={isDate ? Colors.AccentYellow : Colors.PeriwinkleSoft}
             opacity={0.55}
           />
         </Svg>
