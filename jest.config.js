@@ -2,7 +2,7 @@ module.exports = {
   preset: '@react-native/jest-preset',
   testPathIgnorePatterns: ['/node_modules/', '/__mocks__/'],
   transformIgnorePatterns: [
-    'node_modules/(?!(react-native|@react-native|@react-navigation|@react-native-async-storage|react-native-responsive-fontsize|react-native-iphone-x-helper|react-native-toast-message)/)',
+    'node_modules/(?!(react-native|@react-native|@react-navigation|@react-native-async-storage|react-native-toast-message)/)',
   ],
   moduleNameMapper: {
     '^lucide-react-native$':

@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleProp, ViewStyle, StyleSheet } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { Colors } from '../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
 export interface CutoutCardSvgProps {
   width: number;
@@ -15,7 +16,7 @@ export interface CutoutCardSvgProps {
 
 // Rounded card SVG path with top-right cutout for the floating checkbox
 export const getCutoutCardPath = (W: number, H: number): string => {
-  if (W <= 60 || H <= 60) return '';
+  if (W <= ResponsivePixels.size60 || H <= ResponsivePixels.size60) return '';
   const sw = 1.5;
   const half = sw / 2;
   const x0 = half;
@@ -23,13 +24,13 @@ export const getCutoutCardPath = (W: number, H: number): string => {
   const x1 = W - half;
   const y1 = H - half;
 
-  const CW = 44; // Cutout notch width
-  const CH = 44; // Cutout notch height
-  const R_tl = 18; // Top-left corner radius
-  const R_bl = 18; // Bottom-left corner radius
-  const R_br = 18; // Bottom-right corner radius
-  const R_outer = 12; // Fillet entering and exiting the notch
-  const R_inner = 14; // Fillet at inner scooped corner
+  const CW = ResponsivePixels.size44; // Cutout notch width
+  const CH = ResponsivePixels.size44; // Cutout notch height
+  const R_tl = ResponsivePixels.size18; // Top-left corner radius
+  const R_bl = ResponsivePixels.size18; // Bottom-left corner radius
+  const R_br = ResponsivePixels.size18; // Bottom-right corner radius
+  const R_outer = ResponsivePixels.size12; // Fillet entering and exiting the notch
+  const R_inner = ResponsivePixels.size14; // Fillet at inner scooped corner
 
   return [
     `M ${x0} ${y0 + R_tl}`,

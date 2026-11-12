@@ -3,6 +3,7 @@ import { Text, StyleSheet, TextStyle, StyleProp, View } from 'react-native';
 import Svg, { Path, Circle } from 'react-native-svg';
 import { Fonts } from '../Theme/fonts';
 import { Colors } from '../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
 export type RegiusLogoSize = 'sm' | 'md' | 'lg' | 'xl';
 export type RegiusLogoVariant = 'default' | 'dark' | 'light' | 'gold' | 'muted';
@@ -36,36 +37,36 @@ const SIZE_MAP: Record<
   }
 > = {
   sm: {
-    fontSize: 17,
-    lineHeight: 22,
-    letterSpacing: 0.5,
-    emblemSize: 18,
-    sparkleSize: 8,
-    emblemGap: 6,
+    fontSize: ResponsivePixels.size17,
+    lineHeight: ResponsivePixels.size22,
+    letterSpacing: ResponsivePixels.size0_5,
+    emblemSize: ResponsivePixels.size18,
+    sparkleSize: ResponsivePixels.size8,
+    emblemGap: ResponsivePixels.size6,
   },
   md: {
-    fontSize: 22,
-    lineHeight: 26,
-    letterSpacing: 0.6,
-    emblemSize: 22,
-    sparkleSize: 9,
-    emblemGap: 7,
+    fontSize: ResponsivePixels.size22,
+    lineHeight: ResponsivePixels.size26,
+    letterSpacing: ResponsivePixels.size0_6,
+    emblemSize: ResponsivePixels.size22,
+    sparkleSize: ResponsivePixels.size9,
+    emblemGap: ResponsivePixels.size7,
   },
   lg: {
-    fontSize: 28,
-    lineHeight: 34,
-    letterSpacing: 0.8,
-    emblemSize: 26,
-    sparkleSize: 11,
-    emblemGap: 8,
+    fontSize: ResponsivePixels.size28,
+    lineHeight: ResponsivePixels.size34,
+    letterSpacing: ResponsivePixels.size0_8,
+    emblemSize: ResponsivePixels.size26,
+    sparkleSize: ResponsivePixels.size11,
+    emblemGap: ResponsivePixels.size8,
   },
   xl: {
-    fontSize: 36,
-    lineHeight: 44,
-    letterSpacing: 1.0,
-    emblemSize: 32,
-    sparkleSize: 13,
-    emblemGap: 10,
+    fontSize: ResponsivePixels.size36,
+    lineHeight: ResponsivePixels.size44,
+    letterSpacing: ResponsivePixels.size1,
+    emblemSize: ResponsivePixels.size32,
+    sparkleSize: ResponsivePixels.size13,
+    emblemGap: ResponsivePixels.size10,
   },
 };
 
@@ -120,10 +121,10 @@ export const RegiusLogo: React.FC<RegiusLogoProps> = ({
       ? {
           fontSize: size,
           lineHeight: Math.round(size * 1.2),
-          letterSpacing: 0.6,
+          letterSpacing: ResponsivePixels.size0_6,
           emblemSize: Math.round(size * 0.95),
           sparkleSize: Math.round(size * 0.38),
-          emblemGap: 7,
+          emblemGap: ResponsivePixels.size7,
         }
       : SIZE_MAP[size] || SIZE_MAP.md;
 
@@ -238,8 +239,8 @@ const styles = StyleSheet.create({
     includeFontPadding: false,
   },
   sparkleWrap: {
-    marginLeft: 3,
-    marginTop: -2,
+    marginLeft: ResponsivePixels.size3,
+    marginTop: -ResponsivePixels.size2,
     alignItems: 'center',
     justifyContent: 'center',
   },

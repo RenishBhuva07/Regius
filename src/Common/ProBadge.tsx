@@ -12,6 +12,7 @@ import {
 import { Crown } from 'lucide-react-native';
 import { Fonts } from '../Theme/fonts';
 import { Colors } from '../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
 export interface ProBadgeProps {
   size?: 'sm' | 'md' | 'lg';
@@ -31,7 +32,11 @@ export const ProBadge: React.FC<ProBadgeProps> = ({
   const isSm = size === 'sm';
   const isLg = size === 'lg';
 
-  const iconSize = isSm ? 10.5 : isLg ? 14 : 12;
+  const iconSize = isSm
+    ? ResponsivePixels.size10_5
+    : isLg
+    ? ResponsivePixels.size14
+    : ResponsivePixels.size12;
 
   const content = (
     <View
@@ -93,22 +98,22 @@ const styles = StyleSheet.create({
     }),
   },
   badgeSm: {
-    paddingHorizontal: 7.5,
-    paddingVertical: 2.5,
-    borderRadius: 14,
-    gap: 3.5,
+    paddingHorizontal: ResponsivePixels.size7_5,
+    paddingVertical: ResponsivePixels.size2_5,
+    borderRadius: ResponsivePixels.size14,
+    gap: ResponsivePixels.size3_5,
   },
   badgeMd: {
-    paddingHorizontal: 9.5,
-    paddingVertical: 3.5,
-    borderRadius: 16,
-    gap: 4.5,
+    paddingHorizontal: ResponsivePixels.size9_5,
+    paddingVertical: ResponsivePixels.size3_5,
+    borderRadius: ResponsivePixels.size16,
+    gap: ResponsivePixels.size4_5,
   },
   badgeLg: {
-    paddingHorizontal: 12,
-    paddingVertical: 4.5,
-    borderRadius: 20,
-    gap: 5.5,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size4_5,
+    borderRadius: ResponsivePixels.size20,
+    gap: ResponsivePixels.size5_5,
   },
   label: {
     fontFamily: Fonts.poppins.bold,
@@ -117,18 +122,18 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
   },
   labelSm: {
-    fontSize: 9.5,
-    lineHeight: 12,
+    fontSize: ResponsivePixels.size9_5,
+    lineHeight: ResponsivePixels.size12,
     letterSpacing: 0.8,
   },
   labelMd: {
-    fontSize: 10.5,
-    lineHeight: 13,
+    fontSize: ResponsivePixels.size10_5,
+    lineHeight: ResponsivePixels.size13,
     letterSpacing: 0.9,
   },
   labelLg: {
-    fontSize: 12,
-    lineHeight: 15,
+    fontSize: ResponsivePixels.size12,
+    lineHeight: ResponsivePixels.size15,
     letterSpacing: 1,
   },
 });

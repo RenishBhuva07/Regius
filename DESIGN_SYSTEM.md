@@ -1,7 +1,7 @@
 # 🎨 Regius — UI/UX Design System Specification
 
 > **Document Status**: Active / Single Source of Truth for Visual Design & UI Engineering  
-> **Source Files**: [Colors.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Assets/StyleUtilities/Colors.tsx) | [ThemeContext.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Theme/ThemeContext.tsx) | [Typographys.ts](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Theme/Typographys.ts) | [Badge.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Common/Badge.tsx) | [CustomButton.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Common/CustomButton.tsx) | [VoiceAssistantSheet.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Screens/Dashboard/Components/VoiceAssistantSheet.tsx)  
+> **Source Files**: [Colors.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Assets/StyleUtilities/Colors.tsx) | [ResponsivePixels.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Assets/StyleUtilities/ResponsivePixels.tsx) | [ThemeContext.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Theme/ThemeContext.tsx) | [Typographys.ts](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Theme/Typographys.ts) | [Badge.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Common/Badge.tsx) | [CustomButton.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Common/CustomButton.tsx) | [VoiceAssistantSheet.tsx](file:///Users/renishbhuva/Documents/Development/React_Native/Regius/src/Screens/Dashboard/Components/VoiceAssistantSheet.tsx)  
 > **Related Documents**: [PRD.md](PRD.md) | [ARCHITECTURE.md](ARCHITECTURE.md) | [FEATURES.md](FEATURES.md) | [AGENTS.md](AGENTS.md)
 
 ---
@@ -187,6 +187,8 @@ Regius pairs two typeface families imported in `src/Theme/fonts.ts`:
    - Modern, friendly geometric sans-serif. Used for **Section Headers (H5/H6)**, **Card Labels**, **Body Copy**, **Pills**, **Badges**, and **Input Fields**.
 
 ### Typographic Tokens Table (`src/Theme/Typographys.ts`)
+
+All `fontSize` and `lineHeight` values in `Typography` bind directly to calibrated `ResponsivePixels` tokens (`scaleSize`, `1.000×` at the `402pt` iPhone 17 Pro reference width).
 
 | Token                                          | Font Family      | Size    | Line Height | Usage                                     |
 | :--------------------------------------------- | :--------------- | :------ | :---------- | :---------------------------------------- |
@@ -812,7 +814,16 @@ The voice assistant presents as an immersive bottom-anchored modal sheet with ri
 
 ---
 
-## 6. Spacing Scale, Safe Areas & Elevation
+## 6. Responsive Scaling, Spacing Scale, Safe Areas & Elevation
+
+### 6.0 Responsive Scaling Engine (`src/Assets/StyleUtilities/ResponsivePixels.tsx`)
+
+All UI typography, icon dimensions, spacing, radii, component heights/widths, and coordinate offsets consume `ResponsivePixels` (`ResponsivePixels.size*` or `ResponsivePixels.scale(n)`):
+
+- **Damped Width Calibration (`getResponsiveScaleFactor`)**: Uses `Dimensions.get('window')` portrait width (`Math.min(width, height)`) anchored at **`BASELINE_WIDTH = 402`** (iPhone 17 Pro) with **`SCALE_DAMPING = 0.65`** and clamped to **`[0.85, 1.15]`** (`rawFactor = 1 + (portraitWidth / 402 - 1) * 0.65`).
+- **Exact Design Fidelity**: On a `402pt` width device, the scale factor is **`1.000×`**, so `ResponsivePixels.size18 === 18` with zero height-based inflation (`RFPercentage` was replaced).
+- **Available Tokens**: `ResponsivePixels.scale(size)`, `size0`–`size200`, fractional tokens (`size0_5`–`size16_5`, including `size9_3`, `size10_5`), and extended layout tokens (`size207`–`size595`).
+- **Unscaled Exceptions**: Never scale `borderWidth`, `borderBottomWidth`, `borderTopWidth`, `strokeWidth` on thin strokes, `shadowOffset`, `shadowRadius`, `elevation`, `opacity`, `zIndex`, `flex`, percentages (`'100%'`), `1px` divider hairlines, or internal coordinates inside fixed `viewBox` vector artwork.
 
 ### 6.1 Spacing Scale
 

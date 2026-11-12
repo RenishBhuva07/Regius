@@ -10,6 +10,7 @@ import {
   TextStyle,
 } from 'react-native';
 import { Colors } from '../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 import { Fonts } from '../Theme/fonts';
 
 export type BadgeVariant =
@@ -213,9 +214,9 @@ export const Badge: React.FC<BadgeProps> = ({
 
 const SIZE_STYLES = StyleSheet.create({
   sm: {
-    paddingHorizontal: 7.5,
-    paddingVertical: 2.5,
-    borderRadius: 20,
+    paddingHorizontal: ResponsivePixels.size7_5,
+    paddingVertical: ResponsivePixels.size2_5,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1,
     borderBottomWidth: 2,
     shadowOffset: { width: 0, height: 2 },
@@ -223,9 +224,9 @@ const SIZE_STYLES = StyleSheet.create({
     elevation: 2.5,
   },
   md: {
-    paddingHorizontal: 10,
-    paddingVertical: 3.5,
-    borderRadius: 20,
+    paddingHorizontal: ResponsivePixels.size10,
+    paddingVertical: ResponsivePixels.size3_5,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1,
     borderBottomWidth: 2.2,
     shadowOffset: { width: 0, height: 2.5 },
@@ -233,9 +234,9 @@ const SIZE_STYLES = StyleSheet.create({
     elevation: 3.5,
   },
   lg: {
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 24,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size5,
+    borderRadius: ResponsivePixels.size24,
     borderWidth: 1.2,
     borderBottomWidth: 2.8,
     shadowOffset: { width: 0, height: 3 },
@@ -246,15 +247,15 @@ const SIZE_STYLES = StyleSheet.create({
 
 const SIZE_TEXT_STYLES = StyleSheet.create({
   sm: {
-    fontSize: 8.5,
+    fontSize: ResponsivePixels.size8_5,
     letterSpacing: 0.5,
   },
   md: {
-    fontSize: 9.5,
+    fontSize: ResponsivePixels.size9_5,
     letterSpacing: 0.8,
   },
   lg: {
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     letterSpacing: 0.9,
   },
 });
@@ -264,7 +265,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 4.5,
+    gap: ResponsivePixels.size4_5,
     alignSelf: 'flex-start',
   },
   iconSlot: {

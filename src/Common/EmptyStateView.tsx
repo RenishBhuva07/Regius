@@ -11,6 +11,7 @@ import {
 import { Fonts } from '../Theme/fonts';
 import { Colors } from '../Assets/StyleUtilities/Colors';
 import { useTheme } from '../Theme/ThemeContext';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
 export interface EmptyStateAction {
   label: string;
@@ -70,42 +71,42 @@ const styles = StyleSheet.create({
   emptyContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 36,
-    paddingHorizontal: 24,
+    paddingVertical: ResponsivePixels.size36,
+    paddingHorizontal: ResponsivePixels.size24,
   },
   illustrationWrapper: {
-    marginBottom: 14,
+    marginBottom: ResponsivePixels.size14,
     alignItems: 'center',
     justifyContent: 'center',
   },
   emptyTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 18,
+    fontSize: ResponsivePixels.size18,
     textAlign: 'center',
     letterSpacing: -0.2,
-    marginBottom: 6,
+    marginBottom: ResponsivePixels.size6,
   },
   emptySubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     textAlign: 'center',
-    lineHeight: 19,
-    maxWidth: 280,
+    lineHeight: ResponsivePixels.size19,
+    maxWidth: ResponsivePixels.size280,
   },
   actionBtn: {
-    marginTop: 18,
+    marginTop: ResponsivePixels.size18,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.MidnightCharcoal,
-    paddingHorizontal: 18,
-    paddingVertical: 9,
-    borderRadius: 24,
+    paddingHorizontal: ResponsivePixels.size18,
+    paddingVertical: ResponsivePixels.size9,
+    borderRadius: ResponsivePixels.size24,
     borderWidth: 1,
     borderColor: Colors.DarkButtonBorder,
     borderBottomWidth: 2.5,
     borderBottomColor: Colors.DarkButtonBottom,
-    gap: 6,
+    gap: ResponsivePixels.size6,
     ...Platform.select({
       ios: {
         shadowColor: Colors.PureBlack,
@@ -119,11 +120,11 @@ const styles = StyleSheet.create({
     }),
   },
   actionBtnIcon: {
-    marginRight: 2,
+    marginRight: ResponsivePixels.size2,
   },
   actionBtnText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     color: Colors.PureWhite,
     letterSpacing: 0.1,
   },

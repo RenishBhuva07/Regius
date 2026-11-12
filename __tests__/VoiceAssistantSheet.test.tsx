@@ -24,11 +24,6 @@ jest.mock('lottie-react-native', () => {
   };
 });
 
-jest.mock('react-native-responsive-fontsize', () => ({
-  RFPercentage: (val: number) => val,
-  RFValue: (val: number) => val,
-}));
-
 jest.mock('react-native-svg', () => {
   const React = require('react');
   const View = require('react-native').View;

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import Svg, { Circle } from 'react-native-svg';
 import { Fonts } from '../Theme/fonts';
 import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
 export interface CircularProgressProps {
   percent: number;
@@ -18,7 +19,7 @@ export interface CircularProgressProps {
 export const CircularProgress: React.FC<CircularProgressProps> = React.memo(
   ({
     percent,
-    size = 34,
+    size = ResponsivePixels.size34,
     strokeWidth = 2.8,
     trackColor,
     progressColor,

@@ -34,7 +34,7 @@ export const FlowSectionSheet: React.FC<FlowSectionSheetProps> = React.memo(
     onPressAdd,
     addAccessibilityLabel = 'Add item',
     children,
-    bottomPadding = 130,
+    bottomPadding = ResponsivePixels.size130,
     containerStyle,
   }) => {
     const { isDarkMode, activeThemeId, surfaceAlt, borderLight } = useAppTheme();
@@ -96,7 +96,7 @@ export const FlowSectionSheet: React.FC<FlowSectionSheetProps> = React.memo(
             style={styles.floatingAddBtn}
             accessibilityRole="button"
             accessibilityLabel={addAccessibilityLabel}
-            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            hitSlop={{ top: ResponsivePixels.size8, bottom: ResponsivePixels.size8, left: ResponsivePixels.size8, right: ResponsivePixels.size8 }}
           >
             <Plus
               size={ResponsivePixels.size18}
@@ -116,12 +116,12 @@ export const FlowSectionSheet: React.FC<FlowSectionSheetProps> = React.memo(
 const styles = StyleSheet.create({
   sectionContainer: {
     backgroundColor: Colors.CreamSurfaceAlt,
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
-    paddingTop: 36,
+    borderTopLeftRadius: ResponsivePixels.size32,
+    borderTopRightRadius: ResponsivePixels.size32,
+    paddingTop: ResponsivePixels.size36,
     paddingHorizontal: 0,
     position: 'relative',
-    marginTop: 24,
+    marginTop: ResponsivePixels.size24,
     borderWidth: 1.5,
     borderTopColor: Colors.PureWhite,
     borderLeftColor: Colors.CreamBorderSubtle,
@@ -141,8 +141,8 @@ const styles = StyleSheet.create({
   },
   backgroundSvgWrapper: {
     ...StyleSheet.absoluteFill,
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
+    borderTopLeftRadius: ResponsivePixels.size32,
+    borderTopRightRadius: ResponsivePixels.size32,
     overflow: 'hidden',
   },
   flowHeaderBadge: {
@@ -171,16 +171,16 @@ const styles = StyleSheet.create({
   },
   flowTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 14.5,
+    fontSize: ResponsivePixels.size14_5,
     color: Colors.PureWhite,
     letterSpacing: -0.1,
     textAlign: 'center',
   },
   flowSubtitle: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     color: Colors.CoolSilverSubtitle,
-    marginTop: 1,
+    marginTop: ResponsivePixels.size1,
     textAlign: 'center',
   },
   floatingAddBtn: {

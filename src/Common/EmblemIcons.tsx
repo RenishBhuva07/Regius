@@ -1,6 +1,7 @@
 import React from 'react';
 import Svg, { Path, SvgProps } from 'react-native-svg';
 import { Colors } from '../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
 export interface EmblemIconProps extends SvgProps {
   size?: number;
@@ -9,7 +10,7 @@ export interface EmblemIconProps extends SvgProps {
 export const PictureEmblemIcon: React.FC<EmblemIconProps> = ({
   width,
   height,
-  size = 18,
+  size = ResponsivePixels.size18,
   color,
   ...rest
 }) => {
@@ -36,7 +37,7 @@ export const PictureEmblemIcon: React.FC<EmblemIconProps> = ({
 export const OfficeBagIcon: React.FC<EmblemIconProps> = ({
   width,
   height,
-  size = 18,
+  size = ResponsivePixels.size18,
   color,
   ...rest
 }) => {
@@ -67,7 +68,7 @@ export const OfficeBagIcon: React.FC<EmblemIconProps> = ({
 export const HeartEmblemIcon: React.FC<EmblemIconProps> = ({
   width,
   height,
-  size = 18,
+  size = ResponsivePixels.size18,
   color,
   ...rest
 }) => {
@@ -96,7 +97,7 @@ export const HeartEmblemIcon: React.FC<EmblemIconProps> = ({
 export const SparkleEmblemIcon: React.FC<EmblemIconProps> = ({
   width,
   height,
-  size = 18,
+  size = ResponsivePixels.size18,
   color,
   ...rest
 }) => {
@@ -121,7 +122,7 @@ export const SparkleEmblemIcon: React.FC<EmblemIconProps> = ({
 export const FlameEmblemIcon: React.FC<EmblemIconProps> = ({
   width,
   height,
-  size = 18,
+  size = ResponsivePixels.size18,
   color,
   ...rest
 }) => {

@@ -14,6 +14,7 @@ import { MilestoneFullScreenSheet } from './src/Screens/Milestones';
 import Toast from 'react-native-toast-message';
 import { toastConfig } from './src/Common/ToastConfig';
 import { Colors } from './src/Assets/StyleUtilities/Colors';
+import ResponsivePixels from './src/Assets/StyleUtilities/ResponsivePixels';
 
 const ThemedStatusBar: React.FC = () => {
   const { isDarkMode } = useTheme();
@@ -34,8 +35,14 @@ const ThemedToast: React.FC = () => {
   const insets = useSafeAreaInsets();
   const topOffset =
     Platform.OS === 'ios'
-      ? Math.max(insets.top + 8, 54)
-      : Math.max(insets.top + 8, 28);
+      ? Math.max(
+          insets.top + ResponsivePixels.size8,
+          ResponsivePixels.size54,
+        )
+      : Math.max(
+          insets.top + ResponsivePixels.size8,
+          ResponsivePixels.size28,
+        );
 
   return <Toast config={toastConfig} topOffset={topOffset} />;
 };

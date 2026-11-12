@@ -31,11 +31,6 @@ jest.mock('lottie-react-native', () => {
   };
 });
 
-jest.mock('react-native-responsive-fontsize', () => ({
-  RFPercentage: (val: number) => val,
-  RFValue: (val: number) => val,
-}));
-
 import {
   VoiceCommandService,
   ExecutionContext,

@@ -26,6 +26,7 @@ import {
   SparkleEmblemIcon,
   FlameEmblemIcon,
 } from './EmblemIcons';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
 const { width: screenWidth } = Dimensions.get('window');
 const categoryCardWidth = Math.min((screenWidth - 48) / 3, 114);
@@ -231,7 +232,7 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                       size="sm"
                       label="CATEGORY STUDIO"
                       icon={
-                        <Sparkles size={10} color={Colors.HabitBurnishedAmber} />
+                        <Sparkles size={ResponsivePixels.size10} color={Colors.HabitBurnishedAmber} />
                       }
                     />
                     <Text
@@ -284,9 +285,9 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                         {React.createElement(
                           CATEGORY_ICON_CHOICES[selectedIconIndex].Icon,
                           {
-                            width: 16,
-                            height: 16,
-                            size: 16,
+                            width: ResponsivePixels.size16,
+                            height: ResponsivePixels.size16,
+                            size: ResponsivePixels.size16,
                             color:
                               CATEGORY_PRESETS[newCatPresetIndex].checkColor,
                           },
@@ -307,7 +308,7 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                         ]}
                       >
                         <Check
-                          size={12}
+                          size={ResponsivePixels.size12}
                           color={CATEGORY_PRESETS[newCatPresetIndex].checkColor}
                           strokeWidth={3}
                         />
@@ -402,7 +403,7 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                           accessibilityLabel={choice.label}
                         >
                           <IconComp
-                            size={18}
+                            size={ResponsivePixels.size18}
                             color={
                               isSel
                                 ? Colors.MidnightCharcoal
@@ -451,7 +452,7 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                         >
                           {isSel && (
                             <Check
-                              size={12}
+                              size={ResponsivePixels.size12}
                               color={preset.checkColor}
                               strokeWidth={3}
                             />
@@ -490,7 +491,7 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
                     onPress={handleCreate}
                   >
                     <Plus
-                      size={16}
+                      size={ResponsivePixels.size16}
                       color={Colors.PureWhite}
                       strokeWidth={2.4}
                     />
@@ -513,11 +514,11 @@ const styles = StyleSheet.create({
   },
   modalCard: {
     backgroundColor: Colors.CreamSurfaceAlt,
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
-    paddingTop: 12,
-    paddingBottom: 32,
-    paddingHorizontal: 20,
+    borderTopLeftRadius: ResponsivePixels.size32,
+    borderTopRightRadius: ResponsivePixels.size32,
+    paddingTop: ResponsivePixels.size12,
+    paddingBottom: ResponsivePixels.size32,
+    paddingHorizontal: ResponsivePixels.size20,
     borderWidth: 1.5,
     borderTopColor: Colors.PureWhite,
     borderLeftColor: Colors.CreamBorderSubtle,
@@ -536,42 +537,42 @@ const styles = StyleSheet.create({
     }),
   },
   modalDragHandle: {
-    width: 38,
-    height: 4,
-    borderRadius: 2,
+    width: ResponsivePixels.size38,
+    height: ResponsivePixels.size4,
+    borderRadius: ResponsivePixels.size2,
     backgroundColor: Colors.WarmDragHandle,
     alignSelf: 'center',
-    marginBottom: 12,
+    marginBottom: ResponsivePixels.size12,
   },
   modalHeaderRow: {
-    marginBottom: 12,
+    marginBottom: ResponsivePixels.size12,
   },
   modalHeaderLeft: {
-    gap: 3,
+    gap: ResponsivePixels.size3,
   },
   modalHeading: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 20,
+    fontSize: ResponsivePixels.size20,
     color: Colors.DarkBackground,
-    marginTop: 4,
+    marginTop: ResponsivePixels.size4,
   },
   modalSubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.Grey,
   },
   showcaseOuterWrap: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 8,
-    marginBottom: 14,
+    paddingVertical: ResponsivePixels.size8,
+    marginBottom: ResponsivePixels.size14,
   },
   categoryCardExact: {
-    height: 104,
-    borderRadius: 20,
-    borderTopRightRadius: 36,
-    padding: 10,
-    paddingBottom: 12,
+    height: ResponsivePixels.size104,
+    borderRadius: ResponsivePixels.size20,
+    borderTopRightRadius: ResponsivePixels.size36,
+    padding: ResponsivePixels.size10,
+    paddingBottom: ResponsivePixels.size12,
     borderWidth: 1.5,
     justifyContent: 'space-between',
     position: 'relative',
@@ -593,32 +594,32 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   categoryIconWrap: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: ResponsivePixels.size30,
+    height: ResponsivePixels.size30,
+    borderRadius: ResponsivePixels.size15,
     backgroundColor: Colors.PureWhite,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   categoryFloatingCheckbox: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: ResponsivePixels.size20,
+    height: ResponsivePixels.size20,
+    borderRadius: ResponsivePixels.size10,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
   },
   categoryCardBottom: {
-    gap: 1,
+    gap: ResponsivePixels.size1,
   },
   categoryCardLabelExact: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
   },
   categoryCardCountExact: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     color: Colors.MutedNeutralCount,
   },
   categoryBottomIndicator: {
@@ -626,39 +627,39 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: '25%',
     right: '25%',
-    height: 3,
-    borderTopLeftRadius: 3,
-    borderTopRightRadius: 3,
+    height: ResponsivePixels.size3,
+    borderTopLeftRadius: ResponsivePixels.size3,
+    borderTopRightRadius: ResponsivePixels.size3,
   },
   inputSection: {
-    marginBottom: 14,
+    marginBottom: ResponsivePixels.size14,
   },
   inputLabel: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     color: Colors.Grey,
     letterSpacing: 0.8,
-    marginBottom: 6,
+    marginBottom: ResponsivePixels.size6,
   },
   textInput: {
     backgroundColor: Colors.PureWhite,
-    borderRadius: 14,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1.5,
     borderColor: Colors.RingBorder,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
+    paddingHorizontal: ResponsivePixels.size14,
+    paddingVertical: ResponsivePixels.size10,
     fontFamily: Fonts.poppins.medium,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     color: Colors.DarkBackground,
   },
   iconChoiceRow: {
     flexDirection: 'row',
-    gap: 10,
+    gap: ResponsivePixels.size10,
   },
   iconChoiceBtn: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: ResponsivePixels.size42,
+    height: ResponsivePixels.size42,
+    borderRadius: ResponsivePixels.size21,
     backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
     borderColor: Colors.RingBorder,
@@ -670,26 +671,26 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.BadgeYellowBg,
   },
   presetScrollContent: {
-    gap: 10,
-    paddingVertical: 2,
+    gap: ResponsivePixels.size10,
+    paddingVertical: ResponsivePixels.size2,
   },
   presetSwatch: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: ResponsivePixels.size36,
+    height: ResponsivePixels.size36,
+    borderRadius: ResponsivePixels.size18,
     borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
   modalActionRow: {
     flexDirection: 'row',
-    gap: 10,
-    marginTop: 8,
+    gap: ResponsivePixels.size10,
+    marginTop: ResponsivePixels.size8,
   },
   cancelBtn: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: 24,
+    paddingVertical: ResponsivePixels.size12,
+    borderRadius: ResponsivePixels.size24,
     borderWidth: 1.5,
     borderColor: Colors.WarmDragHandle,
     alignItems: 'center',
@@ -697,7 +698,7 @@ const styles = StyleSheet.create({
   },
   cancelBtnText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     color: Colors.Grey,
   },
   createBtn: {
@@ -706,9 +707,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.DarkElevatedNero,
-    paddingVertical: 12,
-    borderRadius: 24,
-    gap: 6,
+    paddingVertical: ResponsivePixels.size12,
+    borderRadius: ResponsivePixels.size24,
+    gap: ResponsivePixels.size6,
     borderWidth: 1,
     borderColor: Colors.DarkBevelTop,
     borderBottomWidth: 3,
@@ -716,7 +717,7 @@ const styles = StyleSheet.create({
   },
   createBtnText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     color: Colors.PureWhite,
   },
 });

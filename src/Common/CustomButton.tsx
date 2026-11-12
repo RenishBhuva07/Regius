@@ -107,7 +107,7 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   );
 };
 
-const GoogleLogo = ({ size = 20 }) => (
+const GoogleLogo = ({ size = ResponsivePixels.size20 }) => (
   <Svg width={size} height={size} viewBox="0 0 48 48">
     <Path
       fill={Colors.GoogleRed}
@@ -128,7 +128,10 @@ const GoogleLogo = ({ size = 20 }) => (
   </Svg>
 );
 
-const FacebookLogo = ({ size = 20, color = Colors.PureWhite }) => (
+const FacebookLogo = ({
+  size = ResponsivePixels.size20,
+  color = Colors.PureWhite,
+}) => (
   <Svg width={size} height={size} viewBox="0 0 320 512">
     <Path
       fill={color}
@@ -137,7 +140,10 @@ const FacebookLogo = ({ size = 20, color = Colors.PureWhite }) => (
   </Svg>
 );
 
-const AppleLogo = ({ size = 20, color = Colors.PureWhite }) => (
+const AppleLogo = ({
+  size = ResponsivePixels.size20,
+  color = Colors.PureWhite,
+}) => (
   <Svg width={size} height={size} viewBox="0 0 384 512">
     <Path
       fill={color}

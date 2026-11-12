@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { Fonts } from '../Theme/fonts';
 import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
 export interface HeaderActionButtonProps {
   label: string;
@@ -68,7 +69,13 @@ export const HeaderActionButton: React.FC<HeaderActionButtonProps> = ({
         color?: string;
         strokeWidth?: number;
       }>;
-      return <IconComp size={11} color={accentColor} strokeWidth={3} />;
+      return (
+        <IconComp
+          size={ResponsivePixels.size11}
+          color={accentColor}
+          strokeWidth={3}
+        />
+      );
     }
     return null;
   };
@@ -112,24 +119,24 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 4.5,
-    borderRadius: 20,
+    gap: ResponsivePixels.size6,
+    paddingHorizontal: ResponsivePixels.size10,
+    paddingVertical: ResponsivePixels.size4_5,
+    borderRadius: ResponsivePixels.size20,
     backgroundColor: Colors.DarkElevatedNero,
     borderWidth: 1,
     borderColor: Colors.DarkBorder,
   },
   iconWrap: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
+    width: ResponsivePixels.size14,
+    height: ResponsivePixels.size14,
+    borderRadius: ResponsivePixels.size7,
     alignItems: 'center',
     justifyContent: 'center',
   },
   labelText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     letterSpacing: 0.2,
   },
 });

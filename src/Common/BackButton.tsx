@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { ChevronLeft } from 'lucide-react-native';
 import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import { useTheme } from '../Theme/ThemeContext';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
 export interface BackButtonProps {
   onPress?: () => void;
@@ -77,7 +78,7 @@ export const BackButton: React.FC<BackButtonProps> = ({
       accessibilityLabel={accessibilityLabel}
     >
       <ChevronLeft
-        size={20}
+        size={ResponsivePixels.size20}
         color={chevronColor}
         strokeWidth={2.4}
       />
@@ -87,9 +88,9 @@ export const BackButton: React.FC<BackButtonProps> = ({
 
 const styles = StyleSheet.create({
   backButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: ResponsivePixels.size40,
+    height: ResponsivePixels.size40,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
     borderBottomWidth: 3,
     alignItems: 'center',
