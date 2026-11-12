@@ -20,6 +20,7 @@ import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../../Theme/useAppTheme';
 import { Badge } from '../../../Common/Badge';
 import { Task } from '../../../Context/TaskReminderContext';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 interface TaskProductivityBentoProps {
   tasks: Task[];
@@ -80,7 +81,12 @@ const FocusBarBackgroundSvg: React.FC = React.memo(() => (
 const TaskPercentBadge: React.FC<{ percent: number }> = React.memo(
   ({ percent }) => (
     <View style={styles.percentBadgeContainer}>
-      <Svg width={56} height={56} viewBox="0 0 56 56" fill="none">
+      <Svg
+        width={ResponsivePixels.size56}
+        height={ResponsivePixels.size56}
+        viewBox="0 0 56 56"
+        fill="none"
+      >
         <Defs>
           <LinearGradient
             id="uniqueBorderGrad"
@@ -241,7 +247,7 @@ export const TaskProductivityBento: React.FC<TaskProductivityBentoProps> = ({
 
 const styles = StyleSheet.create({
   cardShadowWrapper: {
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     backgroundColor: Colors.NeroBlack,
     ...Platform.select({
       ios: {
@@ -257,23 +263,23 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: Colors.NeroBlack,
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     borderWidth: 4,
     borderColor: withAlpha(Colors.PureWhite, 0.9),
     overflow: 'hidden',
     position: 'relative',
-    height: 88,
+    height: ResponsivePixels.size88,
     justifyContent: 'center',
   },
   content: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
-    gap: 12,
+    paddingHorizontal: ResponsivePixels.size14,
+    gap: ResponsivePixels.size12,
   },
   percentBadgeContainer: {
-    width: 56,
-    height: 56,
+    width: ResponsivePixels.size56,
+    height: ResponsivePixels.size56,
     position: 'relative',
     alignItems: 'center',
     justifyContent: 'center',
@@ -285,73 +291,73 @@ const styles = StyleSheet.create({
   },
   percentageText: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 15,
+    fontSize: ResponsivePixels.size15,
     color: Colors.WorkDarkLabelGold,
-    lineHeight: 18,
+    lineHeight: ResponsivePixels.size18,
   },
   percentageLabel: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 7.5,
+    fontSize: ResponsivePixels.size7_5,
     color: Colors.RingBorder,
     letterSpacing: 0.6,
   },
   centerBlock: {
     flex: 1,
-    gap: 5,
+    gap: ResponsivePixels.size5,
   },
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   liveIndicator: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: ResponsivePixels.size4,
     backgroundColor: withAlpha(Colors.PureWhite, 0.08),
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 10,
+    paddingHorizontal: ResponsivePixels.size6,
+    paddingVertical: ResponsivePixels.size2,
+    borderRadius: ResponsivePixels.size10,
   },
   liveDot: {
-    width: 5,
-    height: 5,
-    borderRadius: 2.5,
+    width: ResponsivePixels.size5,
+    height: ResponsivePixels.size5,
+    borderRadius: ResponsivePixels.size2_5,
     backgroundColor: Colors.AccentGreen,
   },
   liveText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 8.5,
+    fontSize: ResponsivePixels.size8_5,
     color: Colors.BentoMintGreen,
     letterSpacing: 0.4,
   },
   progressBarBg: {
-    height: 5,
+    height: ResponsivePixels.size5,
     backgroundColor: withAlpha(Colors.PureWhite, 0.12),
-    borderRadius: 2.5,
+    borderRadius: ResponsivePixels.size2_5,
     overflow: 'hidden',
   },
   progressBarFill: {
     height: '100%',
     backgroundColor: Colors.AccentYellow,
-    borderRadius: 2.5,
+    borderRadius: ResponsivePixels.size2_5,
   },
   statusText: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     color: Colors.BentoWarmGoldMuted,
   },
   rightStats: {
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   glassStatPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
     backgroundColor: withAlpha(Colors.PureWhite, 0.12),
-    paddingHorizontal: 9,
-    paddingVertical: 4.5,
-    borderRadius: 12,
+    paddingHorizontal: ResponsivePixels.size9,
+    paddingVertical: ResponsivePixels.size4_5,
+    borderRadius: ResponsivePixels.size12,
     borderWidth: 1,
     borderColor: withAlpha(Colors.PureWhite, 0.22),
     ...Platform.select({
@@ -367,19 +373,19 @@ const styles = StyleSheet.create({
     }),
   },
   statDot: {
-    width: 6.5,
-    height: 6.5,
-    borderRadius: 3.5,
+    width: ResponsivePixels.size6_5,
+    height: ResponsivePixels.size6_5,
+    borderRadius: ResponsivePixels.size3_5,
   },
   statNumber: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.PureWhite,
     letterSpacing: -0.2,
   },
   statCaption: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     color: Colors.BentoLightSilver,
     letterSpacing: 0.2,
   },

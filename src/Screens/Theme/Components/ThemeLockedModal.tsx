@@ -77,7 +77,7 @@ export const ThemeLockedModal: React.FC<ThemeLockedModalProps> = React.memo(
             <View style={styles.modalHeader}>
               <View style={styles.modalIconWrap}>
                 <Trophy
-                  size={20}
+                  size={ResponsivePixels.size20}
                   color={Colors.AccentYellow}
                   strokeWidth={2.2}
                 />
@@ -89,7 +89,7 @@ export const ThemeLockedModal: React.FC<ThemeLockedModalProps> = React.memo(
                 accessibilityRole="button"
                 accessibilityLabel="Close theme requirements modal"
               >
-                <X size={18} color={textSecondary} strokeWidth={2.2} />
+                <X size={ResponsivePixels.size18} color={textSecondary} strokeWidth={2.2} />
               </TouchableOpacity>
             </View>
 
@@ -190,7 +190,7 @@ export const ThemeLockedModal: React.FC<ThemeLockedModalProps> = React.memo(
                 accessibilityLabel="Unlock with Regius Royal"
               >
                 <Crown
-                  size={18}
+                  size={ResponsivePixels.size18}
                   color={Colors.MidnightCharcoal}
                   fill={Colors.AccentYellow}
                   strokeWidth={2.4}
@@ -200,7 +200,7 @@ export const ThemeLockedModal: React.FC<ThemeLockedModalProps> = React.memo(
                 </Text>
               </TouchableOpacity>
 
-              <View style={{ height: 10 }} />
+              <View style={{ height: ResponsivePixels.size10 }} />
 
               <CustomButton
                 title="View Milestone Journey"
@@ -221,14 +221,14 @@ const styles = StyleSheet.create({
     backgroundColor: withAlpha(Colors.PureBlack, 0.65),
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    padding: ResponsivePixels.size20,
   },
   modalCard: {
     width: '100%',
-    maxWidth: 380,
-    borderRadius: 24,
+    maxWidth: ResponsivePixels.size380,
+    borderRadius: ResponsivePixels.size24,
     borderWidth: 1.5,
-    padding: 20,
+    padding: ResponsivePixels.size20,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.35,
@@ -239,114 +239,114 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    marginBottom: ResponsivePixels.size12,
   },
   modalIconWrap: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: ResponsivePixels.size40,
+    height: ResponsivePixels.size40,
+    borderRadius: ResponsivePixels.size20,
     backgroundColor: withAlpha(Colors.AccentYellow, 0.15),
     alignItems: 'center',
     justifyContent: 'center',
   },
   modalCloseBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: ResponsivePixels.size32,
+    height: ResponsivePixels.size32,
+    borderRadius: ResponsivePixels.size16,
     alignItems: 'center',
     justifyContent: 'center',
   },
   modalTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 20,
-    marginBottom: 4,
+    fontSize: ResponsivePixels.size20,
+    marginBottom: ResponsivePixels.size4,
   },
   modalDesc: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 12,
-    marginBottom: 14,
+    fontSize: ResponsivePixels.size12,
+    marginBottom: ResponsivePixels.size14,
   },
   modalColorsRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    padding: 10,
-    borderRadius: 14,
+    padding: ResponsivePixels.size10,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1,
-    marginBottom: 14,
+    marginBottom: ResponsivePixels.size14,
   },
   modalColorCol: {
     alignItems: 'center',
     flex: 1,
-    gap: 3,
+    gap: ResponsivePixels.size3,
   },
   modalColorCircle: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: ResponsivePixels.size28,
+    height: ResponsivePixels.size28,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1,
     borderColor: withAlpha(Colors.PureWhite, 0.3),
   },
   modalColorCode: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 9.5,
+    fontSize: ResponsivePixels.size9_5,
   },
   modalColorLabel: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 8.5,
+    fontSize: ResponsivePixels.size8_5,
   },
   modalProgressBox: {
-    borderRadius: 14,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1,
-    padding: 12,
-    marginBottom: 16,
+    padding: ResponsivePixels.size12,
+    marginBottom: ResponsivePixels.size16,
   },
   modalReqRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 8,
+    gap: ResponsivePixels.size8,
+    marginBottom: ResponsivePixels.size8,
   },
   modalReqTitle: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
   },
   modalXpProgressRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 6,
+    marginBottom: ResponsivePixels.size6,
   },
   modalXpLabel: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
   },
   modalProgressBarBg: {
-    height: 6,
-    borderRadius: 3,
+    height: ResponsivePixels.size6,
+    borderRadius: ResponsivePixels.size3,
     backgroundColor: withAlpha(Colors.PureBlack, 0.15),
     overflow: 'hidden',
-    marginBottom: 8,
+    marginBottom: ResponsivePixels.size8,
   },
   modalProgressBarFill: {
     height: '100%',
-    borderRadius: 3,
+    borderRadius: ResponsivePixels.size3,
     backgroundColor: Colors.AccentYellow,
   },
   modalHintText: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 10.5,
-    lineHeight: 14,
+    fontSize: ResponsivePixels.size10_5,
+    lineHeight: ResponsivePixels.size14,
   },
   modalActions: {
-    marginTop: 4,
+    marginTop: ResponsivePixels.size4,
   },
   royalUpgradeBtn: {
     backgroundColor: Colors.AccentYellow,
-    borderRadius: 28,
+    borderRadius: ResponsivePixels.size28,
     paddingVertical: ResponsivePixels.size14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
     borderBottomWidth: 3,
     borderBottomColor: Colors.HabitBurnishedAmber,
     ...Platform.select({
@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
   },
   royalUpgradeBtnText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     color: Colors.MidnightCharcoal,
   },
 });

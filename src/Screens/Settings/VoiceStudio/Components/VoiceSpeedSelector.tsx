@@ -4,6 +4,7 @@ import { Sliders } from 'lucide-react-native';
 import { Fonts } from '../../../../Theme/fonts';
 import { Colors } from '../../../../Assets/StyleUtilities/Colors';
 import { isLightColor } from '../../../../Theme/ThemeContext';
+import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface VoiceSpeedSelectorProps {
   speechSpeed: number;
@@ -27,7 +28,7 @@ export const VoiceSpeedSelector: React.FC<VoiceSpeedSelectorProps> = React.memo(
     return (
       <View style={styles.container}>
         <View style={styles.controlHeaderRow}>
-          <Sliders size={16} color={themeAccent} strokeWidth={2.2} />
+          <Sliders size={ResponsivePixels.size16} color={themeAccent} strokeWidth={2.2} />
           <Text style={[styles.controlHeaderTitle, { color: textPrimary }]}>
             Playback Speed ({speechSpeed}x)
           </Text>
@@ -81,29 +82,29 @@ const styles = StyleSheet.create({
   controlHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 12,
+    gap: ResponsivePixels.size8,
+    marginBottom: ResponsivePixels.size12,
   },
   controlHeaderTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     letterSpacing: -0.2,
   },
   speedPillsRow: {
     flexDirection: 'row',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   speedPill: {
     flex: 1,
-    paddingVertical: 9,
-    borderRadius: 14,
+    paddingVertical: ResponsivePixels.size9,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   speedPillText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12.5,
+    fontSize: ResponsivePixels.size12_5,
   },
 });
 

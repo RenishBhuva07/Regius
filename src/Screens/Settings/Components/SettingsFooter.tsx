@@ -24,7 +24,10 @@ export const SettingsFooter: React.FC = () => {
       <View style={styles.watermarkContainer}>
         {/* Doodle illustration */}
         <View style={styles.footerDoodleWrapper}>
-          <SettingsWatermarkDoodleSvg width={130} height={130} />
+          <SettingsWatermarkDoodleSvg
+            width={ResponsivePixels.size130}
+            height={ResponsivePixels.size130}
+          />
         </View>
 
         {/* Watermark text */}
@@ -71,11 +74,11 @@ const styles = StyleSheet.create({
   },
   watermarkContainer: {
     position: 'relative',
-    minHeight: 140,
+    minHeight: ResponsivePixels.size140,
   },
   footerDoodleWrapper: {
     position: 'absolute',
-    top: -42,
+    top: -ResponsivePixels.size42,
     right: 0,
     zIndex: 1,
   },
@@ -84,34 +87,34 @@ const styles = StyleSheet.create({
   },
   footerWatermarkText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 34,
-    lineHeight: 42,
+    fontSize: ResponsivePixels.size34,
+    lineHeight: ResponsivePixels.size42,
     letterSpacing: -1.2,
   },
   regiusHighlight: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 44,
-    lineHeight: 50,
+    fontSize: ResponsivePixels.size44,
+    lineHeight: ResponsivePixels.size50,
   },
   craftedWithRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',
-    marginTop: 22,
+    marginTop: ResponsivePixels.size22,
   },
   craftedWithText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
   },
   craftedWithHeart: {
-    fontSize: 13.5,
+    fontSize: ResponsivePixels.size13_5,
   },
   versionText: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     opacity: 0.75,
-    marginTop: 6,
+    marginTop: ResponsivePixels.size6,
     textAlign: 'center',
     alignSelf: 'center',
   },

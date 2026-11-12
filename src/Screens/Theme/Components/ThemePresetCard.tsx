@@ -158,7 +158,7 @@ export const ThemePresetCard: React.FC<ThemePresetCardProps> = React.memo(
             ]}
             onPress={() => onPressLocked(theme)}
           >
-            <Lock size={13} color={Colors.LavenderPurple} strokeWidth={2.4} />
+            <Lock size={ResponsivePixels.size13} color={Colors.LavenderPurple} strokeWidth={2.4} />
             <Text style={styles.lockedInfoText}>
               Unlocks at Tier {theme.requiredTierLevel} (
               {reqTierTitle || 'Milestone'}) • Tap for details
@@ -171,7 +171,7 @@ export const ThemePresetCard: React.FC<ThemePresetCardProps> = React.memo(
           {isSelected ? (
             <View style={styles.activeAppliedRow}>
               <CheckCircle2
-                size={16}
+                size={ResponsivePixels.size16}
                 color={Colors.LuminousGreen}
                 strokeWidth={2.4}
               />
@@ -195,7 +195,7 @@ export const ThemePresetCard: React.FC<ThemePresetCardProps> = React.memo(
               accessibilityLabel={`Apply ${theme.name} Theme`}
             >
               <Check
-                size={14}
+                size={ResponsivePixels.size14}
                 color={isDarkMode ? Colors.PureBlack : Colors.PureWhite}
                 strokeWidth={2.4}
               />
@@ -226,7 +226,7 @@ export const ThemePresetCard: React.FC<ThemePresetCardProps> = React.memo(
               accessibilityRole="button"
               accessibilityLabel={`View unlock requirements for ${theme.name}`}
             >
-              <Lock size={13} color={Colors.LavenderPurple} strokeWidth={2.4} />
+              <Lock size={ResponsivePixels.size13} color={Colors.LavenderPurple} strokeWidth={2.4} />
               <Text style={styles.unlockButtonText}>Unlock Requirements</Text>
             </TouchableOpacity>
           )}
@@ -238,7 +238,7 @@ export const ThemePresetCard: React.FC<ThemePresetCardProps> = React.memo(
 
 const styles = StyleSheet.create({
   themeCard: {
-    borderRadius: 22,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
     borderBottomWidth: 3.5,
     padding: ResponsivePixels.size16,
@@ -251,29 +251,29 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    marginBottom: ResponsivePixels.size12,
   },
   themeTitleLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: ResponsivePixels.size10,
     flex: 1,
-    paddingRight: 8,
+    paddingRight: ResponsivePixels.size8,
   },
   themeDot: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
+    width: ResponsivePixels.size14,
+    height: ResponsivePixels.size14,
+    borderRadius: ResponsivePixels.size7,
   },
   themeNameText: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 17,
+    fontSize: ResponsivePixels.size17,
     letterSpacing: 0.2,
   },
   themeTaglineText: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 11,
-    marginTop: 1,
+    fontSize: ResponsivePixels.size11,
+    marginTop: ResponsivePixels.size1,
   },
   statusBadgeWrap: {
     alignItems: 'flex-end',
@@ -282,21 +282,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: ResponsivePixels.size16,
     borderWidth: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    marginBottom: 12,
+    paddingVertical: ResponsivePixels.size12,
+    paddingHorizontal: ResponsivePixels.size10,
+    marginBottom: ResponsivePixels.size12,
   },
   colorSwatchItem: {
     flex: 1,
     alignItems: 'center',
-    gap: 4,
+    gap: ResponsivePixels.size4,
   },
   colorCircle: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: ResponsivePixels.size38,
+    height: ResponsivePixels.size38,
+    borderRadius: ResponsivePixels.size19,
     borderWidth: 1.5,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
@@ -306,27 +306,27 @@ const styles = StyleSheet.create({
   },
   colorCodeText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     letterSpacing: 0.4,
-    marginTop: 2,
+    marginTop: ResponsivePixels.size2,
   },
   colorRoleLabel: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 9.5,
+    fontSize: ResponsivePixels.size9_5,
   },
   lockedInfoBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 12,
+    gap: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size8,
+    paddingHorizontal: ResponsivePixels.size12,
+    borderRadius: ResponsivePixels.size12,
     borderWidth: 1,
-    marginBottom: 12,
+    marginBottom: ResponsivePixels.size12,
   },
   lockedInfoText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: Colors.LavenderPurple,
     flex: 1,
   },
@@ -338,24 +338,24 @@ const styles = StyleSheet.create({
   activeAppliedRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 20,
+    gap: ResponsivePixels.size6,
+    paddingVertical: ResponsivePixels.size6,
+    paddingHorizontal: ResponsivePixels.size12,
+    borderRadius: ResponsivePixels.size20,
     backgroundColor: withAlpha(Colors.LuminousGreen, 0.12),
   },
   activeAppliedText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.LuminousGreen,
   },
   applyButtonPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderRadius: 20,
+    gap: ResponsivePixels.size6,
+    paddingVertical: ResponsivePixels.size8,
+    paddingHorizontal: ResponsivePixels.size16,
+    borderRadius: ResponsivePixels.size20,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
@@ -364,20 +364,20 @@ const styles = StyleSheet.create({
   },
   applyButtonText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
   },
   unlockButtonPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    borderRadius: 20,
+    gap: ResponsivePixels.size6,
+    paddingVertical: ResponsivePixels.size8,
+    paddingHorizontal: ResponsivePixels.size14,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1,
   },
   unlockButtonText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: Colors.LavenderPurple,
   },
 });

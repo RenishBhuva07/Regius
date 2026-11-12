@@ -85,7 +85,7 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
       <View style={styles.sectionHeaderRow}>
         <View style={styles.sectionTitleWithIcon}>
           <Headphones
-            size={18}
+            size={ResponsivePixels.size18}
             color={themeAccent}
             strokeWidth={2.4}
           />
@@ -146,7 +146,7 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
             ]}
           >
             <Mic
-              size={22}
+              size={ResponsivePixels.size22}
               color={selectedVoice.accentColor}
               strokeWidth={2.2}
             />
@@ -207,13 +207,13 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
           >
             {isCurrentVoicePlaying ? (
               <Pause
-                size={14}
+                size={ResponsivePixels.size14}
                 color={StaticColors.PureWhite}
                 fill={StaticColors.PureWhite}
               />
             ) : (
               <Play
-                size={14}
+                size={ResponsivePixels.size14}
                 color={StaticColors.PureWhite}
                 fill={StaticColors.PureWhite}
                 style={styles.playIconOffset}
@@ -257,7 +257,7 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
         >
           <View style={styles.presetsInsideHeader}>
             <Headphones
-              size={13}
+              size={ResponsivePixels.size13}
               color={themeAccent}
               strokeWidth={2.2}
             />
@@ -318,7 +318,7 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
                         ]}
                       >
                         <Check
-                          size={8}
+                          size={ResponsivePixels.size8}
                           color={StaticColors.PureWhite}
                           strokeWidth={3}
                         />
@@ -381,7 +381,7 @@ export const DefaultVoiceSection: React.FC<DefaultVoiceSectionProps> = ({
             accessibilityLabel="Reset voice defaults"
           >
             <RotateCcw
-              size={12}
+              size={ResponsivePixels.size12}
               color={themeAccent}
               strokeWidth={2.2}
             />
@@ -407,16 +407,16 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginRight: 8,
+    gap: ResponsivePixels.size8,
+    marginRight: ResponsivePixels.size8,
   },
   sectionTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 17,
+    fontSize: ResponsivePixels.size17,
     flexShrink: 1,
   },
   activeVoiceCard: {
-    borderRadius: 22,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
     borderBottomWidth: 3.5,
     padding: ResponsivePixels.size16,
@@ -430,50 +430,50 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   voiceIconSquare: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
+    width: ResponsivePixels.size44,
+    height: ResponsivePixels.size44,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 10,
+    marginRight: ResponsivePixels.size10,
     flexShrink: 0,
   },
   voiceMeta: {
     flex: 1,
-    marginRight: 8,
+    marginRight: ResponsivePixels.size8,
     justifyContent: 'center',
   },
   voiceNameLine: {
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   voiceNameText: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 17,
+    fontSize: ResponsivePixels.size17,
   },
   voiceTagBadge: {
-    paddingHorizontal: 7,
-    paddingVertical: 2,
-    borderRadius: 8,
+    paddingHorizontal: ResponsivePixels.size7,
+    paddingVertical: ResponsivePixels.size2,
+    borderRadius: ResponsivePixels.size8,
     borderWidth: 1,
-    maxWidth: 150,
+    maxWidth: ResponsivePixels.size150,
   },
   voiceTagText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
   },
   voiceSubtitle: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 11.5,
-    marginTop: 2,
+    fontSize: ResponsivePixels.size11_5,
+    marginTop: ResponsivePixels.size2,
   },
   playPauseCircleBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: ResponsivePixels.size36,
+    height: ResponsivePixels.size36,
+    borderRadius: ResponsivePixels.size18,
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
@@ -484,69 +484,69 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   playIconOffset: {
-    marginLeft: 2,
+    marginLeft: ResponsivePixels.size2,
   },
   waveformContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 9,
-    borderRadius: 12,
-    marginTop: 12,
+    gap: ResponsivePixels.size12,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size9,
+    borderRadius: ResponsivePixels.size12,
+    marginTop: ResponsivePixels.size12,
   },
   waveformBars: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 3,
-    height: 20,
-    width: 24,
+    gap: ResponsivePixels.size3,
+    height: ResponsivePixels.size20,
+    width: ResponsivePixels.size24,
     justifyContent: 'center',
   },
   waveBar: {
-    width: 2.5,
-    height: 18,
-    borderRadius: 2,
+    width: ResponsivePixels.size2_5,
+    height: ResponsivePixels.size18,
+    borderRadius: ResponsivePixels.size2,
   },
   waveformSampleText: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 11,
-    lineHeight: 15,
+    fontSize: ResponsivePixels.size11,
+    lineHeight: ResponsivePixels.size15,
     flex: 1,
     fontStyle: 'italic',
   },
   presetsInsideBox: {
-    borderRadius: 14,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1,
-    padding: 10,
-    marginTop: 14,
+    padding: ResponsivePixels.size10,
+    marginTop: ResponsivePixels.size14,
     overflow: 'hidden',
   },
   presetsInsideHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    marginBottom: 8,
+    gap: ResponsivePixels.size6,
+    marginBottom: ResponsivePixels.size8,
   },
   presetsInsideTitle: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
   },
   voicePillsScroll: {
-    marginHorizontal: -10,
+    marginHorizontal: -ResponsivePixels.size10,
   },
   voicePillsScrollContent: {
-    paddingHorizontal: 10,
-    gap: 12,
+    paddingHorizontal: ResponsivePixels.size10,
+    gap: ResponsivePixels.size12,
   },
   roundVoiceItem: {
     alignItems: 'center',
-    width: 56,
+    width: ResponsivePixels.size56,
   },
   roundAvatarCircle: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: ResponsivePixels.size50,
+    height: ResponsivePixels.size50,
+    borderRadius: ResponsivePixels.size25,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
@@ -556,28 +556,28 @@ const styles = StyleSheet.create({
   },
   roundAvatarInitial: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 19,
+    fontSize: ResponsivePixels.size19,
   },
   roundCheckBadge: {
     position: 'absolute',
-    bottom: -1,
-    right: -1,
-    width: 15,
-    height: 15,
-    borderRadius: 7.5,
+    bottom: -ResponsivePixels.size1,
+    right: -ResponsivePixels.size1,
+    width: ResponsivePixels.size15,
+    height: ResponsivePixels.size15,
+    borderRadius: ResponsivePixels.size7_5,
     borderWidth: 1.5,
     borderColor: StaticColors.PureWhite,
     alignItems: 'center',
     justifyContent: 'center',
   },
   roundVoiceName: {
-    fontSize: 11,
-    marginTop: 5,
+    fontSize: ResponsivePixels.size11,
+    marginTop: ResponsivePixels.size5,
     textAlign: 'center',
   },
   voiceTogglesBlock: {
-    marginTop: 14,
-    paddingTop: 12,
+    marginTop: ResponsivePixels.size14,
+    paddingTop: ResponsivePixels.size12,
     borderTopWidth: 1,
   },
   toggleRow: {
@@ -587,30 +587,30 @@ const styles = StyleSheet.create({
   },
   toggleMeta: {
     flex: 1,
-    paddingRight: 12,
+    paddingRight: ResponsivePixels.size12,
   },
   toggleTitle: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 14,
-    marginBottom: 2,
+    fontSize: ResponsivePixels.size14,
+    marginBottom: ResponsivePixels.size2,
   },
   toggleDesc: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 11.5,
-    lineHeight: 16,
+    fontSize: ResponsivePixels.size11_5,
+    lineHeight: ResponsivePixels.size16,
   },
   insideResetRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 6,
-    marginTop: 12,
-    paddingTop: 10,
+    gap: ResponsivePixels.size6,
+    marginTop: ResponsivePixels.size12,
+    paddingTop: ResponsivePixels.size10,
     borderTopWidth: 1,
   },
   insideResetText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: StaticColors.LavenderPurple,
   },
 });

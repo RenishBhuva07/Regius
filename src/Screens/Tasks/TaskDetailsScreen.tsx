@@ -722,7 +722,12 @@ export const TaskDetailsScreen: React.FC = () => {
                   activeOpacity={0.7}
                   onPress={() => handleDeleteSubtask(subtask.id)}
                   style={styles.subtaskDeleteBtn}
-                  hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                  hitSlop={{
+                    top: ResponsivePixels.size8,
+                    bottom: ResponsivePixels.size8,
+                    left: ResponsivePixels.size8,
+                    right: ResponsivePixels.size8,
+                  }}
                   accessibilityLabel="Delete subtask"
                 >
                   <Trash2
@@ -1030,14 +1035,14 @@ const styles = StyleSheet.create({
   },
   frostedDomainText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: ResponsivePixels.size11,
+    fontSize: ResponsivePixels.size12,
     letterSpacing: 0.5,
   },
   bentoTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size22,
+    fontSize: ResponsivePixels.size26,
     color: Colors.PureWhite,
-    lineHeight: ResponsivePixels.size28,
+    lineHeight: ResponsivePixels.size32,
   },
   bentoMetaRow: {
     flexDirection: 'row',
@@ -1057,7 +1062,7 @@ const styles = StyleSheet.create({
   },
   metaChipText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: ResponsivePixels.size11,
+    fontSize: ResponsivePixels.size12,
     color: Colors.Gray300,
     letterSpacing: 0.3,
   },
@@ -1207,7 +1212,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.regular,
     fontSize: ResponsivePixels.size12,
     color: Colors.MutedSlateSubtext,
-    marginTop: 1,
+    marginTop: ResponsivePixels.size1,
   },
   progressTrack: {
     height: ResponsivePixels.size6,

@@ -5,6 +5,7 @@ import { Crown, Sparkles, Palette, Zap } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
 import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { Badge } from '../../../Common/Badge';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface RoyalHeroCardProps {
   isPremium: boolean;
@@ -24,7 +25,7 @@ export const RoyalHeroCard: React.FC<RoyalHeroCardProps> = React.memo(
               <View style={styles.heroTopRow}>
                 <View style={styles.crownIconBox}>
                   <Crown
-                    size={24}
+                    size={ResponsivePixels.size24}
                     color={Colors.AccentYellow}
                     fill={Colors.AccentYellow}
                     strokeWidth={2.2}
@@ -63,7 +64,7 @@ export const RoyalHeroCard: React.FC<RoyalHeroCardProps> = React.memo(
               <View style={styles.heroPillsRow}>
                 <View style={styles.heroPill}>
                   <Sparkles
-                    size={12}
+                    size={ResponsivePixels.size12}
                     color={Colors.AccentYellow}
                     strokeWidth={2.4}
                   />
@@ -71,7 +72,7 @@ export const RoyalHeroCard: React.FC<RoyalHeroCardProps> = React.memo(
                 </View>
                 <View style={styles.heroPill}>
                   <Palette
-                    size={12}
+                    size={ResponsivePixels.size12}
                     color={Colors.AccentYellow}
                     strokeWidth={2.4}
                   />
@@ -79,7 +80,7 @@ export const RoyalHeroCard: React.FC<RoyalHeroCardProps> = React.memo(
                 </View>
                 <View style={styles.heroPill}>
                   <Zap
-                    size={12}
+                    size={ResponsivePixels.size12}
                     color={Colors.AccentYellow}
                     strokeWidth={2.4}
                   />
@@ -96,10 +97,10 @@ export const RoyalHeroCard: React.FC<RoyalHeroCardProps> = React.memo(
 
 const styles = StyleSheet.create({
   heroOuterWrapper: {
-    marginBottom: 24,
+    marginBottom: ResponsivePixels.size24,
   },
   cardShadowWrapper: {
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     backgroundColor: Colors.NeroBlack,
     ...Platform.select({
       ios: {
@@ -115,20 +116,20 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: Colors.NeroBlack,
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     borderWidth: 4,
     borderColor: withAlpha(Colors.PureWhite, 0.9),
     overflow: 'hidden',
     position: 'relative',
-    padding: 20,
+    padding: ResponsivePixels.size20,
   },
   heroGlowCircle: {
     position: 'absolute',
-    top: -50,
-    right: -50,
-    width: 160,
-    height: 160,
-    borderRadius: 80,
+    top: -ResponsivePixels.size50,
+    right: -ResponsivePixels.size50,
+    width: ResponsivePixels.size160,
+    height: ResponsivePixels.size160,
+    borderRadius: ResponsivePixels.size80,
     backgroundColor: withAlpha(Colors.AccentYellow, 0.15),
   },
   heroCardContent: {
@@ -139,12 +140,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 16,
+    marginBottom: ResponsivePixels.size16,
   },
   crownIconBox: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: ResponsivePixels.size44,
+    height: ResponsivePixels.size44,
+    borderRadius: ResponsivePixels.size22,
     backgroundColor: withAlpha(Colors.AccentYellow, 0.18),
     borderWidth: 1.5,
     borderColor: withAlpha(Colors.AccentYellow, 0.45),
@@ -157,38 +158,38 @@ const styles = StyleSheet.create({
   },
   heroTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 22,
+    fontSize: ResponsivePixels.size22,
     color: Colors.PureWhite,
     letterSpacing: -0.5,
-    lineHeight: 28,
-    marginBottom: 8,
+    lineHeight: ResponsivePixels.size28,
+    marginBottom: ResponsivePixels.size8,
   },
   heroDesc: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12.5,
+    fontSize: ResponsivePixels.size12_5,
     color: Colors.Gray300,
-    lineHeight: 18,
-    marginBottom: 18,
+    lineHeight: ResponsivePixels.size18,
+    marginBottom: ResponsivePixels.size18,
   },
   heroPillsRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   heroPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
     backgroundColor: withAlpha(Colors.PureWhite, 0.1),
-    borderRadius: 20,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    borderRadius: ResponsivePixels.size20,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size6,
     borderWidth: 1,
     borderColor: withAlpha(Colors.PureWhite, 0.2),
   },
   heroPillText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: Colors.PureWhite,
   },
 });

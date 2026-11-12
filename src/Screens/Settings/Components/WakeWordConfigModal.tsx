@@ -166,7 +166,7 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
           >
             <View style={styles.headerTitleRow}>
               <View style={styles.headerIconBadge}>
-                <Sliders size={20} color={themeAccent} />
+                <Sliders size={ResponsivePixels.size20} color={themeAccent} />
               </View>
               <View>
                 <Text style={[styles.modalTitle, { color: textPrimary }]}>
@@ -182,7 +182,7 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
               style={[styles.closeButton, { backgroundColor: surfaceAlt }]}
               activeOpacity={0.7}
             >
-              <X size={18} color={textPrimary} />
+              <X size={ResponsivePixels.size18} color={textPrimary} />
             </TouchableOpacity>
           </View>
 
@@ -207,7 +207,7 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
             >
               <View style={styles.activeConfigTop}>
                 <View style={styles.activeConfigLabelRow}>
-                  <Sparkles size={14} color={StaticColors.CategorySkyCheck} />
+                  <Sparkles size={ResponsivePixels.size14} color={StaticColors.CategorySkyCheck} />
                   <Text style={styles.activeConfigLabel}>ACTIVE WAKE WORD</Text>
                 </View>
                 <View style={styles.activePulseBadge}>
@@ -276,7 +276,7 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
                         </Text>
                         <View style={styles.officialBadge}>
                           <ShieldCheck
-                            size={11}
+                            size={ResponsivePixels.size11}
                             color={StaticColors.ToastSuccessIcon}
                           />
                           <Text style={styles.officialBadgeText}>
@@ -299,7 +299,7 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
                       >
                         {isSelected && (
                           <Check
-                            size={11}
+                            size={ResponsivePixels.size11}
                             color={StaticColors.PureWhite}
                             strokeWidth={3}
                           />
@@ -357,7 +357,7 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
               ]}
             >
               <View style={styles.inputRow}>
-                <Mic size={18} color={themeAccent} />
+                <Mic size={ResponsivePixels.size18} color={themeAccent} />
                 <TextInput
                   style={[styles.textInput, { color: textPrimary }]}
                   placeholder="e.g. Hey Aria, Hello Jarvis, Hey Luna"
@@ -371,7 +371,7 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
                     onPress={() => setCustomInput('')}
                     style={styles.inputClearButton}
                   >
-                    <X size={14} color={textSecondary} />
+                    <X size={ResponsivePixels.size14} color={textSecondary} />
                   </TouchableOpacity>
                 )}
               </View>
@@ -405,18 +405,18 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
                     {validation.isValid ? (
                       validation.warning ? (
                         <AlertTriangle
-                          size={15}
+                          size={ResponsivePixels.size15}
                           color={StaticColors.HabitBurnishedAmber}
                         />
                       ) : (
                         <Check
-                          size={15}
+                          size={ResponsivePixels.size15}
                           color={StaticColors.ToastSuccessIcon}
                           strokeWidth={2.5}
                         />
                       )
                     ) : (
-                      <X size={15} color={StaticColors.CategoryRedCheck} />
+                      <X size={ResponsivePixels.size15} color={StaticColors.CategoryRedCheck} />
                     )}
                     <Text
                       style={[
@@ -454,7 +454,7 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
               ]}
             >
               <View style={styles.engineInfoHeader}>
-                <Info size={16} color={StaticColors.AzureRoyal} />
+                <Info size={ResponsivePixels.size16} color={StaticColors.AzureRoyal} />
                 <Text style={styles.engineInfoTitle}>
                   Detection Engine Architecture & Limitations
                 </Text>
@@ -482,7 +482,7 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
             {/* Developer Recognition Playground */}
             <View style={styles.sectionHeader}>
               <View style={styles.devBadgeRow}>
-                <Zap size={15} color={StaticColors.VoiceMichaelAccent} />
+                <Zap size={ResponsivePixels.size15} color={StaticColors.VoiceMichaelAccent} />
                 <Text style={[styles.sectionHeading, { color: textPrimary }]}>
                   Developer Recognition Tester
                 </Text>
@@ -652,7 +652,7 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
               style={[styles.resetButton, { borderColor: borderLight }]}
               onPress={handleResetDefault}
             >
-              <RotateCcw size={15} color={textSecondary} />
+              <RotateCcw size={ResponsivePixels.size15} color={textSecondary} />
               <Text style={[styles.resetButtonText, { color: textSecondary }]}>
                 Default
               </Text>
@@ -672,7 +672,7 @@ export const WakeWordConfigModal: React.FC<WakeWordConfigModalProps> = ({
               onPress={handleApply}
             >
               <Check
-                size={16}
+                size={ResponsivePixels.size16}
                 color={StaticColors.PureWhite}
                 strokeWidth={2.5}
               />
@@ -694,11 +694,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   modalContainer: {
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
+    borderTopLeftRadius: ResponsivePixels.size28,
+    borderTopRightRadius: ResponsivePixels.size28,
     borderWidth: 1,
     maxHeight: '90%',
-    paddingBottom: Platform.OS === 'ios' ? 24 : 16,
+    paddingBottom:
+      Platform.OS === 'ios' ? ResponsivePixels.size24 : ResponsivePixels.size16,
   },
   modalHeader: {
     flexDirection: 'row',
@@ -711,28 +712,28 @@ const styles = StyleSheet.create({
   headerTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: ResponsivePixels.size12,
   },
   headerIconBadge: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: ResponsivePixels.size40,
+    height: ResponsivePixels.size40,
+    borderRadius: ResponsivePixels.size20,
     backgroundColor: withAlpha(StaticColors.LavenderPurple, 0.15),
     justifyContent: 'center',
     alignItems: 'center',
   },
   modalTitle: {
     ...Typography.h6Bold,
-    fontSize: 17,
+    fontSize: ResponsivePixels.size17,
   },
   modalSubtitle: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
   },
   closeButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: ResponsivePixels.size32,
+    height: ResponsivePixels.size32,
+    borderRadius: ResponsivePixels.size16,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -745,7 +746,7 @@ const styles = StyleSheet.create({
     paddingBottom: ResponsivePixels.size24,
   },
   activeConfigCard: {
-    borderRadius: 18,
+    borderRadius: ResponsivePixels.size18,
     borderWidth: 1.5,
     padding: ResponsivePixels.size16,
     marginBottom: ResponsivePixels.size20,
@@ -754,68 +755,68 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: ResponsivePixels.size8,
   },
   activeConfigLabelRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   activeConfigLabel: {
     ...Typography.bodySuperSmallPoppinsSemiBoldLoose,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: StaticColors.CategorySkyCheck,
     letterSpacing: 0.8,
   },
   activePulseBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: ResponsivePixels.size5,
     backgroundColor: withAlpha(StaticColors.ToastSuccessAccent, 0.12),
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 10,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size3,
+    borderRadius: ResponsivePixels.size10,
   },
   pulseDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
+    width: ResponsivePixels.size6,
+    height: ResponsivePixels.size6,
+    borderRadius: ResponsivePixels.size3,
     backgroundColor: StaticColors.ToastSuccessAccent,
   },
   pulseText: {
     ...Typography.bodySuperSmallPoppinsRegularLoose,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: StaticColors.ToastSuccessIcon,
     fontWeight: '600',
   },
   activePhraseText: {
     ...Typography.h5SemiBold,
-    fontSize: 20,
-    marginBottom: 4,
+    fontSize: ResponsivePixels.size20,
+    marginBottom: ResponsivePixels.size4,
   },
   activeDescText: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 12,
-    lineHeight: 18,
+    fontSize: ResponsivePixels.size12,
+    lineHeight: ResponsivePixels.size18,
   },
   sectionHeader: {
-    marginBottom: 10,
-    marginTop: 8,
+    marginBottom: ResponsivePixels.size10,
+    marginTop: ResponsivePixels.size8,
   },
   sectionHeading: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
   },
   sectionSubheading: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
   },
   presetList: {
-    gap: 10,
+    gap: ResponsivePixels.size10,
     marginBottom: ResponsivePixels.size20,
   },
   presetCard: {
-    borderRadius: 16,
+    borderRadius: ResponsivePixels.size16,
     borderWidth: 1.5,
     padding: ResponsivePixels.size14,
   },
@@ -823,63 +824,63 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: ResponsivePixels.size6,
   },
   presetTitleWithBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   presetPhraseText: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 15,
+    fontSize: ResponsivePixels.size15,
   },
   officialBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 3,
+    gap: ResponsivePixels.size3,
     backgroundColor: StaticColors.WellnessLightBg,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
+    paddingHorizontal: ResponsivePixels.size6,
+    paddingVertical: ResponsivePixels.size2,
+    borderRadius: ResponsivePixels.size6,
     borderWidth: 1,
     borderColor: StaticColors.ToastSuccessCardBorderLight,
   },
   officialBadgeText: {
     ...Typography.bodySuperSmallPoppinsRegularLoose,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     color: StaticColors.ToastSuccessIcon,
     fontWeight: '600',
   },
   radioDot: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: ResponsivePixels.size20,
+    height: ResponsivePixels.size20,
+    borderRadius: ResponsivePixels.size10,
     borderWidth: 2,
     justifyContent: 'center',
     alignItems: 'center',
   },
   presetDesc: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 12,
-    marginBottom: 6,
+    fontSize: ResponsivePixels.size12,
+    marginBottom: ResponsivePixels.size6,
   },
   aliasesContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'center',
-    gap: 4,
+    gap: ResponsivePixels.size4,
   },
   aliasesLabel: {
     ...Typography.bodySuperSmallPoppinsSemiBoldLoose,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
   },
   aliasesText: {
     ...Typography.bodySuperSmallPoppinsRegularLoose,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
   },
   customInputCard: {
-    borderRadius: 16,
+    borderRadius: ResponsivePixels.size16,
     borderWidth: 1.5,
     padding: ResponsivePixels.size14,
     marginBottom: ResponsivePixels.size20,
@@ -887,36 +888,36 @@ const styles = StyleSheet.create({
   inputRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: ResponsivePixels.size10,
   },
   textInput: {
     flex: 1,
     ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 14,
-    paddingVertical: 6,
+    fontSize: ResponsivePixels.size14,
+    paddingVertical: ResponsivePixels.size6,
   },
   inputClearButton: {
-    padding: 6,
+    padding: ResponsivePixels.size6,
   },
   validationBox: {
-    marginTop: 10,
-    padding: 10,
-    borderRadius: 10,
+    marginTop: ResponsivePixels.size10,
+    padding: ResponsivePixels.size10,
+    borderRadius: ResponsivePixels.size10,
     borderWidth: 1,
   },
   validationRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   validationText: {
     flex: 1,
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 12,
-    lineHeight: 16,
+    fontSize: ResponsivePixels.size12,
+    lineHeight: ResponsivePixels.size16,
   },
   engineInfoCard: {
-    borderRadius: 16,
+    borderRadius: ResponsivePixels.size16,
     borderWidth: 1,
     padding: ResponsivePixels.size14,
     marginBottom: ResponsivePixels.size20,
@@ -924,99 +925,99 @@ const styles = StyleSheet.create({
   engineInfoHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 8,
+    gap: ResponsivePixels.size8,
+    marginBottom: ResponsivePixels.size8,
   },
   engineInfoTitle: {
     ...Typography.bodySmallPoppinsSemiBold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     color: StaticColors.Blue600,
   },
   engineInfoBody: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 12,
-    lineHeight: 18,
-    marginBottom: 6,
+    fontSize: ResponsivePixels.size12,
+    lineHeight: ResponsivePixels.size18,
+    marginBottom: ResponsivePixels.size6,
   },
   boldText: {
     fontWeight: '700',
   },
   codeText: {
     fontFamily: Platform.OS === 'ios' ? 'Menlo' : 'monospace',
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
   },
   devBadgeRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   testPlaygroundCard: {
-    borderRadius: 16,
+    borderRadius: ResponsivePixels.size16,
     borderWidth: 1.5,
     padding: ResponsivePixels.size14,
   },
   playgroundLabel: {
     ...Typography.bodySuperSmallPoppinsSemiBoldLoose,
-    fontSize: 11,
-    marginBottom: 6,
+    fontSize: ResponsivePixels.size11,
+    marginBottom: ResponsivePixels.size6,
   },
   testTranscriptInput: {
-    borderRadius: 10,
+    borderRadius: ResponsivePixels.size10,
     borderWidth: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size8,
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 13,
-    marginBottom: 10,
+    fontSize: ResponsivePixels.size13,
+    marginBottom: ResponsivePixels.size10,
   },
   chipRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 6,
-    marginBottom: 12,
+    gap: ResponsivePixels.size6,
+    marginBottom: ResponsivePixels.size12,
   },
   sampleChip: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 8,
+    paddingHorizontal: ResponsivePixels.size10,
+    paddingVertical: ResponsivePixels.size5,
+    borderRadius: ResponsivePixels.size8,
     borderWidth: 1,
   },
   sampleChipText: {
     ...Typography.bodySuperSmallPoppinsRegularLoose,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
   },
   resultDashboard: {
-    borderRadius: 12,
+    borderRadius: ResponsivePixels.size12,
     borderWidth: 1.5,
-    padding: 12,
+    padding: ResponsivePixels.size12,
   },
   resultHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: ResponsivePixels.size8,
   },
   resultLabel: {
     ...Typography.bodySuperSmallPoppinsSemiBoldLoose,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     color: StaticColors.Gray500,
     letterSpacing: 0.8,
   },
   statusPill: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size3,
+    borderRadius: ResponsivePixels.size6,
   },
   statusPillText: {
     ...Typography.bodySuperSmallPoppinsSemiBoldLoose,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     color: StaticColors.PureWhite,
     fontWeight: '700',
   },
   matchDetails: {
-    gap: 4,
-    marginBottom: 8,
-    paddingBottom: 8,
+    gap: ResponsivePixels.size4,
+    marginBottom: ResponsivePixels.size8,
+    paddingBottom: ResponsivePixels.size8,
     borderBottomWidth: 1,
     borderBottomColor: withAlpha(StaticColors.PureBlack, 0.06),
   },
@@ -1027,21 +1028,21 @@ const styles = StyleSheet.create({
   },
   detailKey: {
     ...Typography.bodySuperSmallPoppinsRegularLoose,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
   },
   detailValue: {
     ...Typography.bodySuperSmallPoppinsSemiBoldLoose,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
   },
   analysisText: {
     ...Typography.bodySuperSmallPoppinsRegularLoose,
-    fontSize: 11,
-    lineHeight: 15,
+    fontSize: ResponsivePixels.size11,
+    lineHeight: ResponsivePixels.size15,
   },
   modalFooter: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: ResponsivePixels.size12,
     paddingHorizontal: ResponsivePixels.size20,
     paddingTop: ResponsivePixels.size14,
     borderTopWidth: 1,
@@ -1049,28 +1050,28 @@ const styles = StyleSheet.create({
   resetButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderRadius: 14,
+    gap: ResponsivePixels.size6,
+    paddingHorizontal: ResponsivePixels.size16,
+    paddingVertical: ResponsivePixels.size12,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1,
   },
   resetButtonText: {
     ...Typography.bodySmallPoppinsSemiBold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
   },
   applyButton: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 12,
-    borderRadius: 14,
+    gap: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size12,
+    borderRadius: ResponsivePixels.size14,
   },
   applyButtonText: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     color: StaticColors.PureWhite,
   },
 });

@@ -65,7 +65,7 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
       <View style={styles.sectionHeaderRow}>
         <View style={styles.sectionTitleWithIcon}>
           <Radio
-            size={18}
+            size={ResponsivePixels.size18}
             color={themeAccent}
             strokeWidth={2.4}
           />
@@ -138,7 +138,7 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
                   },
                 ]}
               >
-                <Sparkles size={11} color={themeAccent} />
+                <Sparkles size={ResponsivePixels.size11} color={themeAccent} />
                 <Text style={[styles.phrasePillText, { color: themeAccent }]}>
                   &ldquo;{wakeWordPhrase}&rdquo;
                 </Text>
@@ -286,7 +286,7 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
             accessibilityLabel="Test acoustic microphone threshold and sensitivity"
           >
             <SlidersHorizontal
-              size={13}
+              size={ResponsivePixels.size13}
               color={themeAccent}
               strokeWidth={2}
             />
@@ -306,7 +306,7 @@ export const WakeWordSection: React.FC<WakeWordSectionProps> = ({
             accessibilityLabel="Reset wake word defaults"
           >
             <RotateCcw
-              size={12}
+              size={ResponsivePixels.size12}
               color={themeAccent}
               strokeWidth={2.2}
             />
@@ -332,30 +332,30 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginRight: 8,
+    gap: ResponsivePixels.size8,
+    marginRight: ResponsivePixels.size8,
   },
   sectionTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 17,
+    fontSize: ResponsivePixels.size17,
     flexShrink: 1,
   },
   insideResetRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 6,
-    marginTop: 14,
-    paddingTop: 12,
+    gap: ResponsivePixels.size6,
+    marginTop: ResponsivePixels.size14,
+    paddingTop: ResponsivePixels.size12,
     borderTopWidth: 1,
   },
   insideResetText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: StaticColors.LavenderPurple,
   },
   wakeWordCard: {
-    borderRadius: 22,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
     borderBottomWidth: 3.5,
     padding: ResponsivePixels.size16,
@@ -371,52 +371,52 @@ const styles = StyleSheet.create({
   },
   toggleMeta: {
     flex: 1,
-    paddingRight: 12,
+    paddingRight: ResponsivePixels.size12,
   },
   wakeWordTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 4,
+    gap: ResponsivePixels.size8,
+    marginBottom: ResponsivePixels.size4,
   },
   toggleTitle: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 14.5,
+    fontSize: ResponsivePixels.size14_5,
   },
   phrasePill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 12,
+    gap: ResponsivePixels.size4,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size2,
+    borderRadius: ResponsivePixels.size12,
     borderWidth: 1,
   },
   phrasePillText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: StaticColors.LavenderPurple,
   },
   toggleDesc: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 11.5,
-    lineHeight: 16,
+    fontSize: ResponsivePixels.size11_5,
+    lineHeight: ResponsivePixels.size16,
   },
   statusBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 9,
-    borderRadius: 12,
+    gap: ResponsivePixels.size8,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size9,
+    borderRadius: ResponsivePixels.size12,
     borderWidth: 1,
-    marginTop: 14,
+    marginTop: ResponsivePixels.size14,
   },
   statusDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    width: ResponsivePixels.size8,
+    height: ResponsivePixels.size8,
+    borderRadius: ResponsivePixels.size4,
     shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.6,
     shadowRadius: 4,
@@ -424,47 +424,47 @@ const styles = StyleSheet.create({
   },
   statusText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     flex: 1,
   },
   presetsBlock: {
-    marginTop: 14,
-    paddingTop: 12,
+    marginTop: ResponsivePixels.size14,
+    paddingTop: ResponsivePixels.size12,
     borderTopWidth: 1,
     borderTopColor: withAlpha(StaticColors.PureBlack, 0.05),
   },
   presetsTitle: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
-    marginBottom: 8,
+    fontSize: ResponsivePixels.size11_5,
+    marginBottom: ResponsivePixels.size8,
   },
   presetsWrap: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   presetChip: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size6,
+    borderRadius: ResponsivePixels.size16,
     borderWidth: 1.5,
   },
   presetChipText: {
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
   },
   configFooterCallout: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginTop: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRadius: 12,
+    gap: ResponsivePixels.size8,
+    marginTop: ResponsivePixels.size12,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size10,
+    borderRadius: ResponsivePixels.size12,
     borderWidth: 1,
   },
   configFooterText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     flex: 1,
   },
 });

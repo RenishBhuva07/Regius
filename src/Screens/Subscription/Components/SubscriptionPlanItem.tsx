@@ -10,6 +10,7 @@ import {
   SubscriptionPlan,
   SubscriptionPlanId,
 } from '../../../Context/PremiumContext';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface SubscriptionPlanItemProps {
   plan: SubscriptionPlan;
@@ -84,7 +85,7 @@ export const SubscriptionPlanItem: React.FC<SubscriptionPlanItemProps> =
             ]}
           >
             {isSelected && (
-              <Check size={12} color={Colors.MidnightCharcoal} strokeWidth={3} />
+              <Check size={ResponsivePixels.size12} color={Colors.MidnightCharcoal} strokeWidth={3} />
             )}
           </View>
 
@@ -121,8 +122,8 @@ export const SubscriptionPlanItem: React.FC<SubscriptionPlanItemProps> =
 
 const styles = StyleSheet.create({
   planCard: {
-    borderRadius: 20,
-    padding: 16,
+    borderRadius: ResponsivePixels.size20,
+    padding: ResponsivePixels.size16,
     position: 'relative',
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 3 },
@@ -139,52 +140,52 @@ const styles = StyleSheet.create({
   },
   planBadgeWrap: {
     position: 'absolute',
-    top: -10,
-    right: 18,
+    top: -ResponsivePixels.size10,
+    right: ResponsivePixels.size18,
     zIndex: 10,
   },
   planCardTopRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: ResponsivePixels.size8,
   },
   selectionCircle: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+    width: ResponsivePixels.size22,
+    height: ResponsivePixels.size22,
+    borderRadius: ResponsivePixels.size11,
     borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginRight: ResponsivePixels.size12,
   },
   planNameColumn: {
     flex: 1,
   },
   planNameText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 15,
+    fontSize: ResponsivePixels.size15,
   },
   planEquivalentText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
-    marginTop: 1,
+    fontSize: ResponsivePixels.size11,
+    marginTop: ResponsivePixels.size1,
   },
   planPriceColumn: {
     alignItems: 'flex-end',
   },
   planPrice: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 18,
+    fontSize: ResponsivePixels.size18,
   },
   planPeriod: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
   },
   planBillingDesc: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
-    marginLeft: 34,
+    fontSize: ResponsivePixels.size11_5,
+    marginLeft: ResponsivePixels.size34,
   },
 });
 

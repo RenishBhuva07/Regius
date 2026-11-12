@@ -13,6 +13,7 @@ import {
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import { Fonts } from '../../../Theme/fonts';
 import { useTheme } from '../../../Theme/ThemeContext';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface RoyalPerksGridProps {
   isDarkMode: boolean;
@@ -100,7 +101,7 @@ export const RoyalPerksGrid: React.FC<RoyalPerksGridProps> = React.memo(
     return (
       <View style={styles.container}>
         <View style={styles.sectionHeaderRow}>
-          <Crown size={18} color={Colors.AccentYellow} strokeWidth={2.4} />
+          <Crown size={ResponsivePixels.size18} color={Colors.AccentYellow} strokeWidth={2.4} />
           <Text style={[styles.sectionTitle, { color: textPrimary }]}>
             Everything Included in Royal
           </Text>
@@ -132,7 +133,7 @@ export const RoyalPerksGrid: React.FC<RoyalPerksGridProps> = React.memo(
                     },
                   ]}
                 >
-                  <IconComp size={20} color={perk.accent} strokeWidth={2.4} />
+                  <IconComp size={ResponsivePixels.size20} color={perk.accent} strokeWidth={2.4} />
                 </View>
                 <View style={styles.perkInfo}>
                   <Text style={[styles.perkTitle, { color: textPrimary }]}>
@@ -153,30 +154,30 @@ export const RoyalPerksGrid: React.FC<RoyalPerksGridProps> = React.memo(
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 24,
+    marginBottom: ResponsivePixels.size24,
   },
   sectionHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 12,
-    marginLeft: 2,
+    gap: ResponsivePixels.size8,
+    marginBottom: ResponsivePixels.size12,
+    marginLeft: ResponsivePixels.size2,
   },
   sectionTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 18,
+    fontSize: ResponsivePixels.size18,
     letterSpacing: -0.3,
   },
   perksContainer: {
-    gap: 10,
+    gap: ResponsivePixels.size10,
   },
   perkCard: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    borderRadius: 18,
+    borderRadius: ResponsivePixels.size18,
     borderWidth: 1.5,
-    padding: 14,
-    gap: 12,
+    padding: ResponsivePixels.size14,
+    gap: ResponsivePixels.size12,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.04,
@@ -184,9 +185,9 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   perkIconBox: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: ResponsivePixels.size40,
+    height: ResponsivePixels.size40,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -196,13 +197,13 @@ const styles = StyleSheet.create({
   },
   perkTitle: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14,
-    marginBottom: 3,
+    fontSize: ResponsivePixels.size14,
+    marginBottom: ResponsivePixels.size3,
   },
   perkDesc: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
-    lineHeight: 16,
+    fontSize: ResponsivePixels.size11_5,
+    lineHeight: ResponsivePixels.size16,
   },
 });
 

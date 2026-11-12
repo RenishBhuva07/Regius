@@ -71,7 +71,7 @@ export const WakeWordCustomInput: React.FC<WakeWordCustomInputProps> =
             <View style={styles.customToggleMeta}>
               <View style={styles.customTitleRow}>
                 <Sliders
-                  size={16}
+                  size={ResponsivePixels.size16}
                   color={Colors.LavenderPurple}
                   strokeWidth={2.2}
                 />
@@ -130,7 +130,7 @@ export const WakeWordCustomInput: React.FC<WakeWordCustomInputProps> =
                 {validation.isValid ? (
                   <View style={styles.validStatus}>
                     <ShieldCheck
-                      size={16}
+                      size={ResponsivePixels.size16}
                       color={Colors.LuminousGreen}
                       strokeWidth={2.4}
                     />
@@ -141,7 +141,7 @@ export const WakeWordCustomInput: React.FC<WakeWordCustomInputProps> =
                 ) : (
                   <View style={styles.invalidStatus}>
                     <AlertTriangle
-                      size={16}
+                      size={ResponsivePixels.size16}
                       color={Colors.CrimsonPulse}
                       strokeWidth={2.4}
                     />
@@ -161,7 +161,7 @@ export const WakeWordCustomInput: React.FC<WakeWordCustomInputProps> =
 const styles = StyleSheet.create({
   customPhraseCard: {
     marginHorizontal: ResponsivePixels.size16,
-    borderRadius: 20,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
     borderBottomWidth: 3.5,
     padding: ResponsivePixels.size16,
@@ -178,27 +178,27 @@ const styles = StyleSheet.create({
   },
   customToggleMeta: {
     flex: 1,
-    paddingRight: 10,
+    paddingRight: ResponsivePixels.size10,
   },
   customTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    marginBottom: 2,
+    gap: ResponsivePixels.size6,
+    marginBottom: ResponsivePixels.size2,
   },
   customTitle: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
   },
   customSubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
-    marginTop: 2,
+    fontSize: ResponsivePixels.size11,
+    marginTop: ResponsivePixels.size2,
   },
   radioCircle: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+    width: ResponsivePixels.size22,
+    height: ResponsivePixels.size22,
+    borderRadius: ResponsivePixels.size11,
     borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
@@ -207,9 +207,9 @@ const styles = StyleSheet.create({
     borderColor: Colors.LavenderPurple,
   },
   radioInner: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
+    width: ResponsivePixels.size12,
+    height: ResponsivePixels.size12,
+    borderRadius: ResponsivePixels.size6,
   },
   customInputArea: {
     marginTop: ResponsivePixels.size14,
@@ -218,39 +218,39 @@ const styles = StyleSheet.create({
     borderTopColor: Colors.RingBorder,
   },
   customInputWrap: {
-    borderRadius: 14,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1.5,
-    paddingHorizontal: 14,
-    height: 48,
+    paddingHorizontal: ResponsivePixels.size14,
+    height: ResponsivePixels.size48,
     justifyContent: 'center',
-    marginBottom: 10,
+    marginBottom: ResponsivePixels.size10,
   },
   customInputField: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     padding: 0,
   },
   validationRow: {
-    marginTop: 2,
+    marginTop: ResponsivePixels.size2,
   },
   validStatus: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   validText: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: Colors.LuminousGreen,
   },
   invalidStatus: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   invalidText: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: Colors.CrimsonPulse,
   },
 });

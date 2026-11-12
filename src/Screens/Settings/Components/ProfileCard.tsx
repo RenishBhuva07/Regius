@@ -61,7 +61,10 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
           <View style={styles.profileCardTop}>
             <View style={styles.avatarWrapper}>
               <View style={styles.avatarRing}>
-                <SVGS.RegiusAvatar width={52} height={52} />
+                <SVGS.RegiusAvatar
+                  width={ResponsivePixels.size52}
+                  height={ResponsivePixels.size52}
+                />
               </View>
             </View>
 
@@ -93,7 +96,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
               accessibilityRole="button"
               accessibilityLabel="Edit Profile"
             >
-              <Edit3 size={14} color={Colors.PureWhite} strokeWidth={2.2} />
+              <Edit3 size={ResponsivePixels.size14} color={Colors.PureWhite} strokeWidth={2.2} />
               <Text style={styles.editProfileBtnText}>Edit</Text>
             </TouchableOpacity>
           </View>
@@ -119,7 +122,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
               <View style={styles.milestoneTopRow}>
                 <View style={styles.milestoneLeftInfo}>
                   <Award
-                    size={15}
+                    size={ResponsivePixels.size15}
                     color={milestoneTier.accentColor || Colors.AccentYellow}
                     strokeWidth={2.4}
                   />
@@ -131,7 +134,7 @@ export const ProfileCard: React.FC<ProfileCardProps> = ({
                 <View style={styles.milestoneXpWrapper}>
                   <Text style={styles.milestoneXpText}>{milestoneXp} XP</Text>
                   <ChevronRight
-                    size={13}
+                    size={ResponsivePixels.size13}
                     color={Colors.BriefingSilverText}
                     strokeWidth={2}
                   />
@@ -205,7 +208,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: Colors.NeroBlack,
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     padding: ResponsivePixels.size14,
     position: 'relative',
     overflow: 'hidden',
@@ -222,12 +225,12 @@ const styles = StyleSheet.create({
   },
   avatarWrapper: {
     position: 'relative',
-    marginRight: 12,
+    marginRight: ResponsivePixels.size12,
   },
   avatarRing: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: ResponsivePixels.size56,
+    height: ResponsivePixels.size56,
+    borderRadius: ResponsivePixels.size28,
     borderWidth: 2.5,
     borderColor: Colors.AccentYellow,
     backgroundColor: Colors.DarkProfileCardBg,
@@ -237,37 +240,37 @@ const styles = StyleSheet.create({
   },
   profileDetails: {
     flex: 1,
-    marginRight: 8,
+    marginRight: ResponsivePixels.size8,
     justifyContent: 'center',
   },
   nameRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 7,
+    gap: ResponsivePixels.size7,
   },
   profileName: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 17,
-    lineHeight: 22,
+    fontSize: ResponsivePixels.size17,
+    lineHeight: ResponsivePixels.size22,
     color: Colors.PureWhite,
   },
   profileEmail: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.BriefingMutedSilver,
-    marginTop: 1,
+    marginTop: ResponsivePixels.size1,
   },
   roleBadgeWrapper: {
-    marginTop: 4,
+    marginTop: ResponsivePixels.size4,
     alignSelf: 'flex-start',
   },
   editProfileBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-    borderRadius: 20,
+    gap: ResponsivePixels.size6,
+    paddingHorizontal: ResponsivePixels.size14,
+    paddingVertical: ResponsivePixels.size7,
+    borderRadius: ResponsivePixels.size20,
     backgroundColor: withAlpha(Colors.PureWhite, 0.12),
     borderWidth: 1,
     borderColor: withAlpha(Colors.PureWhite, 0.22),
@@ -275,29 +278,29 @@ const styles = StyleSheet.create({
   },
   editProfileBtnText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12.5,
+    fontSize: ResponsivePixels.size12_5,
     color: Colors.PureWhite,
   },
   bioSnippet: {
-    marginTop: 12,
-    paddingHorizontal: 14,
-    paddingVertical: 9,
-    borderRadius: 14,
+    marginTop: ResponsivePixels.size12,
+    paddingHorizontal: ResponsivePixels.size14,
+    paddingVertical: ResponsivePixels.size9,
+    borderRadius: ResponsivePixels.size14,
     backgroundColor: withAlpha(Colors.PureWhite, 0.07),
     borderWidth: 1,
     borderColor: withAlpha(Colors.PureWhite, 0.08),
   },
   bioSnippetText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
-    lineHeight: 17,
+    fontSize: ResponsivePixels.size12,
+    lineHeight: ResponsivePixels.size17,
     color: Colors.BriefingSilverText,
   },
   milestoneBanner: {
-    marginTop: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    borderRadius: 14,
+    marginTop: ResponsivePixels.size12,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size10,
+    borderRadius: ResponsivePixels.size14,
     backgroundColor: withAlpha(Colors.PureWhite, 0.06),
     borderWidth: 1,
     borderColor: withAlpha(Colors.PureWhite, 0.1),
@@ -306,38 +309,38 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 6,
+    marginBottom: ResponsivePixels.size6,
   },
   milestoneLeftInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
     flex: 1,
   },
   milestoneLevelText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: Colors.PureWhite,
   },
   milestoneXpWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: ResponsivePixels.size4,
   },
   milestoneXpText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: Colors.AccentYellow,
   },
   milestoneBarTrack: {
-    height: 5,
-    borderRadius: 2.5,
+    height: ResponsivePixels.size5,
+    borderRadius: ResponsivePixels.size2_5,
     backgroundColor: withAlpha(Colors.PureWhite, 0.12),
     overflow: 'hidden',
   },
   milestoneBarFill: {
     height: '100%',
-    borderRadius: 2.5,
+    borderRadius: ResponsivePixels.size2_5,
   },
   profileMetricsRow: {
     flexDirection: 'row',
@@ -354,18 +357,18 @@ const styles = StyleSheet.create({
   },
   metricValue: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 16,
+    fontSize: ResponsivePixels.size16,
     color: Colors.PureWhite,
   },
   metricLabel: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: Colors.MilestoneSlate,
-    marginTop: 2,
+    marginTop: ResponsivePixels.size2,
   },
   metricDivider: {
     width: 1,
-    height: 24,
+    height: ResponsivePixels.size24,
     backgroundColor: withAlpha(Colors.PureWhite, 0.12),
   },
 });

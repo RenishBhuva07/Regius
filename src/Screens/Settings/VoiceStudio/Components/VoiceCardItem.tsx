@@ -6,6 +6,7 @@ import { Colors, withAlpha } from '../../../../Assets/StyleUtilities/Colors';
 import { Badge } from '../../../../Common/Badge';
 import { VoiceOption } from '../../Components/types';
 import { isLightColor } from '../../../../Theme/ThemeContext';
+import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface VoiceCardItemProps {
   voice: VoiceOption;
@@ -67,7 +68,7 @@ export const VoiceCardItem: React.FC<VoiceCardItemProps> = React.memo(
             ]}
           >
             <Mic
-              size={16}
+              size={ResponsivePixels.size16}
               color={
                 isSelected
                   ? isLightColor(themeAccent)
@@ -118,13 +119,13 @@ export const VoiceCardItem: React.FC<VoiceCardItemProps> = React.memo(
           >
             {isPreviewing ? (
               <Square
-                size={14}
+                size={ResponsivePixels.size14}
                 color={Colors.LavenderPurple}
                 fill={Colors.LavenderPurple}
               />
             ) : (
               <Play
-                size={14}
+                size={ResponsivePixels.size14}
                 color={Colors.LavenderPurple}
                 fill={Colors.LavenderPurple}
               />
@@ -133,7 +134,7 @@ export const VoiceCardItem: React.FC<VoiceCardItemProps> = React.memo(
 
           {isSelected && (
             <View style={styles.activeCheckBadge}>
-              <Check size={14} color={Colors.PureWhite} strokeWidth={3} />
+              <Check size={ResponsivePixels.size14} color={Colors.PureWhite} strokeWidth={3} />
             </View>
           )}
         </View>
@@ -147,19 +148,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 12,
-    paddingHorizontal: 14,
+    paddingVertical: ResponsivePixels.size12,
+    paddingHorizontal: ResponsivePixels.size14,
   },
   voiceInfoClickable: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
-    gap: 12,
+    gap: ResponsivePixels.size12,
   },
   voiceAvatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: ResponsivePixels.size40,
+    height: ResponsivePixels.size40,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -170,37 +171,37 @@ const styles = StyleSheet.create({
   voiceNameRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 2,
+    gap: ResponsivePixels.size8,
+    marginBottom: ResponsivePixels.size2,
   },
   voiceName: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 14.5,
+    fontSize: ResponsivePixels.size14_5,
   },
   voiceNameSelected: {
     fontFamily: Fonts.poppins.bold,
   },
   voiceItemDesc: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
   },
   voiceItemActions: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   itemPlayBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: ResponsivePixels.size32,
+    height: ResponsivePixels.size32,
+    borderRadius: ResponsivePixels.size16,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   activeCheckBadge: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+    width: ResponsivePixels.size22,
+    height: ResponsivePixels.size22,
+    borderRadius: ResponsivePixels.size11,
     backgroundColor: Colors.LavenderPurple,
     alignItems: 'center',
     justifyContent: 'center',

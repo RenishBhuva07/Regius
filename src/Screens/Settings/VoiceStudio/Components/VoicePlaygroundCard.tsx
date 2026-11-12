@@ -11,6 +11,7 @@ import {
 import { Sparkles, StopCircle, Volume2 } from 'lucide-react-native';
 import { Fonts } from '../../../../Theme/fonts';
 import { Colors } from '../../../../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 
 export const DEFAULT_PRESET_SENTENCES = [
   'Hey Regius, ready when you are.',
@@ -70,7 +71,7 @@ export const VoicePlaygroundCard: React.FC<VoicePlaygroundCardProps> =
         >
           <View style={styles.playgroundHeader}>
             <Sparkles
-              size={16}
+              size={ResponsivePixels.size16}
               color={themeAccent}
               strokeWidth={2.4}
             />
@@ -160,7 +161,7 @@ export const VoicePlaygroundCard: React.FC<VoicePlaygroundCardProps> =
                 onPress={onStop}
               >
                 <StopCircle
-                  size={16}
+                  size={ResponsivePixels.size16}
                   color={Colors.PureWhite}
                   strokeWidth={2.2}
                 />
@@ -181,7 +182,7 @@ export const VoicePlaygroundCard: React.FC<VoicePlaygroundCardProps> =
                 disabled={synthesisState === 'synthesizing'}
               >
                 <Volume2
-                  size={16}
+                  size={ResponsivePixels.size16}
                   color={buttonTextColor || Colors.PureWhite}
                   strokeWidth={2.2}
                 />
@@ -205,10 +206,10 @@ export const VoicePlaygroundCard: React.FC<VoicePlaygroundCardProps> =
 
 const styles = StyleSheet.create({
   playgroundCard: {
-    borderRadius: 20,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
-    padding: 16,
-    marginBottom: 26,
+    padding: ResponsivePixels.size16,
+    marginBottom: ResponsivePixels.size26,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
@@ -218,72 +219,72 @@ const styles = StyleSheet.create({
   playgroundHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 12,
+    gap: ResponsivePixels.size8,
+    marginBottom: ResponsivePixels.size12,
   },
   playgroundHeaderTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     letterSpacing: -0.2,
   },
   textInputBox: {
-    borderRadius: 14,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginBottom: 12,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size10,
+    marginBottom: ResponsivePixels.size12,
   },
   textInputField: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 13,
-    minHeight: 58,
+    fontSize: ResponsivePixels.size13,
+    minHeight: ResponsivePixels.size58,
     textAlignVertical: 'top',
   },
   presetChipsLabel: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
-    marginBottom: 8,
+    fontSize: ResponsivePixels.size11,
+    marginBottom: ResponsivePixels.size8,
     textTransform: 'uppercase',
     letterSpacing: 0.6,
   },
   presetChipsScroll: {
-    gap: 8,
-    paddingBottom: 12,
+    gap: ResponsivePixels.size8,
+    paddingBottom: ResponsivePixels.size12,
   },
   presetChip: {
-    borderRadius: 14,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    maxWidth: 220,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size6,
+    maxWidth: ResponsivePixels.size220,
   },
   presetChipText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
   },
   statusBanner: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 12,
+    gap: ResponsivePixels.size8,
+    marginBottom: ResponsivePixels.size12,
   },
   statusSpinner: {
-    marginRight: 4,
+    marginRight: ResponsivePixels.size4,
   },
   statusText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
   },
   playgroundActionsRow: {
-    marginTop: 2,
+    marginTop: ResponsivePixels.size2,
   },
   actionBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
-    borderRadius: 24,
-    paddingVertical: 13,
+    gap: ResponsivePixels.size8,
+    borderRadius: ResponsivePixels.size24,
+    paddingVertical: ResponsivePixels.size13,
   },
   stopBtn: {
     backgroundColor: Colors.CrimsonPulse,
@@ -293,7 +294,7 @@ const styles = StyleSheet.create({
   },
   actionBtnText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 13.5,
+    fontSize: ResponsivePixels.size13_5,
     color: Colors.PureWhite,
   },
 });

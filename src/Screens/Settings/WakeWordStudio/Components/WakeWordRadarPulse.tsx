@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated } from 'react-native';
 import { Mic, MicOff } from 'lucide-react-native';
 import Colors, { withAlpha } from '../../../../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface WakeWordRadarPulseProps {
   isWakeWordEnabled: boolean;
@@ -83,9 +84,9 @@ export const WakeWordRadarPulse: React.FC<WakeWordRadarPulseProps> = React.memo(
           ]}
         >
           {isWakeWordEnabled ? (
-            <Mic size={28} color={Colors.PureWhite} strokeWidth={2.4} />
+            <Mic size={ResponsivePixels.size28} color={Colors.PureWhite} strokeWidth={2.4} />
           ) : (
-            <MicOff size={28} color={Colors.SteelMist} strokeWidth={2.4} />
+            <MicOff size={ResponsivePixels.size28} color={Colors.SteelMist} strokeWidth={2.4} />
           )}
         </View>
       </View>
@@ -95,32 +96,32 @@ export const WakeWordRadarPulse: React.FC<WakeWordRadarPulseProps> = React.memo(
 
 const styles = StyleSheet.create({
   radarVisualizerContainer: {
-    height: 120,
+    height: ResponsivePixels.size120,
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 14,
+    marginVertical: ResponsivePixels.size14,
     position: 'relative',
   },
   radarRingOuter: {
     position: 'absolute',
-    width: 114,
-    height: 114,
-    borderRadius: 57,
+    width: ResponsivePixels.size114,
+    height: ResponsivePixels.size114,
+    borderRadius: ResponsivePixels.size57,
     borderWidth: 2,
     borderColor: Colors.LuminousGreen,
   },
   radarRingMiddle: {
     position: 'absolute',
-    width: 90,
-    height: 90,
-    borderRadius: 45,
+    width: ResponsivePixels.size90,
+    height: ResponsivePixels.size90,
+    borderRadius: ResponsivePixels.size45,
     borderWidth: 1,
     borderColor: withAlpha(Colors.LuminousGreen, 0.3),
   },
   micCoreOrb: {
-    width: 66,
-    height: 66,
-    borderRadius: 33,
+    width: ResponsivePixels.size66,
+    height: ResponsivePixels.size66,
+    borderRadius: ResponsivePixels.size33,
     borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',

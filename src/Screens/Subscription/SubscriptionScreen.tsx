@@ -32,6 +32,7 @@ import {
   SubscriptionPlanItem,
   SocialProofCard,
 } from './Components';
+import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 
 const HEADER_HEIGHT = SUB_SCREEN_HEADER_HEIGHT;
 
@@ -208,8 +209,8 @@ export const SubscriptionScreen: React.FC = () => {
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingTop: insets.top + HEADER_HEIGHT + 14,
-            paddingBottom: insets.bottom + 124,
+            paddingTop: insets.top + HEADER_HEIGHT + ResponsivePixels.size14,
+            paddingBottom: insets.bottom + ResponsivePixels.size124,
           },
         ]}
         showsVerticalScrollIndicator={false}
@@ -225,7 +226,7 @@ export const SubscriptionScreen: React.FC = () => {
         {/* Sculpted Plan Selector */}
         <View style={styles.sectionHeaderRow}>
           <Sparkles
-            size={18}
+            size={ResponsivePixels.size18}
             color={Colors.AccentYellow}
             strokeWidth={2.4}
           />
@@ -278,13 +279,13 @@ export const SubscriptionScreen: React.FC = () => {
           icon={
             isPremium ? (
               <CheckCircle2
-                size={18}
+                size={ResponsivePixels.size18}
                 color={Colors.MidnightCharcoal}
                 strokeWidth={2.4}
               />
             ) : (
               <Crown
-                size={18}
+                size={ResponsivePixels.size18}
                 color={Colors.MidnightCharcoal}
                 strokeWidth={2.4}
               />
@@ -325,23 +326,23 @@ const styles = StyleSheet.create({
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   headerTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 18,
+    fontSize: ResponsivePixels.size18,
     letterSpacing: -0.3,
   },
   headerTitleScrolled: {
     color: Colors.PureWhite,
   },
   restoreBtn: {
-    paddingVertical: 6,
-    paddingHorizontal: 10,
+    paddingVertical: ResponsivePixels.size6,
+    paddingHorizontal: ResponsivePixels.size10,
   },
   restoreBtnText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     color: Colors.ObsidianGoldAntique,
   },
   restoreBtnTextScrolled: {
@@ -351,39 +352,39 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: 16,
+    paddingHorizontal: ResponsivePixels.size16,
   },
   sectionHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 12,
-    marginLeft: 2,
+    gap: ResponsivePixels.size8,
+    marginBottom: ResponsivePixels.size12,
+    marginLeft: ResponsivePixels.size2,
   },
   sectionTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 18,
+    fontSize: ResponsivePixels.size18,
     letterSpacing: -0.3,
   },
   plansContainer: {
-    gap: 12,
-    marginBottom: 20,
+    gap: ResponsivePixels.size12,
+    marginBottom: ResponsivePixels.size20,
   },
   cancelSubBtn: {
     alignSelf: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    marginBottom: 20,
+    paddingVertical: ResponsivePixels.size10,
+    paddingHorizontal: ResponsivePixels.size16,
+    marginBottom: ResponsivePixels.size20,
   },
   cancelSubBtnText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.CategoryRedAccent,
   },
   ctaButton: {
     backgroundColor: Colors.AccentYellow,
-    borderRadius: 28,
-    paddingVertical: 15,
+    borderRadius: ResponsivePixels.size28,
+    paddingVertical: ResponsivePixels.size15,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: Colors.AccentYellow,
@@ -391,7 +392,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.35,
     shadowRadius: 8,
     elevation: 4,
-    marginBottom: 8,
+    marginBottom: ResponsivePixels.size8,
   },
   ctaButtonActive: {
     backgroundColor: Colors.ToastSuccessCardBevelLight,
@@ -400,17 +401,17 @@ const styles = StyleSheet.create({
   ctaContentRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   ctaButtonText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 15,
+    fontSize: ResponsivePixels.size15,
     color: Colors.MidnightCharcoal,
     letterSpacing: 0.2,
   },
   legalMicrocopy: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     textAlign: 'center',
   },
 });

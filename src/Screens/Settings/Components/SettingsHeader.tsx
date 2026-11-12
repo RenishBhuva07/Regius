@@ -15,8 +15,9 @@ import { BackButton } from '../../../Common/BackButton';
 import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import HeaderPatternSvg from '../../Dashboard/Components/HeaderPatternSvg';
 import { useSettingsTheme } from './types';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
-export const SETTINGS_HEADER_HEIGHT = 54;
+export const SETTINGS_HEADER_HEIGHT = ResponsivePixels.size54;
 
 export interface SettingsHeaderProps {
   scrollY?: Animated.Value;
@@ -55,7 +56,7 @@ export const SettingsHeader: React.FC<SettingsHeaderProps> = ({
 
   const headerRadius = activeScrollY.interpolate({
     inputRange: [0, 30],
-    outputRange: [0, 24],
+    outputRange: [0, ResponsivePixels.size24],
     extrapolate: 'clamp',
   });
 
@@ -73,7 +74,7 @@ export const SettingsHeader: React.FC<SettingsHeaderProps> = ({
 
   const headerPaddingBottom = activeScrollY.interpolate({
     inputRange: [0, 30],
-    outputRange: [0, 8],
+    outputRange: [0, ResponsivePixels.size8],
     extrapolate: 'clamp',
   });
 
@@ -166,7 +167,7 @@ const styles = StyleSheet.create({
     shadowRadius: 7,
   },
   header: {
-    paddingHorizontal: 20,
+    paddingHorizontal: ResponsivePixels.size20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -175,18 +176,18 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    marginRight: 8,
+    gap: ResponsivePixels.size12,
+    marginRight: ResponsivePixels.size8,
   },
   titleWrapper: {
     flex: 1,
     justifyContent: 'center',
-    gap: 1,
+    gap: ResponsivePixels.size1,
   },
   headerTitle: {
     ...Typography.h1RanadeBold,
-    fontSize: 24,
-    lineHeight: 28,
+    fontSize: ResponsivePixels.size24,
+    lineHeight: ResponsivePixels.size28,
     letterSpacing: -0.5,
     includeFontPadding: false,
   },
@@ -195,9 +196,9 @@ const styles = StyleSheet.create({
   },
   headerSubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     includeFontPadding: false,
-    lineHeight: 15,
+    lineHeight: ResponsivePixels.size15,
   },
   headerSubtitleScrolled: {
     color: withAlpha(Colors.PureWhite, 0.82),

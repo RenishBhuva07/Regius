@@ -43,7 +43,7 @@ export const SubscriptionSection: React.FC<SubscriptionSectionProps> = ({
     <View style={styles.container}>
       <View style={styles.sectionHeaderRow}>
         <View style={styles.sectionTitleWithIcon}>
-          <Crown size={18} color={Colors.AccentYellow} strokeWidth={2.4} />
+          <Crown size={ResponsivePixels.size18} color={Colors.AccentYellow} strokeWidth={2.4} />
           <Text style={[styles.sectionTitle, { color: canvasTextPrimary }]}>
             Membership & Subscription
           </Text>
@@ -116,7 +116,7 @@ export const SubscriptionSection: React.FC<SubscriptionSectionProps> = ({
               ]}
             >
               <Crown
-                size={22}
+                size={ResponsivePixels.size22}
                 color={Colors.AccentYellow}
                 fill={isPremium ? Colors.AccentYellow : 'none'}
                 strokeWidth={2.2}
@@ -136,7 +136,7 @@ export const SubscriptionSection: React.FC<SubscriptionSectionProps> = ({
                 </Text>
                 {isPremium && (
                   <CheckCircle2
-                    size={16}
+                    size={ResponsivePixels.size16}
                     color={Colors.LuminousGreen}
                     strokeWidth={2.4}
                   />
@@ -152,7 +152,7 @@ export const SubscriptionSection: React.FC<SubscriptionSectionProps> = ({
               </Text>
             </View>
 
-            <ChevronRight size={18} color={textSecondary} strokeWidth={2} />
+            <ChevronRight size={ResponsivePixels.size18} color={textSecondary} strokeWidth={2} />
           </View>
 
           {/* Perks Chip Row */}
@@ -184,7 +184,7 @@ export const SubscriptionSection: React.FC<SubscriptionSectionProps> = ({
           >
             <View style={styles.actionPillLeft}>
               <Sparkles
-                size={13}
+                size={ResponsivePixels.size13}
                 color={Colors.AccentYellow}
                 strokeWidth={2.2}
               />
@@ -206,7 +206,7 @@ export const SubscriptionSection: React.FC<SubscriptionSectionProps> = ({
                 {isPremium ? 'View' : 'Upgrade'}
               </Text>
               <ChevronRight
-                size={14}
+                size={ResponsivePixels.size14}
                 color={isPremium ? textSecondary : Colors.BadgeYellowText}
                 strokeWidth={2.2}
               />
@@ -232,14 +232,14 @@ const styles = StyleSheet.create({
   sectionTitleWithIcon: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   sectionTitle: {
     ...Typography.h6Bold,
-    fontSize: 16,
+    fontSize: ResponsivePixels.size16,
   },
   settingsGroupCard: {
-    borderRadius: 22,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
     borderBottomWidth: 3.5,
     paddingHorizontal: ResponsivePixels.size16,
@@ -250,17 +250,17 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   cardTouchWrapper: {
-    gap: 12,
+    gap: ResponsivePixels.size12,
   },
   topInfoRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: ResponsivePixels.size12,
   },
   iconBadgeBox: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
+    width: ResponsivePixels.size44,
+    height: ResponsivePixels.size44,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -271,51 +271,51 @@ const styles = StyleSheet.create({
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   planTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 14.5,
+    fontSize: ResponsivePixels.size14_5,
   },
   planSubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
-    lineHeight: 16,
-    marginTop: 2,
+    fontSize: ResponsivePixels.size11_5,
+    lineHeight: ResponsivePixels.size16,
+    marginTop: ResponsivePixels.size2,
   },
   perksRow: {
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   actionPillRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 14,
+    paddingVertical: ResponsivePixels.size8,
+    paddingHorizontal: ResponsivePixels.size12,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1,
-    marginTop: 2,
+    marginTop: ResponsivePixels.size2,
   },
   actionPillLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   actionPillText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
   },
   arrowWrap: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 2,
+    gap: ResponsivePixels.size2,
   },
   viewDetailsText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
   },
 });
 

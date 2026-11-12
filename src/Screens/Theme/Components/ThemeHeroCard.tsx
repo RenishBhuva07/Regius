@@ -68,7 +68,7 @@ export const ThemeHeroCard: React.FC<ThemeHeroCardProps> = React.memo(
                 ]}
               >
                 <Sparkles
-                  size={16}
+                  size={ResponsivePixels.size16}
                   color={
                     isLightColor(activeTheme.accent)
                       ? Colors.DarkBackground
@@ -249,12 +249,12 @@ export const ThemeHeroCard: React.FC<ThemeHeroCardProps> = React.memo(
 
 const styles = StyleSheet.create({
   heroWrapper: {
-    paddingHorizontal: 10,
+    paddingHorizontal: ResponsivePixels.size10,
     marginBottom: ResponsivePixels.size20,
   },
   cardShadowWrapper: {
     backgroundColor: Colors.NeroBlack,
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.28,
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   heroCardInner: {
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     borderWidth: 4,
     borderColor: withAlpha(Colors.PureWhite, 0.9),
     padding: ResponsivePixels.size16,
@@ -273,20 +273,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 6,
+    marginBottom: ResponsivePixels.size6,
   },
   heroTitleGroup: {
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   heroThemeName: {
     ...Typography.h1RanadeBold,
     color: Colors.PureWhite,
-    fontSize: 22,
+    fontSize: ResponsivePixels.size22,
   },
   heroAccentOrb: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: ResponsivePixels.size36,
+    height: ResponsivePixels.size36,
+    borderRadius: ResponsivePixels.size18,
     alignItems: 'center',
     justifyContent: 'center',
     shadowColor: Colors.PureBlack,
@@ -298,77 +298,77 @@ const styles = StyleSheet.create({
   heroTagline: {
     ...Typography.bodySmallPoppinsRegular,
     color: withAlpha(Colors.PureWhite, 0.8),
-    fontSize: 12,
-    marginBottom: 14,
+    fontSize: ResponsivePixels.size12,
+    marginBottom: ResponsivePixels.size14,
   },
   heroMockupContainer: {
     backgroundColor: withAlpha(Colors.PureBlack, 0.35),
-    borderRadius: 16,
+    borderRadius: ResponsivePixels.size16,
     borderWidth: 1,
     borderColor: withAlpha(Colors.PureWhite, 0.12),
-    padding: 12,
-    marginBottom: 14,
+    padding: ResponsivePixels.size12,
+    marginBottom: ResponsivePixels.size14,
   },
   mockupHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: ResponsivePixels.size10,
   },
   mockupDotsRow: {
     flexDirection: 'row',
-    gap: 5,
+    gap: ResponsivePixels.size5,
   },
   mockupDot: {
-    width: 7,
-    height: 7,
-    borderRadius: 3.5,
+    width: ResponsivePixels.size7,
+    height: ResponsivePixels.size7,
+    borderRadius: ResponsivePixels.size3_5,
   },
   mockupHeaderText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     color: withAlpha(Colors.PureWhite, 0.65),
     letterSpacing: 0.5,
   },
   mockupSurface: {
-    borderRadius: 12,
-    padding: 12,
+    borderRadius: ResponsivePixels.size12,
+    padding: ResponsivePixels.size12,
   },
   mockupCardRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 8,
+    gap: ResponsivePixels.size8,
+    marginBottom: ResponsivePixels.size8,
   },
   mockupChip: {
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
+    paddingHorizontal: ResponsivePixels.size6,
+    paddingVertical: ResponsivePixels.size2,
+    borderRadius: ResponsivePixels.size6,
   },
   mockupChipText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 8.5,
+    fontSize: ResponsivePixels.size8_5,
     color: Colors.PureBlack,
   },
   mockupCardTitle: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
   },
   mockupProgressTrack: {
-    height: 4,
-    borderRadius: 2,
+    height: ResponsivePixels.size4,
+    borderRadius: ResponsivePixels.size2,
     backgroundColor: withAlpha(Colors.PureBlack, 0.15),
     overflow: 'hidden',
   },
   mockupProgressBar: {
     height: '100%',
-    borderRadius: 2,
+    borderRadius: ResponsivePixels.size2,
   },
   heroFooter: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 10,
+    paddingTop: ResponsivePixels.size10,
     borderTopWidth: 1,
     borderTopColor: withAlpha(Colors.PureWhite, 0.15),
   },
@@ -377,21 +377,21 @@ const styles = StyleSheet.create({
   },
   heroStatLabel: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 9,
+    fontSize: ResponsivePixels.size9,
     color: withAlpha(Colors.PureWhite, 0.6),
     letterSpacing: 0.8,
   },
   heroStatValue: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.PureWhite,
-    marginTop: 2,
+    marginTop: ResponsivePixels.size2,
   },
   heroDivider: {
     width: 1,
-    height: 24,
+    height: ResponsivePixels.size24,
     backgroundColor: withAlpha(Colors.PureWhite, 0.2),
-    marginHorizontal: 10,
+    marginHorizontal: ResponsivePixels.size10,
   },
 });
 

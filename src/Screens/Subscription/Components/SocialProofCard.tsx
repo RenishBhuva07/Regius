@@ -5,6 +5,7 @@ import { Star } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import { useTheme } from '../../../Theme/ThemeContext';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface SocialProofCardProps {
   isDarkMode: boolean;
@@ -40,7 +41,7 @@ export const SocialProofCard: React.FC<SocialProofCardProps> = React.memo(
           {[...Array(5)].map((_, i) => (
             <Star
               key={i}
-              size={14}
+              size={ResponsivePixels.size14}
               color={Colors.AccentYellow}
               fill={Colors.AccentYellow}
               strokeWidth={2}
@@ -64,10 +65,10 @@ export const SocialProofCard: React.FC<SocialProofCardProps> = React.memo(
 
 const styles = StyleSheet.create({
   trustCard: {
-    borderRadius: 18,
+    borderRadius: ResponsivePixels.size18,
     borderWidth: 1.5,
-    padding: 16,
-    marginBottom: 20,
+    padding: ResponsivePixels.size16,
+    marginBottom: ResponsivePixels.size20,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.04,
@@ -77,24 +78,24 @@ const styles = StyleSheet.create({
   starsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    marginBottom: 8,
+    gap: ResponsivePixels.size4,
+    marginBottom: ResponsivePixels.size8,
   },
   ratingText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
-    marginLeft: 6,
+    fontSize: ResponsivePixels.size12,
+    marginLeft: ResponsivePixels.size6,
   },
   guaranteeDesc: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
-    lineHeight: 18,
+    fontSize: ResponsivePixels.size12,
+    lineHeight: ResponsivePixels.size18,
     fontStyle: 'italic',
-    marginBottom: 6,
+    marginBottom: ResponsivePixels.size6,
   },
   guaranteeAuthor: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
   },
 });
 

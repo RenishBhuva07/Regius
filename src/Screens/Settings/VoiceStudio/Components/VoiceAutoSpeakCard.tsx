@@ -3,6 +3,7 @@ import { View, Text, Switch, StyleSheet } from 'react-native';
 import { Fonts } from '../../../../Theme/fonts';
 import { Colors } from '../../../../Assets/StyleUtilities/Colors';
 import { useTheme } from '../../../../Theme/ThemeContext';
+import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface VoiceAutoSpeakCardProps {
   autoSpeakReplies: boolean;
@@ -53,21 +54,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    gap: 12,
+    gap: ResponsivePixels.size12,
   },
   toggleMeta: {
     flex: 1,
   },
   toggleTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     letterSpacing: -0.2,
   },
   toggleSub: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
-    marginTop: 2,
-    lineHeight: 16,
+    fontSize: ResponsivePixels.size12,
+    marginTop: ResponsivePixels.size2,
+    lineHeight: ResponsivePixels.size16,
   },
 });
 

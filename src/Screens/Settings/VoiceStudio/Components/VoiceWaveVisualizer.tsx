@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated, Easing } from 'react-native';
 import { Fonts } from '../../../../Theme/fonts';
 import { Colors, withAlpha } from '../../../../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface VoiceWaveVisualizerProps {
   isActive: boolean;
@@ -187,32 +188,32 @@ export const VoiceWaveVisualizer: React.FC<VoiceWaveVisualizerProps> =
 
 const styles = StyleSheet.create({
   waveVisualizerContainer: {
-    borderRadius: 16,
+    borderRadius: ResponsivePixels.size16,
     backgroundColor: Colors.VoiceWaveDarkBg,
     borderWidth: 1,
     borderColor: withAlpha(Colors.PureWhite, 0.12),
-    paddingVertical: 14,
-    paddingHorizontal: 16,
+    paddingVertical: ResponsivePixels.size14,
+    paddingHorizontal: ResponsivePixels.size16,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 14,
+    marginBottom: ResponsivePixels.size14,
   },
   waveBarsRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    height: 34,
-    gap: 6,
-    marginBottom: 6,
+    height: ResponsivePixels.size34,
+    gap: ResponsivePixels.size6,
+    marginBottom: ResponsivePixels.size6,
   },
   waveBar: {
-    width: 5,
-    height: 30,
-    borderRadius: 3,
+    width: ResponsivePixels.size5,
+    height: ResponsivePixels.size30,
+    borderRadius: ResponsivePixels.size3,
   },
   waveStatusLabel: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: Colors.SteelMist,
   },
 });

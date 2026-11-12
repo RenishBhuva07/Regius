@@ -142,7 +142,7 @@ export const WakeWordPresetCard: React.FC<WakeWordPresetCardProps> = React.memo(
 
 const styles = StyleSheet.create({
   presetCard: {
-    borderRadius: 20,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
     borderBottomWidth: 3.5,
     padding: ResponsivePixels.size16,
@@ -155,7 +155,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 6,
+    marginBottom: ResponsivePixels.size6,
   },
   presetNameCol: {
     flex: 1,
@@ -163,21 +163,21 @@ const styles = StyleSheet.create({
   presetTitleWithBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   presetPhraseText: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 18,
-    marginBottom: 2,
+    fontSize: ResponsivePixels.size18,
+    marginBottom: ResponsivePixels.size2,
   },
   presetNameText: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
   },
   radioCircle: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+    width: ResponsivePixels.size22,
+    height: ResponsivePixels.size22,
+    borderRadius: ResponsivePixels.size11,
     borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
@@ -186,50 +186,50 @@ const styles = StyleSheet.create({
     borderColor: Colors.LavenderPurple,
   },
   radioInner: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
+    width: ResponsivePixels.size12,
+    height: ResponsivePixels.size12,
+    borderRadius: ResponsivePixels.size6,
   },
   presetTipsText: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 12,
-    marginBottom: 10,
+    fontSize: ResponsivePixels.size12,
+    marginBottom: ResponsivePixels.size10,
   },
   aliasesWrap: {
-    marginBottom: 10,
+    marginBottom: ResponsivePixels.size10,
   },
   aliasesLabel: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 10,
-    marginBottom: 4,
+    fontSize: ResponsivePixels.size10,
+    marginBottom: ResponsivePixels.size4,
   },
   aliasesChipsRow: {
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   aliasChip: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size3,
+    borderRadius: ResponsivePixels.size8,
     borderWidth: 1,
   },
   aliasChipText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
   },
   aliasMoreText: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 10,
-    marginLeft: 2,
+    fontSize: ResponsivePixels.size10,
+    marginLeft: ResponsivePixels.size2,
   },
   presetMetaPills: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   badgeGap: {
-    width: 8,
+    width: ResponsivePixels.size8,
   },
 });
 

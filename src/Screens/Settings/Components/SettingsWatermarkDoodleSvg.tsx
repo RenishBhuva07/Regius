@@ -10,6 +10,7 @@ import Svg, {
   Rect,
 } from 'react-native-svg';
 import Colors from '../../../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface SettingsWatermarkDoodleSvgProps {
   width?: number;
@@ -19,7 +20,10 @@ export interface SettingsWatermarkDoodleSvgProps {
 // Vector illustration for the Settings footer watermark.
 export const SettingsWatermarkDoodleSvg: React.FC<
   SettingsWatermarkDoodleSvgProps
-> = ({ width = 135, height = 135 }) => {
+> = ({
+  width = ResponsivePixels.size135,
+  height = ResponsivePixels.size135,
+}) => {
   return (
     <View style={[styles.container, { width, height }]} pointerEvents="none">
       <Svg width={width} height={height} viewBox="0 0 135 135" fill="none">

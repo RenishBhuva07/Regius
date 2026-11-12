@@ -110,7 +110,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
             style={[styles.modalCloseBtn, { backgroundColor: surfaceAlt }]}
             onPress={onClose}
           >
-            <X size={20} color={textPrimary} strokeWidth={2.4} />
+            <X size={ResponsivePixels.size20} color={textPrimary} strokeWidth={2.4} />
           </TouchableOpacity>
         </View>
 
@@ -126,7 +126,10 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = ({
                 { borderColor: StaticColors.AccentYellow },
               ]}
             >
-              <SVGS.RegiusAvatar width={64} height={64} />
+              <SVGS.RegiusAvatar
+                width={ResponsivePixels.size64}
+                height={ResponsivePixels.size64}
+              />
             </View>
             <Text style={[styles.modalAvatarHelp, { color: textSecondary }]}>
               Regius Crown Member Avatar
@@ -265,17 +268,17 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     ...Typography.h6Bold,
-    fontSize: 20,
+    fontSize: ResponsivePixels.size20,
   },
   modalSubtitle: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 12,
-    marginTop: 2,
+    fontSize: ResponsivePixels.size12,
+    marginTop: ResponsivePixels.size2,
   },
   modalCloseBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: ResponsivePixels.size36,
+    height: ResponsivePixels.size36,
+    borderRadius: ResponsivePixels.size18,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -285,7 +288,7 @@ const styles = StyleSheet.create({
   modalScrollContent: {
     paddingHorizontal: ResponsivePixels.size20,
     paddingVertical: ResponsivePixels.size16,
-    paddingBottom: 40,
+    paddingBottom: ResponsivePixels.size40,
   },
   modalAvatarSection: {
     alignItems: 'center',
@@ -293,9 +296,9 @@ const styles = StyleSheet.create({
     marginTop: ResponsivePixels.size8,
   },
   modalAvatarRing: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: ResponsivePixels.size80,
+    height: ResponsivePixels.size80,
+    borderRadius: ResponsivePixels.size40,
     borderWidth: 2.5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -304,65 +307,65 @@ const styles = StyleSheet.create({
   },
   modalAvatarHelp: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 12,
-    marginTop: 8,
+    fontSize: ResponsivePixels.size12,
+    marginTop: ResponsivePixels.size8,
   },
   inputGroup: {
     marginBottom: ResponsivePixels.size16,
   },
   inputLabel: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 13,
-    marginBottom: 6,
+    fontSize: ResponsivePixels.size13,
+    marginBottom: ResponsivePixels.size6,
   },
   textInput: {
-    borderRadius: 14,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1.5,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 14,
+    paddingHorizontal: ResponsivePixels.size14,
+    paddingVertical: ResponsivePixels.size12,
+    fontSize: ResponsivePixels.size14,
     fontFamily: Typography.bodyMediumPoppinsMedium.fontFamily,
   },
   textInputMulti: {
-    borderRadius: 14,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1.5,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
-    fontSize: 14,
+    paddingHorizontal: ResponsivePixels.size14,
+    paddingVertical: ResponsivePixels.size12,
+    fontSize: ResponsivePixels.size14,
     fontFamily: Typography.bodyMediumPoppinsMedium.fontFamily,
-    minHeight: 80,
+    minHeight: ResponsivePixels.size80,
     textAlignVertical: 'top',
   },
   modalFooter: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: ResponsivePixels.size12,
     paddingHorizontal: ResponsivePixels.size20,
     paddingVertical: ResponsivePixels.size16,
     borderTopWidth: 1,
   },
   modalCancelBtn: {
     flex: 1,
-    paddingVertical: 14,
-    borderRadius: 16,
+    paddingVertical: ResponsivePixels.size14,
+    borderRadius: ResponsivePixels.size16,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
   },
   modalCancelBtnText: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
   },
   modalSaveBtn: {
     flex: 1.5,
-    paddingVertical: 14,
-    borderRadius: 16,
+    paddingVertical: ResponsivePixels.size14,
+    borderRadius: ResponsivePixels.size16,
     alignItems: 'center',
     justifyContent: 'center',
   },
   modalSaveBtnText: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     color: StaticColors.PureWhite,
   },
 });

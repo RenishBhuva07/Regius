@@ -155,7 +155,7 @@ export const ThemeScreen: React.FC = () => {
         style={styles.scrollView}
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingBottom: insets.bottom + 40 },
+          { paddingBottom: insets.bottom + ResponsivePixels.size40 },
         ]}
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
@@ -237,13 +237,13 @@ const styles = StyleSheet.create({
   headerRightActions: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   scrollView: {
     flex: 1,
   },
   scrollContent: {
-    paddingTop: 12,
+    paddingTop: ResponsivePixels.size12,
   },
   themeList: {
     paddingHorizontal: ResponsivePixels.size16,

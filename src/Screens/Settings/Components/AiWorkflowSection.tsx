@@ -42,7 +42,7 @@ export const AiWorkflowSection: React.FC<AiWorkflowSectionProps> = ({
       <View style={styles.sectionHeaderRow}>
         <View style={styles.sectionTitleWithIcon}>
           <Zap
-            size={18}
+            size={ResponsivePixels.size18}
             color={StaticColors.AccentGreen}
             strokeWidth={2.4}
           />
@@ -91,7 +91,7 @@ export const AiWorkflowSection: React.FC<AiWorkflowSectionProps> = ({
               ]}
             >
               <Sparkles
-                size={18}
+                size={ResponsivePixels.size18}
                 color={StaticColors.AccentGreen}
                 strokeWidth={2.2}
               />
@@ -131,7 +131,7 @@ export const AiWorkflowSection: React.FC<AiWorkflowSectionProps> = ({
               ]}
             >
               <Bell
-                size={18}
+                size={ResponsivePixels.size18}
                 color={StaticColors.AccentYellow}
                 strokeWidth={2.2}
               />
@@ -171,7 +171,7 @@ export const AiWorkflowSection: React.FC<AiWorkflowSectionProps> = ({
               ]}
             >
               <Volume2
-                size={18}
+                size={ResponsivePixels.size18}
                 color={
                   isDarkMode
                     ? StaticColors.AccentGreen
@@ -215,14 +215,14 @@ const styles = StyleSheet.create({
   sectionTitleWithIcon: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   sectionTitle: {
     ...Typography.h6Bold,
-    fontSize: 16,
+    fontSize: ResponsivePixels.size16,
   },
   settingsGroupCard: {
-    borderRadius: 22,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
     borderBottomWidth: 3.5,
     paddingHorizontal: ResponsivePixels.size16,
@@ -242,14 +242,14 @@ const styles = StyleSheet.create({
   settingItemLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: ResponsivePixels.size12,
     flex: 1,
-    paddingRight: 10,
+    paddingRight: ResponsivePixels.size10,
   },
   iconSquare: {
-    width: 38,
-    height: 38,
-    borderRadius: 12,
+    width: ResponsivePixels.size38,
+    height: ResponsivePixels.size38,
+    borderRadius: ResponsivePixels.size12,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -258,12 +258,12 @@ const styles = StyleSheet.create({
   },
   settingItemTitle: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
   },
   settingItemDesc: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 11,
-    marginTop: 1,
+    fontSize: ResponsivePixels.size11,
+    marginTop: ResponsivePixels.size1,
   },
   itemDivider: {
     height: 1,

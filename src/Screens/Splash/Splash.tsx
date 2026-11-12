@@ -177,7 +177,10 @@ const SplashScreen: React.FC = () => {
                       {
                         translateY: floatAnim.interpolate({
                           inputRange: [-4, 4],
-                          outputRange: [4, -4],
+                          outputRange: [
+                            ResponsivePixels.size4,
+                            -ResponsivePixels.size4,
+                          ],
                         }),
                       },
                     ],

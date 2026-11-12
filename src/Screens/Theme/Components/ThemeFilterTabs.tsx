@@ -81,14 +81,14 @@ const styles = StyleSheet.create({
   filterTabsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    paddingHorizontal: 16,
+    gap: ResponsivePixels.size8,
+    paddingHorizontal: ResponsivePixels.size16,
     marginBottom: ResponsivePixels.size20,
   },
   filterTabPill: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: ResponsivePixels.size14,
+    paddingVertical: ResponsivePixels.size8,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1,
   },
   filterTabPillActive: {
@@ -99,7 +99,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   filterTabText: {
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
   },
 });
 

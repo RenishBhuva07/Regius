@@ -106,7 +106,7 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
       <View style={styles.sectionHeaderRow}>
         <View style={styles.sectionTitleWithIcon}>
           <Palette
-            size={18}
+            size={ResponsivePixels.size18}
             color={StaticColors.AccentYellow}
             strokeWidth={2.4}
           />
@@ -159,7 +159,7 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
           >
             <View style={styles.themesHeaderLeft}>
               <Palette
-                size={14}
+                size={ResponsivePixels.size14}
                 color={StaticColors.AccentYellow}
                 strokeWidth={2.2}
               />
@@ -172,7 +172,7 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
             <View style={styles.themesHeaderRight}>
               <Text style={styles.viewAllThemesText}>View All & Colors</Text>
               <ChevronRight
-                size={14}
+                size={ResponsivePixels.size14}
                 color={StaticColors.AccentYellow}
                 strokeWidth={2.4}
               />
@@ -271,7 +271,7 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
                           ]}
                         >
                           <Check
-                            size={9}
+                            size={ResponsivePixels.size9}
                             color={
                               isLightColor(theme.accent)
                                 ? StaticColors.PureBlack
@@ -285,7 +285,7 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
                       /* Locked Overlay with Lock Icon */
                       <View style={styles.roundLockedOverlay}>
                         <Lock
-                          size={12}
+                          size={ResponsivePixels.size12}
                           color={StaticColors.PureWhite}
                           strokeWidth={2.4}
                         />
@@ -341,7 +341,7 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
               ]}
             >
               <Smartphone
-                size={18}
+                size={ResponsivePixels.size18}
                 color={
                   activeThemeId === 'cyprus_sand'
                     ? isDarkMode
@@ -387,7 +387,7 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
           >
             <View style={styles.intensityHeader}>
               <Sliders
-                size={13}
+                size={ResponsivePixels.size13}
                 color={
                   activeThemeId === 'cyprus_sand'
                     ? isDarkMode
@@ -492,7 +492,7 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
               ]}
             >
               <Globe
-                size={18}
+                size={ResponsivePixels.size18}
                 color={StaticColors.LuminousGreen}
                 strokeWidth={2.2}
               />
@@ -510,7 +510,11 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
             <Text style={[styles.settingValueLabel, { color: textSecondary }]}>
               English
             </Text>
-            <ChevronRight size={16} color={textSecondary} strokeWidth={2} />
+            <ChevronRight
+              size={ResponsivePixels.size16}
+              color={textSecondary}
+              strokeWidth={2}
+            />
           </View>
         </TouchableOpacity>
       </View>
@@ -529,14 +533,14 @@ const styles = StyleSheet.create({
   sectionTitleWithIcon: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   sectionTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 17,
+    fontSize: ResponsivePixels.size17,
   },
   settingsGroupCard: {
-    borderRadius: 22,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
     borderBottomWidth: 3.5,
     paddingHorizontal: ResponsivePixels.size16,
@@ -556,14 +560,14 @@ const styles = StyleSheet.create({
   settingItemLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: ResponsivePixels.size12,
     flex: 1,
-    paddingRight: 10,
+    paddingRight: ResponsivePixels.size10,
   },
   iconSquare: {
-    width: 38,
-    height: 38,
-    borderRadius: 12,
+    width: ResponsivePixels.size38,
+    height: ResponsivePixels.size38,
+    borderRadius: ResponsivePixels.size12,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -572,53 +576,53 @@ const styles = StyleSheet.create({
   },
   settingItemTitle: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
   },
   settingItemDesc: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 11,
-    marginTop: 1,
+    fontSize: ResponsivePixels.size11,
+    marginTop: ResponsivePixels.size1,
   },
   settingItemRight: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   settingValueLabel: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
   },
   itemDivider: {
     height: 1,
     width: '100%',
   },
   intensityContainer: {
-    borderRadius: 14,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1,
-    padding: 10,
-    marginBottom: 10,
-    marginTop: 2,
+    padding: ResponsivePixels.size10,
+    marginBottom: ResponsivePixels.size10,
+    marginTop: ResponsivePixels.size2,
   },
   intensityHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    marginBottom: 8,
+    gap: ResponsivePixels.size6,
+    marginBottom: ResponsivePixels.size8,
   },
   intensityHeaderTitle: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
   },
   intensityPillsRow: {
     flexDirection: 'row',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   intensityPill: {
     flex: 1,
-    paddingVertical: 7,
+    paddingVertical: ResponsivePixels.size7,
     alignItems: 'center',
     justifyContent: 'center',
-    borderRadius: 18,
+    borderRadius: ResponsivePixels.size18,
     borderWidth: 1,
     borderBottomWidth: 2.2,
   },
@@ -629,7 +633,7 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   intensityPillText: {
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     letterSpacing: 0.3,
   },
   themesContainer: {
@@ -658,12 +662,12 @@ const styles = StyleSheet.create({
   },
   viewAllThemesText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: StaticColors.AccentYellow,
   },
   themesHeaderTitle: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
   },
   themesScroll: {
     marginHorizontal: -ResponsivePixels.size10,
@@ -708,8 +712,8 @@ const styles = StyleSheet.create({
   },
   roundCheckBadge: {
     position: 'absolute',
-    bottom: -1,
-    right: -1,
+    bottom: -ResponsivePixels.size1,
+    right: -ResponsivePixels.size1,
     width: ResponsivePixels.size16,
     height: ResponsivePixels.size16,
     borderRadius: ResponsivePixels.size8,
@@ -729,15 +733,15 @@ const styles = StyleSheet.create({
   },
   roundThemeName: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     marginTop: ResponsivePixels.size6,
     textAlign: 'center',
   },
   roundThemeTierText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 9,
+    fontSize: ResponsivePixels.size9,
     color: StaticColors.MilestoneSlate,
-    marginTop: 1,
+    marginTop: ResponsivePixels.size1,
   },
 });
 

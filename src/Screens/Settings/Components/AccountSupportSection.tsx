@@ -48,7 +48,7 @@ export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
       <View style={styles.sectionHeaderRow}>
         <View style={styles.sectionTitleWithIcon}>
           <Shield
-            size={18}
+            size={ResponsivePixels.size18}
             color={themeAccent}
             strokeWidth={2.4}
           />
@@ -110,7 +110,7 @@ export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
               ]}
             >
               <HelpCircle
-                size={18}
+                size={ResponsivePixels.size18}
                 color={themeAccent}
                 strokeWidth={2.2}
               />
@@ -124,7 +124,7 @@ export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
               </Text>
             </View>
           </View>
-          <ChevronRight size={16} color={textSecondary} strokeWidth={2} />
+          <ChevronRight size={ResponsivePixels.size16} color={textSecondary} strokeWidth={2} />
         </TouchableOpacity>
 
         <View style={[styles.itemDivider, { backgroundColor: borderLight }]} />
@@ -155,7 +155,7 @@ export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
               ]}
             >
               <Shield
-                size={18}
+                size={ResponsivePixels.size18}
                 color={StaticColors.LuminousGreen}
                 strokeWidth={2.2}
               />
@@ -169,7 +169,7 @@ export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
               </Text>
             </View>
           </View>
-          <ChevronRight size={16} color={textSecondary} strokeWidth={2} />
+          <ChevronRight size={ResponsivePixels.size16} color={textSecondary} strokeWidth={2} />
         </TouchableOpacity>
 
         <View style={[styles.itemDivider, { backgroundColor: borderLight }]} />
@@ -200,7 +200,7 @@ export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
               ]}
             >
               <Crown
-                size={18}
+                size={ResponsivePixels.size18}
                 color={StaticColors.AccentYellow}
                 strokeWidth={2.2}
               />
@@ -214,7 +214,7 @@ export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
               </Text>
             </View>
           </View>
-          <ChevronRight size={16} color={textSecondary} strokeWidth={2} />
+          <ChevronRight size={ResponsivePixels.size16} color={textSecondary} strokeWidth={2} />
         </TouchableOpacity>
 
         <View style={[styles.itemDivider, { backgroundColor: borderLight }]} />
@@ -236,7 +236,7 @@ export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
               ]}
             >
               <LogOut
-                size={18}
+                size={ResponsivePixels.size18}
                 color={StaticColors.CrimsonPulse}
                 strokeWidth={2.2}
               />
@@ -255,7 +255,7 @@ export const AccountSupportSection: React.FC<AccountSupportSectionProps> = ({
               </Text>
             </View>
           </View>
-          <ChevronRight size={16} color={textSecondary} strokeWidth={2} />
+          <ChevronRight size={ResponsivePixels.size16} color={textSecondary} strokeWidth={2} />
         </TouchableOpacity>
       </View>
     </>
@@ -273,14 +273,14 @@ const styles = StyleSheet.create({
   sectionTitleWithIcon: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   sectionTitle: {
     ...Typography.h6Bold,
-    fontSize: 16,
+    fontSize: ResponsivePixels.size16,
   },
   settingsGroupCard: {
-    borderRadius: 22,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
     borderBottomWidth: 3.5,
     paddingHorizontal: ResponsivePixels.size16,
@@ -300,14 +300,14 @@ const styles = StyleSheet.create({
   settingItemLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: ResponsivePixels.size12,
     flex: 1,
-    paddingRight: 10,
+    paddingRight: ResponsivePixels.size10,
   },
   iconSquare: {
-    width: 38,
-    height: 38,
-    borderRadius: 12,
+    width: ResponsivePixels.size38,
+    height: ResponsivePixels.size38,
+    borderRadius: ResponsivePixels.size12,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -316,12 +316,12 @@ const styles = StyleSheet.create({
   },
   settingItemTitle: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
   },
   settingItemDesc: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 11,
-    marginTop: 1,
+    fontSize: ResponsivePixels.size11,
+    marginTop: ResponsivePixels.size1,
   },
   itemDivider: {
     height: 1,

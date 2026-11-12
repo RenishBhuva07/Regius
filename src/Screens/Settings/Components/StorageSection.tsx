@@ -111,7 +111,7 @@ export const StorageSection: React.FC<StorageSectionProps> = ({
       <View style={styles.sectionHeaderRow}>
         <View style={styles.sectionTitleWithIcon}>
           <Database
-            size={18}
+            size={ResponsivePixels.size18}
             color={StaticColors.PrimaryBlue}
             strokeWidth={2.4}
           />
@@ -162,7 +162,7 @@ export const StorageSection: React.FC<StorageSectionProps> = ({
               ]}
             >
               <Cloud
-                size={18}
+                size={ResponsivePixels.size18}
                 color={StaticColors.PrimaryBlue}
                 strokeWidth={2.2}
               />
@@ -197,12 +197,12 @@ export const StorageSection: React.FC<StorageSectionProps> = ({
           <View style={styles.lastSyncedInfo}>
             {lastSyncedText === 'just now' ? (
               <CheckCircle2
-                size={13}
+                size={ResponsivePixels.size13}
                 color={StaticColors.ToastSuccessAccent}
                 strokeWidth={2.4}
               />
             ) : (
-              <Clock size={13} color={textSecondary} strokeWidth={2.2} />
+              <Clock size={ResponsivePixels.size13} color={textSecondary} strokeWidth={2.2} />
             )}
             <Text
               style={[
@@ -232,7 +232,7 @@ export const StorageSection: React.FC<StorageSectionProps> = ({
           >
             <Animated.View style={{ transform: [{ rotate: spin }] }}>
               <RefreshCw
-                size={12}
+                size={ResponsivePixels.size12}
                 color={StaticColors.PureWhite}
                 strokeWidth={2.4}
               />
@@ -263,7 +263,7 @@ export const StorageSection: React.FC<StorageSectionProps> = ({
               ]}
             >
               <Trash2
-                size={18}
+                size={ResponsivePixels.size18}
                 color={StaticColors.CrimsonPulse}
                 strokeWidth={2.2}
               />
@@ -296,7 +296,7 @@ export const StorageSection: React.FC<StorageSectionProps> = ({
             >
               <Text style={styles.cachePillText}>{cacheSize}</Text>
             </View>
-            <ChevronRight size={16} color={textSecondary} strokeWidth={2} />
+            <ChevronRight size={ResponsivePixels.size16} color={textSecondary} strokeWidth={2} />
           </View>
         </TouchableOpacity>
       </View>
@@ -315,14 +315,14 @@ const styles = StyleSheet.create({
   sectionTitleWithIcon: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   sectionTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 17,
+    fontSize: ResponsivePixels.size17,
   },
   settingsGroupCard: {
-    borderRadius: 22,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
     borderBottomWidth: 3.5,
     paddingHorizontal: ResponsivePixels.size16,
@@ -342,14 +342,14 @@ const styles = StyleSheet.create({
   settingItemLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: ResponsivePixels.size12,
     flex: 1,
-    paddingRight: 10,
+    paddingRight: ResponsivePixels.size10,
   },
   iconSquare: {
-    width: 38,
-    height: 38,
-    borderRadius: 12,
+    width: ResponsivePixels.size38,
+    height: ResponsivePixels.size38,
+    borderRadius: ResponsivePixels.size12,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -358,45 +358,45 @@ const styles = StyleSheet.create({
   },
   settingItemTitle: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
   },
   settingItemDesc: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 11,
-    marginTop: 1,
+    fontSize: ResponsivePixels.size11,
+    marginTop: ResponsivePixels.size1,
   },
   syncPillContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 14,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size8,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1,
-    marginBottom: 8,
-    marginTop: 2,
+    marginBottom: ResponsivePixels.size8,
+    marginTop: ResponsivePixels.size2,
   },
   lastSyncedInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   lastSyncedPillText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
   },
   syncNowBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: ResponsivePixels.size5,
     backgroundColor: StaticColors.PrimaryBlue,
     borderColor: StaticColors.PureWhite,
     borderWidth: 1,
     borderBottomWidth: 2.2,
     borderBottomColor: StaticColors.PrimaryBlueBevel,
-    paddingHorizontal: 12,
-    paddingVertical: 5.5,
-    borderRadius: 16,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size5_5,
+    borderRadius: ResponsivePixels.size16,
     shadowColor: StaticColors.PrimaryBlue,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.25,
@@ -408,19 +408,19 @@ const styles = StyleSheet.create({
   },
   syncNowBtnText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: StaticColors.PureWhite,
     letterSpacing: 0.2,
   },
   settingItemRight: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   cachePill: {
-    paddingHorizontal: 10,
-    paddingVertical: 3.5,
-    borderRadius: 14,
+    paddingHorizontal: ResponsivePixels.size10,
+    paddingVertical: ResponsivePixels.size3_5,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1,
     borderBottomWidth: 2,
     shadowColor: StaticColors.PureBlack,
@@ -431,7 +431,7 @@ const styles = StyleSheet.create({
   },
   cachePillText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: StaticColors.CrimsonPulse,
   },
   itemDivider: {

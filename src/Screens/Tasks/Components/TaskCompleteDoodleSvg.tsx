@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
 import { Colors, IllustrationColors } from '../../../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import Svg, {
   Path,
   Circle,
@@ -19,8 +20,8 @@ export interface TaskCompleteDoodleSvgProps {
 
 // Vector illustration for the Tasks footer watermark.
 export const TaskCompleteDoodleSvg: React.FC<TaskCompleteDoodleSvgProps> = ({
-  width = 135,
-  height = 145,
+  width = ResponsivePixels.size135,
+  height = ResponsivePixels.size145,
 }) => {
   return (
     <View style={[styles.container, { width, height }]} pointerEvents="none">

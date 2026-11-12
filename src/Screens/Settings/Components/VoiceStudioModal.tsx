@@ -149,7 +149,7 @@ export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
             style={[styles.modalCloseBtn, { backgroundColor: surfaceAlt }]}
             onPress={onClose}
           >
-            <X size={20} color={textPrimary} strokeWidth={2.4} />
+            <X size={ResponsivePixels.size20} color={textPrimary} strokeWidth={2.4} />
           </TouchableOpacity>
         </View>
 
@@ -170,7 +170,7 @@ export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
           >
             <View style={styles.playgroundHeader}>
               <View style={styles.playgroundTitleRow}>
-                <Sparkles size={18} color={selectedVoice.accentColor} />
+                <Sparkles size={ResponsivePixels.size18} color={selectedVoice.accentColor} />
                 <Text style={[styles.playgroundTitle, { color: textPrimary }]}>
                   Kokoro Speech Synthesizer
                 </Text>
@@ -238,7 +238,7 @@ export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
                   />
                 )}
                 {synthesisState === 'speaking' && (
-                  <Volume2 size={16} color={selectedVoice.accentColor} />
+                  <Volume2 size={ResponsivePixels.size16} color={selectedVoice.accentColor} />
                 )}
                 <Text
                   style={[
@@ -274,7 +274,7 @@ export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
                   />
                 ) : (
                   <Play
-                    size={14}
+                    size={ResponsivePixels.size14}
                     color={StaticColors.PureWhite}
                     fill={StaticColors.PureWhite}
                   />
@@ -293,7 +293,7 @@ export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
                   style={styles.stopBtn}
                   onPress={handleStopSpeech}
                 >
-                  <StopCircle size={15} color={StaticColors.PureWhite} />
+                  <StopCircle size={ResponsivePixels.size15} color={StaticColors.PureWhite} />
                   <Text style={styles.stopBtnText}>Stop</Text>
                 </TouchableOpacity>
               )}
@@ -333,7 +333,7 @@ export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
                       ]}
                     >
                       <Mic
-                        size={20}
+                        size={ResponsivePixels.size20}
                         color={voice.accentColor}
                         strokeWidth={2.2}
                       />
@@ -407,13 +407,13 @@ export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
                   >
                     {isPlaying ? (
                       <Square
-                        size={13}
+                        size={ResponsivePixels.size13}
                         color={StaticColors.PureWhite}
                         fill={StaticColors.PureWhite}
                       />
                     ) : (
                       <Play
-                        size={13}
+                        size={ResponsivePixels.size13}
                         color={StaticColors.PureWhite}
                         fill={StaticColors.PureWhite}
                       />
@@ -452,7 +452,7 @@ export const VoiceStudioModal: React.FC<VoiceStudioModalProps> = ({
                   {isSelected ? (
                     <View style={styles.selectedConfirmRow}>
                       <Check
-                        size={16}
+                        size={ResponsivePixels.size16}
                         color={voice.accentColor}
                         strokeWidth={2.6}
                       />
@@ -517,17 +517,17 @@ const styles = StyleSheet.create({
   },
   modalTitle: {
     ...Typography.h6Bold,
-    fontSize: 18,
+    fontSize: ResponsivePixels.size18,
   },
   modalSubtitle: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 12,
-    marginTop: 2,
+    fontSize: ResponsivePixels.size12,
+    marginTop: ResponsivePixels.size2,
   },
   modalCloseBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: ResponsivePixels.size36,
+    height: ResponsivePixels.size36,
+    borderRadius: ResponsivePixels.size18,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -538,118 +538,118 @@ const styles = StyleSheet.create({
     paddingHorizontal: ResponsivePixels.size20,
     paddingTop: ResponsivePixels.size16,
     paddingBottom: ResponsivePixels.size32,
-    gap: 14,
+    gap: ResponsivePixels.size14,
   },
   playgroundCard: {
     borderWidth: 1.5,
-    borderRadius: 18,
-    padding: 16,
-    marginBottom: 4,
+    borderRadius: ResponsivePixels.size18,
+    padding: ResponsivePixels.size16,
+    marginBottom: ResponsivePixels.size4,
   },
   playgroundHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    marginBottom: ResponsivePixels.size12,
   },
   playgroundTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   playgroundTitle: {
     ...Typography.bodyLargePoppinsSemiBold,
-    fontSize: 15,
+    fontSize: ResponsivePixels.size15,
   },
   activeVoiceTag: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size3,
+    borderRadius: ResponsivePixels.size8,
   },
   activeVoiceTagText: {
     ...Typography.bodySmallPoppinsSemiBold,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
   },
   playgroundInput: {
     borderWidth: 1,
-    borderRadius: 12,
-    padding: 12,
-    fontSize: 13,
+    borderRadius: ResponsivePixels.size12,
+    padding: ResponsivePixels.size12,
+    fontSize: ResponsivePixels.size13,
     textAlignVertical: 'top',
-    minHeight: 70,
+    minHeight: ResponsivePixels.size70,
     fontFamily: Typography.bodySmallPoppinsRegular.fontFamily,
   },
   presetsRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 6,
-    marginTop: 10,
+    gap: ResponsivePixels.size6,
+    marginTop: ResponsivePixels.size10,
   },
   presetChip: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 8,
+    paddingHorizontal: ResponsivePixels.size10,
+    paddingVertical: ResponsivePixels.size5,
+    borderRadius: ResponsivePixels.size8,
     maxWidth: '100%',
   },
   presetChipText: {
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     fontFamily: Typography.bodySmallPoppinsRegular.fontFamily,
   },
   statusRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginTop: 10,
+    gap: ResponsivePixels.size8,
+    marginTop: ResponsivePixels.size10,
   },
   statusText: {
     ...Typography.bodySmallPoppinsSemiBold,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
   },
   playgroundActions: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    marginTop: 12,
+    gap: ResponsivePixels.size10,
+    marginTop: ResponsivePixels.size12,
   },
   generateBtn: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 12,
-    borderRadius: 12,
+    gap: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size12,
+    borderRadius: ResponsivePixels.size12,
   },
   generateBtnText: {
     ...Typography.bodySmallPoppinsSemiBold,
     color: StaticColors.PureWhite,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
   },
   stopBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
     backgroundColor: StaticColors.CategoryRedAccent,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 12,
+    paddingVertical: ResponsivePixels.size12,
+    paddingHorizontal: ResponsivePixels.size16,
+    borderRadius: ResponsivePixels.size12,
   },
   stopBtnText: {
     ...Typography.bodySmallPoppinsSemiBold,
     color: StaticColors.PureWhite,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
   },
   voiceListHeaderTitle: {
     ...Typography.bodySmallPoppinsSemiBold,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     letterSpacing: 0.8,
-    marginTop: 6,
+    marginTop: ResponsivePixels.size6,
   },
   voiceCardDetailed: {
     borderWidth: 1.5,
-    borderRadius: 18,
-    padding: 16,
+    borderRadius: ResponsivePixels.size18,
+    padding: ResponsivePixels.size16,
   },
   voiceDetailedTop: {
     flexDirection: 'row',
@@ -659,13 +659,13 @@ const styles = StyleSheet.create({
   voiceDetailedLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: ResponsivePixels.size12,
     flex: 1,
   },
   voiceDetailedIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
+    width: ResponsivePixels.size44,
+    height: ResponsivePixels.size44,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
@@ -673,101 +673,101 @@ const styles = StyleSheet.create({
   voiceNameRowDetailed: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   voiceDetailedName: {
     ...Typography.bodyLargePoppinsSemiBold,
-    fontSize: 16,
+    fontSize: ResponsivePixels.size16,
   },
   kokoroIdBadge: {
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
+    paddingHorizontal: ResponsivePixels.size6,
+    paddingVertical: ResponsivePixels.size2,
+    borderRadius: ResponsivePixels.size6,
     borderWidth: 1,
   },
   kokoroIdBadgeText: {
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     fontWeight: '700',
     fontFamily: Typography.bodySmallRanadeBold.fontFamily,
   },
   activeBadgePill: {
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 6,
+    paddingHorizontal: ResponsivePixels.size6,
+    paddingVertical: ResponsivePixels.size2,
+    borderRadius: ResponsivePixels.size6,
   },
   activeBadgePillText: {
     fontFamily: Typography.bodySmallRanadeBold.fontFamily,
-    fontSize: 9,
+    fontSize: ResponsivePixels.size9,
     color: StaticColors.PureWhite,
     fontWeight: '700',
   },
   voiceDetailedMeta: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 11,
-    marginTop: 2,
+    fontSize: ResponsivePixels.size11,
+    marginTop: ResponsivePixels.size2,
   },
   voicePreviewCircleBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: ResponsivePixels.size38,
+    height: ResponsivePixels.size38,
+    borderRadius: ResponsivePixels.size19,
     alignItems: 'center',
     justifyContent: 'center',
   },
   sampleQuoteBox: {
-    padding: 10,
-    borderRadius: 12,
-    marginTop: 12,
+    padding: ResponsivePixels.size10,
+    borderRadius: ResponsivePixels.size12,
+    marginTop: ResponsivePixels.size12,
   },
   sampleQuoteText: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     fontStyle: 'italic',
   },
   voiceActionFooter: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 10,
+    marginTop: ResponsivePixels.size10,
   },
   voiceTagSmall: {
-    borderRadius: 6,
+    borderRadius: ResponsivePixels.size6,
   },
   voiceTagSmallText: {
     ...Typography.bodySmallPoppinsSemiBold,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
   },
   selectedConfirmRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: ResponsivePixels.size4,
   },
   selectedConfirmText: {
     ...Typography.bodySmallPoppinsSemiBold,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
   },
   selectPromptText: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
   },
   modalFooter: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: ResponsivePixels.size12,
     paddingHorizontal: ResponsivePixels.size20,
     paddingVertical: ResponsivePixels.size16,
     borderTopWidth: 1,
   },
   modalDoneBtn: {
     flex: 1,
-    paddingVertical: 14,
-    borderRadius: 16,
+    paddingVertical: ResponsivePixels.size14,
+    borderRadius: ResponsivePixels.size16,
     alignItems: 'center',
     justifyContent: 'center',
   },
   modalDoneBtnText: {
     ...Typography.bodyLargePoppinsSemiBold,
     color: StaticColors.PureWhite,
-    fontSize: 15,
+    fontSize: ResponsivePixels.size15,
   },
 });
 

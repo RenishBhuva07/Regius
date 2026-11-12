@@ -40,7 +40,7 @@ export const LogoutConfirmModal: React.FC<LogoutConfirmModalProps> = ({
               { backgroundColor: Colors.VoiceBellaBg },
             ]}
           >
-            <LogOut size={24} color={Colors.CrimsonPulse} strokeWidth={2.2} />
+            <LogOut size={ResponsivePixels.size24} color={Colors.CrimsonPulse} strokeWidth={2.2} />
           </View>
           <Text style={[styles.dialogTitle, { color: textPrimary }]}>
             Sign Out?
@@ -94,58 +94,58 @@ const styles = StyleSheet.create({
   },
   dialogCard: {
     width: '100%',
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     borderWidth: 1.5,
     padding: ResponsivePixels.size20,
     alignItems: 'center',
   },
   dialogIconWrap: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+    width: ResponsivePixels.size52,
+    height: ResponsivePixels.size52,
+    borderRadius: ResponsivePixels.size26,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 14,
+    marginBottom: ResponsivePixels.size14,
   },
   dialogTitle: {
     ...Typography.h6Bold,
-    fontSize: 18,
-    marginBottom: 8,
+    fontSize: ResponsivePixels.size18,
+    marginBottom: ResponsivePixels.size8,
   },
   dialogDesc: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     textAlign: 'center',
-    lineHeight: 18,
-    marginBottom: 20,
+    lineHeight: ResponsivePixels.size18,
+    marginBottom: ResponsivePixels.size20,
   },
   dialogActions: {
     flexDirection: 'row',
-    gap: 12,
+    gap: ResponsivePixels.size12,
     width: '100%',
   },
   dialogBtnSecondary: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: 14,
+    paddingVertical: ResponsivePixels.size12,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
   },
   dialogBtnSecondaryText: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
   },
   dialogBtnDanger: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: 14,
+    paddingVertical: ResponsivePixels.size12,
+    borderRadius: ResponsivePixels.size14,
     alignItems: 'center',
     justifyContent: 'center',
   },
   dialogBtnDangerText: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     color: Colors.PureWhite,
   },
 });

@@ -173,7 +173,7 @@ export const WakeWordTester: React.FC<WakeWordTesterProps> = React.memo(
 const styles = StyleSheet.create({
   simulatorCard: {
     marginHorizontal: ResponsivePixels.size16,
-    borderRadius: 20,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
     borderBottomWidth: 3.5,
     padding: ResponsivePixels.size16,
@@ -185,56 +185,56 @@ const styles = StyleSheet.create({
   },
   simulatorLabel: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
-    marginBottom: 8,
+    fontSize: ResponsivePixels.size11,
+    marginBottom: ResponsivePixels.size8,
   },
   simulatorInputWrap: {
-    borderRadius: 14,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1.5,
-    paddingHorizontal: 14,
-    height: 46,
+    paddingHorizontal: ResponsivePixels.size14,
+    height: ResponsivePixels.size46,
     justifyContent: 'center',
-    marginBottom: 10,
+    marginBottom: ResponsivePixels.size10,
   },
   simulatorInput: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     padding: 0,
   },
   sampleChipsContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 6,
-    marginBottom: 12,
+    gap: ResponsivePixels.size6,
+    marginBottom: ResponsivePixels.size12,
   },
   sampleChip: {
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    borderRadius: 10,
+    paddingHorizontal: ResponsivePixels.size10,
+    paddingVertical: ResponsivePixels.size5,
+    borderRadius: ResponsivePixels.size10,
     borderWidth: 1,
   },
   sampleChipText: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
   },
   testResultBox: {
-    borderRadius: 14,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1.5,
-    padding: 12,
+    padding: ResponsivePixels.size12,
   },
   resultHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 6,
+    marginBottom: ResponsivePixels.size6,
   },
   confidenceScore: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
   },
   analysisText: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
   },
 });
 
