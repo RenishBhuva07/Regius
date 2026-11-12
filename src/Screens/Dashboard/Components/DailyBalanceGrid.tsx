@@ -23,6 +23,7 @@ import {
   CircularProgress,
   CircularProgressProps,
 } from '../../../Common/CircularProgress';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 export { CircularProgress };
 export type { CircularProgressProps };
@@ -94,7 +95,7 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
               ]}
             >
               <CheckCircle2
-                size={16}
+                size={ResponsivePixels.size16}
                 color={isDarkMode ? Colors.AccentYellow : Colors.WorkTextAccent}
                 strokeWidth={2.4}
               />
@@ -163,7 +164,7 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
               ]}
             >
               <Bell
-                size={16}
+                size={ResponsivePixels.size16}
                 color={isDarkMode ? Colors.AccentGreen : Colors.GreenGracious}
                 strokeWidth={2.4}
               />
@@ -230,7 +231,7 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
               ]}
             >
               <Flame
-                size={16}
+                size={ResponsivePixels.size16}
                 color={
                   isDarkMode ? Colors.LavenderPurple : Colors.MindfulTextAccent
                 }
@@ -280,40 +281,40 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 18,
+    marginBottom: ResponsivePixels.size18,
   },
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    marginBottom: ResponsivePixels.size12,
   },
   sectionTitle: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 18,
+    fontSize: ResponsivePixels.size18,
     color: Colors.RegiusInk,
     letterSpacing: -0.2,
   },
   sectionPace: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.Grey,
   },
   gridRow: {
     flexDirection: 'row',
-    gap: 10,
+    gap: ResponsivePixels.size10,
   },
   // Base asymmetric card matching HomeScreen signature geometry
   metricCard: {
     flex: 1,
     minWidth: 0,
-    borderRadius: 20,
-    borderTopRightRadius: 38, // Signature asymmetric curve
-    padding: 13,
-    paddingBottom: 15,
+    borderRadius: ResponsivePixels.size20,
+    borderTopRightRadius: ResponsivePixels.size38, // Signature asymmetric curve
+    padding: ResponsivePixels.size13,
+    paddingBottom: ResponsivePixels.size15,
     borderWidth: 1.5,
     justifyContent: 'space-between',
-    minHeight: 110,
+    minHeight: ResponsivePixels.size110,
     position: 'relative',
     overflow: 'hidden',
   },
@@ -360,13 +361,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: ResponsivePixels.size10,
   },
   // Elevated circular white icon container matching HomeScreen
   iconCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: ResponsivePixels.size32,
+    height: ResponsivePixels.size32,
+    borderRadius: ResponsivePixels.size16,
     backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
     alignItems: 'center',
@@ -415,10 +416,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   percentIndicator: {
-    minWidth: 32,
-    height: 32,
-    borderRadius: 16,
-    paddingHorizontal: 4,
+    minWidth: ResponsivePixels.size32,
+    height: ResponsivePixels.size32,
+    borderRadius: ResponsivePixels.size16,
+    paddingHorizontal: ResponsivePixels.size4,
     backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
     alignItems: 'center',
@@ -442,39 +443,39 @@ const styles = StyleSheet.create({
   },
   percentIndicatorText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     letterSpacing: -0.3,
   },
   cardBottom: {
-    gap: 1,
+    gap: ResponsivePixels.size1,
   },
   countText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 21,
+    fontSize: ResponsivePixels.size21,
     color: Colors.RegiusInk,
     letterSpacing: -0.4,
   },
   countTotalText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     color: Colors.TimelineMutedGray,
   },
   label: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     color: Colors.RegiusInk,
     letterSpacing: -0.1,
-    marginTop: 2,
+    marginTop: ResponsivePixels.size2,
   },
   // Bottom accent pill matching HomeScreen category card indicator
   accentPill: {
     position: 'absolute',
     bottom: 0,
     alignSelf: 'center',
-    height: 3.5,
-    width: 36,
-    borderTopLeftRadius: 3,
-    borderTopRightRadius: 3,
+    height: ResponsivePixels.size3_5,
+    width: ResponsivePixels.size36,
+    borderTopLeftRadius: ResponsivePixels.size3,
+    borderTopRightRadius: ResponsivePixels.size3,
   },
 });
 

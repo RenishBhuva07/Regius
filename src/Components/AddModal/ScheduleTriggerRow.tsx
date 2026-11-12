@@ -5,6 +5,7 @@ import { Fonts } from '../../Theme/fonts';
 import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../Theme/useAppTheme';
 import { ScheduleButtonBackgroundSvg } from '../../Common/ScheduleButtonBackgroundSvg';
+import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 
 export type QuickDateType = 'today' | 'tomorrow' | 'weekend';
 
@@ -108,7 +109,7 @@ export const ScheduleTriggerRow: React.FC<ScheduleTriggerRowProps> = React.memo(
 
               <View style={[styles.magicIconWrap, styles.magicIconWrapDate]}>
                 <Calendar
-                  size={16}
+                  size={ResponsivePixels.size16}
                   color={Colors.AccentYellow}
                   strokeWidth={2.4}
                 />
@@ -136,7 +137,7 @@ export const ScheduleTriggerRow: React.FC<ScheduleTriggerRowProps> = React.memo(
 
               <View style={[styles.magicIconWrap, styles.magicIconWrapTime]}>
                 <Clock
-                  size={16}
+                  size={ResponsivePixels.size16}
                   color={Colors.PeriwinkleSoft}
                   strokeWidth={2.4}
                 />
@@ -158,26 +159,26 @@ export const ScheduleTriggerRow: React.FC<ScheduleTriggerRowProps> = React.memo(
 
 const styles = StyleSheet.create({
   sectionBlock: {
-    marginBottom: 20,
+    marginBottom: ResponsivePixels.size20,
   },
   sectionHeaderRow: {
-    marginBottom: 10,
+    marginBottom: ResponsivePixels.size10,
   },
   sectionHeading: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 13.5,
+    fontSize: ResponsivePixels.size13_5,
     color: Colors.DarkBackground,
     letterSpacing: -0.2,
   },
   quickDateRow: {
     flexDirection: 'row',
-    gap: 8,
-    marginBottom: 10,
+    gap: ResponsivePixels.size8,
+    marginBottom: ResponsivePixels.size10,
   },
   quickDateChip: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size6,
+    borderRadius: ResponsivePixels.size16,
     backgroundColor: Colors.PureWhite,
     borderWidth: 1,
     borderColor: Colors.RingBorder,
@@ -188,7 +189,7 @@ const styles = StyleSheet.create({
   },
   quickDateChipText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: Colors.Grey,
   },
   quickDateChipTextSelected: {
@@ -197,27 +198,27 @@ const styles = StyleSheet.create({
   },
   scheduleContainerCard: {
     flexDirection: 'row',
-    gap: 10,
+    gap: ResponsivePixels.size10,
   },
   magicScheduleBtnWrapper: {
     flex: 1,
   },
   magicScheduleBtn: {
-    height: 64,
-    borderRadius: 20,
+    height: ResponsivePixels.size64,
+    borderRadius: ResponsivePixels.size20,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12,
-    gap: 10,
+    paddingHorizontal: ResponsivePixels.size12,
+    gap: ResponsivePixels.size10,
     borderWidth: 1.2,
     borderColor: withAlpha(Colors.PureWhite, 0.1),
     overflow: 'hidden',
     position: 'relative',
   },
   magicIconWrap: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: ResponsivePixels.size32,
+    height: ResponsivePixels.size32,
+    borderRadius: ResponsivePixels.size16,
     backgroundColor: withAlpha(Colors.PureWhite, 0.08),
     alignItems: 'center',
     justifyContent: 'center',
@@ -232,17 +233,17 @@ const styles = StyleSheet.create({
   },
   magicScheduleTextGroup: {
     flex: 1,
-    gap: 1,
+    gap: ResponsivePixels.size1,
   },
   magicScheduleSmallLabel: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 8.5,
+    fontSize: ResponsivePixels.size8_5,
     color: Colors.CoolSilverSubtitle,
     letterSpacing: 0.6,
   },
   magicScheduleValue: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 12.5,
+    fontSize: ResponsivePixels.size12_5,
     color: Colors.PureWhite,
   },
 });

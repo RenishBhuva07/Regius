@@ -18,8 +18,9 @@ import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import HeaderPatternSvg from '../Screens/Dashboard/Components/HeaderPatternSvg';
 import { BackButton } from './BackButton';
 import { Badge, BadgeVariant } from './Badge';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
-export const SUB_SCREEN_HEADER_HEIGHT = 54;
+export const SUB_SCREEN_HEADER_HEIGHT = ResponsivePixels.size54;
 
 export interface SubScreenHeaderProps {
   title: string | React.ReactNode;
@@ -90,7 +91,7 @@ export const SubScreenHeader: React.FC<SubScreenHeaderProps> = ({
 
   const headerRadius = scrollY.interpolate({
     inputRange: [0, 30],
-    outputRange: [0, 24],
+    outputRange: [0, ResponsivePixels.size24],
     extrapolate: 'clamp',
   });
 
@@ -108,7 +109,7 @@ export const SubScreenHeader: React.FC<SubScreenHeaderProps> = ({
 
   const headerPaddingBottom = scrollY.interpolate({
     inputRange: [0, 30],
-    outputRange: [0, 8],
+    outputRange: [0, ResponsivePixels.size8],
     extrapolate: 'clamp',
   });
 
@@ -262,29 +263,29 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
+    paddingHorizontal: ResponsivePixels.size20,
   },
   dummySpacer: {
-    width: 44,
+    width: ResponsivePixels.size44,
   },
   headerTitleWrap: {
     alignItems: 'center',
     flex: 1,
-    marginHorizontal: 10,
+    marginHorizontal: ResponsivePixels.size10,
   },
   headerTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 18,
+    fontSize: ResponsivePixels.size18,
     letterSpacing: -0.3,
-    lineHeight: 22,
+    lineHeight: ResponsivePixels.size22,
   },
   headerTitleScrolled: {
     color: Colors.PureWhite,
   },
   headerSubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
-    marginTop: 1,
+    fontSize: ResponsivePixels.size11,
+    marginTop: ResponsivePixels.size1,
   },
   headerSubtitleScrolled: {
     color: withAlpha(Colors.PureWhite, 0.82),

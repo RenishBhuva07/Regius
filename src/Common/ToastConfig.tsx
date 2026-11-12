@@ -22,6 +22,7 @@ import {
   ToastAestheticPatternSvg,
   ToastAestheticVariant,
 } from './ToastAestheticPatternSvg';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
 export type ToastVariant = ToastAestheticVariant;
 
@@ -227,7 +228,7 @@ export const RegiusToast: React.FC<RegiusToastProps> = ({
           },
         ]}
       >
-        <Icon size={19} color={config.iconColor} strokeWidth={2.4} />
+        <Icon size={ResponsivePixels.size19} color={config.iconColor} strokeWidth={2.4} />
       </View>
 
       {/* Text content */}
@@ -274,7 +275,7 @@ export const RegiusToast: React.FC<RegiusToastProps> = ({
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={handleDismiss}
-        hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+        hitSlop={{ top: ResponsivePixels.size12, bottom: ResponsivePixels.size12, left: ResponsivePixels.size12, right: ResponsivePixels.size12 }}
         style={[
           styles.dismissButton,
           {
@@ -287,7 +288,7 @@ export const RegiusToast: React.FC<RegiusToastProps> = ({
         accessibilityLabel="Dismiss notification"
       >
         <X
-          size={14}
+          size={ResponsivePixels.size14}
           color={isDarkMode ? withAlpha(Colors.PureWhite, 0.7) : Colors.Slate500}
           strokeWidth={2.4}
         />
@@ -314,21 +315,21 @@ export const toastConfig = {
 const styles = StyleSheet.create({
   cardContainer: {
     width: '92%',
-    maxWidth: 420,
+    maxWidth: ResponsivePixels.size420,
     alignSelf: 'center',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 14,
-    borderRadius: 22,
+    paddingVertical: ResponsivePixels.size12,
+    paddingHorizontal: ResponsivePixels.size14,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.2,
     borderBottomWidth: 2.8,
     overflow: 'hidden',
   },
   iconBadge: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: ResponsivePixels.size38,
+    height: ResponsivePixels.size38,
+    borderRadius: ResponsivePixels.size19,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.2,
@@ -337,32 +338,32 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
-    marginHorizontal: 12,
+    marginHorizontal: ResponsivePixels.size12,
     justifyContent: 'center',
     zIndex: 2,
   },
   singleText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
-    lineHeight: 18,
+    fontSize: ResponsivePixels.size13,
+    lineHeight: ResponsivePixels.size18,
     letterSpacing: -0.1,
   },
   titleText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 13.5,
-    lineHeight: 18,
+    fontSize: ResponsivePixels.size13_5,
+    lineHeight: ResponsivePixels.size18,
     letterSpacing: -0.1,
   },
   descText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
-    lineHeight: 16,
-    marginTop: 2,
+    fontSize: ResponsivePixels.size12,
+    lineHeight: ResponsivePixels.size16,
+    marginTop: ResponsivePixels.size2,
   },
   dismissButton: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
+    width: ResponsivePixels.size26,
+    height: ResponsivePixels.size26,
+    borderRadius: ResponsivePixels.size13,
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 2,

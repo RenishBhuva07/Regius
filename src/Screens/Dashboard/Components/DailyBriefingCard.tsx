@@ -30,6 +30,7 @@ import Svg, {
   RadialGradient,
   Stop,
 } from 'react-native-svg';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 // Background vector pattern for DailyBriefingCard.
 const DailyBriefingBackgroundSvg: React.FC = React.memo(() => {
@@ -500,7 +501,7 @@ export const DailyBriefingCard: React.FC<DailyBriefingCardProps> = ({
               accessibilityLabel={`Open ${assistantName} Voice Assistant`}
             >
               <View style={styles.iconCircle}>
-                <AudioWaveform size={18} color={Colors.LavenderPurple} />
+                <AudioWaveform size={ResponsivePixels.size18} color={Colors.LavenderPurple} />
               </View>
               <View style={styles.titleContainer}>
                 <Text style={styles.title} numberOfLines={1}>
@@ -521,7 +522,7 @@ export const DailyBriefingCard: React.FC<DailyBriefingCardProps> = ({
                 label={`${assistantName} is ready`}
                 variant="green"
                 size="sm"
-                icon={<Sparkles size={11} color={Colors.GreenGracious} />}
+                icon={<Sparkles size={ResponsivePixels.size11} color={Colors.GreenGracious} />}
               />
             </TouchableOpacity>
           </View>
@@ -549,17 +550,17 @@ export const DailyBriefingCard: React.FC<DailyBriefingCardProps> = ({
                 <ActivityIndicator size="small" color={playIconColor} />
               ) : isPlaying ? (
                 <Pause
-                  size={18}
+                  size={ResponsivePixels.size18}
                   color={playIconColor}
                   strokeWidth={2.5}
                   fill={playIconColor}
                 />
               ) : (
                 <Play
-                  size={18}
+                  size={ResponsivePixels.size18}
                   color={playIconColor}
                   fill={playIconColor}
-                  style={{ marginLeft: 2 }}
+                  style={{ marginLeft: ResponsivePixels.size2 }}
                 />
               )}
             </TouchableOpacity>
@@ -602,8 +603,8 @@ export const DailyBriefingCard: React.FC<DailyBriefingCardProps> = ({
 
 const styles = StyleSheet.create({
   cardShadowWrapper: {
-    marginBottom: 18,
-    borderRadius: 24,
+    marginBottom: ResponsivePixels.size18,
+    borderRadius: ResponsivePixels.size24,
     backgroundColor: Colors.NeroBlack,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 10 },
@@ -613,8 +614,8 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: Colors.NeroBlack,
-    borderRadius: 24,
-    padding: 20,
+    borderRadius: ResponsivePixels.size24,
+    padding: ResponsivePixels.size20,
     position: 'relative',
     overflow: 'hidden',
     borderWidth: 4,
@@ -623,56 +624,56 @@ const styles = StyleSheet.create({
   content: {
     position: 'relative',
     zIndex: 1,
-    gap: 14,
+    gap: ResponsivePixels.size14,
   },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   badgeWrapper: {
     alignSelf: 'flex-start',
-    marginTop: 2,
+    marginTop: ResponsivePixels.size2,
   },
   headerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: ResponsivePixels.size10,
     flex: 1,
-    marginRight: 4,
+    marginRight: ResponsivePixels.size4,
   },
   titleContainer: {
     flexShrink: 1,
   },
   iconCircle: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: ResponsivePixels.size38,
+    height: ResponsivePixels.size38,
+    borderRadius: ResponsivePixels.size19,
     backgroundColor: withAlpha(Colors.PureWhite, 0.08),
     alignItems: 'center',
     justifyContent: 'center',
   },
   title: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     color: Colors.BriefingPlatinumText,
     letterSpacing: -0.2,
   },
   subtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.BriefingMutedSilver,
-    marginTop: 1,
+    marginTop: ResponsivePixels.size1,
   },
   playerRow: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.BriefingControlDark,
-    borderRadius: 30,
-    paddingHorizontal: 8,
-    paddingVertical: 6,
-    gap: 10,
+    borderRadius: ResponsivePixels.size30,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size6,
+    gap: ResponsivePixels.size10,
     borderWidth: 1,
     borderColor: withAlpha(Colors.PureWhite, 0.1),
     shadowColor: Colors.PureBlack,
@@ -683,9 +684,9 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   playBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: ResponsivePixels.size38,
+    height: ResponsivePixels.size38,
+    borderRadius: ResponsivePixels.size19,
     backgroundColor: Colors.LavenderPurple,
     alignItems: 'center',
     justifyContent: 'center',
@@ -700,26 +701,26 @@ const styles = StyleSheet.create({
   },
   waveformContainer: {
     flex: 1,
-    height: 24,
+    height: ResponsivePixels.size24,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 7,
+    paddingHorizontal: ResponsivePixels.size7,
   },
   waveformBar: {
-    width: 3,
-    borderRadius: 2,
+    width: ResponsivePixels.size3,
+    borderRadius: ResponsivePixels.size2,
   },
   timerText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.BriefingSilverText,
-    paddingRight: 6,
+    paddingRight: ResponsivePixels.size6,
   },
   quoteText: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 13,
-    lineHeight: 19,
+    fontSize: ResponsivePixels.size13,
+    lineHeight: ResponsivePixels.size19,
     color: withAlpha(Colors.BriefingWarmOffWhite, 0.88),
   },
 });

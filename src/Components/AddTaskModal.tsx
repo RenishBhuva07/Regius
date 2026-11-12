@@ -458,8 +458,10 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
             contentContainerStyle={[
               styles.scrollContent,
               {
-                paddingTop: insets.top + 10,
-                paddingBottom: Math.max(insets.bottom, 24) + 96,
+                paddingTop: insets.top + ResponsivePixels.size10,
+                paddingBottom:
+                  Math.max(insets.bottom, ResponsivePixels.size24) +
+                  ResponsivePixels.size96,
               },
             ]}
             showsVerticalScrollIndicator={false}
@@ -524,7 +526,9 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                   style={[
                     styles.titleInput,
                     isDarkMode && { color: Colors.PureWhite },
-                    titleInputHeight > 48 ? { height: titleInputHeight } : null,
+                    titleInputHeight > ResponsivePixels.size48
+                      ? { height: titleInputHeight }
+                      : null,
                   ]}
                   placeholder="e.g., Weekly Team Sync & Catchup..."
                   placeholderTextColor={Colors.SteelMist}
@@ -556,7 +560,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                 >
                   <View style={styles.contextIconWrap}>
                     <FileText
-                      size={16}
+                      size={ResponsivePixels.size16}
                       color={
                         isDarkMode ? Colors.SteelMist : Colors.MutedSlateSubtext
                       }
@@ -643,7 +647,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                   ]}
                 >
                   <Volume2
-                    size={20}
+                    size={ResponsivePixels.size20}
                     color={Colors.GreenGracious}
                     strokeWidth={2.4}
                   />
@@ -664,7 +668,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                       variant="purple"
                       size="sm"
                       label={`${assistantName.toUpperCase()} AI`}
-                      icon={<Sparkles size={9} color={Colors.MindfulTextAccent} />}
+                      icon={<Sparkles size={ResponsivePixels.size9} color={Colors.MindfulTextAccent} />}
                     />
                   </View>
                   <Text style={styles.voiceSubtitle} numberOfLines={1}>
@@ -704,7 +708,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                   accessibilityLabel="Delete Task"
                 >
                   <Trash2
-                    size={16}
+                    size={ResponsivePixels.size16}
                     color={Colors.CategoryRedAccent}
                     strokeWidth={2.2}
                   />
@@ -771,9 +775,9 @@ const styles = StyleSheet.create({
     top: -ResponsivePixels.size24,
     alignSelf: 'center',
     backgroundColor: Colors.NeroBlack,
-    paddingHorizontal: 22,
-    paddingVertical: 7,
-    borderRadius: 22,
+    paddingHorizontal: ResponsivePixels.size22,
+    paddingVertical: ResponsivePixels.size7,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
     borderTopColor: Colors.DarkBevelTop,
     borderLeftColor: Colors.DarkBorder,
@@ -799,17 +803,17 @@ const styles = StyleSheet.create({
   },
   flowSubtitle: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     color: Colors.CoolSilverSubtitle,
-    marginTop: 1,
+    marginTop: ResponsivePixels.size1,
     letterSpacing: 0.2,
     textAlign: 'center',
   },
   primaryTaskCardWrapper: {
-    borderRadius: 22,
+    borderRadius: ResponsivePixels.size22,
     backgroundColor: Colors.PureWhite,
-    marginTop: 26,
-    marginBottom: 22,
+    marginTop: ResponsivePixels.size26,
+    marginBottom: ResponsivePixels.size22,
     position: 'relative',
     zIndex: 10,
     ...Platform.select({
@@ -825,11 +829,11 @@ const styles = StyleSheet.create({
   },
   primaryTaskCard: {
     backgroundColor: Colors.PureWhite,
-    borderRadius: 22,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-    paddingTop: 36,
+    paddingHorizontal: ResponsivePixels.size16,
+    paddingBottom: ResponsivePixels.size16,
+    paddingTop: ResponsivePixels.size36,
     position: 'relative',
     overflow: 'hidden',
   },
@@ -842,28 +846,30 @@ const styles = StyleSheet.create({
   },
   cardSectionLabel: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     letterSpacing: 0.8,
     color: Colors.MutedSlateSubtext,
   },
   titleInput: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 18,
-    lineHeight: 26,
+    fontSize: ResponsivePixels.size18,
+    lineHeight: ResponsivePixels.size26,
     color: Colors.MidnightCharcoal,
-    paddingTop: Platform.OS === 'ios' ? 8 : 4,
-    paddingBottom: Platform.OS === 'ios' ? 8 : 4,
+    paddingTop:
+      Platform.OS === 'ios' ? ResponsivePixels.size8 : ResponsivePixels.size4,
+    paddingBottom:
+      Platform.OS === 'ios' ? ResponsivePixels.size8 : ResponsivePixels.size4,
     paddingHorizontal: 0,
-    minHeight: 48,
+    minHeight: ResponsivePixels.size48,
     textAlignVertical: 'top',
     includeFontPadding: false,
   },
   contextRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    marginTop: 10,
-    height: 48,
+    gap: ResponsivePixels.size10,
+    marginTop: ResponsivePixels.size10,
+    height: ResponsivePixels.size48,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: withAlpha(Colors.PureBlack, 0.06),
@@ -876,7 +882,7 @@ const styles = StyleSheet.create({
   contextInput: {
     flex: 1,
     fontFamily: Fonts.poppins.regular,
-    fontSize: 13.5,
+    fontSize: ResponsivePixels.size13_5,
     color: Colors.SlateGraphiteText,
     paddingVertical: 0,
     paddingHorizontal: 0,
@@ -886,14 +892,14 @@ const styles = StyleSheet.create({
   },
   voiceNudgeCard: {
     backgroundColor: Colors.PureWhite,
-    borderRadius: 20,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
     borderColor: Colors.RingBorder,
-    padding: 14,
+    padding: ResponsivePixels.size14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 24,
+    marginBottom: ResponsivePixels.size24,
     ...Platform.select({
       ios: {
         shadowColor: Colors.PureBlack,
@@ -910,13 +916,13 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    marginRight: 14,
+    gap: ResponsivePixels.size12,
+    marginRight: ResponsivePixels.size14,
   },
   voiceIconBox: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
+    width: ResponsivePixels.size44,
+    height: ResponsivePixels.size44,
+    borderRadius: ResponsivePixels.size14,
     backgroundColor: Colors.WellnessLightBg,
     borderWidth: 1.5,
     borderColor: Colors.WellnessLightBorder,
@@ -940,33 +946,33 @@ const styles = StyleSheet.create({
   voiceTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   voiceTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     color: Colors.MidnightCharcoal,
   },
   voiceSubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: Colors.MutedSlateSubtext,
-    marginTop: 2,
+    marginTop: ResponsivePixels.size2,
   },
   deleteSection: {
-    marginTop: 18,
-    marginBottom: 10,
+    marginTop: ResponsivePixels.size18,
+    marginBottom: ResponsivePixels.size10,
   },
   deleteCardBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
     backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
     borderColor: Colors.CategoryRoseBorder,
-    paddingVertical: 13,
-    borderRadius: 18,
+    paddingVertical: ResponsivePixels.size13,
+    borderRadius: ResponsivePixels.size18,
     ...Platform.select({
       ios: {
         shadowColor: Colors.CategoryRedAccent,
@@ -981,7 +987,7 @@ const styles = StyleSheet.create({
   },
   deleteCardBtnText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     color: Colors.CategoryRedAccent,
   },
 });

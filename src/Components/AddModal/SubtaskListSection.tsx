@@ -10,6 +10,7 @@ import { Plus, X } from 'lucide-react-native';
 import { Fonts } from '../../Theme/fonts';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../Theme/useAppTheme';
+import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface SubtaskItem {
   id: string;
@@ -88,7 +89,7 @@ export const SubtaskListSection: React.FC<SubtaskListSectionProps> = React.memo(
             accessibilityRole="button"
             accessibilityLabel="Add subtask"
           >
-            <Plus size={14} color={Colors.PureWhite} strokeWidth={2.4} />
+            <Plus size={ResponsivePixels.size14} color={Colors.PureWhite} strokeWidth={2.4} />
             <Text style={styles.addSubtaskBtnText}>Add</Text>
           </TouchableOpacity>
         </View>
@@ -139,11 +140,11 @@ export const SubtaskListSection: React.FC<SubtaskListSectionProps> = React.memo(
                   activeOpacity={0.7}
                   onPress={() => onRemove(item.id)}
                   style={styles.removeSubtaskBtn}
-                  hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
+                  hitSlop={{ top: ResponsivePixels.size6, bottom: ResponsivePixels.size6, left: ResponsivePixels.size6, right: ResponsivePixels.size6 }}
                   accessibilityLabel={`Remove subtask ${item.text}`}
                 >
                   <X
-                    size={13}
+                    size={ResponsivePixels.size13}
                     color={
                       isDarkMode ? Colors.SteelMist : Colors.MutedSlateSubtext
                     }
@@ -161,40 +162,40 @@ export const SubtaskListSection: React.FC<SubtaskListSectionProps> = React.memo(
 
 const styles = StyleSheet.create({
   sectionBlock: {
-    marginBottom: 20,
+    marginBottom: ResponsivePixels.size20,
   },
   sectionHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: ResponsivePixels.size10,
   },
   sectionHeading: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 13.5,
+    fontSize: ResponsivePixels.size13_5,
     color: Colors.DarkBackground,
     letterSpacing: -0.2,
   },
   sectionSubtext: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: Colors.Grey,
   },
   subtaskInputRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   subtaskTextInput: {
     flex: 1,
-    height: 44,
+    height: ResponsivePixels.size44,
     backgroundColor: Colors.PureWhite,
-    borderRadius: 14,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1.5,
     borderColor: Colors.RingBorder,
-    paddingHorizontal: 14,
+    paddingHorizontal: ResponsivePixels.size14,
     fontFamily: Fonts.poppins.medium,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     color: Colors.DarkBackground,
   },
   addSubtaskBtn: {
@@ -202,35 +203,35 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.DarkElevatedNero,
-    height: 44,
-    paddingHorizontal: 14,
-    borderRadius: 14,
-    gap: 4,
+    height: ResponsivePixels.size44,
+    paddingHorizontal: ResponsivePixels.size14,
+    borderRadius: ResponsivePixels.size14,
+    gap: ResponsivePixels.size4,
   },
   addSubtaskBtnText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 12.5,
+    fontSize: ResponsivePixels.size12_5,
     color: Colors.PureWhite,
   },
   subtasksList: {
-    marginTop: 10,
-    gap: 6,
+    marginTop: ResponsivePixels.size10,
+    gap: ResponsivePixels.size6,
   },
   subtaskItemRow: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.PureWhite,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    borderRadius: 12,
+    paddingVertical: ResponsivePixels.size8,
+    paddingHorizontal: ResponsivePixels.size12,
+    borderRadius: ResponsivePixels.size12,
     borderWidth: 1,
     borderColor: Colors.RingBorder,
-    gap: 10,
+    gap: ResponsivePixels.size10,
   },
   subtaskStepIndicator: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+    width: ResponsivePixels.size22,
+    height: ResponsivePixels.size22,
+    borderRadius: ResponsivePixels.size11,
     backgroundColor: Colors.CreamSurfaceAlt,
     borderWidth: 1,
     borderColor: Colors.RingBorder,
@@ -239,17 +240,17 @@ const styles = StyleSheet.create({
   },
   subtaskStepNumber: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     color: Colors.Grey,
   },
   subtaskItemText: {
     flex: 1,
     fontFamily: Fonts.poppins.medium,
-    fontSize: 12.5,
+    fontSize: ResponsivePixels.size12_5,
     color: Colors.DarkBackground,
   },
   removeSubtaskBtn: {
-    padding: 2,
+    padding: ResponsivePixels.size2,
   },
 });
 

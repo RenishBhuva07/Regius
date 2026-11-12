@@ -10,16 +10,19 @@ import Svg, {
 } from 'react-native-svg';
 import { useTheme } from '../Theme/ThemeContext';
 import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
 interface PlusButtonPatternSvgProps {
   size?: number;
 }
 
+const VIEW_SIZE = 54;
+
 // Pattern background for the floating center Plus button.
 export const PlusButtonPatternSvg: React.FC<PlusButtonPatternSvgProps> =
-  React.memo(({ size = 54 }) => {
+  React.memo(({ size = ResponsivePixels.size54 }) => {
     const { activeThemeId } = useTheme();
-    const center = size / 2;
+    const center = VIEW_SIZE / 2;
 
     const getPlusBtnGradient = () => {
       if (activeThemeId === 'cyprus_sand') {
@@ -91,7 +94,7 @@ export const PlusButtonPatternSvg: React.FC<PlusButtonPatternSvgProps> =
         <Svg
           width={size}
           height={size}
-          viewBox={`0 0 ${size} ${size}`}
+          viewBox={`0 0 ${VIEW_SIZE} ${VIEW_SIZE}`}
           fill="none"
         >
           <Defs>

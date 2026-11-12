@@ -18,6 +18,7 @@ import TasksScreen from '../Screens/Tasks/TasksScreen';
 import RemindersScreen from '../Screens/Reminders/RemindersScreen';
 import { HabitsScreen } from '../Screens/Habits';
 import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 import { useTheme } from '../Theme/ThemeContext';
 import { Typography } from '../Theme/Typographys';
 import { Fonts } from '../Theme/fonts';
@@ -35,23 +36,23 @@ import AddHabitModal from '../Components/AddHabitModal';
 
 const { width: SW } = Dimensions.get('window');
 
-const H_MARGIN = 20; // left/right float gap
+const H_MARGIN = ResponsivePixels.size20; // left/right float gap
 const BAR_W = SW - H_MARGIN * 2;
-const BAR_H = 64;
-const CORNER_R = 34;
+const BAR_H = ResponsivePixels.size64;
+const CORNER_R = ResponsivePixels.size34;
 
-const NOTCH_W = 40; // half-width of notch opening
-const NOTCH_DEEP = 24; // depth of curve
-const CP = 18; // bezier control-point spread
+const NOTCH_W = ResponsivePixels.size40; // half-width of notch opening
+const NOTCH_DEEP = ResponsivePixels.size24; // depth of curve
+const CP = ResponsivePixels.size18; // bezier control-point spread
 
-const BTN_SIZE = 54;
-const BTN_RING = 8; // cream ring around button
-const BTN_FLOAT = 22; // how far center of button floats above bar top
+const BTN_SIZE = ResponsivePixels.size54;
+const BTN_RING = ResponsivePixels.size8; // cream ring around button
+const BTN_FLOAT = ResponsivePixels.size22; // how far center of button floats above bar top
 
-const SIDE_PADDING = 10; // breathing room from rounded pill caps
+const SIDE_PADDING = ResponsivePixels.size10; // breathing room from rounded pill caps
 const TAB_SLOT_W = (BAR_W - SIDE_PADDING * 2) / 5; // equal width for all 5 slots
-const TAB_INNER_W = Math.min(66, Math.floor(TAB_SLOT_W));
-const TAB_INNER_H = 50;
+const TAB_INNER_W = Math.min(ResponsivePixels.size66, Math.floor(TAB_SLOT_W));
+const TAB_INNER_H = ResponsivePixels.size50;
 
 // Curved bottom tab bar with center notch and pattern
 const BAR_BORDER_W = 4; // cream border matching plus button halo
@@ -97,10 +98,11 @@ const getTabX = (slot: number): number =>
 const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
   const insets = useSafeAreaInsets();
   const { isDarkMode, Colors: themeColors } = useTheme();
-  const safeBot = Math.max(insets.bottom, 8);
+  const safeBot = Math.max(insets.bottom, ResponsivePixels.size8);
 
   // Height the nav system reserves: bar + button float + safe area
-  const totalH = BAR_H + BTN_FLOAT + (BTN_SIZE + BTN_RING) / 2 + safeBot + 4;
+  const totalH =
+    BAR_H + BTN_FLOAT + (BTN_SIZE + BTN_RING) / 2 + safeBot + ResponsivePixels.size4;
 
   const { openTaskModal, openReminderModal, openHabitModal } =
     useTaskReminder();
@@ -258,7 +260,7 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
           ]}
         >
           <tab.Icon
-            size={22}
+            size={ResponsivePixels.size22}
             color={
               focused
                 ? Colors.PureWhite
@@ -411,7 +413,7 @@ const CustomTabBar: React.FC<BottomTabBarProps> = ({ state, navigation }) => {
                 ]}
               >
                 <Plus
-                  size={26}
+                  size={ResponsivePixels.size26}
                   color={Colors.PureWhite}
                   strokeWidth={2.6}
                 />
@@ -522,15 +524,15 @@ const styles = StyleSheet.create({
     height: BAR_H,
     alignItems: 'center',
     paddingHorizontal: SIDE_PADDING,
-    paddingBottom: 2,
+    paddingBottom: ResponsivePixels.size2,
   },
   activeIndicator: {
     position: 'absolute',
-    top: 6,
+    top: ResponsivePixels.size6,
     left: 0,
     width: TAB_INNER_W,
     height: TAB_INNER_H,
-    borderRadius: 16,
+    borderRadius: ResponsivePixels.size16,
     backgroundColor: Colors.DarkBackground,
     overflow: 'hidden',
   },
@@ -545,24 +547,24 @@ const styles = StyleSheet.create({
     height: TAB_INNER_H,
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 3,
-    paddingHorizontal: 2,
-    borderRadius: 16,
+    gap: ResponsivePixels.size3,
+    paddingHorizontal: ResponsivePixels.size2,
+    borderRadius: ResponsivePixels.size16,
     position: 'relative',
   },
   label: {
     ...Typography.bodySuperSmallPoppinsRegularLoose,
     fontFamily: Fonts.poppins.medium,
-    fontSize: 9.5,
-    lineHeight: 12,
+    fontSize: ResponsivePixels.size9_5,
+    lineHeight: ResponsivePixels.size12,
     textAlign: 'center',
     color: withAlpha(Colors.PureWhite, 0.7),
   },
   labelActive: {
     ...Typography.bodySuperSmallPoppinsSemiBoldLoose,
     fontFamily: Fonts.poppins.bold,
-    fontSize: 9.5,
-    lineHeight: 12,
+    fontSize: ResponsivePixels.size9_5,
+    lineHeight: ResponsivePixels.size12,
     textAlign: 'center',
     color: Colors.PureWhite,
   },
@@ -611,8 +613,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   plusIconWrap: {
-    width: 26,
-    height: 26,
+    width: ResponsivePixels.size26,
+    height: ResponsivePixels.size26,
     alignItems: 'center',
     justifyContent: 'center',
   },

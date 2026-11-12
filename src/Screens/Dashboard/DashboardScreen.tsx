@@ -131,7 +131,7 @@ export const DashboardScreen: React.FC = () => {
 
   const headerRadius = scrollY.interpolate({
     inputRange: [0, 30],
-    outputRange: [0, 24],
+    outputRange: [0, ResponsivePixels.size24],
     extrapolate: 'clamp',
   });
 
@@ -149,7 +149,7 @@ export const DashboardScreen: React.FC = () => {
 
   const headerPaddingBottom = scrollY.interpolate({
     inputRange: [0, 30],
-    outputRange: [0, 8],
+    outputRange: [0, ResponsivePixels.size8],
     extrapolate: 'clamp',
   });
 
@@ -376,7 +376,7 @@ export const DashboardScreen: React.FC = () => {
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingTop: insets.top + HEADER_HEIGHT + 10,
+            paddingTop: insets.top + HEADER_HEIGHT + ResponsivePixels.size10,
             paddingBottom: 0,
           },
         ]}
@@ -394,7 +394,7 @@ export const DashboardScreen: React.FC = () => {
               </Text>
               <View style={styles.ambientStatus}>
                 <Sun
-                  size={14}
+                  size={ResponsivePixels.size14}
                   color={isDarkMode ? Colors.AccentYellow : Colors.Grey}
                   strokeWidth={2.2}
                 />
@@ -440,7 +440,7 @@ export const DashboardScreen: React.FC = () => {
           title="Today’s Flow"
           subtitle="Your day at a glance"
           backgroundSvg={<FlowSectionBackgroundSvg />}
-          bottomPadding={insets.bottom + 130}
+          bottomPadding={insets.bottom + ResponsivePixels.size130}
           containerStyle={styles.flowSection}
         >
           {/* Filter pills */}
@@ -476,9 +476,9 @@ export const DashboardScreen: React.FC = () => {
               <View style={styles.unscheduledSection}>
                 <View style={styles.unscheduledHeaderRow}>
                   <Calendar
-                    size={14}
+                    size={ResponsivePixels.size14}
                     color={Colors.Grey}
-                    style={{ marginRight: 6 }}
+                    style={{ marginRight: ResponsivePixels.size6 }}
                   />
                   <Text style={styles.unscheduledHeaderText}>
                     Unscheduled / Any Time
@@ -569,51 +569,51 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
   },
   topSectionWrapper: {
-    paddingHorizontal: 10,
+    paddingHorizontal: ResponsivePixels.size10,
   },
   greetingSection: {
-    marginBottom: 10,
+    marginBottom: ResponsivePixels.size10,
   },
   dateWeatherRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 4,
+    marginBottom: ResponsivePixels.size4,
   },
   ambientStatus: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: ResponsivePixels.size5,
   },
   ambientStatusText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: Colors.Grey,
   },
   dateText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: Colors.Grey,
     letterSpacing: 0.8,
   },
   greetingText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 27,
+    fontSize: ResponsivePixels.size27,
     color: Colors.RegiusInk,
     letterSpacing: -0.5,
   },
   flowSection: {
     backgroundColor: Colors.SoftCream,
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
+    borderTopLeftRadius: ResponsivePixels.size32,
+    borderTopRightRadius: ResponsivePixels.size32,
     borderWidth: 1.5,
     borderTopColor: Colors.WarmNavBevelTop,
     borderLeftColor: Colors.WarmNavBevelSide,
     borderRightColor: Colors.WarmNavBevelSide,
     borderBottomWidth: 0,
-    paddingHorizontal: 8,
-    paddingTop: 40,
-    marginTop: 26,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingTop: ResponsivePixels.size40,
+    marginTop: ResponsivePixels.size26,
     flex: 1,
     position: 'relative',
     ...Platform.select({
@@ -630,18 +630,18 @@ const styles = StyleSheet.create({
   },
   flowSectionBgWrapper: {
     ...StyleSheet.absoluteFill,
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
+    borderTopLeftRadius: ResponsivePixels.size32,
+    borderTopRightRadius: ResponsivePixels.size32,
     overflow: 'hidden',
   },
   flowHeaderBadge: {
     position: 'absolute',
-    top: -24,
+    top: -ResponsivePixels.size24,
     alignSelf: 'center',
     backgroundColor: Colors.NeroBlack,
-    paddingHorizontal: 22,
-    paddingVertical: 7,
-    borderRadius: 22,
+    paddingHorizontal: ResponsivePixels.size22,
+    paddingVertical: ResponsivePixels.size7,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
     borderTopColor: Colors.DarkBevelTop,
     borderLeftColor: Colors.DarkBorder,
@@ -660,16 +660,16 @@ const styles = StyleSheet.create({
   },
   flowTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 14.5,
+    fontSize: ResponsivePixels.size14_5,
     color: Colors.PureWhite,
     letterSpacing: -0.1,
     textAlign: 'center',
   },
   flowSubtitle: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     color: Colors.CoolSilverSubtitle,
-    marginTop: 1,
+    marginTop: ResponsivePixels.size1,
     textAlign: 'center',
   },
   timelineList: {
@@ -680,32 +680,32 @@ const styles = StyleSheet.create({
     overflow: 'visible',
   },
   timelineListContent: {
-    paddingBottom: 16,
+    paddingBottom: ResponsivePixels.size16,
     overflow: 'visible',
   },
   unscheduledSection: {
-    marginTop: 12,
+    marginTop: ResponsivePixels.size12,
   },
   unscheduledHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 8,
-    paddingLeft: 4,
-    marginBottom: 4,
+    paddingVertical: ResponsivePixels.size8,
+    paddingLeft: ResponsivePixels.size4,
+    marginBottom: ResponsivePixels.size4,
   },
   unscheduledHeaderText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.Grey,
   },
   emptyFlowState: {
-    paddingVertical: 24,
+    paddingVertical: ResponsivePixels.size24,
     alignItems: 'center',
     justifyContent: 'center',
   },
   emptyFlowText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     color: Colors.TimelineMutedGray,
   },
 
@@ -727,29 +727,29 @@ const styles = StyleSheet.create({
   },
   footerWatermarkText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 34,
-    lineHeight: 42,
+    fontSize: ResponsivePixels.size34,
+    lineHeight: ResponsivePixels.size42,
     color: Colors.MilestoneSlate,
     letterSpacing: -1.2,
   },
   craftedWithRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 18,
+    marginTop: ResponsivePixels.size18,
   },
   craftedWithText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     color: Colors.MilestoneSlate,
   },
   craftedWithHeart: {
-    fontSize: 13.5,
+    fontSize: ResponsivePixels.size13_5,
   },
   footerDoodleWrapper: {
-    marginLeft: 8,
+    marginLeft: ResponsivePixels.size8,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 6,
+    marginTop: ResponsivePixels.size6,
   },
 });
 

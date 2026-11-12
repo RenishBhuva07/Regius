@@ -12,6 +12,7 @@ import { Search, X } from 'lucide-react-native';
 import { Fonts } from '../Theme/fonts';
 import { Colors } from '../Assets/StyleUtilities/Colors';
 import { useTheme } from '../Theme/ThemeContext';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
 export interface SearchInputBarProps {
   value: string;
@@ -65,7 +66,7 @@ export const SearchInputBar: React.FC<SearchInputBarProps> = React.memo(
           containerStyle,
         ]}
       >
-        <Search size={18} color={textSecondary} strokeWidth={2.2} />
+        <Search size={ResponsivePixels.size18} color={textSecondary} strokeWidth={2.2} />
         <TextInput
           style={[styles.searchInput, { color: textPrimary }]}
           value={value}
@@ -86,7 +87,7 @@ export const SearchInputBar: React.FC<SearchInputBarProps> = React.memo(
             accessibilityLabel="Clear search"
             accessibilityRole="button"
           >
-            <X size={15} color={textSecondary} strokeWidth={2.4} />
+            <X size={ResponsivePixels.size15} color={textSecondary} strokeWidth={2.4} />
           </TouchableOpacity>
         )}
       </View>
@@ -98,12 +99,12 @@ const styles = StyleSheet.create({
   searchWrap: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: ResponsivePixels.size16,
     borderWidth: 1.5,
-    paddingHorizontal: 14,
-    height: 48,
-    gap: 10,
-    marginBottom: 16,
+    paddingHorizontal: ResponsivePixels.size14,
+    height: ResponsivePixels.size48,
+    gap: ResponsivePixels.size10,
+    marginBottom: ResponsivePixels.size16,
     ...Platform.select({
       ios: {
         shadowColor: Colors.PureBlack,
@@ -119,11 +120,11 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontFamily: Fonts.poppins.regular,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     padding: 0,
   },
   searchClearBtn: {
-    padding: 4,
+    padding: ResponsivePixels.size4,
   },
 });
 

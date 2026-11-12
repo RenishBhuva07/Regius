@@ -16,6 +16,7 @@ import { Fonts } from '../Theme/fonts';
 import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../Theme/useAppTheme';
 import PickerAestheticBg from '../Components/PickerAestheticBg';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
 export interface UnifiedSchedulePickerModalProps {
   visible: boolean;
@@ -89,13 +90,13 @@ export const UnifiedSchedulePickerModal: React.FC<UnifiedSchedulePickerModalProp
                       >
                         {isDate ? (
                           <Calendar
-                            size={12}
+                            size={ResponsivePixels.size12}
                             color={Colors.WorkTextAccent}
                             strokeWidth={2.5}
                           />
                         ) : (
                           <Clock
-                            size={12}
+                            size={ResponsivePixels.size12}
                             color={Colors.MindfulTextAccent}
                             strokeWidth={2.5}
                           />
@@ -160,11 +161,11 @@ const styles = StyleSheet.create({
   },
   pickerModalCard: {
     backgroundColor: Colors.CreamSurfaceAlt,
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
-    paddingTop: 12,
-    paddingBottom: 28,
-    paddingHorizontal: 20,
+    borderTopLeftRadius: ResponsivePixels.size32,
+    borderTopRightRadius: ResponsivePixels.size32,
+    paddingTop: ResponsivePixels.size12,
+    paddingBottom: ResponsivePixels.size28,
+    paddingHorizontal: ResponsivePixels.size20,
     borderWidth: 1.5,
     borderTopColor: Colors.PureWhite,
     borderLeftColor: Colors.CreamBorderSubtle,
@@ -185,34 +186,34 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   pickerDragHandle: {
-    width: 38,
-    height: 4,
-    borderRadius: 2,
+    width: ResponsivePixels.size38,
+    height: ResponsivePixels.size4,
+    borderRadius: ResponsivePixels.size2,
     backgroundColor: Colors.WarmDragHandle,
     alignSelf: 'center',
-    marginBottom: 12,
+    marginBottom: ResponsivePixels.size12,
   },
   pickerModalHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: ResponsivePixels.size8,
     zIndex: 2,
   },
   pickerHeaderTitleWrap: {
-    gap: 2,
+    gap: ResponsivePixels.size2,
   },
   pickerHeaderBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: ResponsivePixels.size5,
     alignSelf: 'flex-start',
-    paddingHorizontal: 7.5,
-    paddingVertical: 2.5,
-    borderRadius: 20,
+    paddingHorizontal: ResponsivePixels.size7_5,
+    paddingVertical: ResponsivePixels.size2_5,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1,
     borderBottomWidth: 2,
-    marginBottom: 2,
+    marginBottom: ResponsivePixels.size2,
   },
   pickerHeaderBadgeDate: {
     backgroundColor: Colors.BadgeYellowBg,
@@ -226,26 +227,26 @@ const styles = StyleSheet.create({
   },
   pickerHeaderBadgeTextDate: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 8.5,
+    fontSize: ResponsivePixels.size8_5,
     color: Colors.WorkTextAccent,
     letterSpacing: 0.6,
   },
   pickerHeaderBadgeTextTime: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 8.5,
+    fontSize: ResponsivePixels.size8_5,
     color: Colors.MindfulTextAccent,
     letterSpacing: 0.6,
   },
   pickerModalTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 18,
+    fontSize: ResponsivePixels.size18,
     color: Colors.DarkBackground,
   },
   pickerDoneBtn: {
     backgroundColor: Colors.DarkElevatedNero,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: ResponsivePixels.size16,
+    paddingVertical: ResponsivePixels.size8,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1,
     borderColor: Colors.DarkBevelTop,
     borderBottomWidth: 2.5,
@@ -253,7 +254,7 @@ const styles = StyleSheet.create({
   },
   pickerDoneBtnText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 12.5,
+    fontSize: ResponsivePixels.size12_5,
     color: Colors.PureWhite,
     letterSpacing: 0.2,
   },

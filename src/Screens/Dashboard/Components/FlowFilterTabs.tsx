@@ -3,6 +3,7 @@ import { FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Fonts } from '../../../Theme/fonts';
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../../Theme/useAppTheme';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 export type FlowFilter = 'all' | 'tasks' | 'habits' | 'reminders' | 'voice';
 
@@ -90,20 +91,20 @@ export const FlowFilterTabs: React.FC<FlowFilterTabsProps> = React.memo(
 
 const styles = StyleSheet.create({
   filterScroll: {
-    marginHorizontal: -8,
-    marginBottom: 6,
+    marginHorizontal: -ResponsivePixels.size8,
+    marginBottom: ResponsivePixels.size6,
   },
   filterRow: {
     flexDirection: 'row',
-    gap: 8,
-    paddingHorizontal: 12,
-    paddingTop: 6,
-    paddingBottom: 16,
+    gap: ResponsivePixels.size8,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingTop: ResponsivePixels.size6,
+    paddingBottom: ResponsivePixels.size16,
   },
   filterPill: {
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-    borderRadius: 22,
+    paddingHorizontal: ResponsivePixels.size14,
+    paddingVertical: ResponsivePixels.size7,
+    borderRadius: ResponsivePixels.size22,
     backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
     borderColor: Colors.WarmChipBorder,
@@ -131,7 +132,7 @@ const styles = StyleSheet.create({
   },
   filterPillText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.CharcoalStoneText,
     letterSpacing: -0.1,
   },

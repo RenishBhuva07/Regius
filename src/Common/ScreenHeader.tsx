@@ -20,8 +20,9 @@ import HolographAnimation from '../Assets/JsonAnimations/Holograph.json';
 import { useVoiceWakeWord } from '../Context/VoiceWakeWordContext';
 import HeaderPatternSvg from '../Screens/Dashboard/Components/HeaderPatternSvg';
 import { SettingsButton } from './SettingsButton';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
-export const SCREEN_HEADER_HEIGHT = 54;
+export const SCREEN_HEADER_HEIGHT = ResponsivePixels.size54;
 
 export interface ScreenHeaderProps {
   title: string;
@@ -74,7 +75,7 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
 
   const headerRadius = scrollY.interpolate({
     inputRange: [0, 30],
-    outputRange: [0, 24],
+    outputRange: [0, ResponsivePixels.size24],
     extrapolate: 'clamp',
   });
 
@@ -92,7 +93,7 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
 
   const headerPaddingBottom = scrollY.interpolate({
     inputRange: [0, 30],
-    outputRange: [0, 8],
+    outputRange: [0, ResponsivePixels.size8],
     extrapolate: 'clamp',
   });
 
@@ -181,12 +182,12 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
               style={styles.voiceHeaderBtn}
               accessibilityRole="button"
               accessibilityLabel={`Open ${assistantName} Voice Assistant`}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              hitSlop={{ top: ResponsivePixels.size10, bottom: ResponsivePixels.size10, left: ResponsivePixels.size10, right: ResponsivePixels.size10 }}
             >
               <View pointerEvents="none">
                 <CustomAnimation
                   animationFile={HolographAnimation}
-                  size={56}
+                  size={ResponsivePixels.size56}
                   animationStyle={styles.voiceHeaderAnimation}
                   autoPlay
                   loop
@@ -214,7 +215,7 @@ export const ScreenHeader: React.FC<ScreenHeaderProps> = ({
               accessibilityRole="button"
               accessibilityLabel="User Profile"
             >
-              <SVGS.RegiusAvatar width={36} height={36} style={styles.avatar} />
+              <SVGS.RegiusAvatar width={ResponsivePixels.size36} height={ResponsivePixels.size36} style={styles.avatar} />
             </TouchableOpacity>
           )}
         </View>
@@ -235,7 +236,7 @@ const styles = StyleSheet.create({
     shadowRadius: 7,
   },
   header: {
-    paddingHorizontal: 20,
+    paddingHorizontal: ResponsivePixels.size20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -244,25 +245,25 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'center',
     flex: 1,
-    gap: 1,
+    gap: ResponsivePixels.size1,
   },
   screenTitle: {
     ...Typography.h1RanadeBold,
-    fontSize: 24,
+    fontSize: ResponsivePixels.size24,
     color: Colors.RegiusInk,
     letterSpacing: -0.5,
     includeFontPadding: false,
-    lineHeight: 28,
+    lineHeight: ResponsivePixels.size28,
   },
   screenTitleScrolled: {
     color: Colors.PureWhite,
   },
   screenSubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: Colors.HeaderSubtitleOlive,
     includeFontPadding: false,
-    lineHeight: 15,
+    lineHeight: ResponsivePixels.size15,
   },
   screenSubtitleScrolled: {
     color: withAlpha(Colors.PureWhite, 0.82),
@@ -270,22 +271,22 @@ const styles = StyleSheet.create({
   headerRight: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: ResponsivePixels.size10,
   },
   voiceHeaderBtn: {
-    width: 36,
-    height: 36,
+    width: ResponsivePixels.size36,
+    height: ResponsivePixels.size36,
     alignItems: 'center',
     justifyContent: 'center',
   },
   voiceHeaderAnimation: {
-    width: 56,
-    height: 56,
+    width: ResponsivePixels.size56,
+    height: ResponsivePixels.size56,
   },
   avatarRing: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: ResponsivePixels.size44,
+    height: ResponsivePixels.size44,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 2,
     borderColor: Colors.RingBorder,
     alignItems: 'center',

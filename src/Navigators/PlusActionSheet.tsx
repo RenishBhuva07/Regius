@@ -29,9 +29,10 @@ import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import { Fonts } from '../Theme/fonts';
 import { Badge } from '../Common/Badge';
 import { useTheme } from '../Theme/ThemeContext';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
 const { width: SW } = Dimensions.get('window');
-const SHEET_W = Math.min(SW - 20, 362);
+const SHEET_W = Math.min(SW - ResponsivePixels.size20, ResponsivePixels.size362);
 
 export interface PlusActionSheetProps {
   visible: boolean;
@@ -251,7 +252,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
 
   const translateY = anim.interpolate({
     inputRange: [0, 1],
-    outputRange: [28, 0],
+    outputRange: [ResponsivePixels.size28, 0],
   });
 
   const opacity = anim.interpolate({
@@ -315,7 +316,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                 size="md"
                 icon={
                   <Sparkles
-                    size={11}
+                    size={ResponsivePixels.size11}
                     color={Colors.ObsidianGoldAntique}
                     strokeWidth={2.4}
                   />
@@ -332,7 +333,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                 ]}
               >
                 <Sparkles
-                  size={11}
+                  size={ResponsivePixels.size11}
                   color={Colors.SovereignCrestGold}
                   strokeWidth={2.2}
                 />
@@ -375,7 +376,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                     ]}
                   >
                     <CheckSquare
-                      size={18}
+                      size={ResponsivePixels.size18}
                       color={Colors.HabitBurnishedAmber}
                       strokeWidth={2.4}
                     />
@@ -414,7 +415,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                     ]}
                   >
                     <ChevronRight
-                      size={12}
+                      size={ResponsivePixels.size12}
                       color={Colors.HabitBurnishedAmber}
                       strokeWidth={2.4}
                     />
@@ -458,7 +459,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                     ]}
                   >
                     <Bell
-                      size={18}
+                      size={ResponsivePixels.size18}
                       color={Colors.GreenGracious}
                       strokeWidth={2.4}
                     />
@@ -497,7 +498,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                     ]}
                   >
                     <ChevronRight
-                      size={12}
+                      size={ResponsivePixels.size12}
                       color={Colors.GreenGracious}
                       strokeWidth={2.4}
                     />
@@ -541,7 +542,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                     ]}
                   >
                     <Flame
-                      size={18}
+                      size={ResponsivePixels.size18}
                       color={Colors.LavenderPurple}
                       strokeWidth={2.4}
                     />
@@ -580,7 +581,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                     ]}
                   >
                     <ChevronRight
-                      size={12}
+                      size={ResponsivePixels.size12}
                       color={Colors.LavenderPurple}
                       strokeWidth={2.4}
                     />
@@ -620,20 +621,20 @@ const styles = StyleSheet.create({
   },
   pointerNotch: {
     position: 'absolute',
-    bottom: -6.5,
+    bottom: -ResponsivePixels.size6_5,
     alignSelf: 'center',
-    width: 14,
-    height: 14,
+    width: ResponsivePixels.size14,
+    height: ResponsivePixels.size14,
     backgroundColor: Colors.WarmParchment,
     transform: [{ rotate: '45deg' }],
-    borderBottomRightRadius: 3,
+    borderBottomRightRadius: ResponsivePixels.size3,
     borderRightWidth: 1.5,
     borderBottomWidth: 1.5,
     borderColor: Colors.RingBorder,
     zIndex: 1,
   },
   cardShadowWrapper: {
-    borderRadius: 26,
+    borderRadius: ResponsivePixels.size26,
     backgroundColor: Colors.Transparent,
     ...Platform.select({
       ios: {
@@ -649,11 +650,11 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: Colors.WarmCreamHighlight,
-    borderRadius: 26,
+    borderRadius: ResponsivePixels.size26,
     overflow: 'hidden',
-    paddingHorizontal: 12,
-    paddingTop: 11,
-    paddingBottom: 13,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingTop: ResponsivePixels.size11,
+    paddingBottom: ResponsivePixels.size13,
     borderWidth: 1.5,
     borderColor: Colors.RingBorder,
     borderTopWidth: 2,
@@ -663,23 +664,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 9,
-    paddingHorizontal: 4,
+    marginBottom: ResponsivePixels.size9,
+    paddingHorizontal: ResponsivePixels.size4,
   },
   headerRight: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 10,
+    gap: ResponsivePixels.size4,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size3,
+    borderRadius: ResponsivePixels.size10,
     backgroundColor: withAlpha(Colors.PureWhite, 0.85),
     borderWidth: 1,
     borderColor: Colors.WarmParchmentBorder,
   },
   headerRightLabel: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 8.5,
+    fontSize: ResponsivePixels.size8_5,
     color: Colors.WarmSepiaHint,
     letterSpacing: 0.7,
   },
@@ -687,18 +688,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 7.5,
+    gap: ResponsivePixels.size7_5,
   },
   actionCard: {
     flex: 1,
-    minWidth: 96,
-    // height: 158,
-    borderRadius: 20,
-    borderTopRightRadius: 42,
+    minWidth: ResponsivePixels.size96,
+    // height: ResponsivePixels.size158,
+    borderRadius: ResponsivePixels.size20,
+    borderTopRightRadius: ResponsivePixels.size42,
     borderWidth: 1.8,
-    paddingHorizontal: 8,
-    paddingTop: 9.5,
-    paddingBottom: 10,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingTop: ResponsivePixels.size9_5,
+    paddingBottom: ResponsivePixels.size10,
     position: 'relative',
     ...Platform.select({
       ios: {
@@ -741,12 +742,12 @@ const styles = StyleSheet.create({
   cardTopRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 5,
+    marginBottom: ResponsivePixels.size5,
   },
   iconWrap: {
-    width: 35,
-    height: 35,
-    borderRadius: 12,
+    width: ResponsivePixels.size35,
+    height: ResponsivePixels.size35,
+    borderRadius: ResponsivePixels.size12,
     backgroundColor: Colors.PureWhite,
     borderWidth: 1.4,
     alignItems: 'center',
@@ -787,34 +788,34 @@ const styles = StyleSheet.create({
     }),
   },
   cardContent: {
-    marginBottom: 6,
+    marginBottom: ResponsivePixels.size6,
   },
   optionTitle: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     color: Colors.MidnightCharcoal,
-    lineHeight: 17,
+    lineHeight: ResponsivePixels.size17,
     letterSpacing: -0.2,
   },
   optionSubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 9.3,
+    fontSize: ResponsivePixels.size9_3,
     color: Colors.SubtitleGray,
-    lineHeight: 13,
-    marginTop: 1.5,
-    minHeight: 26,
+    lineHeight: ResponsivePixels.size13,
+    marginTop: ResponsivePixels.size1_5,
+    minHeight: ResponsivePixels.size26,
   },
   cardFooter: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: 'auto',
-    paddingBottom: 2,
+    paddingBottom: ResponsivePixels.size2,
   },
   arrowCircle: {
-    width: 21,
-    height: 21,
-    borderRadius: 10.5,
+    width: ResponsivePixels.size21,
+    height: ResponsivePixels.size21,
+    borderRadius: ResponsivePixels.size10_5,
     backgroundColor: Colors.PureWhite,
     borderWidth: 1.1,
     alignItems: 'center',
@@ -862,10 +863,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cardAccent: {
-    height: 3.5,
-    width: 40,
-    borderTopLeftRadius: 2.5,
-    borderTopRightRadius: 2.5,
+    height: ResponsivePixels.size3_5,
+    width: ResponsivePixels.size40,
+    borderTopLeftRadius: ResponsivePixels.size2_5,
+    borderTopRightRadius: ResponsivePixels.size2_5,
   },
 });
 

@@ -9,6 +9,7 @@ import {
 import { Fonts } from '../../Theme/fonts';
 import { Colors } from '../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../Theme/useAppTheme';
+import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 
 export type PriorityLevel = 'low' | 'medium' | 'high';
 
@@ -118,30 +119,30 @@ export const PrioritySelector: React.FC<PrioritySelectorProps> = React.memo(
 
 const styles = StyleSheet.create({
   sectionBlock: {
-    marginBottom: 20,
+    marginBottom: ResponsivePixels.size20,
   },
   sectionHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: ResponsivePixels.size10,
   },
   sectionHeading: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 13.5,
+    fontSize: ResponsivePixels.size13_5,
     color: Colors.DarkBackground,
     letterSpacing: -0.2,
   },
   sectionSubtext: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: Colors.Grey,
   },
   priorityBarContainer: {
     flexDirection: 'row',
     backgroundColor: Colors.PureWhite,
-    borderRadius: 20,
-    padding: 4,
+    borderRadius: ResponsivePixels.size20,
+    padding: ResponsivePixels.size4,
     borderWidth: 1.5,
     borderColor: Colors.RingBorder,
   },
@@ -150,9 +151,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 8,
-    borderRadius: 16,
-    gap: 6,
+    paddingVertical: ResponsivePixels.size8,
+    borderRadius: ResponsivePixels.size16,
+    gap: ResponsivePixels.size6,
   },
   priorityTabActive: {
     backgroundColor: Colors.DarkElevatedNero,
@@ -169,13 +170,13 @@ const styles = StyleSheet.create({
     }),
   },
   priorityDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
+    width: ResponsivePixels.size6,
+    height: ResponsivePixels.size6,
+    borderRadius: ResponsivePixels.size3,
   },
   priorityTabText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
   },
   priorityTabTextActive: {
     fontFamily: Fonts.poppins.bold,

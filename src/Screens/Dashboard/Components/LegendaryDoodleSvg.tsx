@@ -12,6 +12,7 @@ import Svg, {
   Polygon,
 } from 'react-native-svg';
 import { Colors, IllustrationColors } from '../../../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface LegendaryDoodleSvgProps {
   width?: number;
@@ -20,8 +21,8 @@ export interface LegendaryDoodleSvgProps {
 
 // Imperial Regius Crown & Triumph illustration accompanying legendary daily quote
 export const LegendaryDoodleSvg: React.FC<LegendaryDoodleSvgProps> = ({
-  width = 144,
-  height = 152,
+  width = ResponsivePixels.size144,
+  height = ResponsivePixels.size152,
 }) => {
   return (
     <View style={[styles.container, { width, height }]} pointerEvents="none">

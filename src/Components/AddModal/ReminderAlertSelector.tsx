@@ -19,6 +19,7 @@ import { Fonts } from '../../Theme/fonts';
 import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../Theme/useAppTheme';
 import { Badge } from '../../Common/Badge';
+import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 
 export const REMIND_BEFORE_OPTIONS = [
   'At time of event',
@@ -129,7 +130,7 @@ export const ReminderAlertSelector: React.FC<ReminderAlertSelectorProps> = ({
             variant="yellow"
             size="sm"
             label="Prior Alert"
-            icon={<Bell size={11} color={Colors.WorkTextAccent} />}
+            icon={<Bell size={ResponsivePixels.size11} color={Colors.WorkTextAccent} />}
           />
         </View>
 
@@ -195,7 +196,7 @@ export const ReminderAlertSelector: React.FC<ReminderAlertSelectorProps> = ({
               ]}
             >
               <Volume2
-                size={20}
+                size={ResponsivePixels.size20}
                 color={Colors.GreenGracious}
                 strokeWidth={2.4}
               />
@@ -222,7 +223,7 @@ export const ReminderAlertSelector: React.FC<ReminderAlertSelectorProps> = ({
               isPlayingPreview && styles.previewSoundBtnPlaying,
             ]}
           >
-            <Play size={13} color={Colors.GreenGracious} strokeWidth={2.6} />
+            <Play size={ResponsivePixels.size13} color={Colors.GreenGracious} strokeWidth={2.6} />
             <Text style={styles.previewSoundText}>
               {isPlayingPreview ? 'Playing...' : 'Preview'}
             </Text>
@@ -250,7 +251,7 @@ export const ReminderAlertSelector: React.FC<ReminderAlertSelectorProps> = ({
               },
             ]}
           >
-            <Volume2 size={20} color={Colors.GreenGracious} strokeWidth={2.4} />
+            <Volume2 size={ResponsivePixels.size20} color={Colors.GreenGracious} strokeWidth={2.4} />
           </View>
 
           <View style={styles.voiceTextGroup}>
@@ -268,7 +269,7 @@ export const ReminderAlertSelector: React.FC<ReminderAlertSelectorProps> = ({
                 variant="purple"
                 size="sm"
                 label={`${assistantName.toUpperCase()} AI`}
-                icon={<Sparkles size={9} color={Colors.MindfulTextAccent} />}
+                icon={<Sparkles size={ResponsivePixels.size9} color={Colors.MindfulTextAccent} />}
               />
             </View>
             <Text style={styles.voiceSubtitle} numberOfLines={1}>
@@ -312,7 +313,7 @@ export const ReminderAlertSelector: React.FC<ReminderAlertSelectorProps> = ({
             ]}
           >
             <AlertTriangle
-              size={20}
+              size={ResponsivePixels.size20}
               color={Colors.CategoryRedAccent}
               strokeWidth={2.4}
             />
@@ -359,30 +360,30 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   sectionBlock: {
-    marginBottom: 20,
+    marginBottom: ResponsivePixels.size20,
   },
   sectionHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: ResponsivePixels.size10,
   },
   sectionHeading: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     color: Colors.MidnightCharcoal,
     letterSpacing: -0.2,
   },
   sectionSubtext: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.CoolGraphiteMuted,
   },
   segmentedContainer: {
     flexDirection: 'row',
     backgroundColor: Colors.DarkSegmentedShell,
-    borderRadius: 50,
-    padding: 4.5,
+    borderRadius: ResponsivePixels.size50,
+    padding: ResponsivePixels.size4_5,
     borderWidth: 1.2,
     borderColor: Colors.DarkSegmentedShellBorder,
     ...Platform.select({
@@ -402,8 +403,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 6,
-    borderRadius: 50,
+    paddingVertical: ResponsivePixels.size6,
+    borderRadius: ResponsivePixels.size50,
   },
   segmentedTabActive: {
     backgroundColor: Colors.PureWhite,
@@ -423,7 +424,7 @@ const styles = StyleSheet.create({
   },
   segmentedTabText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12.5,
+    fontSize: ResponsivePixels.size12_5,
     letterSpacing: -0.2,
     color: Colors.Gray200,
   },
@@ -438,21 +439,21 @@ const styles = StyleSheet.create({
   remindBeforeGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 10,
+    gap: ResponsivePixels.size10,
   },
   remindBeforeCard: {
     width: '48.5%',
     backgroundColor: Colors.PureWhite,
-    borderRadius: 16,
+    borderRadius: ResponsivePixels.size16,
     borderWidth: 1.5,
     borderColor: Colors.RingBorder,
     borderBottomWidth: 3,
     borderBottomColor: Colors.WarmHaloBottomBevel,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
+    paddingVertical: ResponsivePixels.size12,
+    paddingHorizontal: ResponsivePixels.size12,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
     ...Platform.select({
       ios: {
         shadowColor: Colors.PureBlack,
@@ -483,9 +484,9 @@ const styles = StyleSheet.create({
     }),
   },
   remindDot: {
-    width: 7,
-    height: 7,
-    borderRadius: 3.5,
+    width: ResponsivePixels.size7,
+    height: ResponsivePixels.size7,
+    borderRadius: ResponsivePixels.size3_5,
     backgroundColor: Colors.WarmStoneDot,
   },
   remindDotSelected: {
@@ -493,7 +494,7 @@ const styles = StyleSheet.create({
   },
   remindBeforeCardText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.MidnightCharcoal,
     flex: 1,
   },
@@ -503,14 +504,14 @@ const styles = StyleSheet.create({
   },
   soundCard: {
     backgroundColor: Colors.PureWhite,
-    borderRadius: 20,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
     borderColor: Colors.RingBorder,
-    padding: 14,
+    padding: ResponsivePixels.size14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 14,
+    marginBottom: ResponsivePixels.size14,
     ...Platform.select({
       ios: {
         shadowColor: Colors.PureBlack,
@@ -527,12 +528,12 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: ResponsivePixels.size12,
   },
   soundIconTile: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
+    width: ResponsivePixels.size44,
+    height: ResponsivePixels.size44,
+    borderRadius: ResponsivePixels.size14,
     backgroundColor: Colors.WellnessLightBg,
     borderWidth: 1.5,
     borderColor: Colors.WellnessLightBorder,
@@ -544,25 +545,25 @@ const styles = StyleSheet.create({
   },
   soundTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     color: Colors.MidnightCharcoal,
   },
   soundSubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: Colors.MutedSlateSubtext,
-    marginTop: 1,
+    marginTop: ResponsivePixels.size1,
   },
   previewSoundBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
     backgroundColor: Colors.WellnessLightBg,
     borderWidth: 1.2,
     borderColor: Colors.ToastSuccessCardBorderLight,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size6,
+    borderRadius: ResponsivePixels.size20,
   },
   previewSoundBtnPlaying: {
     backgroundColor: Colors.ToastSuccessBadgeBgLight,
@@ -570,19 +571,19 @@ const styles = StyleSheet.create({
   },
   previewSoundText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.GreenGracious,
   },
   voiceNudgeCard: {
     backgroundColor: Colors.PureWhite,
-    borderRadius: 20,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
     borderColor: Colors.RingBorder,
-    padding: 14,
+    padding: ResponsivePixels.size14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 14,
+    marginBottom: ResponsivePixels.size14,
     ...Platform.select({
       ios: {
         shadowColor: Colors.PureBlack,
@@ -599,13 +600,13 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    marginRight: 14,
+    gap: ResponsivePixels.size12,
+    marginRight: ResponsivePixels.size14,
   },
   voiceIconBox: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
+    width: ResponsivePixels.size44,
+    height: ResponsivePixels.size44,
+    borderRadius: ResponsivePixels.size14,
     backgroundColor: Colors.WellnessLightBg,
     borderWidth: 1.5,
     borderColor: Colors.WellnessLightBorder,
@@ -629,29 +630,29 @@ const styles = StyleSheet.create({
   voiceTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   voiceTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     color: Colors.MidnightCharcoal,
   },
   voiceSubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: Colors.MutedSlateSubtext,
-    marginTop: 2,
+    marginTop: ResponsivePixels.size2,
   },
   urgentAlarmCard: {
     backgroundColor: Colors.PureWhite,
-    borderRadius: 20,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
     borderColor: Colors.CategoryRedBorder,
-    padding: 14,
+    padding: ResponsivePixels.size14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 24,
+    marginBottom: ResponsivePixels.size24,
     ...Platform.select({
       ios: {
         shadowColor: Colors.CategoryRedAccent,
@@ -668,13 +669,13 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    marginRight: 14,
+    gap: ResponsivePixels.size12,
+    marginRight: ResponsivePixels.size14,
   },
   urgentIconTile: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
+    width: ResponsivePixels.size44,
+    height: ResponsivePixels.size44,
+    borderRadius: ResponsivePixels.size14,
     backgroundColor: Colors.CategoryRedBg,
     borderWidth: 1.5,
     borderColor: Colors.ToastErrorCardBorderLight,
@@ -687,17 +688,17 @@ const styles = StyleSheet.create({
   urgentTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   urgentTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     color: Colors.MidnightCharcoal,
   },
   urgentSubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: Colors.MutedSlateSubtext,
-    marginTop: 2,
+    marginTop: ResponsivePixels.size2,
   },
 });

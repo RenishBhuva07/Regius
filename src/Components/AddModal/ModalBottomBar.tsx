@@ -87,8 +87,9 @@ export const ModalBottomBar: React.FC<ModalBottomBarProps> = ({
     isDarkMode,
     themeColors.AccentDeep,
   );
-  const bottomPadding = Math.max(insets.bottom, 16) + 6;
-  const totalBarHeight = 74 + bottomPadding;
+  const bottomPadding =
+    Math.max(insets.bottom, ResponsivePixels.size16) + ResponsivePixels.size6;
+  const totalBarHeight = ResponsivePixels.size74 + bottomPadding;
 
   const handlePressSubmit = () => {
     if (disabled) return;
@@ -138,7 +139,7 @@ export const ModalBottomBar: React.FC<ModalBottomBarProps> = ({
           accessibilityRole="button"
           accessibilityLabel={dismissAccessibilityLabel}
         >
-          <ArrowDown size={20} color={Colors.PureWhite} strokeWidth={2.4} />
+          <ArrowDown size={ResponsivePixels.size20} color={Colors.PureWhite} strokeWidth={2.4} />
         </TouchableOpacity>
 
         {/* Primary Action Button on Right */}
@@ -162,7 +163,7 @@ export const ModalBottomBar: React.FC<ModalBottomBarProps> = ({
             <Text style={styles.heroSubmitBtnText}>{submitText}</Text>
 
             <View style={styles.heroSubmitCircle}>
-              <ArrowRight size={18} color={Colors.PureWhite} strokeWidth={2.6} />
+              <ArrowRight size={ResponsivePixels.size18} color={Colors.PureWhite} strokeWidth={2.6} />
             </View>
           </TouchableOpacity>
         </Animated.View>
@@ -178,9 +179,9 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingHorizontal: ResponsivePixels.size20,
-    paddingTop: 12,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
+    paddingTop: ResponsivePixels.size12,
+    borderTopLeftRadius: ResponsivePixels.size24,
+    borderTopRightRadius: ResponsivePixels.size24,
     borderTopWidth: 1.5,
     borderLeftWidth: 1,
     borderRightWidth: 1,
@@ -201,12 +202,12 @@ const styles = StyleSheet.create({
   buttonRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: ResponsivePixels.size12,
   },
   backBtn: {
-    width: 54,
-    height: 54,
-    borderRadius: 27,
+    width: ResponsivePixels.size54,
+    height: ResponsivePixels.size54,
+    borderRadius: ResponsivePixels.size27,
     backgroundColor: Colors.MidnightCharcoal,
     borderWidth: 1.2,
     borderColor: Colors.DarkModalBarBorder,
@@ -229,12 +230,12 @@ const styles = StyleSheet.create({
   },
   heroSubmitBtn: {
     backgroundColor: Colors.MidnightCharcoal,
-    borderRadius: 50,
-    height: 54,
+    borderRadius: ResponsivePixels.size50,
+    height: ResponsivePixels.size54,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 10,
+    gap: ResponsivePixels.size10,
     borderWidth: 1.2,
     borderColor: Colors.DarkModalBarBorder,
     ...Platform.select({
@@ -254,14 +255,14 @@ const styles = StyleSheet.create({
   },
   heroSubmitBtnText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 16,
+    fontSize: ResponsivePixels.size16,
     color: Colors.PureWhite,
     letterSpacing: -0.2,
   },
   heroSubmitCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: ResponsivePixels.size32,
+    height: ResponsivePixels.size32,
+    borderRadius: ResponsivePixels.size16,
     backgroundColor: withAlpha(Colors.PureWhite, 0.18),
     alignItems: 'center',
     justifyContent: 'center',

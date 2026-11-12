@@ -352,8 +352,10 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
             contentContainerStyle={[
               styles.scrollContent,
               {
-                paddingTop: insets.top + 10,
-                paddingBottom: Math.max(insets.bottom, 24) + 96,
+                paddingTop: insets.top + ResponsivePixels.size10,
+                paddingBottom:
+                  Math.max(insets.bottom, ResponsivePixels.size24) +
+                  ResponsivePixels.size96,
               },
             ]}
             showsVerticalScrollIndicator={false}
@@ -424,7 +426,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                       variant="purple"
                       size="sm"
                       label="EDITING"
-                      icon={<Flame size={10} color={Colors.MindfulTextAccent} />}
+                      icon={<Flame size={ResponsivePixels.size10} color={Colors.MindfulTextAccent} />}
                     />
                   )}
                 </View>
@@ -432,7 +434,9 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                   style={[
                     styles.titleInput,
                     isDarkMode && { color: Colors.PureWhite },
-                    titleInputHeight > 48 ? { height: titleInputHeight } : null,
+                    titleInputHeight > ResponsivePixels.size48
+                      ? { height: titleInputHeight }
+                      : null,
                   ]}
                   placeholder="e.g., Morning Sunlight & 500ml Water..."
                   placeholderTextColor={Colors.SteelMist}
@@ -464,7 +468,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                 >
                   <View style={styles.contextIconWrap}>
                     <FileText
-                      size={16}
+                      size={ResponsivePixels.size16}
                       color={
                         isDarkMode ? Colors.SteelMist : Colors.MutedSlateSubtext
                       }
@@ -584,7 +588,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                           ]}
                         >
                           <CatIcon
-                            size={16}
+                            size={ResponsivePixels.size16}
                             color={
                               isDarkMode
                                 ? cat.id === 'morning'
@@ -610,7 +614,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                             ]}
                           >
                             <Check
-                              size={12}
+                              size={ResponsivePixels.size12}
                               color={
                                 isDarkMode
                                   ? Colors.AccentGreen
@@ -678,7 +682,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                   variant="green"
                   size="sm"
                   label="Streak Cadence"
-                  icon={<RotateCw size={11} color={Colors.GreenGracious} />}
+                  icon={<RotateCw size={ResponsivePixels.size11} color={Colors.GreenGracious} />}
                 />
               </View>
 
@@ -786,7 +790,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                       style={[styles.magicIconWrap, styles.magicIconWrapTime]}
                     >
                       <Clock
-                        size={16}
+                        size={ResponsivePixels.size16}
                         color={Colors.PeriwinkleSoft}
                         strokeWidth={2.4}
                       />
@@ -826,7 +830,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                   ]}
                 >
                   <Volume2
-                    size={20}
+                    size={ResponsivePixels.size20}
                     color={Colors.GreenGracious}
                     strokeWidth={2.4}
                   />
@@ -847,7 +851,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                       variant="purple"
                       size="sm"
                       label={`${assistantName.toUpperCase()} AI`}
-                      icon={<Sparkles size={9} color={Colors.MindfulTextAccent} />}
+                      icon={<Sparkles size={ResponsivePixels.size9} color={Colors.MindfulTextAccent} />}
                     />
                   </View>
                   <Text style={styles.voiceSubtitle} numberOfLines={1}>
@@ -887,7 +891,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
                   accessibilityLabel="Delete Habit"
                 >
                   <Trash2
-                    size={16}
+                    size={ResponsivePixels.size16}
                     color={Colors.CategoryRedAccent}
                     strokeWidth={2.2}
                   />
@@ -936,9 +940,9 @@ const styles = StyleSheet.create({
     top: -ResponsivePixels.size24,
     alignSelf: 'center',
     backgroundColor: Colors.NeroBlack,
-    paddingHorizontal: 22,
-    paddingVertical: 7,
-    borderRadius: 22,
+    paddingHorizontal: ResponsivePixels.size22,
+    paddingVertical: ResponsivePixels.size7,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
     borderTopColor: Colors.DarkBevelTop,
     borderLeftColor: Colors.DarkBorder,
@@ -964,9 +968,9 @@ const styles = StyleSheet.create({
   },
   flowSubtitle: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     color: Colors.CoolSilverSubtitle,
-    marginTop: 1,
+    marginTop: ResponsivePixels.size1,
     letterSpacing: 0.2,
     textAlign: 'center',
   },
@@ -981,10 +985,10 @@ const styles = StyleSheet.create({
 
   // Primary Card (2-Layer Card Wrapper Pattern)
   primaryCardWrapper: {
-    borderRadius: 22,
+    borderRadius: ResponsivePixels.size22,
     backgroundColor: Colors.PureWhite,
-    marginTop: 26,
-    marginBottom: 22,
+    marginTop: ResponsivePixels.size26,
+    marginBottom: ResponsivePixels.size22,
     position: 'relative',
     zIndex: 10,
     ...Platform.select({
@@ -1000,11 +1004,11 @@ const styles = StyleSheet.create({
   },
   primaryCard: {
     backgroundColor: Colors.PureWhite,
-    borderRadius: 22,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
-    paddingHorizontal: 16,
-    paddingBottom: 16,
-    paddingTop: 36,
+    paddingHorizontal: ResponsivePixels.size16,
+    paddingBottom: ResponsivePixels.size16,
+    paddingTop: ResponsivePixels.size36,
     position: 'relative',
     overflow: 'hidden',
   },
@@ -1017,28 +1021,30 @@ const styles = StyleSheet.create({
   },
   cardSectionLabel: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     letterSpacing: 0.8,
     color: Colors.MutedSlateSubtext,
   },
   titleInput: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 18,
-    lineHeight: 26,
+    fontSize: ResponsivePixels.size18,
+    lineHeight: ResponsivePixels.size26,
     color: Colors.MidnightCharcoal,
-    paddingTop: Platform.OS === 'ios' ? 8 : 4,
-    paddingBottom: Platform.OS === 'ios' ? 8 : 4,
+    paddingTop:
+      Platform.OS === 'ios' ? ResponsivePixels.size8 : ResponsivePixels.size4,
+    paddingBottom:
+      Platform.OS === 'ios' ? ResponsivePixels.size8 : ResponsivePixels.size4,
     paddingHorizontal: 0,
-    minHeight: 48,
+    minHeight: ResponsivePixels.size48,
     textAlignVertical: 'top',
     includeFontPadding: false,
   },
   contextRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    marginTop: 10,
-    height: 48,
+    gap: ResponsivePixels.size10,
+    marginTop: ResponsivePixels.size10,
+    height: ResponsivePixels.size48,
     borderTopWidth: 1,
     borderBottomWidth: 1,
     borderColor: withAlpha(Colors.PureBlack, 0.06),
@@ -1051,7 +1057,7 @@ const styles = StyleSheet.create({
   contextInput: {
     flex: 1,
     fontFamily: Fonts.poppins.regular,
-    fontSize: 13.5,
+    fontSize: ResponsivePixels.size13_5,
     color: Colors.SlateGraphiteText,
     paddingVertical: 0,
     paddingHorizontal: 0,
@@ -1062,24 +1068,24 @@ const styles = StyleSheet.create({
 
   // General Section Block
   sectionBlock: {
-    marginBottom: 24,
+    marginBottom: ResponsivePixels.size24,
     overflow: 'visible',
   },
   sectionHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 12,
-    paddingHorizontal: 2,
+    marginBottom: ResponsivePixels.size12,
+    paddingHorizontal: ResponsivePixels.size2,
   },
   sectionHeading: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 15.5,
+    fontSize: ResponsivePixels.size15_5,
     color: Colors.MidnightCharcoal,
   },
   sectionSubtext: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.MutedSlateSubtext,
   },
 
@@ -1088,14 +1094,14 @@ const styles = StyleSheet.create({
     overflow: 'visible',
   },
   categoryScrollContainer: {
-    paddingVertical: 12,
-    paddingHorizontal: 2,
-    gap: 10,
+    paddingVertical: ResponsivePixels.size12,
+    paddingHorizontal: ResponsivePixels.size2,
+    gap: ResponsivePixels.size10,
   },
   categoryCardExact: {
-    minHeight: 88,
-    borderRadius: 18,
-    borderTopRightRadius: 44,
+    minHeight: ResponsivePixels.size88,
+    borderRadius: ResponsivePixels.size18,
+    borderTopRightRadius: ResponsivePixels.size44,
     paddingTop: ResponsivePixels.size12,
     paddingBottom: ResponsivePixels.size12,
     paddingHorizontal: ResponsivePixels.size11,
@@ -1135,9 +1141,9 @@ const styles = StyleSheet.create({
     marginBottom: ResponsivePixels.size8,
   },
   categoryIconWrap: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: ResponsivePixels.size30,
+    height: ResponsivePixels.size30,
+    borderRadius: ResponsivePixels.size15,
     backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
     alignItems: 'center',
@@ -1154,18 +1160,18 @@ const styles = StyleSheet.create({
     }),
   },
   categoryCardBottom: {
-    gap: 1,
+    gap: ResponsivePixels.size1,
   },
   categoryCardLabel: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     color: Colors.RegiusInk,
     letterSpacing: -0.1,
   },
   categoryFloatingCheckbox: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+    width: ResponsivePixels.size22,
+    height: ResponsivePixels.size22,
+    borderRadius: ResponsivePixels.size11,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -1195,22 +1201,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   categoryAccent: {
-    height: 3,
-    width: 32,
-    borderTopLeftRadius: 2.5,
-    borderTopRightRadius: 2.5,
+    height: ResponsivePixels.size3,
+    width: ResponsivePixels.size32,
+    borderTopLeftRadius: ResponsivePixels.size2_5,
+    borderTopRightRadius: ResponsivePixels.size2_5,
   },
 
   // Frequency Chips
   frequencyRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   frequencyChip: {
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-    borderRadius: 22,
+    paddingHorizontal: ResponsivePixels.size14,
+    paddingVertical: ResponsivePixels.size8,
+    borderRadius: ResponsivePixels.size22,
     backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
     borderColor: Colors.WarmChipBorder,
@@ -1250,7 +1256,7 @@ const styles = StyleSheet.create({
   },
   frequencyChipText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.CharcoalStoneText,
     letterSpacing: -0.1,
   },
@@ -1263,13 +1269,13 @@ const styles = StyleSheet.create({
   quickTimeRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
-    marginBottom: 12,
+    gap: ResponsivePixels.size8,
+    marginBottom: ResponsivePixels.size12,
   },
   quickTimeChip: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 18,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size6,
+    borderRadius: ResponsivePixels.size18,
     backgroundColor: Colors.PureWhite,
     borderWidth: 1.2,
     borderColor: Colors.WarmChipBorder,
@@ -1283,7 +1289,7 @@ const styles = StyleSheet.create({
   },
   quickTimeChipText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: Colors.SlateAshText,
   },
   quickTimeChipTextSelected: {
@@ -1294,10 +1300,10 @@ const styles = StyleSheet.create({
   // Schedule pickers
   scheduleContainerCard: {
     backgroundColor: Colors.PureWhite,
-    borderRadius: 22,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
     borderColor: Colors.RingBorder,
-    padding: 8,
+    padding: ResponsivePixels.size8,
     ...Platform.select({
       ios: {
         shadowColor: Colors.PureBlack,
@@ -1311,7 +1317,7 @@ const styles = StyleSheet.create({
     }),
   },
   magicScheduleBtnWrapper: {
-    borderRadius: 18,
+    borderRadius: ResponsivePixels.size18,
     backgroundColor: Colors.NeroBlack,
     ...Platform.select({
       ios: {
@@ -1326,20 +1332,20 @@ const styles = StyleSheet.create({
     }),
   },
   magicScheduleBtn: {
-    borderRadius: 18,
+    borderRadius: ResponsivePixels.size18,
     borderWidth: 1.2,
     borderColor: Colors.DarkSegmentedShellBorder,
     overflow: 'hidden',
-    paddingVertical: 12,
-    paddingHorizontal: 14,
+    paddingVertical: ResponsivePixels.size12,
+    paddingHorizontal: ResponsivePixels.size14,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: ResponsivePixels.size12,
   },
   magicIconWrap: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: ResponsivePixels.size38,
+    height: ResponsivePixels.size38,
+    borderRadius: ResponsivePixels.size19,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
@@ -1353,28 +1359,28 @@ const styles = StyleSheet.create({
   },
   magicScheduleSmallLabel: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 9.5,
+    fontSize: ResponsivePixels.size9_5,
     color: Colors.TabInactiveSilver,
     letterSpacing: 0.6,
   },
   magicScheduleValue: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     color: Colors.PureWhite,
-    marginTop: 1,
+    marginTop: ResponsivePixels.size1,
   },
 
   // Voice Nudge Card
   voiceNudgeCard: {
     backgroundColor: Colors.PureWhite,
-    borderRadius: 20,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
     borderColor: Colors.RingBorder,
-    padding: 14,
+    padding: ResponsivePixels.size14,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 20,
+    marginBottom: ResponsivePixels.size20,
     ...Platform.select({
       ios: {
         shadowColor: Colors.PureBlack,
@@ -1391,13 +1397,13 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
-    marginRight: 14,
+    gap: ResponsivePixels.size12,
+    marginRight: ResponsivePixels.size14,
   },
   voiceIconBox: {
-    width: 44,
-    height: 44,
-    borderRadius: 14,
+    width: ResponsivePixels.size44,
+    height: ResponsivePixels.size44,
+    borderRadius: ResponsivePixels.size14,
     backgroundColor: Colors.WellnessLightBg,
     borderWidth: 1.5,
     borderColor: Colors.WellnessLightBorder,
@@ -1421,34 +1427,34 @@ const styles = StyleSheet.create({
   voiceTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   voiceTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     color: Colors.MidnightCharcoal,
   },
   voiceSubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: Colors.MutedSlateSubtext,
-    marginTop: 2,
+    marginTop: ResponsivePixels.size2,
   },
 
   // Delete Button Section
   deleteSection: {
-    marginBottom: 24,
+    marginBottom: ResponsivePixels.size24,
   },
   deleteCardBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
     backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
     borderColor: Colors.CategoryRoseBorder,
-    paddingVertical: 13,
-    borderRadius: 18,
+    paddingVertical: ResponsivePixels.size13,
+    borderRadius: ResponsivePixels.size18,
     ...Platform.select({
       ios: {
         shadowColor: Colors.CategoryRedAccent,
@@ -1463,7 +1469,7 @@ const styles = StyleSheet.create({
   },
   deleteCardBtnText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 13.5,
+    fontSize: ResponsivePixels.size13_5,
     color: Colors.CategoryRedAccent,
   },
 });

@@ -14,6 +14,7 @@ import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../Theme/useAppTheme';
 import { BadgeVariant } from '../../Common/Badge';
 import { HeaderActionButton } from '../../Common/HeaderActionButton';
+import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 
 const { width: screenWidth } = Dimensions.get('window');
 const categoryCardWidth = Math.min((screenWidth - 48) / 3, 114);
@@ -169,7 +170,10 @@ export const CategoryChipSelector: React.FC<CategoryChipSelectorProps> =
                         },
                       ]}
                     >
-                      <CatIcon width={16} height={16} />
+                      <CatIcon
+                        width={ResponsivePixels.size16}
+                        height={ResponsivePixels.size16}
+                      />
                     </View>
                     {isSelected ? (
                       <View
@@ -184,7 +188,7 @@ export const CategoryChipSelector: React.FC<CategoryChipSelectorProps> =
                         ]}
                       >
                         <Check
-                          size={12}
+                          size={ResponsivePixels.size12}
                           color={cat.checkColor || cat.accentColor}
                           strokeWidth={3}
                         />
@@ -246,34 +250,34 @@ export const CategoryChipSelector: React.FC<CategoryChipSelectorProps> =
 
 const styles = StyleSheet.create({
   sectionBlock: {
-    marginBottom: 20,
+    marginBottom: ResponsivePixels.size20,
   },
   sectionHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: ResponsivePixels.size10,
   },
   sectionHeading: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 13.5,
+    fontSize: ResponsivePixels.size13_5,
     color: Colors.DarkBackground,
     letterSpacing: -0.2,
   },
   categoryFlatList: {
-    marginHorizontal: -20,
+    marginHorizontal: -ResponsivePixels.size20,
   },
   categoryScrollContainer: {
-    paddingHorizontal: 20,
-    gap: 10,
-    paddingVertical: 4,
+    paddingHorizontal: ResponsivePixels.size20,
+    gap: ResponsivePixels.size10,
+    paddingVertical: ResponsivePixels.size4,
   },
   categoryCardExact: {
-    height: 104,
-    borderRadius: 20,
-    borderTopRightRadius: 36,
-    padding: 10,
-    paddingBottom: 12,
+    height: ResponsivePixels.size104,
+    borderRadius: ResponsivePixels.size20,
+    borderTopRightRadius: ResponsivePixels.size36,
+    padding: ResponsivePixels.size10,
+    paddingBottom: ResponsivePixels.size12,
     borderWidth: 1.5,
     borderColor: Colors.Transparent,
     justifyContent: 'space-between',
@@ -308,18 +312,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   categoryIconWrap: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: ResponsivePixels.size30,
+    height: ResponsivePixels.size30,
+    borderRadius: ResponsivePixels.size15,
     backgroundColor: Colors.PureWhite,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   categoryFloatingCheckbox: {
-    width: 20,
-    height: 20,
-    borderRadius: 10,
+    width: ResponsivePixels.size20,
+    height: ResponsivePixels.size20,
+    borderRadius: ResponsivePixels.size10,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -340,11 +344,11 @@ const styles = StyleSheet.create({
     backgroundColor: withAlpha(Colors.PureWhite, 0.4),
   },
   categoryCardBottom: {
-    gap: 1,
+    gap: ResponsivePixels.size1,
   },
   categoryCardLabel: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     color: Colors.DarkBackground,
   },
   categoryAccentWrap: {
@@ -355,10 +359,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   categoryAccent: {
-    width: 36,
-    height: 3.5,
-    borderTopLeftRadius: 3,
-    borderTopRightRadius: 3,
+    width: ResponsivePixels.size36,
+    height: ResponsivePixels.size3_5,
+    borderTopLeftRadius: ResponsivePixels.size3,
+    borderTopRightRadius: ResponsivePixels.size3,
   },
 });
 

@@ -9,8 +9,9 @@ import HolographAnimation from '../../../Assets/JsonAnimations/Holograph.json';
 import { SettingsButton } from '../../../Common/SettingsButton';
 import HeaderPatternSvg from './HeaderPatternSvg';
 import { useTheme } from '../../../Theme/ThemeContext';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
-export const HEADER_HEIGHT = 54;
+export const HEADER_HEIGHT = ResponsivePixels.size54;
 
 export interface DashboardHeaderProps {
   isScrolled: boolean;
@@ -91,12 +92,12 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = React.memo(
               style={styles.voiceHeaderBtn}
               accessibilityRole="button"
               accessibilityLabel={`Open ${assistantName} Voice Assistant`}
-              hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              hitSlop={{ top: ResponsivePixels.size10, bottom: ResponsivePixels.size10, left: ResponsivePixels.size10, right: ResponsivePixels.size10 }}
             >
               <View pointerEvents="none">
                 <CustomAnimation
                   animationFile={HolographAnimation}
-                  size={56}
+                  size={ResponsivePixels.size56}
                   animationStyle={styles.voiceHeaderAnimation}
                   autoPlay
                   loop
@@ -118,7 +119,11 @@ export const DashboardHeader: React.FC<DashboardHeaderProps> = React.memo(
               accessibilityRole="button"
               accessibilityLabel="User Profile"
             >
-              <SVGS.RegiusAvatar width={36} height={36} style={styles.avatar} />
+              <SVGS.RegiusAvatar
+                width={ResponsivePixels.size36}
+                height={ResponsivePixels.size36}
+                style={styles.avatar}
+              />
             </TouchableOpacity>
           </View>
         </View>
@@ -140,7 +145,7 @@ const styles = StyleSheet.create({
   },
   header: {
     height: HEADER_HEIGHT,
-    paddingHorizontal: 20,
+    paddingHorizontal: ResponsivePixels.size20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -152,22 +157,22 @@ const styles = StyleSheet.create({
   headerRight: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: ResponsivePixels.size10,
   },
   voiceHeaderBtn: {
-    width: 36,
-    height: 36,
+    width: ResponsivePixels.size36,
+    height: ResponsivePixels.size36,
     alignItems: 'center',
     justifyContent: 'center',
   },
   voiceHeaderAnimation: {
-    width: 56,
-    height: 56,
+    width: ResponsivePixels.size56,
+    height: ResponsivePixels.size56,
   },
   avatarRing: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: ResponsivePixels.size44,
+    height: ResponsivePixels.size44,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 2,
     borderColor: Colors.RingBorder,
     alignItems: 'center',

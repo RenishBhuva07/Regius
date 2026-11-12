@@ -3,6 +3,7 @@ import { View, StyleSheet, Platform, StyleProp, ViewStyle } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import { useTheme } from '../Theme/ThemeContext';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
 export interface StickyActionDockProps {
   children: React.ReactNode;
@@ -54,8 +55,8 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    paddingHorizontal: 20,
-    paddingTop: 12,
+    paddingHorizontal: ResponsivePixels.size20,
+    paddingTop: ResponsivePixels.size12,
     borderTopWidth: 1,
     ...Platform.select({
       ios: {

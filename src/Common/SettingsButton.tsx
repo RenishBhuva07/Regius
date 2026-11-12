@@ -10,6 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import { Settings } from 'lucide-react-native';
 import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
 import { useTheme } from '../Theme/ThemeContext';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 
 export interface SettingsButtonProps {
   onPress?: () => void;
@@ -24,7 +25,7 @@ export const SettingsButton: React.FC<SettingsButtonProps> = ({
   isScrolled = false,
   accessibilityLabel = 'Open Settings',
   style,
-  size = 36,
+  size = ResponsivePixels.size36,
 }) => {
   const navigation = useNavigation<any>();
   const { isDarkMode, activeThemeId, Colors: themeColors } = useTheme();
@@ -120,9 +121,9 @@ export const SettingsButton: React.FC<SettingsButtonProps> = ({
         ]}
         accessibilityRole="button"
         accessibilityLabel={accessibilityLabel}
-        hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
+        hitSlop={{ top: ResponsivePixels.size6, bottom: ResponsivePixels.size6, left: ResponsivePixels.size6, right: ResponsivePixels.size6 }}
       >
-        <Settings size={20} color={iconColor} strokeWidth={2.2} />
+        <Settings size={ResponsivePixels.size20} color={iconColor} strokeWidth={2.2} />
       </TouchableOpacity>
     </Animated.View>
   );

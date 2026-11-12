@@ -146,7 +146,7 @@ export const TactileSegmentedTabs = <T extends string = string>({
           >
             {IconComponent && (
               <IconComponent
-                size={14}
+                size={ResponsivePixels.size14}
                 color={isActive ? activeColor : iconInactiveColor}
                 strokeWidth={isActive ? 2.4 : 2}
               />
@@ -242,9 +242,9 @@ const styles = StyleSheet.create({
     marginHorizontal: ResponsivePixels.size10,
     marginTop: ResponsivePixels.size10,
     marginBottom: ResponsivePixels.size6,
-    height: 46,
+    height: ResponsivePixels.size46,
     borderRadius: ResponsivePixels.size50,
-    padding: 4,
+    padding: ResponsivePixels.size4,
     borderWidth: 1.5,
     borderBottomWidth: 3,
     ...Platform.select({
@@ -260,9 +260,9 @@ const styles = StyleSheet.create({
   },
   slidingIndicator: {
     position: 'absolute',
-    top: 4,
-    left: 4,
-    bottom: 4,
+    top: ResponsivePixels.size4,
+    left: ResponsivePixels.size4,
+    bottom: ResponsivePixels.size4,
     borderRadius: ResponsivePixels.size50,
     borderWidth: 1,
     borderTopWidth: 1.2,
@@ -283,28 +283,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 5,
-    paddingHorizontal: 8,
+    paddingVertical: ResponsivePixels.size5,
+    paddingHorizontal: ResponsivePixels.size8,
     borderRadius: ResponsivePixels.size50,
-    gap: 7,
+    gap: ResponsivePixels.size7,
     zIndex: 2,
   },
   toggleText: {
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     letterSpacing: -0.2,
   },
   tabCountPill: {
-    paddingHorizontal: 7.5,
-    paddingVertical: 1.5,
-    borderRadius: 12,
-    minWidth: 20,
+    paddingHorizontal: ResponsivePixels.size7_5,
+    paddingVertical: ResponsivePixels.size1_5,
+    borderRadius: ResponsivePixels.size12,
+    minWidth: ResponsivePixels.size20,
     alignItems: 'center',
     justifyContent: 'center',
   },
   tabCountPillInactive: {},
   tabCountText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     letterSpacing: 0.2,
   },
   tabCountTextInactive: {},

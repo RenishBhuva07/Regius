@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleProp, ViewStyle, TextStyle } from 'react-native';
 import { Flame } from 'lucide-react-native';
 import { Colors } from '../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../Assets/StyleUtilities/ResponsivePixels';
 import { Badge, BadgeSize, BadgeVariant } from './Badge';
 
 export interface StreakBadgeProps {
@@ -35,7 +36,12 @@ export const StreakBadge: React.FC<StreakBadgeProps> = ({
   const streakCount = streak ?? count ?? 0;
   const isActive = active !== undefined ? active : streakCount > 0;
 
-  const defaultIconSize = size === 'sm' ? 10.5 : size === 'lg' ? 14 : 12;
+  const defaultIconSize =
+    size === 'sm'
+      ? ResponsivePixels.size10_5
+      : size === 'lg'
+      ? ResponsivePixels.size14
+      : ResponsivePixels.size12;
   const effectiveIconSize = iconSize ?? defaultIconSize;
 
   const flameColor = isActive ? Colors.EventTextAccent : Colors.DisabledGrayText;

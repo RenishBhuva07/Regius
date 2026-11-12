@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import LottieView from 'lottie-react-native';
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 import CustomAnimation from '../../../Common/CustomAnimation';
 import HolographAnimation from '../../../Assets/JsonAnimations/Holograph.json';
 import { VoiceAssistantState } from '../../../Services/Voice/VoiceStateMachine';
@@ -17,7 +18,7 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 export const DEFAULT_HOLOGRAPHIC_ORB_SIZE = Math.min(
   Math.round(SCREEN_WIDTH * 1.2),
   Math.round(SCREEN_HEIGHT * 0.5),
-  480,
+  ResponsivePixels.size480,
 );
 // Holographic orb animation for the voice assistant
 export interface SiaHolographicOrbProps {
