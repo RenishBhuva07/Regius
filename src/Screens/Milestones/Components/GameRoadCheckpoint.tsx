@@ -5,6 +5,7 @@ import { Crown, Lock, Check } from 'lucide-react-native';
 import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { Fonts } from '../../../Theme/fonts';
 import { MilestoneTier } from '../../../Services/Milestone/MilestoneService';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 interface GameRoadCheckpointProps {
   tier: MilestoneTier;
@@ -145,17 +146,17 @@ export const GameRoadCheckpoint: React.FC<GameRoadCheckpointProps> = ({
                 <Text style={styles.discLevelText}>{tier.level}</Text>
                 {/* 3D Mini Right Sign Seal at bottom-right */}
                 <View style={styles.miniRightSignSeal}>
-                  <Check size={9} color={Colors.PureWhite} strokeWidth={3.2} />
+                  <Check size={ResponsivePixels.size9} color={Colors.PureWhite} strokeWidth={3.2} />
                 </View>
               </View>
             ) : isCurrent ? (
               <View style={styles.currentCenter}>
-                <Crown size={18} color={Colors.PureWhite} strokeWidth={2.4} />
+                <Crown size={ResponsivePixels.size18} color={Colors.PureWhite} strokeWidth={2.4} />
                 <Text style={styles.currentLevelSubText}>LVL {tier.level}</Text>
               </View>
             ) : (
               <View style={styles.lockedCenter}>
-                <Lock size={15} color={Colors.Slate400} strokeWidth={2.4} />
+                <Lock size={ResponsivePixels.size15} color={Colors.Slate400} strokeWidth={2.4} />
                 <Text style={styles.lockedLevelText}>{tier.level}</Text>
               </View>
             )}
@@ -201,7 +202,7 @@ export const GameRoadCheckpoint: React.FC<GameRoadCheckpointProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: 56,
+    width: ResponsivePixels.size56,
     alignItems: 'center',
     position: 'relative',
     alignSelf: 'stretch',
@@ -225,7 +226,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   roadTrack: {
-    width: 22,
+    width: ResponsivePixels.size22,
     height: '100%',
     borderLeftWidth: 2,
     borderRightWidth: 2,
@@ -241,26 +242,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     position: 'relative',
     zIndex: 3,
-    marginTop: 20,
-    marginBottom: 20,
+    marginTop: ResponsivePixels.size20,
+    marginBottom: ResponsivePixels.size20,
   },
   connectorRamp: {
     position: 'absolute',
-    left: 26,
-    width: 32,
-    height: 12,
+    left: ResponsivePixels.size26,
+    width: ResponsivePixels.size32,
+    height: ResponsivePixels.size12,
     borderTopWidth: 1.5,
     borderBottomWidth: 1.5,
     justifyContent: 'center',
     zIndex: 1,
   },
   connectorRampCenterDash: {
-    height: 2,
+    height: ResponsivePixels.size2,
     width: '100%',
     opacity: 0.8,
   },
   discShadowWrap: {
-    borderRadius: 26,
+    borderRadius: ResponsivePixels.size26,
     ...Platform.select({
       ios: {
         shadowOffset: { width: 0, height: 6 },
@@ -273,19 +274,19 @@ const styles = StyleSheet.create({
   },
   currentAuraRing: {
     position: 'absolute',
-    top: -6,
-    left: -6,
-    right: -6,
-    bottom: -6,
-    borderRadius: 32,
+    top: -ResponsivePixels.size6,
+    left: -ResponsivePixels.size6,
+    right: -ResponsivePixels.size6,
+    bottom: -ResponsivePixels.size6,
+    borderRadius: ResponsivePixels.size32,
     borderWidth: 2,
     borderColor: withAlpha(Colors.VoiceMichaelAccent, 0.65),
     backgroundColor: withAlpha(Colors.VoiceMichaelAccent, 0.12),
   },
   discBody: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: ResponsivePixels.size48,
+    height: ResponsivePixels.size48,
+    borderRadius: ResponsivePixels.size24,
     borderWidth: 2,
     borderTopColor: withAlpha(Colors.PureWhite, 0.8),
     borderLeftColor: withAlpha(Colors.PureWhite, 0.4),
@@ -299,10 +300,10 @@ const styles = StyleSheet.create({
   discGlossHighlight: {
     position: 'absolute',
     top: 0,
-    left: 4,
-    right: 4,
-    height: 10,
-    borderRadius: 10,
+    left: ResponsivePixels.size4,
+    right: ResponsivePixels.size4,
+    height: ResponsivePixels.size10,
+    borderRadius: ResponsivePixels.size10,
     backgroundColor: withAlpha(Colors.PureWhite, 0.35),
   },
   unlockedCenter: {
@@ -314,19 +315,19 @@ const styles = StyleSheet.create({
   },
   discLevelText: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 18,
+    fontSize: ResponsivePixels.size18,
     color: Colors.PureWhite,
     textShadowColor: withAlpha(Colors.PureBlack, 0.4),
-    textShadowOffset: { width: 0, height: 1.5 },
+    textShadowOffset: { width: 0, height: ResponsivePixels.size1_5 },
     textShadowRadius: 2,
   },
   miniRightSignSeal: {
     position: 'absolute',
-    bottom: 2,
-    right: 2,
-    width: 14,
-    height: 14,
-    borderRadius: 7,
+    bottom: ResponsivePixels.size2,
+    right: ResponsivePixels.size2,
+    width: ResponsivePixels.size14,
+    height: ResponsivePixels.size14,
+    borderRadius: ResponsivePixels.size7,
     backgroundColor: Colors.Emerald700,
     borderWidth: 1,
     borderColor: Colors.PureWhite,
@@ -339,9 +340,9 @@ const styles = StyleSheet.create({
   },
   currentLevelSubText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 8,
+    fontSize: ResponsivePixels.size8,
     color: Colors.PureWhite,
-    marginTop: 1,
+    marginTop: ResponsivePixels.size1,
     letterSpacing: 0.5,
   },
   lockedCenter: {
@@ -350,8 +351,8 @@ const styles = StyleSheet.create({
   },
   lockedLevelText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 9,
+    fontSize: ResponsivePixels.size9,
     color: Colors.Slate400,
-    marginTop: 1,
+    marginTop: ResponsivePixels.size1,
   },
 });

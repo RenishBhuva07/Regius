@@ -500,13 +500,13 @@ const styles = StyleSheet.create({
   },
   neuralLabel: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size10,
+    fontSize: ResponsivePixels.size12,
     color: Colors.PureWhite,
     letterSpacing: 0.6,
   },
   neuralSub: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: ResponsivePixels.size8,
+    fontSize: ResponsivePixels.size10,
     color: Colors.MilestoneSlate,
     letterSpacing: 0.3,
   },
@@ -520,8 +520,8 @@ const styles = StyleSheet.create({
   },
   guidanceQuoteText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: ResponsivePixels.size11,
-    lineHeight: ResponsivePixels.size17,
+    fontSize: ResponsivePixels.size13,
+    lineHeight: ResponsivePixels.size20,
     color: Colors.VocalQuoteTextDark,
     fontStyle: 'italic',
   },
@@ -548,7 +548,7 @@ const styles = StyleSheet.create({
   },
   fidelityLabel: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: ResponsivePixels.size8,
+    fontSize: ResponsivePixels.size10,
     color: Colors.VocalDurationMuted,
     letterSpacing: 0.5,
   },
@@ -578,13 +578,13 @@ const styles = StyleSheet.create({
   },
   playButtonText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size10,
+    fontSize: ResponsivePixels.size12,
     color: Colors.PureWhite,
     letterSpacing: 0.6,
   },
   playButtonTextActive: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size10,
+    fontSize: ResponsivePixels.size12,
     color: Colors.PureWhite,
     letterSpacing: 0.6,
   },

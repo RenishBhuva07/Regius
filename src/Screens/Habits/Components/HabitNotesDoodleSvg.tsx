@@ -12,6 +12,7 @@ import Svg, {
   Line,
 } from 'react-native-svg';
 import { Colors, IllustrationColors } from '../../../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface HabitNotesDoodleSvgProps {
   width?: number;
@@ -20,8 +21,8 @@ export interface HabitNotesDoodleSvgProps {
 
 // Vector illustration for the Habits footer watermark.
 export const HabitNotesDoodleSvg: React.FC<HabitNotesDoodleSvgProps> = ({
-  width = 142,
-  height = 150,
+  width = ResponsivePixels.size142,
+  height = ResponsivePixels.size150,
 }) => {
   return (
     <View style={[styles.container, { width, height }]} pointerEvents="none">

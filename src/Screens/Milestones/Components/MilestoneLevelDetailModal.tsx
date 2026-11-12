@@ -24,6 +24,7 @@ import { Fonts } from '../../../Theme/fonts';
 import { Badge } from '../../../Common/Badge';
 import { MilestoneTier } from '../../../Services/Milestone/MilestoneService';
 import { ThreeDStatusBadge } from './ThreeDStatusBadge';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 interface MilestoneLevelDetailModalProps {
   tier: MilestoneTier | null;
@@ -146,14 +147,14 @@ export const MilestoneLevelDetailModal: React.FC<
                     <View style={styles.discGlossHighlight} />
                     {isCurrent ? (
                       <Crown
-                        size={20}
+                        size={ResponsivePixels.size20}
                         color={Colors.PureWhite}
                         strokeWidth={2.4}
                       />
                     ) : isUnlocked ? (
                       <Text style={styles.discLevelText}>{tier.level}</Text>
                     ) : (
-                      <Lock size={18} color={Colors.Slate300} strokeWidth={2.4} />
+                      <Lock size={ResponsivePixels.size18} color={Colors.Slate300} strokeWidth={2.4} />
                     )}
                   </View>
 
@@ -190,7 +191,7 @@ export const MilestoneLevelDetailModal: React.FC<
                   accessibilityRole="button"
                   accessibilityLabel="Close level details"
                 >
-                  <X size={16} color={textPrimary} strokeWidth={2.4} />
+                  <X size={ResponsivePixels.size16} color={textPrimary} strokeWidth={2.4} />
                 </TouchableOpacity>
               </View>
 
@@ -264,7 +265,7 @@ export const MilestoneLevelDetailModal: React.FC<
                   >
                     <View style={styles.sectionHeader}>
                       <Palette
-                        size={14}
+                        size={ResponsivePixels.size14}
                         color={tier.accentColor || Colors.AccentYellow}
                       />
                       <Text
@@ -341,7 +342,7 @@ export const MilestoneLevelDetailModal: React.FC<
                               isThemeActive ? (
                                 <View style={styles.activePill}>
                                   <CheckCircle2
-                                    size={13}
+                                    size={ResponsivePixels.size13}
                                     color={
                                       tier.accentColor || Colors.AccentYellow
                                     }
@@ -386,7 +387,7 @@ export const MilestoneLevelDetailModal: React.FC<
                                 </View>
                               )
                             ) : (
-                              <Lock size={13} color={textSecondary} />
+                              <Lock size={ResponsivePixels.size13} color={textSecondary} />
                             )}
                           </TouchableOpacity>
                         );
@@ -405,13 +406,13 @@ export const MilestoneLevelDetailModal: React.FC<
                           ? withAlpha(Colors.PureWhite, 0.04)
                           : Colors.MilestoneDetailSectionLightBg,
                         borderColor: cardBorder,
-                        marginTop: 10,
+                        marginTop: ResponsivePixels.size10,
                       },
                     ]}
                   >
                     <View style={styles.sectionHeader}>
                       <Sparkles
-                        size={14}
+                        size={ResponsivePixels.size14}
                         color={tier.accentColor || Colors.AccentYellow}
                       />
                       <Text
@@ -487,14 +488,14 @@ const styles = StyleSheet.create({
     backgroundColor: withAlpha(Colors.PureBlack, 0.65),
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: ResponsivePixels.size16,
   },
   modalContentWrapper: {
     width: '100%',
-    maxWidth: 420,
+    maxWidth: ResponsivePixels.size420,
   },
   cardShadowWrapper: {
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 12 },
     shadowOpacity: 0.35,
@@ -502,37 +503,37 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   modalCard: {
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     borderWidth: 3.5,
     overflow: 'hidden',
     maxHeight: Dimensions.get('window').height * 0.82,
     position: 'relative',
-    padding: 16,
+    padding: ResponsivePixels.size16,
   },
   topAccentStrip: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: 5,
+    height: ResponsivePixels.size5,
   },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginTop: 6,
-    marginBottom: 12,
+    marginTop: ResponsivePixels.size6,
+    marginBottom: ResponsivePixels.size12,
   },
   levelTokenRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: ResponsivePixels.size12,
     flex: 1,
   },
   disc3D: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: ResponsivePixels.size50,
+    height: ResponsivePixels.size50,
+    borderRadius: ResponsivePixels.size25,
     borderWidth: 2,
     borderTopColor: withAlpha(Colors.PureWhite, 0.8),
     borderLeftColor: withAlpha(Colors.PureWhite, 0.4),
@@ -546,18 +547,18 @@ const styles = StyleSheet.create({
   discGlossHighlight: {
     position: 'absolute',
     top: 0,
-    left: 4,
-    right: 4,
-    height: 10,
-    borderRadius: 10,
+    left: ResponsivePixels.size4,
+    right: ResponsivePixels.size4,
+    height: ResponsivePixels.size10,
+    borderRadius: ResponsivePixels.size10,
     backgroundColor: withAlpha(Colors.PureWhite, 0.35),
   },
   discLevelText: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 20,
+    fontSize: ResponsivePixels.size20,
     color: Colors.PureWhite,
     textShadowColor: withAlpha(Colors.PureBlack, 0.35),
-    textShadowOffset: { width: 0, height: 1.5 },
+    textShadowOffset: { width: 0, height: ResponsivePixels.size1_5 },
     textShadowRadius: 2,
   },
   titleColumn: {
@@ -566,110 +567,110 @@ const styles = StyleSheet.create({
   titleWithBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
     flexWrap: 'wrap',
   },
   tierTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 17,
+    fontSize: ResponsivePixels.size17,
   },
   tierSubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
-    marginTop: 1,
+    fontSize: ResponsivePixels.size11,
+    marginTop: ResponsivePixels.size1,
   },
   closeButton: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: ResponsivePixels.size32,
+    height: ResponsivePixels.size32,
+    borderRadius: ResponsivePixels.size16,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 8,
+    marginLeft: ResponsivePixels.size8,
   },
   statusSection: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 10,
+    paddingVertical: ResponsivePixels.size10,
     borderTopWidth: StyleSheet.hairlineWidth,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: withAlpha(Colors.PureBlack, 0.08),
-    marginBottom: 10,
+    marginBottom: ResponsivePixels.size10,
   },
   xpPill: {
     flex: 1,
     alignItems: 'flex-end',
-    marginLeft: 8,
+    marginLeft: ResponsivePixels.size8,
   },
   xpPillText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
   },
   progressBarSection: {
-    marginBottom: 10,
+    marginBottom: ResponsivePixels.size10,
   },
   progressLabelRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 4,
+    marginBottom: ResponsivePixels.size4,
   },
   progressLabelLeft: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
   },
   progressLabelRight: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
   },
   progressBarTrack: {
-    height: 6,
-    borderRadius: 3,
+    height: ResponsivePixels.size6,
+    borderRadius: ResponsivePixels.size3,
     backgroundColor: withAlpha(Colors.PureBlack, 0.08),
     overflow: 'hidden',
   },
   progressBarFill: {
     height: '100%',
-    borderRadius: 3,
+    borderRadius: ResponsivePixels.size3,
   },
   modalScroll: {
-    maxHeight: 280,
+    maxHeight: ResponsivePixels.size280,
   },
   sectionBox: {
-    borderRadius: 16,
+    borderRadius: ResponsivePixels.size16,
     borderWidth: 1,
-    padding: 12,
+    padding: ResponsivePixels.size12,
   },
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    marginBottom: 10,
+    gap: ResponsivePixels.size6,
+    marginBottom: ResponsivePixels.size10,
   },
   sectionHeading: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
   },
   themeChipsContainer: {
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   themeChip: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 7,
-    borderRadius: 12,
+    paddingHorizontal: ResponsivePixels.size10,
+    paddingVertical: ResponsivePixels.size7,
+    borderRadius: ResponsivePixels.size12,
     borderWidth: 1.2,
     borderBottomWidth: 2.2,
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   themeChipActive: {
     borderWidth: 1.8,
   },
   themeColorDot: {
-    width: 14,
-    height: 14,
-    borderRadius: 7,
+    width: ResponsivePixels.size14,
+    height: ResponsivePixels.size14,
+    borderRadius: ResponsivePixels.size7,
     borderWidth: 1,
     borderColor: withAlpha(Colors.PureBlack, 0.1),
   },
@@ -678,61 +679,61 @@ const styles = StyleSheet.create({
   },
   themeName: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
   },
   themeDesc: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
   },
   activePill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 3,
-    paddingHorizontal: 6,
-    paddingVertical: 2,
-    borderRadius: 8,
+    gap: ResponsivePixels.size3,
+    paddingHorizontal: ResponsivePixels.size6,
+    paddingVertical: ResponsivePixels.size2,
+    borderRadius: ResponsivePixels.size8,
   },
   activePillText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
   },
   applyBtnPill: {
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 8,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size3,
+    borderRadius: ResponsivePixels.size8,
   },
   applyBtnText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
   },
   featureItemRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 8,
-    marginBottom: 7,
+    gap: ResponsivePixels.size8,
+    marginBottom: ResponsivePixels.size7,
   },
   featureBullet: {
-    width: 5,
-    height: 5,
-    borderRadius: 2.5,
-    marginTop: 6,
+    width: ResponsivePixels.size5,
+    height: ResponsivePixels.size5,
+    borderRadius: ResponsivePixels.size2_5,
+    marginTop: ResponsivePixels.size6,
   },
   featureInfo: {
     flex: 1,
   },
   featureName: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
   },
   featureDesc: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 10,
-    lineHeight: 14,
+    fontSize: ResponsivePixels.size10,
+    lineHeight: ResponsivePixels.size14,
   },
   dismissButton: {
-    marginTop: 12,
-    paddingVertical: 12,
-    borderRadius: 16,
+    marginTop: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size12,
+    borderRadius: ResponsivePixels.size16,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
@@ -742,7 +743,7 @@ const styles = StyleSheet.create({
   },
   dismissButtonText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     color: Colors.PureWhite,
     letterSpacing: 0.5,
   },

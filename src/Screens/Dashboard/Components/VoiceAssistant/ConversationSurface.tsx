@@ -9,6 +9,7 @@ import { ClarificationPrompt } from './ClarificationPrompt';
 import { Badge, BadgeVariant } from '../../../../Common/Badge';
 import { VoiceWaveVisualizer } from './VoiceWaveVisualizer';
 import { Check } from 'lucide-react-native';
+import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface ConversationSurfaceProps {
   state: VoiceAssistantState;
@@ -270,7 +271,7 @@ export const ConversationSurface: React.FC<ConversationSurfaceProps> = ({
               <View
                 style={[styles.checkCircle, { backgroundColor: theme.success }]}
               >
-                <Check size={12} color={Colors.PureWhite} strokeWidth={3} />
+                <Check size={ResponsivePixels.size12} color={Colors.PureWhite} strokeWidth={3} />
               </View>
               <Text
                 style={[
@@ -379,18 +380,18 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: ResponsivePixels.size16,
     paddingTop: 0,
-    paddingBottom: 4,
+    paddingBottom: ResponsivePixels.size4,
   },
   capsuleCard: {
     width: '100%',
-    maxWidth: 380,
+    maxWidth: ResponsivePixels.size380,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: 22,
+    paddingHorizontal: ResponsivePixels.size18,
+    paddingVertical: ResponsivePixels.size12,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.4,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
@@ -398,76 +399,76 @@ const styles = StyleSheet.create({
     elevation: 3.5,
   },
   badgeRow: {
-    marginBottom: 4,
+    marginBottom: ResponsivePixels.size4,
     alignItems: 'center',
   },
   headline: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 21,
-    lineHeight: 26,
+    fontSize: ResponsivePixels.size21,
+    lineHeight: ResponsivePixels.size26,
     textAlign: 'center',
     letterSpacing: -0.3,
-    paddingHorizontal: 6,
-    marginTop: 2,
+    paddingHorizontal: ResponsivePixels.size6,
+    marginTop: ResponsivePixels.size2,
   },
   supportingText: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 13,
-    lineHeight: 18,
+    fontSize: ResponsivePixels.size13,
+    lineHeight: ResponsivePixels.size18,
     textAlign: 'center',
-    marginTop: 4,
+    marginTop: ResponsivePixels.size4,
     maxWidth: '92%',
-    paddingHorizontal: 6,
+    paddingHorizontal: ResponsivePixels.size6,
   },
   confirmationBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
-    paddingVertical: 6,
-    borderRadius: 20,
+    paddingHorizontal: ResponsivePixels.size14,
+    paddingVertical: ResponsivePixels.size6,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1.2,
-    marginTop: 12,
-    gap: 8,
+    marginTop: ResponsivePixels.size12,
+    gap: ResponsivePixels.size8,
     maxWidth: '92%',
   },
   checkCircle: {
-    width: 18,
-    height: 18,
-    borderRadius: 9,
+    width: ResponsivePixels.size18,
+    height: ResponsivePixels.size18,
+    borderRadius: ResponsivePixels.size9,
     alignItems: 'center',
     justifyContent: 'center',
   },
   confirmationText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     flexShrink: 1,
   },
   suggestionsContainer: {
     width: '100%',
-    marginTop: 16,
+    marginTop: ResponsivePixels.size16,
   },
   suggestionsRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   suggestionPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-    borderRadius: 18,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size7,
+    borderRadius: ResponsivePixels.size18,
     borderWidth: 1,
     borderBottomWidth: 2,
-    gap: 5,
+    gap: ResponsivePixels.size5,
   },
   suggestionSymbol: {
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
   },
   suggestionText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
   },
 });
 

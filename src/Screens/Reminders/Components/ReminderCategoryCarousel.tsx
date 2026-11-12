@@ -142,7 +142,7 @@ export const ReminderCategoryCarousel: React.FC<
             onPress={() => onSelectCategory(selectedCategory ? null : 'daily')}
           >
             <Filter
-              size={15}
+              size={ResponsivePixels.size15}
               color={
                 selectedCategory !== null
                   ? Colors.PureWhite
@@ -250,7 +250,10 @@ export const ReminderCategoryCarousel: React.FC<
                     },
                   ]}
                 >
-                  <cat.Icon width={16} height={16} />
+                  <cat.Icon
+                    width={ResponsivePixels.size16}
+                    height={ResponsivePixels.size16}
+                  />
                 </View>
 
                 <CircularProgress
@@ -308,22 +311,22 @@ const styles = StyleSheet.create({
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   sectionTitle: {
     ...Typography.h6Bold,
     color: Colors.PureBlack,
-    fontSize: 17,
+    fontSize: ResponsivePixels.size17,
   },
   clearFilterChip: {
     backgroundColor: Colors.GrayPillSurface,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 12,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size3,
+    borderRadius: ResponsivePixels.size12,
   },
   clearFilterText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     color: Colors.DarkIconSlate,
   },
   sectionActions: {
@@ -332,9 +335,9 @@ const styles = StyleSheet.create({
     gap: ResponsivePixels.size10,
   },
   filterBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: ResponsivePixels.size32,
+    height: ResponsivePixels.size32,
+    borderRadius: ResponsivePixels.size16,
     backgroundColor: Colors.CoolNeutralSurface,
     alignItems: 'center',
     justifyContent: 'center',
@@ -346,12 +349,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.MidnightCharcoal,
     paddingHorizontal: ResponsivePixels.size14,
     paddingVertical: ResponsivePixels.size6,
-    borderRadius: 50,
+    borderRadius: ResponsivePixels.size50,
   },
   addBtnText: {
     ...Typography.bodySmallPoppinsSemiBold,
     color: Colors.PureWhite,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
   },
   categoriesScroll: {
     overflow: 'visible',
@@ -363,9 +366,9 @@ const styles = StyleSheet.create({
     gap: ResponsivePixels.size10,
   },
   categoryCard: {
-    width: 108,
-    borderRadius: 18,
-    borderTopRightRadius: 44,
+    width: ResponsivePixels.size108,
+    borderRadius: ResponsivePixels.size18,
+    borderTopRightRadius: ResponsivePixels.size44,
     paddingTop: ResponsivePixels.size12,
     paddingBottom: ResponsivePixels.size12,
     paddingHorizontal: ResponsivePixels.size11,
@@ -394,9 +397,9 @@ const styles = StyleSheet.create({
     marginBottom: ResponsivePixels.size8,
   },
   categoryIconWrap: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: ResponsivePixels.size30,
+    height: ResponsivePixels.size30,
+    borderRadius: ResponsivePixels.size15,
     backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
     alignItems: 'center',
@@ -415,22 +418,22 @@ const styles = StyleSheet.create({
   cardBottom: {},
   countText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 18,
+    fontSize: ResponsivePixels.size18,
     color: Colors.RegiusInk,
     letterSpacing: -0.4,
-    lineHeight: 22,
+    lineHeight: ResponsivePixels.size22,
   },
   countTotalText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.TimelineMutedGray,
   },
   categoryLabel: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12.5,
+    fontSize: ResponsivePixels.size12_5,
     color: Colors.RegiusInk,
     letterSpacing: -0.1,
-    lineHeight: 16,
+    lineHeight: ResponsivePixels.size16,
   },
   categoryAccentWrap: {
     position: 'absolute',
@@ -440,10 +443,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   categoryAccent: {
-    height: 3,
-    width: 32,
-    borderTopLeftRadius: 2.5,
-    borderTopRightRadius: 2.5,
+    height: ResponsivePixels.size3,
+    width: ResponsivePixels.size32,
+    borderTopLeftRadius: ResponsivePixels.size2_5,
+    borderTopRightRadius: ResponsivePixels.size2_5,
   },
   progressContainer: {
     alignItems: 'center',

@@ -152,7 +152,7 @@ const IntroBottomControls = React.memo<IntroBottomControlsProps>(
                   { backgroundColor: currentStep.accentColor },
                 ]}
               >
-                <ArrowRight size={18} color={Colors.PureWhite} />
+                <ArrowRight size={ResponsivePixels.size18} color={Colors.PureWhite} />
               </View>
             </TouchableOpacity>
           ) : (
@@ -514,7 +514,7 @@ const styles = StyleSheet.create({
   },
   skipText: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     letterSpacing: 0.4,
   },
   contentContainer: {
@@ -559,8 +559,8 @@ const styles = StyleSheet.create({
   },
   title: {
     ...Typography.h1RanadeBold,
-    fontSize: 27,
-    lineHeight: 33,
+    fontSize: ResponsivePixels.size27,
+    lineHeight: ResponsivePixels.size33,
     textAlign: 'center',
     letterSpacing: -0.3,
   },
@@ -568,7 +568,7 @@ const styles = StyleSheet.create({
     ...Typography.bodyMediumPoppinsRegular,
     textAlign: 'center',
     letterSpacing: 0.3,
-    lineHeight: 22,
+    lineHeight: ResponsivePixels.size22,
     marginTop: ResponsivePixels.size8,
     paddingHorizontal: ResponsivePixels.size8,
   },

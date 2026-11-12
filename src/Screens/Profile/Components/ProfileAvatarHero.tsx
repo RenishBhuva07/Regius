@@ -31,7 +31,7 @@ export const ProfileAvatarHero: React.FC<ProfileAvatarHeroProps> = React.memo(
               <View style={styles.heroStatusRow}>
                 <View style={styles.heroStatusLeft}>
                   <Sparkles
-                    size={14}
+                    size={ResponsivePixels.size14}
                     color={Colors.AccentYellow}
                     strokeWidth={2.4}
                   />
@@ -58,7 +58,7 @@ export const ProfileAvatarHero: React.FC<ProfileAvatarHeroProps> = React.memo(
                   accessibilityLabel="Change avatar image"
                 >
                   <Camera
-                    size={14}
+                    size={ResponsivePixels.size14}
                     color={Colors.PureWhite}
                     strokeWidth={2.4}
                   />
@@ -87,12 +87,12 @@ export const ProfileAvatarHero: React.FC<ProfileAvatarHeroProps> = React.memo(
 
 const styles = StyleSheet.create({
   heroOuterWrapper: {
-    paddingHorizontal: 10,
+    paddingHorizontal: ResponsivePixels.size10,
     marginBottom: ResponsivePixels.size20,
   },
   cardShadowWrapper: {
     backgroundColor: Colors.NeroBlack,
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.28,
@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: Colors.NeroBlack,
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     borderWidth: 4,
     borderColor: withAlpha(Colors.PureWhite, 0.9),
     overflow: 'hidden',
@@ -121,11 +121,11 @@ const styles = StyleSheet.create({
   heroStatusLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   heroStatusLabel: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: Colors.AccentYellow,
     letterSpacing: 1.2,
   },
@@ -134,8 +134,8 @@ const styles = StyleSheet.create({
     marginBottom: ResponsivePixels.size12,
   },
   avatarGlowHalo: {
-    padding: 3,
-    borderRadius: 50,
+    padding: ResponsivePixels.size3,
+    borderRadius: ResponsivePixels.size50,
     backgroundColor: withAlpha(Colors.AccentYellow, 0.25),
   },
   avatarRing: {
@@ -153,9 +153,9 @@ const styles = StyleSheet.create({
     bottom: 0,
     right: 0,
     backgroundColor: Colors.LavenderPurple,
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: ResponsivePixels.size28,
+    height: ResponsivePixels.size28,
+    borderRadius: ResponsivePixels.size14,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 2,
@@ -164,14 +164,14 @@ const styles = StyleSheet.create({
   },
   heroName: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 22,
+    fontSize: ResponsivePixels.size22,
     color: Colors.CreamBackground,
-    marginBottom: 4,
+    marginBottom: ResponsivePixels.size4,
   },
   heroEmail: {
     ...Typography.bodySmallPoppinsRegular,
     color: withAlpha(Colors.PureWhite, 0.7),
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     marginBottom: ResponsivePixels.size12,
   },
   roleBadgeRow: {
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   badgeGap: {
-    width: 8,
+    width: ResponsivePixels.size8,
   },
 });
 

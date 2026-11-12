@@ -11,6 +11,7 @@ import { Fonts } from '../../../Theme/fonts';
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../../Theme/useAppTheme';
 import { HabitItem } from '../../../Context/TaskReminderContext';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 export type HabitFilterKey = 'all' | 'morning' | 'mindful' | 'evening';
 
@@ -74,7 +75,7 @@ export const HabitCategoryFilters: React.FC<HabitCategoryFiltersProps> = ({
             ]}
           >
             <IconComponent
-              size={14}
+              size={ResponsivePixels.size14}
               color={
                 isActive
                   ? Colors.PureWhite
@@ -116,17 +117,17 @@ export const HabitCategoryFilters: React.FC<HabitCategoryFiltersProps> = ({
 const styles = StyleSheet.create({
   scroll: {},
   container: {
-    gap: 8,
-    paddingVertical: 16,
-    paddingHorizontal: 10,
+    gap: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size16,
+    paddingHorizontal: ResponsivePixels.size10,
   },
   filterPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 7,
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-    borderRadius: 22,
+    gap: ResponsivePixels.size7,
+    paddingHorizontal: ResponsivePixels.size14,
+    paddingVertical: ResponsivePixels.size7,
+    borderRadius: ResponsivePixels.size22,
     backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
     borderColor: Colors.WarmChipBorder,
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
   },
   filterPillText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.CharcoalStoneText,
     letterSpacing: -0.1,
   },
@@ -164,10 +165,10 @@ const styles = StyleSheet.create({
   },
   countBadge: {
     backgroundColor: Colors.PureBlack,
-    borderRadius: 10,
-    paddingHorizontal: 6,
-    paddingVertical: 1,
-    minWidth: 18,
+    borderRadius: ResponsivePixels.size10,
+    paddingHorizontal: ResponsivePixels.size6,
+    paddingVertical: ResponsivePixels.size1,
+    minWidth: ResponsivePixels.size18,
     alignItems: 'center',
   },
   countBadgeActive: {
@@ -175,7 +176,7 @@ const styles = StyleSheet.create({
   },
   countText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     color: Colors.PureWhite,
   },
   countTextActive: {

@@ -6,6 +6,7 @@ import {
 } from '../SiaHolographicOrb';
 import { VoiceAssistantState } from '../../../../Services/Voice/VoiceStateMachine';
 import { VoiceAssistantTheme } from './types';
+import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface AssistantOrbProps {
   state: VoiceAssistantState;
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 4,
+    marginVertical: ResponsivePixels.size4,
   },
 });
 

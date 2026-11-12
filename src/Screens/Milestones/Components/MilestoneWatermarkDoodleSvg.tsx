@@ -11,6 +11,7 @@ import Svg, {
   Polygon,
 } from 'react-native-svg';
 import { Colors, IllustrationColors } from '../../../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface MilestoneWatermarkDoodleSvgProps {
   width?: number;
@@ -20,7 +21,11 @@ export interface MilestoneWatermarkDoodleSvgProps {
 
 export const MilestoneWatermarkDoodleSvg: React.FC<
   MilestoneWatermarkDoodleSvgProps
-> = ({ width = 140, height = 148, isDarkMode = false }) => {
+> = ({
+  width = ResponsivePixels.size140,
+  height = ResponsivePixels.size148,
+  isDarkMode = false,
+}) => {
   const mountainBaseColor = isDarkMode
     ? Colors.RoadLabelDarkBg
     : IllustrationColors.MilestoneBaseWarm;

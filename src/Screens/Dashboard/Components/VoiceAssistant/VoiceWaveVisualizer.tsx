@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { View, StyleSheet, Animated, Easing } from 'react-native';
 import { Colors, withAlpha } from '../../../../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface VoiceWaveVisualizerProps {
   isActive?: boolean;
@@ -115,19 +116,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 16,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size3,
+    borderRadius: ResponsivePixels.size16,
     borderWidth: 1,
-    gap: 3.5,
-    height: 25,
+    gap: ResponsivePixels.size3_5,
+    height: ResponsivePixels.size25,
     alignSelf: 'center',
-    marginVertical: 4,
+    marginVertical: ResponsivePixels.size4,
   },
   bar: {
-    width: 3.5,
-    borderRadius: 2,
-    minHeight: 4,
+    width: ResponsivePixels.size3_5,
+    borderRadius: ResponsivePixels.size2,
+    minHeight: ResponsivePixels.size4,
   },
 });
 

@@ -162,7 +162,7 @@ export const HabitConsistencyBento: React.FC<HabitConsistencyBentoProps> = ({
               size="sm"
               icon={
                 <Flame
-                  size={12}
+                  size={ResponsivePixels.size12}
                   color={Colors.EventTextAccent}
                   strokeWidth={2.4}
                 />
@@ -172,7 +172,12 @@ export const HabitConsistencyBento: React.FC<HabitConsistencyBentoProps> = ({
               label="TOP 5% CONSISTENCY"
               variant="purple"
               size="sm"
-              icon={<Trophy size={12} color={Colors.LavenderPurple} />}
+              icon={
+                <Trophy
+                  size={ResponsivePixels.size12}
+                  color={Colors.LavenderPurple}
+                />
+              }
             />
           </View>
 
@@ -186,7 +191,7 @@ export const HabitConsistencyBento: React.FC<HabitConsistencyBentoProps> = ({
                 ]}
               >
                 <Flame
-                  size={60}
+                  size={ResponsivePixels.size60}
                   color={Colors.AccentAmber}
                   strokeWidth={2.2}
                   fill={Colors.AccentAmber}
@@ -350,8 +355,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   flameWrap: {
-    width: ResponsivePixels.size44,
-    height: ResponsivePixels.size44,
+    width: ResponsivePixels.size52,
+    height: ResponsivePixels.size52,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -361,8 +366,8 @@ const styles = StyleSheet.create({
   },
   metricBig: {
     ...Typography.h1RanadeBold,
-    fontSize: ResponsivePixels.size32,
-    lineHeight: ResponsivePixels.size40,
+    fontSize: ResponsivePixels.size38,
+    lineHeight: ResponsivePixels.size47,
     paddingTop: ResponsivePixels.size4,
     color: Colors.PureWhite,
     letterSpacing: -0.5,
@@ -370,7 +375,7 @@ const styles = StyleSheet.create({
   },
   metricLabel: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: ResponsivePixels.size12,
+    fontSize: ResponsivePixels.size14,
     color: Colors.SteelMist,
     marginTop: ResponsivePixels.size1,
   },
@@ -388,12 +393,12 @@ const styles = StyleSheet.create({
   },
   percentText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size18,
+    fontSize: ResponsivePixels.size21,
     color: Colors.AccentGreen,
   },
   progressSubtext: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: ResponsivePixels.size11,
+    fontSize: ResponsivePixels.size13,
     color: Colors.SteelMist,
   },
   progressBarTrack: {
@@ -420,7 +425,7 @@ const styles = StyleSheet.create({
   },
   weekStripLabel: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: ResponsivePixels.size10,
+    fontSize: ResponsivePixels.size12,
     color: Colors.ConsistencyLabelGray,
     letterSpacing: 0.8,
   },
@@ -435,9 +440,9 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   dayBubble: {
-    width: ResponsivePixels.size30,
-    height: ResponsivePixels.size30,
-    borderRadius: ResponsivePixels.size15,
+    width: ResponsivePixels.size34,
+    height: ResponsivePixels.size34,
+    borderRadius: ResponsivePixels.size17,
     backgroundColor: withAlpha(Colors.PureWhite, 0.04),
     alignItems: 'center',
     justifyContent: 'center',
@@ -500,7 +505,7 @@ const styles = StyleSheet.create({
   },
   dayText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: ResponsivePixels.size11,
+    fontSize: ResponsivePixels.size13,
     color: Colors.ConsistencyLabelGray,
   },
   dayTextFilled: {

@@ -368,8 +368,9 @@ const SettingsScreen: React.FC = () => {
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingTop: insets.top + SETTINGS_HEADER_HEIGHT + 10,
-            paddingBottom: 120 + insets.bottom,
+            paddingTop:
+              insets.top + SETTINGS_HEADER_HEIGHT + ResponsivePixels.size10,
+            paddingBottom: ResponsivePixels.size120 + insets.bottom,
           },
         ]}
         showsVerticalScrollIndicator={false}

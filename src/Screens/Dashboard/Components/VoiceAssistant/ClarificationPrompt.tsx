@@ -5,6 +5,7 @@ import { Fonts } from '../../../../Theme/fonts';
 import { Colors } from '../../../../Assets/StyleUtilities/Colors';
 import { VoiceAssistantTheme } from './types';
 import { PendingClarification } from '../../../../Services/Voice/VoiceTypes';
+import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface ClarificationPromptProps {
   clarification?: PendingClarification | null;
@@ -63,7 +64,7 @@ export const ClarificationPrompt: React.FC<ClarificationPromptProps> = ({
             { backgroundColor: theme.accent },
           ]}
         >
-          <HelpCircle size={15} color={Colors.PureWhite} strokeWidth={2.4} />
+          <HelpCircle size={ResponsivePixels.size15} color={Colors.PureWhite} strokeWidth={2.4} />
         </View>
         <Text
           style={[styles.questionText, { color: theme.textPrimary }]}
@@ -82,54 +83,54 @@ export const ClarificationPrompt: React.FC<ClarificationPromptProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 10,
-    paddingHorizontal: 8,
+    paddingVertical: ResponsivePixels.size10,
+    paddingHorizontal: ResponsivePixels.size8,
     width: '100%',
     alignItems: 'center',
   },
   contextTag: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 14,
-    marginBottom: 12,
+    gap: ResponsivePixels.size6,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size5,
+    borderRadius: ResponsivePixels.size14,
+    marginBottom: ResponsivePixels.size12,
   },
   contextLabel: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   contextText: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
-    maxWidth: 240,
+    fontSize: ResponsivePixels.size12,
+    maxWidth: ResponsivePixels.size240,
   },
   questionContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
-    marginVertical: 4,
-    paddingHorizontal: 12,
+    gap: ResponsivePixels.size10,
+    marginVertical: ResponsivePixels.size4,
+    paddingHorizontal: ResponsivePixels.size12,
   },
   iconBubble: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: ResponsivePixels.size28,
+    height: ResponsivePixels.size28,
+    borderRadius: ResponsivePixels.size14,
     alignItems: 'center',
     justifyContent: 'center',
   },
   questionText: {
     fontFamily: Fonts.ranade.medium,
-    fontSize: 16,
-    lineHeight: 22,
+    fontSize: ResponsivePixels.size16,
+    lineHeight: ResponsivePixels.size22,
     flexShrink: 1,
   },
   instructionHint: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
-    marginTop: 10,
+    fontSize: ResponsivePixels.size12,
+    marginTop: ResponsivePixels.size10,
   },
 });

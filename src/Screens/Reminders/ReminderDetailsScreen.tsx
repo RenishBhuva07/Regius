@@ -940,14 +940,14 @@ const styles = StyleSheet.create({
   },
   frostedDomainText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: ResponsivePixels.size11,
+    fontSize: ResponsivePixels.size12,
     letterSpacing: 0.5,
   },
   bentoTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size22,
+    fontSize: ResponsivePixels.size26,
     color: Colors.PureWhite,
-    lineHeight: ResponsivePixels.size28,
+    lineHeight: ResponsivePixels.size32,
   },
   bentoMetaRow: {
     flexDirection: 'row',
@@ -967,7 +967,7 @@ const styles = StyleSheet.create({
   },
   metaChipText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: ResponsivePixels.size11,
+    fontSize: ResponsivePixels.size12,
     color: Colors.Gray300,
     letterSpacing: 0.3,
   },
@@ -976,7 +976,7 @@ const styles = StyleSheet.create({
   },
   urgentChipText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size10,
+    fontSize: ResponsivePixels.size11,
     color: Colors.CategoryRedAccent,
     letterSpacing: 0.4,
   },

@@ -9,6 +9,7 @@ import Svg, {
   Stop,
 } from 'react-native-svg';
 import { Colors, IllustrationColors } from '../../../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface ReminderEmptyDoodleSvgProps {
   width?: number;
@@ -16,8 +17,8 @@ export interface ReminderEmptyDoodleSvgProps {
 }
 
 export const ReminderEmptyDoodleSvg: React.FC<ReminderEmptyDoodleSvgProps> = ({
-  width = 130,
-  height = 140,
+  width = ResponsivePixels.size130,
+  height = ResponsivePixels.size140,
 }) => {
   return (
     <View style={[styles.container, { width, height }]} pointerEvents="none">

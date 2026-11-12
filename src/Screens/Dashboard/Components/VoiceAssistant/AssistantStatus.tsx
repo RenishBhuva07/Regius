@@ -3,6 +3,7 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Fonts } from '../../../../Theme/fonts';
 import { VoiceAssistantTheme } from './types';
 import { VoiceAssistantState } from '../../../../Services/Voice/VoiceStateMachine';
+import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface AssistantStatusProps {
   state: VoiceAssistantState;
@@ -126,21 +127,21 @@ export const AssistantStatus: React.FC<AssistantStatusProps> = ({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    paddingHorizontal: 24,
-    marginVertical: 12,
+    paddingHorizontal: ResponsivePixels.size24,
+    marginVertical: ResponsivePixels.size12,
   },
   headline: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 22,
-    lineHeight: 28,
+    fontSize: ResponsivePixels.size22,
+    lineHeight: ResponsivePixels.size28,
     textAlign: 'center',
     letterSpacing: -0.3,
-    marginBottom: 6,
+    marginBottom: ResponsivePixels.size6,
   },
   subtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 13,
-    lineHeight: 19,
+    fontSize: ResponsivePixels.size13,
+    lineHeight: ResponsivePixels.size19,
     textAlign: 'center',
   },
 });

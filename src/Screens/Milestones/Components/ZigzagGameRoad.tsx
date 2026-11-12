@@ -21,6 +21,7 @@ import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { Fonts } from '../../../Theme/fonts';
 import { MilestoneTier } from '../../../Services/Milestone/MilestoneService';
 import { ThreeDStatusBadge } from './ThreeDStatusBadge';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 const { width: screenWidth } = Dimensions.get('window');
 
@@ -42,16 +43,16 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
   isDarkMode,
 }) => {
   // Road track geometry: 10px margin on each side, snug 780px height to eliminate dead bottom space
-  const trackWidth = screenWidth - 20;
-  const trackHeight = 780;
+  const trackWidth = screenWidth - ResponsivePixels.size20;
+  const trackHeight = ResponsivePixels.scale(780);
 
   // Node center coordinates: original 10:47 zigzag S-curve pattern
   const nodeCoords = [
-    { x: trackWidth * 0.28, y: 70 }, // Level 1 (Left)
-    { x: trackWidth * 0.72, y: 215 }, // Level 2 (Right)
-    { x: trackWidth * 0.28, y: 360 }, // Level 3 (Left)
-    { x: trackWidth * 0.72, y: 505 }, // Level 4 (Right)
-    { x: trackWidth * 0.5, y: 660 }, // Level 5 (Center Summit)
+    { x: trackWidth * 0.28, y: ResponsivePixels.size70 }, // Level 1 (Left)
+    { x: trackWidth * 0.72, y: ResponsivePixels.scale(215) }, // Level 2 (Right)
+    { x: trackWidth * 0.28, y: ResponsivePixels.scale(360) }, // Level 3 (Left)
+    { x: trackWidth * 0.72, y: ResponsivePixels.scale(505) }, // Level 4 (Right)
+    { x: trackWidth * 0.5, y: ResponsivePixels.scale(660) }, // Level 5 (Center Summit)
   ];
 
   // Original 10:47 smooth cubic Bezier S-curve connecting node coordinates
@@ -103,7 +104,7 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
               <Path
                 d={pathD}
                 stroke={curbColor}
-                strokeWidth={48}
+                strokeWidth={ResponsivePixels.size48}
                 strokeLinecap="round"
                 fill="none"
               />
@@ -112,7 +113,7 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
               <Path
                 d={pathD}
                 stroke={asphaltColor}
-                strokeWidth={40}
+                strokeWidth={ResponsivePixels.size40}
                 strokeLinecap="round"
                 fill="none"
               />
@@ -138,7 +139,7 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
         <Circle
           cx={nodeCoords[4].x}
           cy={nodeCoords[4].y}
-          r={44}
+          r={ResponsivePixels.size44}
           stroke={withAlpha(Colors.AccentYellow, 0.35)}
           strokeWidth={3}
           strokeDasharray="4 4"
@@ -148,10 +149,10 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
 
       {/* ── CLEAN GATEWAY MILESTONE BANNERS (NO OVERLAPS ON NODES) ── */}
       <View
-        style={[styles.startGateBanner, { top: 16, left: trackWidth * 0.08 }]}
+        style={[styles.startGateBanner, { top: ResponsivePixels.size16, left: trackWidth * 0.08 }]}
       >
         <Compass
-          size={11}
+          size={ResponsivePixels.size11}
           color={Colors.HabitBurnishedAmber}
           strokeWidth={2.4}
         />
@@ -161,9 +162,9 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
       </View>
 
       <View
-        style={[styles.summitGateBanner, { top: 595, alignSelf: 'center' }]}
+        style={[styles.summitGateBanner, { top: ResponsivePixels.size595, alignSelf: 'center' }]}
       >
-        <Flag size={12} color={Colors.AccentYellow} strokeWidth={2.5} />
+        <Flag size={ResponsivePixels.size12} color={Colors.AccentYellow} strokeWidth={2.5} />
         <Text style={[styles.gateBannerText, { color: Colors.AccentYellow }]}>
           ROYAL SUMMIT · 1000 XP
         </Text>
@@ -217,8 +218,8 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
             style={[
               styles.nodeWrapper,
               {
-                left: coord.x - 29, // 58px / 2
-                top: coord.y - 29,
+                left: coord.x - ResponsivePixels.size29, // 58px / 2
+                top: coord.y - ResponsivePixels.size29,
               },
             ]}
           >
@@ -257,7 +258,7 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
                 {isCurrent ? (
                   <View style={styles.discCenterCol}>
                     <Crown
-                      size={20}
+                      size={ResponsivePixels.size20}
                       color={Colors.PureWhite}
                       strokeWidth={2.4}
                     />
@@ -271,7 +272,7 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
                     {/* Floating 3D Checkmark Seal */}
                     <View style={styles.floatingRightSignSeal}>
                       <Check
-                        size={9}
+                        size={ResponsivePixels.size9}
                         color={Colors.PureWhite}
                         strokeWidth={3.5}
                       />
@@ -279,7 +280,7 @@ export const ZigzagGameRoad: React.FC<ZigzagGameRoadProps> = ({
                   </View>
                 ) : (
                   <View style={styles.discCenterCol}>
-                    <Lock size={17} color={Colors.Slate400} strokeWidth={2.4} />
+                    <Lock size={ResponsivePixels.size17} color={Colors.Slate400} strokeWidth={2.4} />
                     <Text style={styles.discLockedText}>LVL {tier.level}</Text>
                   </View>
                 )}
@@ -347,49 +348,49 @@ const styles = StyleSheet.create({
   container: {
     alignSelf: 'center',
     position: 'relative',
-    marginVertical: 10,
+    marginVertical: ResponsivePixels.size10,
   },
   startGateBanner: {
     position: 'absolute',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: ResponsivePixels.size4,
     backgroundColor: withAlpha(Colors.PureBlack, 0.05),
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 10,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size3,
+    borderRadius: ResponsivePixels.size10,
     zIndex: 1,
   },
   summitGateBanner: {
     position: 'absolute',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: ResponsivePixels.size5,
     backgroundColor: withAlpha(Colors.AccentYellow, 0.15),
-    paddingHorizontal: 10,
-    paddingVertical: 3.5,
-    borderRadius: 12,
+    paddingHorizontal: ResponsivePixels.size10,
+    paddingVertical: ResponsivePixels.size3_5,
+    borderRadius: ResponsivePixels.size12,
     borderWidth: 1,
     borderColor: withAlpha(Colors.AccentYellow, 0.4),
     zIndex: 1,
   },
   gateBannerText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 9.5,
+    fontSize: ResponsivePixels.size9_5,
     letterSpacing: 0.6,
   },
   nodeWrapper: {
     position: 'absolute',
-    width: 58,
-    height: 58,
+    width: ResponsivePixels.size58,
+    height: ResponsivePixels.size58,
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 3,
   },
   discShadowWrap: {
-    width: 58,
-    height: 58,
-    borderRadius: 29,
+    width: ResponsivePixels.size58,
+    height: ResponsivePixels.size58,
+    borderRadius: ResponsivePixels.size29,
     ...Platform.select({
       ios: {
         shadowOffset: { width: 0, height: 6 },
@@ -402,19 +403,19 @@ const styles = StyleSheet.create({
   },
   currentAuraRing: {
     position: 'absolute',
-    top: -7,
-    left: -7,
-    right: -7,
-    bottom: -7,
-    borderRadius: 36,
+    top: -ResponsivePixels.size7,
+    left: -ResponsivePixels.size7,
+    right: -ResponsivePixels.size7,
+    bottom: -ResponsivePixels.size7,
+    borderRadius: ResponsivePixels.size36,
     borderWidth: 2.5,
     borderColor: withAlpha(Colors.VoiceMichaelAccent, 0.85),
     backgroundColor: withAlpha(Colors.VoiceMichaelAccent, 0.15),
   },
   discBody: {
-    width: 58,
-    height: 58,
-    borderRadius: 29,
+    width: ResponsivePixels.size58,
+    height: ResponsivePixels.size58,
+    borderRadius: ResponsivePixels.size29,
     borderWidth: 2,
     borderTopColor: withAlpha(Colors.PureWhite, 0.85),
     borderLeftColor: withAlpha(Colors.PureWhite, 0.45),
@@ -428,10 +429,10 @@ const styles = StyleSheet.create({
   discGlossHighlight: {
     position: 'absolute',
     top: 0,
-    left: 6,
-    right: 6,
-    height: 12,
-    borderRadius: 12,
+    left: ResponsivePixels.size6,
+    right: ResponsivePixels.size6,
+    height: ResponsivePixels.size12,
+    borderRadius: ResponsivePixels.size12,
     backgroundColor: withAlpha(Colors.PureWhite, 0.38),
   },
   discCenterCol: {
@@ -442,19 +443,19 @@ const styles = StyleSheet.create({
   },
   discLevelNumber: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 22,
+    fontSize: ResponsivePixels.size22,
     color: Colors.PureWhite,
     textShadowColor: withAlpha(Colors.PureBlack, 0.35),
-    textShadowOffset: { width: 0, height: 1.5 },
+    textShadowOffset: { width: 0, height: ResponsivePixels.size1_5 },
     textShadowRadius: 2,
   },
   floatingRightSignSeal: {
     position: 'absolute',
-    bottom: 4,
-    right: 4,
-    width: 16,
-    height: 16,
-    borderRadius: 8,
+    bottom: ResponsivePixels.size4,
+    right: ResponsivePixels.size4,
+    width: ResponsivePixels.size16,
+    height: ResponsivePixels.size16,
+    borderRadius: ResponsivePixels.size8,
     backgroundColor: Colors.Emerald700,
     borderWidth: 1.2,
     borderColor: Colors.PureWhite,
@@ -463,28 +464,28 @@ const styles = StyleSheet.create({
   },
   discCurrentLevelText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 8.5,
+    fontSize: ResponsivePixels.size8_5,
     color: Colors.PureWhite,
-    marginTop: 1,
+    marginTop: ResponsivePixels.size1,
     letterSpacing: 0.5,
   },
   discLockedText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 9,
+    fontSize: ResponsivePixels.size9,
     color: Colors.Slate400,
-    marginTop: 1,
+    marginTop: ResponsivePixels.size1,
   },
 
   // Floating Stage Label Pill: Generous width to prevent any name truncation
   stageLabelCard: {
     position: 'absolute',
-    borderRadius: 14,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1.2,
     borderBottomWidth: 2.8,
-    paddingHorizontal: 10,
-    paddingVertical: 5.5,
-    minWidth: 136,
-    maxWidth: 168,
+    paddingHorizontal: ResponsivePixels.size10,
+    paddingVertical: ResponsivePixels.size5_5,
+    minWidth: ResponsivePixels.size136,
+    maxWidth: ResponsivePixels.size168,
     alignItems: 'center',
     zIndex: 4,
     ...Platform.select({
@@ -500,32 +501,32 @@ const styles = StyleSheet.create({
     }),
   },
   labelRightPos: {
-    left: 66,
-    top: 4,
+    left: ResponsivePixels.size66,
+    top: ResponsivePixels.size4,
   },
   labelLeftPos: {
-    right: 66,
-    top: 4,
+    right: ResponsivePixels.size66,
+    top: ResponsivePixels.size4,
   },
   labelCenterPos: {
-    top: 68,
-    left: -46,
-    width: 150,
+    top: ResponsivePixels.size68,
+    left: -ResponsivePixels.size46,
+    width: ResponsivePixels.size150,
   },
   stageLabelTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 12,
-    marginBottom: 3,
+    fontSize: ResponsivePixels.size12,
+    marginBottom: ResponsivePixels.size3,
     textAlign: 'center',
   },
   stageLabelBottomRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 2,
+    marginBottom: ResponsivePixels.size2,
   },
   xpSubtext: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 8.5,
+    fontSize: ResponsivePixels.size8_5,
     textAlign: 'center',
   },
 });

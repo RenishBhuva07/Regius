@@ -33,6 +33,7 @@ import {
   VoicePlaygroundCard,
   VoiceCardItem,
 } from './VoiceStudio/Components';
+import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 
 const HEADER_HEIGHT = SUB_SCREEN_HEADER_HEIGHT;
 
@@ -238,8 +239,8 @@ export const VoiceStudioScreen: React.FC = () => {
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingTop: insets.top + HEADER_HEIGHT + 14,
-            paddingBottom: insets.bottom + 48,
+            paddingTop: insets.top + HEADER_HEIGHT + ResponsivePixels.size14,
+            paddingBottom: insets.bottom + ResponsivePixels.size48,
           },
         ]}
         showsVerticalScrollIndicator={false}
@@ -252,7 +253,7 @@ export const VoiceStudioScreen: React.FC = () => {
             <View style={styles.heroHeaderRow}>
               <View style={styles.heroTagRow}>
                 <RadioTower
-                  size={13}
+                  size={ResponsivePixels.size13}
                   color={Colors.LavenderPurple}
                   strokeWidth={2.4}
                 />
@@ -264,7 +265,7 @@ export const VoiceStudioScreen: React.FC = () => {
             <View style={styles.heroTopRow}>
               <View style={styles.personaAvatarBox}>
                 <Mic
-                  size={22}
+                  size={ResponsivePixels.size22}
                   color={Colors.LavenderPurple}
                   strokeWidth={2.4}
                 />
@@ -286,13 +287,13 @@ export const VoiceStudioScreen: React.FC = () => {
               >
                 {isPlayingPreview && playingVoiceId === selectedVoice.id ? (
                   <Square
-                    size={16}
+                    size={ResponsivePixels.size16}
                     color={Colors.PureWhite}
                     fill={Colors.PureWhite}
                   />
                 ) : (
                   <Play
-                    size={16}
+                    size={ResponsivePixels.size16}
                     color={Colors.PureWhite}
                     fill={Colors.PureWhite}
                   />
@@ -440,78 +441,78 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: 16,
+    paddingHorizontal: ResponsivePixels.size16,
   },
   heroCardShadowWrapper: {
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     backgroundColor: Colors.PureBlack,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.28,
     shadowRadius: 18,
     elevation: 8,
-    marginBottom: 26,
+    marginBottom: ResponsivePixels.size26,
   },
   heroCard: {
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     borderWidth: 4,
     borderColor: withAlpha(Colors.PureWhite, 0.9),
     backgroundColor: Colors.NeroBlack,
-    padding: 20,
+    padding: ResponsivePixels.size20,
     overflow: 'hidden',
   },
   heroHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 16,
+    marginBottom: ResponsivePixels.size16,
   },
   heroTagRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   heroTagText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     letterSpacing: 0.8,
     color: Colors.LavenderPurple,
   },
   heroTopRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 18,
+    marginBottom: ResponsivePixels.size18,
   },
   personaAvatarBox: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: ResponsivePixels.size48,
+    height: ResponsivePixels.size48,
+    borderRadius: ResponsivePixels.size24,
     backgroundColor: withAlpha(Colors.LavenderPurple, 0.15),
     borderWidth: 1.5,
     borderColor: withAlpha(Colors.LavenderPurple, 0.3),
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 14,
+    marginRight: ResponsivePixels.size14,
   },
   heroVoiceInfo: {
     flex: 1,
   },
   heroVoiceName: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 20,
+    fontSize: ResponsivePixels.size20,
     color: Colors.PureWhite,
     letterSpacing: -0.4,
   },
   heroVoiceDescription: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.SteelMist,
-    marginTop: 2,
+    marginTop: ResponsivePixels.size2,
   },
   heroPreviewPlayBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: ResponsivePixels.size38,
+    height: ResponsivePixels.size38,
+    borderRadius: ResponsivePixels.size19,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: Colors.LavenderPurple,
@@ -524,20 +525,20 @@ const styles = StyleSheet.create({
   heroTagsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
   },
   sectionHeading: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     letterSpacing: 1.2,
-    marginBottom: 10,
+    marginBottom: ResponsivePixels.size10,
     textTransform: 'uppercase',
   },
   settingsBentoCard: {
-    borderRadius: 20,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
-    padding: 16,
-    marginBottom: 26,
+    padding: ResponsivePixels.size16,
+    marginBottom: ResponsivePixels.size26,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
@@ -546,10 +547,10 @@ const styles = StyleSheet.create({
   },
   innerDivider: {
     height: 1,
-    marginVertical: 16,
+    marginVertical: ResponsivePixels.size16,
   },
   voiceListCard: {
-    borderRadius: 20,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 4 },
@@ -557,7 +558,7 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 2,
     overflow: 'hidden',
-    marginBottom: 20,
+    marginBottom: ResponsivePixels.size20,
   },
   itemDivider: {
     height: 1,

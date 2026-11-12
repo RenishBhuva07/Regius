@@ -46,7 +46,7 @@ import {
 } from './Components';
 
 const { width: screenWidth } = Dimensions.get('window');
-const HEADER_HEIGHT = 52;
+const HEADER_HEIGHT = ResponsivePixels.size52;
 
 export const MilestoneFullScreenSheet: React.FC = () => {
   const insets = useSafeAreaInsets();
@@ -109,7 +109,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
 
   const headerRadius = scrollY.interpolate({
     inputRange: [0, 30],
-    outputRange: [0, 24],
+    outputRange: [0, ResponsivePixels.size24],
     extrapolate: 'clamp',
   });
 
@@ -127,7 +127,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
 
   const headerPaddingBottom = scrollY.interpolate({
     inputRange: [0, 30],
-    outputRange: [0, 8],
+    outputRange: [0, ResponsivePixels.size8],
     extrapolate: 'clamp',
   });
 
@@ -238,7 +238,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                 ]}
               >
                 <Crown
-                  size={18}
+                  size={ResponsivePixels.size18}
                   color={
                     isScrolled ? Colors.AccentYellow : Colors.HabitBurnishedAmber
                   }
@@ -298,7 +298,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
               accessibilityLabel="Close milestones sheet"
             >
               <X
-                size={18}
+                size={ResponsivePixels.size18}
                 color={isScrolled ? Colors.PureWhite : textPrimary}
                 strokeWidth={2.4}
               />
@@ -310,7 +310,11 @@ export const MilestoneFullScreenSheet: React.FC = () => {
           style={styles.scrollArea}
           contentContainerStyle={[
             styles.scrollContent,
-            { paddingBottom: Math.max(insets.bottom, 24) + 16 },
+            {
+              paddingBottom:
+                Math.max(insets.bottom, ResponsivePixels.size24) +
+                ResponsivePixels.size16,
+            },
           ]}
           showsVerticalScrollIndicator={false}
           onScroll={handleScroll}
@@ -373,7 +377,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                   ) : (
                     <View style={styles.maxTierSection}>
                       <Sparkles
-                        size={16}
+                        size={ResponsivePixels.size16}
                         color={Colors.AccentYellow}
                         strokeWidth={2}
                       />
@@ -387,7 +391,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                   <View style={styles.statsSummaryGrid}>
                     <View style={styles.statSummaryItem}>
                       <CheckSquare
-                        size={16}
+                        size={ResponsivePixels.size16}
                         color={Colors.AccentYellow}
                         strokeWidth={2.4}
                       />
@@ -399,7 +403,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                     <View style={styles.statDivider} />
                     <View style={styles.statSummaryItem}>
                       <Bell
-                        size={16}
+                        size={ResponsivePixels.size16}
                         color={Colors.AccentGreen}
                         strokeWidth={2.4}
                       />
@@ -411,7 +415,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                     <View style={styles.statDivider} />
                     <View style={styles.statSummaryItem}>
                       <Activity
-                        size={16}
+                        size={ResponsivePixels.size16}
                         color={Colors.LavenderPurple}
                         strokeWidth={2.4}
                       />
@@ -444,7 +448,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
           >
             <View style={styles.xpGuideHeader}>
               <Zap
-                size={15}
+                size={ResponsivePixels.size15}
                 color={Colors.HabitBurnishedAmber}
                 strokeWidth={2.4}
               />
@@ -507,7 +511,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                 },
               ]}
             >
-              <Zap size={11} color={Colors.AccentYellow} strokeWidth={2.6} />
+              <Zap size={ResponsivePixels.size11} color={Colors.AccentYellow} strokeWidth={2.6} />
               <Text style={[styles.totalXpPillText, { color: textPrimary }]}>
                 {totalXp} XP
               </Text>
@@ -620,16 +624,16 @@ const styles = StyleSheet.create({
   headerTitleWrap: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 12,
+    gap: ResponsivePixels.size12,
     flex: 1,
   },
   headerTextCol: {
     flex: 1,
   },
   headerIconBadge: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: ResponsivePixels.size36,
+    height: ResponsivePixels.size36,
+    borderRadius: ResponsivePixels.size18,
     backgroundColor: Colors.ToastWarningBadgeBgLight,
     alignItems: 'center',
     justifyContent: 'center',
@@ -637,27 +641,27 @@ const styles = StyleSheet.create({
   titleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   headerTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 16,
+    fontSize: ResponsivePixels.size16,
   },
   headerTitleScrolled: {
     color: Colors.PureWhite,
   },
   headerSubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
-    marginTop: 1,
+    fontSize: ResponsivePixels.size11,
+    marginTop: ResponsivePixels.size1,
   },
   headerSubtitleScrolled: {
     color: withAlpha(Colors.PureWhite, 0.85),
   },
   closeBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: ResponsivePixels.size38,
+    height: ResponsivePixels.size38,
+    borderRadius: ResponsivePixels.size19,
     borderWidth: 1.5,
     borderBottomWidth: 3,
     alignItems: 'center',
@@ -677,15 +681,15 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     paddingTop: ResponsivePixels.size16,
-    paddingBottom: 60,
+    paddingBottom: ResponsivePixels.size60,
   },
   heroOuterWrapper: {
-    paddingHorizontal: 10,
+    paddingHorizontal: ResponsivePixels.size10,
     marginBottom: ResponsivePixels.size20,
   },
   cardShadowWrapper: {
     backgroundColor: Colors.NeroBlack,
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.28,
@@ -694,7 +698,7 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: Colors.NeroBlack,
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     borderWidth: 4,
     borderColor: withAlpha(Colors.PureWhite, 0.9),
     overflow: 'hidden',
@@ -711,29 +715,29 @@ const styles = StyleSheet.create({
   },
   heroLeft: {
     flex: 1,
-    paddingRight: 12,
+    paddingRight: ResponsivePixels.size12,
   },
   tierBadgeRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 4,
+    gap: ResponsivePixels.size8,
+    marginBottom: ResponsivePixels.size4,
   },
   heroTierTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 20,
+    fontSize: ResponsivePixels.size20,
     color: Colors.CreamBackground,
   },
   heroSubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: withAlpha(Colors.PureWhite, 0.7),
-    lineHeight: 16,
+    lineHeight: ResponsivePixels.size16,
   },
   xpCircleBadge: {
-    width: 68,
-    height: 68,
-    borderRadius: 34,
+    width: ResponsivePixels.size68,
+    height: ResponsivePixels.size68,
+    borderRadius: ResponsivePixels.size34,
     backgroundColor: withAlpha(Colors.AccentYellow, 0.15),
     borderWidth: 2,
     borderColor: Colors.AccentYellow,
@@ -742,12 +746,12 @@ const styles = StyleSheet.create({
   },
   xpAmountText: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 18,
+    fontSize: ResponsivePixels.size18,
     color: Colors.AccentYellow,
   },
   xpUnitText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     color: withAlpha(Colors.PureWhite, 0.7),
   },
   progressSection: {
@@ -756,37 +760,37 @@ const styles = StyleSheet.create({
   progressLabelRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 6,
+    marginBottom: ResponsivePixels.size6,
   },
   progressLabelLeft: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: withAlpha(Colors.PureWhite, 0.75),
   },
   progressLabelRight: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: Colors.AccentYellow,
   },
   progressBarTrack: {
-    height: 6,
-    borderRadius: 3,
+    height: ResponsivePixels.size6,
+    borderRadius: ResponsivePixels.size3,
     backgroundColor: withAlpha(Colors.PureWhite, 0.15),
     overflow: 'hidden',
   },
   progressBarFill: {
     height: '100%',
-    borderRadius: 3,
+    borderRadius: ResponsivePixels.size3,
   },
   maxTierSection: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
     marginBottom: ResponsivePixels.size16,
   },
   maxTierText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.AccentYellow,
   },
   statsSummaryGrid: {
@@ -803,24 +807,24 @@ const styles = StyleSheet.create({
   },
   statSummaryVal: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 16,
+    fontSize: ResponsivePixels.size16,
     color: Colors.PureWhite,
-    marginTop: 4,
-    marginBottom: 1,
+    marginTop: ResponsivePixels.size4,
+    marginBottom: ResponsivePixels.size1,
   },
   statSummaryLbl: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     color: withAlpha(Colors.PureWhite, 0.65),
   },
   statDivider: {
     width: 1,
-    height: 24,
+    height: ResponsivePixels.size24,
     backgroundColor: withAlpha(Colors.PureWhite, 0.15),
   },
   xpGuideBox: {
     marginHorizontal: ResponsivePixels.size16,
-    borderRadius: 20,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
     borderBottomWidth: 3.5,
     padding: ResponsivePixels.size16,
@@ -833,21 +837,21 @@ const styles = StyleSheet.create({
   xpGuideHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 8,
+    gap: ResponsivePixels.size8,
+    marginBottom: ResponsivePixels.size8,
   },
   xpGuideTitle: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
   },
   xpGuideRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 4,
+    marginTop: ResponsivePixels.size4,
   },
   xpGuideItem: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
   },
   xpHighlight: {
     fontFamily: Fonts.poppins.semiBold,
@@ -861,26 +865,26 @@ const styles = StyleSheet.create({
   },
   roadmapHeading: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     letterSpacing: 1.1,
   },
   roadmapSubheading: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 10,
-    marginTop: 1,
+    fontSize: ResponsivePixels.size10,
+    marginTop: ResponsivePixels.size1,
   },
   totalXpPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 12,
+    gap: ResponsivePixels.size4,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size3,
+    borderRadius: ResponsivePixels.size12,
     borderWidth: 1,
   },
   totalXpPillText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
   },
 
   // Footer watermark styles
@@ -901,26 +905,26 @@ const styles = StyleSheet.create({
   },
   footerWatermarkText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 34,
-    lineHeight: 42,
+    fontSize: ResponsivePixels.size34,
+    lineHeight: ResponsivePixels.size42,
     letterSpacing: -1.2,
   },
   craftedWithRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 18,
+    marginTop: ResponsivePixels.size18,
   },
   craftedWithText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
   },
   craftedWithHeart: {
-    fontSize: 13.5,
+    fontSize: ResponsivePixels.size13_5,
   },
   footerDoodleWrapper: {
-    marginLeft: 8,
+    marginLeft: ResponsivePixels.size8,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 6,
+    marginTop: ResponsivePixels.size6,
   },
 });

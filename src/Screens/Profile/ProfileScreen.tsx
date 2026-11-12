@@ -147,7 +147,7 @@ export const ProfileScreen: React.FC = () => {
           style={styles.scrollView}
           contentContainerStyle={[
             styles.scrollContent,
-            { paddingBottom: insets.bottom + 100 },
+            { paddingBottom: insets.bottom + ResponsivePixels.size100 },
           ]}
           showsVerticalScrollIndicator={false}
           onScroll={handleScroll}
@@ -193,7 +193,7 @@ export const ProfileScreen: React.FC = () => {
           accessibilityLabel="Save Profile Changes"
           icon={
             <Check
-              size={18}
+              size={ResponsivePixels.size18}
               color={
                 themeColors.ButtonText ||
                 (isDarkMode ? Colors.DarkBackground : Colors.PureWhite)

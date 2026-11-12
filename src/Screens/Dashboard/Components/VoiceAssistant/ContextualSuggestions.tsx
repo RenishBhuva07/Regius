@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { Fonts } from '../../../../Theme/fonts';
 import { Colors } from '../../../../Assets/StyleUtilities/Colors';
 import { VoiceAssistantTheme } from './types';
+import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface ContextualSuggestionsProps {
   onSelectSuggestion: (command: string) => void;
@@ -58,31 +59,31 @@ export const ContextualSuggestions: React.FC<ContextualSuggestionsProps> = ({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    paddingHorizontal: 20,
-    marginTop: 14,
-    marginBottom: 6,
+    paddingHorizontal: ResponsivePixels.size20,
+    marginTop: ResponsivePixels.size14,
+    marginBottom: ResponsivePixels.size6,
     alignItems: 'center',
   },
   heading: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     letterSpacing: 0.8,
-    marginBottom: 8,
+    marginBottom: ResponsivePixels.size8,
   },
   suggestionsList: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: ResponsivePixels.size8,
     justifyContent: 'center',
   },
   pill: {
-    paddingHorizontal: 14,
-    paddingVertical: 7,
-    borderRadius: 16,
+    paddingHorizontal: ResponsivePixels.size14,
+    paddingVertical: ResponsivePixels.size7,
+    borderRadius: ResponsivePixels.size16,
     borderWidth: 1,
   },
   pillText: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
   },
 });

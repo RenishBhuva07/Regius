@@ -280,7 +280,8 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingTop: insets.top + SCREEN_HEADER_HEIGHT + 10,
+            paddingTop:
+              insets.top + SCREEN_HEADER_HEIGHT + ResponsivePixels.size10,
             paddingBottom: 0,
           },
         ]}
@@ -317,7 +318,7 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
           backgroundSvg={<ReminderSectionBackgroundSvg />}
           onPressAdd={openReminderModal}
           addAccessibilityLabel="Add Reminder"
-          bottomPadding={insets.bottom + 130}
+          bottomPadding={insets.bottom + ResponsivePixels.size130}
           containerStyle={styles.reminderSection}
         >
           {/* Reminders List or Empty State */}
@@ -337,7 +338,7 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
                 style={styles.addEmptyBtn}
                 onPress={openReminderModal}
               >
-                <Plus size={15} color={Colors.PureWhite} strokeWidth={2.5} />
+                <Plus size={ResponsivePixels.size15} color={Colors.PureWhite} strokeWidth={2.5} />
                 <Text style={styles.addEmptyBtnText}>Add Reminder</Text>
               </TouchableOpacity>
             </View>
@@ -479,24 +480,24 @@ const styles = StyleSheet.create({
     // padding applied dynamically with safe insets
   },
   bentoCardWrapper: {
-    paddingTop: 5,
-    paddingHorizontal: 10,
-    marginBottom: 4,
+    paddingTop: ResponsivePixels.size5,
+    paddingHorizontal: ResponsivePixels.size10,
+    marginBottom: ResponsivePixels.size4,
   },
 
   // Reminders Section Container matching TasksScreen & HabitsScreen
   reminderSection: {
     backgroundColor: Colors.SoftCream,
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
+    borderTopLeftRadius: ResponsivePixels.size32,
+    borderTopRightRadius: ResponsivePixels.size32,
     borderWidth: 1.5,
     borderTopColor: Colors.WarmNavBevelTop,
     borderLeftColor: Colors.WarmNavBevelSide,
     borderRightColor: Colors.WarmNavBevelSide,
     borderBottomWidth: 0,
-    paddingHorizontal: 8,
-    paddingTop: 40,
-    marginTop: 26,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingTop: ResponsivePixels.size40,
+    marginTop: ResponsivePixels.size26,
     flex: 1,
     position: 'relative',
     ...Platform.select({
@@ -513,18 +514,18 @@ const styles = StyleSheet.create({
   },
   reminderSectionBgWrapper: {
     ...StyleSheet.absoluteFill,
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
+    borderTopLeftRadius: ResponsivePixels.size32,
+    borderTopRightRadius: ResponsivePixels.size32,
     overflow: 'hidden',
   },
   flowHeaderBadge: {
     position: 'absolute',
-    top: -24,
+    top: -ResponsivePixels.size24,
     alignSelf: 'center',
     backgroundColor: Colors.NeroBlack,
-    paddingHorizontal: 22,
-    paddingVertical: 7,
-    borderRadius: 22,
+    paddingHorizontal: ResponsivePixels.size22,
+    paddingVertical: ResponsivePixels.size7,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
     borderTopColor: Colors.DarkBevelTop,
     borderLeftColor: Colors.DarkBorder,
@@ -543,25 +544,25 @@ const styles = StyleSheet.create({
   },
   flowTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 14.5,
+    fontSize: ResponsivePixels.size14_5,
     color: Colors.PureWhite,
     letterSpacing: -0.1,
     textAlign: 'center',
   },
   flowSubtitle: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     color: Colors.CoolSilverSubtitle,
-    marginTop: 1,
+    marginTop: ResponsivePixels.size1,
     textAlign: 'center',
   },
   addReminderFloatingBtn: {
     position: 'absolute',
-    top: -21,
-    right: 18,
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    top: -ResponsivePixels.size21,
+    right: ResponsivePixels.size18,
+    width: ResponsivePixels.size42,
+    height: ResponsivePixels.size42,
+    borderRadius: ResponsivePixels.size21,
     backgroundColor: Colors.NeroBlack,
     borderWidth: 1.5,
     borderTopColor: Colors.DarkBevelTop,
@@ -587,15 +588,15 @@ const styles = StyleSheet.create({
     overflow: 'visible',
   },
   listContent: {
-    gap: 12,
-    paddingTop: 10,
+    gap: ResponsivePixels.size12,
+    paddingTop: ResponsivePixels.size10,
     paddingHorizontal: 0,
-    paddingBottom: 20,
+    paddingBottom: ResponsivePixels.size20,
     overflow: 'visible',
   },
   selectAllBtn: {
     backgroundColor: Colors.MidnightCharcoal,
-    borderRadius: 50,
+    borderRadius: ResponsivePixels.size50,
     paddingVertical: ResponsivePixels.size14,
     paddingHorizontal: ResponsivePixels.size36,
     alignItems: 'center',
@@ -618,7 +619,7 @@ const styles = StyleSheet.create({
   selectAllText: {
     ...Typography.bodyMediumPoppinsSemiBold,
     color: Colors.PureWhite,
-    fontSize: 13.5,
+    fontSize: ResponsivePixels.size13_5,
   },
 
   // Footer watermark styles
@@ -639,66 +640,66 @@ const styles = StyleSheet.create({
   },
   liveItUpText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 34,
-    lineHeight: 42,
+    fontSize: ResponsivePixels.size34,
+    lineHeight: ResponsivePixels.size42,
     color: Colors.MilestoneSlate,
     letterSpacing: -1.2,
   },
   craftedWithRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 18,
+    marginTop: ResponsivePixels.size18,
   },
   craftedWithText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     color: Colors.MilestoneSlate,
   },
   craftedWithHeart: {
-    fontSize: 13.5,
+    fontSize: ResponsivePixels.size13_5,
   },
   footerDoodleWrapper: {
-    marginLeft: 8,
+    marginLeft: ResponsivePixels.size8,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 6,
+    marginTop: ResponsivePixels.size6,
   },
 
   // Empty State
   emptyContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 40,
-    paddingHorizontal: 20,
-    gap: 8,
+    paddingVertical: ResponsivePixels.size40,
+    paddingHorizontal: ResponsivePixels.size20,
+    gap: ResponsivePixels.size8,
   },
   emptyTitle: {
     ...Typography.bodyMediumPoppinsSemiBold,
     color: Colors.Gray700,
-    fontSize: 15,
-    marginTop: 6,
+    fontSize: ResponsivePixels.size15,
+    marginTop: ResponsivePixels.size6,
   },
   emptySubtitle: {
     ...Typography.bodySmallPoppinsRegular,
     color: Colors.Gray400,
     textAlign: 'center',
-    paddingHorizontal: 20,
-    lineHeight: 18,
+    paddingHorizontal: ResponsivePixels.size20,
+    lineHeight: ResponsivePixels.size18,
   },
   addEmptyBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
     backgroundColor: Colors.MidnightCharcoal,
     paddingHorizontal: ResponsivePixels.size20,
     paddingVertical: ResponsivePixels.size10,
-    borderRadius: 50,
-    marginTop: 12,
+    borderRadius: ResponsivePixels.size50,
+    marginTop: ResponsivePixels.size12,
   },
   addEmptyBtnText: {
     ...Typography.bodySmallPoppinsSemiBold,
     color: Colors.PureWhite,
-    fontSize: 12.5,
+    fontSize: ResponsivePixels.size12_5,
   },
 });
 

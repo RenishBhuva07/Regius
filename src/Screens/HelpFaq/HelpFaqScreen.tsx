@@ -36,6 +36,7 @@ import { useScrollReactiveHeader } from '../../Common/useScrollReactiveHeader';
 import { SearchInputBar } from '../../Common/SearchInputBar';
 import { useTheme } from '../../Theme/ThemeContext';
 import { SettingsBackgroundSvg } from '../Settings/Components/SettingsBackgroundSvg';
+import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 
 const HEADER_HEIGHT = SUB_SCREEN_HEADER_HEIGHT;
 
@@ -187,8 +188,8 @@ export const HelpFaqScreen: React.FC = () => {
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingTop: insets.top + HEADER_HEIGHT + 14,
-            paddingBottom: insets.bottom + 48,
+            paddingTop: insets.top + HEADER_HEIGHT + ResponsivePixels.size14,
+            paddingBottom: insets.bottom + ResponsivePixels.size48,
           },
         ]}
         showsVerticalScrollIndicator={false}
@@ -201,7 +202,7 @@ export const HelpFaqScreen: React.FC = () => {
             <View style={styles.heroHeaderRow}>
               <View style={styles.heroTagRow}>
                 <Sparkles
-                  size={13}
+                  size={ResponsivePixels.size13}
                   color={Colors.AccentYellow}
                   strokeWidth={2.4}
                 />
@@ -228,7 +229,7 @@ export const HelpFaqScreen: React.FC = () => {
                 accessibilityLabel="Ask Voice Assistant"
               >
                 <Mic
-                  size={15}
+                  size={ResponsivePixels.size15}
                   color={Colors.LavenderPurple}
                   strokeWidth={2.4}
                 />
@@ -243,7 +244,7 @@ export const HelpFaqScreen: React.FC = () => {
                 accessibilityLabel="Contact Concierge Desk"
               >
                 <Mail
-                  size={15}
+                  size={ResponsivePixels.size15}
                   color={Colors.AccentYellow}
                   strokeWidth={2.4}
                 />
@@ -258,7 +259,7 @@ export const HelpFaqScreen: React.FC = () => {
           value={searchQuery}
           onChangeText={setSearchQuery}
           placeholder="Search guides, gestures, commands..."
-          containerStyle={{ marginBottom: 16 }}
+          containerStyle={{ marginBottom: ResponsivePixels.size16 }}
         />
 
         {/* 4-Facet Knowledge Domains */}
@@ -349,7 +350,7 @@ export const HelpFaqScreen: React.FC = () => {
                     ]}
                   >
                     <IconComp
-                      size={16}
+                      size={ResponsivePixels.size16}
                       color={domain.accent}
                       strokeWidth={2.4}
                     />
@@ -459,13 +460,13 @@ export const HelpFaqScreen: React.FC = () => {
                     >
                       {isExpanded ? (
                         <ChevronUp
-                          size={15}
+                          size={ResponsivePixels.size15}
                           color={accentColor}
                           strokeWidth={2.4}
                         />
                       ) : (
                         <ChevronDown
-                          size={15}
+                          size={ResponsivePixels.size15}
                           color={textSecondary}
                           strokeWidth={2.4}
                         />
@@ -501,7 +502,7 @@ export const HelpFaqScreen: React.FC = () => {
                           ]}
                         >
                           <Sparkles
-                            size={14}
+                            size={ResponsivePixels.size14}
                             color={Colors.LavenderPurple}
                             strokeWidth={2.4}
                           />
@@ -543,7 +544,7 @@ export const HelpFaqScreen: React.FC = () => {
               ]}
             >
               <MessageSquare
-                size={22}
+                size={ResponsivePixels.size22}
                 color={Colors.LavenderPurple}
                 strokeWidth={2.2}
               />
@@ -581,13 +582,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: 16,
+    paddingHorizontal: ResponsivePixels.size16,
   },
   /* 2-Layer Hero Bento */
   heroCardShadowWrapper: {
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     backgroundColor: Colors.NeroBlack,
-    marginBottom: 16,
+    marginBottom: ResponsivePixels.size16,
     ...Platform.select({
       ios: {
         shadowColor: Colors.PureBlack,
@@ -602,64 +603,64 @@ const styles = StyleSheet.create({
   },
   heroCard: {
     backgroundColor: Colors.NeroBlack,
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     borderWidth: 4,
     borderColor: withAlpha(Colors.PureWhite, 0.9),
     overflow: 'hidden',
-    padding: 18,
+    padding: ResponsivePixels.size18,
   },
   heroHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: ResponsivePixels.size10,
   },
   heroTagRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   heroTagText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     color: Colors.AccentYellow,
     letterSpacing: 1,
   },
   heroTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 21,
+    fontSize: ResponsivePixels.size21,
     color: Colors.PureWhite,
     letterSpacing: -0.4,
-    lineHeight: 26,
-    marginBottom: 6,
+    lineHeight: ResponsivePixels.size26,
+    marginBottom: ResponsivePixels.size6,
   },
   heroSubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.SteelMist,
-    lineHeight: 18,
-    marginBottom: 16,
+    lineHeight: ResponsivePixels.size18,
+    marginBottom: ResponsivePixels.size16,
   },
   heroActionsRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: ResponsivePixels.size10,
   },
   heroVoiceBtn: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
     backgroundColor: Colors.LanguageAuditionDarkBg,
     borderWidth: 1,
     borderColor: withAlpha(Colors.LavenderPurple, 0.35),
-    borderRadius: 20,
-    paddingVertical: 10,
+    borderRadius: ResponsivePixels.size20,
+    paddingVertical: ResponsivePixels.size10,
   },
   heroVoiceBtnText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12.5,
+    fontSize: ResponsivePixels.size12_5,
     color: Colors.PureWhite,
   },
   heroEmailBtn: {
@@ -667,28 +668,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
     backgroundColor: Colors.LanguageAuditionDarkBg,
     borderWidth: 1,
     borderColor: withAlpha(Colors.AccentYellow, 0.35),
-    borderRadius: 20,
-    paddingVertical: 10,
+    borderRadius: ResponsivePixels.size20,
+    paddingVertical: ResponsivePixels.size10,
   },
   heroEmailBtnText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12.5,
+    fontSize: ResponsivePixels.size12_5,
     color: Colors.PureWhite,
   },
   /* Search input */
   searchWrap: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: ResponsivePixels.size16,
     borderWidth: 1.5,
-    paddingHorizontal: 14,
-    height: 48,
-    gap: 10,
-    marginBottom: 16,
+    paddingHorizontal: ResponsivePixels.size14,
+    height: ResponsivePixels.size48,
+    gap: ResponsivePixels.size10,
+    marginBottom: ResponsivePixels.size16,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.04,
@@ -698,80 +699,80 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontFamily: Fonts.poppins.regular,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     padding: 0,
   },
   searchClearBtn: {
-    padding: 4,
+    padding: ResponsivePixels.size4,
   },
   /* Knowledge domains 4-facet grid */
   domainsSection: {
-    marginBottom: 20,
+    marginBottom: ResponsivePixels.size20,
   },
   sectionHeading: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     letterSpacing: 0.8,
-    marginBottom: 10,
-    marginLeft: 2,
+    marginBottom: ResponsivePixels.size10,
+    marginLeft: ResponsivePixels.size2,
   },
   domainsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 10,
+    gap: ResponsivePixels.size10,
   },
   domainCard: {
     width: '48.5%',
-    borderRadius: 18,
-    padding: 12,
+    borderRadius: ResponsivePixels.size18,
+    padding: ResponsivePixels.size12,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.08,
     shadowRadius: 5,
     elevation: 2,
   },
   domainIconCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: ResponsivePixels.size32,
+    height: ResponsivePixels.size32,
+    borderRadius: ResponsivePixels.size16,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 8,
+    marginBottom: ResponsivePixels.size8,
   },
   domainLabel: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12.5,
-    marginBottom: 2,
+    fontSize: ResponsivePixels.size12_5,
+    marginBottom: ResponsivePixels.size2,
   },
   domainCount: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
   },
   /* FAQ list */
   faqSection: {
-    marginBottom: 20,
+    marginBottom: ResponsivePixels.size20,
   },
   faqHeaderBar: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 10,
-    paddingHorizontal: 2,
+    marginBottom: ResponsivePixels.size10,
+    paddingHorizontal: ResponsivePixels.size2,
   },
   clearFilterText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: Colors.LavenderPurple,
   },
   faqList: {
-    gap: 10,
+    gap: ResponsivePixels.size10,
   },
   faqCard: {
-    borderRadius: 18,
+    borderRadius: ResponsivePixels.size18,
     borderWidth: 1.5,
-    paddingVertical: 14,
-    paddingHorizontal: 16,
-    paddingLeft: 20,
+    paddingVertical: ResponsivePixels.size14,
+    paddingHorizontal: ResponsivePixels.size16,
+    paddingLeft: ResponsivePixels.size20,
     position: 'relative',
     overflow: 'hidden',
     shadowOffset: { width: 0, height: 3 },
@@ -784,67 +785,67 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
     left: 0,
-    width: 4,
-    borderTopLeftRadius: 18,
-    borderBottomLeftRadius: 18,
+    width: ResponsivePixels.size4,
+    borderTopLeftRadius: ResponsivePixels.size18,
+    borderBottomLeftRadius: ResponsivePixels.size18,
   },
   faqHeaderBtn: {
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
-    gap: 10,
+    gap: ResponsivePixels.size10,
   },
   faqHeaderLeft: {
     flex: 1,
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   faqQuestionText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14,
-    lineHeight: 20,
+    fontSize: ResponsivePixels.size14,
+    lineHeight: ResponsivePixels.size20,
   },
   chevronWrap: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: ResponsivePixels.size30,
+    height: ResponsivePixels.size30,
+    borderRadius: ResponsivePixels.size15,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 2,
+    marginTop: ResponsivePixels.size2,
   },
   faqAnswerWrap: {
-    marginTop: 12,
-    paddingTop: 10,
+    marginTop: ResponsivePixels.size12,
+    paddingTop: ResponsivePixels.size10,
     borderTopWidth: StyleSheet.hairlineWidth,
-    gap: 10,
+    gap: ResponsivePixels.size10,
   },
   faqAnswerText: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12.5,
-    lineHeight: 19,
+    fontSize: ResponsivePixels.size12_5,
+    lineHeight: ResponsivePixels.size19,
   },
   tipCard: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 8,
-    borderRadius: 12,
+    gap: ResponsivePixels.size8,
+    borderRadius: ResponsivePixels.size12,
     borderWidth: 1,
-    padding: 10,
+    padding: ResponsivePixels.size10,
   },
   tipText: {
     flex: 1,
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
-    lineHeight: 16,
+    fontSize: ResponsivePixels.size11_5,
+    lineHeight: ResponsivePixels.size16,
   },
   tipBold: {
     fontFamily: Fonts.poppins.bold,
   },
   /* Bottom concierge desk */
   conciergeDeskCard: {
-    borderRadius: 20,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
-    padding: 16,
+    padding: ResponsivePixels.size16,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
@@ -854,13 +855,13 @@ const styles = StyleSheet.create({
   deskTopRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 12,
-    marginBottom: 14,
+    gap: ResponsivePixels.size12,
+    marginBottom: ResponsivePixels.size14,
   },
   deskIconCircle: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: ResponsivePixels.size42,
+    height: ResponsivePixels.size42,
+    borderRadius: ResponsivePixels.size21,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -869,13 +870,13 @@ const styles = StyleSheet.create({
   },
   deskTitle: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14.5,
-    marginBottom: 2,
+    fontSize: ResponsivePixels.size14_5,
+    marginBottom: ResponsivePixels.size2,
   },
   deskDesc: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
-    lineHeight: 16,
+    fontSize: ResponsivePixels.size11_5,
+    lineHeight: ResponsivePixels.size16,
   },
   deskButton: {
     width: '100%',

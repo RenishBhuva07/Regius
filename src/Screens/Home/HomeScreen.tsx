@@ -21,8 +21,8 @@ import { useTaskReminder } from '../../Context/TaskReminderContext';
 // Inline SVGs
 
 const OfficeBagIcon: React.FC<{ width?: number; height?: number }> = ({
-  width = 24,
-  height = 24,
+  width = ResponsivePixels.size24,
+  height = ResponsivePixels.size24,
 }) => (
   <Svg width={width} height={height} viewBox="23 19 24 24" fill="none">
     <Path
@@ -126,7 +126,10 @@ const HomeScreen: React.FC = () => {
             <Text style={styles.headerTitle}>Home</Text>
           </View>
           <View style={styles.avatarRing}>
-            <SVGS.RegiusAvatar width={36} height={36} />
+            <SVGS.RegiusAvatar
+              width={ResponsivePixels.size36}
+              height={ResponsivePixels.size36}
+            />
           </View>
         </View>
 
@@ -178,7 +181,7 @@ const HomeScreen: React.FC = () => {
           <View style={styles.sectionActions}>
             <TouchableOpacity activeOpacity={0.7} style={styles.filterBtn}>
               <Filter
-                size={16}
+                size={ResponsivePixels.size16}
                 color={Colors.MidnightCharcoal}
                 strokeWidth={2.2}
               />
@@ -221,7 +224,10 @@ const HomeScreen: React.FC = () => {
                     },
                   ]}
                 >
-                  <cat.Icon width={24} height={24} />
+                  <cat.Icon
+                    width={ResponsivePixels.size24}
+                    height={ResponsivePixels.size24}
+                  />
                 </View>
                 <Text style={styles.categoryLabel}>{cat.label}</Text>
                 <Text style={styles.categoryCount}>{cat.taskCount}</Text>
@@ -267,13 +273,13 @@ const HomeScreen: React.FC = () => {
                     <View style={styles.taskIconContainer}>
                       {task.iconType === 'mail' ? (
                         <Mail
-                          size={19}
+                          size={ResponsivePixels.size19}
                           color={Colors.DarkIconSlate}
                           strokeWidth={2.2}
                         />
                       ) : (
                         <Users
-                          size={19}
+                          size={ResponsivePixels.size19}
                           color={Colors.DarkIconSlate}
                           strokeWidth={2.2}
                         />
@@ -292,7 +298,7 @@ const HomeScreen: React.FC = () => {
                   >
                     {isChecked ? (
                       <Check
-                        size={14}
+                        size={ResponsivePixels.size14}
                         color={Colors.AccentGreen}
                         strokeWidth={3}
                       />
@@ -328,7 +334,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingBottom: 120,
+    paddingBottom: ResponsivePixels.size120,
   },
 
   // Header
@@ -346,25 +352,25 @@ const styles = StyleSheet.create({
     gap: ResponsivePixels.size14,
   },
   menuIcon: {
-    gap: 4.5,
+    gap: ResponsivePixels.size4_5,
     justifyContent: 'center',
-    paddingVertical: 4,
+    paddingVertical: ResponsivePixels.size4,
   },
   menuLine: {
-    width: 18,
-    height: 2.2,
+    width: ResponsivePixels.size18,
+    height: ResponsivePixels.size2_2,
     backgroundColor: Colors.MidnightCharcoal,
-    borderRadius: 2,
+    borderRadius: ResponsivePixels.size2,
   },
   headerTitle: {
     ...Typography.h1RanadeBold,
     color: Colors.PureBlack,
-    fontSize: 26,
+    fontSize: ResponsivePixels.size26,
   },
   avatarRing: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: ResponsivePixels.size44,
+    height: ResponsivePixels.size44,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 2,
     borderColor: Colors.RingBorder,
     alignItems: 'center',
@@ -378,13 +384,13 @@ const styles = StyleSheet.create({
     marginHorizontal: ResponsivePixels.size20,
     marginTop: ResponsivePixels.size16,
     backgroundColor: Colors.MidnightCharcoal,
-    borderRadius: 50,
-    padding: 4,
+    borderRadius: ResponsivePixels.size50,
+    padding: ResponsivePixels.size4,
   },
   toggleTab: {
     flex: 1,
     paddingVertical: ResponsivePixels.size10,
-    borderRadius: 50,
+    borderRadius: ResponsivePixels.size50,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -393,7 +399,7 @@ const styles = StyleSheet.create({
   },
   toggleText: {
     ...Typography.bodyMediumPoppinsSemiBold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
   },
   toggleTextActive: {
     color: Colors.MidnightCharcoal,
@@ -414,7 +420,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     ...Typography.h6Bold,
     color: Colors.PureBlack,
-    fontSize: 18,
+    fontSize: ResponsivePixels.size18,
   },
   sectionActions: {
     flexDirection: 'row',
@@ -422,9 +428,9 @@ const styles = StyleSheet.create({
     gap: ResponsivePixels.size10,
   },
   filterBtn: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: ResponsivePixels.size34,
+    height: ResponsivePixels.size34,
+    borderRadius: ResponsivePixels.size17,
     backgroundColor: Colors.CoolNeutralSurface,
     alignItems: 'center',
     justifyContent: 'center',
@@ -433,12 +439,12 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.MidnightCharcoal,
     paddingHorizontal: ResponsivePixels.size16,
     paddingVertical: ResponsivePixels.size8,
-    borderRadius: 50,
+    borderRadius: ResponsivePixels.size50,
   },
   addBtnText: {
     ...Typography.bodySmallPoppinsSemiBold,
     color: Colors.PureWhite,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
   },
 
   // Categories
@@ -453,9 +459,9 @@ const styles = StyleSheet.create({
     gap: ResponsivePixels.size14,
   },
   categoryCard: {
-    width: 124,
-    borderRadius: 23,
-    borderTopRightRadius: 63,
+    width: ResponsivePixels.size124,
+    borderRadius: ResponsivePixels.size23,
+    borderTopRightRadius: ResponsivePixels.size63,
     padding: ResponsivePixels.size16,
     paddingBottom: ResponsivePixels.size18,
     gap: ResponsivePixels.size6,
@@ -477,9 +483,9 @@ const styles = StyleSheet.create({
     }),
   },
   categoryIconWrap: {
-    width: 46,
-    height: 46,
-    borderRadius: 23,
+    width: ResponsivePixels.size46,
+    height: ResponsivePixels.size46,
+    borderRadius: ResponsivePixels.size23,
     backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
     alignItems: 'center',
@@ -499,12 +505,12 @@ const styles = StyleSheet.create({
   categoryLabel: {
     ...Typography.bodyMediumPoppinsSemiBold,
     color: Colors.PureBlack,
-    fontSize: 15,
+    fontSize: ResponsivePixels.size15,
   },
   categoryCount: {
     ...Typography.bodySmallPoppinsRegular,
     color: Colors.SubtitleGray,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
   },
   categoryAccentWrap: {
     position: 'absolute',
@@ -514,17 +520,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   categoryAccent: {
-    height: 4,
-    width: 48,
-    borderTopLeftRadius: 3,
-    borderTopRightRadius: 3,
+    height: ResponsivePixels.size4,
+    width: ResponsivePixels.size48,
+    borderTopLeftRadius: ResponsivePixels.size3,
+    borderTopRightRadius: ResponsivePixels.size3,
   },
 
   // Task Section (LightGrey surface background)
   taskSection: {
     backgroundColor: Colors.LightGrey,
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
+    borderTopLeftRadius: ResponsivePixels.size32,
+    borderTopRightRadius: ResponsivePixels.size32,
     paddingHorizontal: ResponsivePixels.size20,
     paddingTop: ResponsivePixels.size24,
     paddingBottom: ResponsivePixels.size32,
@@ -539,18 +545,18 @@ const styles = StyleSheet.create({
   taskSectionTitle: {
     ...Typography.h6Bold,
     color: Colors.PureBlack,
-    fontSize: 18,
+    fontSize: ResponsivePixels.size18,
   },
   addTaskBtn: {
     backgroundColor: Colors.MidnightCharcoal,
     paddingHorizontal: ResponsivePixels.size16,
     paddingVertical: ResponsivePixels.size8,
-    borderRadius: 50,
+    borderRadius: ResponsivePixels.size50,
   },
   addTaskBtnText: {
     ...Typography.bodySmallPoppinsSemiBold,
     color: Colors.PureWhite,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
   },
 
   // Task Cards
@@ -559,7 +565,7 @@ const styles = StyleSheet.create({
   },
   taskCard: {
     backgroundColor: Colors.PureWhite,
-    borderRadius: 18,
+    borderRadius: ResponsivePixels.size18,
     paddingHorizontal: ResponsivePixels.size16,
     paddingVertical: ResponsivePixels.size16,
     flexDirection: 'row',
@@ -584,22 +590,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   taskIconContainer: {
-    width: 32,
-    height: 32,
+    width: ResponsivePixels.size32,
+    height: ResponsivePixels.size32,
     alignItems: 'center',
     justifyContent: 'center',
   },
   taskLabel: {
     ...Typography.bodyMediumPoppinsMedium,
     color: Colors.PureBlack,
-    fontSize: 15,
+    fontSize: ResponsivePixels.size15,
   },
 
   // Checkboxes
   taskCheckbox: {
-    width: 24,
-    height: 24,
-    borderRadius: 6,
+    width: ResponsivePixels.size24,
+    height: ResponsivePixels.size24,
+    borderRadius: ResponsivePixels.size6,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -613,7 +619,7 @@ const styles = StyleSheet.create({
   // Select All Task
   selectAllBtn: {
     backgroundColor: Colors.MidnightCharcoal,
-    borderRadius: 50,
+    borderRadius: ResponsivePixels.size50,
     paddingVertical: ResponsivePixels.size14,
     paddingHorizontal: ResponsivePixels.size36,
     alignItems: 'center',
@@ -624,7 +630,7 @@ const styles = StyleSheet.create({
   selectAllText: {
     ...Typography.bodyMediumPoppinsSemiBold,
     color: Colors.PureWhite,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
   },
 });
 

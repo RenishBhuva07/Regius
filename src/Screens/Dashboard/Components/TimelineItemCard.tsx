@@ -49,6 +49,7 @@ export interface TimelineItem {
   originalId: string;
 }
 import { getCutoutCardPath } from '../../../Common/CutoutCardSvg';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 export { getCutoutCardPath };
 
@@ -73,10 +74,10 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
   const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
 
   // Responsive card size state for exact SVG path rendering
-  const initialW = Dimensions.get('window').width - 118;
+  const initialW = Dimensions.get('window').width - ResponsivePixels.size118;
   const [cardSize, setCardSize] = React.useState({
-    width: Math.max(initialW, 200),
-    height: 92,
+    width: Math.max(initialW, ResponsivePixels.size200),
+    height: ResponsivePixels.size92,
   });
 
   const handleCardLayout = React.useCallback((e: LayoutChangeEvent) => {
@@ -165,18 +166,18 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
       ? Colors.TimelineMutedGray
       : catStyle.iconColor;
     if (item.type === 'task') {
-      return <CheckCircle2 size={12} color={iconColor} strokeWidth={2.4} />;
+      return <CheckCircle2 size={ResponsivePixels.size12} color={iconColor} strokeWidth={2.4} />;
     }
     if (item.type === 'reminder') {
-      return <Bell size={12} color={iconColor} strokeWidth={2.2} />;
+      return <Bell size={ResponsivePixels.size12} color={iconColor} strokeWidth={2.2} />;
     }
     if (item.type === 'habit') {
-      return <Flame size={12} color={iconColor} strokeWidth={2.2} />;
+      return <Flame size={ResponsivePixels.size12} color={iconColor} strokeWidth={2.2} />;
     }
     if (item.isVoiceNudge) {
-      return <Mic size={12} color={iconColor} strokeWidth={2.4} />;
+      return <Mic size={ResponsivePixels.size12} color={iconColor} strokeWidth={2.4} />;
     }
-    return <CheckCircle2 size={12} color={iconColor} strokeWidth={2.4} />;
+    return <CheckCircle2 size={ResponsivePixels.size12} color={iconColor} strokeWidth={2.4} />;
   };
 
   return (
@@ -274,9 +275,9 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
             {!isCompleted && (
               <RadialGradient
                 id={`timelineItemAura-${item.id}`}
-                cx={cardSize.width - 55}
-                cy={25}
-                r={110}
+                cx={cardSize.width - ResponsivePixels.size55}
+                cy={ResponsivePixels.size25}
+                r={ResponsivePixels.size110}
                 gradientUnits="userSpaceOnUse"
               >
                 <Stop
@@ -325,15 +326,15 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
               />
               {/* Delicate starlight nodes */}
               <Circle
-                cx={cardSize.width - 66}
-                cy={16}
+                cx={cardSize.width - ResponsivePixels.size66}
+                cy={ResponsivePixels.size16}
                 r={1.6}
                 fill={catStyle.accent}
                 opacity={0.4}
               />
               <Circle
-                cx={cardSize.width - 80}
-                cy={30}
+                cx={cardSize.width - ResponsivePixels.size80}
+                cy={ResponsivePixels.size30}
                 r={1.3}
                 fill={catStyle.accent}
                 opacity={0.3}
@@ -356,7 +357,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
         {/* Floating Checkbox */}
         <TouchableOpacity
           activeOpacity={0.75}
-          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          hitSlop={{ top: ResponsivePixels.size8, bottom: ResponsivePixels.size8, left: ResponsivePixels.size8, right: ResponsivePixels.size8 }}
           onPress={() => onToggleComplete?.(item)}
           style={[
             styles.floatingCheckbox,
@@ -375,7 +376,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
           }`}
         >
           {isCompleted ? (
-            <Check size={14} color={Colors.GreenGracious} strokeWidth={3} />
+            <Check size={ResponsivePixels.size14} color={Colors.GreenGracious} strokeWidth={3} />
           ) : null}
         </TouchableOpacity>
 
@@ -421,9 +422,9 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
               ]}
             >
               <Clock
-                size={11}
+                size={ResponsivePixels.size11}
                 color={isCompleted ? Colors.Grey : catStyle.pillText}
-                style={{ marginRight: 4 }}
+                style={{ marginRight: ResponsivePixels.size4 }}
               />
               <Text
                 style={[
@@ -450,7 +451,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
                 size="sm"
                 icon={
                   <Bell
-                    size={10}
+                    size={ResponsivePixels.size10}
                     color={
                       item.category === 'Alert'
                         ? Colors.MoltenRust
@@ -464,7 +465,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
                 label="Voice Nudge"
                 variant="purple"
                 size="sm"
-                icon={<Sparkles size={10} color={Colors.LavenderPurple} />}
+                icon={<Sparkles size={ResponsivePixels.size10} color={Colors.LavenderPurple} />}
               />
             ) : (
               <Badge
@@ -484,13 +485,13 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'stretch',
-    marginBottom: 12,
+    marginBottom: ResponsivePixels.size12,
   },
   containerLast: {
-    marginBottom: 4,
+    marginBottom: ResponsivePixels.size4,
   },
   timeColumn: {
-    width: 40,
+    width: ResponsivePixels.size40,
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
@@ -498,25 +499,25 @@ const styles = StyleSheet.create({
   timeTextContainer: {
     position: 'absolute',
     bottom: '50%',
-    marginBottom: 15,
+    marginBottom: ResponsivePixels.size15,
     alignItems: 'center',
     backgroundColor: Colors.Transparent,
-    paddingHorizontal: 2,
-    borderRadius: 3,
+    paddingHorizontal: ResponsivePixels.size2,
+    borderRadius: ResponsivePixels.size3,
     zIndex: 0,
   },
   timeNumber: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: Colors.RegiusInk,
     letterSpacing: -0.2,
-    lineHeight: 15,
+    lineHeight: ResponsivePixels.size15,
   },
   timePeriod: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 9,
+    fontSize: ResponsivePixels.size9,
     color: Colors.TimelineMutedGray,
-    lineHeight: 12,
+    lineHeight: ResponsivePixels.size12,
   },
   timeCompletedText: {
     color: Colors.WarmStoneMuted,
@@ -524,8 +525,8 @@ const styles = StyleSheet.create({
   timelineLine: {
     position: 'absolute',
     top: 0,
-    bottom: -16,
-    width: 1.5,
+    bottom: -ResponsivePixels.size16,
+    width: ResponsivePixels.size1_5,
     backgroundColor: Colors.TimelineMutedIconBg,
   },
   timelineLineFirst: {
@@ -537,10 +538,10 @@ const styles = StyleSheet.create({
   nodeCircle: {
     position: 'absolute',
     top: '50%',
-    marginTop: -11,
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+    marginTop: -ResponsivePixels.size11,
+    width: ResponsivePixels.size22,
+    height: ResponsivePixels.size22,
+    borderRadius: ResponsivePixels.size11,
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 2,
@@ -557,7 +558,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     position: 'relative',
-    minHeight: 88,
+    minHeight: ResponsivePixels.size88,
     backgroundColor: Colors.Transparent,
     ...Platform.select({
       ios: {
@@ -583,11 +584,11 @@ const styles = StyleSheet.create({
   },
   floatingCheckbox: {
     position: 'absolute',
-    top: 9,
-    right: 9,
-    width: 26,
-    height: 26,
-    borderRadius: 13, // Perfectly round circular checkbox outside the card
+    top: ResponsivePixels.size9,
+    right: ResponsivePixels.size9,
+    width: ResponsivePixels.size26,
+    height: ResponsivePixels.size26,
+    borderRadius: ResponsivePixels.size13, // Perfectly round circular checkbox outside the card
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -614,9 +615,9 @@ const styles = StyleSheet.create({
   },
   // Retained alias for backwards compatibility
   taskCheckbox: {
-    width: 26,
-    height: 26,
-    borderRadius: 13,
+    width: ResponsivePixels.size26,
+    height: ResponsivePixels.size26,
+    borderRadius: ResponsivePixels.size13,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -630,32 +631,32 @@ const styles = StyleSheet.create({
     borderColor: Colors.WarmCheckboxBorder,
   },
   accentBar: {
-    width: 3.5,
-    height: 36,
-    borderTopRightRadius: 3,
-    borderBottomRightRadius: 3,
+    width: ResponsivePixels.size3_5,
+    height: ResponsivePixels.size36,
+    borderTopRightRadius: ResponsivePixels.size3,
+    borderBottomRightRadius: ResponsivePixels.size3,
     alignSelf: 'center',
     zIndex: 2,
   },
   cardContent: {
     flex: 1,
-    paddingVertical: 13,
-    paddingLeft: 12,
-    paddingRight: 14,
+    paddingVertical: ResponsivePixels.size13,
+    paddingLeft: ResponsivePixels.size12,
+    paddingRight: ResponsivePixels.size14,
     justifyContent: 'space-between',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   cardTopRow: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    paddingRight: 48, // Guarantees title stays completely clear of the floating checkbox cutout
+    paddingRight: ResponsivePixels.size48, // Guarantees title stays completely clear of the floating checkbox cutout
   },
   title: {
     flex: 1,
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     color: Colors.RegiusInk,
-    lineHeight: 19,
+    lineHeight: ResponsivePixels.size19,
     letterSpacing: -0.2,
   },
   titleCompleted: {
@@ -663,10 +664,10 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.SubtitleGray,
-    lineHeight: 16,
-    paddingRight: 36, // Clears the floating checkbox and scooped cutout notch
+    lineHeight: ResponsivePixels.size16,
+    paddingRight: ResponsivePixels.size36, // Clears the floating checkbox and scooped cutout notch
   },
   subtitleCompleted: {
     color: Colors.WarmSilverMuted,
@@ -675,43 +676,43 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
-    gap: 8,
-    marginTop: 2,
+    gap: ResponsivePixels.size8,
+    marginTop: ResponsivePixels.size2,
   },
   timePill: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 8,
-    paddingVertical: 3.5,
-    borderRadius: 10,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size3_5,
+    borderRadius: ResponsivePixels.size10,
   },
   timePillText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     letterSpacing: -0.1,
   },
   voicePrepBadge: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: Colors.MindfulSoftPillLight,
-    paddingHorizontal: 7,
-    paddingVertical: 3.5,
-    borderRadius: 10,
+    paddingHorizontal: ResponsivePixels.size7,
+    paddingVertical: ResponsivePixels.size3_5,
+    borderRadius: ResponsivePixels.size10,
   },
   voicePrepBadgeText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     color: Colors.VioletDeepAccent,
   },
   categoryBadge: {
     backgroundColor: Colors.TimelineEventSoftCream,
-    paddingHorizontal: 7,
-    paddingVertical: 3.5,
-    borderRadius: 10,
+    paddingHorizontal: ResponsivePixels.size7,
+    paddingVertical: ResponsivePixels.size3_5,
+    borderRadius: ResponsivePixels.size10,
   },
   categoryBadgeText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     color: Colors.WarmCharcoalMuted,
   },
 });

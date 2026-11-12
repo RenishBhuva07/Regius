@@ -91,13 +91,13 @@ export const ForgotPasswordModal: React.FC<ForgotPasswordModalProps> = ({
             ]}
             onPress={onClose}
           >
-            <X size={18} color={textSecondary} strokeWidth={2.4} />
+            <X size={ResponsivePixels.size18} color={textSecondary} strokeWidth={2.4} />
           </TouchableOpacity>
 
           {/* Key Icon Badge */}
           <View style={styles.iconCircle}>
             <KeyRound
-              size={26}
+              size={ResponsivePixels.size26}
               color={Colors.LavenderPurple}
               strokeWidth={2.2}
             />
@@ -206,16 +206,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: ResponsivePixels.size16,
     right: ResponsivePixels.size16,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: ResponsivePixels.size32,
+    height: ResponsivePixels.size32,
+    borderRadius: ResponsivePixels.size16,
     alignItems: 'center',
     justifyContent: 'center',
   },
   iconCircle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: ResponsivePixels.size60,
+    height: ResponsivePixels.size60,
+    borderRadius: ResponsivePixels.size30,
     backgroundColor: Colors.MindfulLightBg,
     borderWidth: 1.5,
     borderColor: Colors.MindfulLightBorder,
@@ -230,14 +230,14 @@ const styles = StyleSheet.create({
   },
   title: {
     ...Typography.h6Bold,
-    fontSize: 20,
+    fontSize: ResponsivePixels.size20,
     marginBottom: ResponsivePixels.size8,
   },
   description: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     textAlign: 'center',
-    lineHeight: 19,
+    lineHeight: ResponsivePixels.size19,
     marginBottom: ResponsivePixels.size20,
     paddingHorizontal: ResponsivePixels.size8,
   },
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-    height: 52,
+    height: ResponsivePixels.size52,
     borderRadius: ResponsivePixels.size18,
     borderWidth: 1.5,
     paddingHorizontal: ResponsivePixels.size14,
@@ -257,11 +257,11 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontFamily: Fonts.poppins.medium,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
   },
   primaryBtn: {
     width: '100%',
-    height: 50,
+    height: ResponsivePixels.size50,
     borderRadius: ResponsivePixels.size26,
     alignItems: 'center',
     justifyContent: 'center',
@@ -273,15 +273,15 @@ const styles = StyleSheet.create({
   },
   primaryBtnText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 15,
+    fontSize: ResponsivePixels.size15,
   },
   cancelTouch: {
     marginTop: ResponsivePixels.size14,
-    paddingVertical: 6,
+    paddingVertical: ResponsivePixels.size6,
   },
   cancelText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
   },
 });
 

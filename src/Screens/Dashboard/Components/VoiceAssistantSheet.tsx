@@ -36,6 +36,7 @@ import {
   AssistantVisualState,
   VoiceAssistantSheetProps,
 } from './VoiceAssistant';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -202,8 +203,14 @@ export const VoiceAssistantSheet: React.FC<VoiceAssistantSheetProps> = ({
             styles.sheetContainer,
             {
               backgroundColor: theme.background,
-              paddingTop: Math.max(insets.top + 6, 20),
-              paddingBottom: Math.max(insets.bottom + 8, 20),
+              paddingTop: Math.max(
+                insets.top + ResponsivePixels.size6,
+                ResponsivePixels.size20,
+              ),
+              paddingBottom: Math.max(
+                insets.bottom + ResponsivePixels.size8,
+                ResponsivePixels.size20,
+              ),
               transform: [{ translateY: slideAnim }],
             },
           ]}
@@ -290,12 +297,12 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 16,
+    paddingHorizontal: ResponsivePixels.size16,
   },
   orbWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: -40,
+    marginBottom: -ResponsivePixels.size40,
   },
   conversationWrapper: {
     width: '100%',
@@ -305,8 +312,8 @@ const styles = StyleSheet.create({
   },
   dockContainer: {
     width: '100%',
-    paddingHorizontal: 16,
-    paddingBottom: 6,
+    paddingHorizontal: ResponsivePixels.size16,
+    paddingBottom: ResponsivePixels.size6,
   },
 });
 

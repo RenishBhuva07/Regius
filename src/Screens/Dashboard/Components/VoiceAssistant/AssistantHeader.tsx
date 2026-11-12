@@ -5,6 +5,7 @@ import { Fonts } from '../../../../Theme/fonts';
 import { Colors, withAlpha } from '../../../../Assets/StyleUtilities/Colors';
 import { VoiceAssistantTheme } from './types';
 import { VoiceAssistantState } from '../../../../Services/Voice/VoiceStateMachine';
+import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface AssistantHeaderProps {
   assistantName: string;
@@ -62,11 +63,11 @@ export const AssistantHeader: React.FC<AssistantHeaderProps> = ({
               : Colors.LavenderPurple,
           },
         ]}
-        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        hitSlop={{ top: ResponsivePixels.size10, bottom: ResponsivePixels.size10, left: ResponsivePixels.size10, right: ResponsivePixels.size10 }}
         accessibilityRole="button"
         accessibilityLabel="Open settings"
       >
-        <Settings size={18} color={theme.textPrimary} strokeWidth={2.2} />
+        <Settings size={ResponsivePixels.size18} color={theme.textPrimary} strokeWidth={2.2} />
       </Pressable>
 
       {/* 2. Center: Luxury Brand Identity & Status Dot */}
@@ -97,11 +98,11 @@ export const AssistantHeader: React.FC<AssistantHeaderProps> = ({
               : Colors.LavenderPurple,
           },
         ]}
-        hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        hitSlop={{ top: ResponsivePixels.size10, bottom: ResponsivePixels.size10, left: ResponsivePixels.size10, right: ResponsivePixels.size10 }}
         accessibilityRole="button"
         accessibilityLabel="Toggle suggestions"
       >
-        <Sparkles size={18} color={theme.accent} strokeWidth={2.2} />
+        <Sparkles size={ResponsivePixels.size18} color={theme.accent} strokeWidth={2.2} />
       </Pressable>
     </View>
   );
@@ -112,15 +113,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 22,
-    paddingVertical: 10,
+    paddingHorizontal: ResponsivePixels.size22,
+    paddingVertical: ResponsivePixels.size10,
     width: '100%',
     zIndex: 10,
   },
   circleBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 22,
+    width: ResponsivePixels.size44,
+    height: ResponsivePixels.size44,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.2,
     borderBottomWidth: 2.2,
     alignItems: 'center',
@@ -136,24 +137,24 @@ const styles = StyleSheet.create({
   },
   identityTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 16,
+    fontSize: ResponsivePixels.size16,
     letterSpacing: 2.2,
   },
   statusPill: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4.5,
-    marginTop: 2,
+    gap: ResponsivePixels.size4_5,
+    marginTop: ResponsivePixels.size2,
   },
   statusDot: {
-    width: 5.5,
-    height: 5.5,
-    borderRadius: 3,
+    width: ResponsivePixels.size5_5,
+    height: ResponsivePixels.size5_5,
+    borderRadius: ResponsivePixels.size3,
     backgroundColor: Colors.ToastSuccessAccent,
   },
   statusText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 9,
+    fontSize: ResponsivePixels.size9,
     letterSpacing: 0.8,
   },
 });

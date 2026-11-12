@@ -36,6 +36,7 @@ import { StickyActionDock } from '../../Common/StickyActionDock';
 import { StickyBottomButton } from '../../Common/StickyBottomButton';
 import { useTheme } from '../../Theme/ThemeContext';
 import { SettingsBackgroundSvg } from '../Settings/Components/SettingsBackgroundSvg';
+import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 
 const APP_LANGUAGE_KEY = '@regius_app_language';
 const HEADER_HEIGHT = SUB_SCREEN_HEADER_HEIGHT;
@@ -290,8 +291,8 @@ export const LanguageScreen: React.FC = () => {
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingTop: insets.top + HEADER_HEIGHT + 14,
-            paddingBottom: insets.bottom + 104,
+            paddingTop: insets.top + HEADER_HEIGHT + ResponsivePixels.size14,
+            paddingBottom: insets.bottom + ResponsivePixels.size104,
           },
         ]}
         showsVerticalScrollIndicator={false}
@@ -305,7 +306,7 @@ export const LanguageScreen: React.FC = () => {
             <View style={styles.heroHeaderRow}>
               <View style={styles.heroTagRow}>
                 <Sparkles
-                  size={13}
+                  size={ResponsivePixels.size13}
                   color={Colors.AccentYellow}
                   strokeWidth={2.4}
                 />
@@ -348,7 +349,7 @@ export const LanguageScreen: React.FC = () => {
               accessibilityLabel="Audition spoken greeting"
             >
               <Volume2
-                size={16}
+                size={ResponsivePixels.size16}
                 color={Colors.LavenderPurple}
                 strokeWidth={2.4}
               />
@@ -365,7 +366,7 @@ export const LanguageScreen: React.FC = () => {
               <View style={styles.autoDetectLeft}>
                 <View style={styles.globeWrap}>
                   <Globe
-                    size={18}
+                    size={ResponsivePixels.size18}
                     color={Colors.LavenderPurple}
                     strokeWidth={2.2}
                   />
@@ -401,7 +402,7 @@ export const LanguageScreen: React.FC = () => {
           value={searchQuery}
           onChangeText={setSearchQuery}
           placeholder="Search language, country, or code..."
-          containerStyle={{ marginBottom: 16 }}
+          containerStyle={{ marginBottom: ResponsivePixels.size16 }}
         />
 
         {/* Region Filter Chips */}
@@ -588,13 +589,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: 16,
+    paddingHorizontal: ResponsivePixels.size16,
   },
   /* 2-Layer Hero Bento Card */
   heroCardShadowWrapper: {
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     backgroundColor: Colors.NeroBlack,
-    marginBottom: 16,
+    marginBottom: ResponsivePixels.size16,
     ...Platform.select({
       ios: {
         shadowColor: Colors.PureBlack,
@@ -609,39 +610,39 @@ const styles = StyleSheet.create({
   },
   heroCard: {
     backgroundColor: Colors.NeroBlack, // #1C1D22
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     borderWidth: 4, // Bold luxury specular border
     borderColor: withAlpha(Colors.PureWhite, 0.9), // Ceramic white rim
     overflow: 'hidden',
-    padding: 18,
+    padding: ResponsivePixels.size18,
   },
   heroHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 14,
+    marginBottom: ResponsivePixels.size14,
   },
   heroTagRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   heroTagText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     color: Colors.AccentYellow,
     letterSpacing: 1,
   },
   heroBodyRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
-    marginBottom: 14,
+    gap: ResponsivePixels.size14,
+    marginBottom: ResponsivePixels.size14,
   },
   heroFlagCircle: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: ResponsivePixels.size50,
+    height: ResponsivePixels.size50,
+    borderRadius: ResponsivePixels.size25,
     backgroundColor: Colors.PureWhite,
     borderWidth: 1.5,
     borderColor: withAlpha(Colors.PureWhite, 0.9),
@@ -654,46 +655,46 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   heroFlagEmoji: {
-    fontSize: 28,
+    fontSize: ResponsivePixels.size28,
   },
   heroDetails: {
     flex: 1,
   },
   heroNativeTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 20,
+    fontSize: ResponsivePixels.size20,
     color: Colors.PureWhite,
     letterSpacing: -0.4,
-    lineHeight: 24,
-    marginBottom: 2,
+    lineHeight: ResponsivePixels.size24,
+    marginBottom: ResponsivePixels.size2,
   },
   heroEnglishSub: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.SteelMist,
   },
   auditionPillBtn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
     backgroundColor: Colors.LanguageAuditionDarkBg,
     borderWidth: 1,
     borderColor: withAlpha(Colors.LavenderPurple, 0.35),
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    marginBottom: 14,
+    borderRadius: ResponsivePixels.size20,
+    paddingVertical: ResponsivePixels.size10,
+    paddingHorizontal: ResponsivePixels.size16,
+    marginBottom: ResponsivePixels.size14,
   },
   auditionPillText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.PureWhite,
   },
   heroDivider: {
     height: 1,
     backgroundColor: withAlpha(Colors.PureWhite, 0.1),
-    marginBottom: 14,
+    marginBottom: ResponsivePixels.size14,
   },
   autoDetectRow: {
     flexDirection: 'row',
@@ -704,13 +705,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
-    paddingRight: 10,
-    gap: 10,
+    paddingRight: ResponsivePixels.size10,
+    gap: ResponsivePixels.size10,
   },
   globeWrap: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: ResponsivePixels.size34,
+    height: ResponsivePixels.size34,
+    borderRadius: ResponsivePixels.size17,
     backgroundColor: Colors.LanguageGlobeDarkBg,
     alignItems: 'center',
     justifyContent: 'center',
@@ -720,25 +721,25 @@ const styles = StyleSheet.create({
   },
   autoDetectTitle: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12.5,
+    fontSize: ResponsivePixels.size12_5,
     color: Colors.PureWhite,
   },
   autoDetectDesc: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     color: Colors.SteelMist,
-    marginTop: 1,
+    marginTop: ResponsivePixels.size1,
   },
   /* Search input */
   searchWrap: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 16,
+    borderRadius: ResponsivePixels.size16,
     borderWidth: 1.5,
-    paddingHorizontal: 14,
-    height: 48,
-    gap: 10,
-    marginBottom: 12,
+    paddingHorizontal: ResponsivePixels.size14,
+    height: ResponsivePixels.size48,
+    gap: ResponsivePixels.size10,
+    marginBottom: ResponsivePixels.size12,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.04,
@@ -748,22 +749,22 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     fontFamily: Fonts.poppins.regular,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     padding: 0,
   },
   searchClearBtn: {
-    padding: 4,
+    padding: ResponsivePixels.size4,
   },
   /* Filter horizontal scroll */
   filterScroll: {
-    gap: 8,
-    paddingBottom: 16,
+    gap: ResponsivePixels.size8,
+    paddingBottom: ResponsivePixels.size16,
   },
   filterChip: {
-    borderRadius: 20,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1,
-    paddingHorizontal: 14,
-    paddingVertical: 7,
+    paddingHorizontal: ResponsivePixels.size14,
+    paddingVertical: ResponsivePixels.size7,
   },
   filterChipActive: {
     backgroundColor: Colors.MidnightCharcoal,
@@ -771,33 +772,33 @@ const styles = StyleSheet.create({
   },
   filterChipText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
   },
   filterChipTextActive: {
     color: Colors.PureWhite,
     fontFamily: Fonts.poppins.bold,
   },
   sectionHeaderRow: {
-    marginBottom: 10,
-    marginLeft: 2,
+    marginBottom: ResponsivePixels.size10,
+    marginLeft: ResponsivePixels.size2,
   },
   sectionHeading: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     letterSpacing: 0.8,
   },
   /* Languages list cards */
   languagesContainer: {
-    gap: 10,
+    gap: ResponsivePixels.size10,
   },
   languageCard: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    borderRadius: 18,
+    borderRadius: ResponsivePixels.size18,
     borderWidth: 1.5,
-    paddingVertical: 12,
-    paddingHorizontal: 14,
+    paddingVertical: ResponsivePixels.size12,
+    paddingHorizontal: ResponsivePixels.size14,
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.06,
     shadowRadius: 6,
@@ -807,18 +808,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
-    gap: 12,
+    gap: ResponsivePixels.size12,
   },
   langFlagPill: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: ResponsivePixels.size42,
+    height: ResponsivePixels.size42,
+    borderRadius: ResponsivePixels.size21,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
   },
   langFlagChar: {
-    fontSize: 22,
+    fontSize: ResponsivePixels.size22,
   },
   langMeta: {
     flex: 1,
@@ -826,25 +827,25 @@ const styles = StyleSheet.create({
   langTitleRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 2,
+    gap: ResponsivePixels.size8,
+    marginBottom: ResponsivePixels.size2,
   },
   langNativeName: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 14.5,
+    fontSize: ResponsivePixels.size14_5,
   },
   langNativeNameSelected: {
     fontFamily: Fonts.poppins.bold,
   },
   langEnglishName: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
   },
   /* 3D Radio Vessel */
   radioVessel: {
-    width: 22,
-    height: 22,
-    borderRadius: 11,
+    width: ResponsivePixels.size22,
+    height: ResponsivePixels.size22,
+    borderRadius: ResponsivePixels.size11,
     borderWidth: 2,
     alignItems: 'center',
     justifyContent: 'center',
@@ -854,9 +855,9 @@ const styles = StyleSheet.create({
     borderColor: Colors.LavenderPurple,
   },
   radioDot: {
-    width: 11,
-    height: 11,
-    borderRadius: 5.5,
+    width: ResponsivePixels.size11,
+    height: ResponsivePixels.size11,
+    borderRadius: ResponsivePixels.size5_5,
   },
   /* Sticky Frosted Action Dock */
   actionDock: {
@@ -865,8 +866,8 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     borderTopWidth: 1,
-    paddingTop: 12,
-    paddingHorizontal: 20,
+    paddingTop: ResponsivePixels.size12,
+    paddingHorizontal: ResponsivePixels.size20,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.08,

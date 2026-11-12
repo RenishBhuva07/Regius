@@ -156,7 +156,8 @@ export const HabitsScreen: React.FC = () => {
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingTop: insets.top + SCREEN_HEADER_HEIGHT + 10,
+            paddingTop:
+              insets.top + SCREEN_HEADER_HEIGHT + ResponsivePixels.size10,
             paddingBottom: 0,
           },
         ]}
@@ -183,7 +184,7 @@ export const HabitsScreen: React.FC = () => {
           backgroundSvg={<HabitSectionBackgroundSvg />}
           onPressAdd={openHabitModal}
           addAccessibilityLabel="Add new habit"
-          bottomPadding={insets.bottom + 130}
+          bottomPadding={insets.bottom + ResponsivePixels.size130}
           containerStyle={styles.habitsSection}
         >
           {/* All habits list using FlatList */}
@@ -212,7 +213,7 @@ export const HabitsScreen: React.FC = () => {
                 ]}
               >
                 <Flame
-                  size={32}
+                  size={ResponsivePixels.size32}
                   color={
                     isDarkMode
                       ? Colors.DarkTitleCompleted
@@ -231,7 +232,7 @@ export const HabitsScreen: React.FC = () => {
                   onPress={openHabitModal}
                   style={styles.emptyCreateBtn}
                 >
-                  <Plus size={14} color={Colors.PureWhite} strokeWidth={2.4} />
+                  <Plus size={ResponsivePixels.size14} color={Colors.PureWhite} strokeWidth={2.4} />
                   <Text style={styles.emptyCreateText}>Add Habit</Text>
                 </TouchableOpacity>
               </View>
@@ -316,24 +317,24 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    // gap: 16,
+    // gap: ResponsivePixels.size16,
   },
   bentoCardWrapper: {
-    paddingTop: 5,
-    paddingHorizontal: 10,
+    paddingTop: ResponsivePixels.size5,
+    paddingHorizontal: ResponsivePixels.size10,
   },
   habitsSection: {
     backgroundColor: Colors.SoftCream,
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
+    borderTopLeftRadius: ResponsivePixels.size32,
+    borderTopRightRadius: ResponsivePixels.size32,
     borderWidth: 1.5,
     borderTopColor: Colors.WarmNavBevelTop,
     borderLeftColor: Colors.WarmNavBevelSide,
     borderRightColor: Colors.WarmNavBevelSide,
     borderBottomColor: Colors.WarmHeaderBottomBevel,
-    paddingHorizontal: 8,
-    paddingTop: 40,
-    marginTop: 26,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingTop: ResponsivePixels.size40,
+    marginTop: ResponsivePixels.size26,
     flex: 1,
     position: 'relative',
     ...Platform.select({
@@ -350,18 +351,18 @@ const styles = StyleSheet.create({
   },
   habitsSectionBgWrapper: {
     ...StyleSheet.absoluteFill,
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
+    borderTopLeftRadius: ResponsivePixels.size32,
+    borderTopRightRadius: ResponsivePixels.size32,
     overflow: 'hidden',
   },
   flowHeaderBadge: {
     position: 'absolute',
-    top: -24,
+    top: -ResponsivePixels.size24,
     alignSelf: 'center',
     backgroundColor: Colors.NeroBlack,
-    paddingHorizontal: 22,
-    paddingVertical: 7,
-    borderRadius: 22,
+    paddingHorizontal: ResponsivePixels.size22,
+    paddingVertical: ResponsivePixels.size7,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
     borderTopColor: Colors.DarkBevelTop,
     borderLeftColor: Colors.DarkBorder,
@@ -380,25 +381,25 @@ const styles = StyleSheet.create({
   },
   flowTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 14.5,
+    fontSize: ResponsivePixels.size14_5,
     color: Colors.PureWhite,
     letterSpacing: -0.1,
     textAlign: 'center',
   },
   flowSubtitle: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     color: Colors.CoolSilverSubtitle,
-    marginTop: 1,
+    marginTop: ResponsivePixels.size1,
     textAlign: 'center',
   },
   addHabitFloatingBtn: {
     position: 'absolute',
-    top: -21,
-    right: 18,
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    top: -ResponsivePixels.size21,
+    right: ResponsivePixels.size18,
+    width: ResponsivePixels.size42,
+    height: ResponsivePixels.size42,
+    borderRadius: ResponsivePixels.size21,
     backgroundColor: Colors.NeroBlack,
     borderWidth: 1.5,
     borderTopColor: Colors.DarkBevelTop,
@@ -416,49 +417,49 @@ const styles = StyleSheet.create({
     zIndex: 20,
   },
   habitListContainer: {
-    paddingTop: 8,
-    paddingBottom: 20,
+    paddingTop: ResponsivePixels.size8,
+    paddingBottom: ResponsivePixels.size20,
   },
   listSeparator: {
-    height: 12,
+    height: ResponsivePixels.size12,
   },
   emptyCard: {
     backgroundColor: Colors.PureWhite,
-    borderRadius: 22,
-    padding: 30,
+    borderRadius: ResponsivePixels.size22,
+    padding: ResponsivePixels.size30,
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1.5,
     borderColor: Colors.DetailWarmBorder,
-    gap: 8,
+    gap: ResponsivePixels.size8,
     marginHorizontal: 0,
   },
   emptyTitle: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 15,
+    fontSize: ResponsivePixels.size15,
     color: Colors.RegiusInk,
-    marginTop: 4,
+    marginTop: ResponsivePixels.size4,
   },
   emptySubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.DisabledGrayText,
     textAlign: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: ResponsivePixels.size20,
   },
   emptyCreateBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
     backgroundColor: Colors.MidnightCharcoal,
-    paddingHorizontal: 16,
-    paddingVertical: 9,
-    borderRadius: 18,
-    marginTop: 8,
+    paddingHorizontal: ResponsivePixels.size16,
+    paddingVertical: ResponsivePixels.size9,
+    borderRadius: ResponsivePixels.size18,
+    marginTop: ResponsivePixels.size8,
   },
   emptyCreateText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.PureWhite,
   },
 
@@ -480,29 +481,29 @@ const styles = StyleSheet.create({
   },
   footerWatermarkText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 34,
-    lineHeight: 42,
+    fontSize: ResponsivePixels.size34,
+    lineHeight: ResponsivePixels.size42,
     color: Colors.MilestoneSlate,
     letterSpacing: -1.2,
   },
   craftedWithRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 18,
+    marginTop: ResponsivePixels.size18,
   },
   craftedWithText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     color: Colors.MilestoneSlate,
   },
   craftedWithHeart: {
-    fontSize: 13.5,
+    fontSize: ResponsivePixels.size13_5,
   },
   footerDoodleWrapper: {
-    marginLeft: 8,
+    marginLeft: ResponsivePixels.size8,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 6,
+    marginTop: ResponsivePixels.size6,
   },
 });
 

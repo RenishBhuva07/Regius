@@ -73,7 +73,7 @@ export const TermsPrivacyModal: React.FC<TermsPrivacyModalProps> = ({
               ]}
               onPress={onClose}
             >
-              <X size={18} color={textSecondary} strokeWidth={2.4} />
+              <X size={ResponsivePixels.size18} color={textSecondary} strokeWidth={2.4} />
             </TouchableOpacity>
           </View>
 
@@ -100,11 +100,11 @@ export const TermsPrivacyModal: React.FC<TermsPrivacyModalProps> = ({
               onPress={() => setActiveTab('terms')}
             >
               <FileText
-                size={14}
+                size={ResponsivePixels.size14}
                 color={
                   activeTab === 'terms' ? Colors.LavenderPurple : textSecondary
                 }
-                style={{ marginRight: 6 }}
+                style={{ marginRight: ResponsivePixels.size6 }}
               />
               <Text
                 style={[
@@ -134,13 +134,13 @@ export const TermsPrivacyModal: React.FC<TermsPrivacyModalProps> = ({
               onPress={() => setActiveTab('privacy')}
             >
               <Lock
-                size={14}
+                size={ResponsivePixels.size14}
                 color={
                   activeTab === 'privacy'
                     ? Colors.LavenderPurple
                     : textSecondary
                 }
-                style={{ marginRight: 6 }}
+                style={{ marginRight: ResponsivePixels.size6 }}
               />
               <Text
                 style={[
@@ -236,9 +236,9 @@ export const TermsPrivacyModal: React.FC<TermsPrivacyModalProps> = ({
                 >
                   <View style={styles.pillarHeaderRow}>
                     <ShieldCheck
-                      size={18}
+                      size={ResponsivePixels.size18}
                       color={Colors.AccentGreen}
-                      style={{ marginRight: 6 }}
+                      style={{ marginRight: ResponsivePixels.size6 }}
                     />
                     <Text style={[styles.pillarTitle, { color: textPrimary }]}>
                       Zero Data Selling
@@ -352,24 +352,24 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   closeBtn: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: ResponsivePixels.size32,
+    height: ResponsivePixels.size32,
+    borderRadius: ResponsivePixels.size16,
     alignItems: 'center',
     justifyContent: 'center',
   },
   title: {
     ...Typography.h6Bold,
-    fontSize: 22,
+    fontSize: ResponsivePixels.size22,
     marginBottom: ResponsivePixels.size14,
   },
   switchContainer: {
     flexDirection: 'row',
     width: '100%',
-    height: 42,
+    height: ResponsivePixels.size42,
     borderRadius: ResponsivePixels.size22,
     borderWidth: 1.2,
-    padding: 3,
+    padding: ResponsivePixels.size3,
     marginBottom: ResponsivePixels.size16,
   },
   switchTab: {
@@ -387,7 +387,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   switchTabText: {
-    fontSize: 12.5,
+    fontSize: ResponsivePixels.size12_5,
   },
   scrollView: {
     marginBottom: ResponsivePixels.size18,
@@ -407,17 +407,17 @@ const styles = StyleSheet.create({
   },
   pillarTitle: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13.5,
+    fontSize: ResponsivePixels.size13_5,
     marginBottom: ResponsivePixels.size4,
   },
   pillarBody: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
-    lineHeight: 18,
+    fontSize: ResponsivePixels.size12,
+    lineHeight: ResponsivePixels.size18,
   },
   primaryBtn: {
     width: '100%',
-    height: 48,
+    height: ResponsivePixels.size48,
     borderRadius: ResponsivePixels.size24,
     alignItems: 'center',
     justifyContent: 'center',
@@ -429,7 +429,7 @@ const styles = StyleSheet.create({
   },
   primaryBtnText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14.5,
+    fontSize: ResponsivePixels.size14_5,
   },
 });
 

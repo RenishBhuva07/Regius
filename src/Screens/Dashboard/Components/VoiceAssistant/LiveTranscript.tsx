@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Fonts } from '../../../../Theme/fonts';
 import { VoiceAssistantTheme } from './types';
+import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface LiveTranscriptProps {
   transcript: string;
@@ -29,22 +30,22 @@ export const LiveTranscript: React.FC<LiveTranscriptProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 12,
+    paddingVertical: ResponsivePixels.size12,
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
   },
   transcriptText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 17,
-    lineHeight: 25,
+    fontSize: ResponsivePixels.size17,
+    lineHeight: ResponsivePixels.size25,
     textAlign: 'center',
     letterSpacing: -0.2,
   },
   hintText: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
-    marginTop: 8,
+    fontSize: ResponsivePixels.size12,
+    marginTop: ResponsivePixels.size8,
     textAlign: 'center',
   },
 });

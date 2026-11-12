@@ -4,6 +4,7 @@ import { AlertCircle, HelpCircle } from 'lucide-react-native';
 import { Fonts } from '../../../../Theme/fonts';
 import { Colors } from '../../../../Assets/StyleUtilities/Colors';
 import { VoiceAssistantTheme } from './types';
+import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface ErrorRecoveryProps {
   isUnrecognized?: boolean;
@@ -36,9 +37,9 @@ export const ErrorRecovery: React.FC<ErrorRecoveryProps> = ({
         ]}
       >
         {isUnrecognized ? (
-          <HelpCircle size={20} color={iconColor} strokeWidth={2.4} />
+          <HelpCircle size={ResponsivePixels.size20} color={iconColor} strokeWidth={2.4} />
         ) : (
-          <AlertCircle size={20} color={iconColor} strokeWidth={2.4} />
+          <AlertCircle size={ResponsivePixels.size20} color={iconColor} strokeWidth={2.4} />
         )}
       </View>
 
@@ -78,43 +79,43 @@ export const ErrorRecovery: React.FC<ErrorRecoveryProps> = ({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 16,
+    paddingVertical: ResponsivePixels.size14,
+    paddingHorizontal: ResponsivePixels.size16,
     width: '100%',
   },
   iconBadge: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: ResponsivePixels.size38,
+    height: ResponsivePixels.size38,
+    borderRadius: ResponsivePixels.size19,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 10,
+    marginBottom: ResponsivePixels.size10,
   },
   messageText: {
     fontFamily: Fonts.ranade.medium,
-    fontSize: 15,
-    lineHeight: 22,
+    fontSize: ResponsivePixels.size15,
+    lineHeight: ResponsivePixels.size22,
     textAlign: 'center',
-    maxWidth: 290,
+    maxWidth: ResponsivePixels.size290,
   },
   heardBubble: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 14,
-    marginTop: 12,
+    gap: ResponsivePixels.size6,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size6,
+    borderRadius: ResponsivePixels.size14,
+    marginTop: ResponsivePixels.size12,
   },
   heardLabel: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     textTransform: 'uppercase',
     letterSpacing: 0.4,
   },
   heardText: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
-    maxWidth: 220,
+    fontSize: ResponsivePixels.size12,
+    maxWidth: ResponsivePixels.size220,
   },
 });

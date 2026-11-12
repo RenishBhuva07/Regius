@@ -12,11 +12,17 @@ import {
   Colors,
   IllustrationColors,
 } from '../../../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 // Auth SVG icons and illustrations
 export const RegiusCrownCrestSvg: React.FC<
   SvgProps & { glowColor?: string; isDark?: boolean; size?: number }
-> = ({ glowColor: _glowColor, isDark = false, size = 96, ...props }) => {
+> = ({
+  glowColor: _glowColor,
+  isDark = false,
+  size = ResponsivePixels.size96,
+  ...props
+}) => {
   return (
     <Svg width={size} height={size} viewBox="0 0 96 96" fill="none" {...props}>
       <Defs>
@@ -149,7 +155,7 @@ export const DecorativeHeaderWavesSvg: React.FC<
   return (
     <Svg
       width="100%"
-      height={220}
+      height={ResponsivePixels.size220}
       viewBox="0 0 375 220"
       fill="none"
       preserveAspectRatio="none"
@@ -224,7 +230,13 @@ export const MailFieldSvg: React.FC<SvgProps & { color?: string }> = ({
   color = Colors.LavenderPurple,
   ...props
 }) => (
-  <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" {...props}>
+  <Svg
+    width={ResponsivePixels.size20}
+    height={ResponsivePixels.size20}
+    viewBox="0 0 24 24"
+    fill="none"
+    {...props}
+  >
     <Rect
       x={2}
       y={4}
@@ -250,7 +262,13 @@ export const LockFieldSvg: React.FC<SvgProps & { color?: string }> = ({
   color = Colors.LavenderPurple,
   ...props
 }) => (
-  <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" {...props}>
+  <Svg
+    width={ResponsivePixels.size20}
+    height={ResponsivePixels.size20}
+    viewBox="0 0 24 24"
+    fill="none"
+    {...props}
+  >
     <Rect
       x={4}
       y={10}
@@ -277,7 +295,13 @@ export const UserFieldSvg: React.FC<SvgProps & { color?: string }> = ({
   color = Colors.LavenderPurple,
   ...props
 }) => (
-  <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" {...props}>
+  <Svg
+    width={ResponsivePixels.size20}
+    height={ResponsivePixels.size20}
+    viewBox="0 0 24 24"
+    fill="none"
+    {...props}
+  >
     <Circle cx={12} cy={7} r={4} stroke={color} strokeWidth={1.8} />
     <Path
       d="M4 21C4 17.134 7.58172 14 12 14C16.4183 14 20 17.134 20 21"
@@ -292,7 +316,13 @@ export const EyeOpenSvg: React.FC<SvgProps & { color?: string }> = ({
   color = Colors.MutedSlateSubtext,
   ...props
 }) => (
-  <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" {...props}>
+  <Svg
+    width={ResponsivePixels.size20}
+    height={ResponsivePixels.size20}
+    viewBox="0 0 24 24"
+    fill="none"
+    {...props}
+  >
     <Path
       d="M1 12C1 12 5 4 12 4C19 4 23 12 23 12C23 12 19 20 12 20C5 20 1 12 1 12Z"
       stroke={color}
@@ -308,7 +338,13 @@ export const EyeClosedSvg: React.FC<SvgProps & { color?: string }> = ({
   color = Colors.MutedSlateSubtext,
   ...props
 }) => (
-  <Svg width={20} height={20} viewBox="0 0 24 24" fill="none" {...props}>
+  <Svg
+    width={ResponsivePixels.size20}
+    height={ResponsivePixels.size20}
+    viewBox="0 0 24 24"
+    fill="none"
+    {...props}
+  >
     <Path
       d="M17.94 17.94A10.07 10.07 0 0112 20C5 20 1 12 1 12A18.45 18.45 0 015.06 6.06M9.9 4.24A9.12 9.12 0 0112 4C19 4 23 12 23 12A18.5 18.5 0 0119.78 16.22M1 1L23 23"
       stroke={color}
@@ -330,7 +366,13 @@ export const TactileCheckmarkSvg: React.FC<SvgProps & { color?: string }> = ({
   color = Colors.AccentGreen,
   ...props
 }) => (
-  <Svg width={14} height={14} viewBox="0 0 24 24" fill="none" {...props}>
+  <Svg
+    width={ResponsivePixels.size14}
+    height={ResponsivePixels.size14}
+    viewBox="0 0 24 24"
+    fill="none"
+    {...props}
+  >
     <Path
       d="M20 6L9 17L4 12"
       stroke={color}
@@ -342,7 +384,7 @@ export const TactileCheckmarkSvg: React.FC<SvgProps & { color?: string }> = ({
 );
 
 export const GoogleLogoSvg: React.FC<SvgProps & { size?: number }> = ({
-  size = 20,
+  size = ResponsivePixels.size20,
   ...props
 }) => (
   <Svg width={size} height={size} viewBox="0 0 48 48" {...props}>
@@ -367,7 +409,11 @@ export const GoogleLogoSvg: React.FC<SvgProps & { size?: number }> = ({
 
 export const AppleLogoSvg: React.FC<
   SvgProps & { size?: number; color?: string }
-> = ({ size = 20, color = Colors.PureWhite, ...props }) => (
+> = ({
+  size = ResponsivePixels.size20,
+  color = Colors.PureWhite,
+  ...props
+}) => (
   <Svg width={size} height={size} viewBox="0 0 384 512" {...props}>
     <Path
       fill={color}
@@ -378,7 +424,11 @@ export const AppleLogoSvg: React.FC<
 
 export const SparkleSvg: React.FC<
   SvgProps & { color?: string; size?: number }
-> = ({ color = Colors.AccentYellow, size = 18, ...props }) => (
+> = ({
+  color = Colors.AccentYellow,
+  size = ResponsivePixels.size18,
+  ...props
+}) => (
   <Svg width={size} height={size} viewBox="0 0 24 24" fill="none" {...props}>
     <Path
       d="M12 2L14.4 9.6L22 12L14.4 14.4L12 22L9.6 14.4L2 12L9.6 9.6L12 2Z"

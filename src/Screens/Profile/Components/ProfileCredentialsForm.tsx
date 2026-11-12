@@ -86,7 +86,7 @@ export const ProfileCredentialsForm: React.FC<ProfileCredentialsFormProps> =
             <View style={styles.inputGroup}>
               <View style={styles.inputLabelRow}>
                 <User
-                  size={15}
+                  size={ResponsivePixels.size15}
                   color={themeAccent}
                   strokeWidth={2.2}
                 />
@@ -126,7 +126,7 @@ export const ProfileCredentialsForm: React.FC<ProfileCredentialsFormProps> =
             <View style={styles.inputGroup}>
               <View style={styles.inputLabelRow}>
                 <Mail
-                  size={15}
+                  size={ResponsivePixels.size15}
                   color={themeAccent}
                   strokeWidth={2.2}
                 />
@@ -168,7 +168,7 @@ export const ProfileCredentialsForm: React.FC<ProfileCredentialsFormProps> =
             <View style={styles.inputGroup}>
               <View style={styles.inputLabelRow}>
                 <FileText
-                  size={15}
+                  size={ResponsivePixels.size15}
                   color={themeAccent}
                   strokeWidth={2.2}
                 />
@@ -215,7 +215,7 @@ export const ProfileCredentialsForm: React.FC<ProfileCredentialsFormProps> =
             <View style={styles.inputGroup}>
               <View style={styles.inputLabelRow}>
                 <ShieldCheck
-                  size={15}
+                  size={ResponsivePixels.size15}
                   color={themeAccent}
                   strokeWidth={2.2}
                 />
@@ -259,14 +259,14 @@ const styles = StyleSheet.create({
   sectionHeading: {
     ...Typography.bodySuperSmallPoppinsRegularLoose,
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     letterSpacing: 1.1,
     marginHorizontal: ResponsivePixels.size16,
     marginBottom: ResponsivePixels.size8,
   },
   formCard: {
     marginHorizontal: ResponsivePixels.size16,
-    borderRadius: 22,
+    borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
     borderBottomWidth: 3.5,
     padding: ResponsivePixels.size16,
@@ -276,41 +276,41 @@ const styles = StyleSheet.create({
     elevation: 3,
   },
   inputGroup: {
-    marginVertical: 4,
+    marginVertical: ResponsivePixels.size4,
   },
   inputLabelRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    marginBottom: 8,
+    gap: ResponsivePixels.size8,
+    marginBottom: ResponsivePixels.size8,
   },
   inputLabel: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
   },
   inputWrap: {
-    borderRadius: 14,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1.5,
-    paddingHorizontal: 14,
-    height: 48,
+    paddingHorizontal: ResponsivePixels.size14,
+    height: ResponsivePixels.size48,
     justifyContent: 'center',
   },
   textAreaWrap: {
-    height: 80,
-    paddingVertical: 10,
+    height: ResponsivePixels.size80,
+    paddingVertical: ResponsivePixels.size10,
   },
   input: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     padding: 0,
   },
   textArea: {
-    height: 60,
+    height: ResponsivePixels.size60,
     textAlignVertical: 'top',
   },
   fieldDivider: {
     height: StyleSheet.hairlineWidth,
-    marginVertical: 12,
+    marginVertical: ResponsivePixels.size12,
   },
 });
 

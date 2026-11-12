@@ -37,6 +37,7 @@ import { useScrollReactiveHeader } from '../../Common/useScrollReactiveHeader';
 import { useTheme } from '../../Theme/ThemeContext';
 import { VoiceSettingsService } from '../../Services/VoiceSettingsService';
 import { SettingsBackgroundSvg } from '../Settings/Components/SettingsBackgroundSvg';
+import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 
 const HEADER_HEIGHT = SUB_SCREEN_HEADER_HEIGHT;
 
@@ -147,8 +148,8 @@ export const PrivacySecurityScreen: React.FC = () => {
         contentContainerStyle={[
           styles.scrollContent,
           {
-            paddingTop: insets.top + HEADER_HEIGHT + 14,
-            paddingBottom: insets.bottom + 48,
+            paddingTop: insets.top + HEADER_HEIGHT + ResponsivePixels.size14,
+            paddingBottom: insets.bottom + ResponsivePixels.size48,
           },
         ]}
         showsVerticalScrollIndicator={false}
@@ -161,7 +162,7 @@ export const PrivacySecurityScreen: React.FC = () => {
             <View style={styles.heroHeaderRow}>
               <View style={styles.heroTagRow}>
                 <Sparkles
-                  size={13}
+                  size={ResponsivePixels.size13}
                   color={Colors.LuminousGreen}
                   strokeWidth={2.4}
                 />
@@ -173,7 +174,7 @@ export const PrivacySecurityScreen: React.FC = () => {
             <View style={styles.heroMainRow}>
               <View style={styles.heroShieldCircle}>
                 <ShieldCheck
-                  size={28}
+                  size={ResponsivePixels.size28}
                   color={Colors.LuminousGreen}
                   strokeWidth={2.4}
                 />
@@ -194,7 +195,7 @@ export const PrivacySecurityScreen: React.FC = () => {
               <View style={styles.pillarItem}>
                 <View style={styles.pillarIconCircle}>
                   <Key
-                    size={14}
+                    size={ResponsivePixels.size14}
                     color={Colors.LuminousGreen}
                     strokeWidth={2.2}
                   />
@@ -207,7 +208,7 @@ export const PrivacySecurityScreen: React.FC = () => {
 
               <View style={styles.pillarItem}>
                 <View style={styles.pillarIconCircle}>
-                  <EyeOff size={14} color={themeAccent} strokeWidth={2.2} />
+                  <EyeOff size={ResponsivePixels.size14} color={themeAccent} strokeWidth={2.2} />
                 </View>
                 <Text style={styles.pillarTitle}>Zero Ad Tracking</Text>
                 <Text style={styles.pillarSub}>No Profiling</Text>
@@ -218,7 +219,7 @@ export const PrivacySecurityScreen: React.FC = () => {
               <View style={styles.pillarItem}>
                 <View style={styles.pillarIconCircle}>
                   <Lock
-                    size={14}
+                    size={ResponsivePixels.size14}
                     color={Colors.AccentYellow}
                     strokeWidth={2.2}
                   />
@@ -257,7 +258,7 @@ export const PrivacySecurityScreen: React.FC = () => {
                   },
                 ]}
               >
-                <Lock size={18} color={Colors.LuminousGreen} strokeWidth={2.2} />
+                <Lock size={ResponsivePixels.size18} color={Colors.LuminousGreen} strokeWidth={2.2} />
               </View>
               <View style={styles.settingItemMeta}>
                 <Text style={[styles.settingItemTitle, { color: textPrimary }]}>
@@ -300,7 +301,7 @@ export const PrivacySecurityScreen: React.FC = () => {
                 ]}
               >
                 <Server
-                  size={18}
+                  size={ResponsivePixels.size18}
                   color={themeAccent}
                   strokeWidth={2.2}
                 />
@@ -346,7 +347,7 @@ export const PrivacySecurityScreen: React.FC = () => {
                 ]}
               >
                 <CheckCircle2
-                  size={18}
+                  size={ResponsivePixels.size18}
                   color={Colors.AccentYellow}
                   strokeWidth={2.2}
                 />
@@ -391,7 +392,7 @@ export const PrivacySecurityScreen: React.FC = () => {
                   },
                 ]}
               >
-                <EyeOff size={18} color={textSecondary} strokeWidth={2.2} />
+                <EyeOff size={ResponsivePixels.size18} color={textSecondary} strokeWidth={2.2} />
               </View>
               <View style={styles.settingItemMeta}>
                 <Text style={[styles.settingItemTitle, { color: textPrimary }]}>
@@ -451,7 +452,7 @@ export const PrivacySecurityScreen: React.FC = () => {
                 ]}
               >
                 <Download
-                  size={18}
+                  size={ResponsivePixels.size18}
                   color={themeAccent}
                   strokeWidth={2.2}
                 />
@@ -488,7 +489,7 @@ export const PrivacySecurityScreen: React.FC = () => {
                 ]}
               >
                 <HardDrive
-                  size={18}
+                  size={ResponsivePixels.size18}
                   color={Colors.AccentAmber}
                   strokeWidth={2.2}
                 />
@@ -524,7 +525,7 @@ export const PrivacySecurityScreen: React.FC = () => {
                   },
                 ]}
               >
-                <Trash2 size={18} color={Colors.CrimsonPulse} strokeWidth={2.2} />
+                <Trash2 size={ResponsivePixels.size18} color={Colors.CrimsonPulse} strokeWidth={2.2} />
               </View>
               <View style={styles.actionMeta}>
                 <Text style={[styles.actionTitle, { color: Colors.CrimsonPulse }]}>
@@ -549,7 +550,7 @@ export const PrivacySecurityScreen: React.FC = () => {
             },
           ]}
         >
-          <FileText size={18} color={textSecondary} strokeWidth={2} />
+          <FileText size={ResponsivePixels.size18} color={textSecondary} strokeWidth={2} />
           <Text style={[styles.legalText, { color: textSecondary }]}>
             Regius is strictly compliant with GDPR, CCPA, and Apple App Store
             Privacy Guidelines. We do not sell your personal data or store
@@ -571,13 +572,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContent: {
-    paddingHorizontal: 16,
+    paddingHorizontal: ResponsivePixels.size16,
   },
   /* 2-Layer Hero Bento */
   heroCardShadowWrapper: {
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     backgroundColor: Colors.NeroBlack,
-    marginBottom: 16,
+    marginBottom: ResponsivePixels.size16,
     ...Platform.select({
       ios: {
         shadowColor: Colors.PureBlack,
@@ -592,39 +593,39 @@ const styles = StyleSheet.create({
   },
   heroCard: {
     backgroundColor: Colors.NeroBlack,
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     borderWidth: 4,
     borderColor: withAlpha(Colors.PureWhite, 0.9),
     overflow: 'hidden',
-    padding: 18,
+    padding: ResponsivePixels.size18,
   },
   heroHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    marginBottom: ResponsivePixels.size12,
   },
   heroTagRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   heroTagText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     color: Colors.LuminousGreen,
     letterSpacing: 1,
   },
   heroMainRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 14,
-    marginBottom: 14,
+    gap: ResponsivePixels.size14,
+    marginBottom: ResponsivePixels.size14,
   },
   heroShieldCircle: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: ResponsivePixels.size48,
+    height: ResponsivePixels.size48,
+    borderRadius: ResponsivePixels.size24,
     backgroundColor: Colors.VaultGreenDarkBg,
     borderWidth: 1.5,
     borderColor: withAlpha(Colors.LuminousGreen, 0.4),
@@ -636,22 +637,22 @@ const styles = StyleSheet.create({
   },
   heroTitle: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 19,
+    fontSize: ResponsivePixels.size19,
     color: Colors.PureWhite,
     letterSpacing: -0.4,
-    lineHeight: 24,
-    marginBottom: 4,
+    lineHeight: ResponsivePixels.size24,
+    marginBottom: ResponsivePixels.size4,
   },
   heroSubtitle: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: Colors.SteelMist,
-    lineHeight: 17,
+    lineHeight: ResponsivePixels.size17,
   },
   heroDivider: {
     height: 1,
     backgroundColor: withAlpha(Colors.PureWhite, 0.1),
-    marginBottom: 14,
+    marginBottom: ResponsivePixels.size14,
   },
   heroPillarsRow: {
     flexDirection: 'row',
@@ -663,68 +664,68 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   pillarIconCircle: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: ResponsivePixels.size28,
+    height: ResponsivePixels.size28,
+    borderRadius: ResponsivePixels.size14,
     backgroundColor: Colors.VaultPillarDarkBg,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 6,
+    marginBottom: ResponsivePixels.size6,
   },
   pillarTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 11.5,
+    fontSize: ResponsivePixels.size11_5,
     color: Colors.PureWhite,
-    marginBottom: 1,
+    marginBottom: ResponsivePixels.size1,
     textAlign: 'center',
   },
   pillarSub: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     color: Colors.SteelMist,
     textAlign: 'center',
   },
   pillarSeparator: {
     width: 1,
-    height: 32,
+    height: ResponsivePixels.size32,
     backgroundColor: withAlpha(Colors.PureWhite, 0.12),
   },
   sectionHeading: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     letterSpacing: 0.8,
-    marginBottom: 10,
-    marginLeft: 2,
+    marginBottom: ResponsivePixels.size10,
+    marginLeft: ResponsivePixels.size2,
   },
   /* Settings group card */
   settingsGroupCard: {
-    borderRadius: 20,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
-    padding: 14,
+    padding: ResponsivePixels.size14,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
-    marginBottom: 20,
+    marginBottom: ResponsivePixels.size20,
   },
   settingItemRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 6,
+    paddingVertical: ResponsivePixels.size6,
   },
   settingItemLeft: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
-    paddingRight: 10,
-    gap: 12,
+    paddingRight: ResponsivePixels.size10,
+    gap: ResponsivePixels.size12,
   },
   iconSquare: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: ResponsivePixels.size42,
+    height: ResponsivePixels.size42,
+    borderRadius: ResponsivePixels.size21,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -733,59 +734,59 @@ const styles = StyleSheet.create({
   },
   settingItemTitle: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14,
-    marginBottom: 2,
+    fontSize: ResponsivePixels.size14,
+    marginBottom: ResponsivePixels.size2,
   },
   settingItemDesc: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
-    lineHeight: 15,
+    fontSize: ResponsivePixels.size11,
+    lineHeight: ResponsivePixels.size15,
   },
   itemDivider: {
     height: 1,
-    marginVertical: 10,
+    marginVertical: ResponsivePixels.size10,
   },
   /* Action row */
   actionRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 6,
+    paddingVertical: ResponsivePixels.size6,
   },
   actionLeft: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
-    paddingRight: 10,
-    gap: 12,
+    paddingRight: ResponsivePixels.size10,
+    gap: ResponsivePixels.size12,
   },
   actionMeta: {
     flex: 1,
   },
   actionTitle: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14,
-    marginBottom: 2,
+    fontSize: ResponsivePixels.size14,
+    marginBottom: ResponsivePixels.size2,
   },
   actionDesc: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
-    lineHeight: 15,
+    fontSize: ResponsivePixels.size11,
+    lineHeight: ResponsivePixels.size15,
   },
   /* Legal footer */
   legalCard: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 10,
-    borderRadius: 16,
+    gap: ResponsivePixels.size10,
+    borderRadius: ResponsivePixels.size16,
     borderWidth: 1,
-    padding: 14,
-    marginBottom: 10,
+    padding: ResponsivePixels.size14,
+    marginBottom: ResponsivePixels.size10,
   },
   legalText: {
     flex: 1,
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11.5,
-    lineHeight: 17,
+    fontSize: ResponsivePixels.size11_5,
+    lineHeight: ResponsivePixels.size17,
   },
 });

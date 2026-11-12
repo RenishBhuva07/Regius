@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
   },
   waxSealDisc: {
     position: 'absolute',
-    top: -1,
+    top: -ResponsivePixels.size1,
     alignSelf: 'center',
     width: ResponsivePixels.size32,
     height: ResponsivePixels.size20,
@@ -392,8 +392,8 @@ const styles = StyleSheet.create({
     top: ResponsivePixels.size6,
     left: ResponsivePixels.size16,
     fontFamily: Fonts.ranade.bold,
-    fontSize: ResponsivePixels.size72,
-    lineHeight: ResponsivePixels.size72,
+    fontSize: ResponsivePixels.size84,
+    lineHeight: ResponsivePixels.size84,
     pointerEvents: 'none',
   },
   quoteBodyWrap: {
@@ -404,8 +404,8 @@ const styles = StyleSheet.create({
   },
   editorialQuoteText: {
     fontFamily: Fonts.ranade.medium,
-    fontSize: ResponsivePixels.size13,
-    lineHeight: ResponsivePixels.size20,
+    fontSize: ResponsivePixels.size15,
+    lineHeight: ResponsivePixels.size24,
     color: Colors.KeepsakeTextLight,
     textAlign: 'center',
     fontStyle: 'italic',
@@ -430,7 +430,7 @@ const styles = StyleSheet.create({
   },
   authorName: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size12,
+    fontSize: ResponsivePixels.size14,
     color: Colors.RegiusInk,
     letterSpacing: 0.2,
   },
@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
   },
   authorEra: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: ResponsivePixels.size9,
+    fontSize: ResponsivePixels.size11,
     color: Colors.MilestoneSlate,
   },
   shuffleButton: {
@@ -460,7 +460,7 @@ const styles = StyleSheet.create({
   },
   shuffleText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size9,
+    fontSize: ResponsivePixels.size11,
     color: Colors.BadgeYellowText,
     letterSpacing: 0.4,
   },
@@ -484,7 +484,7 @@ const styles = StyleSheet.create({
   },
   codexStampText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size8,
+    fontSize: ResponsivePixels.size10,
     color: Colors.KeepsakeAuthorMuted,
     letterSpacing: 0.8,
   },

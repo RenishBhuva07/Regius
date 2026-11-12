@@ -2,6 +2,7 @@ import React from 'react';
 import Svg, { Circle, Path, SvgProps } from 'react-native-svg';
 import { useTheme } from '../../../Theme/ThemeContext';
 import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface IntroNextArrowButtonProps extends SvgProps {
   size?: number;
@@ -9,7 +10,7 @@ export interface IntroNextArrowButtonProps extends SvgProps {
 }
 
 export const IntroNextArrowButton: React.FC<IntroNextArrowButtonProps> = ({
-  size = 84,
+  size = ResponsivePixels.size84,
   isDark: propIsDark,
   ...props
 }) => {

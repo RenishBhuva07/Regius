@@ -66,7 +66,7 @@ export const ProfileStatsMatrix: React.FC<ProfileStatsMatrixProps> = React.memo(
             ]}
           >
             <CheckSquare
-              size={16}
+              size={ResponsivePixels.size16}
               color={Colors.WorkTextAccent}
               strokeWidth={2.4}
             />
@@ -92,7 +92,7 @@ export const ProfileStatsMatrix: React.FC<ProfileStatsMatrixProps> = React.memo(
               },
             ]}
           >
-            <Flame size={16} color={Colors.LavenderPurple} strokeWidth={2.4} />
+            <Flame size={ResponsivePixels.size16} color={Colors.LavenderPurple} strokeWidth={2.4} />
           </View>
           <Text style={[styles.statValue, { color: textPrimary }]}>
             {activeHabitsStreak}d
@@ -116,7 +116,7 @@ export const ProfileStatsMatrix: React.FC<ProfileStatsMatrixProps> = React.memo(
             ]}
           >
             <Calendar
-              size={16}
+              size={ResponsivePixels.size16}
               color={Colors.GreenGracious}
               strokeWidth={2.4}
             />
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
   statsGridCard: {
     flexDirection: 'row',
     marginHorizontal: ResponsivePixels.size16,
-    borderRadius: 20,
+    borderRadius: ResponsivePixels.size20,
     borderWidth: 1.5,
     borderBottomWidth: 3.5,
     paddingVertical: ResponsivePixels.size16,
@@ -153,21 +153,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   statIconWrap: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: ResponsivePixels.size34,
+    height: ResponsivePixels.size34,
+    borderRadius: ResponsivePixels.size17,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 6,
+    marginBottom: ResponsivePixels.size6,
   },
   statValue: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 18,
-    marginBottom: 2,
+    fontSize: ResponsivePixels.size18,
+    marginBottom: ResponsivePixels.size2,
   },
   statLabel: {
     ...Typography.bodySuperSmallPoppinsRegularLoose,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
   },
   statDivider: {
     width: 1,

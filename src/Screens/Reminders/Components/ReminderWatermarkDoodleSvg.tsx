@@ -11,6 +11,7 @@ import Svg, {
   Line,
 } from 'react-native-svg';
 import { Colors, IllustrationColors } from '../../../Assets/StyleUtilities/Colors';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface ReminderWatermarkDoodleSvgProps {
   width?: number;
@@ -20,7 +21,10 @@ export interface ReminderWatermarkDoodleSvgProps {
 // Vector illustration for the Reminders footer watermark.
 export const ReminderWatermarkDoodleSvg: React.FC<
   ReminderWatermarkDoodleSvgProps
-> = ({ width = 135, height = 145 }) => {
+> = ({
+  width = ResponsivePixels.size135,
+  height = ResponsivePixels.size145,
+}) => {
   return (
     <View style={[styles.container, { width, height }]} pointerEvents="none">
       <Svg width={width} height={height} viewBox="0 0 135 145" fill="none">

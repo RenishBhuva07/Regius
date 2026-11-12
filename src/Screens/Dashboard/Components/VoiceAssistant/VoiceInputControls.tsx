@@ -11,6 +11,7 @@ import { Mic, X, MessageSquare, Square, RotateCcw } from 'lucide-react-native';
 import { Colors, withAlpha } from '../../../../Assets/StyleUtilities/Colors';
 import { VoiceAssistantTheme } from './types';
 import { VoiceAssistantState } from '../../../../Services/Voice/VoiceStateMachine';
+import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface VoiceInputControlsProps {
   state: VoiceAssistantState;
@@ -145,12 +146,12 @@ export const VoiceInputControls: React.FC<VoiceInputControlsProps> = ({
 
   // Center Mic button background & icon
   let micBg = theme.accent;
-  let micIcon = <Mic size={28} color={Colors.PureWhite} strokeWidth={2.4} />;
+  let micIcon = <Mic size={ResponsivePixels.size28} color={Colors.PureWhite} strokeWidth={2.4} />;
   let micLabel = 'Start speaking';
 
   if (isListening) {
     micBg = theme.accent;
-    micIcon = <Mic size={28} color={Colors.PureWhite} strokeWidth={2.4} />;
+    micIcon = <Mic size={ResponsivePixels.size28} color={Colors.PureWhite} strokeWidth={2.4} />;
     micLabel = 'Recording active. Tap to finish';
   } else if (isThinking) {
     micBg = theme.isDarkMode
@@ -162,17 +163,17 @@ export const VoiceInputControls: React.FC<VoiceInputControlsProps> = ({
     micBg = theme.isDarkMode
       ? Colors.VoiceMicDarkViolet
       : Colors.VoiceMicLilacSurface;
-    micIcon = <Square size={20} color={theme.accent} fill={theme.accent} />;
+    micIcon = <Square size={ResponsivePixels.size20} color={theme.accent} fill={theme.accent} />;
     micLabel = 'Interrupt speech';
   } else if (isErrorOrUnrecognized) {
     micBg = theme.accent;
     micIcon = (
-      <RotateCcw size={24} color={Colors.PureWhite} strokeWidth={2.4} />
+      <RotateCcw size={ResponsivePixels.size24} color={Colors.PureWhite} strokeWidth={2.4} />
     );
     micLabel = 'Retry speaking';
   } else if (isCompleted) {
     micBg = theme.accent;
-    micIcon = <Mic size={26} color={Colors.PureWhite} strokeWidth={2.4} />;
+    micIcon = <Mic size={ResponsivePixels.size26} color={Colors.PureWhite} strokeWidth={2.4} />;
     micLabel = 'Speak another command';
   }
 
@@ -193,11 +194,11 @@ export const VoiceInputControls: React.FC<VoiceInputControlsProps> = ({
               : Colors.LavenderPurple,
           },
         ]}
-        hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+        hitSlop={{ top: ResponsivePixels.size12, bottom: ResponsivePixels.size12, left: ResponsivePixels.size12, right: ResponsivePixels.size12 }}
         accessibilityRole="button"
         accessibilityLabel="Suggestions and conversations"
       >
-        <MessageSquare size={21} color={theme.textPrimary} strokeWidth={2.2} />
+        <MessageSquare size={ResponsivePixels.size21} color={theme.textPrimary} strokeWidth={2.2} />
       </Pressable>
 
       {/* 2. Center Primary Action: Futuristic 3D Microphone Button */}
@@ -241,7 +242,7 @@ export const VoiceInputControls: React.FC<VoiceInputControlsProps> = ({
               opacity: pressed ? 0.85 : 1,
             },
           ]}
-          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          hitSlop={{ top: ResponsivePixels.size10, bottom: ResponsivePixels.size10, left: ResponsivePixels.size10, right: ResponsivePixels.size10 }}
           accessibilityRole="button"
           accessibilityLabel={micLabel}
         >
@@ -264,11 +265,11 @@ export const VoiceInputControls: React.FC<VoiceInputControlsProps> = ({
               : Colors.LavenderPurple,
           },
         ]}
-        hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }}
+        hitSlop={{ top: ResponsivePixels.size12, bottom: ResponsivePixels.size12, left: ResponsivePixels.size12, right: ResponsivePixels.size12 }}
         accessibilityRole="button"
         accessibilityLabel="Dismiss voice assistant"
       >
-        <X size={21} color={theme.textPrimary} strokeWidth={2.4} />
+        <X size={ResponsivePixels.size21} color={theme.textPrimary} strokeWidth={2.4} />
       </Pressable>
     </View>
   );
@@ -280,13 +281,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-evenly',
     width: '100%',
-    paddingVertical: 12,
-    paddingHorizontal: 24,
+    paddingVertical: ResponsivePixels.size12,
+    paddingHorizontal: ResponsivePixels.size24,
   },
   secondaryBtn: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+    width: ResponsivePixels.size52,
+    height: ResponsivePixels.size52,
+    borderRadius: ResponsivePixels.size26,
     borderWidth: 1.2,
     borderBottomWidth: 2.6,
     alignItems: 'center',
@@ -299,25 +300,25 @@ const styles = StyleSheet.create({
   micWrapper: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 88,
-    height: 88,
+    width: ResponsivePixels.size88,
+    height: ResponsivePixels.size88,
   },
   pulseRingOuter: {
     position: 'absolute',
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: ResponsivePixels.size80,
+    height: ResponsivePixels.size80,
+    borderRadius: ResponsivePixels.size40,
   },
   pulseRingInner: {
     position: 'absolute',
-    width: 72,
-    height: 72,
-    borderRadius: 36,
+    width: ResponsivePixels.size72,
+    height: ResponsivePixels.size72,
+    borderRadius: ResponsivePixels.size36,
   },
   micBtn: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
+    width: ResponsivePixels.size72,
+    height: ResponsivePixels.size72,
+    borderRadius: ResponsivePixels.size36,
     borderWidth: 2,
     borderColor: withAlpha(Colors.PureWhite, 0.45),
     borderBottomWidth: 4,

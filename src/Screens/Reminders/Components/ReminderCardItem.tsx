@@ -38,6 +38,7 @@ import { useAppTheme } from '../../../Theme/useAppTheme';
 import { Badge } from '../../../Common/Badge';
 import { getCutoutCardPath } from '../../../Common/CutoutCardSvg';
 import { Reminder } from '../../../Context/TaskReminderContext';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 interface ReminderCardItemProps {
   reminder: Reminder;
@@ -65,14 +66,14 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
   const currentX = useRef(0);
   const isOpenRef = useRef(false);
 
-  const ACTIONS_WIDTH = 138;
+  const ACTIONS_WIDTH = ResponsivePixels.size138;
   const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
   const [localChecked, setLocalChecked] = useState(isChecked);
 
-  const initialW = Dimensions.get('window').width - 16;
+  const initialW = Dimensions.get('window').width - ResponsivePixels.size16;
   const [cardSize, setCardSize] = useState({
-    width: Math.max(initialW, 200),
-    height: 96,
+    width: Math.max(initialW, ResponsivePixels.size200),
+    height: ResponsivePixels.size96,
   });
 
   const handleCardLayout = useCallback((e: LayoutChangeEvent) => {
@@ -337,7 +338,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
               accessibilityLabel={`View details for ${reminder.title}`}
             >
               <View style={styles.actionIconAuraDetails}>
-                <Flame size={14} color={Colors.AccentAmber} strokeWidth={2.6} />
+                <Flame size={ResponsivePixels.size14} color={Colors.AccentAmber} strokeWidth={2.6} />
               </View>
               <Text style={styles.actionBtnText}>DETAILS</Text>
             </TouchableOpacity>
@@ -363,7 +364,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
               accessibilityLabel={`Edit ${reminder.title}`}
             >
               <View style={styles.actionIconAuraEdit}>
-                <Pencil size={13.5} color={Colors.AccentYellow} strokeWidth={2.6} />
+                <Pencil size={ResponsivePixels.size13_5} color={Colors.AccentYellow} strokeWidth={2.6} />
               </View>
               <Text style={styles.actionBtnText}>EDIT</Text>
             </TouchableOpacity>
@@ -410,9 +411,9 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
               {!localChecked && (
                 <RadialGradient
                   id={`reminderCardAura-${reminder.id}`}
-                  cx={cardSize.width - 55}
-                  cy={25}
-                  r={110}
+                  cx={cardSize.width - ResponsivePixels.size55}
+                  cy={ResponsivePixels.size25}
+                  r={ResponsivePixels.size110}
                   gradientUnits="userSpaceOnUse"
                 >
                   <Stop
@@ -457,15 +458,15 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                 />
                 {/* Delicate starlight nodes */}
                 <Circle
-                  cx={cardSize.width - 66}
-                  cy={16}
+                  cx={cardSize.width - ResponsivePixels.size66}
+                  cy={ResponsivePixels.size16}
                   r={1.6}
                   fill={theme.accent}
                   opacity={isDarkMode ? 0.6 : 0.4}
                 />
                 <Circle
-                  cx={cardSize.width - 80}
-                  cy={30}
+                  cx={cardSize.width - ResponsivePixels.size80}
+                  cy={ResponsivePixels.size30}
                   r={1.3}
                   fill={theme.accent}
                   opacity={isDarkMode ? 0.5 : 0.3}
@@ -477,7 +478,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
           {/* Floating Checkbox in Top-Right Cutout */}
           <TouchableOpacity
             activeOpacity={0.75}
-            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            hitSlop={{ top: ResponsivePixels.size8, bottom: ResponsivePixels.size8, left: ResponsivePixels.size8, right: ResponsivePixels.size8 }}
             onPress={e => {
               e.stopPropagation();
               handlePress();
@@ -510,7 +511,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
           >
             {localChecked && (
               <Check
-                size={14}
+                size={ResponsivePixels.size14}
                 color={isDarkMode ? Colors.AccentGreen : Colors.GreenGracious}
                 strokeWidth={3}
               />
@@ -535,7 +536,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                 ]}
               >
                 <IconComponent
-                  size={18}
+                  size={ResponsivePixels.size18}
                   color={
                     localChecked
                       ? isDarkMode
@@ -591,7 +592,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                   isSpeaking && styles.speakBtnActive,
                 ]}
                 onPress={e => onSpeak(reminder, e)}
-                hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+                hitSlop={{ top: ResponsivePixels.size8, bottom: ResponsivePixels.size8, left: ResponsivePixels.size8, right: ResponsivePixels.size8 }}
                 accessibilityRole="button"
                 accessibilityLabel={
                   isSpeaking
@@ -601,13 +602,13 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
               >
                 {isSpeaking ? (
                   <VolumeX
-                    size={15}
+                    size={ResponsivePixels.size15}
                     color={isDarkMode ? Colors.AccentGreen : Colors.GreenGracious}
                     strokeWidth={2.4}
                   />
                 ) : (
                   <Volume2
-                    size={15}
+                    size={ResponsivePixels.size15}
                     color={isDarkMode ? Colors.SteelMist : Colors.MutedSlateSubtext}
                     strokeWidth={2.2}
                   />
@@ -633,7 +634,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                     ]}
                   >
                     <Clock
-                      size={11.5}
+                      size={ResponsivePixels.size11_5}
                       color={isDarkMode ? Colors.SteelMist : Colors.MutedSlateSubtext}
                       strokeWidth={2}
                     />
@@ -656,7 +657,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                     ]}
                   >
                     <Calendar
-                      size={11.5}
+                      size={ResponsivePixels.size11_5}
                       color={isDarkMode ? Colors.SteelMist : Colors.MutedSlateSubtext}
                       strokeWidth={2}
                     />
@@ -683,7 +684,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                     ]}
                   >
                     <RotateCw
-                      size={11}
+                      size={ResponsivePixels.size11}
                       color={Colors.LavenderPurple}
                       strokeWidth={2.2}
                     />
@@ -713,23 +714,23 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
-    width: 138,
+    width: ResponsivePixels.size138,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    gap: 8,
-    paddingRight: 2,
+    gap: ResponsivePixels.size8,
+    paddingRight: ResponsivePixels.size2,
     zIndex: 1,
   },
   actionBtnAnimWrap: {
-    width: 60,
-    height: 56,
+    width: ResponsivePixels.size60,
+    height: ResponsivePixels.size56,
   },
   actionBtnDetails: {
-    width: 60,
-    height: 56,
+    width: ResponsivePixels.size60,
+    height: ResponsivePixels.size56,
     backgroundColor: Colors.NeroBlack,
-    borderRadius: 18,
+    borderRadius: ResponsivePixels.size18,
     borderWidth: 1.2,
     borderTopWidth: 1.8,
     borderTopColor: withAlpha(Colors.PureWhite, 0.45),
@@ -739,7 +740,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.DarkChipBevelAbyss,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 4,
+    paddingVertical: ResponsivePixels.size4,
     ...Platform.select({
       ios: {
         shadowColor: Colors.AccentAmber,
@@ -753,21 +754,21 @@ const styles = StyleSheet.create({
     }),
   },
   actionIconAuraDetails: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: ResponsivePixels.size28,
+    height: ResponsivePixels.size28,
+    borderRadius: ResponsivePixels.size14,
     backgroundColor: withAlpha(Colors.AccentAmber, 0.22),
     borderWidth: 1.2,
     borderColor: withAlpha(Colors.AccentAmber, 0.48),
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 3,
+    marginBottom: ResponsivePixels.size3,
   },
   actionBtnEdit: {
-    width: 60,
-    height: 56,
+    width: ResponsivePixels.size60,
+    height: ResponsivePixels.size56,
     backgroundColor: Colors.NeroBlack,
-    borderRadius: 18,
+    borderRadius: ResponsivePixels.size18,
     borderWidth: 1.2,
     borderTopWidth: 1.8,
     borderTopColor: withAlpha(Colors.PureWhite, 0.45),
@@ -777,7 +778,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.DarkChipBevelAbyss,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 4,
+    paddingVertical: ResponsivePixels.size4,
     ...Platform.select({
       ios: {
         shadowColor: Colors.AccentYellow,
@@ -791,19 +792,19 @@ const styles = StyleSheet.create({
     }),
   },
   actionIconAuraEdit: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: ResponsivePixels.size28,
+    height: ResponsivePixels.size28,
+    borderRadius: ResponsivePixels.size14,
     backgroundColor: withAlpha(Colors.AccentYellow, 0.22),
     borderWidth: 1.2,
     borderColor: withAlpha(Colors.AccentYellow, 0.48),
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 3,
+    marginBottom: ResponsivePixels.size3,
   },
   actionBtnText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 9.5,
+    fontSize: ResponsivePixels.size9_5,
     color: Colors.WarmActionTextCream,
     letterSpacing: 0.75,
   },
@@ -813,8 +814,8 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: Colors.Transparent,
-    padding: 16,
-    gap: 10,
+    padding: ResponsivePixels.size16,
+    gap: ResponsivePixels.size10,
     position: 'relative',
     ...Platform.select({
       ios: {
@@ -837,11 +838,11 @@ const styles = StyleSheet.create({
   },
   floatingCheckbox: {
     position: 'absolute',
-    top: 9,
-    right: 9,
-    width: 26,
-    height: 26,
-    borderRadius: 13,
+    top: ResponsivePixels.size9,
+    right: ResponsivePixels.size9,
+    width: ResponsivePixels.size26,
+    height: ResponsivePixels.size26,
+    borderRadius: ResponsivePixels.size13,
     borderWidth: 1.5,
     alignItems: 'center',
     justifyContent: 'center',
@@ -870,34 +871,34 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
-    gap: 12,
+    gap: ResponsivePixels.size12,
   },
   leftInfo: {
     flexDirection: 'row',
     alignItems: 'flex-start',
-    gap: 12,
+    gap: ResponsivePixels.size12,
     flex: 1,
   },
   iconContainer: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: ResponsivePixels.size36,
+    height: ResponsivePixels.size36,
+    borderRadius: ResponsivePixels.size18,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 2,
+    marginTop: ResponsivePixels.size2,
   },
   iconContainerChecked: {
     backgroundColor: Colors.BadgeGreenBg,
   },
   textBlock: {
     flex: 1,
-    gap: 3,
+    gap: ResponsivePixels.size3,
   },
   title: {
     ...Typography.bodyMediumPoppinsSemiBold,
     color: Colors.RegiusInk,
-    fontSize: 15,
-    lineHeight: 21,
+    fontSize: ResponsivePixels.size15,
+    lineHeight: ResponsivePixels.size21,
   },
   titleCompleted: {
     color: Colors.MutedSlateSubtext,
@@ -905,8 +906,8 @@ const styles = StyleSheet.create({
   notes: {
     ...Typography.bodySmallPoppinsRegular,
     color: Colors.MutedSlateSubtext,
-    fontSize: 12,
-    lineHeight: 17,
+    fontSize: ResponsivePixels.size12,
+    lineHeight: ResponsivePixels.size17,
   },
   notesCompleted: {
     color: Colors.CoolMistText,
@@ -914,13 +915,13 @@ const styles = StyleSheet.create({
   rightControls: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 34,
-    marginTop: 2,
+    marginRight: ResponsivePixels.size34,
+    marginTop: ResponsivePixels.size2,
   },
   speakBtn: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
+    width: ResponsivePixels.size28,
+    height: ResponsivePixels.size28,
+    borderRadius: ResponsivePixels.size14,
     backgroundColor: Colors.WellnessLightBg,
     borderWidth: 1,
     borderColor: Colors.WellnessLightBorder,
@@ -934,28 +935,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingTop: 8,
+    paddingTop: ResponsivePixels.size8,
     borderTopWidth: 1,
     borderTopColor: Colors.WellnessCardTopBorder,
   },
   footerLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: ResponsivePixels.size8,
     flexWrap: 'wrap',
   },
   metaTag: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4,
+    gap: ResponsivePixels.size4,
     backgroundColor: Colors.CoolNeutralSurface,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 10,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size3,
+    borderRadius: ResponsivePixels.size10,
   },
   metaText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: Colors.MutedSlateSubtext,
   },
   repeatTag: {
@@ -963,7 +964,7 @@ const styles = StyleSheet.create({
   },
   repeatText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: Colors.LavenderPurple,
   },
 });

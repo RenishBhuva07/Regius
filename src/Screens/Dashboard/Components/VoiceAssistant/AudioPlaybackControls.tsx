@@ -10,6 +10,7 @@ import { Square, RotateCcw } from 'lucide-react-native';
 import { Fonts } from '../../../../Theme/fonts';
 import { Colors } from '../../../../Assets/StyleUtilities/Colors';
 import { VoiceAssistantTheme } from './types';
+import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface AudioPlaybackControlsProps {
   onInterrupt?: () => void;
@@ -35,7 +36,7 @@ export const AudioPlaybackControls: React.FC<AudioPlaybackControlsProps> = ({
           accessibilityRole="button"
           accessibilityLabel="Interrupt speech and start speaking"
         >
-          <Square size={13} color={theme.background} fill={theme.background} />
+          <Square size={ResponsivePixels.size13} color={theme.background} fill={theme.background} />
           <Text style={[styles.interruptText, { color: theme.background }]}>
             Interrupt &amp; Speak
           </Text>
@@ -58,7 +59,7 @@ export const AudioPlaybackControls: React.FC<AudioPlaybackControlsProps> = ({
           accessibilityRole="button"
           accessibilityLabel="Replay response"
         >
-          <RotateCcw size={16} color={theme.textPrimary} />
+          <RotateCcw size={ResponsivePixels.size16} color={theme.textPrimary} />
         </Pressable>
       ) : null}
     </View>
@@ -70,17 +71,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 12,
+    gap: ResponsivePixels.size12,
     width: '100%',
-    paddingVertical: 8,
+    paddingVertical: ResponsivePixels.size8,
   },
   interruptBtn: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderRadius: 24,
+    gap: ResponsivePixels.size8,
+    paddingHorizontal: ResponsivePixels.size20,
+    paddingVertical: ResponsivePixels.size12,
+    borderRadius: ResponsivePixels.size24,
     ...Platform.select({
       ios: {
         shadowColor: Colors.PureBlack,
@@ -95,13 +96,13 @@ const styles = StyleSheet.create({
   },
   interruptText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     letterSpacing: 0.2,
   },
   replayBtn: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: ResponsivePixels.size42,
+    height: ResponsivePixels.size42,
+    borderRadius: ResponsivePixels.size21,
     alignItems: 'center',
     justifyContent: 'center',
   },

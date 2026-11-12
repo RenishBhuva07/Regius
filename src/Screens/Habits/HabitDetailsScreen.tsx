@@ -1367,14 +1367,14 @@ const styles = StyleSheet.create({
   },
   frostedDomainText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: ResponsivePixels.size10,
+    fontSize: ResponsivePixels.size12,
     letterSpacing: 0.3,
   },
   bentoTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size22,
+    fontSize: ResponsivePixels.size26,
     color: Colors.PureWhite,
-    lineHeight: ResponsivePixels.size28,
+    lineHeight: ResponsivePixels.size32,
   },
   streakShowcaseRow: {
     flexDirection: 'row',
@@ -1388,9 +1388,9 @@ const styles = StyleSheet.create({
     gap: ResponsivePixels.size10,
   },
   flameAuraContainer: {
-    width: ResponsivePixels.size34,
-    height: ResponsivePixels.size34,
-    borderRadius: ResponsivePixels.size17,
+    width: ResponsivePixels.size40,
+    height: ResponsivePixels.size40,
+    borderRadius: ResponsivePixels.size20,
     backgroundColor: withAlpha(Colors.AccentAmber, 0.18),
     borderWidth: 1.5,
     borderColor: withAlpha(Colors.AccentAmber, 0.35),
@@ -1407,20 +1407,20 @@ const styles = StyleSheet.create({
   },
   streakNumber: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: ResponsivePixels.size22,
-    lineHeight: ResponsivePixels.size25,
+    fontSize: ResponsivePixels.size26,
+    lineHeight: ResponsivePixels.size30,
     color: Colors.AccentYellow,
     letterSpacing: -0.4,
   },
   streakUnit: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size10,
+    fontSize: ResponsivePixels.size12,
     color: Colors.PureWhite,
     letterSpacing: 0.5,
   },
   streakSublabel: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: ResponsivePixels.size10,
+    fontSize: ResponsivePixels.size12,
     color: Colors.CoolSilverSubtitle,
     marginTop: ResponsivePixels.size1,
   },
@@ -1443,7 +1443,7 @@ const styles = StyleSheet.create({
   },
   sectionHeaderTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size14,
+    fontSize: ResponsivePixels.size16,
     color: Colors.RegiusInk,
     letterSpacing: 0.1,
   },
@@ -1455,7 +1455,7 @@ const styles = StyleSheet.create({
   },
   sectionHeaderCapsuleText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: ResponsivePixels.size9,
+    fontSize: ResponsivePixels.size11,
     color: Colors.LavenderPurple,
     letterSpacing: 0.5,
   },
@@ -1533,7 +1533,7 @@ const styles = StyleSheet.create({
   },
   streakWindowHeaderTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size9,
+    fontSize: ResponsivePixels.size11,
     color: Colors.RegiusInk,
     letterSpacing: 0.6,
   },
@@ -1592,7 +1592,7 @@ const styles = StyleSheet.create({
   },
   dayName: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: ResponsivePixels.size9,
+    fontSize: ResponsivePixels.size11,
     color: Colors.DetailMutedSlate,
     letterSpacing: 0.2,
   },
@@ -1601,7 +1601,7 @@ const styles = StyleSheet.create({
   },
   dayNameToday: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size9,
+    fontSize: ResponsivePixels.size11,
     color: Colors.BadgeYellowText,
     letterSpacing: 0.3,
   },
@@ -1699,22 +1699,22 @@ const styles = StyleSheet.create({
   },
   cubbyValueBig: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: ResponsivePixels.size20,
-    lineHeight: ResponsivePixels.size23,
+    fontSize: ResponsivePixels.size24,
+    lineHeight: ResponsivePixels.size27,
     color: Colors.RegiusInk,
     letterSpacing: -0.3,
     textAlign: 'center',
   },
   cubbyCadenceText: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: ResponsivePixels.size16,
-    lineHeight: ResponsivePixels.size23,
+    fontSize: ResponsivePixels.size19,
+    lineHeight: ResponsivePixels.size27,
     color: Colors.RegiusInk,
     textAlign: 'center',
   },
   cubbyLabel: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: ResponsivePixels.size8,
+    fontSize: ResponsivePixels.size10,
     color: Colors.MilestoneSlate,
     letterSpacing: 0.3,
     textAlign: 'center',
@@ -1833,13 +1833,13 @@ const styles = StyleSheet.create({
   },
   protocolMicroLabel: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size9,
+    fontSize: ResponsivePixels.size11,
     color: Colors.MilestoneSlate,
     letterSpacing: 0.6,
   },
   protocolBoldValue: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: ResponsivePixels.size15,
+    fontSize: ResponsivePixels.size18,
     color: Colors.RegiusInk,
     letterSpacing: -0.2,
   },
@@ -1877,7 +1877,7 @@ const styles = StyleSheet.create({
   },
   deleteBtnText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: ResponsivePixels.size13,
+    fontSize: ResponsivePixels.size15,
     color: Colors.CategoryRedAccent,
   },
 

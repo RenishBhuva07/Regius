@@ -195,7 +195,7 @@ export const WakeWordStudioScreen: React.FC = () => {
         style={styles.scrollView}
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingBottom: insets.bottom + 100 },
+          { paddingBottom: insets.bottom + ResponsivePixels.size100 },
         ]}
         showsVerticalScrollIndicator={false}
         onScroll={handleScroll}
@@ -212,7 +212,7 @@ export const WakeWordStudioScreen: React.FC = () => {
                 <View style={styles.heroStatusRow}>
                   <View style={styles.heroStatusLeft}>
                     <Sparkles
-                      size={14}
+                      size={ResponsivePixels.size14}
                       color={Colors.AccentYellow}
                       strokeWidth={2.4}
                     />
@@ -242,7 +242,7 @@ export const WakeWordStudioScreen: React.FC = () => {
                 <View style={styles.radarMetricsRow}>
                   <View style={styles.metricCell}>
                     <Activity
-                      size={13}
+                      size={ResponsivePixels.size13}
                       color={Colors.AccentYellow}
                       strokeWidth={2.2}
                     />
@@ -251,7 +251,7 @@ export const WakeWordStudioScreen: React.FC = () => {
                   <View style={styles.metricDivider} />
                   <View style={styles.metricCell}>
                     <ShieldCheck
-                      size={13}
+                      size={ResponsivePixels.size13}
                       color={Colors.LuminousGreen}
                       strokeWidth={2.2}
                     />
@@ -260,7 +260,7 @@ export const WakeWordStudioScreen: React.FC = () => {
                   <View style={styles.metricDivider} />
                   <View style={styles.metricCell}>
                     <Zap
-                      size={13}
+                      size={ResponsivePixels.size13}
                       color={Colors.Violet400}
                       strokeWidth={2.2}
                     />
@@ -379,7 +379,7 @@ export const WakeWordStudioScreen: React.FC = () => {
               ? Colors.DarkCardBackground
               : Colors.PureWhite,
             borderTopColor: borderLight,
-            paddingBottom: insets.bottom + 12,
+            paddingBottom: insets.bottom + ResponsivePixels.size12,
           },
         ]}
       >
@@ -406,11 +406,11 @@ const styles = StyleSheet.create({
     paddingTop: ResponsivePixels.size16,
   },
   heroOuterWrapper: {
-    paddingHorizontal: 10,
+    paddingHorizontal: ResponsivePixels.size10,
     marginBottom: ResponsivePixels.size24,
   },
   cardShadowWrapper: {
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     backgroundColor: Colors.PureBlack,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: 10 },
@@ -419,7 +419,7 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   card: {
-    borderRadius: 24,
+    borderRadius: ResponsivePixels.size24,
     borderWidth: 4,
     borderColor: withAlpha(Colors.PureWhite, 0.9),
     backgroundColor: Colors.NeroBlack,
@@ -435,33 +435,33 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 4,
+    marginBottom: ResponsivePixels.size4,
   },
   heroStatusLeft: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: ResponsivePixels.size6,
   },
   heroStatusLabel: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     letterSpacing: 0.8,
     color: Colors.AccentYellow,
   },
   phraseReadoutWrap: {
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: ResponsivePixels.size16,
   },
   phraseLabel: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     letterSpacing: 1.2,
     color: withAlpha(Colors.PureWhite, 0.45),
-    marginBottom: 4,
+    marginBottom: ResponsivePixels.size4,
   },
   phraseDisplay: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 22,
+    fontSize: ResponsivePixels.size22,
     color: Colors.PureWhite,
     letterSpacing: -0.3,
   },
@@ -470,54 +470,54 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: withAlpha(Colors.PureWhite, 0.06),
-    borderRadius: 14,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginBottom: 16,
+    borderRadius: ResponsivePixels.size14,
+    paddingVertical: ResponsivePixels.size8,
+    paddingHorizontal: ResponsivePixels.size12,
+    marginBottom: ResponsivePixels.size16,
     borderWidth: 1,
     borderColor: withAlpha(Colors.PureWhite, 0.08),
   },
   metricCell: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 5,
+    gap: ResponsivePixels.size5,
   },
   metricText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     color: withAlpha(Colors.PureWhite, 0.8),
   },
   metricDivider: {
     width: 1,
-    height: 12,
+    height: ResponsivePixels.size12,
     backgroundColor: withAlpha(Colors.PureWhite, 0.15),
-    marginHorizontal: 10,
+    marginHorizontal: ResponsivePixels.size10,
   },
   heroMasterSwitch: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: withAlpha(Colors.PureWhite, 0.05),
-    borderRadius: 16,
-    paddingHorizontal: 14,
-    paddingVertical: 12,
+    borderRadius: ResponsivePixels.size16,
+    paddingHorizontal: ResponsivePixels.size14,
+    paddingVertical: ResponsivePixels.size12,
     borderWidth: 1,
     borderColor: withAlpha(Colors.PureWhite, 0.08),
   },
   heroMasterSwitchMeta: {
     flex: 1,
-    marginRight: 10,
+    marginRight: ResponsivePixels.size10,
   },
   heroMasterSwitchTitle: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 14,
+    fontSize: ResponsivePixels.size14,
     color: Colors.PureWhite,
   },
   heroMasterSwitchDesc: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     color: withAlpha(Colors.PureWhite, 0.55),
-    marginTop: 1,
+    marginTop: ResponsivePixels.size1,
   },
   sectionHeaderRow: {
     flexDirection: 'row',
@@ -528,12 +528,12 @@ const styles = StyleSheet.create({
   },
   sectionHeading: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 11,
+    fontSize: ResponsivePixels.size11,
     letterSpacing: 1.1,
   },
   presetsGrid: {
     paddingHorizontal: ResponsivePixels.size16,
-    gap: 12,
+    gap: ResponsivePixels.size12,
     marginBottom: ResponsivePixels.size24,
   },
   floatingActionDock: {
@@ -542,7 +542,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     paddingHorizontal: ResponsivePixels.size16,
-    paddingTop: 12,
+    paddingTop: ResponsivePixels.size12,
     borderTopWidth: StyleSheet.hairlineWidth,
     shadowColor: Colors.PureBlack,
     shadowOffset: { width: 0, height: -4 },

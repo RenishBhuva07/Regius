@@ -4,6 +4,7 @@ import Svg, { Path } from 'react-native-svg';
 import { Lock, Crown, Sparkles } from 'lucide-react-native';
 import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { Fonts } from '../../../Theme/fonts';
+import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 export type MilestoneBadgeState = 'unlocked' | 'current' | 'next_goal' | 'locked';
 
@@ -13,7 +14,9 @@ interface ThreeDStatusBadgeProps {
 }
 
 // Embossed checkmark icon for completed status.
-const ThreeDRightSignSvg: React.FC<{ size?: number }> = ({ size = 16 }) => {
+const ThreeDRightSignSvg: React.FC<{ size?: number }> = ({
+  size = ResponsivePixels.size16,
+}) => {
   return (
     <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
       <Path
@@ -53,7 +56,7 @@ export const ThreeDStatusBadge: React.FC<ThreeDStatusBadgeProps> = ({
           <View style={styles.glossHighlight} />
           <View style={styles.contentRow}>
             <View style={styles.icon3dWrap}>
-              <ThreeDRightSignSvg size={15} />
+              <ThreeDRightSignSvg size={ResponsivePixels.size15} />
             </View>
             <Text style={styles.unlockedText}>UNLOCKED</Text>
           </View>
@@ -69,7 +72,7 @@ export const ThreeDStatusBadge: React.FC<ThreeDStatusBadgeProps> = ({
           <View style={styles.glossHighlight} />
           <View style={styles.contentRow}>
             <View style={styles.currentIconWrap}>
-              <Crown size={13} color={Colors.PureWhite} strokeWidth={2.6} />
+              <Crown size={ResponsivePixels.size13} color={Colors.PureWhite} strokeWidth={2.6} />
             </View>
             <Text style={styles.currentText}>CURRENT</Text>
           </View>
@@ -85,7 +88,7 @@ export const ThreeDStatusBadge: React.FC<ThreeDStatusBadgeProps> = ({
           <View style={styles.glossHighlightDim} />
           <View style={styles.contentRow}>
             <Sparkles
-              size={12}
+              size={ResponsivePixels.size12}
               color={Colors.HabitBurnishedAmber}
               strokeWidth={2.4}
             />
@@ -101,7 +104,7 @@ export const ThreeDStatusBadge: React.FC<ThreeDStatusBadgeProps> = ({
       <View style={styles.lockedBadge}>
         <View style={styles.glossHighlightDark} />
         <View style={styles.contentRow}>
-          <Lock size={12} color={Colors.Slate400} strokeWidth={2.4} />
+          <Lock size={ResponsivePixels.size12} color={Colors.Slate400} strokeWidth={2.4} />
           <Text style={styles.lockedText}>
             {requiredXp ? `LOCKED` : 'LOCKED'}
           </Text>
@@ -114,7 +117,7 @@ export const ThreeDStatusBadge: React.FC<ThreeDStatusBadgeProps> = ({
 const styles = StyleSheet.create({
   // --- 3D UNLOCKED RIGHT SIGN BADGE ---
   unlockedShadowWrap: {
-    borderRadius: 16,
+    borderRadius: ResponsivePixels.size16,
     ...Platform.select({
       ios: {
         shadowColor: Colors.ToastSuccessIcon,
@@ -129,21 +132,21 @@ const styles = StyleSheet.create({
   },
   unlockedBadge: {
     backgroundColor: Colors.ToastSuccessAccent,
-    borderRadius: 14,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1.5,
     borderTopColor: withAlpha(Colors.PureWhite, 0.75),
     borderLeftColor: withAlpha(Colors.PureWhite, 0.4),
     borderRightColor: withAlpha(Colors.PureWhite, 0.25),
     borderBottomWidth: 3.5,
     borderBottomColor: Colors.Emerald700,
-    paddingHorizontal: 9,
-    paddingVertical: 4,
+    paddingHorizontal: ResponsivePixels.size9,
+    paddingVertical: ResponsivePixels.size4,
     position: 'relative',
     overflow: 'hidden',
   },
   unlockedText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     letterSpacing: 0.8,
     color: Colors.PureWhite,
     textShadowColor: withAlpha(Colors.Emerald700, 0.75),
@@ -153,12 +156,12 @@ const styles = StyleSheet.create({
   icon3dWrap: {
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 1,
+    marginRight: ResponsivePixels.size1,
   },
 
   // --- 3D CURRENT LEVEL BADGE ---
   currentShadowWrap: {
-    borderRadius: 16,
+    borderRadius: ResponsivePixels.size16,
     ...Platform.select({
       ios: {
         shadowColor: Colors.HabitBurnishedAmber,
@@ -173,15 +176,15 @@ const styles = StyleSheet.create({
   },
   currentBadge: {
     backgroundColor: Colors.VoiceMichaelAccent,
-    borderRadius: 14,
+    borderRadius: ResponsivePixels.size14,
     borderWidth: 1.5,
     borderTopColor: withAlpha(Colors.PureWhite, 0.8),
     borderLeftColor: withAlpha(Colors.PureWhite, 0.4),
     borderRightColor: withAlpha(Colors.PureWhite, 0.25),
     borderBottomWidth: 3.5,
     borderBottomColor: Colors.Amber700,
-    paddingHorizontal: 9,
-    paddingVertical: 4,
+    paddingHorizontal: ResponsivePixels.size9,
+    paddingVertical: ResponsivePixels.size4,
     position: 'relative',
     overflow: 'hidden',
   },
@@ -191,7 +194,7 @@ const styles = StyleSheet.create({
   },
   currentText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 10,
+    fontSize: ResponsivePixels.size10,
     letterSpacing: 0.8,
     color: Colors.PureWhite,
     textShadowColor: withAlpha(Colors.Amber700, 0.75),
@@ -201,7 +204,7 @@ const styles = StyleSheet.create({
 
   // --- 3D NEXT GOAL BADGE ---
   nextGoalShadowWrap: {
-    borderRadius: 14,
+    borderRadius: ResponsivePixels.size14,
     ...Platform.select({
       ios: {
         shadowColor: Colors.PureBlack,
@@ -216,28 +219,28 @@ const styles = StyleSheet.create({
   },
   nextGoalBadge: {
     backgroundColor: Colors.ToastWarningBadgeBgLight,
-    borderRadius: 12,
+    borderRadius: ResponsivePixels.size12,
     borderWidth: 1.2,
     borderTopColor: Colors.PureWhite,
     borderLeftColor: Colors.VoiceMichaelBorder,
     borderRightColor: Colors.VoiceMichaelBorder,
     borderBottomWidth: 2.8,
     borderBottomColor: Colors.HabitBurnishedAmber,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size3,
     position: 'relative',
     overflow: 'hidden',
   },
   nextGoalText: {
     fontFamily: Fonts.poppins.bold,
-    fontSize: 9.5,
+    fontSize: ResponsivePixels.size9_5,
     letterSpacing: 0.7,
     color: Colors.Amber800,
   },
 
   // --- 3D LOCKED BADGE ---
   lockedShadowWrap: {
-    borderRadius: 14,
+    borderRadius: ResponsivePixels.size14,
     ...Platform.select({
       ios: {
         shadowColor: Colors.PureBlack,
@@ -252,21 +255,21 @@ const styles = StyleSheet.create({
   },
   lockedBadge: {
     backgroundColor: Colors.Slate700,
-    borderRadius: 12,
+    borderRadius: ResponsivePixels.size12,
     borderWidth: 1.2,
     borderTopColor: withAlpha(Colors.PureWhite, 0.25),
     borderLeftColor: withAlpha(Colors.PureWhite, 0.1),
     borderRightColor: withAlpha(Colors.PureWhite, 0.08),
     borderBottomWidth: 2.8,
     borderBottomColor: Colors.Slate800,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
+    paddingHorizontal: ResponsivePixels.size8,
+    paddingVertical: ResponsivePixels.size3,
     position: 'relative',
     overflow: 'hidden',
   },
   lockedText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 9.5,
+    fontSize: ResponsivePixels.size9_5,
     letterSpacing: 0.7,
     color: Colors.Slate300,
   },
@@ -275,14 +278,14 @@ const styles = StyleSheet.create({
   contentRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 4.5,
+    gap: ResponsivePixels.size4_5,
   },
   glossHighlight: {
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
-    height: 4,
+    height: ResponsivePixels.size4,
     backgroundColor: withAlpha(Colors.PureWhite, 0.35),
   },
   glossHighlightDim: {
@@ -290,7 +293,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 3,
+    height: ResponsivePixels.size3,
     backgroundColor: withAlpha(Colors.PureWhite, 0.5),
   },
   glossHighlightDark: {
@@ -298,7 +301,7 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: 3,
+    height: ResponsivePixels.size3,
     backgroundColor: withAlpha(Colors.PureWhite, 0.12),
   },
 });

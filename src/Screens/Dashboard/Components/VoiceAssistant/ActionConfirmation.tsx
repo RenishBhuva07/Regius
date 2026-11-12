@@ -4,6 +4,7 @@ import { Check } from 'lucide-react-native';
 import { Fonts } from '../../../../Theme/fonts';
 import { Colors } from '../../../../Assets/StyleUtilities/Colors';
 import { VoiceAssistantTheme } from './types';
+import ResponsivePixels from '../../../../Assets/StyleUtilities/ResponsivePixels';
 
 export interface ActionConfirmationProps {
   title?: string | null;
@@ -29,7 +30,7 @@ export const ActionConfirmation: React.FC<ActionConfirmationProps> = ({
           { backgroundColor: theme.success },
         ]}
       >
-        <Check size={18} color={Colors.PureWhite} strokeWidth={3} />
+        <Check size={ResponsivePixels.size18} color={Colors.PureWhite} strokeWidth={3} />
       </View>
 
       <Text
@@ -55,29 +56,29 @@ export const ActionConfirmation: React.FC<ActionConfirmationProps> = ({
 const styles = StyleSheet.create({
   container: {
     alignItems: 'center',
-    paddingVertical: 14,
-    paddingHorizontal: 16,
+    paddingVertical: ResponsivePixels.size14,
+    paddingHorizontal: ResponsivePixels.size16,
     width: '100%',
   },
   checkBadge: {
-    width: 36,
-    height: 36,
-    borderRadius: 18,
+    width: ResponsivePixels.size36,
+    height: ResponsivePixels.size36,
+    borderRadius: ResponsivePixels.size18,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 10,
+    marginBottom: ResponsivePixels.size10,
   },
   title: {
     fontFamily: Fonts.ranade.bold,
-    fontSize: 18,
-    lineHeight: 24,
+    fontSize: ResponsivePixels.size18,
+    lineHeight: ResponsivePixels.size24,
     textAlign: 'center',
-    marginBottom: 4,
+    marginBottom: ResponsivePixels.size4,
   },
   detail: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 13,
-    lineHeight: 19,
+    fontSize: ResponsivePixels.size13,
+    lineHeight: ResponsivePixels.size19,
     textAlign: 'center',
   },
 });

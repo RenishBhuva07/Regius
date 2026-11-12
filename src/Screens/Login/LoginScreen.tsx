@@ -263,7 +263,8 @@ export const LoginScreen: React.FC = () => {
             {
               paddingTop: insets.top + ResponsivePixels.size8,
               paddingBottom:
-                Math.max(insets.bottom, 16) + ResponsivePixels.size8,
+                Math.max(insets.bottom, ResponsivePixels.size16) +
+                ResponsivePixels.size8,
             },
           ]}
           showsVerticalScrollIndicator={false}
@@ -273,9 +274,15 @@ export const LoginScreen: React.FC = () => {
           <View style={styles.headerSection}>
             <View style={styles.crestShadowWrapper}>
               <View style={styles.crestWrapper}>
-                <RegiusCrownCrestSvg isDark={isDarkMode} size={76} />
+                <RegiusCrownCrestSvg
+                  isDark={isDarkMode}
+                  size={ResponsivePixels.size76}
+                />
                 <View style={styles.crestSparkle}>
-                  <SparkleSvg size={14} color={Colors.AccentYellow} />
+                  <SparkleSvg
+                    size={ResponsivePixels.size14}
+                    color={Colors.AccentYellow}
+                  />
                 </View>
               </View>
             </View>
@@ -712,7 +719,7 @@ export const LoginScreen: React.FC = () => {
                     </Text>
                     <View style={styles.ctaSparkle}>
                       <SparkleSvg
-                        size={14}
+                        size={ResponsivePixels.size14}
                         color={
                           isDarkMode
                             ? Colors.WarmGoldDarkModeAccent
@@ -752,7 +759,7 @@ export const LoginScreen: React.FC = () => {
                   ]}
                   onPress={() => handleSocialAuth('Google')}
                 >
-                  <GoogleLogoSvg size={20} />
+                  <GoogleLogoSvg size={ResponsivePixels.size20} />
                   <Text style={[styles.socialBtnText, { color: textPrimary }]}>
                     Google
                   </Text>
@@ -773,7 +780,10 @@ export const LoginScreen: React.FC = () => {
                   ]}
                   onPress={() => handleSocialAuth('Apple')}
                 >
-                  <AppleLogoSvg size={20} color={Colors.PureWhite} />
+                  <AppleLogoSvg
+                    size={ResponsivePixels.size20}
+                    color={Colors.PureWhite}
+                  />
                   <Text
                     style={[
                       styles.socialBtnText,
@@ -860,43 +870,43 @@ const styles = StyleSheet.create({
   },
   crestSparkle: {
     position: 'absolute',
-    top: -2,
-    right: -2,
+    top: -ResponsivePixels.size2,
+    right: -ResponsivePixels.size2,
   },
   badgeWrapper: {
     marginBottom: ResponsivePixels.size8,
   },
   brandTitle: {
     ...Typography.h1RanadeBold,
-    fontSize: 24,
-    lineHeight: 30,
+    fontSize: ResponsivePixels.size24,
+    lineHeight: ResponsivePixels.size30,
     textAlign: 'center',
     letterSpacing: -0.3,
     marginBottom: ResponsivePixels.size4,
   },
   brandSubtitle: {
     ...Typography.bodySmallPoppinsRegular,
-    fontSize: 12.5,
+    fontSize: ResponsivePixels.size12_5,
     textAlign: 'center',
-    lineHeight: 17,
-    maxWidth: 290,
+    lineHeight: ResponsivePixels.size17,
+    maxWidth: ResponsivePixels.size290,
   },
   switchContainer: {
     flexDirection: 'row',
     position: 'relative',
     width: '100%',
-    height: 46,
+    height: ResponsivePixels.size46,
     borderRadius: ResponsivePixels.size24,
     borderWidth: 1.5,
     borderBottomWidth: 3,
-    padding: 4,
+    padding: ResponsivePixels.size4,
     marginBottom: ResponsivePixels.size14,
   },
   switchIndicator: {
     position: 'absolute',
-    top: 4,
-    left: 4,
-    bottom: 4,
+    top: ResponsivePixels.size4,
+    left: ResponsivePixels.size4,
+    bottom: ResponsivePixels.size4,
     borderRadius: ResponsivePixels.size20,
     borderWidth: 1,
     borderTopWidth: 1.2,
@@ -914,7 +924,7 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   switchTabText: {
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
     letterSpacing: 0.2,
   },
   formCardShadowWrapper: {
@@ -940,7 +950,7 @@ const styles = StyleSheet.create({
   },
   fieldLabel: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12.5,
+    fontSize: ResponsivePixels.size12_5,
     marginBottom: ResponsivePixels.size5,
     letterSpacing: 0.1,
   },
@@ -951,13 +961,13 @@ const styles = StyleSheet.create({
   },
   forgotPasswordText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     color: Colors.LavenderPurple,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    height: 48,
+    height: ResponsivePixels.size48,
     borderRadius: ResponsivePixels.size16,
     paddingHorizontal: ResponsivePixels.size12,
     borderBottomWidth: 2,
@@ -977,11 +987,11 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontFamily: Fonts.poppins.medium,
-    fontSize: 13.5,
+    fontSize: ResponsivePixels.size13_5,
     paddingVertical: 0,
   },
   eyeBtn: {
-    padding: 6,
+    padding: ResponsivePixels.size6,
   },
   checkboxRow: {
     flexDirection: 'row',
@@ -990,9 +1000,9 @@ const styles = StyleSheet.create({
     marginTop: ResponsivePixels.size2,
   },
   tactileCheckbox: {
-    width: 20,
-    height: 20,
-    borderRadius: 6,
+    width: ResponsivePixels.size20,
+    height: ResponsivePixels.size20,
+    borderRadius: ResponsivePixels.size6,
     alignItems: 'center',
     justifyContent: 'center',
     marginRight: ResponsivePixels.size10,
@@ -1008,7 +1018,7 @@ const styles = StyleSheet.create({
   },
   checkboxLabel: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: 12,
+    fontSize: ResponsivePixels.size12,
     flex: 1,
   },
   linkText: {
@@ -1017,7 +1027,7 @@ const styles = StyleSheet.create({
   },
   primaryCta: {
     width: '100%',
-    height: 48,
+    height: ResponsivePixels.size48,
     borderRadius: ResponsivePixels.size24,
     alignItems: 'center',
     justifyContent: 'center',
@@ -1034,7 +1044,7 @@ const styles = StyleSheet.create({
   },
   primaryCtaText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 14.5,
+    fontSize: ResponsivePixels.size14_5,
     letterSpacing: 0.3,
   },
   ctaSparkle: {
@@ -1051,7 +1061,7 @@ const styles = StyleSheet.create({
   },
   dividerText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 10.5,
+    fontSize: ResponsivePixels.size10_5,
     letterSpacing: 0.8,
     paddingHorizontal: ResponsivePixels.size10,
   },
@@ -1061,7 +1071,7 @@ const styles = StyleSheet.create({
   },
   socialBtn: {
     flex: 1,
-    height: 44,
+    height: ResponsivePixels.size44,
     borderRadius: ResponsivePixels.size22,
     borderWidth: 1.5,
     borderTopWidth: 1,
@@ -1078,7 +1088,7 @@ const styles = StyleSheet.create({
   },
   socialBtnText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: 13,
+    fontSize: ResponsivePixels.size13,
   },
   guestLinkTouch: {
     marginTop: ResponsivePixels.size12,
@@ -1088,7 +1098,7 @@ const styles = StyleSheet.create({
   },
   guestLinkText: {
     fontFamily: Fonts.poppins.medium,
-    fontSize: 12.5,
+    fontSize: ResponsivePixels.size12_5,
     letterSpacing: 0.2,
   },
 });
