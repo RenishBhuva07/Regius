@@ -1,7 +1,7 @@
 import React from 'react';
 import { FlatList, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import { Fonts } from '../../../Theme/fonts';
-import { Colors } from '../../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../../Theme/useAppTheme';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
@@ -49,23 +49,12 @@ export const FlowFilterTabs: React.FC<FlowFilterTabsProps> = React.memo(
                 isDarkMode && {
                   backgroundColor: cardBg,
                   borderColor: borderLight,
-                  borderBottomColor:
-                    activeThemeId === 'cyprus_sand'
-                      ? Colors.SandstoneBorder
-                      : Colors.DarkSurfaceDeep,
-                  shadowColor:
-                    activeThemeId === 'cyprus_sand'
-                      ? Colors.WarmUmberShadow
-                      : Colors.PureBlack,
                 },
                 isActive && styles.filterPillActive,
                 isActive &&
                   isDarkMode && {
-                    backgroundColor: Colors.DarkChipBevelAbyss,
-                    borderTopColor: Colors.DarkChipBevelTop,
-                    borderLeftColor: Colors.DarkChipBorder,
-                    borderRightColor: Colors.DarkChipBorder,
-                    borderBottomColor: Colors.WorkDarkBorder,
+                    backgroundColor: Colors.NeroBlack,
+                    borderColor: Colors.WorkDarkBorder,
                   },
               ]}
               accessibilityRole="tab"
@@ -92,53 +81,48 @@ export const FlowFilterTabs: React.FC<FlowFilterTabsProps> = React.memo(
 const styles = StyleSheet.create({
   filterScroll: {
     marginHorizontal: -ResponsivePixels.size8,
-    marginBottom: ResponsivePixels.size6,
+    marginBottom: ResponsivePixels.size8,
   },
   filterRow: {
     flexDirection: 'row',
     gap: ResponsivePixels.size8,
     paddingHorizontal: ResponsivePixels.size12,
-    paddingTop: ResponsivePixels.size6,
-    paddingBottom: ResponsivePixels.size16,
+    paddingTop: ResponsivePixels.size4,
+    paddingBottom: ResponsivePixels.size12,
   },
   filterPill: {
-    paddingHorizontal: ResponsivePixels.size14,
-    paddingVertical: ResponsivePixels.size7,
-    borderRadius: ResponsivePixels.size22,
+    paddingHorizontal: ResponsivePixels.size16,
+    paddingVertical: ResponsivePixels.size8,
+    borderRadius: ResponsivePixels.size20,
     backgroundColor: Colors.PureWhite,
-    borderWidth: 1.5,
-    borderColor: Colors.WarmChipBorder,
-    borderBottomWidth: 3.5,
-    borderBottomColor: Colors.WarmHaloBottomBevel,
-    shadowColor: Colors.WarmUmberShadow,
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.12,
-    shadowRadius: 4,
-    elevation: 3,
+    borderWidth: 1,
+    borderColor: withAlpha(Colors.CharcoalStoneText, 0.14),
+    shadowColor: Colors.PureBlack,
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.04,
+    shadowRadius: 3,
+    elevation: 1,
   },
   filterPillActive: {
     backgroundColor: Colors.NeroBlack,
-    borderWidth: 1.5,
-    borderTopColor: Colors.DarkChipBevelTop,
-    borderLeftColor: Colors.DarkChipBorder,
-    borderRightColor: Colors.DarkChipBorder,
-    borderBottomWidth: 3.5,
-    borderBottomColor: Colors.DarkChipBevelAbyss,
+    borderWidth: 1,
+    borderColor: withAlpha(Colors.PureWhite, 0.2),
+    borderTopColor: withAlpha(Colors.PureWhite, 0.35),
     shadowColor: Colors.PureBlack,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.28,
-    shadowRadius: 5,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.16,
+    shadowRadius: 4,
+    elevation: 3,
   },
   filterPillText: {
-    fontFamily: Fonts.poppins.semiBold,
+    fontFamily: Fonts.poppins.medium,
     fontSize: ResponsivePixels.size12,
     color: Colors.CharcoalStoneText,
     letterSpacing: -0.1,
   },
   filterPillTextActive: {
     color: Colors.PureWhite,
-    fontFamily: Fonts.poppins.bold,
+    fontFamily: Fonts.poppins.semiBold,
   },
 });
 

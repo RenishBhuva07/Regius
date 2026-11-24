@@ -110,7 +110,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
           borderTint: isDarkMode
             ? Colors.WorkDarkBorder
             : Colors.WorkLightBorder,
-          shadowColor: isDarkMode ? Colors.PureBlack : Colors.AccentYellow,
+          shadowColor: Colors.PureBlack,
           auraColor: Colors.AccentYellow,
           pillBg: isDarkMode ? Colors.WorkDarkIconBg : Colors.WorkPillLight,
           pillText: isDarkMode ? Colors.AccentYellow : Colors.WorkTextAccent,
@@ -127,7 +127,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
           borderTint: isDarkMode
             ? Colors.GreenGracious
             : Colors.WellnessLightBorder,
-          shadowColor: isDarkMode ? Colors.PureBlack : Colors.AccentGreen,
+          shadowColor: Colors.PureBlack,
           auraColor: Colors.AccentGreen,
           pillBg: isDarkMode ? Colors.WellnessDarkIconBg : Colors.BadgeGreenBg,
           pillText: isDarkMode ? Colors.AccentGreen : Colors.GreenGracious,
@@ -143,7 +143,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
           borderTint: isDarkMode
             ? Colors.LavenderPurple
             : Colors.MindfulLightBorder,
-          shadowColor: isDarkMode ? Colors.PureBlack : Colors.LavenderPurple,
+          shadowColor: Colors.PureBlack,
           auraColor: Colors.LavenderPurple,
           pillBg: isDarkMode ? Colors.MindfulDarkIconBg : Colors.MindfulPillLight,
           pillText: isDarkMode
@@ -252,11 +252,8 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
         style={[
           styles.card,
           {
-            shadowColor: isCompleted
-              ? isDarkMode
-                ? Colors.PureBlack
-                : Colors.Gray300
-              : catStyle.shadowColor,
+            shadowColor: Colors.PureBlack,
+            shadowOpacity: isCompleted ? 0.03 : 0.06,
           },
         ]}
         accessibilityRole="button"
@@ -264,40 +261,13 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
           item.time
         }, ${isCompleted ? 'completed' : 'not completed'}`}
       >
-        {/* Dynamic Cutout Notch Background SVG with Radiant Aura & Starlight Nodes */}
+        {/* Dynamic Cutout Notch Background SVG: Clean tactile surface */}
         <Svg
           width={cardSize.width}
           height={cardSize.height}
           style={styles.cardSvgBackground}
           pointerEvents="none"
         >
-          <Defs>
-            {!isCompleted && (
-              <RadialGradient
-                id={`timelineItemAura-${item.id}`}
-                cx={cardSize.width - ResponsivePixels.size55}
-                cy={ResponsivePixels.size25}
-                r={ResponsivePixels.size110}
-                gradientUnits="userSpaceOnUse"
-              >
-                <Stop
-                  offset="0%"
-                  stopColor={catStyle.auraColor}
-                  stopOpacity={0.16}
-                />
-                <Stop
-                  offset="65%"
-                  stopColor={catStyle.auraColor}
-                  stopOpacity={0.03}
-                />
-                <Stop
-                  offset="100%"
-                  stopColor={catStyle.bgTint}
-                  stopOpacity={0}
-                />
-              </RadialGradient>
-            )}
-          </Defs>
           <Path
             d={getCutoutCardPath(cardSize.width, cardSize.height)}
             fill={
@@ -314,33 +284,9 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
                   : Colors.TimelineBorderWarm
                 : catStyle.borderTint
             }
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             strokeLinejoin="round"
           />
-          {!isCompleted && (
-            <>
-              {/* Soft ambient radiance under top-right cutout */}
-              <Path
-                d={getCutoutCardPath(cardSize.width, cardSize.height)}
-                fill={`url(#timelineItemAura-${item.id})`}
-              />
-              {/* Delicate starlight nodes */}
-              <Circle
-                cx={cardSize.width - ResponsivePixels.size66}
-                cy={ResponsivePixels.size16}
-                r={1.6}
-                fill={catStyle.accent}
-                opacity={0.4}
-              />
-              <Circle
-                cx={cardSize.width - ResponsivePixels.size80}
-                cy={ResponsivePixels.size30}
-                r={1.3}
-                fill={catStyle.accent}
-                opacity={0.3}
-              />
-            </>
-          )}
         </Svg>
 
         <View
@@ -465,7 +411,7 @@ export const TimelineItemCard: React.FC<TimelineItemCardProps> = ({
                 label="Voice Nudge"
                 variant="purple"
                 size="sm"
-                icon={<Sparkles size={ResponsivePixels.size10} color={Colors.LavenderPurple} />}
+                icon={<Mic size={ResponsivePixels.size10} color={Colors.LavenderPurple} />}
               />
             ) : (
               <Badge
@@ -512,6 +458,7 @@ const styles = StyleSheet.create({
     color: Colors.RegiusInk,
     letterSpacing: -0.2,
     lineHeight: ResponsivePixels.size15,
+    fontVariant: ['tabular-nums'],
   },
   timePeriod: {
     fontFamily: Fonts.poppins.medium,
@@ -562,13 +509,13 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Transparent,
     ...Platform.select({
       ios: {
-        shadowColor: Colors.AccentYellow,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.12,
-        shadowRadius: 8,
+        shadowColor: Colors.PureBlack,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 5,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },

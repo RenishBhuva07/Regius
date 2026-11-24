@@ -41,7 +41,10 @@ export const CircularProgress: React.FC<CircularProgressProps> = React.memo(
             width: size,
             height: size,
             borderRadius: size / 2,
-            shadowColor: shadowColor || withAlpha(Colors.PureBlack, 0.1),
+            shadowColor: shadowColor || withAlpha(Colors.PureBlack, 0.08),
+            shadowOpacity: 0.08,
+            shadowRadius: 2,
+            elevation: 1,
           },
         ]}
         accessibilityRole="image"

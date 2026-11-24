@@ -8,7 +8,7 @@ import {
   Easing,
   ActivityIndicator,
 } from 'react-native';
-import { Play, Pause, AudioWaveform, Sparkles } from 'lucide-react-native';
+import { Play, Pause, AudioWaveform } from 'lucide-react-native';
 import TrackPlayer from 'react-native-track-player';
 import Toast from 'react-native-toast-message';
 
@@ -32,19 +32,17 @@ import Svg, {
 } from 'react-native-svg';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
-// Background vector pattern for DailyBriefingCard.
+// Background vector pattern for DailyBriefingCard: calm, tactile acoustic instrument surface.
 const DailyBriefingBackgroundSvg: React.FC = React.memo(() => {
   const { activeThemeId, Colors: themeColors } = useTheme();
-  const auraColor =
+  const brassAccent =
     activeThemeId === 'cyprus_sand'
-      ? Colors.CyprusTealLight
+      ? Colors.CyprusSandPaper
       : activeThemeId === 'emerald_velvet'
-      ? Colors.GreenGracious
+      ? Colors.EmeraldVibrant
       : activeThemeId === 'celestial_azure'
-      ? Colors.AzureRoyal
-      : activeThemeId === 'classic_dark' || activeThemeId === 'obsidian_gold'
-      ? Colors.ObsidianGoldAntique
-      : Colors.LavenderPurple;
+      ? Colors.AzureSkyAccent
+      : Colors.AccentYellow;
 
   return (
     <View style={StyleSheet.absoluteFill} pointerEvents="none">
@@ -56,157 +54,51 @@ const DailyBriefingBackgroundSvg: React.FC = React.memo(() => {
         fill="none"
       >
         <Defs>
-          <LinearGradient id="cardBgSheen" x1="0%" y1="0%" x2="100%" y2="100%">
-            <Stop offset="0%" stopColor={Colors.BentoStopSlate} stopOpacity={0.65} />
-            <Stop offset="50%" stopColor={Colors.NeroBlack} stopOpacity={0.15} />
-            <Stop offset="100%" stopColor={Colors.BriefingStopDark} stopOpacity={0.7} />
+          <LinearGradient id="cardBgSheen" x1="0%" y1="0%" x2="0%" y2="100%">
+            <Stop offset="0%" stopColor="#22252C" stopOpacity={0.9} />
+            <Stop offset="50%" stopColor="#1C1D22" stopOpacity={0.95} />
+            <Stop offset="100%" stopColor="#141519" stopOpacity={1} />
           </LinearGradient>
-          <RadialGradient id="lavenderAura" cx="86%" cy="14%" rx="68%" ry="68%">
-            <Stop offset="0%" stopColor={auraColor} stopOpacity={0.42} />
-            <Stop offset="35%" stopColor={auraColor} stopOpacity={0.22} />
-            <Stop
-              offset="70%"
-              stopColor={themeColors.AccentDeep || Colors.NeroBlack}
-              stopOpacity={0.06}
-            />
-            <Stop offset="100%" stopColor={Colors.NeroBlack} stopOpacity={0} />
-          </RadialGradient>
-        <RadialGradient id="goldDawnGlow" cx="12%" cy="88%" rx="52%" ry="52%">
-          <Stop offset="0%" stopColor={Colors.AccentYellow} stopOpacity={0.16} />
-          <Stop offset="45%" stopColor={Colors.WorkTextAccent} stopOpacity={0.06} />
-          <Stop offset="100%" stopColor={Colors.NeroBlack} stopOpacity={0} />
-        </RadialGradient>
-        <RadialGradient id="mintGlow" cx="62%" cy="68%" rx="40%" ry="40%">
-          <Stop offset="0%" stopColor={Colors.AccentGreen} stopOpacity={0.09} />
-          <Stop offset="60%" stopColor={Colors.GreenGracious} stopOpacity={0.02} />
-          <Stop offset="100%" stopColor={Colors.NeroBlack} stopOpacity={0} />
-        </RadialGradient>
-        <LinearGradient id="goldStar" x1="0%" y1="0%" x2="100%" y2="100%">
-          <Stop offset="0%" stopColor={Colors.CreamBackground} stopOpacity={0.95} />
-          <Stop offset="100%" stopColor={Colors.AccentYellow} stopOpacity={0.8} />
-        </LinearGradient>
-      </Defs>
-      <Rect width="100%" height="100%" fill="url(#cardBgSheen)" />
-      <Rect width="100%" height="100%" fill="url(#lavenderAura)" />
-      <Rect width="100%" height="100%" fill="url(#goldDawnGlow)" />
-      <Rect width="100%" height="100%" fill="url(#mintGlow)" />
-      <Circle
-        cx={305}
-        cy={24}
-        r={38}
-        stroke={withAlpha(Colors.MindfulLightBorder, 0.18)}
-        strokeWidth={1}
-        fill="none"
-      />
-      <Circle
-        cx={305}
-        cy={24}
-        r={64}
-        stroke={withAlpha(Colors.BadgePurpleBevel, 0.12)}
-        strokeWidth={1.2}
-        strokeDasharray="4 5"
-        fill="none"
-      />
-      <Circle
-        cx={305}
-        cy={24}
-        r={98}
-        stroke={withAlpha(Colors.PureWhite, 0.06)}
-        strokeWidth={1}
-        fill="none"
-      />
-      <Circle
-        cx={305}
-        cy={24}
-        r={140}
-        stroke={withAlpha(Colors.MindfulLightBorder, 0.035)}
-        strokeWidth={1}
-        strokeDasharray="5 7"
-        fill="none"
-      />
-      <Circle
-        cx={42}
-        cy={38}
-        r={30}
-        stroke={withAlpha(Colors.PureWhite, 0.05)}
-        strokeWidth={1}
-        fill="none"
-      />
-      <Circle
-        cx={42}
-        cy={38}
-        r={48}
-        stroke={withAlpha(Colors.LavenderPurple, 0.07)}
-        strokeWidth={1}
-        strokeDasharray="3 4"
-        fill="none"
-      />
-      <Path
-        d="M -20 62 C 75 22, 155 92, 255 46 S 355 82, 420 52"
-        stroke={withAlpha(Colors.PeriwinkleSoft, 0.22)}
-        strokeWidth={1.4}
-        strokeLinecap="round"
-        fill="none"
-      />
-      <Path
-        d="M -20 88 C 68 124, 148 44, 248 104 S 348 44, 420 84"
-        stroke={withAlpha(Colors.BriefingAcousticSage, 0.14)}
-        strokeWidth={1.2}
-        strokeDasharray="4 5"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <Path
-        d="M -10 148 C 88 108, 178 168, 288 128 S 378 158, 420 138"
-        stroke={withAlpha(Colors.AccentYellow, 0.11)}
-        strokeWidth={1}
-        strokeLinecap="round"
-        fill="none"
-      />
-      <G opacity={0.06}>
-        <Rect x={278} y={150} width={2.5} height={24} rx={1.2} fill={Colors.PureWhite} />
-        <Rect x={286} y={142} width={2.5} height={32} rx={1.2} fill={Colors.BriefingAcousticSage} />
-        <Rect x={294} y={135} width={2.5} height={39} rx={1.2} fill={Colors.LavenderPurple} />
-        <Rect x={302} y={146} width={2.5} height={28} rx={1.2} fill={Colors.PureWhite} />
-        <Rect x={310} y={138} width={2.5} height={36} rx={1.2} fill={Colors.BriefingAcousticSage} />
-        <Rect x={318} y={148} width={2.5} height={26} rx={1.2} fill={Colors.PureWhite} />
-        <Rect x={326} y={140} width={2.5} height={34} rx={1.2} fill={Colors.LavenderPurple} />
-        <Rect x={334} y={152} width={2.5} height={22} rx={1.2} fill={Colors.PureWhite} />
-      </G>
-      <G transform="translate(245, 18) scale(0.85)">
+          <LinearGradient id="brassAcousticRule" x1="0%" y1="0%" x2="100%" y2="0%">
+            <Stop offset="0%" stopColor={brassAccent} stopOpacity={0.04} />
+            <Stop offset="40%" stopColor={brassAccent} stopOpacity={0.22} />
+            <Stop offset="80%" stopColor={brassAccent} stopOpacity={0.06} />
+            <Stop offset="100%" stopColor={brassAccent} stopOpacity={0} />
+          </LinearGradient>
+        </Defs>
+
+        {/* Clean surface base */}
+        <Rect width="100%" height="100%" fill="url(#cardBgSheen)" />
+
+        {/* Subtle acoustic hairline rule - signature instrument detail */}
         <Path
-          d="M6 0L7.5 4.5L12 6L7.5 7.5L6 12L4.5 7.5L0 6L4.5 4.5Z"
-          fill="url(#goldStar)"
+          d="M 16 68 C 90 48, 180 84, 270 56 S 330 64, 344 60"
+          stroke="url(#brassAcousticRule)"
+          strokeWidth={1.2}
+          strokeLinecap="round"
+          fill="none"
         />
-      </G>
-      <G transform="translate(32, 142) scale(0.65)" opacity={0.6}>
-        <Path
-          d="M6 0L7.5 4.5L12 6L7.5 7.5L6 12L4.5 7.5L0 6L4.5 4.5Z"
-          fill={Colors.CreamBackground}
+
+        {/* Quiet concentric tuning circle in top right */}
+        <Circle
+          cx={316}
+          cy={28}
+          r={42}
+          stroke={withAlpha(Colors.PureWhite, 0.05)}
+          strokeWidth={1}
+          fill="none"
         />
-      </G>
-      <G transform="translate(326, 86) scale(0.55)" opacity={0.5}>
-        <Path
-          d="M6 0L7.5 4.5L12 6L7.5 7.5L6 12L4.5 7.5L0 6L4.5 4.5Z"
-          fill={Colors.MindfulLightBorder}
+        <Circle
+          cx={316}
+          cy={28}
+          r={78}
+          stroke={withAlpha(brassAccent, 0.04)}
+          strokeWidth={1}
+          strokeDasharray="4 6"
+          fill="none"
         />
-      </G>
-      <G transform="translate(142, 28) scale(0.48)" opacity={0.45}>
-        <Path
-          d="M6 0L7.5 4.5L12 6L7.5 7.5L6 12L4.5 7.5L0 6L4.5 4.5Z"
-          fill={Colors.AccentYellow}
-        />
-      </G>
-      <Circle cx={118} cy={34} r={1.3} fill={Colors.CreamBackground} opacity={0.5} />
-      <Circle cx={192} cy={22} r={1.1} fill={Colors.AccentYellow} opacity={0.55} />
-      <Circle cx={272} cy={52} r={1.4} fill={Colors.CreamBackground} opacity={0.45} />
-      <Circle cx={338} cy={44} r={1.2} fill={Colors.MindfulLightBorder} opacity={0.5} />
-      <Circle cx={28} cy={102} r={1.2} fill={Colors.CreamBackground} opacity={0.35} />
-      <Circle cx={94} cy={168} r={1.3} fill={Colors.AccentYellow} opacity={0.4} />
-      <Circle cx={214} cy={182} r={1.1} fill={Colors.CreamBackground} opacity={0.3} />
-      <Circle cx={344} cy={176} r={1.3} fill={Colors.BriefingAcousticSage} opacity={0.45} />
-    </Svg>
-  </View>
+      </Svg>
+    </View>
   );
 });
 
@@ -519,10 +411,9 @@ export const DailyBriefingCard: React.FC<DailyBriefingCardProps> = ({
               accessibilityLabel={`${assistantName} is ready, tap to talk`}
             >
               <Badge
-                label={`${assistantName} is ready`}
+                label="Ready"
                 variant="green"
                 size="sm"
-                icon={<Sparkles size={ResponsivePixels.size11} color={Colors.GreenGracious} />}
               />
             </TouchableOpacity>
           </View>
@@ -537,7 +428,7 @@ export const DailyBriefingCard: React.FC<DailyBriefingCardProps> = ({
                 styles.playBtn,
                 {
                   backgroundColor: playBtnBg,
-                  shadowColor: playBtnBg,
+                  shadowColor: Colors.PureBlack,
                 },
                 isPlaying && styles.playBtnActive,
               ]}
@@ -568,7 +459,7 @@ export const DailyBriefingCard: React.FC<DailyBriefingCardProps> = ({
             {/* Dynamic Waveform Visualizer */}
             <View style={styles.waveformContainer}>
               {barHeights.map((barAnim, idx) => {
-                const isMint = idx % 2 === 0 || idx === 3 || idx === 9;
+                const isAccent = idx % 3 === 0 || idx === 7;
                 return (
                   <Animated.View
                     key={idx}
@@ -576,9 +467,11 @@ export const DailyBriefingCard: React.FC<DailyBriefingCardProps> = ({
                       styles.waveformBar,
                       {
                         height: barAnim,
-                        backgroundColor: isMint
-                          ? Colors.BriefingAcousticSage
-                          : withAlpha(Colors.PureWhite, 0.35),
+                        backgroundColor: isPlaying
+                          ? isAccent
+                            ? Colors.AccentYellow
+                            : withAlpha(Colors.PureWhite, 0.7)
+                          : withAlpha(Colors.PureWhite, 0.28),
                       },
                     ]}
                   />
@@ -589,11 +482,9 @@ export const DailyBriefingCard: React.FC<DailyBriefingCardProps> = ({
             <Text style={styles.timerText}>{displayTime}</Text>
           </View>
 
-          {/* Dynamic Contextual Quote Synchronized with Real Counts */}
+          {/* Dynamic Contextual Briefing Summary */}
           <Text style={styles.quoteText}>
-            “You have {taskCount} tasks, {habitCount} habits, and{' '}
-            {reminderCount} scheduled voice check-ins today. Focus block opens
-            at 11:30 AM.”
+            {taskCount} tasks, {reminderCount} reminders, and {habitCount} habits scheduled for today. Focus block begins at 11:30 AM.
           </Text>
         </View>
       </View>
@@ -716,6 +607,7 @@ const styles = StyleSheet.create({
     fontSize: ResponsivePixels.size12,
     color: Colors.BriefingSilverText,
     paddingRight: ResponsivePixels.size6,
+    fontVariant: ['tabular-nums'],
   },
   quoteText: {
     fontFamily: Fonts.poppins.regular,

@@ -473,15 +473,14 @@ Replacing brutalist black toggles with an artisanal, warm luxury minimal segment
 
 Used for list item cards across `TasksScreen` (`TaskCardItem.tsx`), `RemindersScreen` (`ReminderCardItem.tsx`), `HabitsScreen` (`HabitItemCard.tsx`), and `DashboardScreen` (`TimelineItemCard.tsx`):
 
-- **Signature Inverted Scooped Corner Cutout with Radial Gradient Aura & Starlight Nodes**:
+- **Signature Inverted Scooped Corner Cutout (Clean Craft Standard)**:
   - **Inverted Top-Right Scoop**: Rather than a standard rounded corner, the top-right corner features an organic concave scoop / cutout (`CW: 44, CH: 44`) with smooth quadratic bezier fillets (`R_outer: 12, R_inner: 14`), rendered dynamically via SVG path (`getCutoutCardPath`).
-  - **Radiant Radial Gradient Aura**: Centered under the top-right cutout (`cx={width - 55}, cy=25, r=110`), casting a soft 16% to 0% opacity glow matching the card's theme color.
-  - **Celestial Starlight Nodes**: Two micro-sparkle SVG circles (`r=1.6` at `cx={width - 66}, cy=16`, `r=1.3` at `cx={width - 80}, cy=30`) adding subtle luxury craftsmanship.
+  - **Quiet Surface Depth**: Artificial radial gradient glow blobs and decorative micro-sparkle stars ("starlight nodes") are eliminated in accordance with the Unslop specification. Surface depth is rendered purely through clean surface steps, 1.2px perimeter hairlines, and soft neutral shadows (`#000000` with 0.05 opacity).
   - **Base Border Radius**: `18px` on top-left, bottom-left, and bottom-right corners.
 - **Harmonized Universal Theme Palettes**:
-  - **Tasks (Warm Gold / Yellow)**: Surface `#FFFDF7` / `#FFFCEB` with `#FFF5B8` border (`borderWidth: 1.5`), `#F5C518` gold aura, starlight nodes, and drop shadow glow, yellow 3D `<Badge />`, and `#FFF9D2` time pill (`#B48216` text). Left icon: 36×36 circular container (`#FFFCEB`, border `#FFF5B8`).
-  - **Reminders (Fresh Mint / Green)**: Surface `#F5FDF9` / `#EDFDF5` with `#C6FFDD` border (`borderWidth: 1.5`), `#52D22E` green aura, starlight nodes, and drop shadow glow, green 3D `<Badge />`, and `#EDFDF5` time pill (`#1B9A72` text). Left icon: 36×36 circular container (`#EDFDF5`, border `#C6FFDD`). Includes Kokoro TTS speaker button nestled cleanly beside cutout.
-  - **Habits (Celestial Lavender / Purple)**: Surface `#F7F8FE` / `#EFF2FE` with `#D8DBFF` border (`borderWidth: 1.5`), `#8383D6` purple aura, starlight nodes, and drop shadow glow, purple 3D `<Badge />`, and `#EFF2FE` time pill (`#7059C8` text). Left icon: 36×36 circular container (`#EFF2FE`, border `#D8DBFF`).
+  - **Tasks (Warm Gold / Yellow)**: Surface `#FFFDF7` / `#FFFCEB` with `#FFF5B8` border (`borderWidth: 1.2`), neutral drop shadow, yellow 3D `<Badge />`, and `#FFF9D2` time pill (`#B48216` text). Left icon: 36×36 circular container (`#FFFCEB`, border `#FFF5B8`).
+  - **Reminders (Fresh Mint / Green)**: Surface `#F5FDF9` / `#EDFDF5` with `#C6FFDD` border (`borderWidth: 1.2`), neutral drop shadow, green 3D `<Badge />`, and `#EDFDF5` time pill (`#1B9A72` text). Left icon: 36×36 circular container (`#EDFDF5`, border `#C6FFDD`). Includes Kokoro TTS speaker button nestled cleanly beside cutout.
+  - **Habits (Celestial Lavender / Purple)**: Surface `#F7F8FE` / `#EFF2FE` with `#D8DBFF` border (`borderWidth: 1.2`), neutral drop shadow, purple 3D `<Badge />`, and `#EFF2FE` time pill (`#7059C8` text). Left icon: 36×36 circular container (`#EFF2FE`, border `#D8DBFF`).
 - **Completed State**: Subdued `#FAFAF8` background with `#ECEAE4` hairline border and muted text (`#7E838F`), retaining full typography clarity.
 - **Floating Round Checkbox (Top-Right Cutout)**:
   - **Position**: Floats completely in the top-right scooped negative space (`position: 'absolute'`, `top: 9`, `right: 9`, `zIndex: 10`).

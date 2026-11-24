@@ -184,9 +184,9 @@ export const Badge: React.FC<BadgeProps> = ({
       borderBottomColor: config.bottomBorderColor,
       ...Platform.select({
         ios: {
-          shadowColor: config.shadowColor,
+          shadowColor: Colors.PureBlack,
           shadowOffset: sizeStyle.shadowOffset,
-          shadowOpacity: 0.22,
+          shadowOpacity: 0.08,
           shadowRadius: sizeStyle.shadowRadius,
         },
         android: {

@@ -113,7 +113,6 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
               textColor={
                 isDarkMode ? Colors.AccentYellow : Colors.WorkTextAccent
               }
-              shadowColor={Colors.AccentYellow}
             />
           </View>
           <View style={styles.cardBottom}>
@@ -180,7 +179,6 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
                 isDarkMode ? Colors.AccentGreen : Colors.GreenGracious
               }
               textColor={isDarkMode ? Colors.AccentGreen : Colors.GreenGracious}
-              shadowColor={Colors.AccentGreen}
             />
           </View>
           <View style={styles.cardBottom}>
@@ -251,7 +249,6 @@ export const DailyBalanceGrid: React.FC<DailyBalanceGridProps> = ({
               textColor={
                 isDarkMode ? Colors.LavenderPurple : Colors.MindfulTextAccent
               }
-              shadowColor={Colors.LavenderPurple}
             />
           </View>
           <View style={styles.cardBottom}>
@@ -322,40 +319,40 @@ const styles = StyleSheet.create({
   tasksCard: {
     backgroundColor: Colors.WorkLightBg,
     borderColor: Colors.WorkLightBorder,
-    shadowColor: Colors.AccentYellow,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.22,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowColor: Colors.PureBlack,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 2,
   },
   // Habits palette (Regius Purple)
   habitsCard: {
     backgroundColor: Colors.MindfulLightBg,
     borderColor: Colors.MindfulLightBorder,
-    shadowColor: Colors.LavenderPurple,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.22,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowColor: Colors.PureBlack,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 2,
   },
   // Reminders palette (Sport/Wellness/Reminders Green)
   remindersCard: {
     backgroundColor: Colors.WellnessLightBg,
     borderColor: Colors.WellnessLightBorder,
-    shadowColor: Colors.AccentGreen,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.22,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowColor: Colors.PureBlack,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 2,
   },
   nudgesCard: {
     backgroundColor: Colors.WellnessLightBg,
     borderColor: Colors.WellnessLightBorder,
-    shadowColor: Colors.AccentGreen,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.22,
-    shadowRadius: 8,
-    elevation: 3,
+    shadowColor: Colors.PureBlack,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 2,
   },
   cardTop: {
     flexDirection: 'row',
@@ -379,19 +376,23 @@ const styles = StyleSheet.create({
   },
   tasksIconCircle: {
     borderColor: Colors.WorkLightBorder,
-    shadowColor: Colors.AccentYellow,
+    shadowColor: Colors.PureBlack,
+    shadowOpacity: 0.06,
   },
   habitsIconCircle: {
     borderColor: Colors.MindfulLightBorder,
-    shadowColor: Colors.LavenderPurple,
+    shadowColor: Colors.PureBlack,
+    shadowOpacity: 0.06,
   },
   remindersIconCircle: {
     borderColor: Colors.WellnessLightBorder,
-    shadowColor: Colors.AccentGreen,
+    shadowColor: Colors.PureBlack,
+    shadowOpacity: 0.06,
   },
   nudgesIconCircle: {
     borderColor: Colors.WellnessLightBorder,
-    shadowColor: Colors.AccentGreen,
+    shadowColor: Colors.PureBlack,
+    shadowOpacity: 0.06,
   },
   progressContainer: {
     alignItems: 'center',
@@ -431,20 +432,24 @@ const styles = StyleSheet.create({
   },
   tasksPercentIndicator: {
     borderColor: Colors.WorkLightBorder,
-    shadowColor: Colors.AccentYellow,
+    shadowColor: Colors.PureBlack,
+    shadowOpacity: 0.06,
   },
   remindersPercentIndicator: {
     borderColor: Colors.WellnessLightBorder,
-    shadowColor: Colors.AccentGreen,
+    shadowColor: Colors.PureBlack,
+    shadowOpacity: 0.06,
   },
   habitsPercentIndicator: {
     borderColor: Colors.MindfulLightBorder,
-    shadowColor: Colors.LavenderPurple,
+    shadowColor: Colors.PureBlack,
+    shadowOpacity: 0.06,
   },
   percentIndicatorText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size10_5,
-    letterSpacing: -0.3,
+    letterSpacing: -0.2,
+    fontVariant: ['tabular-nums'],
   },
   cardBottom: {
     gap: ResponsivePixels.size1,
@@ -454,11 +459,13 @@ const styles = StyleSheet.create({
     fontSize: ResponsivePixels.size21,
     color: Colors.RegiusInk,
     letterSpacing: -0.4,
+    fontVariant: ['tabular-nums'],
   },
   countTotalText: {
     fontFamily: Fonts.poppins.medium,
     fontSize: ResponsivePixels.size13,
     color: Colors.TimelineMutedGray,
+    fontVariant: ['tabular-nums'],
   },
   label: {
     fontFamily: Fonts.poppins.semiBold,
@@ -467,15 +474,15 @@ const styles = StyleSheet.create({
     letterSpacing: -0.1,
     marginTop: ResponsivePixels.size2,
   },
-  // Bottom accent pill matching HomeScreen category card indicator
+  // Bottom accent pill matching signature index rule geometry
   accentPill: {
     position: 'absolute',
     bottom: 0,
     alignSelf: 'center',
-    height: ResponsivePixels.size3_5,
-    width: ResponsivePixels.size36,
-    borderTopLeftRadius: ResponsivePixels.size3,
-    borderTopRightRadius: ResponsivePixels.size3,
+    height: ResponsivePixels.size2_5,
+    width: ResponsivePixels.size32,
+    borderTopLeftRadius: ResponsivePixels.size2,
+    borderTopRightRadius: ResponsivePixels.size2,
   },
 });
 

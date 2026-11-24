@@ -186,14 +186,14 @@ export const DashboardScreen: React.FC = () => {
     return 'Good evening, Alex';
   }, []);
 
-  // Format today's date
+  // Format today's date in natural sentence case
   const formattedDate = useMemo(() => {
     const options: Intl.DateTimeFormatOptions = {
       weekday: 'long',
       month: 'short',
       day: 'numeric',
     };
-    return new Date().toLocaleDateString('en-US', options).toUpperCase();
+    return new Date().toLocaleDateString('en-US', options);
   }, []);
 
   // Compute real metrics from context data in standard sequence: Tasks, Reminders, Habits
@@ -313,10 +313,10 @@ export const DashboardScreen: React.FC = () => {
 
       Toast.show({
         type: 'success',
-        text1: `${item.category} Updated`,
+        text1: `${item.category} updated`,
         text2: item.completed
-          ? 'Marked as incomplete'
-          : 'Great job maintaining your daily focus streak!',
+          ? 'Marked as incomplete.'
+          : 'Added to your completed focus items.',
       });
     },
     [toggleTask, toggleHabit, toggleReminder],
@@ -386,7 +386,7 @@ export const DashboardScreen: React.FC = () => {
       >
         {/* Top sections with horizontal padding */}
         <View style={styles.topSectionWrapper}>
-          {/* Greeting */}
+          {/* Contextual Screen Title */}
           <View style={styles.greetingSection}>
             <View style={styles.dateWeatherRow}>
               <Text style={[styles.dateText, { color: canvasTextSecondary }]}>
@@ -407,7 +407,7 @@ export const DashboardScreen: React.FC = () => {
             </View>
 
             <Text style={[styles.greetingText, { color: canvasTextPrimary }]}>
-              {greeting}
+              Today’s Flow
             </Text>
           </View>
 
@@ -533,14 +533,7 @@ export const DashboardScreen: React.FC = () => {
                   <Text
                     style={[styles.craftedWithText, { color: textSecondary }]}
                   >
-                    Crafted with{' '}
-                  </Text>
-                  <Text style={styles.craftedWithHeart}>❤️</Text>
-                  <Text
-                    style={[styles.craftedWithText, { color: textSecondary }]}
-                  >
-                    {' '}
-                    in Ahmedabad, India
+                    Crafted for mindful productivity • Ahmedabad, India
                   </Text>
                 </View>
               </View>
@@ -592,9 +585,9 @@ const styles = StyleSheet.create({
   },
   dateText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: ResponsivePixels.size11_5,
+    fontSize: ResponsivePixels.size12,
     color: Colors.Grey,
-    letterSpacing: 0.8,
+    letterSpacing: -0.1,
   },
   greetingText: {
     fontFamily: Fonts.poppins.bold,
@@ -639,22 +632,21 @@ const styles = StyleSheet.create({
     top: -ResponsivePixels.size24,
     alignSelf: 'center',
     backgroundColor: Colors.NeroBlack,
-    paddingHorizontal: ResponsivePixels.size22,
+    paddingHorizontal: ResponsivePixels.size20,
     paddingVertical: ResponsivePixels.size7,
-    borderRadius: ResponsivePixels.size22,
-    borderWidth: 1.5,
-    borderTopColor: Colors.DarkBevelTop,
-    borderLeftColor: Colors.DarkBorder,
-    borderRightColor: Colors.DarkBorder,
-    borderBottomWidth: 4,
-    borderBottomColor: Colors.DarkBevelAbyss,
+    borderRadius: ResponsivePixels.size20,
+    borderWidth: 1,
+    borderTopColor: withAlpha(Colors.PureWhite, 0.3),
+    borderLeftColor: withAlpha(Colors.PureWhite, 0.12),
+    borderRightColor: withAlpha(Colors.PureWhite, 0.12),
+    borderBottomColor: withAlpha(Colors.PureWhite, 0.08),
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: Colors.DarkShadowAnchor,
-    shadowOffset: { width: 0, height: 5 },
-    shadowOpacity: 0.32,
-    shadowRadius: 8,
-    elevation: 6,
+    shadowColor: Colors.PureBlack,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.18,
+    shadowRadius: 6,
+    elevation: 4,
     zIndex: 20,
     overflow: 'hidden',
   },
