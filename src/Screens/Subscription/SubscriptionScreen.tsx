@@ -97,7 +97,7 @@ export const SubscriptionScreen: React.FC = () => {
         Vibration.vibrate([0, 40, 80, 50]);
         Toast.show({
           type: 'success',
-          text1: '👑 Welcome to Regius Royal!',
+          text1: 'Welcome to Regius Royal',
           text2: `Your ${selectedPlan.name} is now active. All perks unlocked.`,
         });
         setTimeout(() => {

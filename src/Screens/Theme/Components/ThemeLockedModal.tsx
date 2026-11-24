@@ -196,7 +196,7 @@ export const ThemeLockedModal: React.FC<ThemeLockedModalProps> = React.memo(
                   strokeWidth={2.4}
                 />
                 <Text style={styles.royalUpgradeBtnText}>
-                  Unlock Instantly with Royal 👑
+                  Unlock Instantly with Royal
                 </Text>
               </TouchableOpacity>
 

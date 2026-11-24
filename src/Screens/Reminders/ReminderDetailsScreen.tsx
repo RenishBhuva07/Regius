@@ -250,7 +250,7 @@ export const ReminderDetailsScreen: React.FC = () => {
     if (updated) {
       Toast.show({
         type: 'success',
-        text1: updated.done ? 'Reminder Acknowledged! 🔔' : 'Reminder Restored',
+        text1: updated.done ? 'Reminder acknowledged' : 'Reminder restored',
         text2: updated.done
           ? 'Alert marked as completed.'
           : 'Alert returned to upcoming queue.',

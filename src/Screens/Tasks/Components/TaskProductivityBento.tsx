@@ -27,7 +27,7 @@ interface TaskProductivityBentoProps {
   onAddTask?: () => void;
 }
 
-// Background vector pattern for the task focus bar.
+// Background vector pattern for the task focus bar: calm, tactile instrument surface.
 const FocusBarBackgroundSvg: React.FC = React.memo(() => (
   <View style={StyleSheet.absoluteFill} pointerEvents="none">
     <Svg
@@ -38,39 +38,26 @@ const FocusBarBackgroundSvg: React.FC = React.memo(() => (
       fill="none"
     >
       <Defs>
-        <LinearGradient id="focusBarBg" x1="0%" y1="0%" x2="100%" y2="100%">
-          <Stop offset="0%" stopColor={Colors.BentoStopSlate} stopOpacity={0.8} />
-          <Stop offset="50%" stopColor={Colors.BentoStopMid} stopOpacity={0.5} />
-          <Stop offset="100%" stopColor={Colors.BentoStopAbyss} stopOpacity={0.9} />
+        <LinearGradient id="focusBarBg" x1="0%" y1="0%" x2="0%" y2="100%">
+          <Stop offset="0%" stopColor="#22252C" stopOpacity={0.9} />
+          <Stop offset="50%" stopColor="#1C1D22" stopOpacity={0.95} />
+          <Stop offset="100%" stopColor="#141519" stopOpacity={1} />
         </LinearGradient>
-
-        <RadialGradient id="focusGoldAura" cx="12%" cy="50%" rx="50%" ry="90%">
-          <Stop offset="0%" stopColor={Colors.AccentYellow} stopOpacity={0.28} />
-          <Stop offset="55%" stopColor={Colors.WorkDarkBorder} stopOpacity={0.06} />
-          <Stop offset="100%" stopColor={Colors.BentoStopAbyss} stopOpacity={0} />
-        </RadialGradient>
-
-        <RadialGradient
-          id="focusLavenderGlow"
-          cx="88%"
-          cy="30%"
-          rx="45%"
-          ry="80%"
-        >
-          <Stop offset="0%" stopColor={Colors.PeriwinkleSoft} stopOpacity={0.2} />
-          <Stop offset="60%" stopColor={Colors.LavenderPurple} stopOpacity={0.04} />
-          <Stop offset="100%" stopColor={Colors.BentoStopAbyss} stopOpacity={0} />
-        </RadialGradient>
+        <LinearGradient id="brassFocusRule" x1="0%" y1="0%" x2="100%" y2="0%">
+          <Stop offset="0%" stopColor={Colors.AccentYellow} stopOpacity={0.04} />
+          <Stop offset="30%" stopColor={Colors.AccentYellow} stopOpacity={0.18} />
+          <Stop offset="70%" stopColor={Colors.AccentYellow} stopOpacity={0.04} />
+          <Stop offset="100%" stopColor={Colors.AccentYellow} stopOpacity={0} />
+        </LinearGradient>
       </Defs>
 
       <Rect width="100%" height="100%" fill="url(#focusBarBg)" />
-      <Rect width="100%" height="100%" fill="url(#focusGoldAura)" />
-      <Rect width="100%" height="100%" fill="url(#focusLavenderGlow)" />
+      {/* Subtle acoustic hairline rule */}
       <Circle
         cx={330}
         cy={20}
         r={32}
-        stroke={withAlpha(Colors.WorkLightBorder, 0.12)}
+        stroke={withAlpha(Colors.PureWhite, 0.05)}
         strokeWidth={1}
         fill="none"
       />
@@ -87,30 +74,16 @@ const TaskPercentBadge: React.FC<{ percent: number }> = React.memo(
         viewBox="0 0 56 56"
         fill="none"
       >
-        <Defs>
-          <LinearGradient
-            id="uniqueBorderGrad"
-            x1="0%"
-            y1="0%"
-            x2="100%"
-            y2="100%"
-          >
-            <Stop offset="0%" stopColor={Colors.HeroSunGlowYellow} stopOpacity={0.9} />
-            <Stop offset="50%" stopColor={Colors.AccentYellow} stopOpacity={0.65} />
-            <Stop offset="100%" stopColor={Colors.WorkDarkBorder} stopOpacity={0.85} />
-          </LinearGradient>
-        </Defs>
-
-        {/* Outer Unique Rounded Rect Frame with Specular Gold Gradient Border */}
+        {/* Outer Rounded Rect Frame with Subtle Hairline Border */}
         <Rect
           x={1.5}
           y={1.5}
           width={53}
           height={53}
-          rx={18}
-          stroke="url(#uniqueBorderGrad)"
-          strokeWidth={1.8}
-          fill={withAlpha(Colors.AccentYellow, 0.08)}
+          rx={16}
+          stroke={withAlpha(Colors.AccentYellow, 0.45)}
+          strokeWidth={1.2}
+          fill={withAlpha(Colors.AccentYellow, 0.06)}
         />
 
         {/* Inner Subtle Hairline Accent */}
@@ -119,17 +92,17 @@ const TaskPercentBadge: React.FC<{ percent: number }> = React.memo(
           y={4.5}
           width={47}
           height={47}
-          rx={14}
-          stroke={withAlpha(Colors.PureWhite, 0.12)}
+          rx={13}
+          stroke={withAlpha(Colors.PureWhite, 0.08)}
           strokeWidth={1}
-          fill={withAlpha(Colors.PureBlack, 0.28)}
+          fill={withAlpha(Colors.PureBlack, 0.25)}
         />
       </Svg>
 
       {/* Centered Typography */}
       <View style={styles.graphTextOverlay} pointerEvents="none">
         <Text style={styles.percentageText}>{percent}%</Text>
-        <Text style={styles.percentageLabel}>DONE</Text>
+        <Text style={styles.percentageLabel}>Done</Text>
       </View>
     </View>
   ),
@@ -149,32 +122,9 @@ export const TaskProductivityBento: React.FC<TaskProductivityBentoProps> = ({
   const progressPercent =
     totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
-  const pulseScale = useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    const pulse = Animated.loop(
-      Animated.sequence([
-        Animated.timing(pulseScale, {
-          toValue: 1.15,
-          duration: 900,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-        Animated.timing(pulseScale, {
-          toValue: 1,
-          duration: 900,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-      ]),
-    );
-    pulse.start();
-    return () => pulse.stop();
-  }, [pulseScale]);
-
   const motivationStatus = useMemo(() => {
     if (totalCount === 0) return 'Add your first task to start';
-    if (progressPercent === 100) return 'All daily tasks conquered! 🎯';
+    if (progressPercent === 100) return 'All daily tasks completed';
     return `${pendingCount} of ${totalCount} remaining today`;
   }, [totalCount, pendingCount, progressPercent]);
 
@@ -195,15 +145,10 @@ export const TaskProductivityBento: React.FC<TaskProductivityBentoProps> = ({
           {/* Center: Title + Progress Bar + Status */}
           <View style={styles.centerBlock}>
             <View style={styles.titleRow}>
-              <Badge label="DAILY FOCUS" variant="yellow" size="sm" />
+              <Badge label="Daily Focus" variant="yellow" size="sm" />
               <View style={styles.liveIndicator}>
-                <Animated.View
-                  style={[
-                    styles.liveDot,
-                    { transform: [{ scale: pulseScale }] },
-                  ]}
-                />
-                <Text style={styles.liveText}>ACTIVE</Text>
+                <View style={styles.liveDot} />
+                <Text style={styles.liveText}>Active</Text>
               </View>
             </View>
 
@@ -294,6 +239,7 @@ const styles = StyleSheet.create({
     fontSize: ResponsivePixels.size15,
     color: Colors.WorkDarkLabelGold,
     lineHeight: ResponsivePixels.size18,
+    fontVariant: ['tabular-nums'],
   },
   percentageLabel: {
     fontFamily: Fonts.poppins.semiBold,

@@ -18,8 +18,6 @@ export const RoyalHeroCard: React.FC<RoyalHeroCardProps> = React.memo(
       <View style={styles.heroOuterWrapper}>
         <View style={styles.cardShadowWrapper}>
           <View style={styles.card}>
-            <View style={styles.heroGlowCircle} />
-
             <View style={styles.heroCardContent}>
               {/* Top Badge & Crown Row */}
               <View style={styles.heroTopRow}>
@@ -33,7 +31,7 @@ export const RoyalHeroCard: React.FC<RoyalHeroCardProps> = React.memo(
                 </View>
                 <View style={styles.heroBadgeGroup}>
                   <Badge
-                    label={isPremium ? 'ROYAL MONARCH' : 'ELITE PASS'}
+                    label={isPremium ? 'Royal Member' : 'Full Access'}
                     variant="yellow"
                     size="sm"
                   />
@@ -44,7 +42,7 @@ export const RoyalHeroCard: React.FC<RoyalHeroCardProps> = React.memo(
               <Text style={styles.heroTitle}>
                 {isPremium
                   ? 'Regius Royal Active'
-                  : 'Elevate Your Mindful Productivity'}
+                  : 'Clarity Through Voice & Journaling'}
               </Text>
 
               {/* Hero Description */}
@@ -57,7 +55,7 @@ export const RoyalHeroCard: React.FC<RoyalHeroCardProps> = React.memo(
                         ? 'Royal Monthly Membership'
                         : 'Royal Annual Pass'
                     }.`
-                  : 'Experience Regius without boundaries. Unleash unlimited AI voice synthesis, custom neural wake phrases, and all artisanal theme palettes.'}
+                  : 'Full access to on-device neural voice synthesis, bespoke acoustic profiles, and tactile journal themes.'}
               </Text>
 
               {/* Hero Feature Pills */}
@@ -68,7 +66,7 @@ export const RoyalHeroCard: React.FC<RoyalHeroCardProps> = React.memo(
                     color={Colors.AccentYellow}
                     strokeWidth={2.4}
                   />
-                  <Text style={styles.heroPillText}>Unlimited AI Voice</Text>
+                  <Text style={styles.heroPillText}>Neural Voice Synthesis</Text>
                 </View>
                 <View style={styles.heroPill}>
                   <Palette
@@ -76,7 +74,7 @@ export const RoyalHeroCard: React.FC<RoyalHeroCardProps> = React.memo(
                     color={Colors.AccentYellow}
                     strokeWidth={2.4}
                   />
-                  <Text style={styles.heroPillText}>8 Luxury Themes</Text>
+                  <Text style={styles.heroPillText}>8 Artisanal Themes</Text>
                 </View>
                 <View style={styles.heroPill}>
                   <Zap
@@ -84,7 +82,7 @@ export const RoyalHeroCard: React.FC<RoyalHeroCardProps> = React.memo(
                     color={Colors.AccentYellow}
                     strokeWidth={2.4}
                   />
-                  <Text style={styles.heroPillText}>2x XP Boost</Text>
+                  <Text style={styles.heroPillText}>Acoustic Morning Briefing</Text>
                 </View>
               </View>
             </View>
@@ -122,15 +120,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     position: 'relative',
     padding: ResponsivePixels.size20,
-  },
-  heroGlowCircle: {
-    position: 'absolute',
-    top: -ResponsivePixels.size50,
-    right: -ResponsivePixels.size50,
-    width: ResponsivePixels.size160,
-    height: ResponsivePixels.size160,
-    borderRadius: ResponsivePixels.size80,
-    backgroundColor: withAlpha(Colors.AccentYellow, 0.15),
   },
   heroCardContent: {
     position: 'relative',

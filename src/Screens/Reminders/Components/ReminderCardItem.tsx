@@ -12,10 +12,6 @@ import {
 } from 'react-native';
 import Svg, {
   Path,
-  Defs,
-  RadialGradient,
-  Stop,
-  Circle,
 } from 'react-native-svg';
 import {
   Bell,
@@ -259,7 +255,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
           bg: isDarkMode ? Colors.MindfulDarkBg : Colors.MindfulTintLight,
           border: isDarkMode ? Colors.LavenderPurple : Colors.MindfulLightBorder,
           accent: Colors.LavenderPurple,
-          shadow: isDarkMode ? Colors.PureBlack : Colors.LavenderPurple,
+          shadow: Colors.PureBlack,
           iconBg: isDarkMode ? Colors.MindfulDarkIconBg : Colors.MindfulLightBg,
           auraColor: Colors.LavenderPurple,
           Icon: Briefcase,
@@ -269,7 +265,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
           bg: isDarkMode ? Colors.EventDarkBg : Colors.CategoryOrangeSoftBg,
           border: isDarkMode ? Colors.AccentAmber : Colors.EventLightBorder,
           accent: Colors.AccentAmber,
-          shadow: isDarkMode ? Colors.PureBlack : Colors.AccentAmber,
+          shadow: Colors.PureBlack,
           iconBg: isDarkMode ? Colors.EventDarkIconBgDeep : Colors.EventIconBgLight,
           auraColor: Colors.AccentAmber,
           Icon: CalendarCheck,
@@ -279,7 +275,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
           bg: isDarkMode ? Colors.WellnessDarkBg : Colors.WellnessTintLight,
           border: isDarkMode ? Colors.GreenGracious : Colors.WellnessLightBorder,
           accent: Colors.GreenGracious,
-          shadow: isDarkMode ? Colors.PureBlack : Colors.AccentGreen,
+          shadow: Colors.PureBlack,
           iconBg: isDarkMode ? Colors.WellnessDarkIconBg : Colors.WellnessLightBg,
           auraColor: Colors.AccentGreen,
           Icon: Heart,
@@ -290,7 +286,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
           bg: isDarkMode ? Colors.WorkDarkBg : Colors.WellnessTintLight,
           border: isDarkMode ? Colors.WorkDarkBorder : Colors.WellnessLightBorder,
           accent: isDarkMode ? Colors.AccentYellow : Colors.GreenGracious,
-          shadow: isDarkMode ? Colors.PureBlack : Colors.AccentGreen,
+          shadow: Colors.PureBlack,
           iconBg: isDarkMode ? Colors.WorkDarkIconBg : Colors.WellnessLightBg,
           auraColor: isDarkMode ? Colors.AccentYellow : Colors.AccentGreen,
           Icon: Bell,
@@ -340,7 +336,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
               <View style={styles.actionIconAuraDetails}>
                 <Flame size={ResponsivePixels.size14} color={Colors.AccentAmber} strokeWidth={2.6} />
               </View>
-              <Text style={styles.actionBtnText}>DETAILS</Text>
+              <Text style={styles.actionBtnText}>Details</Text>
             </TouchableOpacity>
           </Animated.View>
         )}
@@ -366,7 +362,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
               <View style={styles.actionIconAuraEdit}>
                 <Pencil size={ResponsivePixels.size13_5} color={Colors.AccentYellow} strokeWidth={2.6} />
               </View>
-              <Text style={styles.actionBtnText}>EDIT</Text>
+              <Text style={styles.actionBtnText}>Edit</Text>
             </TouchableOpacity>
           </Animated.View>
         )}
@@ -400,36 +396,13 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
           accessibilityState={{ checked: localChecked }}
           accessibilityLabel={reminder.title}
         >
-          {/* Dynamic Cutout Notch Background SVG with Radiant Emerald Aura & Starlight Nodes */}
+          {/* Dynamic Cutout Notch Background SVG */}
           <Svg
             width={cardSize.width}
             height={cardSize.height}
             style={styles.cardSvgBackground}
             pointerEvents="none"
           >
-            <Defs>
-              {!localChecked && (
-                <RadialGradient
-                  id={`reminderCardAura-${reminder.id}`}
-                  cx={cardSize.width - ResponsivePixels.size55}
-                  cy={ResponsivePixels.size25}
-                  r={ResponsivePixels.size110}
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <Stop
-                    offset="0%"
-                    stopColor={theme.auraColor}
-                    stopOpacity={isDarkMode ? 0.28 : 0.16}
-                  />
-                  <Stop
-                    offset="65%"
-                    stopColor={theme.auraColor}
-                    stopOpacity={isDarkMode ? 0.08 : 0.03}
-                  />
-                  <Stop offset="100%" stopColor={theme.bg} stopOpacity={0} />
-                </RadialGradient>
-              )}
-            </Defs>
             <Path
               d={getCutoutCardPath(cardSize.width, cardSize.height)}
               fill={
@@ -449,30 +422,6 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
               strokeWidth={1.5}
               strokeLinejoin="round"
             />
-            {!localChecked && (
-              <>
-                {/* Soft ambient radiance under top-right cutout */}
-                <Path
-                  d={getCutoutCardPath(cardSize.width, cardSize.height)}
-                  fill={`url(#reminderCardAura-${reminder.id})`}
-                />
-                {/* Delicate starlight nodes */}
-                <Circle
-                  cx={cardSize.width - ResponsivePixels.size66}
-                  cy={ResponsivePixels.size16}
-                  r={1.6}
-                  fill={theme.accent}
-                  opacity={isDarkMode ? 0.6 : 0.4}
-                />
-                <Circle
-                  cx={cardSize.width - ResponsivePixels.size80}
-                  cy={ResponsivePixels.size30}
-                  r={1.3}
-                  fill={theme.accent}
-                  opacity={isDarkMode ? 0.5 : 0.3}
-                />
-              </>
-            )}
           </Svg>
 
           {/* Floating Checkbox in Top-Right Cutout */}
@@ -819,13 +768,13 @@ const styles = StyleSheet.create({
     position: 'relative',
     ...Platform.select({
       ios: {
-        shadowColor: Colors.AccentGreen,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.12,
-        shadowRadius: 8,
+        shadowColor: Colors.PureBlack,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 5,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },
@@ -958,6 +907,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.medium,
     fontSize: ResponsivePixels.size11,
     color: Colors.MutedSlateSubtext,
+    fontVariant: ['tabular-nums'],
   },
   repeatTag: {
     backgroundColor: Colors.MindfulLightBg,

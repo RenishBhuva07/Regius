@@ -30,11 +30,7 @@ interface HabitConsistencyBentoProps {
 
 const WEEKDAYS = ['M', 'T', 'W', 'T', 'F', 'S', 'S'];
 
-/**
- * Ambient luxury dark background matching DailyBriefingCard:
- * - Radial fiery amber & lavender auras
- * - Deep dark slate-black canvas
- */
+// Ambient tactile dark background for Habit Consistency: calm, grounded surface.
 const BentoBackgroundSvg: React.FC = React.memo(() => (
   <View style={StyleSheet.absoluteFill} pointerEvents="none">
     <Svg
@@ -45,55 +41,22 @@ const BentoBackgroundSvg: React.FC = React.memo(() => (
       fill="none"
     >
       <Defs>
-        <LinearGradient id="bentoBg" x1="0%" y1="0%" x2="100%" y2="100%">
-          <Stop offset="0%" stopColor={Colors.BentoStopSlate} stopOpacity={0.7} />
-          <Stop offset="50%" stopColor={Colors.BentoStopMid} stopOpacity={0.3} />
-          <Stop offset="100%" stopColor={Colors.BentoStopAbyss} stopOpacity={0.8} />
+        <LinearGradient id="bentoBg" x1="0%" y1="0%" x2="0%" y2="100%">
+          <Stop offset="0%" stopColor="#22252C" stopOpacity={0.9} />
+          <Stop offset="50%" stopColor="#1C1D22" stopOpacity={0.95} />
+          <Stop offset="100%" stopColor="#141519" stopOpacity={1} />
         </LinearGradient>
-
-        {/* Fiery Amber Glow (Bottom-Left behind fire icon) */}
-        <RadialGradient id="flameGlow" cx="20%" cy="45%" rx="55%" ry="55%">
-          <Stop offset="0%" stopColor={Colors.AccentAmber} stopOpacity={0.28} />
-          <Stop offset="40%" stopColor={Colors.EventTextAccent} stopOpacity={0.12} />
-          <Stop offset="100%" stopColor={Colors.BentoStopAbyss} stopOpacity={0} />
-        </RadialGradient>
-
-        {/* Top-Right Lavender / Purple Aura */}
-        <RadialGradient id="lavenderAura" cx="85%" cy="15%" rx="65%" ry="65%">
-          <Stop offset="0%" stopColor={Colors.PeriwinkleSoft} stopOpacity={0.35} />
-          <Stop offset="45%" stopColor={Colors.LavenderPurple} stopOpacity={0.15} />
-          <Stop offset="100%" stopColor={Colors.BentoStopAbyss} stopOpacity={0} />
-        </RadialGradient>
-
-        {/* Mint Glow on bottom right */}
-        <RadialGradient id="mintGlow" cx="75%" cy="85%" rx="45%" ry="45%">
-          <Stop offset="0%" stopColor={Colors.AccentGreen} stopOpacity={0.14} />
-          <Stop offset="60%" stopColor={Colors.GreenGracious} stopOpacity={0.03} />
-          <Stop offset="100%" stopColor={Colors.BentoStopAbyss} stopOpacity={0} />
-        </RadialGradient>
       </Defs>
 
       <Rect width="100%" height="100%" fill="url(#bentoBg)" />
-      <Rect width="100%" height="100%" fill="url(#flameGlow)" />
-      <Rect width="100%" height="100%" fill="url(#lavenderAura)" />
-      <Rect width="100%" height="100%" fill="url(#mintGlow)" />
 
       {/* Top-right subtle ambient ring */}
       <Circle
         cx={310}
         cy={30}
         r={40}
-        stroke={withAlpha(Colors.MindfulLightBorder, 0.14)}
+        stroke={withAlpha(Colors.PureWhite, 0.05)}
         strokeWidth={1}
-        fill="none"
-      />
-      <Circle
-        cx={310}
-        cy={30}
-        r={70}
-        stroke={withAlpha(Colors.MindfulLightBorder, 0.06)}
-        strokeWidth={1}
-        strokeDasharray="4 6"
         fill="none"
       />
     </Svg>
@@ -119,29 +82,6 @@ export const HabitConsistencyBento: React.FC<HabitConsistencyBentoProps> = ({
     return day === 0 ? 6 : day - 1;
   }, []);
 
-  const flameScale = useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    const pulse = Animated.loop(
-      Animated.sequence([
-        Animated.timing(flameScale, {
-          toValue: 1.15,
-          duration: 900,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-        Animated.timing(flameScale, {
-          toValue: 1,
-          duration: 900,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-      ]),
-    );
-    pulse.start();
-    return () => pulse.stop();
-  }, [flameScale]);
-
   return (
     <View style={styles.cardShadowWrapper}>
       <View
@@ -150,14 +90,14 @@ export const HabitConsistencyBento: React.FC<HabitConsistencyBentoProps> = ({
           isDarkMode && { borderColor: withAlpha(Colors.PureWhite, 0.22) },
         ]}
       >
-        {/* Luxury Dark Ambient Background matching DailyBriefingCard */}
+        {/* Calm tactile dark background */}
         <BentoBackgroundSvg />
 
         <View style={styles.content}>
           {/* Top Badge Row */}
           <View style={styles.topRow}>
             <Badge
-              label="ACTIVE STREAK"
+              label="Active Streak"
               variant="orange"
               size="sm"
               icon={
@@ -169,7 +109,7 @@ export const HabitConsistencyBento: React.FC<HabitConsistencyBentoProps> = ({
               }
             />
             <Badge
-              label="TOP 5% CONSISTENCY"
+              label="Consistency"
               variant="purple"
               size="sm"
               icon={
@@ -184,19 +124,14 @@ export const HabitConsistencyBento: React.FC<HabitConsistencyBentoProps> = ({
           {/* Hero Metric Row: Big Fire Icon + 20 Days Streak + Percent */}
           <View style={styles.metricRow}>
             <View style={styles.heroStreakLeft}>
-              <Animated.View
-                style={[
-                  styles.flameWrap,
-                  { transform: [{ scale: flameScale }] },
-                ]}
-              >
+              <View style={styles.flameWrap}>
                 <Flame
                   size={ResponsivePixels.size60}
                   color={Colors.AccentAmber}
                   strokeWidth={2.2}
                   fill={Colors.AccentAmber}
                 />
-              </Animated.View>
+              </View>
 
               <View style={styles.streakTextWrap}>
                 <Text style={styles.metricBig}>{longestStreak} Days</Text>
@@ -233,7 +168,7 @@ export const HabitConsistencyBento: React.FC<HabitConsistencyBentoProps> = ({
                 fill={Colors.AccentAmber}
                 strokeWidth={2}
               />
-              <Text style={styles.weekStripLabel}>WEEKLY MOMENTUM</Text>
+              <Text style={styles.weekStripLabel}>Weekly Momentum</Text>
             </View>
 
             <View style={styles.weekDaysRow}>
@@ -372,6 +307,7 @@ const styles = StyleSheet.create({
     color: Colors.PureWhite,
     letterSpacing: -0.5,
     includeFontPadding: false,
+    fontVariant: ['tabular-nums'],
   },
   metricLabel: {
     fontFamily: Fonts.poppins.regular,
@@ -395,11 +331,13 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size21,
     color: Colors.AccentGreen,
+    fontVariant: ['tabular-nums'],
   },
   progressSubtext: {
     fontFamily: Fonts.poppins.medium,
     fontSize: ResponsivePixels.size13,
     color: Colors.SteelMist,
+    fontVariant: ['tabular-nums'],
   },
   progressBarTrack: {
     height: ResponsivePixels.size8,
@@ -427,7 +365,7 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.semiBold,
     fontSize: ResponsivePixels.size12,
     color: Colors.ConsistencyLabelGray,
-    letterSpacing: 0.8,
+    letterSpacing: -0.1,
   },
   weekDaysRow: {
     flexDirection: 'row',

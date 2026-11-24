@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Star } from 'lucide-react-native';
+import { ShieldCheck } from 'lucide-react-native';
 
 import { Fonts } from '../../../Theme/fonts';
 import { Colors } from '../../../Assets/StyleUtilities/Colors';
@@ -37,26 +37,23 @@ export const SocialProofCard: React.FC<SocialProofCardProps> = React.memo(
           },
         ]}
       >
-        <View style={styles.starsRow}>
-          {[...Array(5)].map((_, i) => (
-            <Star
-              key={i}
-              size={ResponsivePixels.size14}
-              color={Colors.AccentYellow}
-              fill={Colors.AccentYellow}
-              strokeWidth={2}
-            />
-          ))}
-          <Text style={[styles.ratingText, { color: textPrimary }]}>
-            4.9/5 from 12,000+ members
+        <View style={styles.headerRow}>
+          <ShieldCheck
+            size={ResponsivePixels.size16}
+            color={isDarkMode ? Colors.AccentGreen : Colors.GreenGracious}
+            strokeWidth={2.4}
+          />
+          <Text style={[styles.headingText, { color: textPrimary }]}>
+            Local-First & Private
           </Text>
         </View>
-        <Text style={[styles.guaranteeDesc, { color: textSecondary }]}>
-          “Regius transformed how I organize my days with voice and elegant
-          tactile focus. Upgrading was the easiest decision of the year.”
+        <Text style={[styles.architectureDesc, { color: textSecondary }]}>
+          Your daily schedule, audio recordings, and personal journal stay
+          strictly on your device. Voice recognition operates on local models
+          with zero cloud telemetry.
         </Text>
-        <Text style={[styles.guaranteeAuthor, { color: textPrimary }]}>
-          — Marcus Vance, Design Principal
+        <Text style={[styles.privacyNote, { color: textSecondary }]}>
+          Zero trackers • Zero third-party analytics
         </Text>
       </View>
     );
@@ -75,27 +72,26 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 2,
   },
-  starsRow: {
+  headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: ResponsivePixels.size4,
+    gap: ResponsivePixels.size6,
     marginBottom: ResponsivePixels.size8,
   },
-  ratingText: {
+  headingText: {
     fontFamily: Fonts.poppins.semiBold,
-    fontSize: ResponsivePixels.size12,
-    marginLeft: ResponsivePixels.size6,
+    fontSize: ResponsivePixels.size12_5,
   },
-  guaranteeDesc: {
+  architectureDesc: {
     fontFamily: Fonts.poppins.regular,
-    fontSize: ResponsivePixels.size12,
-    lineHeight: ResponsivePixels.size18,
-    fontStyle: 'italic',
-    marginBottom: ResponsivePixels.size6,
-  },
-  guaranteeAuthor: {
-    fontFamily: Fonts.poppins.semiBold,
     fontSize: ResponsivePixels.size11_5,
+    lineHeight: ResponsivePixels.size17,
+    marginBottom: ResponsivePixels.size8,
+  },
+  privacyNote: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: ResponsivePixels.size10_5,
+    letterSpacing: 0.2,
   },
 });
 

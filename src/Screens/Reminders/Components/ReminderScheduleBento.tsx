@@ -1,11 +1,9 @@
-import React, { useMemo, useEffect, useRef } from 'react';
+import React, { useMemo } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   Platform,
-  Animated,
-  Easing,
 } from 'react-native';
 import Svg, {
   Rect,
@@ -27,11 +25,7 @@ interface ReminderScheduleBentoProps {
   onAddReminder?: () => void;
 }
 
-/**
- * FocusBarBackgroundSvg for Reminders:
- * - Slim 88px profile identical in design to TaskProductivityBento
- * - Lavender acoustic focus auras on obsidian canvas
- */
+// FocusBarBackgroundSvg for Reminders: calm, grounded acoustic surface.
 const FocusBarBackgroundSvg: React.FC = React.memo(() => (
   <View style={StyleSheet.absoluteFill} pointerEvents="none">
     <Svg
@@ -42,47 +36,21 @@ const FocusBarBackgroundSvg: React.FC = React.memo(() => (
       fill="none"
     >
       <Defs>
-        <LinearGradient id="remFocusBarBg" x1="0%" y1="0%" x2="100%" y2="100%">
-          <Stop offset="0%" stopColor={Colors.BentoStopSlate} stopOpacity={0.8} />
-          <Stop offset="50%" stopColor={Colors.BentoStopMid} stopOpacity={0.5} />
-          <Stop offset="100%" stopColor={Colors.BentoStopAbyss} stopOpacity={0.9} />
+        <LinearGradient id="remFocusBarBg" x1="0%" y1="0%" x2="0%" y2="100%">
+          <Stop offset="0%" stopColor="#22252C" stopOpacity={0.9} />
+          <Stop offset="50%" stopColor="#1C1D22" stopOpacity={0.95} />
+          <Stop offset="100%" stopColor="#141519" stopOpacity={1} />
         </LinearGradient>
-
-        <RadialGradient
-          id="remFocusLavenderAura"
-          cx="12%"
-          cy="50%"
-          rx="50%"
-          ry="90%"
-        >
-          <Stop offset="0%" stopColor={Colors.PeriwinkleSoft} stopOpacity={0.32} />
-          <Stop offset="55%" stopColor={Colors.LavenderPurple} stopOpacity={0.08} />
-          <Stop offset="100%" stopColor={Colors.BentoStopAbyss} stopOpacity={0} />
-        </RadialGradient>
-
-        <RadialGradient
-          id="remFocusGoldGlow"
-          cx="88%"
-          cy="30%"
-          rx="45%"
-          ry="80%"
-        >
-          <Stop offset="0%" stopColor={Colors.AccentYellow} stopOpacity={0.16} />
-          <Stop offset="60%" stopColor={Colors.WorkDarkBorder} stopOpacity={0.03} />
-          <Stop offset="100%" stopColor={Colors.BentoStopAbyss} stopOpacity={0} />
-        </RadialGradient>
       </Defs>
 
       <Rect width="100%" height="100%" fill="url(#remFocusBarBg)" />
-      <Rect width="100%" height="100%" fill="url(#remFocusLavenderAura)" />
-      <Rect width="100%" height="100%" fill="url(#remFocusGoldGlow)" />
 
       {/* Ambient right accent ring */}
       <Circle
         cx={330}
         cy={20}
         r={32}
-        stroke={withAlpha(Colors.MindfulLightBorder, 0.15)}
+        stroke={withAlpha(Colors.PureWhite, 0.05)}
         strokeWidth={1}
         fill="none"
       />
@@ -99,30 +67,16 @@ const ReminderPercentBadge: React.FC<{ percent: number }> = React.memo(
         viewBox="0 0 56 56"
         fill="none"
       >
-        <Defs>
-          <LinearGradient
-            id="remUniqueBorderGrad"
-            x1="0%"
-            y1="0%"
-            x2="100%"
-            y2="100%"
-          >
-            <Stop offset="0%" stopColor={Colors.MindfulLightBorder} stopOpacity={0.95} />
-            <Stop offset="50%" stopColor={Colors.LavenderPurple} stopOpacity={0.75} />
-            <Stop offset="100%" stopColor={Colors.BentoVioletStopDeep} stopOpacity={0.9} />
-          </LinearGradient>
-        </Defs>
-
-        {/* Outer Unique Rounded Rect Frame with Specular Lavender Gradient Border */}
+        {/* Outer Rounded Rect Frame with Subtle Lavender Border */}
         <Rect
           x={1.5}
           y={1.5}
           width={53}
           height={53}
-          rx={18}
-          stroke="url(#remUniqueBorderGrad)"
-          strokeWidth={1.8}
-          fill={withAlpha(Colors.LavenderPurple, 0.1)}
+          rx={16}
+          stroke={withAlpha(Colors.LavenderPurple, 0.45)}
+          strokeWidth={1.2}
+          fill={withAlpha(Colors.LavenderPurple, 0.06)}
         />
 
         {/* Inner Subtle Hairline Accent */}
@@ -131,17 +85,17 @@ const ReminderPercentBadge: React.FC<{ percent: number }> = React.memo(
           y={4.5}
           width={47}
           height={47}
-          rx={14}
-          stroke={withAlpha(Colors.PureWhite, 0.12)}
+          rx={13}
+          stroke={withAlpha(Colors.PureWhite, 0.08)}
           strokeWidth={1}
-          fill={withAlpha(Colors.PureBlack, 0.28)}
+          fill={withAlpha(Colors.PureBlack, 0.25)}
         />
       </Svg>
 
       {/* Centered Typography in Lavender Palette */}
       <View style={styles.graphTextOverlay} pointerEvents="none">
         <Text style={styles.percentageText}>{percent}%</Text>
-        <Text style={styles.percentageLabel}>DONE</Text>
+        <Text style={styles.percentageLabel}>Done</Text>
       </View>
     </View>
   ),
@@ -161,29 +115,6 @@ export const ReminderScheduleBento: React.FC<ReminderScheduleBentoProps> = ({
   const progressPercent =
     totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
-  const pulseScale = useRef(new Animated.Value(1)).current;
-
-  useEffect(() => {
-    const pulse = Animated.loop(
-      Animated.sequence([
-        Animated.timing(pulseScale, {
-          toValue: 1.15,
-          duration: 900,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-        Animated.timing(pulseScale, {
-          toValue: 1,
-          duration: 900,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-      ]),
-    );
-    pulse.start();
-    return () => pulse.stop();
-  }, [pulseScale]);
-
   // Find next pending reminder
   const nextAlert = useMemo(() => {
     const pendingList = reminders.filter(r => !r.done);
@@ -193,7 +124,7 @@ export const ReminderScheduleBento: React.FC<ReminderScheduleBentoProps> = ({
 
   const motivationStatus = useMemo(() => {
     if (totalCount === 0) return 'Set your first reminder alert';
-    if (progressPercent === 100) return 'All reminder alerts acknowledged! 🔔';
+    if (progressPercent === 100) return 'All reminder alerts acknowledged';
     if (nextAlert?.time)
       return `Next chime: ${nextAlert.time} (${nextAlert.title})`;
     return `${pendingCount} of ${totalCount} alerts pending`;
@@ -216,15 +147,10 @@ export const ReminderScheduleBento: React.FC<ReminderScheduleBentoProps> = ({
           {/* Center: Title + Progress Bar + Status */}
           <View style={styles.centerBlock}>
             <View style={styles.titleRow}>
-              <Badge label="ALERT HORIZON" variant="purple" size="sm" />
+              <Badge label="Reminders" variant="purple" size="sm" />
               <View style={styles.liveIndicator}>
-                <Animated.View
-                  style={[
-                    styles.liveDot,
-                    { transform: [{ scale: pulseScale }] },
-                  ]}
-                />
-                <Text style={styles.liveText}>TIMED</Text>
+                <View style={styles.liveDot} />
+                <Text style={styles.liveText}>Scheduled</Text>
               </View>
             </View>
 
@@ -315,6 +241,7 @@ const styles = StyleSheet.create({
     fontSize: ResponsivePixels.size15,
     color: Colors.MindfulLightBorder,
     lineHeight: ResponsivePixels.size18,
+    fontVariant: ['tabular-nums'],
   },
   percentageLabel: {
     fontFamily: Fonts.poppins.semiBold,
@@ -403,6 +330,7 @@ const styles = StyleSheet.create({
     fontSize: ResponsivePixels.size12,
     color: Colors.PureWhite,
     letterSpacing: -0.2,
+    fontVariant: ['tabular-nums'],
   },
   statCaption: {
     fontFamily: Fonts.poppins.medium,

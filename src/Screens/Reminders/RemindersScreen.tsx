@@ -140,10 +140,10 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
         Toast.show({
           type: 'success',
           text1: updated.done
-            ? 'Reminder Acknowledged! 🔔'
-            : 'Reminder Restored',
+            ? 'Reminder acknowledged'
+            : 'Reminder restored',
           text2: updated.done
-            ? 'Marked as completed for today.'
+            ? 'Marked as completed.'
             : 'Returned to upcoming alerts queue.',
         });
       }
@@ -375,10 +375,10 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
                   Toast.show({
                     type: 'success',
                     text1: markDone
-                      ? 'All Reminders Acknowledged! 🔔'
-                      : 'Reminders Restored to Active List',
+                      ? 'All reminders acknowledged'
+                      : 'Reminders restored to active list',
                     text2: markDone
-                      ? 'Great momentum on conquering your daily schedule!'
+                      ? 'Marked as completed.'
                       : 'Items are now back in your upcoming alerts queue.',
                   });
                 }}
@@ -418,17 +418,7 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
                       isDarkMode && { color: Colors.DarkTitleCompleted },
                     ]}
                   >
-                    Crafted with{' '}
-                  </Text>
-                  <Text style={styles.craftedWithHeart}>❤️</Text>
-                  <Text
-                    style={[
-                      styles.craftedWithText,
-                      isDarkMode && { color: Colors.DarkTitleCompleted },
-                    ]}
-                  >
-                    {' '}
-                    in Ahmedabad, India
+                    Crafted for mindful productivity • Ahmedabad, India
                   </Text>
                 </View>
               </View>

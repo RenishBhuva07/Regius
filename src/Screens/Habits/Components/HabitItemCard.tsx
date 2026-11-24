@@ -352,7 +352,7 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
               <View style={styles.actionIconAuraDetails}>
                 <Flame size={ResponsivePixels.size14} color={Colors.AccentAmber} strokeWidth={2.6} />
               </View>
-              <Text style={styles.actionBtnText}>DETAILS</Text>
+              <Text style={styles.actionBtnText}>Details</Text>
             </TouchableOpacity>
           </Animated.View>
         )}
@@ -378,7 +378,7 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
               <View style={styles.actionIconAuraEdit}>
                 <Pencil size={ResponsivePixels.size13_5} color={Colors.AccentYellow} strokeWidth={2.6} />
               </View>
-              <Text style={styles.actionBtnText}>EDIT</Text>
+              <Text style={styles.actionBtnText}>Edit</Text>
             </TouchableOpacity>
           </Animated.View>
         )}
@@ -401,61 +401,21 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
           style={[
             styles.card,
             {
-              shadowColor: habit.completed
-                ? isDarkMode
-                  ? Colors.PureBlack
-                  : Colors.Gray300
-                : theme.shadow,
+              shadowColor: Colors.PureBlack,
+              shadowOpacity: habit.completed ? 0.03 : 0.05,
             },
           ]}
           accessibilityRole="checkbox"
           accessibilityState={{ checked: habit.completed }}
           accessibilityLabel={habit.title}
         >
-          {/* Dynamic Cutout Notch Background SVG with Radiant Lavender Aura & Starlight Nodes */}
+          {/* Dynamic Cutout Notch Background SVG: Clean tactile surface */}
           <Svg
             width={cardSize.width}
             height={cardSize.height}
             style={styles.cardSvgBackground}
             pointerEvents="none"
           >
-            <Defs>
-              <RadialGradient
-                id={`habitCardAura-${habit.id}`}
-                cx={cardSize.width - ResponsivePixels.size55}
-                cy={ResponsivePixels.size25}
-                r={ResponsivePixels.size110}
-                gradientUnits="userSpaceOnUse"
-              >
-                <Stop
-                  offset="0%"
-                  stopColor={theme.auraColor}
-                  stopOpacity={
-                    habit.completed
-                      ? isDarkMode
-                        ? 0.12
-                        : 0.08
-                      : isDarkMode
-                      ? 0.28
-                      : 0.16
-                  }
-                />
-                <Stop
-                  offset="65%"
-                  stopColor={theme.auraColor}
-                  stopOpacity={
-                    habit.completed
-                      ? isDarkMode
-                        ? 0.02
-                        : 0.015
-                      : isDarkMode
-                      ? 0.08
-                      : 0.03
-                  }
-                />
-                <Stop offset="100%" stopColor={theme.bg} stopOpacity={0} />
-              </RadialGradient>
-            </Defs>
             <Path
               d={getCutoutCardPath(cardSize.width, cardSize.height)}
               fill={
@@ -472,44 +432,8 @@ export const HabitItemCard: React.FC<HabitItemCardProps> = ({
                     : Colors.TimelineBorderWarm
                   : theme.border
               }
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               strokeLinejoin="round"
-            />
-            {/* Soft ambient radiance under top-right cutout */}
-            <Path
-              d={getCutoutCardPath(cardSize.width, cardSize.height)}
-              fill={`url(#habitCardAura-${habit.id})`}
-            />
-            {/* Delicate starlight nodes */}
-            <Circle
-              cx={cardSize.width - ResponsivePixels.size66}
-              cy={ResponsivePixels.size16}
-              r={1.6}
-              fill={theme.accent}
-              opacity={
-                habit.completed
-                  ? isDarkMode
-                    ? 0.35
-                    : 0.25
-                  : isDarkMode
-                  ? 0.6
-                  : 0.4
-              }
-            />
-            <Circle
-              cx={cardSize.width - ResponsivePixels.size80}
-              cy={ResponsivePixels.size30}
-              r={1.3}
-              fill={theme.accent}
-              opacity={
-                habit.completed
-                  ? isDarkMode
-                    ? 0.25
-                    : 0.18
-                  : isDarkMode
-                  ? 0.5
-                  : 0.3
-              }
             />
           </Svg>
 
@@ -814,12 +738,13 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.Transparent,
     ...Platform.select({
       ios: {
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.12,
-        shadowRadius: 8,
+        shadowColor: Colors.PureBlack,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 5,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
     marginHorizontal: 0,

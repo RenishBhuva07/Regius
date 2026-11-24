@@ -92,9 +92,9 @@ export const HabitsScreen: React.FC = () => {
       if (updated) {
         Toast.show({
           type: 'success',
-          text1: updated.completed ? 'Habit Checked In! 🔥' : 'Habit Reset',
+          text1: updated.completed ? 'Habit checked in' : 'Habit reset',
           text2: updated.completed
-            ? `Momentum active! Current streak: ${updated.streak} days`
+            ? `Current streak: ${updated.streak} days`
             : 'Unchecked for today.',
         });
       }
@@ -259,17 +259,7 @@ export const HabitsScreen: React.FC = () => {
                       isDarkMode && { color: Colors.DarkTitleCompleted },
                     ]}
                   >
-                    Crafted with{' '}
-                  </Text>
-                  <Text style={styles.craftedWithHeart}>❤️</Text>
-                  <Text
-                    style={[
-                      styles.craftedWithText,
-                      isDarkMode && { color: Colors.DarkTitleCompleted },
-                    ]}
-                  >
-                    {' '}
-                    in Ahmedabad, India
+                    Crafted for mindful productivity • Ahmedabad, India
                   </Text>
                 </View>
               </View>

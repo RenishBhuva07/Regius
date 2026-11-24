@@ -242,9 +242,9 @@ export const TaskDetailsScreen: React.FC = () => {
     if (updated) {
       Toast.show({
         type: 'success',
-        text1: updated.done ? 'Task Completed! 🎯' : 'Task Restored',
+        text1: updated.done ? 'Task completed' : 'Task restored',
         text2: updated.done
-          ? 'Great momentum on your focus items!'
+          ? 'Marked as completed.'
           : 'Task returned to active status.',
       });
     }

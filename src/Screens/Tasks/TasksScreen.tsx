@@ -136,9 +136,9 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
       if (updated) {
         Toast.show({
           type: 'success',
-          text1: updated.done ? 'Task Completed! 🎯' : 'Task Active',
+          text1: updated.done ? 'Task completed' : 'Task active',
           text2: updated.done
-            ? 'Great momentum on your daily flow!'
+            ? 'Marked as completed.'
             : 'Returned to your active task list.',
         });
       }
@@ -347,10 +347,10 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
                 Toast.show({
                   type: 'success',
                   text1: markDone
-                    ? 'All Tasks Completed! 🎯'
-                    : 'Tasks Restored to Active List',
+                    ? 'All tasks completed'
+                    : 'Tasks restored to active list',
                   text2: markDone
-                    ? 'Great momentum on conquering your focus items!'
+                    ? 'Marked as completed.'
                     : 'Items are now back in your active task list.',
                 });
               }}
@@ -376,11 +376,8 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
               <View style={styles.liveItUpBlock}>
                 <Text style={styles.liveItUpText}>{dailyQuote}</Text>
                 <View style={styles.craftedWithRow}>
-                  <Text style={styles.craftedWithText}>Crafted with </Text>
-                  <Text style={styles.craftedWithHeart}>❤️</Text>
                   <Text style={styles.craftedWithText}>
-                    {' '}
-                    in Ahmedabad, India
+                    Crafted for mindful productivity • Ahmedabad, India
                   </Text>
                 </View>
               </View>

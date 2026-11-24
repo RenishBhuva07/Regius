@@ -353,11 +353,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
       bg: isDarkMode ? Colors.WorkDarkBg : Colors.WorkTintCream,
       border: isDarkMode ? Colors.WorkDarkBorder : Colors.WorkLightBorder,
       accent: Colors.AccentYellow,
-      shadow: isDarkMode
-        ? Colors.PureBlack
-        : task.priority === 'high'
-        ? Colors.CrimsonPulse
-        : Colors.AccentYellow,
+      shadow: Colors.PureBlack,
       iconBg: isDarkMode ? Colors.WorkDarkIconBg : Colors.WorkLightBg,
       auraColor: Colors.AccentYellow,
     };
@@ -405,7 +401,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
               <View style={styles.actionIconAuraDetails}>
                 <Flame size={ResponsivePixels.size14} color={Colors.AccentAmber} strokeWidth={2.6} />
               </View>
-              <Text style={styles.actionBtnText}>DETAILS</Text>
+              <Text style={styles.actionBtnText}>Details</Text>
             </TouchableOpacity>
           </Animated.View>
         )}
@@ -431,7 +427,7 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
               <View style={styles.actionIconAuraEdit}>
                 <Pencil size={ResponsivePixels.size13_5} color={Colors.AccentYellow} strokeWidth={2.6} />
               </View>
-              <Text style={styles.actionBtnText}>EDIT</Text>
+              <Text style={styles.actionBtnText}>Edit</Text>
             </TouchableOpacity>
           </Animated.View>
         )}
@@ -450,14 +446,11 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
         <TouchableOpacity
           activeOpacity={0.88}
           onLayout={handleCardLayout}
-            style={[
+          style={[
             styles.card,
             {
-              shadowColor: localChecked
-                ? isDarkMode
-                  ? Colors.PureBlack
-                  : Colors.Gray300
-                : catStyle.shadow,
+              shadowColor: Colors.PureBlack,
+              shadowOpacity: localChecked ? 0.03 : 0.05,
             },
           ]}
           onPress={handleCardPress}
@@ -465,36 +458,13 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
           accessibilityState={{ checked: localChecked }}
           accessibilityLabel={task.label}
         >
-          {/* Dynamic Cutout Notch Background SVG with Theme Colors & Aesthetic Radiance */}
+          {/* Dynamic Cutout Notch Background SVG: Clean tactile surface */}
           <Svg
             width={cardSize.width}
             height={cardSize.height}
             style={styles.cardSvgBackground}
             pointerEvents="none"
           >
-            <Defs>
-              {!localChecked && (
-                <RadialGradient
-                  id={`taskCardAura-${task.id}`}
-                  cx={cardSize.width - ResponsivePixels.size55}
-                  cy={ResponsivePixels.size25}
-                  r={ResponsivePixels.size110}
-                  gradientUnits="userSpaceOnUse"
-                >
-                  <Stop
-                    offset="0%"
-                    stopColor={catStyle.auraColor}
-                    stopOpacity={isDarkMode ? 0.28 : 0.16}
-                  />
-                  <Stop
-                    offset="65%"
-                    stopColor={catStyle.auraColor}
-                    stopOpacity={isDarkMode ? 0.08 : 0.03}
-                  />
-                  <Stop offset="100%" stopColor={catStyle.bg} stopOpacity={0} />
-                </RadialGradient>
-              )}
-            </Defs>
             <Path
               d={getCutoutCardPath(cardSize.width, cardSize.height)}
               fill={
@@ -511,33 +481,9 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
                     : Colors.TimelineBorderWarm
                   : catStyle.border
               }
-              strokeWidth={1.5}
+              strokeWidth={1.2}
               strokeLinejoin="round"
             />
-            {!localChecked && (
-              <>
-                {/* Soft ambient radiance under top-right cutout */}
-                <Path
-                  d={getCutoutCardPath(cardSize.width, cardSize.height)}
-                  fill={`url(#taskCardAura-${task.id})`}
-                />
-                {/* Delicate starlight nodes */}
-                <Circle
-                  cx={cardSize.width - ResponsivePixels.size66}
-                  cy={ResponsivePixels.size16}
-                  r={1.6}
-                  fill={catStyle.accent}
-                  opacity={isDarkMode ? 0.6 : 0.4}
-                />
-                <Circle
-                  cx={cardSize.width - ResponsivePixels.size80}
-                  cy={ResponsivePixels.size30}
-                  r={1.3}
-                  fill={catStyle.accent}
-                  opacity={isDarkMode ? 0.5 : 0.3}
-                />
-              </>
-            )}
           </Svg>
 
           {/* Floating Checkbox in Top-Right Cutout */}
@@ -826,13 +772,13 @@ const styles = StyleSheet.create({
     position: 'relative',
     ...Platform.select({
       ios: {
-        shadowColor: Colors.AccentYellow,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.12,
-        shadowRadius: 8,
+        shadowColor: Colors.PureBlack,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 5,
       },
       android: {
-        elevation: 3,
+        elevation: 2,
       },
     }),
   },

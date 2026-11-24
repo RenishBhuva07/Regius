@@ -279,7 +279,7 @@ export const AddHabitModal: React.FC<AddHabitModalProps> = ({
       });
       Toast.show({
         type: 'success',
-        text1: 'Habit Created! 🔥',
+        text1: 'Habit created',
         text2: `"${title.trim()}" added to your daily consistency flow.`,
       });
     }
