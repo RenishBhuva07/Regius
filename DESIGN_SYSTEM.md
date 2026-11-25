@@ -47,19 +47,19 @@ All application and vector colors are centralized in `src/Assets/StyleUtilities/
 
 Regius features an app-wide Obsidian Dark Theme that maintains artisanal luxury warmth while preventing eye strain. Clinical pure `#000000` pitch black and generic flat greys are strictly avoided in favor of rich midnight tones and deep category jewel tints.
 
-| Token Name              | Hex Value             | Semantic Role & Usage                                                               |
-| :---------------------- | :-------------------- | :---------------------------------------------------------------------------------- |
-| `DarkBackground`        | `#121417`             | Deep midnight canvas for all screens (`Dashboard`, `Tasks`, `Reminders`, `Habits`). |
-| `DarkCardBackground`    | `#1E2228`             | Elevated modal cards, quick action cards, and bento cards in dark theme.            |
-| `DarkSurfacePressed`    | `#181B20`             | Flow section rounded sheet containers and canopy docks.                             |
-| `DarkSurfaceAlt`        | `#171A1F`             | Deep input fields, search bars, and subtask text inputs.                            |
-| `DarkSurfaceDeep`       | `#171A20`             | Asymmetric cutout SVG card fill color in dark mode.                                 |
-| `CarbonSlate`           | `#2C3035`             | Asymmetric cutout SVG card hairline perimeter border.                               |
-| `DarkCheckboxUnchecked` | `#252932`             | Floating checkbox button surface when unchecked.                                    |
-| `TaskCompletedDarkBg`   | `#13281E`             | Floating checkbox button surface when checked (border: `#52D22E`).                  |
-| `SteelMist`             | `#A3A8B1`             | Subdued secondary copy, metadata stamps, and unselected filter chips.               |
-| `CarbonSlate` / `DarkBorder` | `#2C3035` / `#363944` | Subtle hairline borders, divider lines, and card bevels.                       |
-| `PureWhite`             | `#FFFFFF`             | High-contrast titles, headers, active tab icons, and primary inputs.                |
+| Token Name                   | Hex Value             | Semantic Role & Usage                                                               |
+| :--------------------------- | :-------------------- | :---------------------------------------------------------------------------------- |
+| `DarkBackground`             | `#121417`             | Deep midnight canvas for all screens (`Dashboard`, `Tasks`, `Reminders`, `Habits`). |
+| `DarkCardBackground`         | `#1E2228`             | Elevated modal cards, quick action cards, and bento cards in dark theme.            |
+| `DarkSurfacePressed`         | `#181B20`             | Flow section rounded sheet containers and canopy docks.                             |
+| `DarkSurfaceAlt`             | `#171A1F`             | Deep input fields, search bars, and subtask text inputs.                            |
+| `DarkSurfaceDeep`            | `#171A20`             | Asymmetric cutout SVG card fill color in dark mode.                                 |
+| `CarbonSlate`                | `#2C3035`             | Asymmetric cutout SVG card hairline perimeter border.                               |
+| `DarkCheckboxUnchecked`      | `#252932`             | Floating checkbox button surface when unchecked.                                    |
+| `TaskCompletedDarkBg`        | `#13281E`             | Floating checkbox button surface when checked (border: `#52D22E`).                  |
+| `SteelMist`                  | `#A3A8B1`             | Subdued secondary copy, metadata stamps, and unselected filter chips.               |
+| `CarbonSlate` / `DarkBorder` | `#2C3035` / `#363944` | Subtle hairline borders, divider lines, and card bevels.                            |
+| `PureWhite`                  | `#FFFFFF`             | High-contrast titles, headers, active tab icons, and primary inputs.                |
 
 ### 2.3 Category Trios & Semantic Accents (Dual Light & Dark Harmonized System)
 
@@ -109,18 +109,22 @@ const {
   textSecondary, // '#A3A8B1' (dark) | '#666665' (light)
   borderLight, // '#2C3035' (dark) | '#E8E2D5' (light)
   borderSubtle, // '#363944' (dark) | '#F0EDE6' (light)
+  sheetWatermarkText, // surface-aware daily quote watermark on FlowSectionSheet
+  sheetWatermarkSubtext, // surface-aware attribution text on FlowSectionSheet
+  canvasWatermarkText, // surface-aware watermark on outer screen Background
+  canvasWatermarkSubtext, // surface-aware attribution text on outer screen Background
   getCategoryTheme, // (categoryKey) => { bg, border, accent, shadow }
 } = useAppTheme();
 ```
 
 ### 2.4 Typography Foregrounds
 
-| Token Name                              | Hex Value             | Purpose & Visual Weight                                       |
-| :-------------------------------------- | :-------------------- | :------------------------------------------------------------ |
-| `PureBlack`                             | `#000000`             | Hero screen headers, brand display, high-emphasis titles.     |
+| Token Name                               | Hex Value             | Purpose & Visual Weight                                       |
+| :--------------------------------------- | :-------------------- | :------------------------------------------------------------ |
+| `PureBlack`                              | `#000000`             | Hero screen headers, brand display, high-emphasis titles.     |
 | `MidnightCharcoal` / `SlateGraphiteText` | `#1F2228` / `#3F454D` | Body copy, section headers, prominent input text.             |
-| `SubtitleGray` / `MutedSlateSubtext`    | `#666665` / `#7E838F` | Secondary descriptions, task counts, metadata stamps.         |
-| `PureWhite`                             | `#FFFFFF`             | Text on dark buttons, active tab indicators, floating badges. |
+| `SubtitleGray` / `MutedSlateSubtext`     | `#666665` / `#7E838F` | Secondary descriptions, task counts, metadata stamps.         |
+| `PureWhite`                              | `#FFFFFF`             | Text on dark buttons, active tab indicators, floating badges. |
 
 ### 2.5 Prestige Theme Palettes (Dual Light & Dark Harmonic Systems)
 
