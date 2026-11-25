@@ -38,7 +38,7 @@ import {
   XP_RULES,
   MilestoneTier,
 } from '../../Services/Milestone/MilestoneService';
-import { useDailyQuote } from '../../Services/DailyQuotes';
+import { DailyQuoteFooter } from '../../Common/DailyQuoteFooter';
 import {
   ZigzagGameRoad,
   MilestoneLevelDetailModal,
@@ -50,9 +50,12 @@ const HEADER_HEIGHT = ResponsivePixels.size52;
 
 export const MilestoneFullScreenSheet: React.FC = () => {
   const insets = useSafeAreaInsets();
-  const { isDarkMode, activeThemeId, setActiveThemeId, Colors: themeColors } =
-    useTheme();
-  const dailyQuote = useDailyQuote('milestones');
+  const {
+    isDarkMode,
+    activeThemeId,
+    setActiveThemeId,
+    Colors: themeColors,
+  } = useTheme();
 
   const {
     isMilestoneModalVisible,
@@ -189,9 +192,7 @@ export const MilestoneFullScreenSheet: React.FC = () => {
           }
           {...(Platform.OS === 'android'
             ? {
-                backgroundColor: isScrolled
-                  ? scrolledBg
-                  : sheetBg,
+                backgroundColor: isScrolled ? scrolledBg : sheetBg,
                 translucent: true,
               }
             : {})}
@@ -240,7 +241,9 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                 <Crown
                   size={ResponsivePixels.size18}
                   color={
-                    isScrolled ? Colors.AccentYellow : Colors.HabitBurnishedAmber
+                    isScrolled
+                      ? Colors.AccentYellow
+                      : Colors.HabitBurnishedAmber
                   }
                   strokeWidth={2.4}
                 />
@@ -511,7 +514,11 @@ export const MilestoneFullScreenSheet: React.FC = () => {
                 },
               ]}
             >
-              <Zap size={ResponsivePixels.size11} color={Colors.AccentYellow} strokeWidth={2.6} />
+              <Zap
+                size={ResponsivePixels.size11}
+                color={Colors.AccentYellow}
+                strokeWidth={2.6}
+              />
               <Text style={[styles.totalXpPillText, { color: textPrimary }]}>
                 {totalXp} XP
               </Text>
@@ -529,58 +536,34 @@ export const MilestoneFullScreenSheet: React.FC = () => {
           />
 
           {/* Footer brand watermark */}
-          <View style={styles.footerWatermarkWrapper} pointerEvents="none">
-            <View style={styles.footerWatermarkRow}>
-              {/* Left Column: Bold Typography & Sign-off */}
-              <View style={styles.footerTextBlock}>
+          <DailyQuoteFooter
+            screen="milestones"
+            surface="canvas"
+            containerStyle={styles.footerWatermarkSpacing}
+            attribution={
+              <>
                 <Text
                   style={[
-                    styles.footerWatermarkText,
-                    {
-                      color: isDarkMode
-                        ? Colors.DarkWatermarkSlate
-                        : Colors.MilestoneSlate,
-                    },
+                    styles.craftedWithText,
+                    { color: themeColors.CanvasWatermarkSubtext },
                   ]}
                 >
-                  {dailyQuote}
+                  Crafted with{' '}
                 </Text>
-                <View style={styles.craftedWithRow}>
-                  <Text
-                    style={[
-                      styles.craftedWithText,
-                      {
-                        color: isDarkMode
-                          ? Colors.DarkSubtextCoolGray
-                          : Colors.MilestoneSlate,
-                      },
-                    ]}
-                  >
-                    Crafted with{' '}
-                  </Text>
-                  <Text style={styles.craftedWithHeart}>❤️</Text>
-                  <Text
-                    style={[
-                      styles.craftedWithText,
-                      {
-                        color: isDarkMode
-                          ? Colors.DarkSubtextCoolGray
-                          : Colors.MilestoneSlate,
-                      },
-                    ]}
-                  >
-                    {' '}
-                    in Ahmedabad, India
-                  </Text>
-                </View>
-              </View>
-
-              {/* Trophy doodle */}
-              <View style={styles.footerDoodleWrapper}>
-                <MilestoneWatermarkDoodleSvg isDarkMode={isDarkMode} />
-              </View>
-            </View>
-          </View>
+                <Text style={styles.craftedWithHeart}>❤️</Text>
+                <Text
+                  style={[
+                    styles.craftedWithText,
+                    { color: themeColors.CanvasWatermarkSubtext },
+                  ]}
+                >
+                  {' '}
+                  in Ahmedabad, India
+                </Text>
+              </>
+            }
+            doodle={<MilestoneWatermarkDoodleSvg isDarkMode={isDarkMode} />}
+          />
         </Animated.ScrollView>
 
         {/* Level details modal */}
@@ -889,31 +872,11 @@ const styles = StyleSheet.create({
   },
 
   // Footer watermark styles
-  footerWatermarkWrapper: {
+  footerWatermarkSpacing: {
     paddingLeft: ResponsivePixels.size16,
     paddingRight: ResponsivePixels.size16,
     marginTop: ResponsivePixels.size28,
     marginBottom: ResponsivePixels.size24,
-  },
-  footerWatermarkRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-  },
-  footerTextBlock: {
-    flex: 1,
-    justifyContent: 'flex-start',
-  },
-  footerWatermarkText: {
-    fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size34,
-    lineHeight: ResponsivePixels.size42,
-    letterSpacing: -1.2,
-  },
-  craftedWithRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: ResponsivePixels.size18,
   },
   craftedWithText: {
     fontFamily: Fonts.poppins.medium,
@@ -921,11 +884,5 @@ const styles = StyleSheet.create({
   },
   craftedWithHeart: {
     fontSize: ResponsivePixels.size13_5,
-  },
-  footerDoodleWrapper: {
-    marginLeft: ResponsivePixels.size8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: ResponsivePixels.size6,
   },
 });

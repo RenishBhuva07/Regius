@@ -29,7 +29,11 @@ import { Colors } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { useTaskReminder, Task } from '../../Context/TaskReminderContext';
 import { ScreenHeader, SCREEN_HEADER_HEIGHT } from '../../Common/ScreenHeader';
-import { TactileSegmentedTabs, FlowSectionSheet } from '../../Common';
+import {
+  TactileSegmentedTabs,
+  FlowSectionSheet,
+  DailyQuoteFooter,
+} from '../../Common';
 
 import TaskSectionBackgroundSvg from './Components/TaskSectionBackgroundSvg';
 import TaskProductivityBento from './Components/TaskProductivityBento';
@@ -37,7 +41,6 @@ import TaskCategoryCarousel from './Components/TaskCategoryCarousel';
 import TaskCardItem from './Components/TaskCardItem';
 import TaskCompleteDoodleSvg from './Components/TaskCompleteDoodleSvg';
 import AddTaskModal from '../../Components/AddTaskModal';
-import { useDailyQuote } from '../../Services/DailyQuotes';
 import { useAppTheme } from '../../Theme/useAppTheme';
 
 type TabKey = 'taskList' | 'completed';
@@ -47,7 +50,6 @@ const TaskListSeparator = () => <View style={styles.listSeparator} />;
 export const TasksScreen: React.FC<any> = ({ route }) => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
-  const dailyQuote = useDailyQuote('tasks');
   const {
     isDarkMode,
     bgMain,
@@ -212,9 +214,7 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
         }
         {...(Platform.OS === 'android'
           ? {
-              backgroundColor: isScrolled
-                ? accentDeep
-                : bgMain,
+              backgroundColor: isScrolled ? accentDeep : bgMain,
               translucent: true,
             }
           : {})}
@@ -370,24 +370,7 @@ export const TasksScreen: React.FC<any> = ({ route }) => {
           )}
 
           {/* Footer brand watermark */}
-          <View style={styles.footerWatermarkWrapper} pointerEvents="none">
-            <View style={styles.footerWatermarkRow}>
-              {/* Left Column: Bold "Live it up!" Typography & Sign-off */}
-              <View style={styles.liveItUpBlock}>
-                <Text style={styles.liveItUpText}>{dailyQuote}</Text>
-                <View style={styles.craftedWithRow}>
-                  <Text style={styles.craftedWithText}>
-                    Crafted for mindful productivity • Ahmedabad, India
-                  </Text>
-                </View>
-              </View>
-
-              {/* Right Column: Task Complete Doodle Illustration */}
-              <View style={styles.footerDoodleWrapper}>
-                <TaskCompleteDoodleSvg />
-              </View>
-            </View>
-          </View>
+          <DailyQuoteFooter screen="tasks" doodle={<TaskCompleteDoodleSvg />} />
         </FlowSectionSheet>
       </ScrollView>
 
@@ -574,50 +557,6 @@ const styles = StyleSheet.create({
     ...Typography.bodyMediumPoppinsSemiBold,
     color: Colors.PureWhite,
     fontSize: ResponsivePixels.size13_5,
-  },
-
-  // Footer watermark styles
-  footerWatermarkWrapper: {
-    paddingLeft: ResponsivePixels.size10,
-    paddingRight: ResponsivePixels.size16,
-    marginTop: ResponsivePixels.size16,
-    marginBottom: ResponsivePixels.size20,
-  },
-  footerWatermarkRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-  },
-  liveItUpBlock: {
-    flex: 1,
-    justifyContent: 'flex-start',
-  },
-  liveItUpText: {
-    fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size34,
-    lineHeight: ResponsivePixels.size42,
-    color: Colors.MilestoneSlate,
-    letterSpacing: -1.2,
-  },
-  craftedWithRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: ResponsivePixels.size18,
-    // flexWrap: 'wrap',
-  },
-  craftedWithText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: ResponsivePixels.size14,
-    color: Colors.MilestoneSlate,
-  },
-  craftedWithHeart: {
-    fontSize: ResponsivePixels.size13_5,
-  },
-  footerDoodleWrapper: {
-    marginLeft: ResponsivePixels.size8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: ResponsivePixels.size6,
   },
 
   // Empty State

@@ -37,6 +37,10 @@ export interface AppThemeTokens {
   accentLight: string;
   accentDark: string;
   accentAura: string;
+  sheetWatermarkText: string;
+  sheetWatermarkSubtext: string;
+  canvasWatermarkText: string;
+  canvasWatermarkSubtext: string;
   getCategoryTheme: (category?: string) => CategoryThemeTokens;
 }
 
@@ -59,7 +63,9 @@ export const useAppTheme = (): AppThemeTokens => {
     (isDarkMode ? StaticColors.DarkCardBackground : StaticColors.PureWhite);
   const surfaceAlt =
     Colors.SurfaceAlt ||
-    (isDarkMode ? StaticColors.DarkSurfacePressed : StaticColors.CreamSurfaceAlt);
+    (isDarkMode
+      ? StaticColors.DarkSurfacePressed
+      : StaticColors.CreamSurfaceAlt);
   const inputBg = isDarkMode
     ? Colors.SurfaceAlt || StaticColors.DarkSurfaceAlt
     : StaticColors.PureWhite;
@@ -90,7 +96,9 @@ export const useAppTheme = (): AppThemeTokens => {
     (isDarkMode ? StaticColors.MidnightIndigo : StaticColors.LavenderPurple);
   const accentLight =
     Colors.AccentLight ||
-    (isDarkMode ? StaticColors.AccentYellow : StaticColors.LavenderSoftHighlight);
+    (isDarkMode
+      ? StaticColors.AccentYellow
+      : StaticColors.LavenderSoftHighlight);
   const accentDark =
     Colors.AccentDark ||
     (isDarkMode ? StaticColors.ObsidianNight : StaticColors.LavenderDeep);
@@ -99,6 +107,28 @@ export const useAppTheme = (): AppThemeTokens => {
     (isDarkMode
       ? withAlpha(StaticColors.AccentYellow, 0.2)
       : withAlpha(StaticColors.LavenderPurple, 0.25));
+
+  const isLightSheetSurface = !isDarkMode || activeThemeId === 'cyprus_sand';
+  const sheetWatermarkText =
+    Colors.SheetWatermarkText ||
+    (isLightSheetSurface
+      ? StaticColors.MilestoneSlate
+      : StaticColors.DarkWatermarkSlate);
+  const sheetWatermarkSubtext =
+    Colors.SheetWatermarkSubtext ||
+    (isLightSheetSurface
+      ? StaticColors.LightSubtextSlateGray
+      : StaticColors.DarkSubtextCoolGray);
+  const canvasWatermarkText =
+    Colors.CanvasWatermarkText ||
+    (isDarkMode
+      ? StaticColors.DarkWatermarkSlate
+      : StaticColors.MilestoneSlate);
+  const canvasWatermarkSubtext =
+    Colors.CanvasWatermarkSubtext ||
+    (isDarkMode
+      ? StaticColors.DarkSubtextCoolGray
+      : StaticColors.LightSubtextSlateGray);
 
   const getCategoryTheme = useMemo(() => {
     return (category?: string): CategoryThemeTokens => {
@@ -120,7 +150,9 @@ export const useAppTheme = (): AppThemeTokens => {
             ? StaticColors.GreenGracious
             : StaticColors.WellnessLightBorder,
           accent: StaticColors.AccentGreen,
-          text: isDarkMode ? StaticColors.PureWhite : StaticColors.GreenGracious,
+          text: isDarkMode
+            ? StaticColors.PureWhite
+            : StaticColors.GreenGracious,
           shadow: isDarkMode
             ? StaticColors.PureBlack
             : StaticColors.AccentGreen,
@@ -188,9 +220,7 @@ export const useAppTheme = (): AppThemeTokens => {
           : StaticColors.WorkLightBorder,
         accent: StaticColors.AccentYellow,
         text: isDarkMode ? StaticColors.PureWhite : StaticColors.WorkTextAccent,
-        shadow: isDarkMode
-          ? StaticColors.PureBlack
-          : StaticColors.AccentYellow,
+        shadow: isDarkMode ? StaticColors.PureBlack : StaticColors.AccentYellow,
         aura: StaticColors.AccentYellow,
         iconBg: isDarkMode
           ? StaticColors.WorkDarkIconBg
@@ -221,6 +251,10 @@ export const useAppTheme = (): AppThemeTokens => {
     accentLight,
     accentDark,
     accentAura,
+    sheetWatermarkText,
+    sheetWatermarkSubtext,
+    canvasWatermarkText,
+    canvasWatermarkSubtext,
     getCategoryTheme,
   };
 };

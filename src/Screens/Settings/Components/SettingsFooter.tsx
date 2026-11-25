@@ -3,18 +3,16 @@ import { View, Text, StyleSheet } from 'react-native';
 import { Fonts } from '../../../Theme/fonts';
 import Colors from '../../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
+import { useAppTheme } from '../../../Theme/useAppTheme';
 import { useSettingsTheme } from './types';
 import SettingsWatermarkDoodleSvg from './SettingsWatermarkDoodleSvg';
 
 export const SettingsFooter: React.FC = () => {
   const { isDarkMode } = useSettingsTheme();
+  const { canvasWatermarkText, canvasWatermarkSubtext } = useAppTheme();
 
-  const watermarkColor = isDarkMode
-    ? Colors.DarkWatermarkSlate
-    : Colors.MilestoneSlate;
-  const subtextColor = isDarkMode
-    ? Colors.DarkSubtextCoolGray
-    : Colors.LightSubtextSlateGray;
+  const watermarkColor = canvasWatermarkText;
+  const subtextColor = canvasWatermarkSubtext;
   const regiusHighlightColor = isDarkMode
     ? Colors.PeriwinkleSoft
     : Colors.LavenderPurple;

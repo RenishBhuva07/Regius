@@ -38,7 +38,7 @@ import { FlowSectionSheet } from '../../Common/FlowSectionSheet';
 import FlowSectionBackgroundSvg from './Components/FlowSectionBackgroundSvg';
 import LegendaryDoodleSvg from './Components/LegendaryDoodleSvg';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
-import { useDailyQuote } from '../../Services/DailyQuotes';
+import { DailyQuoteFooter } from '../../Common/DailyQuoteFooter';
 import { useAppTheme } from '../../Theme/useAppTheme';
 import DashboardHeader, { HEADER_HEIGHT } from './Components/DashboardHeader';
 import FlowFilterTabs, { FlowFilter } from './Components/FlowFilterTabs';
@@ -64,12 +64,10 @@ export const DashboardScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
-  const dailyQuote = useDailyQuote('dashboard');
   const {
     isDarkMode,
     bgMain,
     textPrimary,
-    textSecondary,
     canvasTextPrimary,
     canvasTextSecondary,
     accentDeep,
@@ -346,9 +344,7 @@ export const DashboardScreen: React.FC = () => {
         }
         {...(Platform.OS === 'android'
           ? {
-              backgroundColor: isScrolled
-                ? accentDeep
-                : bgMain,
+              backgroundColor: isScrolled ? accentDeep : bgMain,
               translucent: true,
             }
           : {})}
@@ -399,7 +395,10 @@ export const DashboardScreen: React.FC = () => {
                   strokeWidth={2.2}
                 />
                 <Text
-                  style={[styles.ambientStatusText, { color: canvasTextSecondary }]}
+                  style={[
+                    styles.ambientStatusText,
+                    { color: canvasTextSecondary },
+                  ]}
                 >
                   Calm & Focused • 68°F
                 </Text>
@@ -513,37 +512,10 @@ export const DashboardScreen: React.FC = () => {
           </View>
 
           {/* Footer brand watermark */}
-          <View style={styles.footerWatermarkWrapper} pointerEvents="none">
-            <View style={styles.footerWatermarkRow}>
-              {/* Left Column: Bold Typography & Sign-off */}
-              <View style={styles.footerTextBlock}>
-                <Text
-                  style={[
-                    styles.footerWatermarkText,
-                    {
-                      color: isDarkMode
-                        ? Colors.DarkEmptyCountMuted
-                        : Colors.MilestoneSlate,
-                    },
-                  ]}
-                >
-                  {dailyQuote}
-                </Text>
-                <View style={styles.craftedWithRow}>
-                  <Text
-                    style={[styles.craftedWithText, { color: textSecondary }]}
-                  >
-                    Crafted for mindful productivity • Ahmedabad, India
-                  </Text>
-                </View>
-              </View>
-
-              {/* Footer doodle */}
-              <View style={styles.footerDoodleWrapper}>
-                <LegendaryDoodleSvg />
-              </View>
-            </View>
-          </View>
+          <DailyQuoteFooter
+            screen="dashboard"
+            doodle={<LegendaryDoodleSvg />}
+          />
         </FlowSectionSheet>
       </ScrollView>
     </View>
@@ -699,49 +671,6 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.medium,
     fontSize: ResponsivePixels.size13,
     color: Colors.TimelineMutedGray,
-  },
-
-  // Footer watermark styles
-  footerWatermarkWrapper: {
-    paddingLeft: ResponsivePixels.size10,
-    paddingRight: ResponsivePixels.size16,
-    marginTop: ResponsivePixels.size36,
-    marginBottom: ResponsivePixels.size20,
-  },
-  footerWatermarkRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    justifyContent: 'space-between',
-  },
-  footerTextBlock: {
-    flex: 1,
-    justifyContent: 'flex-start',
-  },
-  footerWatermarkText: {
-    fontFamily: Fonts.poppins.bold,
-    fontSize: ResponsivePixels.size34,
-    lineHeight: ResponsivePixels.size42,
-    color: Colors.MilestoneSlate,
-    letterSpacing: -1.2,
-  },
-  craftedWithRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: ResponsivePixels.size18,
-  },
-  craftedWithText: {
-    fontFamily: Fonts.poppins.medium,
-    fontSize: ResponsivePixels.size14,
-    color: Colors.MilestoneSlate,
-  },
-  craftedWithHeart: {
-    fontSize: ResponsivePixels.size13_5,
-  },
-  footerDoodleWrapper: {
-    marginLeft: ResponsivePixels.size8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: ResponsivePixels.size6,
   },
 });
 

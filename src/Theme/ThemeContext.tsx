@@ -51,6 +51,10 @@ export const lightColors = {
   AccentAura: withAlpha(Colors.LavenderPurple, 0.25),
   SurfaceAlt: Colors.CreamSurfaceAlt,
   BorderLight: Colors.RingBorder,
+  SheetWatermarkText: Colors.MilestoneSlate,
+  SheetWatermarkSubtext: Colors.LightSubtextSlateGray,
+  CanvasWatermarkText: Colors.MilestoneSlate,
+  CanvasWatermarkSubtext: Colors.LightSubtextSlateGray,
 };
 
 // Prestige light themes
@@ -71,6 +75,10 @@ export const cyprusSandLightColors = {
   AccentAura: withAlpha(Colors.CyprusTeal, 0.22),
   SurfaceAlt: Colors.CyprusSandAlt,
   BorderLight: Colors.CyprusBorderLight,
+  SheetWatermarkText: withAlpha(Colors.CyprusTextMuted, 0.7),
+  SheetWatermarkSubtext: Colors.CyprusTextMuted,
+  CanvasWatermarkText: withAlpha(Colors.CyprusTextMuted, 0.7),
+  CanvasWatermarkSubtext: Colors.CyprusTextMuted,
 };
 
 export const emeraldVelvetLightColors = {
@@ -84,6 +92,10 @@ export const emeraldVelvetLightColors = {
   Accent: Colors.GreenGracious,
   SurfaceAlt: Colors.EmeraldMistAlt,
   BorderLight: Colors.EmeraldBorderLight,
+  SheetWatermarkText: withAlpha(Colors.EmeraldTextMuted, 0.7),
+  SheetWatermarkSubtext: Colors.EmeraldTextMuted,
+  CanvasWatermarkText: withAlpha(Colors.EmeraldTextMuted, 0.7),
+  CanvasWatermarkSubtext: Colors.EmeraldTextMuted,
 };
 
 export const celestialAzureLightColors = {
@@ -97,6 +109,10 @@ export const celestialAzureLightColors = {
   Accent: Colors.AzureRoyal,
   SurfaceAlt: Colors.AzureMistAlt,
   BorderLight: Colors.AzureBorderLight,
+  SheetWatermarkText: withAlpha(Colors.AzureTextMuted, 0.7),
+  SheetWatermarkSubtext: Colors.AzureTextMuted,
+  CanvasWatermarkText: withAlpha(Colors.AzureTextMuted, 0.7),
+  CanvasWatermarkSubtext: Colors.AzureTextMuted,
 };
 
 export const obsidianGoldLightColors = {
@@ -110,6 +126,10 @@ export const obsidianGoldLightColors = {
   Accent: Colors.ObsidianGoldAntique,
   SurfaceAlt: Colors.ObsidianLightAlt,
   BorderLight: Colors.ObsidianBorderLight,
+  SheetWatermarkText: withAlpha(Colors.ObsidianTextMuted, 0.7),
+  SheetWatermarkSubtext: Colors.ObsidianTextMuted,
+  CanvasWatermarkText: withAlpha(Colors.ObsidianTextMuted, 0.7),
+  CanvasWatermarkSubtext: Colors.ObsidianTextMuted,
 };
 
 // Base dark palette
@@ -134,6 +154,10 @@ export const darkColors = {
   SilverDust: Colors.DarkSilverDust,
   SoftLinen: Colors.DarkSoftLinen,
   FogGrey: Colors.DarkFogGrey,
+  SheetWatermarkText: Colors.DarkWatermarkSlate,
+  SheetWatermarkSubtext: Colors.DarkSubtextCoolGray,
+  CanvasWatermarkText: Colors.DarkWatermarkSlate,
+  CanvasWatermarkSubtext: Colors.DarkSubtextCoolGray,
 };
 
 // Prestige dark themes
@@ -154,6 +178,11 @@ export const cyprusSandDarkColors = {
   AccentAura: withAlpha(Colors.CyprusTeal, 0.28),
   SurfaceAlt: Colors.CyprusSandAlt,
   BorderLight: Colors.CyprusBorderDarkCard,
+  // Dual-tone: FlowSectionSheet stays light Sand Ivory while outer canvas is dark Cyprus Teal
+  SheetWatermarkText: withAlpha(Colors.CyprusTextMuted, 0.7),
+  SheetWatermarkSubtext: Colors.CyprusTextMuted,
+  CanvasWatermarkText: withAlpha(Colors.CyprusSeafoamMuted, 0.55),
+  CanvasWatermarkSubtext: withAlpha(Colors.CyprusSeafoamMuted, 0.85),
 };
 
 export const emeraldVelvetDarkColors = {
@@ -167,6 +196,10 @@ export const emeraldVelvetDarkColors = {
   Accent: Colors.EmeraldVibrant,
   SurfaceAlt: Colors.EmeraldDarkSurfaceAlt,
   BorderLight: Colors.EmeraldBorderDark,
+  SheetWatermarkText: withAlpha(Colors.EmeraldSageMuted, 0.55),
+  SheetWatermarkSubtext: withAlpha(Colors.EmeraldSageMuted, 0.85),
+  CanvasWatermarkText: withAlpha(Colors.EmeraldSageMuted, 0.55),
+  CanvasWatermarkSubtext: withAlpha(Colors.EmeraldSageMuted, 0.85),
 };
 
 export const celestialAzureDarkColors = {
@@ -180,6 +213,10 @@ export const celestialAzureDarkColors = {
   Accent: Colors.AzureSkyAccent,
   SurfaceAlt: Colors.AzureDarkSurfaceAlt,
   BorderLight: Colors.AzureBorderDark,
+  SheetWatermarkText: withAlpha(Colors.AzureSlateMuted, 0.55),
+  SheetWatermarkSubtext: withAlpha(Colors.AzureSlateMuted, 0.85),
+  CanvasWatermarkText: withAlpha(Colors.AzureSlateMuted, 0.55),
+  CanvasWatermarkSubtext: withAlpha(Colors.AzureSlateMuted, 0.85),
 };
 
 export const obsidianGoldDarkColors = {
@@ -193,6 +230,10 @@ export const obsidianGoldDarkColors = {
   Accent: Colors.ObsidianGold,
   SurfaceAlt: Colors.ObsidianDarkSurfaceAlt,
   BorderLight: Colors.ObsidianBorderDark,
+  SheetWatermarkText: withAlpha(Colors.ObsidianSandMuted, 0.5),
+  SheetWatermarkSubtext: withAlpha(Colors.ObsidianSandMuted, 0.82),
+  CanvasWatermarkText: withAlpha(Colors.ObsidianSandMuted, 0.5),
+  CanvasWatermarkSubtext: withAlpha(Colors.ObsidianSandMuted, 0.82),
 };
 
 export type ThemePresetId =
