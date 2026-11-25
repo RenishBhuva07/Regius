@@ -69,7 +69,7 @@ export const HABIT_CATEGORIES: HabitCategoryDefinition[] = [
     sublabel: 'Dawn Rituals',
     bgColor: Colors.WorkLightBg,
     borderColor: Colors.WorkLightBorder,
-    shadowColor: Colors.HabitBurnishedAmber,
+    shadowColor: Colors.PureBlack,
     accentColor: Colors.BadgeYellowText,
     checkColor: Colors.BadgeYellowText,
     Icon: Sun,
@@ -80,7 +80,7 @@ export const HABIT_CATEGORIES: HabitCategoryDefinition[] = [
     sublabel: 'Midday Focus',
     bgColor: Colors.MindfulLightBg,
     borderColor: Colors.MindfulLightBorder,
-    shadowColor: Colors.LavenderPurple,
+    shadowColor: Colors.PureBlack,
     accentColor: Colors.LavenderPurple,
     checkColor: Colors.MindfulTextAccent,
     Icon: Sparkles,
@@ -91,7 +91,7 @@ export const HABIT_CATEGORIES: HabitCategoryDefinition[] = [
     sublabel: 'Night Routine',
     bgColor: Colors.CategoryPeachBg,
     borderColor: Colors.CategoryPeachBorder,
-    shadowColor: Colors.CategoryOrangeAccent,
+    shadowColor: Colors.PureBlack,
     accentColor: Colors.HabitRoyalIndigo,
     checkColor: Colors.CategoryOrangeCheck,
     Icon: Moon,
@@ -1411,9 +1411,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     ...Platform.select({
       ios: {
-        shadowColor: Colors.AccentGreen,
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.08,
         shadowRadius: 4,
       },
       android: {
@@ -1457,9 +1457,9 @@ const styles = StyleSheet.create({
     borderRadius: ResponsivePixels.size18,
     ...Platform.select({
       ios: {
-        shadowColor: Colors.CategoryRedAccent,
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
+        shadowOpacity: 0.06,
         shadowRadius: 6,
       },
       android: {

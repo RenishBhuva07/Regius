@@ -52,12 +52,6 @@ interface SheetBackgroundAestheticSvgProps {
 const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
   React.memo(({ width }) => {
     const { isDarkMode } = useTheme();
-    const starPath = (cx: number, cy: number, r: number) =>
-      `M ${cx} ${cy - r} Q ${cx} ${cy} ${cx + r} ${cy} Q ${cx} ${cy} ${cx} ${
-        cy + r
-      } Q ${cx} ${cy} ${cx - r} ${cy} Q ${cx} ${cy} ${cx} ${cy - r} Z`;
-
-    const cx = width / 2;
 
     return (
       <View style={StyleSheet.absoluteFill} pointerEvents="none">
@@ -78,38 +72,11 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
                 stopOpacity={1}
               />
               <Stop
-                offset="50%"
-                stopColor={
-                  isDarkMode
-                    ? Colors.DarkSurfacePressed
-                    : Colors.WarmCreamHighlight
-                }
-                stopOpacity={0.99}
-              />
-              <Stop
                 offset="100%"
                 stopColor={
                   isDarkMode ? Colors.DarkCanvasRich : Colors.WarmParchment
                 }
                 stopOpacity={1}
-              />
-            </LinearGradient>
-            <LinearGradient
-              id="goldSparkle"
-              x1="0%"
-              y1="0%"
-              x2="100%"
-              y2="100%"
-            >
-              <Stop
-                offset="0%"
-                stopColor={Colors.GoldSparkleTint}
-                stopOpacity={1}
-              />
-              <Stop
-                offset="100%"
-                stopColor={Colors.SovereignCrestGold}
-                stopOpacity={0.85}
               />
             </LinearGradient>
           </Defs>
@@ -127,58 +94,6 @@ const SheetBackgroundAestheticSvg: React.FC<SheetBackgroundAestheticSvgProps> =
             }
             strokeWidth={0.8}
             fill="none"
-          />
-          <Circle
-            cx={cx}
-            cy={-14}
-            r={58}
-            stroke={withAlpha(Colors.SovereignCrestGold, 0.16)}
-            strokeWidth={0.8}
-            fill="none"
-          />
-          <Circle
-            cx={cx}
-            cy={-14}
-            r={88}
-            stroke={withAlpha(Colors.SovereignCrestGold, 0.12)}
-            strokeWidth={0.75}
-            strokeDasharray="3 4"
-            fill="none"
-          />
-          <Circle
-            cx={cx}
-            cy={-14}
-            r={120}
-            stroke={withAlpha(Colors.SovereignCrestGold, 0.08)}
-            strokeWidth={0.7}
-            fill="none"
-          />
-          <Path d={starPath(width - 24, 18, 4.5)} fill="url(#goldSparkle)" />
-          <Circle
-            cx={width - 38}
-            cy={22}
-            r={1.2}
-            fill={Colors.SovereignCrestGold}
-            opacity={0.4}
-          />
-          <Path
-            d={starPath(22, 22, 3.5)}
-            fill="url(#goldSparkle)"
-            opacity={0.7}
-          />
-          <Circle
-            cx={34}
-            cy={16}
-            r={1}
-            fill={Colors.SovereignCrestGold}
-            opacity={0.35}
-          />
-          <Circle
-            cx={cx}
-            cy={218}
-            r={1.5}
-            fill={Colors.ChampagneDust}
-            opacity={0.6}
           />
         </Svg>
       </View>
@@ -311,16 +226,9 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
             {/* Header row with 3D Badge + clean right tag */}
             <View style={styles.header}>
               <Badge
-                label="QUICK CREATE"
+                label="Create"
                 variant="neutral"
                 size="md"
-                icon={
-                  <Sparkles
-                    size={ResponsivePixels.size11}
-                    color={Colors.ObsidianGoldAntique}
-                    strokeWidth={2.4}
-                  />
-                }
               />
 
               <View
@@ -332,18 +240,13 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                   },
                 ]}
               >
-                <Sparkles
-                  size={ResponsivePixels.size11}
-                  color={Colors.SovereignCrestGold}
-                  strokeWidth={2.2}
-                />
                 <Text
                   style={[
                     styles.headerRightLabel,
                     isDarkMode && { color: Colors.AccentYellow },
                   ]}
                 >
-                  INSTANT
+                  Quick Add
                 </Text>
               </View>
             </View>
@@ -391,7 +294,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
                       isDarkMode && { color: Colors.PureWhite },
                     ]}
                   >
-                    Add Task
+                    Task
                   </Text>
                   <Text
                     style={[
@@ -406,7 +309,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
 
                 {/* Action Footer: Badge + Chevron Button */}
                 <View style={styles.cardFooter}>
-                  <Badge label="TO-DO" variant="yellow" size="sm" />
+                  <Badge label="Task" variant="yellow" size="sm" />
                   <View
                     style={[
                       styles.arrowCircle,
@@ -489,7 +392,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
 
                 {/* Action Footer: Badge + Chevron Button */}
                 <View style={styles.cardFooter}>
-                  <Badge label="ALERT" variant="green" size="sm" />
+                  <Badge label="Reminder" variant="green" size="sm" />
                   <View
                     style={[
                       styles.arrowCircle,
@@ -572,7 +475,7 @@ export const PlusActionSheet: React.FC<PlusActionSheetProps> = ({
 
                 {/* Action Footer: Badge + Chevron Button */}
                 <View style={styles.cardFooter}>
-                  <Badge label="RITUAL" variant="purple" size="sm" />
+                  <Badge label="Habit" variant="purple" size="sm" />
                   <View
                     style={[
                       styles.arrowCircle,
@@ -703,41 +606,27 @@ const styles = StyleSheet.create({
     position: 'relative',
     ...Platform.select({
       ios: {
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.24,
+        shadowColor: Colors.PureBlack,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.07,
         shadowRadius: 8,
       },
       android: {
-        elevation: 4,
+        elevation: 3,
       },
     }),
   },
   taskCard: {
     backgroundColor: Colors.WorkLightBg,
     borderColor: Colors.WorkLightBorder,
-    ...Platform.select({
-      ios: {
-        shadowColor: Colors.AccentYellow,
-      },
-    }),
   },
   reminderCard: {
     backgroundColor: Colors.WellnessLightBg,
     borderColor: Colors.WellnessLightBorder,
-    ...Platform.select({
-      ios: {
-        shadowColor: Colors.LeafGreenShadow,
-      },
-    }),
   },
   habitCard: {
     backgroundColor: Colors.MindfulLightBg,
     borderColor: Colors.MindfulLightBorder,
-    ...Platform.select({
-      ios: {
-        shadowColor: Colors.LavenderPurple,
-      },
-    }),
   },
   cardTopRow: {
     flexDirection: 'row',
@@ -754,8 +643,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     ...Platform.select({
       ios: {
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.14,
+        shadowOpacity: 0.05,
         shadowRadius: 4,
       },
       android: {
@@ -765,27 +655,12 @@ const styles = StyleSheet.create({
   },
   taskIconWrap: {
     borderColor: Colors.WorkLightBorder,
-    ...Platform.select({
-      ios: {
-        shadowColor: Colors.AccentYellow,
-      },
-    }),
   },
   reminderIconWrap: {
     borderColor: Colors.WellnessLightBorder,
-    ...Platform.select({
-      ios: {
-        shadowColor: Colors.LeafGreenShadow,
-      },
-    }),
   },
   habitIconWrap: {
     borderColor: Colors.MindfulLightBorder,
-    ...Platform.select({
-      ios: {
-        shadowColor: Colors.LavenderPurple,
-      },
-    }),
   },
   cardContent: {
     marginBottom: ResponsivePixels.size6,
@@ -822,8 +697,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     ...Platform.select({
       ios: {
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.08,
+        shadowOpacity: 0.04,
         shadowRadius: 2,
       },
       android: {
@@ -833,27 +709,12 @@ const styles = StyleSheet.create({
   },
   taskArrowCircle: {
     borderColor: Colors.WorkLightBorder,
-    ...Platform.select({
-      ios: {
-        shadowColor: Colors.HabitBurnishedAmber,
-      },
-    }),
   },
   reminderArrowCircle: {
     borderColor: Colors.WellnessLightBorder,
-    ...Platform.select({
-      ios: {
-        shadowColor: Colors.LeafGreenShadow,
-      },
-    }),
   },
   habitArrowCircle: {
     borderColor: Colors.MindfulLightBorder,
-    ...Platform.select({
-      ios: {
-        shadowColor: Colors.LavenderPurple,
-      },
-    }),
   },
   cardAccentWrap: {
     position: 'absolute',

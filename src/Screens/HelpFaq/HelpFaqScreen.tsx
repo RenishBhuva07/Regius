@@ -146,7 +146,7 @@ export const HelpFaqScreen: React.FC = () => {
     Vibration.vibrate(25);
     Toast.show({
       type: 'info',
-      text1: 'Voice Assistant Active 🎙️',
+      text1: 'Voice Assistant Active',
       text2: 'Say "Hey Regius" at any time or hold the center plus button.',
     });
   };

@@ -351,9 +351,9 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.HabitBurnishedAmber,
     ...Platform.select({
       ios: {
-        shadowColor: Colors.AccentYellow,
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.35,
+        shadowOpacity: 0.16,
         shadowRadius: 6,
       },
       android: {

@@ -204,7 +204,7 @@ export const AppearanceSection: React.FC<AppearanceSectionProps> = ({
                     } else {
                       Toast.show({
                         type: 'info',
-                        text2: `🔒 Unlocks at Tier ${theme.requiredTierLevel}! Complete more tasks, reminders & habits.`,
+                        text2: `Unlocks at Tier ${theme.requiredTierLevel}. Complete more tasks, reminders, and habits to unlock.`,
                       });
                       onOpenMilestones?.();
                     }

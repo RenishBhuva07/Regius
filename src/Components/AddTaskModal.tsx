@@ -54,7 +54,7 @@ const DEFAULT_CATEGORY_ITEMS: CategoryItem[] = [
     label: 'Works',
     bgColor: Colors.WorkLightBg,
     borderColor: Colors.WorkLightBorder,
-    shadowColor: Colors.AccentYellow,
+    shadowColor: Colors.PureBlack,
     accentColor: Colors.TaskGoldVivid,
     checkColor: Colors.HabitBurnishedAmber,
     badgeVariant: 'yellow',
@@ -65,7 +65,7 @@ const DEFAULT_CATEGORY_ITEMS: CategoryItem[] = [
     label: 'Sport',
     bgColor: Colors.WellnessLightBg,
     borderColor: Colors.WellnessLightBorder,
-    shadowColor: Colors.AccentGreen,
+    shadowColor: Colors.PureBlack,
     accentColor: Colors.AccentGreen,
     checkColor: Colors.GreenGracious,
     badgeVariant: 'green',
@@ -76,7 +76,7 @@ const DEFAULT_CATEGORY_ITEMS: CategoryItem[] = [
     label: 'Habits',
     bgColor: Colors.MindfulLightBg,
     borderColor: Colors.MindfulLightBorder,
-    shadowColor: Colors.LavenderPurple,
+    shadowColor: Colors.PureBlack,
     accentColor: Colors.LavenderPurple,
     checkColor: Colors.MindfulTextAccent,
     badgeVariant: 'purple',
@@ -930,9 +930,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     ...Platform.select({
       ios: {
-        shadowColor: Colors.AccentGreen,
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.08,
         shadowRadius: 4,
       },
       android: {
@@ -975,9 +975,9 @@ const styles = StyleSheet.create({
     borderRadius: ResponsivePixels.size18,
     ...Platform.select({
       ios: {
-        shadowColor: Colors.CategoryRedAccent,
+        shadowColor: Colors.PureBlack,
         shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
+        shadowOpacity: 0.06,
         shadowRadius: 6,
       },
       android: {

@@ -610,9 +610,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headerContainer: {
-    shadowColor: Colors.LavenderPurple,
-    shadowOffset: { width: 0, height: 6 },
-    shadowRadius: 12,
+    shadowColor: Colors.PureBlack,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
     zIndex: 10,
   },
   headerRow: {

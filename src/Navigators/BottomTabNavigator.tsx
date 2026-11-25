@@ -590,12 +590,12 @@ const styles = StyleSheet.create({
   btnShadow: {
     ...Platform.select({
       ios: {
-        shadowColor: Colors.LavenderPurple,
-        shadowOffset: { width: 0, height: 5 },
-        shadowOpacity: 0.45,
-        shadowRadius: 12,
+        shadowColor: Colors.PureBlack,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.22,
+        shadowRadius: 8,
       },
-      android: { elevation: 16 },
+      android: { elevation: 12 },
     }),
   },
   btnCircle: {
