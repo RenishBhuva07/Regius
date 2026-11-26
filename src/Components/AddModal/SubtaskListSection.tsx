@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Platform,
 } from 'react-native';
 import { Plus, X } from 'lucide-react-native';
 import { Fonts } from '../../Theme/fonts';
@@ -202,11 +203,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.DarkElevatedNero,
+    backgroundColor: Colors.NeroBlack,
     height: ResponsivePixels.size44,
-    paddingHorizontal: ResponsivePixels.size14,
-    borderRadius: ResponsivePixels.size14,
+    paddingHorizontal: ResponsivePixels.size16,
+    borderRadius: ResponsivePixels.size50,
+    borderWidth: 1.5,
+    borderTopColor: Colors.DarkChipBevelTop,
+    borderLeftColor: Colors.DarkChipBorder,
+    borderRightColor: Colors.DarkChipBorder,
+    borderBottomWidth: 3,
+    borderBottomColor: Colors.DarkChipBevelAbyss,
     gap: ResponsivePixels.size4,
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.PureBlack,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   addSubtaskBtnText: {
     fontFamily: Fonts.poppins.bold,

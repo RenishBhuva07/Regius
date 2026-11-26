@@ -4,9 +4,124 @@ import React, {
   useState,
   useMemo,
   useCallback,
+  useEffect,
+  useRef,
   ReactNode,
 } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Colors } from '../Assets/StyleUtilities/Colors';
+import { BadgeVariant } from '../Common/Badge';
+import {
+  OfficeBagIcon,
+  HeartEmblemIcon,
+  PictureEmblemIcon,
+  SparkleEmblemIcon,
+  FlameEmblemIcon,
+} from '../Common/EmblemIcons';
+import {
+  TaskRecurrence,
+  toLocalISODate,
+  formatDisplayDate,
+  normalizeTaskDateInput,
+  resolveTaskDueDate,
+  getNextOccurrenceISO,
+} from '../Utils/taskDateUtils';
+
+const TASKS_STORAGE_KEY = '@regius_tasks_v1';
+const TASK_CATEGORIES_STORAGE_KEY = '@regius_task_categories_v1';
+
+export type TaskCategoryIconKey =
+  | 'bag'
+  | 'heart'
+  | 'picture'
+  | 'sparkles'
+  | 'flame';
+
+export interface TaskCategoryItem {
+  id: string;
+  label: string;
+  bgColor: string;
+  borderColor: string;
+  shadowColor: string;
+  accentColor: string;
+  checkColor: string;
+  badgeVariant?: BadgeVariant;
+  iconKey: TaskCategoryIconKey;
+  Icon: React.ComponentType<any>;
+  isCustom?: boolean;
+}
+
+export interface TaskModalPrefill {
+  dueDate?: string | null;
+  category?: string;
+}
+
+export function resolveCategoryIconComponent(
+  iconKey?: TaskCategoryIconKey,
+): React.ComponentType<any> {
+  switch (iconKey) {
+    case 'heart':
+      return HeartEmblemIcon;
+    case 'picture':
+      return PictureEmblemIcon;
+    case 'sparkles':
+      return SparkleEmblemIcon;
+    case 'flame':
+      return FlameEmblemIcon;
+    case 'bag':
+    default:
+      return OfficeBagIcon;
+  }
+}
+
+export function inferCategoryIconKey(
+  Icon?: React.ComponentType<any>,
+): TaskCategoryIconKey {
+  if (Icon === HeartEmblemIcon) return 'heart';
+  if (Icon === PictureEmblemIcon) return 'picture';
+  if (Icon === SparkleEmblemIcon) return 'sparkles';
+  if (Icon === FlameEmblemIcon) return 'flame';
+  return 'bag';
+}
+
+export const DEFAULT_TASK_CATEGORIES: TaskCategoryItem[] = [
+  {
+    id: 'works',
+    label: 'Works',
+    bgColor: Colors.WorkLightBg,
+    borderColor: Colors.WorkLightBorder,
+    shadowColor: Colors.PureBlack,
+    accentColor: Colors.TaskGoldVivid,
+    checkColor: Colors.HabitBurnishedAmber,
+    badgeVariant: 'yellow',
+    iconKey: 'bag',
+    Icon: OfficeBagIcon,
+  },
+  {
+    id: 'sport',
+    label: 'Sport',
+    bgColor: Colors.WellnessLightBg,
+    borderColor: Colors.WellnessLightBorder,
+    shadowColor: Colors.PureBlack,
+    accentColor: Colors.AccentGreen,
+    checkColor: Colors.GreenGracious,
+    badgeVariant: 'green',
+    iconKey: 'heart',
+    Icon: HeartEmblemIcon,
+  },
+  {
+    id: 'habits',
+    label: 'Habits',
+    bgColor: Colors.MindfulLightBg,
+    borderColor: Colors.MindfulLightBorder,
+    shadowColor: Colors.PureBlack,
+    accentColor: Colors.LavenderPurple,
+    checkColor: Colors.MindfulTextAccent,
+    badgeVariant: 'purple',
+    iconKey: 'picture',
+    Icon: PictureEmblemIcon,
+  },
+];
 
 export interface Task {
   id: string;
@@ -17,9 +132,14 @@ export interface Task {
   note?: string;
   priority?: 'low' | 'medium' | 'high';
   date?: string;
+  dueDate?: string | null;
   time?: string;
+  dueTime?: string | null;
+  recurrence?: TaskRecurrence;
   subtasks?: { id: string; text: string; done: boolean }[];
   voiceNudge?: boolean;
+  createdAt?: string;
+  completedAt?: string | null;
 }
 
 export interface Reminder {
@@ -101,6 +221,9 @@ export const INITIAL_HABITS: HabitItem[] = [
   },
 ];
 
+const TODAY_ISO_SEED = toLocalISODate();
+const TODAY_LABEL_SEED = formatDisplayDate(TODAY_ISO_SEED, TODAY_ISO_SEED);
+
 export const INITIAL_TASKS: Task[] = [
   {
     id: '1',
@@ -108,8 +231,12 @@ export const INITIAL_TASKS: Task[] = [
     iconType: 'mail',
     done: true,
     category: 'works',
+    date: TODAY_LABEL_SEED,
+    dueDate: TODAY_ISO_SEED,
     time: '09:00 AM',
+    dueTime: '09:00 AM',
     note: 'Processed 14 critical communications. Focus block active.',
+    completedAt: new Date().toISOString(),
   },
   {
     id: '2',
@@ -117,7 +244,10 @@ export const INITIAL_TASKS: Task[] = [
     iconType: 'users',
     done: false,
     category: 'works',
+    date: TODAY_LABEL_SEED,
+    dueDate: TODAY_ISO_SEED,
     time: '11:30 AM',
+    dueTime: '11:30 AM',
     note: 'Regius will chime 5 minutes prior with talking points.',
   },
   {
@@ -126,7 +256,10 @@ export const INITIAL_TASKS: Task[] = [
     iconType: 'users',
     done: false,
     category: 'works',
+    date: TODAY_LABEL_SEED,
+    dueDate: TODAY_ISO_SEED,
     time: '03:30 PM',
+    dueTime: '03:30 PM',
     note: 'Review interactive timeline component specs.',
   },
   {
@@ -135,7 +268,10 @@ export const INITIAL_TASKS: Task[] = [
     iconType: 'users',
     done: false,
     category: 'sport',
+    date: TODAY_LABEL_SEED,
+    dueDate: TODAY_ISO_SEED,
     time: '05:30 PM',
+    dueTime: '05:30 PM',
     note: 'Cardio endurance and post-run mobility routine.',
   },
   {
@@ -144,7 +280,10 @@ export const INITIAL_TASKS: Task[] = [
     iconType: 'mail',
     done: false,
     category: 'habits',
+    date: TODAY_LABEL_SEED,
+    dueDate: TODAY_ISO_SEED,
     time: '09:00 PM',
+    dueTime: '09:00 PM',
     note: 'Read 15 pages screen-free before sleep.',
   },
 ];
@@ -207,25 +346,86 @@ export const INITIAL_REMINDERS: Reminder[] = [
   },
 ];
 
+export interface AddTaskInput {
+  title: string;
+  note?: string;
+  category?: string;
+  iconType?: 'mail' | 'users';
+  priority?: 'low' | 'medium' | 'high';
+  date?: string;
+  dueDate?: string | null;
+  time?: string;
+  dueTime?: string | null;
+  recurrence?: TaskRecurrence;
+  subtasks?: { id: string; text: string; done: boolean }[];
+  voiceNudge?: boolean;
+}
+
+interface StoredCustomCategory {
+  id: string;
+  label: string;
+  bgColor: string;
+  borderColor: string;
+  shadowColor: string;
+  accentColor: string;
+  checkColor: string;
+  badgeVariant?: BadgeVariant;
+  iconKey: TaskCategoryIconKey;
+}
+
+function hydrateStoredTask(raw: Task): Task {
+  const todayISO = toLocalISODate();
+  const normalizedDate =
+    raw.dueDate !== undefined
+      ? {
+          dueDate: raw.dueDate,
+          displayDate: raw.dueDate
+            ? formatDisplayDate(raw.dueDate, todayISO)
+            : 'Anytime',
+        }
+      : normalizeTaskDateInput(raw.date);
+
+  const dueTime =
+    raw.dueTime !== undefined
+      ? raw.dueTime
+      : raw.time && raw.time.toLowerCase() !== 'anytime'
+      ? raw.time
+      : null;
+
+  return {
+    ...raw,
+    dueDate: normalizedDate.dueDate,
+    date: raw.date || normalizedDate.displayDate,
+    dueTime,
+    time: dueTime || undefined,
+    recurrence: raw.recurrence || 'none',
+  };
+}
+
 interface TaskReminderContextType {
   tasks: Task[];
-  addTask: (data: {
-    title: string;
-    note?: string;
-    category?: string;
-    iconType?: 'mail' | 'users';
-    priority?: 'low' | 'medium' | 'high';
-    date?: string;
-    time?: string;
-    subtasks?: { id: string; text: string; done: boolean }[];
-    voiceNudge?: boolean;
-  }) => Task | null;
+  isTasksHydrated: boolean;
+  addTask: (data: AddTaskInput) => Task | null;
   toggleTask: (id: string) => Task | null;
   updateTask: (id: string, updates: Partial<Omit<Task, 'id'>>) => Task | null;
   deleteTask: (id: string) => void;
+  rescheduleTask: (
+    id: string,
+    dueDate: string | null,
+    dueTime?: string | null,
+  ) => Task | null;
+  rescheduleOverdueToToday: (targetIds?: string[]) => number;
   selectedTasks: Set<string>;
   setSelectedTasks: React.Dispatch<React.SetStateAction<Set<string>>>;
   selectAllTasks: (markDone?: boolean, targetIds?: string[]) => void;
+
+  taskCategories: TaskCategoryItem[];
+  addTaskCategory: (
+    category: Omit<TaskCategoryItem, 'iconKey' | 'Icon'> & {
+      iconKey?: TaskCategoryIconKey;
+      Icon?: React.ComponentType<any>;
+    },
+  ) => TaskCategoryItem;
 
   reminders: Reminder[];
   addReminder: (data: {
@@ -250,7 +450,8 @@ interface TaskReminderContextType {
   selectAllReminders: () => void;
 
   isTaskModalOpen: boolean;
-  openTaskModal: () => void;
+  taskModalPrefill: TaskModalPrefill | null;
+  openTaskModal: (prefill?: TaskModalPrefill) => void;
   closeTaskModal: () => void;
 
   isReminderModalOpen: boolean;
@@ -278,13 +479,23 @@ interface TaskReminderContextType {
 
 const TaskReminderContext = createContext<TaskReminderContextType>({
   tasks: INITIAL_TASKS,
+  isTasksHydrated: false,
   addTask: () => null,
   toggleTask: () => null,
   updateTask: () => null,
   deleteTask: () => {},
+  rescheduleTask: () => null,
+  rescheduleOverdueToToday: () => 0,
   selectedTasks: new Set(['1']),
   setSelectedTasks: () => {},
   selectAllTasks: () => {},
+
+  taskCategories: DEFAULT_TASK_CATEGORIES,
+  addTaskCategory: cat => ({
+    ...cat,
+    iconKey: cat.iconKey || 'bag',
+    Icon: cat.Icon || OfficeBagIcon,
+  }),
 
   reminders: INITIAL_REMINDERS,
   addReminder: () => null,
@@ -296,6 +507,7 @@ const TaskReminderContext = createContext<TaskReminderContextType>({
   selectAllReminders: () => {},
 
   isTaskModalOpen: false,
+  taskModalPrefill: null,
   openTaskModal: () => {},
   closeTaskModal: () => {},
 
@@ -317,6 +529,10 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
   const [tasks, setTasks] = useState<Task[]>(INITIAL_TASKS);
+  const [isTasksHydrated, setIsTasksHydrated] = useState(false);
+  const [customCategories, setCustomCategories] = useState<TaskCategoryItem[]>(
+    [],
+  );
   const [selectedTasks, setSelectedTasks] = useState<Set<string>>(
     new Set(['1']),
   );
@@ -327,20 +543,152 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
   );
 
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
+  const [taskModalPrefill, setTaskModalPrefill] =
+    useState<TaskModalPrefill | null>(null);
   const [isReminderModalOpen, setIsReminderModalOpen] = useState(false);
 
-  const addTask = (data: {
-    title: string;
-    note?: string;
-    category?: string;
-    iconType?: 'mail' | 'users';
-    priority?: 'low' | 'medium' | 'high';
-    date?: string;
-    time?: string;
-    subtasks?: { id: string; text: string; done: boolean }[];
-    voiceNudge?: boolean;
-  }): Task | null => {
+  const hasHydratedRef = useRef(false);
+
+  useEffect(() => {
+    let mounted = true;
+    const hydrate = async () => {
+      try {
+        const [storedTasksRaw, storedCatsRaw] = await Promise.all([
+          AsyncStorage.getItem(TASKS_STORAGE_KEY),
+          AsyncStorage.getItem(TASK_CATEGORIES_STORAGE_KEY),
+        ]);
+        if (!mounted) return;
+
+        if (storedTasksRaw) {
+          const parsed = JSON.parse(storedTasksRaw);
+          if (Array.isArray(parsed)) {
+            const hydrated = parsed.map(hydrateStoredTask);
+            setTasks(hydrated);
+            setSelectedTasks(
+              new Set(hydrated.filter(t => t.done).map(t => t.id)),
+            );
+          }
+        }
+
+        if (storedCatsRaw) {
+          const parsedCats: StoredCustomCategory[] = JSON.parse(storedCatsRaw);
+          if (Array.isArray(parsedCats)) {
+            setCustomCategories(
+              parsedCats.map(cat => ({
+                ...cat,
+                Icon: resolveCategoryIconComponent(cat.iconKey),
+                isCustom: true,
+              })),
+            );
+          }
+        }
+      } catch {
+        // Fallback silently to initial seed data if storage is unavailable
+      } finally {
+        if (mounted) {
+          hasHydratedRef.current = true;
+          setIsTasksHydrated(true);
+        }
+      }
+    };
+
+    hydrate();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!hasHydratedRef.current) return;
+    AsyncStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasks)).catch(
+      () => {},
+    );
+  }, [tasks]);
+
+  useEffect(() => {
+    if (!hasHydratedRef.current) return;
+    const serializable: StoredCustomCategory[] = customCategories.map(cat => ({
+      id: cat.id,
+      label: cat.label,
+      bgColor: cat.bgColor,
+      borderColor: cat.borderColor,
+      shadowColor: cat.shadowColor,
+      accentColor: cat.accentColor,
+      checkColor: cat.checkColor,
+      badgeVariant: cat.badgeVariant,
+      iconKey: cat.iconKey,
+    }));
+    AsyncStorage.setItem(
+      TASK_CATEGORIES_STORAGE_KEY,
+      JSON.stringify(serializable),
+    ).catch(() => {});
+  }, [customCategories]);
+
+  const taskCategories = useMemo(
+    () => [...DEFAULT_TASK_CATEGORIES, ...customCategories],
+    [customCategories],
+  );
+
+  const addTaskCategory = useCallback(
+    (
+      cat: Omit<TaskCategoryItem, 'iconKey' | 'Icon'> & {
+        iconKey?: TaskCategoryIconKey;
+        Icon?: React.ComponentType<any>;
+      },
+    ): TaskCategoryItem => {
+      const iconKey = cat.iconKey || inferCategoryIconKey(cat.Icon);
+      const nextCategory: TaskCategoryItem = {
+        ...cat,
+        id: cat.id || `custom_${Date.now()}`,
+        iconKey,
+        Icon: cat.Icon || resolveCategoryIconComponent(iconKey),
+        isCustom: true,
+      };
+      setCustomCategories(prev => {
+        if (prev.some(existing => existing.id === nextCategory.id)) {
+          return prev;
+        }
+        return [...prev, nextCategory];
+      });
+      return nextCategory;
+    },
+    [],
+  );
+
+  const addTask = useCallback((data: AddTaskInput): Task | null => {
     if (!data.title.trim()) return null;
+    const todayISO = toLocalISODate();
+
+    let resolvedDueDate: string | null;
+    let resolvedDisplayDate: string;
+
+    if (data.dueDate !== undefined) {
+      resolvedDueDate = data.dueDate;
+      resolvedDisplayDate = data.dueDate
+        ? formatDisplayDate(data.dueDate, todayISO)
+        : 'Anytime';
+    } else if (data.date !== undefined) {
+      const normalized = normalizeTaskDateInput(data.date);
+      resolvedDueDate = normalized.dueDate;
+      resolvedDisplayDate = normalized.displayDate;
+    } else {
+      resolvedDueDate = todayISO;
+      resolvedDisplayDate = formatDisplayDate(todayISO, todayISO);
+    }
+
+    let resolvedDueTime: string | null;
+    if (data.dueTime !== undefined) {
+      resolvedDueTime = data.dueTime;
+    } else if (data.time !== undefined) {
+      const cleanTime = data.time.trim();
+      resolvedDueTime =
+        !cleanTime || cleanTime.toLowerCase() === 'anytime'
+          ? null
+          : cleanTime;
+    } else {
+      resolvedDueTime = '10:00 AM';
+    }
+
     const newTask: Task = {
       id: Date.now().toString(),
       label: data.title.trim(),
@@ -349,26 +697,65 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
       category: data.category || 'works',
       note: data.note,
       priority: data.priority || 'medium',
-      date: data.date || 'Today',
-      time: data.time || '10:00 AM',
+      date: resolvedDisplayDate,
+      dueDate: resolvedDueDate,
+      time: resolvedDueTime || undefined,
+      dueTime: resolvedDueTime,
+      recurrence: data.recurrence || 'none',
       subtasks: data.subtasks,
       voiceNudge: data.voiceNudge ?? true,
+      createdAt: new Date().toISOString(),
+      completedAt: null,
     };
     setTasks(prev => [newTask, ...prev]);
     return newTask;
-  };
+  }, []);
 
-  const toggleTask = (id: string): Task | null => {
+  const toggleTask = useCallback((id: string): Task | null => {
     let updatedTask: Task | null = null;
-    setTasks(prev =>
-      prev.map(t => {
+    setTasks(prev => {
+      const nextTasks: Task[] = [];
+      let spawnedTask: Task | null = null;
+
+      for (const t of prev) {
         if (t.id === id) {
-          updatedTask = { ...t, done: !t.done };
-          return updatedTask;
+          const nextDone = !t.done;
+          updatedTask = {
+            ...t,
+            done: nextDone,
+            completedAt: nextDone ? new Date().toISOString() : null,
+          };
+          nextTasks.push(updatedTask);
+
+          if (
+            nextDone &&
+            t.recurrence &&
+            t.recurrence !== 'none'
+          ) {
+            const anchorISO = resolveTaskDueDate(t) || toLocalISODate();
+            const nextDueISO = getNextOccurrenceISO(anchorISO, t.recurrence);
+            spawnedTask = {
+              ...t,
+              id: `${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+              done: false,
+              dueDate: nextDueISO,
+              date: formatDisplayDate(nextDueISO),
+              completedAt: null,
+              createdAt: new Date().toISOString(),
+              subtasks: t.subtasks?.map(s => ({ ...s, done: false })),
+            };
+          }
+        } else {
+          nextTasks.push(t);
         }
-        return t;
-      }),
-    );
+      }
+
+      if (spawnedTask) {
+        return [spawnedTask, ...nextTasks];
+      }
+      return nextTasks;
+    });
+
     setSelectedTasks(prev => {
       const next = new Set(prev);
       if (next.has(id)) {
@@ -379,40 +766,113 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
       return next;
     });
     return updatedTask;
-  };
+  }, []);
 
-  const updateTask = (
-    id: string,
-    updates: Partial<Omit<Task, 'id'>> & { title?: string },
-  ): Task | null => {
-    let updated: Task | null = null;
-    const normalized: Partial<Omit<Task, 'id'>> = { ...updates };
-    if (typeof updates.title === 'string' && updates.title.trim()) {
-      normalized.label = updates.title.trim();
-    }
-    setTasks(prev =>
-      prev.map(t => {
-        if (t.id === id) {
-          updated = { ...t, ...normalized };
-          return updated;
-        }
-        return t;
-      }),
-    );
-    return updated;
-  };
+  const updateTask = useCallback(
+    (
+      id: string,
+      updates: Partial<Omit<Task, 'id'>> & { title?: string },
+    ): Task | null => {
+      let updated: Task | null = null;
+      const todayISO = toLocalISODate();
+      const normalized: Partial<Omit<Task, 'id'>> = { ...updates };
+      if (typeof updates.title === 'string' && updates.title.trim()) {
+        normalized.label = updates.title.trim();
+      }
+      delete (normalized as { title?: string }).title;
 
-  const deleteTask = (id: string) => {
+      if (updates.dueDate !== undefined) {
+        normalized.dueDate = updates.dueDate;
+        normalized.date = updates.dueDate
+          ? formatDisplayDate(updates.dueDate, todayISO)
+          : 'Anytime';
+      } else if (updates.date !== undefined) {
+        const res = normalizeTaskDateInput(updates.date);
+        normalized.dueDate = res.dueDate;
+        normalized.date = res.displayDate;
+      }
+
+      if (updates.dueTime !== undefined) {
+        normalized.dueTime = updates.dueTime;
+        normalized.time = updates.dueTime || undefined;
+      } else if (updates.time !== undefined) {
+        const cleanTime = updates.time.trim();
+        const isAnytime = !cleanTime || cleanTime.toLowerCase() === 'anytime';
+        normalized.dueTime = isAnytime ? null : cleanTime;
+        normalized.time = isAnytime ? undefined : cleanTime;
+      }
+
+      setTasks(prev =>
+        prev.map(t => {
+          if (t.id === id) {
+            updated = { ...t, ...normalized };
+            return updated;
+          }
+          return t;
+        }),
+      );
+      return updated;
+    },
+    [],
+  );
+
+  const deleteTask = useCallback((id: string) => {
     setTasks(prev => prev.filter(t => t.id !== id));
     setSelectedTasks(prev => {
       const next = new Set(prev);
       next.delete(id);
       return next;
     });
-  };
+  }, []);
+
+  const rescheduleTask = useCallback(
+    (
+      id: string,
+      dueDate: string | null,
+      dueTime?: string | null,
+    ): Task | null => {
+      const updates: Partial<Omit<Task, 'id'>> = {
+        dueDate,
+        date: dueDate ? formatDisplayDate(dueDate) : 'Anytime',
+      };
+      if (dueTime !== undefined) {
+        updates.dueTime = dueTime;
+        updates.time = dueTime || undefined;
+      }
+      return updateTask(id, updates);
+    },
+    [updateTask],
+  );
+
+  const rescheduleOverdueToToday = useCallback((targetIds?: string[]): number => {
+    const todayISO = toLocalISODate();
+    const displayToday = formatDisplayDate(todayISO, todayISO);
+    const idsSet = targetIds ? new Set(targetIds) : null;
+    let movedCount = 0;
+
+    setTasks(prev =>
+      prev.map(t => {
+        if (t.done) return t;
+        if (idsSet && !idsSet.has(t.id)) return t;
+        const resolved = resolveTaskDueDate(t, todayISO);
+        if (resolved && resolved < todayISO) {
+          movedCount += 1;
+          return {
+            ...t,
+            dueDate: todayISO,
+            date: displayToday,
+          };
+        }
+        return t;
+      }),
+    );
+
+    return movedCount;
+  }, []);
 
   const selectAllTasks = useCallback(
     (markDone?: boolean, targetIds?: string[]) => {
+      const nowISO = new Date().toISOString();
       setTasks(prev => {
         const idsSet = targetIds ? new Set(targetIds) : null;
         const relevant = idsSet ? prev.filter(t => idsSet.has(t.id)) : prev;
@@ -421,7 +881,11 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
 
         const updated = prev.map(t => {
           if (!idsSet || idsSet.has(t.id)) {
-            return { ...t, done: shouldComplete };
+            return {
+              ...t,
+              done: shouldComplete,
+              completedAt: shouldComplete ? nowISO : null,
+            };
           }
           return t;
         });
@@ -527,8 +991,20 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
     }
   }, [selectedReminders.size, reminders]);
 
-  const openTaskModal = () => setIsTaskModalOpen(true);
-  const closeTaskModal = () => setIsTaskModalOpen(false);
+  const openTaskModal = useCallback((prefill?: TaskModalPrefill) => {
+    const validPrefill =
+      prefill &&
+      (prefill.dueDate !== undefined || prefill.category !== undefined)
+        ? { dueDate: prefill.dueDate, category: prefill.category }
+        : null;
+    setTaskModalPrefill(validPrefill);
+    setIsTaskModalOpen(true);
+  }, []);
+
+  const closeTaskModal = useCallback(() => {
+    setIsTaskModalOpen(false);
+    setTaskModalPrefill(null);
+  }, []);
 
   const openReminderModal = () => setIsReminderModalOpen(true);
   const closeReminderModal = () => setIsReminderModalOpen(false);
@@ -605,13 +1081,19 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
   const value = useMemo(
     () => ({
       tasks,
+      isTasksHydrated,
       addTask,
       toggleTask,
       updateTask,
       deleteTask,
+      rescheduleTask,
+      rescheduleOverdueToToday,
       selectedTasks,
       setSelectedTasks,
       selectAllTasks,
+
+      taskCategories,
+      addTaskCategory,
 
       reminders,
       addReminder,
@@ -623,6 +1105,7 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
       selectAllReminders,
 
       isTaskModalOpen,
+      taskModalPrefill,
       openTaskModal,
       closeTaskModal,
 
@@ -641,12 +1124,24 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
     }),
     [
       tasks,
+      isTasksHydrated,
+      addTask,
+      toggleTask,
+      updateTask,
+      deleteTask,
+      rescheduleTask,
+      rescheduleOverdueToToday,
       selectedTasks,
       selectAllTasks,
+      taskCategories,
+      addTaskCategory,
       reminders,
       selectedReminders,
       selectAllReminders,
       isTaskModalOpen,
+      taskModalPrefill,
+      openTaskModal,
+      closeTaskModal,
       isReminderModalOpen,
       habits,
       isHabitModalOpen,

@@ -436,6 +436,7 @@ export default function BottomTabNavigator() {
   const { startWakeWordListening } = useVoiceWakeWord();
   const {
     isTaskModalOpen,
+    taskModalPrefill,
     closeTaskModal,
     addTask,
     isReminderModalOpen,
@@ -465,6 +466,8 @@ export default function BottomTabNavigator() {
       <AddTaskModal
         visible={isTaskModalOpen}
         onClose={closeTaskModal}
+        prefillDate={taskModalPrefill?.dueDate}
+        prefillCategory={taskModalPrefill?.category}
         onCreateTask={taskData => {
           addTask(taskData);
           closeTaskModal();
