@@ -36,6 +36,7 @@ import {
   Flame,
   FileText,
   RotateCw,
+  Repeat,
 } from 'lucide-react-native';
 import Svg, {
   Rect,
@@ -62,10 +63,20 @@ import { HeaderActionButton } from '../../Common/HeaderActionButton';
 import { StickyActionDock } from '../../Common/StickyActionDock';
 import { StickyBottomButton } from '../../Common/StickyBottomButton';
 import { MiniAcousticBars } from '../../Common/MiniAcousticBars';
+import { UnifiedSchedulePickerModal } from '../../Common/UnifiedSchedulePickerModal';
 import AddTaskModal from '../../Components/AddTaskModal';
 import { KokoroTTSService } from '../../Services/Kokoro/KokoroTTSService';
 import { AudioPlayerService } from '../../Services/AudioPlayerService';
 import { TaskDetailsBackgroundSvg } from './Components/TaskDetailsBackgroundSvg';
+import {
+  toLocalISODate,
+  addDaysToISO,
+  parseLocalISODate,
+  resolveTaskDueDate,
+  classifyTaskHorizon,
+  formatDisplayDate,
+  formatShortDateBadge,
+} from '../../Utils/taskDateUtils';
 
 export interface TaskDetailsScreenRouteParams {
   taskId: string;
@@ -92,9 +103,21 @@ const BentoHeroBg: React.FC<{ accentColor: string }> = React.memo(
             x2="100%"
             y2="100%"
           >
-            <Stop offset="0%" stopColor={Colors.BentoStopSlate} stopOpacity={0.85} />
-            <Stop offset="50%" stopColor={Colors.DetailStopMid} stopOpacity={0.5} />
-            <Stop offset="100%" stopColor={Colors.BentoStopDeep} stopOpacity={0.92} />
+            <Stop
+              offset="0%"
+              stopColor={Colors.BentoStopSlate}
+              stopOpacity={0.85}
+            />
+            <Stop
+              offset="50%"
+              stopColor={Colors.DetailStopMid}
+              stopOpacity={0.5}
+            />
+            <Stop
+              offset="100%"
+              stopColor={Colors.BentoStopDeep}
+              stopOpacity={0.92}
+            />
           </LinearGradient>
 
           <RadialGradient
@@ -106,7 +129,11 @@ const BentoHeroBg: React.FC<{ accentColor: string }> = React.memo(
           >
             <Stop offset="0%" stopColor={accentColor} stopOpacity={0.35} />
             <Stop offset="50%" stopColor={accentColor} stopOpacity={0.12} />
-            <Stop offset="100%" stopColor={Colors.BentoStopDeep} stopOpacity={0} />
+            <Stop
+              offset="100%"
+              stopColor={Colors.BentoStopDeep}
+              stopOpacity={0}
+            />
           </RadialGradient>
         </Defs>
 
@@ -130,7 +157,13 @@ const BentoHeroBg: React.FC<{ accentColor: string }> = React.memo(
           strokeDasharray="4 6"
           fill="none"
         />
-        <Circle cx={285} cy={18} r={1.6} fill={Colors.PureWhite} opacity={0.65} />
+        <Circle
+          cx={285}
+          cy={18}
+          r={1.6}
+          fill={Colors.PureWhite}
+          opacity={0.65}
+        />
         <Circle cx={35} cy={165} r={1.4} fill={accentColor} opacity={0.5} />
       </Svg>
     </View>
@@ -145,11 +178,20 @@ export const TaskDetailsScreen: React.FC = () => {
   const { isDarkMode } = useTheme();
 
   const taskId = route.params?.taskId;
-  const { tasks, toggleTask, updateTask, deleteTask } = useTaskReminder();
+  const {
+    tasks,
+    taskCategories,
+    toggleTask,
+    updateTask,
+    deleteTask,
+    rescheduleTask,
+  } = useTaskReminder();
 
   const task = useMemo(() => tasks.find(t => t.id === taskId), [tasks, taskId]);
+  const todayISO = toLocalISODate();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isReschedulePickerOpen, setIsReschedulePickerOpen] = useState(false);
   const [isPlayingBriefing, setIsPlayingBriefing] = useState(false);
   const [newSubtaskText, setNewSubtaskText] = useState('');
 
@@ -175,6 +217,20 @@ export const TaskDetailsScreen: React.FC = () => {
   }, []);
 
   const categoryTheme = useMemo(() => {
+    const custom = taskCategories.find(
+      c => c.id === task?.category && c.isCustom,
+    );
+    if (custom) {
+      return {
+        label: custom.label.toUpperCase(),
+        badgeVariant: (custom.badgeVariant || 'purple') as BadgeVariant,
+        accent: custom.accentColor,
+        bgTint: custom.bgColor,
+        borderColor: custom.borderColor,
+        icon: custom.Icon,
+        iconColor: custom.checkColor || custom.accentColor,
+      };
+    }
     if (task?.category === 'sport') {
       return {
         label: 'HEALTH & SPORT',
@@ -217,7 +273,7 @@ export const TaskDetailsScreen: React.FC = () => {
       icon: Users,
       iconColor: Colors.DarkIconSlate,
     };
-  }, [task?.category]);
+  }, [task?.category, taskCategories]);
 
   const IconComponent = categoryTheme.icon;
 
@@ -273,9 +329,14 @@ export const TaskDetailsScreen: React.FC = () => {
     const priorityText = task.priority
       ? `${task.priority} priority`
       : 'regular priority';
-    const scheduleText = task.time
-      ? `scheduled for ${task.time}`
-      : 'due today without a fixed time';
+    const resolvedDue = resolveTaskDueDate(task, todayISO);
+    const datePhrase = resolvedDue
+      ? formatDisplayDate(resolvedDue, todayISO)
+      : 'anytime without a fixed date';
+    const activeTime = task.dueTime !== undefined ? task.dueTime : task.time;
+    const scheduleText = activeTime
+      ? `scheduled for ${datePhrase} at ${activeTime}`
+      : `scheduled for ${datePhrase}`;
     const spokenText = `Task briefing: ${task.label}. Category: ${categoryTheme.label}. Marked as ${priorityText}, ${scheduleText}.`;
 
     const unsub = AudioPlayerService.onPlaybackFinished(() => {
@@ -296,7 +357,7 @@ export const TaskDetailsScreen: React.FC = () => {
         setIsPlayingBriefing(false);
       }
     }
-  }, [task, isPlayingBriefing, categoryTheme.label]);
+  }, [task, isPlayingBriefing, categoryTheme.label, todayISO]);
 
   const handleToggleSubtask = useCallback(
     (subtaskId: string) => {
@@ -393,6 +454,45 @@ export const TaskDetailsScreen: React.FC = () => {
       ? Math.round((completedSubtasks / subtasksList.length) * 100)
       : 0;
 
+  const resolvedDueDate = resolveTaskDueDate(task, todayISO);
+  const horizon = classifyTaskHorizon(task, todayISO);
+  const displayTime =
+    task.dueTime !== undefined
+      ? task.dueTime || 'Anytime'
+      : task.time || 'Flexible';
+  const displayDueLabel = resolvedDueDate
+    ? formatDisplayDate(resolvedDueDate, todayISO)
+    : 'Anytime';
+  const shortDueLabel = formatShortDateBadge(resolvedDueDate, todayISO);
+  const isRecurring = Boolean(task.recurrence && task.recurrence !== 'none');
+
+  const statusBadge: { label: string; variant: BadgeVariant } = task.done
+    ? { label: 'COMPLETED', variant: 'green' }
+    : horizon === 'overdue'
+    ? { label: 'OVERDUE', variant: 'red' }
+    : horizon === 'upcoming'
+    ? { label: 'UPCOMING', variant: 'purple' }
+    : horizon === 'anytime'
+    ? { label: 'ANYTIME', variant: 'neutral' }
+    : { label: 'IN PROGRESS', variant: 'yellow' };
+
+  const tomorrowISO = addDaysToISO(todayISO, 1);
+  const todayObj = new Date();
+  const daysUntilMon = todayObj.getDay() === 0 ? 1 : 8 - todayObj.getDay();
+  const nextWeekISO = addDaysToISO(todayISO, daysUntilMon);
+
+  const handleQuickReschedule = (targetISO: string | null) => {
+    rescheduleTask(task.id, targetISO);
+    Toast.show({
+      type: 'success',
+      text1: targetISO === null ? 'Moved to Anytime' : 'Task Rescheduled',
+      text2:
+        targetISO === null
+          ? 'Task moved to your flexible backlog.'
+          : `Scheduled for ${formatDisplayDate(targetISO, todayISO)}.`,
+    });
+  };
+
   return (
     <View style={[styles.container, isDarkMode && styles.containerDark]}>
       {/* Luxury Ambient Canvas Background Svg */}
@@ -461,8 +561,8 @@ export const TaskDetailsScreen: React.FC = () => {
                 </View>
 
                 <Badge
-                  label={task.done ? 'COMPLETED' : 'IN PROGRESS'}
-                  variant={task.done ? 'green' : 'yellow'}
+                  label={statusBadge.label}
+                  variant={statusBadge.variant}
                   size="sm"
                 />
               </View>
@@ -486,15 +586,35 @@ export const TaskDetailsScreen: React.FC = () => {
                 )}
 
                 <View style={styles.metaChip}>
+                  <Calendar
+                    size={ResponsivePixels.size12}
+                    color={Colors.AccentYellow}
+                    strokeWidth={2.2}
+                  />
+                  <Text style={styles.metaChipText}>{shortDueLabel}</Text>
+                </View>
+
+                <View style={styles.metaChip}>
                   <Clock
                     size={ResponsivePixels.size12}
                     color={Colors.DisabledGrayText}
                     strokeWidth={2.2}
                   />
-                  <Text style={styles.metaChipText}>
-                    {task.time || 'Flexible Time'}
-                  </Text>
+                  <Text style={styles.metaChipText}>{displayTime}</Text>
                 </View>
+
+                {isRecurring && (
+                  <View style={styles.metaChip}>
+                    <Repeat
+                      size={ResponsivePixels.size12}
+                      color={Colors.LavenderPurple}
+                      strokeWidth={2.2}
+                    />
+                    <Text style={styles.metaChipText}>
+                      {task.recurrence!.toUpperCase()}
+                    </Text>
+                  </View>
+                )}
 
                 {subtasksList.length > 0 && (
                   <View style={styles.metaChip}>
@@ -525,7 +645,9 @@ export const TaskDetailsScreen: React.FC = () => {
               <Volume2
                 size={ResponsivePixels.size18}
                 color={
-                  isDarkMode ? Colors.SoftVioletAccent : Colors.MindfulTextAccent
+                  isDarkMode
+                    ? Colors.SoftVioletAccent
+                    : Colors.MindfulTextAccent
                 }
                 strokeWidth={2.4}
               />
@@ -579,7 +701,9 @@ export const TaskDetailsScreen: React.FC = () => {
               <Volume2
                 size={ResponsivePixels.size15}
                 color={
-                  isDarkMode ? Colors.SoftVioletAccent : Colors.MindfulTextAccent
+                  isDarkMode
+                    ? Colors.SoftVioletAccent
+                    : Colors.MindfulTextAccent
                 }
                 strokeWidth={2.4}
               />
@@ -809,7 +933,7 @@ export const TaskDetailsScreen: React.FC = () => {
                     isDarkMode && styles.textWhite,
                   ]}
                 >
-                  {task.date || 'Today'}
+                  {displayDueLabel}
                 </Text>
               </View>
             </View>
@@ -835,7 +959,36 @@ export const TaskDetailsScreen: React.FC = () => {
                     isDarkMode && styles.textWhite,
                   ]}
                 >
-                  {task.time || 'Flexible'}
+                  {displayTime}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.parameterItem}>
+              <Repeat
+                size={ResponsivePixels.size14}
+                color={Colors.DisabledGrayText}
+                strokeWidth={2.2}
+              />
+              <View>
+                <Text
+                  style={[
+                    styles.parameterLabel,
+                    isDarkMode && styles.textMuted,
+                  ]}
+                >
+                  Repeat Cadence
+                </Text>
+                <Text
+                  style={[
+                    styles.parameterValue,
+                    isDarkMode && styles.textWhite,
+                  ]}
+                >
+                  {task.recurrence && task.recurrence !== 'none'
+                    ? task.recurrence.charAt(0).toUpperCase() +
+                      task.recurrence.slice(1)
+                    : 'Once'}
                 </Text>
               </View>
             </View>
@@ -844,7 +997,9 @@ export const TaskDetailsScreen: React.FC = () => {
               <Sparkles
                 size={ResponsivePixels.size14}
                 color={
-                  isDarkMode ? Colors.SoftVioletAccent : Colors.MindfulTextAccent
+                  isDarkMode
+                    ? Colors.SoftVioletAccent
+                    : Colors.MindfulTextAccent
                 }
                 strokeWidth={2.2}
               />
@@ -867,6 +1022,84 @@ export const TaskDetailsScreen: React.FC = () => {
                 </Text>
               </View>
             </View>
+          </View>
+
+          {/* Quick Reschedule Pills */}
+          <View
+            style={[
+              styles.quickRescheduleWrap,
+              isDarkMode && { borderTopColor: Colors.CarbonSlate },
+            ]}
+          >
+            <Text
+              style={[
+                styles.quickRescheduleLabel,
+                isDarkMode && styles.textMuted,
+              ]}
+            >
+              QUICK RESCHEDULE
+            </Text>
+            <ScrollView
+              horizontal
+              showsHorizontalScrollIndicator={false}
+              contentContainerStyle={styles.quickRescheduleRow}
+            >
+              {[
+                { key: 'today', label: 'Today', iso: todayISO },
+                { key: 'tomorrow', label: 'Tomorrow', iso: tomorrowISO },
+                { key: 'next_week', label: 'Next Week', iso: nextWeekISO },
+                { key: 'anytime', label: 'Anytime', iso: null },
+              ].map(preset => {
+                const isActive = resolvedDueDate === preset.iso;
+                return (
+                  <TouchableOpacity
+                    key={preset.key}
+                    activeOpacity={0.8}
+                    onPress={() => handleQuickReschedule(preset.iso)}
+                    style={[
+                      styles.rescheduleChip,
+                      isDarkMode && styles.rescheduleChipDark,
+                      isActive && styles.rescheduleChipActive,
+                    ]}
+                  >
+                    <Text
+                      style={[
+                        styles.rescheduleChipText,
+                        isDarkMode && styles.rescheduleChipTextDark,
+                        isActive && styles.rescheduleChipTextActive,
+                      ]}
+                    >
+                      {preset.label}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+
+              <TouchableOpacity
+                activeOpacity={0.8}
+                onPress={() => setIsReschedulePickerOpen(true)}
+                style={[
+                  styles.rescheduleChip,
+                  isDarkMode && styles.rescheduleChipDark,
+                ]}
+              >
+                <Calendar
+                  size={ResponsivePixels.size12}
+                  color={
+                    isDarkMode ? Colors.AccentYellow : Colors.MindfulTextAccent
+                  }
+                  strokeWidth={2.3}
+                />
+                <Text
+                  style={[
+                    styles.rescheduleChipText,
+                    isDarkMode && { color: Colors.AccentYellow },
+                  ]}
+                >
+                  Pick Date
+                </Text>
+              </TouchableOpacity>
+            </ScrollView>
           </View>
         </View>
 
@@ -941,6 +1174,25 @@ export const TaskDetailsScreen: React.FC = () => {
           setIsEditModalOpen(false);
           navigation.goBack();
         }}
+      />
+
+      {/* Quick Reschedule Calendar Picker */}
+      <UnifiedSchedulePickerModal
+        visible={isReschedulePickerOpen}
+        mode="date"
+        title="Reschedule Task"
+        badgeText="RESCHEDULE HORIZON"
+        value={parseLocalISODate(resolvedDueDate || todayISO) || new Date()}
+        minimumDate={new Date()}
+        allowAnytime={true}
+        isAnytime={resolvedDueDate === null}
+        onSelectAnytime={() => handleQuickReschedule(null)}
+        onChange={(_e, date) => {
+          if (date) {
+            handleQuickReschedule(toLocalISODate(date));
+          }
+        }}
+        onClose={() => setIsReschedulePickerOpen(false)}
       />
     </View>
   );
@@ -1363,6 +1615,54 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.poppins.semiBold,
     fontSize: ResponsivePixels.size13,
     color: Colors.RegiusInk,
+  },
+  quickRescheduleWrap: {
+    marginTop: ResponsivePixels.size4,
+    paddingTop: ResponsivePixels.size12,
+    borderTopWidth: 1,
+    borderTopColor: Colors.TaskDetailDivider,
+    gap: ResponsivePixels.size8,
+  },
+  quickRescheduleLabel: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: ResponsivePixels.size10_5,
+    color: Colors.MutedSlateSubtext,
+    letterSpacing: 0.6,
+  },
+  quickRescheduleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: ResponsivePixels.size8,
+  },
+  rescheduleChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: ResponsivePixels.size5,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size6,
+    borderRadius: ResponsivePixels.size16,
+    backgroundColor: Colors.CreamSurfaceAlt,
+    borderWidth: 1,
+    borderColor: Colors.TaskDetailDivider,
+  },
+  rescheduleChipDark: {
+    backgroundColor: Colors.DarkCheckboxUnchecked,
+    borderColor: Colors.DarkBorderSlate,
+  },
+  rescheduleChipActive: {
+    backgroundColor: Colors.DarkElevatedNero,
+    borderColor: Colors.DarkBorder,
+  },
+  rescheduleChipText: {
+    fontFamily: Fonts.poppins.semiBold,
+    fontSize: ResponsivePixels.size11_5,
+    color: Colors.MidnightCharcoal,
+  },
+  rescheduleChipTextDark: {
+    color: Colors.SteelMist,
+  },
+  rescheduleChipTextActive: {
+    color: Colors.PureWhite,
   },
   deleteSection: {
     marginTop: ResponsivePixels.size4,

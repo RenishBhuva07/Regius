@@ -253,7 +253,7 @@ const HomeScreen: React.FC = () => {
             <TouchableOpacity
               activeOpacity={0.85}
               style={styles.addTaskBtn}
-              onPress={openTaskModal}
+              onPress={() => openTaskModal()}
             >
               <Text style={styles.addTaskBtnText}>Add Task</Text>
             </TouchableOpacity>

@@ -42,23 +42,11 @@ import { DailyQuoteFooter } from '../../Common/DailyQuoteFooter';
 import { useAppTheme } from '../../Theme/useAppTheme';
 import DashboardHeader, { HEADER_HEIGHT } from './Components/DashboardHeader';
 import FlowFilterTabs, { FlowFilter } from './Components/FlowFilterTabs';
-
-// Parse 12h/24h time string into minutes since midnight
-function parseTimeToMinutes(timeStr?: string): number {
-  if (!timeStr) return 9999;
-  const clean = timeStr.trim().toUpperCase();
-  const match = clean.match(/(\d{1,2}):(\d{2})\s*(AM|PM)?/);
-  if (!match) return 9999;
-
-  let hours = parseInt(match[1], 10);
-  const minutes = parseInt(match[2], 10);
-  const modifier = match[3];
-
-  if (modifier === 'PM' && hours < 12) hours += 12;
-  if (modifier === 'AM' && hours === 12) hours = 0;
-
-  return hours * 60 + minutes;
-}
+import {
+  isTaskRelevantToday,
+  parseTimeToMinutes,
+  toLocalISODate,
+} from '../../Utils/taskDateUtils';
 
 export const DashboardScreen: React.FC = () => {
   const insets = useSafeAreaInsets();
@@ -194,10 +182,17 @@ export const DashboardScreen: React.FC = () => {
     return new Date().toLocaleDateString('en-US', options);
   }, []);
 
+  // Scope dashboard tasks to Today (overdue pending + due today + completed today)
+  const todayISO = toLocalISODate();
+  const todayTasks = useMemo(
+    () => tasks.filter(t => isTaskRelevantToday(t, todayISO)),
+    [tasks, todayISO],
+  );
+
   // Compute real metrics from context data in standard sequence: Tasks, Reminders, Habits
   const completedTasksCount = useMemo(
-    () => tasks.filter(t => t.done).length,
-    [tasks],
+    () => todayTasks.filter(t => t.done).length,
+    [todayTasks],
   );
   const completedRemindersCount = useMemo(
     () => reminders.filter(r => r.done).length,
@@ -213,13 +208,13 @@ export const DashboardScreen: React.FC = () => {
     const items: TimelineItem[] = [];
 
     // 1. Tasks (Gold/Yellow theme matching Daily Balance)
-    tasks.forEach(t => {
+    todayTasks.forEach(t => {
       items.push({
         id: `task-${t.id}`,
         originalId: t.id,
         type: 'task',
         time: t.time || '',
-        timeMinutes: parseTimeToMinutes(t.time),
+        timeMinutes: parseTimeToMinutes(t.dueTime ?? t.time),
         title: t.label,
         subtitle: t.note,
         category: 'Task',
@@ -274,7 +269,7 @@ export const DashboardScreen: React.FC = () => {
       }
       return a.title.localeCompare(b.title);
     });
-  }, [tasks, reminders, habits]);
+  }, [todayTasks, reminders, habits]);
 
   // Filter without modifying order
   const filteredTimeline = useMemo(() => {
@@ -412,7 +407,7 @@ export const DashboardScreen: React.FC = () => {
 
           {/* Voice briefing card */}
           <DailyBriefingCard
-            taskCount={tasks.length}
+            taskCount={todayTasks.length}
             reminderCount={reminders.length}
             habitCount={habits.length}
             assistantName={assistantName}
@@ -423,7 +418,7 @@ export const DashboardScreen: React.FC = () => {
           {/* Daily balance grid */}
           <DailyBalanceGrid
             tasksCompleted={completedTasksCount}
-            tasksTotal={tasks.length}
+            tasksTotal={todayTasks.length}
             remindersCompleted={completedRemindersCount}
             remindersTotal={reminders.length}
             habitsCompleted={completedHabitsCount}

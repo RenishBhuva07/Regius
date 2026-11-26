@@ -27,6 +27,8 @@ import {
   Briefcase,
   Pencil,
   Flame,
+  Calendar,
+  Repeat,
 } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
 import { Typography } from '../../../Theme/Typographys';
@@ -34,8 +36,13 @@ import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../../Theme/useAppTheme';
 import { Badge } from '../../../Common/Badge';
 import { getCutoutCardPath } from '../../../Common/CutoutCardSvg';
-import { Task } from '../../../Context/TaskReminderContext';
+import { Task, useTaskReminder } from '../../../Context/TaskReminderContext';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
+import {
+  toLocalISODate,
+  resolveTaskDueDate,
+  formatShortDateBadge,
+} from '../../../Utils/taskDateUtils';
 
 interface TaskCardItemProps {
   task: Task;
@@ -43,6 +50,7 @@ interface TaskCardItemProps {
   onToggle: (id: string) => void;
   onEdit?: (task: Task) => void;
   onDetails?: (task: Task) => void;
+  onReschedule?: (task: Task) => void;
 }
 
 export const TaskCardItem: React.FC<TaskCardItemProps> = ({
@@ -51,16 +59,24 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
   onToggle,
   onEdit,
   onDetails,
+  onReschedule,
 }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const translateX = useRef(new Animated.Value(0)).current;
+  const rescheduleScaleAnim = useRef(new Animated.Value(1)).current;
   const detailsScaleAnim = useRef(new Animated.Value(1)).current;
   const editScaleAnim = useRef(new Animated.Value(1)).current;
   const currentX = useRef(0);
   const isOpenRef = useRef(false);
 
-  const ACTIONS_WIDTH = ResponsivePixels.size138;
+  const actionButtonCount =
+    (onReschedule ? 1 : 0) + (onDetails ? 1 : 0) + (onEdit ? 1 : 0);
+  const ACTIONS_WIDTH =
+    actionButtonCount >= 3 ? ResponsivePixels.size200 : ResponsivePixels.size138;
+  const actionsWidthRef = useRef(ACTIONS_WIDTH);
+  actionsWidthRef.current = ACTIONS_WIDTH;
   const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
+  const { taskCategories } = useTaskReminder();
   const [localChecked, setLocalChecked] = useState(isChecked);
 
   const initialW = Dimensions.get('window').width - ResponsivePixels.size16;
@@ -101,16 +117,17 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
   }, [translateX]);
 
   const openSwipe = useCallback(() => {
+    const targetW = actionsWidthRef.current;
     Animated.spring(translateX, {
-      toValue: -ACTIONS_WIDTH,
+      toValue: -targetW,
       friction: 8,
       tension: 60,
       useNativeDriver: true,
     }).start(() => {
-      currentX.current = -ACTIONS_WIDTH;
+      currentX.current = -targetW;
       isOpenRef.current = true;
     });
-  }, [translateX, ACTIONS_WIDTH]);
+  }, [translateX]);
 
   const panResponder = useRef(
     PanResponder.create({
@@ -125,11 +142,12 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
         translateX.stopAnimation();
       },
       onPanResponderMove: (_, gestureState) => {
+        const maxW = actionsWidthRef.current;
         const newX = currentX.current + gestureState.dx;
         if (newX > 0) {
           translateX.setValue(0);
-        } else if (newX < -ACTIONS_WIDTH - 25) {
-          translateX.setValue(-ACTIONS_WIDTH - 25);
+        } else if (newX < -maxW - 25) {
+          translateX.setValue(-maxW - 25);
         } else {
           translateX.setValue(newX);
         }
@@ -192,29 +210,26 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
     handlePress();
   };
 
+  const animateChipScale = useCallback((anim: Animated.Value, toValue: number) => {
+    Animated.spring(anim, {
+      toValue,
+      tension: 250,
+      friction: 8,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
+  const handleReschedulePress = (e: any) => {
+    e?.stopPropagation?.();
+    closeSwipe();
+    onReschedule?.(task);
+  };
+
   const handleDetailsPress = (e: any) => {
     e?.stopPropagation?.();
     closeSwipe();
     onDetails?.(task);
   };
-
-  const handlePressInDetails = useCallback(() => {
-    Animated.spring(detailsScaleAnim, {
-      toValue: 0.92,
-      tension: 250,
-      friction: 8,
-      useNativeDriver: true,
-    }).start();
-  }, [detailsScaleAnim]);
-
-  const handlePressOutDetails = useCallback(() => {
-    Animated.spring(detailsScaleAnim, {
-      toValue: 1,
-      tension: 250,
-      friction: 8,
-      useNativeDriver: true,
-    }).start();
-  }, [detailsScaleAnim]);
 
   const handleEditPress = (e: any) => {
     e?.stopPropagation?.();
@@ -222,31 +237,34 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
     onEdit?.(task);
   };
 
-  const handlePressInEdit = useCallback(() => {
-    Animated.spring(editScaleAnim, {
-      toValue: 0.92,
-      tension: 250,
-      friction: 8,
-      useNativeDriver: true,
-    }).start();
-  }, [editScaleAnim]);
-
-  const handlePressOutEdit = useCallback(() => {
-    Animated.spring(editScaleAnim, {
-      toValue: 1,
-      tension: 250,
-      friction: 8,
-      useNativeDriver: true,
-    }).start();
-  }, [editScaleAnim]);
-
   const actionsOpacity = translateX.interpolate({
     inputRange: [-ACTIONS_WIDTH, -25, 0],
     outputRange: [1, 0.5, 0],
     extrapolate: 'clamp',
   });
 
+  const customCategory = taskCategories.find(
+    c => c.id === task.category && c.isCustom,
+  );
+
   const renderIcon = () => {
+    if (customCategory) {
+      const CustomIcon = customCategory.Icon;
+      return (
+        <CustomIcon
+          size={ResponsivePixels.size18}
+          width={ResponsivePixels.size18}
+          height={ResponsivePixels.size18}
+          color={
+            localChecked
+              ? isDarkMode
+                ? Colors.AccentGreen
+                : Colors.GreenGracious
+              : customCategory.accentColor
+          }
+        />
+      );
+    }
     if (task.category === 'sport') {
       return (
         <Heart
@@ -329,6 +347,18 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
   };
 
   const getCategoryStyles = () => {
+    if (customCategory) {
+      return {
+        bg: isDarkMode ? Colors.DarkCardBackground : customCategory.bgColor,
+        border: customCategory.borderColor,
+        accent: customCategory.accentColor,
+        shadow: Colors.PureBlack,
+        iconBg: isDarkMode
+          ? Colors.DarkCheckboxUnchecked
+          : Colors.PureWhite,
+        auraColor: customCategory.accentColor,
+      };
+    }
     if (task.category === 'sport') {
       return {
         bg: isDarkMode ? Colors.WellnessDarkBg : Colors.WellnessTintLight,
@@ -360,9 +390,25 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
   };
 
   const catStyle = getCategoryStyles();
+  const todayISO = toLocalISODate();
+  const resolvedDueDate = resolveTaskDueDate(task, todayISO);
+  const isOverdue = Boolean(
+    resolvedDueDate && resolvedDueDate < todayISO && !localChecked,
+  );
+  const showDateChip =
+    resolvedDueDate === null ||
+    (resolvedDueDate !== todayISO && resolvedDueDate !== undefined);
+  const dateBadgeText = isOverdue
+    ? 'OVERDUE'
+    : formatShortDateBadge(resolvedDueDate, todayISO);
+  const isRecurring = Boolean(task.recurrence && task.recurrence !== 'none');
+  const displayTime = task.dueTime !== undefined ? task.dueTime : task.time;
   const hasSubtasks = !!(task.subtasks && task.subtasks.length > 0);
   const hasFooter = !!(
-    task.time ||
+    displayTime ||
+    showDateChip ||
+    isOverdue ||
+    isRecurring ||
     task.priority ||
     task.voiceNudge ||
     hasSubtasks
@@ -375,11 +421,42 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
         style={[
           styles.actionsTray,
           {
+            width: ACTIONS_WIDTH,
             opacity: actionsOpacity,
           },
         ]}
         pointerEvents="box-none"
       >
+        {onReschedule && (
+          <Animated.View
+            style={[
+              styles.actionBtnAnimWrap,
+              {
+                transform: [{ scale: rescheduleScaleAnim }],
+              },
+            ]}
+          >
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPressIn={() => animateChipScale(rescheduleScaleAnim, 0.92)}
+              onPressOut={() => animateChipScale(rescheduleScaleAnim, 1)}
+              onPress={handleReschedulePress}
+              style={[styles.actionBtnBase, styles.actionBtnMove]}
+              accessibilityRole="button"
+              accessibilityLabel={`Reschedule ${task.label}`}
+            >
+              <View style={styles.actionIconAuraMove}>
+                <Calendar
+                  size={ResponsivePixels.size13_5}
+                  color={Colors.LavenderPurple}
+                  strokeWidth={2.6}
+                />
+              </View>
+              <Text style={styles.actionBtnText}>Move</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
+
         {onDetails && (
           <Animated.View
             style={[
@@ -391,10 +468,10 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
           >
             <TouchableOpacity
               activeOpacity={0.85}
-              onPressIn={handlePressInDetails}
-              onPressOut={handlePressOutDetails}
+              onPressIn={() => animateChipScale(detailsScaleAnim, 0.92)}
+              onPressOut={() => animateChipScale(detailsScaleAnim, 1)}
               onPress={handleDetailsPress}
-              style={styles.actionBtnDetails}
+              style={[styles.actionBtnBase, styles.actionBtnDetails]}
               accessibilityRole="button"
               accessibilityLabel={`View details for ${task.label}`}
             >
@@ -417,10 +494,10 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
           >
             <TouchableOpacity
               activeOpacity={0.85}
-              onPressIn={handlePressInEdit}
-              onPressOut={handlePressOutEdit}
+              onPressIn={() => animateChipScale(editScaleAnim, 0.92)}
+              onPressOut={() => animateChipScale(editScaleAnim, 1)}
               onPress={handleEditPress}
-              style={styles.actionBtnEdit}
+              style={[styles.actionBtnBase, styles.actionBtnEdit]}
               accessibilityRole="button"
               accessibilityLabel={`Edit ${task.label}`}
             >
@@ -598,7 +675,42 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
               ]}
             >
               <View style={styles.footerLeft}>
-                {task.time ? (
+                {isOverdue ? (
+                  <Badge
+                    label={`OVERDUE · ${formatShortDateBadge(resolvedDueDate, todayISO)}`}
+                    variant="red"
+                    size="sm"
+                  />
+                ) : showDateChip ? (
+                  <View
+                    style={[
+                      styles.timeTag,
+                      isDarkMode && {
+                        backgroundColor: Colors.DarkCheckboxUnchecked,
+                      },
+                    ]}
+                  >
+                    <Calendar
+                      size={ResponsivePixels.size11}
+                      color={
+                        isDarkMode
+                          ? Colors.AccentYellow
+                          : Colors.MindfulTextAccent
+                      }
+                      strokeWidth={2.2}
+                    />
+                    <Text
+                      style={[
+                        styles.timeText,
+                        isDarkMode && { color: Colors.PureWhite },
+                      ]}
+                    >
+                      {dateBadgeText}
+                    </Text>
+                  </View>
+                ) : null}
+
+                {displayTime ? (
                   <View
                     style={[
                       styles.timeTag,
@@ -620,10 +732,35 @@ export const TaskCardItem: React.FC<TaskCardItemProps> = ({
                         isDarkMode && { color: Colors.SteelMist },
                       ]}
                     >
-                      {task.time}
+                      {displayTime}
                     </Text>
                   </View>
                 ) : null}
+
+                {isRecurring && (
+                  <View
+                    style={[
+                      styles.timeTag,
+                      isDarkMode && {
+                        backgroundColor: Colors.DarkCheckboxUnchecked,
+                      },
+                    ]}
+                  >
+                    <Repeat
+                      size={ResponsivePixels.size11}
+                      color={Colors.AccentGreen}
+                      strokeWidth={2.2}
+                    />
+                    <Text
+                      style={[
+                        styles.timeText,
+                        isDarkMode && { color: Colors.SteelMist },
+                      ]}
+                    >
+                      {task.recurrence}
+                    </Text>
+                  </View>
+                )}
 
                 {task.priority === 'high' && (
                   <Badge label="HIGH PRIORITY" variant="red" size="sm" />
@@ -667,20 +804,19 @@ const styles = StyleSheet.create({
     right: 0,
     top: 0,
     bottom: 0,
-    width: ResponsivePixels.size138,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    gap: ResponsivePixels.size8,
+    gap: ResponsivePixels.size6,
     paddingRight: ResponsivePixels.size2,
     zIndex: 1,
   },
   actionBtnAnimWrap: {
-    width: ResponsivePixels.size60,
+    width: ResponsivePixels.size58,
     height: ResponsivePixels.size56,
   },
-  actionBtnDetails: {
-    width: ResponsivePixels.size60,
+  actionBtnBase: {
+    width: ResponsivePixels.size58,
     height: ResponsivePixels.size56,
     backgroundColor: Colors.NeroBlack,
     borderRadius: ResponsivePixels.size18,
@@ -694,6 +830,32 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: ResponsivePixels.size4,
+  },
+  actionBtnMove: {
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.LavenderPurple,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.38,
+        shadowRadius: 7,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
+  },
+  actionIconAuraMove: {
+    width: ResponsivePixels.size28,
+    height: ResponsivePixels.size28,
+    borderRadius: ResponsivePixels.size14,
+    backgroundColor: withAlpha(Colors.LavenderPurple, 0.22),
+    borderWidth: 1.2,
+    borderColor: withAlpha(Colors.LavenderPurple, 0.48),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: ResponsivePixels.size3,
+  },
+  actionBtnDetails: {
     ...Platform.select({
       ios: {
         shadowColor: Colors.AccentAmber,
@@ -718,20 +880,6 @@ const styles = StyleSheet.create({
     marginBottom: ResponsivePixels.size3,
   },
   actionBtnEdit: {
-    width: ResponsivePixels.size60,
-    height: ResponsivePixels.size56,
-    backgroundColor: Colors.NeroBlack,
-    borderRadius: ResponsivePixels.size18,
-    borderWidth: 1.2,
-    borderTopWidth: 1.8,
-    borderTopColor: withAlpha(Colors.PureWhite, 0.45),
-    borderLeftColor: withAlpha(Colors.PureWhite, 0.14),
-    borderRightColor: withAlpha(Colors.PureWhite, 0.14),
-    borderBottomWidth: 3.5,
-    borderBottomColor: Colors.DarkChipBevelAbyss,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: ResponsivePixels.size4,
     ...Platform.select({
       ios: {
         shadowColor: Colors.AccentYellow,

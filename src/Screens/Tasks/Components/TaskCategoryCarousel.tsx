@@ -7,13 +7,17 @@ import {
   FlatList,
   Platform,
 } from 'react-native';
-import { Filter } from 'lucide-react-native';
+import { Filter, Search } from 'lucide-react-native';
 import { Typography } from '../../../Theme/Typographys';
 import { Fonts } from '../../../Theme/fonts';
 import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { SVGS } from '../../../Assets/Images';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
-import { Task } from '../../../Context/TaskReminderContext';
+import {
+  Task,
+  TaskCategoryItem,
+  useTaskReminder,
+} from '../../../Context/TaskReminderContext';
 import { CircularProgress } from '../../../Common/CircularProgress';
 import { OfficeBagIcon } from '../../../Common/EmblemIcons';
 import { useAppTheme } from '../../../Theme/useAppTheme';
@@ -75,6 +79,8 @@ interface TaskCategoryCarouselProps {
   selectedCategory: string | null;
   onSelectCategory: (id: string | null) => void;
   onAddPress: () => void;
+  isSearchOpen?: boolean;
+  onToggleSearch?: () => void;
 }
 
 export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
@@ -82,9 +88,33 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
   selectedCategory,
   onSelectCategory,
   onAddPress,
+  isSearchOpen = false,
+  onToggleSearch,
 }) => {
-  const { isDarkMode, textPrimary, borderLight, cardBg } =
-    useAppTheme();
+  const { isDarkMode, textPrimary, borderLight, cardBg } = useAppTheme();
+  const { taskCategories } = useTaskReminder();
+
+  const carouselCategories = React.useMemo<CategoryItem[]>(() => {
+    if (!taskCategories || taskCategories.length === 0) {
+      return CATEGORY_ITEMS;
+    }
+    return taskCategories.map((cat: TaskCategoryItem) => {
+      const preset = CATEGORY_ITEMS.find(item => item.id === cat.id);
+      if (preset) return preset;
+      return {
+        id: cat.id,
+        label: cat.label,
+        bgColor: cat.bgColor,
+        borderColor: cat.borderColor,
+        shadowColor: cat.accentColor || cat.shadowColor,
+        Icon: cat.Icon,
+        accentColor: cat.accentColor,
+        trackColor: cat.borderColor,
+        progressColor: cat.checkColor || cat.accentColor,
+        textColor: cat.checkColor || cat.accentColor,
+      };
+    });
+  }, [taskCategories]);
 
   const getCategoryMetrics = (catId: string) => {
     const catTasks = tasks.filter(t => {
@@ -117,6 +147,36 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
         </View>
 
         <View style={styles.sectionActions}>
+          {onToggleSearch && (
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={[
+                styles.filterBtn,
+                isDarkMode && {
+                  backgroundColor: cardBg,
+                  borderColor: borderLight,
+                },
+                isSearchOpen && styles.filterBtnActive,
+              ]}
+              onPress={onToggleSearch}
+              accessibilityRole="button"
+              accessibilityLabel={
+                isSearchOpen ? 'Hide task search' : 'Search tasks'
+              }
+            >
+              <Search
+                size={ResponsivePixels.size15}
+                color={
+                  isSearchOpen
+                    ? Colors.PureWhite
+                    : isDarkMode
+                    ? Colors.PureWhite
+                    : Colors.MidnightCharcoal
+                }
+                strokeWidth={2.2}
+              />
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             activeOpacity={0.7}
             style={[
@@ -128,6 +188,8 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
               selectedCategory !== null && styles.filterBtnActive,
             ]}
             onPress={() => onSelectCategory(selectedCategory ? null : 'works')}
+            accessibilityRole="button"
+            accessibilityLabel="Toggle category filter"
           >
             <Filter
               size={ResponsivePixels.size15}
@@ -156,7 +218,7 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
       {/* Horizontal Carousel */}
       <FlatList
         horizontal
-        data={CATEGORY_ITEMS}
+        data={carouselCategories}
         keyExtractor={item => item.id}
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.categoriesRow}
@@ -170,14 +232,18 @@ export const TaskCategoryCarousel: React.FC<TaskCategoryCarouselProps> = ({
               ? Colors.WorkDarkBg
               : cat.id === 'sport'
               ? Colors.WellnessDarkBg
-              : Colors.MindfulDarkBg
+              : cat.id === 'habits'
+              ? Colors.MindfulDarkBg
+              : Colors.DarkCardBackground
             : cat.bgColor;
           const cardBorderColor = isDarkMode
             ? cat.id === 'works'
               ? Colors.WorkDarkBorder
               : cat.id === 'sport'
               ? Colors.GreenGracious
-              : Colors.LavenderPurple
+              : cat.id === 'habits'
+              ? Colors.LavenderPurple
+              : cat.borderColor
             : cat.borderColor;
           const circularTrack = isDarkMode
             ? withAlpha(Colors.PureWhite, 0.12)

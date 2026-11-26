@@ -21,6 +21,11 @@ import { useAppTheme } from '../../../Theme/useAppTheme';
 import { Badge } from '../../../Common/Badge';
 import { Task } from '../../../Context/TaskReminderContext';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
+import {
+  toLocalISODate,
+  isTaskRelevantToday,
+  classifyTaskHorizon,
+} from '../../../Utils/taskDateUtils';
 
 interface TaskProductivityBentoProps {
   tasks: Task[];
@@ -44,9 +49,21 @@ const FocusBarBackgroundSvg: React.FC = React.memo(() => (
           <Stop offset="100%" stopColor="#141519" stopOpacity={1} />
         </LinearGradient>
         <LinearGradient id="brassFocusRule" x1="0%" y1="0%" x2="100%" y2="0%">
-          <Stop offset="0%" stopColor={Colors.AccentYellow} stopOpacity={0.04} />
-          <Stop offset="30%" stopColor={Colors.AccentYellow} stopOpacity={0.18} />
-          <Stop offset="70%" stopColor={Colors.AccentYellow} stopOpacity={0.04} />
+          <Stop
+            offset="0%"
+            stopColor={Colors.AccentYellow}
+            stopOpacity={0.04}
+          />
+          <Stop
+            offset="30%"
+            stopColor={Colors.AccentYellow}
+            stopOpacity={0.18}
+          />
+          <Stop
+            offset="70%"
+            stopColor={Colors.AccentYellow}
+            stopOpacity={0.04}
+          />
           <Stop offset="100%" stopColor={Colors.AccentYellow} stopOpacity={0} />
         </LinearGradient>
       </Defs>
@@ -112,21 +129,43 @@ export const TaskProductivityBento: React.FC<TaskProductivityBentoProps> = ({
   tasks,
 }) => {
   const { isDarkMode } = useAppTheme();
-  const completedCount = useMemo(
-    () => tasks.filter(t => t.done).length,
-    [tasks],
+  const todayISO = toLocalISODate();
+
+  const todayTasks = useMemo(
+    () => tasks.filter(t => isTaskRelevantToday(t, todayISO)),
+    [tasks, todayISO],
   );
-  const totalCount = tasks.length;
+  const upcomingCount = useMemo(
+    () =>
+      tasks.filter(
+        t => !t.done && classifyTaskHorizon(t, todayISO) === 'upcoming',
+      ).length,
+    [tasks, todayISO],
+  );
+
+  const completedCount = useMemo(
+    () => todayTasks.filter(t => t.done).length,
+    [todayTasks],
+  );
+  const totalCount = todayTasks.length;
   const pendingCount = totalCount - completedCount;
 
   const progressPercent =
     totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
   const motivationStatus = useMemo(() => {
-    if (totalCount === 0) return 'Add your first task to start';
-    if (progressPercent === 100) return 'All daily tasks completed';
+    if (totalCount === 0) {
+      return upcomingCount > 0
+        ? `Clear today · ${upcomingCount} upcoming`
+        : 'Add your first task to start';
+    }
+    if (progressPercent === 100) {
+      return upcomingCount > 0
+        ? `Today done · ${upcomingCount} upcoming`
+        : 'All daily tasks completed';
+    }
     return `${pendingCount} of ${totalCount} remaining today`;
-  }, [totalCount, pendingCount, progressPercent]);
+  }, [totalCount, pendingCount, progressPercent, upcomingCount]);
 
   return (
     <View style={styles.cardShadowWrapper}>
@@ -170,7 +209,10 @@ export const TaskProductivityBento: React.FC<TaskProductivityBentoProps> = ({
           <View style={styles.rightStats}>
             <View style={styles.glassStatPill}>
               <View
-                style={[styles.statDot, { backgroundColor: Colors.AccentYellow }]}
+                style={[
+                  styles.statDot,
+                  { backgroundColor: Colors.AccentYellow },
+                ]}
               />
               <Text style={styles.statNumber}>{pendingCount}</Text>
               <Text style={styles.statCaption}>left</Text>
@@ -178,7 +220,10 @@ export const TaskProductivityBento: React.FC<TaskProductivityBentoProps> = ({
 
             <View style={styles.glassStatPill}>
               <View
-                style={[styles.statDot, { backgroundColor: Colors.AccentGreen }]}
+                style={[
+                  styles.statDot,
+                  { backgroundColor: Colors.AccentGreen },
+                ]}
               />
               <Text style={styles.statNumber}>{completedCount}</Text>
               <Text style={styles.statCaption}>done</Text>
