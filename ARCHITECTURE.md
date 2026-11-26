@@ -210,7 +210,7 @@ The TTS pipeline produces human-grade, natural 24kHz speech using Kokoro-82M:
 
 ### 4.4 Conversational Command Interpretation & Execution
 
-- **`IntentRecognitionService.ts`**: Analyzes spoken text, extracts parameters (title, date, time, category, priority, frequency), and detects missing required slots.
+- **`IntentRecognitionService.ts`**: Analyzes spoken text, extracts parameters (title, relative/calendar future dates via `parseNaturalFutureDate`, time, category, priority, frequency), and detects missing required slots.
 - **Slot Clarification**: If a required parameter is missing (e.g., user says _"Add a task"_ without a title), the system constructs a `PendingClarification` object and prompts the user verbally.
 - **Allowlisted Execution**: `VoiceCommandService.execute()` validates parameters and modifies `TaskReminderContext` using safe, synchronous operations.
 
@@ -261,9 +261,9 @@ graph LR
 ### 5.1 Context Roles & Scopes
 
 1. **`TaskReminderContext`**:
-   - Manages in-memory state for `tasks`, `reminders`, and `habits`.
-   - Exposes modal control functions (`openTaskModal`, `closeTaskModal`, etc.).
-   - Provides item toggle and creation methods with auto-generated IDs and date stamps.
+   - Manages canonical state for `tasks` (persisted via `@regius_tasks_v1`), shared `taskCategories` (persisted via `@regius_task_categories_v1`), `reminders`, and `habits`.
+   - Uses `src/Utils/taskDateUtils.ts` for timezone-safe local `YYYY-MM-DD` due dates, horizon classification (`overdue`, `today`, `upcoming`, `anytime`), recurring task roll-forward (`daily`, `weekdays`, `weekly`, `monthly`), and today-scoped Dashboard filtering.
+   - Exposes modal control functions with optional prefill (`openTaskModal(prefill?)`, `closeTaskModal`), rescheduling (`rescheduleTask`, `rescheduleOverdueToToday`), and item toggle/creation methods.
 2. **`VoiceWakeWordContext`**:
    - Maintains the centralized `VoiceStateMachine` instance.
    - Manages the native Voice STT lifecycle and restarts.
@@ -434,7 +434,7 @@ graph TD
     end
 
     subgraph Feature_Layer [Tier 2: Cross-Feature Modular Modules (src/Components/)]
-        AddModal[AddModal/ Subcomponents\nCategoryChipSelector, ScheduleTriggerRow, PrioritySelector,\nSubtaskListSection, ReminderAlertSelector]
+        AddModal[AddModal/ Subcomponents\nCategoryChipSelector, ScheduleTriggerRow, PrioritySelector,\nRecurrenceSelector, SubtaskListSection, ReminderAlertSelector]
     end
 
     subgraph Screen_Layer [Tier 3: Screen-Specific Components (src/Screens/<Screen>/Components/)]

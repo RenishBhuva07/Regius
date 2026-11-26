@@ -142,9 +142,10 @@ stateDiagram-v2
 ### 4.4 Task, Reminder, and Habit Management
 
 - **Task Management**:
-  - Filter by category: Works (`#FFFCEB`), Sport (`#EDFDF5`), Habits (`#EFF2FE`), Events (`#FFF3E0`).
-  - Toggle done state with tactile custom checkbox (`24x24`, `#EFF1F4` unchecked, `#E8FDF0` checked with `#52D22E` checkmark).
-  - Add task via modal or full screen with priority (`low`, `medium`, `high`), due date, due time, and subtasks.
+  - 4-Horizon temporal organization via segmented tabs: **Today** (with Overdue recovery banner & one-tap Move to Today), **Upcoming** (interactive Future Horizon date strip + chronological day groups + Jump to Future Date calendar), **Anytime** (flexible backlog), and **Done** (completed archive).
+  - Filter by category: All Categories (default), Works (`#FFFCEB`), Sport (`#EDFDF5`), Habits (`#EFF2FE`), Events (`#FFF3E0`), plus persisted custom categories, alongside collapsible search, priority filter (`All`, `High`, `Medium`, `Low`), and sort (`Smart`, `Time`, `Priority`).
+  - Toggle done state with tactile custom checkbox (`24x24`, `#EFF1F4` unchecked, `#E8FDF0` checked with `#52D22E` checkmark), swipe left on cards for 3D `Move` (quick reschedule), `Details`, and `Edit` actions, or quick-reschedule directly inside `TaskDetailsScreen`.
+  - Add task via modal with priority (`low`, `medium`, `high`), any future due date via Solar Calendar grid or quick presets (`Today`, `Tomorrow`, `This Weekend`, `Next Week`, `Anytime`), optional due time (`Anytime` or specific time), repeat cadence (`Once`, `Daily`, `Weekdays`, `Weekly`, `Monthly`), context-aware date/category prefill, and subtasks.
 - **Reminder Management**:
   - Upcoming vs. Completed tabs.
   - Time, date, recurrence (`Once`, `Daily`, `Every 2 hrs`), sound, and urgent alarm flags.
@@ -176,18 +177,18 @@ stateDiagram-v2
 
 ## 5. Feature Prioritization Matrix
 
-| Priority | Feature Area                                   | Description                                                                                                       | Implementation Status                                                           |
-| :------- | :--------------------------------------------- | :---------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------ |
-| **P0**   | **Voice Assistant Core**                       | Wake word detection, state machine, STT listening, command interpretation, slot filling, task/reminder execution. | **Implemented**                                                                 |
-| **P0**   | **Neural TTS & Audio**                         | Kokoro-82M cloud synthesis, audio caching, bundled fallback WAV playback, TrackPlayer integration.                | **Implemented**                                                                 |
+| Priority | Feature Area                                   | Description                                                                                                           | Implementation Status                                                           |
+| :------- | :--------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------ |
+| **P0**   | **Voice Assistant Core**                       | Wake word detection, state machine, STT listening, command interpretation, slot filling, task/reminder execution.     | **Implemented**                                                                 |
+| **P0**   | **Neural TTS & Audio**                         | Kokoro-82M cloud synthesis, audio caching, bundled fallback WAV playback, TrackPlayer integration.                    | **Implemented**                                                                 |
 | **P0**   | **Core UI & Theming**                          | Cream canvas, asymmetric cards, 3D badges, curved SVG tab bar, app-wide Obsidian dark mode, 5 prestige theme presets. | **Implemented**                                                                 |
-| **P0**   | **Tasks & Reminders Context**                  | In-memory CRUD, category filtering, toggle completion, modal creators.                                            | **Implemented**                                                                 |
-| **P0**   | **Voice Settings Persistence**                 | AsyncStorage storage for selected voice, speech speed, wake word phrase, and auto-speak flags.                    | **Implemented**                                                                 |
-| **P1**   | **Offline Local Persistence for Tasks/Habits** | Hydrating `TaskReminderContext` state to/from `@react-native-async-storage/async-storage`.                        | **Partial** (Settings persisted, Tasks/Habits in-memory)                        |
-| **P1**   | **OS-Level Scheduled Notifications**           | Native alarm/notification scheduling using local notification library.                                            | **Planned** (No notification lib installed yet)                                 |
-| **P1**   | **On-Device ONNX Kokoro TTS**                  | Truly offline neural TTS using bundled `.onnx` model via `onnxruntime-react-native`.                              | **Partial** (JSI bridge patched, requires model bundle)                         |
-| **P2**   | **Remote Backend Cloud Sync**                  | User authentication, cloud sync for tasks/reminders/habits via REST API.                                          | **Planned** (`src/api` folders created as scaffolding)                          |
-| **P2**   | **Subscription & In-App Purchases**            | Regius Royal membership (Unlimited AI Voice, Custom Wake Words, All 8 Luxury Themes, 2x XP boost, Cloud Sync).    | **Implemented** (`PremiumContext`, `SubscriptionScreen`, `SubscriptionSection`) |
+| **P0**   | **Tasks & Reminders Context**                  | In-memory CRUD, category filtering, toggle completion, modal creators.                                                | **Implemented**                                                                 |
+| **P0**   | **Voice Settings Persistence**                 | AsyncStorage storage for selected voice, speech speed, wake word phrase, and auto-speak flags.                        | **Implemented**                                                                 |
+| **P1**   | **Offline Local Persistence for Tasks/Habits** | Hydrating `TaskReminderContext` state to/from `@react-native-async-storage/async-storage`.                            | **Partial** (Settings persisted, Tasks/Habits in-memory)                        |
+| **P1**   | **OS-Level Scheduled Notifications**           | Native alarm/notification scheduling using local notification library.                                                | **Planned** (No notification lib installed yet)                                 |
+| **P1**   | **On-Device ONNX Kokoro TTS**                  | Truly offline neural TTS using bundled `.onnx` model via `onnxruntime-react-native`.                                  | **Partial** (JSI bridge patched, requires model bundle)                         |
+| **P2**   | **Remote Backend Cloud Sync**                  | User authentication, cloud sync for tasks/reminders/habits via REST API.                                              | **Planned** (`src/api` folders created as scaffolding)                          |
+| **P2**   | **Subscription & In-App Purchases**            | Regius Royal membership (Unlimited AI Voice, Custom Wake Words, All 8 Luxury Themes, 2x XP boost, Cloud Sync).        | **Implemented** (`PremiumContext`, `SubscriptionScreen`, `SubscriptionSection`) |
 
 ---
 

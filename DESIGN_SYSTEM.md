@@ -344,18 +344,19 @@ Used across screens wherever a section header places its title on the left and a
     - `iconPosition: 'left'` (default) for creation/action triggers (e.g. `+ Add Category`, `🎚️ Configure`).
     - `iconPosition: 'right'` for forward drill-down sub-screen navigations (e.g. `Voice Studio >`).
 
-#### 4.2.2 3D Tactile Swipe Action Duo (`HabitItemCard.tsx`)
+#### 4.2.2 3D Tactile Swipe Action Duo / Trio (`HabitItemCard.tsx`, `TaskCardItem.tsx`)
 
-Used for revealed swipe-behind actions (Details and Edit) in habit cards:
+Used for revealed swipe-behind actions (`Move`, `Details`, and `Edit` in `TaskCardItem`; `Details` and `Edit` in `HabitItemCard`):
 
-- **Surface & Geometry**: `backgroundColor: Colors.NeroBlack` (`#1C1D22`), squircle `borderRadius: 18`, twin dimensions `width: 60`, `height: 56`.
+- **Surface & Geometry**: `backgroundColor: Colors.NeroBlack` (`#1C1D22`), squircle `borderRadius: 18`, dimensions `width: 58–60`, `height: 56`.
 - **Specular Top Light Rim**: `borderTopWidth: 1.8`, `borderTopColor: 'rgba(255, 255, 255, 0.45)'` for ambient top light bounce.
 - **Lateral Rims & 3D Extruded Bevel**: `borderLeftColor: 'rgba(255, 255, 255, 0.14)'`, `borderRightColor: 'rgba(255, 255, 255, 0.14)'`, `borderBottomWidth: 3.5`, `borderBottomColor: '#0A0B0E'`.
 - **Colored Ambient Glow Shadows**:
+  - `Move`: Lavender horizon glow (`shadowColor: '#8383D6'`, `shadowOffset: { width: 0, height: 4 }`, `shadowOpacity: 0.38`, `shadowRadius: 7`, `elevation: 6`).
   - `Details`: Warm amber fire glow (`shadowColor: '#FF9800'`, `shadowOffset: { width: 0, height: 4 }`, `shadowOpacity: 0.38`, `shadowRadius: 7`, `elevation: 6`).
   - `Edit`: Radiant imperial gold glow (`shadowColor: '#F5C518'`, `shadowOffset: { width: 0, height: 4 }`, `shadowOpacity: 0.38`, `shadowRadius: 7`, `elevation: 6`).
 - **Luminous Jewel Icon Auras**: `width: 28, height: 28, borderRadius: 14`, `borderWidth: 1.2`, multi-tint backdrop (`0.22` opacity) and glowing border (`0.48` opacity) housing icons with `strokeWidth: 2.6`.
-- **Typographic Stamping**: `fontFamily: Fonts.poppins.bold`, `fontSize: 9.5`, warm ivory `#FFFBF0`, uppercase `'DETAILS'` & `'EDIT'` with letter spacing `0.75px`.
+- **Typographic Stamping**: `fontFamily: Fonts.poppins.bold`, `fontSize: 9.5`, warm ivory `#FFFBF0`, uppercase `'MOVE'`, `'DETAILS'` & `'EDIT'` with letter spacing `0.75px`.
 - **Micro-Spring Tactile Response**: Spring scale compression to `0.92` on press in, rebounding to `1.0` with `tension: 250, friction: 8`.
 
 ---
@@ -903,10 +904,12 @@ The Regius Royal subscription flow embodies mindful luxury:
 
 To prevent divergence and maintain strict aesthetic consistency across features, engineers and AI agents must consume the centralized primitives in `src/Common/`:
 
-### 10.1 `UnifiedSchedulePickerModal.tsx`
+### 10.1 `UnifiedSchedulePickerModal.tsx` & `PickerAestheticBg.tsx`
 
 - **Purpose**: Consolidated date & time schedule picker modal replacing disjointed platform picker sheets.
-- **Visuals**: Displays an interactive solar calendar grid with month navigation, day cells, lunar chrono time spinner, quick selection chips ('Today', 'Tomorrow', 'Next Week'), and a full-pill tactile confirmation CTA.
+- **Badge-Free Header & Atmospheric Aesthetics**: Uses a clean title header (`Schedule Date` / `Due Time`) with zero decorative uppercase pill badges (`SOLAR CALENDAR` / `LUNAR CHRONO` removed). In `time` mode, dynamically inspects `draftDate.getHours() >= 12` to switch **Day (AM)** vs **Night (PM)** surfaces, typography, 3D capsules, clock cards, native iOS `DateTimePicker` (`textColor` & `themeVariant`), and `PickerAestheticBg` SVG illustrations (Solar Sun Dial + solstice ticks for Date and AM Day Time; midnight-indigo dusk gradient sky + crescent moon + horological dial + stars for PM Night Time).
+- **Edge-to-Edge 3D Capsules & Controls**: Horizontal quick-preset, quick-time, and year-jump `ScrollView`s bleed edge-to-edge (`marginHorizontal: -ResponsivePixels.size20`, `paddingHorizontal: ResponsivePixels.size20`). All quick chips, month navigation arrows, month/year trigger pill, jump pills, and the confirmation `Done` button enforce full-pill (`borderRadius: ResponsivePixels.size50`) 3D extruded bevel geometry (`borderBottomWidth: 3–3.5`, top specular highlight, volumetric shadow).
+- **Schedule Trigger Cards (`ScheduleTriggerRow.tsx` & `ScheduleButtonBackgroundSvg.tsx`)**: Two-layer wrapper (`cardShadowWrapper` without `overflow: 'hidden'`, inner dark beveled card with `overflow: 'hidden'` and `borderRadius: ResponsivePixels.size20`) paired with SVG fills clipped via `rx={20} ry={20}` so dark cards never exhibit square corner bleeding. Form capsule rows (`When to do it`, `Repeat Cadence`, `Subtasks`, `Priority`) follow the same edge-to-edge horizontal scroll and 3D extruded pill specification.
 - **Props**: `visible: boolean`, `initialDate?: Date`, `mode?: 'date' | 'time' | 'datetime'`, `onConfirm: (date: Date) => void`, `onCancel: () => void`.
 
 ### 10.2 `TactileSegmentedTabs.tsx`
@@ -960,5 +963,5 @@ All creation modals (`AddTaskModal`, `AddReminderModal`, `AddHabitModal`), dialo
 - **Inputs & Fields**: Input container background `#171A1F`, border `#2C3035`, placeholder text `#666665`, typed text `#FFFFFF`.
 - **Section Headings & Labels**: Poppins SemiBold `#FFFFFF` for primary titles, `#A3A8B1` for secondary context.
 - **Category Chips & Selectors**: Deep jewel backgrounds (`#2A2416` Works, `#162820` Sport, `#202336` Mindful, `#331F18` Events) with high-contrast active borders and glowing accents.
-- **Platform Pickers**: Native iOS `DateTimePicker` sets `textColor="#FFFFFF"` and `themeVariant="dark"` when `isDarkMode` is true.
+- **Platform Pickers**: Native iOS `DateTimePicker` sets `textColor="#FFFFFF"` and `themeVariant="dark"` when `isDarkMode` is true or when `UnifiedSchedulePickerModal` switches to Night (PM) mode (`draftDate.getHours() >= 12`) in `time` mode.
 - **Destructive & Cancel Controls**: Outlined slate buttons (`#252932` fill, `#363944` border) for cancel actions; high-contrast crimson `#EF4444` for delete actions.
