@@ -65,7 +65,9 @@ export const TactileSegmentedTabs = <T extends string = string>({
 
   // Color tokens aligned with 3D tactile pill standard
   const trackBg = isDarkMode ? Colors.DarkCanvasDeep : Colors.WarmSandTrack;
-  const trackBorder = isDarkMode ? Colors.DarkSegmentedBorder : Colors.RingBorder;
+  const trackBorder = isDarkMode
+    ? Colors.DarkSegmentedBorder
+    : Colors.RingBorder;
   const trackBottomBorder = isDarkMode
     ? Colors.DarkSegmentedBottom
     : Colors.WarmBevelLight;
@@ -85,6 +87,7 @@ export const TactileSegmentedTabs = <T extends string = string>({
 
   // Account for 4px padding on left and right = 8px total
   const numTabs = tabs.length;
+  const isCompact = numTabs >= 4;
   const tabWidth =
     containerWidth > 8 && numTabs > 0 ? (containerWidth - 8) / numTabs : 0;
 
@@ -137,14 +140,14 @@ export const TactileSegmentedTabs = <T extends string = string>({
             key={tab.key}
             activeOpacity={0.85}
             onPress={() => onChangeTab(tab.key)}
-            style={styles.toggleTab}
+            style={[styles.toggleTab, isCompact && styles.toggleTabCompact]}
             accessibilityRole="tab"
             accessibilityState={{ selected: isActive }}
             accessibilityLabel={`${tab.label}${
               tab.count !== undefined ? `, ${tab.count} items` : ''
             }`}
           >
-            {IconComponent && (
+            {IconComponent && !isCompact && (
               <IconComponent
                 size={ResponsivePixels.size14}
                 color={isActive ? activeColor : iconInactiveColor}
@@ -154,6 +157,7 @@ export const TactileSegmentedTabs = <T extends string = string>({
             <Text
               style={[
                 styles.toggleText,
+                isCompact && styles.toggleTextCompact,
                 {
                   color: isActive ? tabActiveTextColor : tabInactiveTextColor,
                   fontFamily: isActive
@@ -169,6 +173,7 @@ export const TactileSegmentedTabs = <T extends string = string>({
               <View
                 style={[
                   styles.tabCountPill,
+                  isCompact && styles.tabCountPillCompact,
                   isActive
                     ? getCountPillActiveStyle(tab.countVariant || 'yellow')
                     : [
@@ -184,6 +189,7 @@ export const TactileSegmentedTabs = <T extends string = string>({
                 <Text
                   style={[
                     styles.tabCountText,
+                    isCompact && styles.tabCountTextCompact,
                     isActive
                       ? getCountTextActiveStyle(tab.countVariant || 'yellow')
                       : [
@@ -289,8 +295,16 @@ const styles = StyleSheet.create({
     gap: ResponsivePixels.size7,
     zIndex: 2,
   },
+  toggleTabCompact: {
+    paddingHorizontal: ResponsivePixels.size4,
+    gap: ResponsivePixels.size3_5,
+  },
   toggleText: {
     fontSize: ResponsivePixels.size13,
+    letterSpacing: -0.2,
+  },
+  toggleTextCompact: {
+    fontSize: ResponsivePixels.size11,
     letterSpacing: -0.2,
   },
   tabCountPill: {
@@ -301,11 +315,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  tabCountPillCompact: {
+    paddingHorizontal: ResponsivePixels.size5,
+    paddingVertical: ResponsivePixels.size1,
+    minWidth: ResponsivePixels.size16,
+  },
   tabCountPillInactive: {},
   tabCountText: {
     fontFamily: Fonts.poppins.bold,
     fontSize: ResponsivePixels.size10,
     letterSpacing: 0.2,
+  },
+  tabCountTextCompact: {
+    fontSize: ResponsivePixels.size9,
   },
   tabCountTextInactive: {},
   countPillActiveYellow: {

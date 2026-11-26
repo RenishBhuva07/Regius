@@ -15,22 +15,33 @@ import { Colors } from '../Assets/StyleUtilities/Colors';
 
 export interface PickerAestheticBgProps {
   type: 'date' | 'time';
+  isDarkMode?: boolean;
+  timePeriod?: 'day' | 'night';
   width?: number;
   height?: number;
 }
 
 export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
-  ({ type, width = 400, height = 340 }) => {
+  ({
+    type,
+    isDarkMode = false,
+    timePeriod = 'day',
+    width = 400,
+    height = 340,
+  }) => {
     const isDate = type === 'date';
+    const isNight = !isDate && timePeriod === 'night';
+    const isSolarVisual = isDate || !isNight;
     const W = Math.max(width, 100);
     const H = Math.max(height, 100);
+    const gradSuffix = `${type}-${timePeriod}-${isDarkMode ? 'dark' : 'light'}`;
 
     const diamondStar = (cx: number, cy: number, s: number) =>
       `M ${cx} ${cy - s} Q ${cx} ${cy}, ${cx + s} ${cy} Q ${cx} ${cy}, ${cx} ${
         cy + s
       } Q ${cx} ${cy}, ${cx - s} ${cy} Q ${cx} ${cy}, ${cx} ${cy - s} Z`;
 
-    // 8 Solar Solstice & Equinox dial ticks for Date Picker
+    // 8 Solar Solstice & Equinox dial ticks for Date & Daytime AM Time Picker
     const solarTicks = Array.from({ length: 8 }).map((_, i) => {
       const angle = ((i * 360) / 8) * (Math.PI / 180);
       return (
@@ -40,14 +51,14 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
           y1={60 + 72 * Math.sin(angle)}
           x2={340 + 84 * Math.cos(angle)}
           y2={60 + 84 * Math.sin(angle)}
-          stroke={Colors.SolarGoldStroke}
+          stroke={isDarkMode ? Colors.AccentYellow : Colors.SolarGoldStroke}
           strokeWidth={1.3}
           strokeLinecap="round"
         />
       );
     });
 
-    // 12 Horological Hour ticks for Time Picker
+    // 12 Horological Hour ticks for Nighttime PM Time Picker
     const clockHourTicks = Array.from({ length: 12 }).map((_, i) => {
       const angle = ((i * 360) / 12) * (Math.PI / 180);
       const isCardinal = i % 3 === 0;
@@ -60,14 +71,14 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
           y1={70 + rInner * Math.sin(angle)}
           x2={330 + rOuter * Math.cos(angle)}
           y2={70 + rOuter * Math.sin(angle)}
-          stroke={isCardinal ? Colors.MindfulTextAccent : Colors.LavenderPurple}
+          stroke={isCardinal ? Colors.PeriwinkleSoft : Colors.LavenderPurple}
           strokeWidth={isCardinal ? 1.6 : 1.1}
           strokeLinecap="round"
         />
       );
     });
 
-    // 24 Horological Minute ticks for Time Picker
+    // 24 Horological Minute ticks for Nighttime PM Time Picker
     const clockMinuteTicks = Array.from({ length: 24 }).map((_, i) => {
       const angle = ((i * 360) / 24) * (Math.PI / 180);
       return (
@@ -77,14 +88,14 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
           y1={70 + 84 * Math.sin(angle)}
           x2={330 + 88 * Math.cos(angle)}
           y2={70 + 88 * Math.sin(angle)}
-          stroke={Colors.LavenderPurple}
+          stroke={Colors.PeriwinkleSoft}
           strokeWidth={0.8}
-          strokeOpacity={0.4}
+          strokeOpacity={0.45}
         />
       );
     });
 
-    // 16 Planetary Gear Teeth ticks for Time Picker
+    // 16 Planetary Gear Teeth ticks for Nighttime PM Time Picker
     const gearTicks = Array.from({ length: 16 }).map((_, i) => {
       const angle = ((i * 360) / 16) * (Math.PI / 180);
       return (
@@ -94,12 +105,33 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
           y1={270 + 35 * Math.sin(angle)}
           x2={50 + 43 * Math.cos(angle)}
           y2={270 + 43 * Math.sin(angle)}
-          stroke={Colors.MindfulTextAccent}
+          stroke={Colors.PeriwinkleSoft}
           strokeWidth={1.2}
           strokeLinecap="round"
         />
       );
     });
+
+    const gradStart = isNight
+      ? Colors.BentoStopSlate
+      : isDarkMode
+      ? Colors.DarkCardBackground
+      : Colors.PureWhite;
+    const gradMid = isNight
+      ? Colors.ToastInfoCardDarkMid
+      : isDarkMode
+      ? Colors.WorkDarkBg
+      : Colors.PickerDateSheenMid;
+    const gradEnd = isNight
+      ? Colors.ToastInfoCardDarkEnd
+      : isDarkMode
+      ? Colors.SvgSectionVoid
+      : Colors.PickerDateSheenEnd;
+
+    const topAuraColor = isNight ? Colors.LavenderPurple : Colors.AccentYellow;
+    const bottomAuraColor = isNight
+      ? Colors.MindfulTextAccent
+      : Colors.SolarGoldAura;
 
     return (
       <View style={StyleSheet.absoluteFill} pointerEvents="none">
@@ -111,69 +143,53 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
         >
           <Defs>
             <LinearGradient
-              id={`pickerSheenGrad-${type}`}
+              id={`pickerSheenGrad-${gradSuffix}`}
               x1="0%"
               y1="0%"
               x2="100%"
               y2="100%"
             >
-              <Stop offset="0%" stopColor={Colors.PureWhite} stopOpacity={0.99} />
-              <Stop
-                offset="55%"
-                stopColor={isDate ? Colors.PickerDateSheenMid : Colors.PickerTimeSheenMid}
-                stopOpacity={0.96}
-              />
-              <Stop
-                offset="100%"
-                stopColor={isDate ? Colors.PickerDateSheenEnd : Colors.PickerTimeSheenEnd}
-                stopOpacity={0.98}
-              />
+              <Stop offset="0%" stopColor={gradStart} stopOpacity={0.99} />
+              <Stop offset="55%" stopColor={gradMid} stopOpacity={0.97} />
+              <Stop offset="100%" stopColor={gradEnd} stopOpacity={0.99} />
             </LinearGradient>
             <RadialGradient
-              id={`pickerTopAura-${type}`}
+              id={`pickerTopAura-${gradSuffix}`}
               cx={W - 40}
               cy={50}
-              r={150}
+              r={155}
               gradientUnits="userSpaceOnUse"
             >
               <Stop
                 offset="0%"
-                stopColor={isDate ? Colors.AccentYellow : Colors.LavenderPurple}
-                stopOpacity={isDate ? 0.24 : 0.25}
+                stopColor={topAuraColor}
+                stopOpacity={isNight ? 0.34 : isDarkMode ? 0.2 : 0.25}
               />
               <Stop
                 offset="50%"
-                stopColor={isDate ? Colors.AccentYellow : Colors.LavenderPurple}
-                stopOpacity={isDate ? 0.06 : 0.07}
+                stopColor={topAuraColor}
+                stopOpacity={isNight ? 0.12 : 0.06}
               />
-              <Stop
-                offset="100%"
-                stopColor={isDate ? Colors.AccentYellow : Colors.LavenderPurple}
-                stopOpacity={0}
-              />
+              <Stop offset="100%" stopColor={topAuraColor} stopOpacity={0} />
             </RadialGradient>
             <RadialGradient
-              id={`pickerBottomAura-${type}`}
+              id={`pickerBottomAura-${gradSuffix}`}
               cx={30}
               cy={H - 40}
-              r={130}
+              r={135}
               gradientUnits="userSpaceOnUse"
             >
               <Stop
                 offset="0%"
-                stopColor={isDate ? Colors.SolarGoldAura : Colors.MindfulTextAccent}
-                stopOpacity={isDate ? 0.16 : 0.18}
+                stopColor={bottomAuraColor}
+                stopOpacity={isNight ? 0.24 : isDarkMode ? 0.14 : 0.16}
               />
               <Stop
                 offset="50%"
-                stopColor={isDate ? Colors.SolarGoldAura : Colors.MindfulTextAccent}
-                stopOpacity={0.04}
+                stopColor={bottomAuraColor}
+                stopOpacity={isNight ? 0.08 : 0.04}
               />
-              <Stop
-                offset="100%"
-                stopColor={isDate ? Colors.SolarGoldAura : Colors.MindfulTextAccent}
-                stopOpacity={0}
-              />
+              <Stop offset="100%" stopColor={bottomAuraColor} stopOpacity={0} />
             </RadialGradient>
           </Defs>
           <Rect
@@ -181,25 +197,25 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
             y="0"
             width={W}
             height={H}
-            fill={`url(#pickerSheenGrad-${type})`}
+            fill={`url(#pickerSheenGrad-${gradSuffix})`}
           />
           <Rect
             x="0"
             y="0"
             width={W}
             height={H}
-            fill={`url(#pickerTopAura-${type})`}
+            fill={`url(#pickerTopAura-${gradSuffix})`}
           />
           <Rect
             x="0"
             y="0"
             width={W}
             height={H}
-            fill={`url(#pickerBottomAura-${type})`}
+            fill={`url(#pickerBottomAura-${gradSuffix})`}
           />
-          {isDate && (
+          {isSolarVisual && (
             <>
-              <G opacity={0.32}>
+              <G opacity={isDarkMode ? 0.26 : 0.34}>
                 <Circle
                   cx={340}
                   cy={60}
@@ -235,8 +251,8 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   fill="none"
                 />
               </G>
-              <G opacity={0.38}>{solarTicks}</G>
-              <G opacity={0.3}>
+              <G opacity={isDarkMode ? 0.3 : 0.4}>{solarTicks}</G>
+              <G opacity={isDarkMode ? 0.24 : 0.3}>
                 <Circle
                   cx={40}
                   cy={H - 50}
@@ -264,7 +280,11 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   fill="none"
                 />
               </G>
-              <Path d={diamondStar(320, 45, 5)} fill={Colors.SolarGoldSpark} opacity={0.55} />
+              <Path
+                d={diamondStar(320, 45, 5)}
+                fill={Colors.SolarGoldSpark}
+                opacity={0.55}
+              />
               <Path
                 d={diamondStar(345, 135, 3.5)}
                 fill={Colors.SolarGoldStroke}
@@ -280,8 +300,20 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                 fill={Colors.SolarGoldSpark}
                 opacity={0.4}
               />
-              <Circle cx={285} cy={40} r={1.6} fill={Colors.AccentYellow} opacity={0.6} />
-              <Circle cx={365} cy={115} r={1.4} fill={Colors.WorkTextAccent} opacity={0.45} />
+              <Circle
+                cx={285}
+                cy={40}
+                r={1.6}
+                fill={Colors.AccentYellow}
+                opacity={0.6}
+              />
+              <Circle
+                cx={365}
+                cy={115}
+                r={1.4}
+                fill={Colors.WorkTextAccent}
+                opacity={0.45}
+              />
               <Circle
                 cx={55}
                 cy={H - 110}
@@ -296,36 +328,16 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                 fill={Colors.WorkTextAccent}
                 opacity={0.4}
               />
-              <G opacity={0.25}>
-                <Line
-                  x1={W - 48}
-                  y1={16}
-                  x2={W - 32}
-                  y2={16}
-                  stroke={Colors.WorkTextAccent}
-                  strokeWidth={1.2}
-                  strokeLinecap="round"
-                />
-                <Line
-                  x1={W - 16}
-                  y1={32}
-                  x2={W - 16}
-                  y2={48}
-                  stroke={Colors.WorkTextAccent}
-                  strokeWidth={1.2}
-                  strokeLinecap="round"
-                />
-              </G>
             </>
           )}
-          {!isDate && (
+          {isNight && (
             <>
-              <G opacity={0.34}>
+              <G opacity={0.42}>
                 <Circle
                   cx={330}
                   cy={70}
                   r={48}
-                  stroke={Colors.MindfulTextAccent}
+                  stroke={Colors.PeriwinkleSoft}
                   strokeWidth={1}
                   fill="none"
                 />
@@ -342,7 +354,7 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   cx={330}
                   cy={70}
                   r={74}
-                  stroke={Colors.MindfulTextAccent}
+                  stroke={Colors.PeriwinkleSoft}
                   strokeWidth={1.2}
                   fill="none"
                 />
@@ -364,19 +376,19 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   fill="none"
                 />
               </G>
-              <G opacity={0.4}>{clockHourTicks}</G>
-              <G opacity={0.35}>{clockMinuteTicks}</G>
+              <G opacity={0.48}>{clockHourTicks}</G>
+              <G opacity={0.4}>{clockMinuteTicks}</G>
               <Path
                 d="M 330 35 A 25 25 0 0 0 355 60 A 30 30 0 0 1 330 35 Z"
-                fill={Colors.LavenderPurple}
-                opacity={0.35}
+                fill={Colors.SvgOrbLavenderLight}
+                opacity={0.55}
               />
-              <G opacity={0.32}>
+              <G opacity={0.38}>
                 <Circle
                   cx={50}
                   cy={270}
                   r={35}
-                  stroke={Colors.MindfulTextAccent}
+                  stroke={Colors.PeriwinkleSoft}
                   strokeWidth={1.2}
                   fill="none"
                 />
@@ -398,59 +410,55 @@ export const PickerAestheticBg: React.FC<PickerAestheticBgProps> = React.memo(
                   fill="none"
                 />
               </G>
-              <G opacity={0.38}>{gearTicks}</G>
-              <Path d={diamondStar(315, 50, 5)} fill={Colors.MindfulTextAccent} opacity={0.55} />
+              <G opacity={0.44}>{gearTicks}</G>
+              <Path
+                d={diamondStar(315, 50, 5)}
+                fill={Colors.PureWhite}
+                opacity={0.72}
+              />
               <Path
                 d={diamondStar(340, 150, 3.5)}
                 fill={Colors.PeriwinkleSoft}
-                opacity={0.45}
+                opacity={0.65}
               />
               <Path
                 d={diamondStar(80, H - 75, 4.5)}
-                fill={Colors.LavenderPurple}
-                opacity={0.5}
+                fill={Colors.SvgOrbLavenderLight}
+                opacity={0.65}
               />
               <Path
                 d={diamondStar(130, H - 35, 3)}
-                fill={Colors.MindfulTextAccent}
-                opacity={0.4}
+                fill={Colors.PureWhite}
+                opacity={0.55}
               />
-              <Circle cx={275} cy={45} r={1.6} fill={Colors.LavenderPurple} opacity={0.6} />
-              <Circle cx={360} cy={125} r={1.4} fill={Colors.MindfulTextAccent} opacity={0.45} />
+              <Circle
+                cx={275}
+                cy={45}
+                r={1.6}
+                fill={Colors.PureWhite}
+                opacity={0.7}
+              />
+              <Circle
+                cx={360}
+                cy={125}
+                r={1.4}
+                fill={Colors.PeriwinkleSoft}
+                opacity={0.55}
+              />
               <Circle
                 cx={65}
                 cy={H - 115}
                 r={1.5}
-                fill={Colors.LavenderPurple}
-                opacity={0.5}
+                fill={Colors.PureWhite}
+                opacity={0.6}
               />
               <Circle
                 cx={155}
                 cy={H - 55}
                 r={1.3}
-                fill={Colors.MindfulTextAccent}
-                opacity={0.4}
+                fill={Colors.PeriwinkleSoft}
+                opacity={0.5}
               />
-              <G opacity={0.25}>
-                <Line
-                  x1={W - 48}
-                  y1={16}
-                  x2={W - 32}
-                  y2={16}
-                  stroke={Colors.MindfulTextAccent}
-                  strokeWidth={1.2}
-                  strokeLinecap="round"
-                />
-                <Line
-                  x1={W - 16}
-                  y1={32}
-                  x2={W - 16}
-                  y2={48}
-                  stroke={Colors.MindfulTextAccent}
-                  strokeWidth={1.2}
-                  strokeLinecap="round"
-                />
-              </G>
             </>
           )}
         </Svg>

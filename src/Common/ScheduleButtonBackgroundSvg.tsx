@@ -50,8 +50,8 @@ export const ScheduleButtonBackgroundSvg: React.FC<ScheduleButtonBackgroundSvgPr
             </RadialGradient>
           </Defs>
 
-          <Rect width="100%" height="100%" fill={`url(#${bgGradId})`} />
-          <Rect width="100%" height="100%" fill={`url(#${auraId})`} />
+          <Rect width="100%" height="100%" rx={20} ry={20} fill={`url(#${bgGradId})`} />
+          <Rect width="100%" height="100%" rx={20} ry={20} fill={`url(#${auraId})`} />
 
           <Circle
             cx={145}

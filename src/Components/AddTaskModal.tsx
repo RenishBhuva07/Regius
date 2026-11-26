@@ -18,7 +18,17 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FileText, Volume2, Sparkles, Trash2 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
-import { Task } from '../Context/TaskReminderContext';
+import { Task, useTaskReminder } from '../Context/TaskReminderContext';
+import {
+  TaskRecurrence,
+  toLocalISODate,
+  parseLocalISODate,
+  formatDisplayDate,
+  normalizeTaskDateInput,
+  parseTimeStringToDate,
+  formatTimeFromDate,
+  addDaysToISO,
+} from '../Utils/taskDateUtils';
 
 import { Fonts } from '../Theme/fonts';
 import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
@@ -42,7 +52,9 @@ import {
   CategoryChipSelector,
   CategoryItem,
   ScheduleTriggerRow,
+  QuickDateType,
   PrioritySelector,
+  RecurrenceSelector,
   SubtaskListSection,
   SubtaskItem,
   ModalBottomBar,
@@ -84,23 +96,6 @@ const DEFAULT_CATEGORY_ITEMS: CategoryItem[] = [
   },
 ];
 
-const MONTH_SHORT = [
-  'Jan',
-  'Feb',
-  'Mar',
-  'Apr',
-  'May',
-  'Jun',
-  'Jul',
-  'Aug',
-  'Sep',
-  'Oct',
-  'Nov',
-  'Dec',
-];
-
-const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
 export interface AddTaskModalProps {
   visible: boolean;
   onClose: () => void;
@@ -111,7 +106,10 @@ export interface AddTaskModalProps {
     iconType: 'mail' | 'users';
     priority: 'low' | 'medium' | 'high';
     date: string;
+    dueDate?: string | null;
     time?: string;
+    dueTime?: string | null;
+    recurrence?: TaskRecurrence;
     subtasks?: { id: string; text: string; done: boolean }[];
     voiceNudge?: boolean;
   }) => void;
@@ -124,13 +122,18 @@ export interface AddTaskModalProps {
       iconType: 'mail' | 'users';
       priority: 'low' | 'medium' | 'high';
       date: string;
+      dueDate?: string | null;
       time?: string;
+      dueTime?: string | null;
+      recurrence?: TaskRecurrence;
       subtasks?: { id: string; text: string; done: boolean }[];
       voiceNudge?: boolean;
     },
   ) => void;
   onDeleteTask?: (id: string) => void;
   taskToEdit?: Task | null;
+  prefillDate?: string | null;
+  prefillCategory?: string;
 }
 
 export const AddTaskModal: React.FC<AddTaskModalProps> = ({
@@ -140,9 +143,12 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
   onUpdateTask,
   onDeleteTask,
   taskToEdit,
+  prefillDate,
+  prefillCategory,
 }) => {
   const insets = useSafeAreaInsets();
   const { isDarkMode, bgMain, cardBg } = useAppTheme();
+  const { taskCategories, addTaskCategory } = useTaskReminder();
   const voiceContext = useOptionalVoiceWakeWord();
   const assistantName = voiceContext?.assistantName || 'Regius';
   const isEditing = !!taskToEdit;
@@ -154,11 +160,16 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
   const [selectedPriority, setSelectedPriority] = useState<
     'low' | 'medium' | 'high'
   >('high');
-  const [selectedDate, setSelectedDate] = useState<string>(() => {
-    const today = new Date();
-    return `Today, ${MONTH_SHORT[today.getMonth()]} ${today.getDate()}`;
-  });
+  const [selectedDueDate, setSelectedDueDate] = useState<string | null>(() =>
+    toLocalISODate(),
+  );
+  const [selectedDate, setSelectedDate] = useState<string>(() =>
+    formatDisplayDate(toLocalISODate()),
+  );
   const [selectedTime, setSelectedTime] = useState<string>('10:00 AM');
+  const [isTimeAnytime, setIsTimeAnytime] = useState<boolean>(false);
+  const [selectedRecurrence, setSelectedRecurrence] =
+    useState<TaskRecurrence>('none');
   const [voiceNudgeEnabled, setVoiceNudgeEnabled] = useState<boolean>(true);
   const [titleInputHeight, setTitleInputHeight] = useState<number>(48);
 
@@ -170,12 +181,13 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
   const [dateValue, setDateValue] = useState<Date>(new Date());
-  const [timeValue, setTimeValue] = useState<Date>(new Date());
-
-  // Dynamic Category State
-  const [categoryList, setCategoryList] = useState<CategoryItem[]>(
-    DEFAULT_CATEGORY_ITEMS,
+  const [timeValue, setTimeValue] = useState<Date>(() =>
+    parseTimeStringToDate('10:00 AM'),
   );
+
+  // Dynamic Category State (backed by TaskReminderContext)
+  const categoryList: CategoryItem[] =
+    taskCategories.length > 0 ? taskCategories : DEFAULT_CATEGORY_ITEMS;
   const [showAddCategoryModal, setShowAddCategoryModal] =
     useState<boolean>(false);
 
@@ -189,24 +201,32 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
 
   const resetForm = useCallback(() => {
     const today = new Date();
-    const formattedDefaultDate = `Today, ${
-      MONTH_SHORT[today.getMonth()]
-    } ${today.getDate()}`;
+    const initialISO =
+      prefillDate !== undefined ? prefillDate : toLocalISODate(today);
+    const initialDateObj =
+      (initialISO ? parseLocalISODate(initialISO) : null) || today;
+    const formattedDefaultDate = initialISO
+      ? formatDisplayDate(initialISO)
+      : 'Anytime';
+
     setTaskTitle('');
     setTaskNote('');
-    setSelectedCategory('works');
+    setSelectedCategory(prefillCategory || 'works');
     setSelectedPriority('high');
+    setSelectedDueDate(initialISO);
     setSelectedDate(formattedDefaultDate);
     setSelectedTime('10:00 AM');
-    setDateValue(today);
-    setTimeValue(today);
+    setIsTimeAnytime(initialISO === null);
+    setSelectedRecurrence('none');
+    setDateValue(initialDateObj);
+    setTimeValue(parseTimeStringToDate('10:00 AM', initialDateObj));
     setVoiceNudgeEnabled(true);
     setSubtasks([]);
     setNewSubtaskInput('');
     setTitleInputHeight(48);
     scrollY.setValue(0);
     setIsScrolled(false);
-  }, [scrollY]);
+  }, [scrollY, prefillDate, prefillCategory]);
 
   const handleTitleContentSizeChange = (e: {
     nativeEvent: { contentSize: { height: number; width: number } };
@@ -217,45 +237,72 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
     }
   };
 
-  const handleSelectQuickDate = (type: 'today' | 'tomorrow' | 'weekend') => {
-    const today = new Date();
-    let target = new Date();
+  const handleSelectQuickDate = (type: QuickDateType) => {
+    if (type === 'anytime') {
+      setSelectedDueDate(null);
+      setSelectedDate('Anytime');
+      return;
+    }
 
-    if (type === 'today') {
-      target = today;
-      setSelectedDate(
-        `Today, ${MONTH_SHORT[today.getMonth()]} ${today.getDate()}`,
-      );
-    } else if (type === 'tomorrow') {
-      target.setDate(today.getDate() + 1);
-      setSelectedDate(
-        `Tomorrow, ${MONTH_SHORT[target.getMonth()]} ${target.getDate()}`,
-      );
+    const today = new Date();
+    const todayISO = toLocalISODate(today);
+    let targetISO = todayISO;
+
+    if (type === 'tomorrow') {
+      targetISO = addDaysToISO(todayISO, 1);
     } else if (type === 'weekend') {
       const dayOfWeek = today.getDay();
       const daysUntilSaturday = dayOfWeek === 6 ? 7 : 6 - dayOfWeek;
-      target.setDate(today.getDate() + daysUntilSaturday);
-      setSelectedDate(
-        `Sat, ${MONTH_SHORT[target.getMonth()]} ${target.getDate()}`,
-      );
+      targetISO = addDaysToISO(todayISO, daysUntilSaturday);
+    } else if (type === 'next_week') {
+      const dayOfWeek = today.getDay();
+      const daysUntilMonday = dayOfWeek === 0 ? 1 : 8 - dayOfWeek;
+      targetISO = addDaysToISO(todayISO, daysUntilMonday);
     }
-    setDateValue(target);
+
+    const targetDateObj = parseLocalISODate(targetISO) || today;
+    setSelectedDueDate(targetISO);
+    setSelectedDate(formatDisplayDate(targetISO, todayISO));
+    setDateValue(targetDateObj);
   };
 
   useEffect(() => {
     if (visible) {
       if (taskToEdit) {
+        const today = new Date();
+        const resolved =
+          taskToEdit.dueDate !== undefined
+            ? {
+                dueDate: taskToEdit.dueDate,
+                displayDate: taskToEdit.dueDate
+                  ? formatDisplayDate(taskToEdit.dueDate)
+                  : 'Anytime',
+              }
+            : normalizeTaskDateInput(taskToEdit.date, today);
+        const hydratedDateObj =
+          (resolved.dueDate ? parseLocalISODate(resolved.dueDate) : null) ||
+          today;
+        const hasSpecificTime = Boolean(
+          taskToEdit.dueTime !== undefined
+            ? taskToEdit.dueTime
+            : taskToEdit.time &&
+              taskToEdit.time.toLowerCase() !== 'anytime',
+        );
+        const editTime = hasSpecificTime
+          ? taskToEdit.dueTime ?? taskToEdit.time ?? '10:00 AM'
+          : '10:00 AM';
+
         setTaskTitle(taskToEdit.label);
         setTaskNote(taskToEdit.note || '');
         setSelectedCategory(taskToEdit.category || 'works');
         setSelectedPriority(taskToEdit.priority || 'medium');
-        setSelectedDate(
-          taskToEdit.date ||
-            `Today, ${
-              MONTH_SHORT[new Date().getMonth()]
-            } ${new Date().getDate()}`,
-        );
-        setSelectedTime(taskToEdit.time || '10:00 AM');
+        setSelectedDueDate(resolved.dueDate);
+        setSelectedDate(resolved.displayDate);
+        setSelectedTime(editTime);
+        setIsTimeAnytime(!hasSpecificTime);
+        setSelectedRecurrence(taskToEdit.recurrence || 'none');
+        setDateValue(hydratedDateObj);
+        setTimeValue(parseTimeStringToDate(editTime, hydratedDateObj));
         setVoiceNudgeEnabled(taskToEdit.voiceNudge ?? true);
         setSubtasks(
           taskToEdit.subtasks ? taskToEdit.subtasks.map(s => ({ ...s })) : [],
@@ -299,31 +346,10 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
       setShowDatePicker(false);
     }
     if (selected) {
+      const iso = toLocalISODate(selected);
       setDateValue(selected);
-      const today = new Date();
-      const isToday =
-        today.getFullYear() === selected.getFullYear() &&
-        today.getMonth() === selected.getMonth() &&
-        today.getDate() === selected.getDate();
-
-      const tomorrow = new Date();
-      tomorrow.setDate(today.getDate() + 1);
-      const isTomorrow =
-        tomorrow.getFullYear() === selected.getFullYear() &&
-        tomorrow.getMonth() === selected.getMonth() &&
-        tomorrow.getDate() === selected.getDate();
-
-      const monthShort = MONTH_SHORT[selected.getMonth()];
-      const dayNum = selected.getDate();
-      const dayOfWeek = DAY_NAMES[selected.getDay()];
-
-      if (isToday) {
-        setSelectedDate(`Today, ${monthShort} ${dayNum}`);
-      } else if (isTomorrow) {
-        setSelectedDate(`Tomorrow, ${monthShort} ${dayNum}`);
-      } else {
-        setSelectedDate(`${dayOfWeek}, ${monthShort} ${dayNum}`);
-      }
+      setSelectedDueDate(iso);
+      setSelectedDate(formatDisplayDate(iso));
     }
   };
 
@@ -334,13 +360,8 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
     }
     if (selected) {
       setTimeValue(selected);
-      let hours = selected.getHours();
-      const minutes = selected.getMinutes();
-      const meridiem = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12 || 12;
-      const hourStr = hours.toString().padStart(2, '0');
-      const minStr = minutes.toString().padStart(2, '0');
-      setSelectedTime(`${hourStr}:${minStr} ${meridiem}`);
+      setSelectedTime(formatTimeFromDate(selected));
+      setIsTimeAnytime(false);
     }
   };
 
@@ -377,7 +398,10 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
         | 'users',
       priority: selectedPriority,
       date: selectedDate,
-      time: selectedTime,
+      dueDate: selectedDueDate,
+      time: isTimeAnytime ? undefined : selectedTime,
+      dueTime: isTimeAnytime ? null : selectedTime,
+      recurrence: selectedRecurrence,
       subtasks:
         subtasks.length > 0
           ? subtasks.map(s => ({ id: s.id, text: s.text, done: !!s.done }))
@@ -419,8 +443,8 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
   };
 
   const handleCreateCategory = (newCat: CustomCategoryCreated) => {
-    setCategoryList(prev => [...prev, newCat]);
-    setSelectedCategory(newCat.id);
+    const saved = addTaskCategory(newCat);
+    setSelectedCategory(saved.id);
   };
 
   const activeCategory =
@@ -538,7 +562,7 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
                   multiline={true}
                   scrollEnabled={true}
                   rejectResponderTermination={true}
-                  autoFocus={true}
+                  autoFocus={!isEditing}
                   cursorColor={
                     isDarkMode ? Colors.PureWhite : Colors.MidnightCharcoal
                   }
@@ -615,9 +639,19 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
             <ScheduleTriggerRow
               selectedDate={selectedDate}
               selectedTime={selectedTime}
+              selectedDueDate={selectedDueDate}
+              isTimeAnytime={isTimeAnytime}
+              showExtendedPresets={true}
               onSelectQuickDate={handleSelectQuickDate}
               onPressDate={() => setShowDatePicker(true)}
               onPressTime={() => setShowTimePicker(true)}
+              onClearTime={() => setIsTimeAnytime(true)}
+            />
+
+            {/* Repeat Cadence */}
+            <RecurrenceSelector
+              selectedRecurrence={selectedRecurrence}
+              onSelectRecurrence={setSelectedRecurrence}
             />
 
             {/* Priority Weight */}
@@ -732,6 +766,10 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
           visible={showDatePicker}
           mode="date"
           value={dateValue}
+          minimumDate={isEditing ? undefined : new Date()}
+          allowAnytime={true}
+          isAnytime={selectedDueDate === null}
+          onSelectAnytime={() => handleSelectQuickDate('anytime')}
           onChange={onDateChange}
           onClose={() => setShowDatePicker(false)}
         />
@@ -741,6 +779,9 @@ export const AddTaskModal: React.FC<AddTaskModalProps> = ({
           visible={showTimePicker}
           mode="time"
           value={timeValue}
+          allowAnytime={true}
+          isAnytime={isTimeAnytime}
+          onSelectAnytime={() => setIsTimeAnytime(true)}
           onChange={onTimeChange}
           onClose={() => setShowTimePicker(false)}
         />

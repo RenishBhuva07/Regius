@@ -149,6 +149,7 @@ export interface CustomCategoryCreated {
   accentColor: string;
   checkColor: string;
   badgeVariant: BadgeVariant;
+  iconKey?: 'picture' | 'bag' | 'heart' | 'sparkles' | 'flame';
   Icon: React.ComponentType<any>;
 }
 
@@ -188,6 +189,7 @@ export const CustomCategoryModal: React.FC<CustomCategoryModalProps> =
         accentColor: preset.accentColor,
         checkColor: preset.checkColor,
         badgeVariant: preset.badgeVariant,
+        iconKey: iconDef.id as 'picture' | 'bag' | 'heart' | 'sparkles' | 'flame',
         Icon: iconDef.Icon,
       };
 

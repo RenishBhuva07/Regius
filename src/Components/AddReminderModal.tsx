@@ -41,6 +41,7 @@ import {
   CategoryChipSelector,
   CategoryItem,
   ScheduleTriggerRow,
+  QuickDateType,
   ReminderAlertSelector,
   ModalBottomBar,
 } from './AddModal';
@@ -229,7 +230,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
     }
   };
 
-  const handleSelectQuickDate = (type: 'today' | 'tomorrow' | 'weekend') => {
+  const handleSelectQuickDate = (type: QuickDateType) => {
     const today = new Date();
     let target = new Date();
 
