@@ -13,6 +13,12 @@ import {
   getActiveWakePhrase,
   extractNameFromPhrase,
 } from '../WakeWord/WakeWordDetectionEngine';
+import {
+  toLocalISODate,
+  addDaysToISO,
+  parseNaturalFutureDate,
+  normalizeTaskDateInput,
+} from '../../Utils/taskDateUtils';
 
 // Default wake-word regex patterns for fallback
 const WAKE_WORD_REGEX =
@@ -116,10 +122,11 @@ export function extractRecurrence(text: string): {
   return { repeat, frequency, isRecurring, cleanText: clean };
 }
 
-// Extracts relative date and time from speech
+// Extracts relative or calendar date and time from speech
 export function extractDateTime(text: string): {
   cleanTitle: string;
   date?: string;
+  dueDate?: string | null;
   time?: string;
   repeat?: string;
   frequency?: string;
@@ -133,15 +140,19 @@ export function extractDateTime(text: string): {
     )
     .trim();
 
+  const todayISO = toLocalISODate();
   let date: string | undefined;
+  let dueDate: string | null | undefined;
   let time: string | undefined;
 
   if (/\bevery\s+morning\b/i.test(text)) {
     time = '08:00 AM';
     date = 'Today';
+    dueDate = todayISO;
   } else if (/\bevery\s+night\b|\bevery\s+evening\b/i.test(text)) {
     time = '08:00 PM';
     date = 'Today';
+    dueDate = todayISO;
   }
 
   // 1. Relative duration: "in 30 minutes", "in 1 hour", "in 15 mins", "in half an hour"
@@ -165,28 +176,41 @@ export function extractDateTime(text: string): {
     }
   }
 
-  // 2. Relative dates
+  // 2. Relative & calendar future dates
   if (/\btomorrow\s+morning\b/i.test(clean)) {
     date = 'Tomorrow';
+    dueDate = addDaysToISO(todayISO, 1);
     time = time || '09:00 AM';
     clean = clean.replace(/\btomorrow\s+morning\b/gi, ' ').trim();
   } else if (/\btomorrow\s+afternoon\b/i.test(clean)) {
     date = 'Tomorrow';
+    dueDate = addDaysToISO(todayISO, 1);
     time = time || '02:00 PM';
     clean = clean.replace(/\btomorrow\s+afternoon\b/gi, ' ').trim();
   } else if (/\btomorrow\s+night\b/i.test(clean)) {
     date = 'Tomorrow';
+    dueDate = addDaysToISO(todayISO, 1);
     time = time || '08:00 PM';
     clean = clean.replace(/\btomorrow\s+night\b/gi, ' ').trim();
   } else if (/\btomorrow\b/i.test(clean)) {
     date = 'Tomorrow';
+    dueDate = addDaysToISO(todayISO, 1);
     clean = clean.replace(/\btomorrow\b/gi, ' ').trim();
   } else if (/\btoday\b/i.test(clean)) {
     date = 'Today';
+    dueDate = todayISO;
     clean = clean.replace(/\btoday\b/gi, ' ').trim();
   } else if (/\bnext\s+week\b/i.test(clean)) {
     date = 'Next Week';
+    dueDate = normalizeTaskDateInput('Next Week').dueDate;
     clean = clean.replace(/\bnext\s+week\b/gi, ' ').trim();
+  } else {
+    const futureMatch = parseNaturalFutureDate(clean);
+    if (futureMatch) {
+      date = futureMatch.displayDate;
+      dueDate = futureMatch.dueDate;
+      clean = clean.replace(futureMatch.matchedText, ' ').trim();
+    }
   }
 
   // 3. Tonight with hour: e.g. "at 8 tonight", "at 8:00 tonight", "8 tonight"
@@ -198,9 +222,11 @@ export function extractDateTime(text: string): {
     const min = tonightHourMatch[2] ? `:${tonightHourMatch[2]}` : '';
     time = `${hour}${min} PM`;
     date = 'Tonight';
+    dueDate = todayISO;
     clean = clean.replace(tonightHourMatch[0], ' ').trim();
   } else if (/\b(?:tonight|this\s+evening)\b/i.test(clean)) {
     date = 'Tonight';
+    dueDate = todayISO;
     time = time || '07:00 PM';
     clean = clean.replace(/\b(?:tonight|this\s+evening)\b/gi, ' ').trim();
   }
@@ -238,6 +264,7 @@ export function extractDateTime(text: string): {
   return {
     cleanTitle: clean,
     date,
+    dueDate,
     time,
     repeat: recurrenceResult.repeat,
     frequency: recurrenceResult.frequency,
@@ -409,12 +436,16 @@ export const IntentRecognitionService = {
 
     // D: Tasks: Show
     if (showTasksPattern(normalized)) {
+      const isUpcomingQuery =
+        /\b(?:upcoming|future|tomorrow|next\s+week)\b/i.test(normalized);
       return {
         intent: 'SHOW_TASKS',
         originalTranscript: raw,
-        parameters: {},
-        displayTitle: 'Today’s Tasks',
-        displayBody: 'Fetching your task schedule for today.',
+        parameters: isUpcomingQuery ? { query: 'upcoming' } : {},
+        displayTitle: isUpcomingQuery ? 'Upcoming Tasks' : 'Today’s Tasks',
+        displayBody: isUpcomingQuery
+          ? 'Fetching your upcoming scheduled objectives.'
+          : 'Fetching your task schedule for today.',
       };
     }
 
@@ -1112,7 +1143,7 @@ export const IntentRecognitionService = {
         };
       }
 
-      const { cleanTitle, date, time } = extractDateTime(remainder);
+      const { cleanTitle, date, dueDate, time } = extractDateTime(remainder);
       const title = cleanTitle || remainder;
 
       return {
@@ -1121,13 +1152,17 @@ export const IntentRecognitionService = {
         parameters: {
           title,
           date,
+          dueDate,
           time,
         },
         displayTitle: `Task Added: ${title}`,
         displayBody: date
-          ? `Added to your daily schedule for ${date}.`
+          ? `Added to your schedule for ${date}.`
           : 'Added to your daily schedule.',
-        spokenConfirmation: `Your task to ${title} has been added.`,
+        spokenConfirmation:
+          date && date !== 'Today'
+            ? `Your task to ${title} has been added for ${date.toLowerCase()}.`
+            : `Your task to ${title} has been added.`,
       };
     }
 
@@ -1161,7 +1196,7 @@ export const IntentRecognitionService = {
       !/\b(?:remember\s+to|reminder|alert|habit|focus)\b/i.test(cleanRaw)
     ) {
       const remainder = needToMatch[1].trim();
-      const { cleanTitle, date, time } = extractDateTime(remainder);
+      const { cleanTitle, date, dueDate, time } = extractDateTime(remainder);
       const title = cleanTitle || remainder;
       const targetDate = date || 'Today';
       return {
@@ -1170,11 +1205,15 @@ export const IntentRecognitionService = {
         parameters: {
           title,
           date: targetDate,
+          dueDate: dueDate ?? toLocalISODate(),
           time,
         },
         displayTitle: `Task Added: ${title}`,
-        displayBody: `Added to your daily schedule for ${targetDate}.`,
-        spokenConfirmation: `Your task to ${title} has been added.`,
+        displayBody: `Added to your schedule for ${targetDate}.`,
+        spokenConfirmation:
+          targetDate !== 'Today'
+            ? `Your task to ${title} has been added for ${targetDate.toLowerCase()}.`
+            : `Your task to ${title} has been added.`,
       };
     }
 
@@ -1184,18 +1223,20 @@ export const IntentRecognitionService = {
     );
     if (addToListMatch && !/\b(?:habit|habits)\b/i.test(cleanRaw)) {
       const core = addToListMatch[1].trim();
-      const { cleanTitle, date, time } = extractDateTime(core);
+      const { cleanTitle, date, dueDate, time } = extractDateTime(core);
       const title = cleanTitle || core;
+      const targetDate = date || 'Today';
       return {
         intent: 'ADD_TASK',
         originalTranscript: raw,
         parameters: {
           title,
-          date: date || 'Today',
+          date: targetDate,
+          dueDate: dueDate ?? toLocalISODate(),
           time,
         },
         displayTitle: `Task Added: ${title}`,
-        displayBody: 'Added to your daily schedule for Today.',
+        displayBody: `Added to your schedule for ${targetDate}.`,
         spokenConfirmation: `Your task to ${title} has been added.`,
       };
     }
@@ -1206,18 +1247,20 @@ export const IntentRecognitionService = {
     );
     if (rememberMatch) {
       const remainder = rememberMatch[1].trim();
-      const { cleanTitle, date, time } = extractDateTime(remainder);
+      const { cleanTitle, date, dueDate, time } = extractDateTime(remainder);
       const title = cleanTitle || remainder;
+      const targetDate = date || 'Today';
       return {
         intent: 'ADD_TASK',
         originalTranscript: raw,
         parameters: {
           title,
-          date: date || 'Today',
+          date: targetDate,
+          dueDate: dueDate ?? toLocalISODate(),
           time,
         },
         displayTitle: `Task Added: ${title}`,
-        displayBody: `Added to your daily schedule for ${date || 'Today'}.`,
+        displayBody: `Added to your schedule for ${targetDate}.`,
         spokenConfirmation: `Your task to ${title} has been added.`,
       };
     }
@@ -1228,18 +1271,20 @@ export const IntentRecognitionService = {
     );
     if (putOnListMatch) {
       const core = putOnListMatch[1].trim();
-      const { cleanTitle, date, time } = extractDateTime(core);
+      const { cleanTitle, date, dueDate, time } = extractDateTime(core);
       const title = cleanTitle || core;
+      const targetDate = date || 'Today';
       return {
         intent: 'ADD_TASK',
         originalTranscript: raw,
         parameters: {
           title,
-          date: date || 'Today',
+          date: targetDate,
+          dueDate: dueDate ?? toLocalISODate(),
           time,
         },
         displayTitle: `Task Added: ${title}`,
-        displayBody: 'Added to your daily schedule for Today.',
+        displayBody: `Added to your schedule for ${targetDate}.`,
         spokenConfirmation: `Your task to ${title} has been added.`,
       };
     }
@@ -1337,13 +1382,15 @@ function sprintPattern(normalized: string): boolean {
 
 function showTasksPattern(normalized: string): boolean {
   return (
-    /\b(?:show|what\s+are|list|view|read)\s+(?:my\s+)?tasks\b/i.test(
+    /\b(?:show|what\s+are|list|view|read)\s+(?:my\s+)?(?:upcoming\s+|future\s+|today['’]?s\s+)?tasks\b/i.test(
       normalized,
     ) ||
     /\bwhat['’]?s\s+on\s+my\s+(?:tasks?|to[\s-]do\s+list)\b/i.test(
       normalized,
     ) ||
-    /^tasks\s*(?:for\s+today)?$/i.test(normalized)
+    /^(?:upcoming\s+)?tasks\s*(?:for\s+(?:today|tomorrow|next\s+week))?$/i.test(
+      normalized,
+    )
   );
 }
 

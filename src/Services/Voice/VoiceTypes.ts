@@ -1,4 +1,5 @@
 import { Task, Reminder, HabitItem } from '../../Context/TaskReminderContext';
+import { TaskRecurrence } from '../../Utils/taskDateUtils';
 
 export type VoiceCommandIntent =
   | 'ADD_TASK'
@@ -33,6 +34,7 @@ export type MissingSlotType =
 export interface ExtractedSlots {
   title?: string;
   date?: string;
+  dueDate?: string | null;
   time?: string;
   repeat?: string; // 'Once' | 'Daily' | 'Weekly' | 'Monthly' | custom
   isRecurring?: boolean;
@@ -80,7 +82,10 @@ export interface ExecutionContext {
     iconType?: 'mail' | 'users';
     priority?: 'low' | 'medium' | 'high';
     date?: string;
+    dueDate?: string | null;
     time?: string;
+    dueTime?: string | null;
+    recurrence?: TaskRecurrence;
   }) => any;
   toggleTask: (id: string) => any;
 

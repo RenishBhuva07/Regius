@@ -299,21 +299,31 @@ export function buildConfirmationMessage(
     }
 
     case 'SHOW_TASKS': {
+      const isUpcoming = data?.query === 'upcoming';
       const count = data?.count || 0;
       const items = data?.items || [];
       const itemNames = items.slice(0, 3).join(', ');
-      const spokenText =
-        count === 0
-          ? 'You have no pending tasks for today. Great job!'
-          : `You have ${count} pending task${count === 1 ? '' : 's'}${
+      const spokenText = isUpcoming
+        ? count === 0
+          ? 'You have no upcoming tasks scheduled.'
+          : `You have ${count} upcoming task${count === 1 ? '' : 's'}${
               itemNames ? ': ' + itemNames : ''
-            }.`;
+            }.`
+        : count === 0
+        ? 'You have no pending tasks for today. Great job!'
+        : `You have ${count} pending task${count === 1 ? '' : 's'}${
+            itemNames ? ': ' + itemNames : ''
+          }.`;
 
       return {
         spokenText,
-        displayTitle: `Today's Tasks (${count} Pending)`,
+        displayTitle: isUpcoming
+          ? `Upcoming Tasks (${count})`
+          : `Today's Tasks (${count} Pending)`,
         displayBody: spokenText,
-        resultSummary: `${count} pending task${count === 1 ? '' : 's'}`,
+        resultSummary: isUpcoming
+          ? `${count} upcoming task${count === 1 ? '' : 's'}`
+          : `${count} pending task${count === 1 ? '' : 's'}`,
         contextualExecutingText: 'Fetching your tasks...',
       };
     }

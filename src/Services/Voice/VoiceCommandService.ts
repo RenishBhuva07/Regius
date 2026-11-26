@@ -15,6 +15,11 @@ import {
 import { IntentRecognitionService } from './IntentRecognitionService';
 
 import { VoiceAssistantState } from './VoiceStateMachine';
+import {
+  toLocalISODate,
+  normalizeTaskDateInput,
+  classifyTaskHorizon,
+} from '../../Utils/taskDateUtils';
 
 // Re-export types for backward compatibility across the project
 export type {
@@ -74,10 +79,16 @@ export const VoiceCommandService = {
 
           const taskDate = command.parameters.date || 'Today';
           const taskTime = command.parameters.time || '10:00 AM';
+          const resolvedDueDate =
+            command.parameters.dueDate !== undefined
+              ? command.parameters.dueDate
+              : normalizeTaskDateInput(taskDate).dueDate;
           const createdTask = ctx.addTask({
             title,
             date: taskDate,
+            dueDate: resolvedDueDate,
             time: taskTime,
+            dueTime: taskTime,
             category: command.parameters.category || 'works',
             priority: command.parameters.priority || 'medium',
           }) as Task | undefined;
@@ -171,7 +182,16 @@ export const VoiceCommandService = {
         }
 
         case 'SHOW_TASKS': {
-          const pending = ctx.tasks.filter(t => !t.done);
+          const isUpcomingQuery = command.parameters.query === 'upcoming';
+          const todayISO = toLocalISODate();
+          const pending = ctx.tasks.filter(t => {
+            if (t.done) return false;
+            if (!t.dueDate && !t.date) return !isUpcomingQuery;
+            const horizon = classifyTaskHorizon(t, todayISO);
+            return isUpcomingQuery
+              ? horizon === 'upcoming'
+              : horizon === 'today' || horizon === 'overdue';
+          });
           const opResult: OperationExecutionResult = {
             success: true,
             intent: 'SHOW_TASKS',
@@ -179,6 +199,7 @@ export const VoiceCommandService = {
             data: {
               count: pending.length,
               items: pending.map(t => t.label),
+              query: command.parameters.query,
             },
           };
           const conf = buildConfirmationMessage(opResult);
