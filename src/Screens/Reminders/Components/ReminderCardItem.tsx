@@ -26,6 +26,8 @@ import {
   CalendarCheck,
   Pencil,
   Flame,
+  Trash2,
+  AlertTriangle,
 } from 'lucide-react-native';
 import { Fonts } from '../../../Theme/fonts';
 import { Typography } from '../../../Theme/Typographys';
@@ -33,7 +35,14 @@ import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../../Theme/useAppTheme';
 import { Badge } from '../../../Common/Badge';
 import { getCutoutCardPath } from '../../../Common/CutoutCardSvg';
-import { Reminder } from '../../../Context/TaskReminderContext';
+import { Reminder } from '../../../Context/ReminderContext';
+import {
+  format24hTo12h,
+  formatTimeUntil,
+  getReminderScheduledDateTime,
+  isReminderOverdue,
+} from '../../../Utils/reminderDateUtils';
+import { formatDisplayDate } from '../../../Utils/taskDateUtils';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 interface ReminderCardItemProps {
@@ -44,6 +53,8 @@ interface ReminderCardItemProps {
   onSpeak: (reminder: Reminder, e: any) => void;
   onEdit?: (reminder: Reminder) => void;
   onDetails?: (reminder: Reminder) => void;
+  onDelete?: (reminder: Reminder) => void;
+  onLongPress?: (reminder: Reminder) => void;
 }
 
 export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
@@ -54,15 +65,20 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
   onSpeak,
   onEdit,
   onDetails,
+  onDelete,
+  onLongPress,
 }) => {
   const scaleAnim = useRef(new Animated.Value(1)).current;
   const translateX = useRef(new Animated.Value(0)).current;
   const detailsScaleAnim = useRef(new Animated.Value(1)).current;
   const editScaleAnim = useRef(new Animated.Value(1)).current;
+  const deleteScaleAnim = useRef(new Animated.Value(1)).current;
   const currentX = useRef(0);
   const isOpenRef = useRef(false);
 
-  const ACTIONS_WIDTH = ResponsivePixels.size138;
+  const ACTIONS_WIDTH = onDelete
+    ? ResponsivePixels.size200
+    : ResponsivePixels.size138;
   const { isDarkMode, textPrimary, textSecondary } = useAppTheme();
   const [localChecked, setLocalChecked] = useState(isChecked);
 
@@ -242,6 +258,30 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
     }).start();
   }, [editScaleAnim]);
 
+  const handleDeletePress = (e: any) => {
+    e?.stopPropagation?.();
+    closeSwipe();
+    onDelete?.(reminder);
+  };
+
+  const handlePressInDelete = useCallback(() => {
+    Animated.spring(deleteScaleAnim, {
+      toValue: 0.92,
+      tension: 250,
+      friction: 8,
+      useNativeDriver: true,
+    }).start();
+  }, [deleteScaleAnim]);
+
+  const handlePressOutDelete = useCallback(() => {
+    Animated.spring(deleteScaleAnim, {
+      toValue: 1,
+      tension: 250,
+      friction: 8,
+      useNativeDriver: true,
+    }).start();
+  }, [deleteScaleAnim]);
+
   const actionsOpacity = translateX.interpolate({
     inputRange: [-ACTIONS_WIDTH, -25, 0],
     outputRange: [1, 0.5, 0],
@@ -296,11 +336,24 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
 
   const theme = getCategoryStyles();
   const IconComponent = theme.Icon;
+  const overdue = !localChecked && isReminderOverdue(reminder);
+  const isSnoozed = !localChecked && !!reminder.snoozedUntil;
+  const displayTime = reminder.scheduledTime
+    ? format24hTo12h(reminder.scheduledTime)
+    : reminder.time;
+  const displayDate = reminder.scheduledDate
+    ? formatDisplayDate(reminder.scheduledDate)
+    : reminder.date;
+  const scheduledDt = getReminderScheduledDateTime(reminder);
+  const snoozeText =
+    isSnoozed && scheduledDt ? `Snoozed (${formatTimeUntil(scheduledDt)})` : null;
   const hasFooter = !!(
-    reminder.time ||
-    reminder.date ||
+    displayTime ||
+    displayDate ||
     reminder.repeat ||
-    reminder.urgentAlarm
+    reminder.urgentAlarm ||
+    overdue ||
+    isSnoozed
   );
 
   return (
@@ -309,6 +362,7 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
       <Animated.View
         style={[
           styles.actionsTray,
+          { width: ACTIONS_WIDTH },
           {
             opacity: actionsOpacity,
           },
@@ -366,6 +420,32 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
             </TouchableOpacity>
           </Animated.View>
         )}
+
+        {onDelete && (
+          <Animated.View
+            style={[
+              styles.actionBtnAnimWrap,
+              {
+                transform: [{ scale: deleteScaleAnim }],
+              },
+            ]}
+          >
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPressIn={handlePressInDelete}
+              onPressOut={handlePressOutDelete}
+              onPress={handleDeletePress}
+              style={styles.actionBtnDelete}
+              accessibilityRole="button"
+              accessibilityLabel={`Delete ${reminder.title}`}
+            >
+              <View style={styles.actionIconAuraDelete}>
+                <Trash2 size={ResponsivePixels.size13_5} color={Colors.CategoryRedAccent} strokeWidth={2.6} />
+              </View>
+              <Text style={styles.actionBtnText}>Delete</Text>
+            </TouchableOpacity>
+          </Animated.View>
+        )}
       </Animated.View>
 
       {/* Front Card Container with PanResponder */}
@@ -392,6 +472,8 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
             },
           ]}
           onPress={handleCardPress}
+          onLongPress={() => onLongPress?.(reminder)}
+          delayLongPress={350}
           accessibilityRole="checkbox"
           accessibilityState={{ checked: localChecked }}
           accessibilityLabel={reminder.title}
@@ -410,6 +492,14 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                   ? isDarkMode
                     ? Colors.DarkSurfaceDeep
                     : Colors.CompletedCardCream
+                  : overdue
+                  ? isDarkMode
+                    ? Colors.EventDarkBg
+                    : Colors.CategoryOrangeSoftBg
+                  : isSnoozed
+                  ? isDarkMode
+                    ? Colors.MindfulDarkBg
+                    : Colors.MindfulTintLight
                   : theme.bg
               }
               stroke={
@@ -417,12 +507,18 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                   ? isDarkMode
                     ? Colors.DarkBorderSubtle
                     : Colors.TimelineBorderWarm
+                  : overdue
+                  ? Colors.AccentAmber
+                  : isSnoozed
+                  ? Colors.LavenderPurple
                   : theme.border
               }
               strokeWidth={1.5}
               strokeLinejoin="round"
             />
           </Svg>
+
+          {overdue && <View style={styles.overdueStripe} />}
 
           {/* Floating Checkbox in Top-Right Cutout */}
           <TouchableOpacity
@@ -575,30 +671,40 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
               ]}
             >
               <View style={styles.footerLeft}>
-                {reminder.time ? (
+                {displayTime ? (
                   <View
                     style={[
                       styles.metaTag,
                       isDarkMode && { backgroundColor: Colors.DarkCheckboxUnchecked },
+                      overdue && styles.overdueTag,
                     ]}
                   >
-                    <Clock
-                      size={ResponsivePixels.size11_5}
-                      color={isDarkMode ? Colors.SteelMist : Colors.MutedSlateSubtext}
-                      strokeWidth={2}
-                    />
+                    {overdue ? (
+                      <AlertTriangle
+                        size={ResponsivePixels.size11_5}
+                        color={Colors.AccentAmber}
+                        strokeWidth={2.2}
+                      />
+                    ) : (
+                      <Clock
+                        size={ResponsivePixels.size11_5}
+                        color={isDarkMode ? Colors.SteelMist : Colors.MutedSlateSubtext}
+                        strokeWidth={2}
+                      />
+                    )}
                     <Text
                       style={[
                         styles.metaText,
                         isDarkMode && { color: Colors.SteelMist },
+                        overdue && { color: Colors.AccentAmber },
                       ]}
                     >
-                      {reminder.time}
+                      {displayTime}
                     </Text>
                   </View>
                 ) : null}
 
-                {reminder.date ? (
+                {displayDate ? (
                   <View
                     style={[
                       styles.metaTag,
@@ -616,12 +722,16 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                         isDarkMode && { color: Colors.SteelMist },
                       ]}
                     >
-                      {reminder.date}
+                      {displayDate}
                     </Text>
                   </View>
                 ) : null}
 
-                {reminder.repeat ? (
+                {snoozeText ? (
+                  <Badge label={snoozeText} variant="purple" size="sm" />
+                ) : null}
+
+                {reminder.repeat && reminder.repeat !== 'Once' ? (
                   <View
                     style={[
                       styles.metaTag,
@@ -642,9 +752,11 @@ export const ReminderCardItem: React.FC<ReminderCardItemProps> = ({
                 ) : null}
               </View>
 
-              {reminder.urgentAlarm && (
+              {reminder.urgentAlarm ? (
                 <Badge label="URGENT" variant="red" size="sm" />
-              )}
+              ) : overdue ? (
+                <Badge label="OVERDUE" variant="orange" size="sm" />
+              ) : null}
             </View>
           )}
         </TouchableOpacity>
@@ -750,6 +862,56 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: ResponsivePixels.size3,
+  },
+  actionBtnDelete: {
+    width: ResponsivePixels.size60,
+    height: ResponsivePixels.size56,
+    backgroundColor: Colors.NeroBlack,
+    borderRadius: ResponsivePixels.size18,
+    borderWidth: 1.2,
+    borderTopWidth: 1.8,
+    borderTopColor: withAlpha(Colors.PureWhite, 0.45),
+    borderLeftColor: withAlpha(Colors.PureWhite, 0.14),
+    borderRightColor: withAlpha(Colors.PureWhite, 0.14),
+    borderBottomWidth: 3.5,
+    borderBottomColor: Colors.DarkChipBevelAbyss,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: ResponsivePixels.size4,
+    ...Platform.select({
+      ios: {
+        shadowColor: Colors.CategoryRedAccent,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.38,
+        shadowRadius: 7,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
+  },
+  actionIconAuraDelete: {
+    width: ResponsivePixels.size28,
+    height: ResponsivePixels.size28,
+    borderRadius: ResponsivePixels.size14,
+    backgroundColor: withAlpha(Colors.CategoryRedAccent, 0.22),
+    borderWidth: 1.2,
+    borderColor: withAlpha(Colors.CategoryRedAccent, 0.48),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: ResponsivePixels.size3,
+  },
+  overdueStripe: {
+    position: 'absolute',
+    left: 0,
+    top: ResponsivePixels.size14,
+    bottom: ResponsivePixels.size14,
+    width: ResponsivePixels.size3,
+    borderRadius: ResponsivePixels.size2,
+    backgroundColor: Colors.AccentAmber,
+  },
+  overdueTag: {
+    backgroundColor: withAlpha(Colors.AccentAmber, 0.14),
   },
   actionBtnText: {
     fontFamily: Fonts.poppins.bold,

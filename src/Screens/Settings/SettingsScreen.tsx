@@ -30,6 +30,7 @@ import {
 } from '../../Services/VoiceSettingsService';
 import { AudioPlayerService } from '../../Services/AudioPlayerService';
 import { RegiusSpeechService } from '../../Services/RegiusSpeechService';
+import { ReminderVoiceScriptService } from '../../Services/Reminders/ReminderVoiceScriptService';
 import type { VoiceOption } from './Components';
 import { useVoiceWakeWord } from '../../Context/VoiceWakeWordContext';
 import { useMilestones } from '../../Context/MilestoneContext';
@@ -94,6 +95,7 @@ const SettingsScreen: React.FC = () => {
   const [selectedVoiceId, setSelectedVoiceId] = useState('af_bella');
   const [speechSpeed, setSpeechSpeed] = useState<number>(1.0);
   const [autoSpeakReplies, setAutoSpeakReplies] = useState(true);
+  const [voiceRemindersEnabled, setVoiceRemindersEnabled] = useState(true);
 
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [hapticFeedback, setHapticFeedback] = useState(true);
@@ -135,6 +137,8 @@ const SettingsScreen: React.FC = () => {
         if (saved.speechSpeed) setSpeechSpeed(saved.speechSpeed);
         if (saved.autoSpeakReplies !== undefined)
           setAutoSpeakReplies(saved.autoSpeakReplies);
+        if (saved.voiceRemindersEnabled !== undefined)
+          setVoiceRemindersEnabled(saved.voiceRemindersEnabled);
       });
     }, []),
   );
@@ -316,6 +320,7 @@ const SettingsScreen: React.FC = () => {
 
   const handleSelectWakePreset = (phrase: string) => {
     setWakeWordPhrase(phrase);
+    ReminderVoiceScriptService.invalidateCache();
   };
 
   const handleResetVoiceDefaults = async () => {
@@ -323,6 +328,13 @@ const SettingsScreen: React.FC = () => {
     setSelectedVoiceId(DEFAULT_VOICE_SETTINGS.selectedVoiceId);
     setSpeechSpeed(DEFAULT_VOICE_SETTINGS.speechSpeed);
     setAutoSpeakReplies(DEFAULT_VOICE_SETTINGS.autoSpeakReplies);
+    setVoiceRemindersEnabled(DEFAULT_VOICE_SETTINGS.voiceRemindersEnabled);
+    ReminderVoiceScriptService.invalidateCache();
+  };
+
+  const handleToggleVoiceReminders = async (val: boolean) => {
+    setVoiceRemindersEnabled(val);
+    await VoiceSettingsService.saveSettings({ voiceRemindersEnabled: val });
   };
 
   const handleClearCache = async () => {
@@ -452,6 +464,8 @@ const SettingsScreen: React.FC = () => {
           onToggleMorningBriefing={setMorningBriefing}
           notificationsEnabled={notificationsEnabled}
           onToggleNotifications={setNotificationsEnabled}
+          voiceRemindersEnabled={voiceRemindersEnabled}
+          onToggleVoiceReminders={handleToggleVoiceReminders}
         />
 
         <StorageSection

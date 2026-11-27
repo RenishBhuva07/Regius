@@ -17,18 +17,21 @@ import {
   Animated,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  Alert,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { Plus, Bell, CheckCircle2 } from 'lucide-react-native';
+import { Plus, Bell, CheckCircle2, BellOff } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 
 import { Fonts } from '../../Theme/fonts';
 import { Typography } from '../../Theme/Typographys';
-import { Colors } from '../../Assets/StyleUtilities/Colors';
+import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../Theme/useAppTheme';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
-import { useTaskReminder, Reminder } from '../../Context/TaskReminderContext';
+import { useReminders, Reminder } from '../../Context/ReminderContext';
+import { sortRemindersBySchedule } from '../../Services/Reminders/ReminderService';
+import { isReminderOverdue } from '../../Utils/reminderDateUtils';
 import { ScreenHeader, SCREEN_HEADER_HEIGHT } from '../../Common/ScreenHeader';
 import { KokoroTTSService } from '../../Services/Kokoro/KokoroTTSService';
 import { AudioPlayerService } from '../../Services/AudioPlayerService';
@@ -41,6 +44,9 @@ import {
 import ReminderScheduleBento from './Components/ReminderScheduleBento';
 import ReminderCategoryCarousel from './Components/ReminderCategoryCarousel';
 import ReminderCardItem from './Components/ReminderCardItem';
+import OverdueSection from './Components/OverdueSection';
+import SnoozeBottomSheet from './Components/SnoozeBottomSheet';
+import NotificationPermissionSheet from './Components/NotificationPermissionSheet';
 import ReminderSectionBackgroundSvg from './Components/ReminderSectionBackgroundSvg';
 import ReminderEmptyDoodleSvg from './Components/ReminderEmptyDoodleSvg';
 import ReminderWatermarkDoodleSvg from './Components/ReminderWatermarkDoodleSvg';
@@ -61,20 +67,28 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
     borderLight,
   } = useAppTheme();
   const [activeTab, setActiveTab] = useState<TabKey>('upcoming');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(
-    'daily',
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [editingReminder, setEditingReminder] = useState<Reminder | null>(null);
+  const [snoozingReminder, setSnoozingReminder] = useState<Reminder | null>(
+    null,
+  );
 
   const {
     reminders,
+    hasNotificationPermission,
+    isPermissionSheetVisible,
     toggleReminder,
     updateReminder,
     deleteReminder,
-    selectedReminders,
-    setSelectedReminders,
+    snoozeReminder,
+    rescheduleOverdueToToday,
+    completeAllReminders,
+    restoreAllReminders,
+    requestNotificationPermission,
+    dismissPermissionSheet,
+    openPermissionSheet,
     openReminderModal,
-  } = useTaskReminder();
+  } = useReminders();
 
   const [speakingReminderId, setSpeakingReminderId] = useState<string | null>(
     null,
@@ -119,21 +133,34 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
     [reminders],
   );
 
-  // Filter reminders based on activeTab ('upcoming' vs 'completed') and selectedCategory
+  // Filter & chronologically sort reminders
   const filteredReminders = useMemo(() => {
-    return reminders.filter(reminder => {
-      // 1. Tab filtering
+    const base = reminders.filter(reminder => {
       if (activeTab === 'upcoming' && reminder.done) return false;
       if (activeTab === 'completed' && !reminder.done) return false;
-
-      // 2. Category filtering
-      if (selectedCategory) {
+      if (selectedCategory && selectedCategory !== 'all') {
         return reminder.category === selectedCategory;
       }
-
       return true;
     });
+    return sortRemindersBySchedule(base);
   }, [reminders, activeTab, selectedCategory]);
+
+  const overdueReminders = useMemo(
+    () =>
+      activeTab === 'upcoming'
+        ? filteredReminders.filter(r => isReminderOverdue(r))
+        : [],
+    [filteredReminders, activeTab],
+  );
+
+  const upcomingReminders = useMemo(
+    () =>
+      activeTab === 'upcoming'
+        ? filteredReminders.filter(r => !isReminderOverdue(r))
+        : filteredReminders,
+    [filteredReminders, activeTab],
+  );
 
   const handleToggleReminder = useCallback(
     (id: string) => {
@@ -179,49 +206,123 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
     [speakingReminderId],
   );
 
-  const selectAll = () => {
-    const currentList = filteredReminders;
-    const allSelected = currentList.every(r => selectedReminders.has(r.id));
-    if (allSelected) {
-      setSelectedReminders(prev => {
-        const next = new Set(prev);
-        currentList.forEach(r => next.delete(r.id));
-        return next;
-      });
-    } else {
-      setSelectedReminders(prev => {
-        const next = new Set(prev);
-        currentList.forEach(r => next.add(r.id));
-        return next;
+  const handleDeleteReminder = useCallback(
+    (rem: Reminder) => {
+      Alert.alert(
+        'Delete Reminder',
+        `Are you sure you want to delete "${rem.title}"?`,
+        [
+          { text: 'Cancel', style: 'cancel' },
+          {
+            text: 'Delete',
+            style: 'destructive',
+            onPress: () => {
+              deleteReminder(rem.id);
+              Toast.show({
+                type: 'info',
+                text1: 'Reminder Deleted',
+                text2: 'Alert removed from your schedule.',
+              });
+            },
+          },
+        ],
+      );
+    },
+    [deleteReminder],
+  );
+
+  const handleLongPressReminder = useCallback(
+    (rem: Reminder) => {
+      Alert.alert(rem.title, 'Choose an action', [
+        ...(!rem.done
+          ? [
+              {
+                text: 'Snooze',
+                onPress: () => setSnoozingReminder(rem),
+              },
+            ]
+          : []),
+        {
+          text: 'Edit',
+          onPress: () => setEditingReminder(rem),
+        },
+        {
+          text: 'View Details',
+          onPress: () => handleViewDetails(rem),
+        },
+        {
+          text: 'Delete',
+          style: 'destructive',
+          onPress: () => handleDeleteReminder(rem),
+        },
+        { text: 'Cancel', style: 'cancel' },
+      ]);
+    },
+    [handleViewDetails, handleDeleteReminder],
+  );
+
+  const handleRescheduleAllOverdue = useCallback(() => {
+    const count = rescheduleOverdueToToday(overdueReminders.map(r => r.id));
+    if (count > 0) {
+      Toast.show({
+        type: 'success',
+        text1: 'Overdue Alerts Rescheduled',
+        text2: `Moved ${count} reminder${count > 1 ? 's' : ''} to today.`,
       });
     }
-  };
+  }, [rescheduleOverdueToToday, overdueReminders]);
+
+  const handleBulkToggle = useCallback(() => {
+    const ids = filteredReminders.map(r => r.id);
+    if (activeTab === 'upcoming') {
+      const count = completeAllReminders(ids);
+      if (count > 0) {
+        Toast.show({
+          type: 'success',
+          text1: 'All reminders acknowledged',
+          text2: `Completed ${count} reminder${count > 1 ? 's' : ''}.`,
+        });
+      }
+    } else {
+      const count = restoreAllReminders(ids);
+      if (count > 0) {
+        Toast.show({
+          type: 'success',
+          text1: 'Reminders restored to active list',
+          text2: `${count} reminder${count > 1 ? 's' : ''} returned to upcoming.`,
+        });
+      }
+    }
+  }, [filteredReminders, activeTab, completeAllReminders, restoreAllReminders]);
 
   // Section title matching TasksScreen & HabitsScreen header badges
   const sectionTitle = useMemo(() => {
     if (activeTab === 'completed') {
       return 'Completed Alerts';
     }
-    if (selectedCategory === 'daily') {
-      return 'Today’s Daily Alerts';
-    }
-    if (selectedCategory) {
-      return `Today’s ${
+    if (selectedCategory && selectedCategory !== 'all') {
+      return `${
         selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)
-      }`;
+      } Alerts`;
     }
-    return 'Today’s Alerts';
+    return 'Scheduled Alerts';
   }, [activeTab, selectedCategory]);
 
-  // Section subtitle: "X of Y completed"
+  // Section subtitle: pending / overdue summary
   const sectionSubtitle = useMemo(() => {
-    const total = filteredReminders.length;
-    const completed = filteredReminders.filter(r => r.done).length;
     if (activeTab === 'completed') {
-      return `${completedRemindersCount} finished alerts`;
+      return `${filteredReminders.length} finished alerts`;
     }
-    return `${completed} of ${total} completed`;
-  }, [filteredReminders, activeTab, completedRemindersCount]);
+    if (overdueReminders.length > 0) {
+      return `${overdueReminders.length} overdue · ${upcomingReminders.length} upcoming`;
+    }
+    return `${filteredReminders.length} upcoming alerts`;
+  }, [
+    filteredReminders.length,
+    activeTab,
+    overdueReminders.length,
+    upcomingReminders.length,
+  ]);
 
   // Tabs configuration for TactileSegmentedTabs
   const reminderTabs = useMemo(
@@ -292,7 +393,28 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
             reminders={reminders}
             onAddReminder={openReminderModal}
           />
-        </View>
+          {/* Snooze Bottom Sheet */}
+      <SnoozeBottomSheet
+        visible={snoozingReminder !== null}
+        reminder={snoozingReminder}
+        onClose={() => setSnoozingReminder(null)}
+        onSelectSnooze={async (id, minutes) => {
+          await snoozeReminder(id, minutes);
+          Toast.show({
+            type: 'info',
+            text1: 'Reminder Snoozed',
+            text2: `Alert rescheduled in ${minutes} minutes.`,
+          });
+        }}
+      />
+
+      {/* Notification Permission Onboarding Sheet */}
+      <NotificationPermissionSheet
+        visible={isPermissionSheetVisible}
+        onAllow={requestNotificationPermission}
+        onDismiss={dismissPermissionSheet}
+      />
+    </View>
 
         {/* Signature Regius Tactile Segmented Tabs */}
         <TactileSegmentedTabs
@@ -319,51 +441,130 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
           bottomPadding={insets.bottom + ResponsivePixels.size130}
           containerStyle={styles.reminderSection}
         >
+          {/* Notification Permission Banner */}
+          {!hasNotificationPermission && pendingRemindersCount > 0 && (
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={openPermissionSheet}
+              style={[
+                styles.permissionBanner,
+                isDarkMode && {
+                  backgroundColor: withAlpha(Colors.AccentAmber, 0.12),
+                  borderColor: withAlpha(Colors.AccentAmber, 0.35),
+                },
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel="Enable reminder notifications"
+            >
+              <BellOff
+                size={ResponsivePixels.size15}
+                color={Colors.AccentAmber}
+                strokeWidth={2.3}
+              />
+              <Text
+                style={[styles.permissionBannerText, { color: textPrimary }]}
+                numberOfLines={2}
+              >
+                Notifications are off — tap to enable alert delivery.
+              </Text>
+            </TouchableOpacity>
+          )}
+
           {/* Reminders List or Empty State */}
           {filteredReminders.length === 0 ? (
             <View style={styles.emptyContainer}>
               <ReminderEmptyDoodleSvg />
               <Text style={[styles.emptyTitle, { color: textPrimary }]}>
-                No reminders here
+                {activeTab === 'completed'
+                  ? 'Nothing completed yet'
+                  : 'Your schedule is clear'}
               </Text>
               <Text style={[styles.emptySubtitle, { color: textSecondary }]}>
                 {activeTab === 'completed'
-                  ? 'No completed alerts in this category yet.'
+                  ? 'Completed alerts will appear here.'
                   : 'Tap “+” or the button below to schedule an alert.'}
               </Text>
               <TouchableOpacity
                 activeOpacity={0.85}
                 style={styles.addEmptyBtn}
-                onPress={openReminderModal}
+                onPress={() =>
+                  activeTab === 'completed'
+                    ? setActiveTab('upcoming')
+                    : openReminderModal()
+                }
               >
-                <Plus
-                  size={ResponsivePixels.size15}
-                  color={Colors.PureWhite}
-                  strokeWidth={2.5}
-                />
-                <Text style={styles.addEmptyBtnText}>Add Reminder</Text>
+                {activeTab !== 'completed' && (
+                  <Plus
+                    size={ResponsivePixels.size15}
+                    color={Colors.PureWhite}
+                    strokeWidth={2.5}
+                  />
+                )}
+                <Text style={styles.addEmptyBtnText}>
+                  {activeTab === 'completed' ? 'View Upcoming' : 'Add Reminder'}
+                </Text>
               </TouchableOpacity>
-            </View>
+              {/* Snooze Bottom Sheet */}
+      <SnoozeBottomSheet
+        visible={snoozingReminder !== null}
+        reminder={snoozingReminder}
+        onClose={() => setSnoozingReminder(null)}
+        onSelectSnooze={async (id, minutes) => {
+          await snoozeReminder(id, minutes);
+          Toast.show({
+            type: 'info',
+            text1: 'Reminder Snoozed',
+            text2: `Alert rescheduled in ${minutes} minutes.`,
+          });
+        }}
+      />
+
+      {/* Notification Permission Onboarding Sheet */}
+      <NotificationPermissionSheet
+        visible={isPermissionSheetVisible}
+        onAllow={requestNotificationPermission}
+        onDismiss={dismissPermissionSheet}
+      />
+    </View>
           ) : (
             <View style={styles.reminderListWrapper}>
-              <FlatList
-                data={filteredReminders}
-                keyExtractor={item => item.id}
-                scrollEnabled={false}
-                renderItem={({ item: rem }) => {
-                  const isChecked = rem.done || selectedReminders.has(rem.id);
-                  return (
+              {activeTab === 'upcoming' && overdueReminders.length > 0 && (
+                <OverdueSection
+                  overdueReminders={overdueReminders}
+                  onRescheduleAll={handleRescheduleAllOverdue}
+                  renderCard={rem => (
                     <ReminderCardItem
                       reminder={rem}
-                      isChecked={isChecked}
+                      isChecked={rem.done}
                       onToggle={handleToggleReminder}
                       isSpeaking={speakingReminderId === rem.id}
                       onSpeak={handleSpeakReminder}
                       onEdit={setEditingReminder}
                       onDetails={handleViewDetails}
+                      onDelete={handleDeleteReminder}
+                      onLongPress={handleLongPressReminder}
                     />
-                  );
-                }}
+                  )}
+                />
+              )}
+
+              <FlatList
+                data={upcomingReminders}
+                keyExtractor={item => item.id}
+                scrollEnabled={false}
+                renderItem={({ item: rem }) => (
+                  <ReminderCardItem
+                    reminder={rem}
+                    isChecked={rem.done}
+                    onToggle={handleToggleReminder}
+                    isSpeaking={speakingReminderId === rem.id}
+                    onSpeak={handleSpeakReminder}
+                    onEdit={setEditingReminder}
+                    onDetails={handleViewDetails}
+                    onDelete={handleDeleteReminder}
+                    onLongPress={handleLongPressReminder}
+                  />
+                )}
                 style={styles.reminderList}
                 contentContainerStyle={styles.listContent}
               />
@@ -371,24 +572,12 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
               {/* Complete / Restore All Reminder Button */}
               <TouchableOpacity
                 activeOpacity={0.85}
-                onPress={() => {
-                  const markDone = activeTab === 'upcoming';
-                  selectAll();
-                  Toast.show({
-                    type: 'success',
-                    text1: markDone
-                      ? 'All reminders acknowledged'
-                      : 'Reminders restored to active list',
-                    text2: markDone
-                      ? 'Marked as completed.'
-                      : 'Items are now back in your upcoming alerts queue.',
-                  });
-                }}
+                onPress={handleBulkToggle}
                 style={styles.selectAllBtn}
               >
                 <Text style={styles.selectAllText}>
                   {activeTab === 'upcoming'
-                    ? selectedCategory
+                    ? selectedCategory && selectedCategory !== 'all'
                       ? `Complete All ${
                           selectedCategory.charAt(0).toUpperCase() +
                           selectedCategory.slice(1)
@@ -397,7 +586,28 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
                     : 'Restore All to Active'}
                 </Text>
               </TouchableOpacity>
-            </View>
+              {/* Snooze Bottom Sheet */}
+      <SnoozeBottomSheet
+        visible={snoozingReminder !== null}
+        reminder={snoozingReminder}
+        onClose={() => setSnoozingReminder(null)}
+        onSelectSnooze={async (id, minutes) => {
+          await snoozeReminder(id, minutes);
+          Toast.show({
+            type: 'info',
+            text1: 'Reminder Snoozed',
+            text2: `Alert rescheduled in ${minutes} minutes.`,
+          });
+        }}
+      />
+
+      {/* Notification Permission Onboarding Sheet */}
+      <NotificationPermissionSheet
+        visible={isPermissionSheetVisible}
+        onAllow={requestNotificationPermission}
+        onDismiss={dismissPermissionSheet}
+      />
+    </View>
           )}
 
           {/* Footer brand watermark */}
@@ -430,6 +640,27 @@ export const RemindersScreen: React.FC<any> = ({ route }) => {
           }}
         />
       )}
+      {/* Snooze Bottom Sheet */}
+      <SnoozeBottomSheet
+        visible={snoozingReminder !== null}
+        reminder={snoozingReminder}
+        onClose={() => setSnoozingReminder(null)}
+        onSelectSnooze={async (id, minutes) => {
+          await snoozeReminder(id, minutes);
+          Toast.show({
+            type: 'info',
+            text1: 'Reminder Snoozed',
+            text2: `Alert rescheduled in ${minutes} minutes.`,
+          });
+        }}
+      />
+
+      {/* Notification Permission Onboarding Sheet */}
+      <NotificationPermissionSheet
+        visible={isPermissionSheetVisible}
+        onAllow={requestNotificationPermission}
+        onDismiss={dismissPermissionSheet}
+      />
     </View>
   );
 };
@@ -623,6 +854,23 @@ const styles = StyleSheet.create({
     ...Typography.bodySmallPoppinsSemiBold,
     color: Colors.PureWhite,
     fontSize: ResponsivePixels.size12_5,
+  },
+  permissionBanner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: ResponsivePixels.size10,
+    backgroundColor: Colors.CategoryOrangeSoftBg,
+    borderRadius: ResponsivePixels.size14,
+    borderWidth: 1,
+    borderColor: Colors.EventLightBorder,
+    paddingHorizontal: ResponsivePixels.size12,
+    paddingVertical: ResponsivePixels.size10,
+    marginBottom: ResponsivePixels.size12,
+  },
+  permissionBannerText: {
+    flex: 1,
+    fontFamily: Fonts.poppins.medium,
+    fontSize: ResponsivePixels.size12,
   },
 });
 

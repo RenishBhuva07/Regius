@@ -7,12 +7,12 @@ import {
   FlatList,
   Platform,
 } from 'react-native';
-import { Filter, CalendarCheck } from 'lucide-react-native';
+import { Filter, CalendarCheck, Sparkles } from 'lucide-react-native';
 import { Typography } from '../../../Theme/Typographys';
 import { Fonts } from '../../../Theme/fonts';
 import { SVGS } from '../../../Assets/Images';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
-import { Reminder } from '../../../Context/TaskReminderContext';
+import { Reminder } from '../../../Context/ReminderContext';
 import { CircularProgress } from '../../../Common/CircularProgress';
 import { OfficeBagIcon } from '../../../Common/EmblemIcons';
 import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
@@ -32,6 +32,18 @@ export interface ReminderCategoryItem {
 }
 
 const CATEGORY_ITEMS: ReminderCategoryItem[] = [
+  {
+    id: 'all',
+    label: 'All',
+    bgColor: Colors.CreamSurfaceAlt,
+    borderColor: Colors.RingBorder,
+    shadowColor: Colors.MidnightCharcoal,
+    Icon: Sparkles,
+    accentColor: Colors.MidnightCharcoal,
+    trackColor: Colors.RingBorder,
+    progressColor: Colors.MidnightCharcoal,
+    textColor: Colors.MidnightCharcoal,
+  },
   {
     id: 'daily',
     label: 'Daily',
@@ -95,7 +107,10 @@ export const ReminderCategoryCarousel: React.FC<
   const { isDarkMode, textPrimary } = useAppTheme();
 
   const getCategoryMetrics = (catId: string) => {
-    const catReminders = reminders.filter(r => r.category === catId);
+    const catReminders =
+      catId === 'all'
+        ? reminders
+        : reminders.filter(r => r.category === catId);
     const total = catReminders.length;
     const completed = catReminders.filter(r => r.done).length;
     const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
@@ -174,11 +189,16 @@ export const ReminderCategoryCarousel: React.FC<
         contentContainerStyle={styles.categoriesRow}
         style={styles.categoriesScroll}
         renderItem={({ item: cat }) => {
-          const isSelected = selectedCategory === cat.id;
+          const isSelected =
+            cat.id === 'all'
+              ? selectedCategory === null || selectedCategory === 'all'
+              : selectedCategory === cat.id;
           const metrics = getCategoryMetrics(cat.id);
 
           const cardBgColor = isDarkMode
-            ? cat.id === 'daily'
+            ? cat.id === 'all'
+              ? Colors.DarkCardBackground
+              : cat.id === 'daily'
               ? Colors.WorkDarkBg
               : cat.id === 'health'
               ? Colors.WellnessDarkBg
@@ -187,7 +207,9 @@ export const ReminderCategoryCarousel: React.FC<
               : Colors.EventDarkBg
             : cat.bgColor;
           const cardBorderColor = isDarkMode
-            ? cat.id === 'daily'
+            ? cat.id === 'all'
+              ? Colors.CarbonSlate
+              : cat.id === 'daily'
               ? Colors.WorkDarkBorder
               : cat.id === 'health'
               ? Colors.GreenGracious
@@ -199,7 +221,9 @@ export const ReminderCategoryCarousel: React.FC<
             ? withAlpha(Colors.PureWhite, 0.12)
             : cat.trackColor;
           const circularProgress = isDarkMode
-            ? cat.accentColor
+            ? cat.id === 'all'
+              ? Colors.PureWhite
+              : cat.accentColor
             : cat.progressColor;
           const circularText = isDarkMode ? Colors.PureWhite : cat.textColor;
 
@@ -208,7 +232,9 @@ export const ReminderCategoryCarousel: React.FC<
               key={cat.id}
               activeOpacity={0.85}
               onPress={() => {
-                if (selectedCategory === cat.id) {
+                if (cat.id === 'all') {
+                  onSelectCategory(null);
+                } else if (selectedCategory === cat.id) {
                   onSelectCategory(null);
                 } else {
                   onSelectCategory(cat.id);

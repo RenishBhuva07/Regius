@@ -17,7 +17,13 @@ import { Fonts } from '../../../Theme/fonts';
 import { Colors, withAlpha } from '../../../Assets/StyleUtilities/Colors';
 import { useAppTheme } from '../../../Theme/useAppTheme';
 import { Badge } from '../../../Common/Badge';
-import { Reminder } from '../../../Context/TaskReminderContext';
+import { Reminder } from '../../../Context/ReminderContext';
+import { getNextUpcomingReminder } from '../../../Services/Reminders/ReminderService';
+import {
+  formatTimeUntil,
+  getReminderScheduledDateTime,
+  isReminderOverdue,
+} from '../../../Utils/reminderDateUtils';
 import ResponsivePixels from '../../../Assets/StyleUtilities/ResponsivePixels';
 
 interface ReminderScheduleBentoProps {
@@ -115,18 +121,25 @@ export const ReminderScheduleBento: React.FC<ReminderScheduleBentoProps> = ({
   const progressPercent =
     totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
-  // Find next pending reminder
-  const nextAlert = useMemo(() => {
-    const pendingList = reminders.filter(r => !r.done);
-    if (pendingList.length === 0) return null;
-    return pendingList[0];
-  }, [reminders]);
+  // Find chronologically next pending reminder & overdue count
+  const overdueCount = useMemo(
+    () => reminders.filter(r => isReminderOverdue(r)).length,
+    [reminders],
+  );
+
+  const nextAlert = useMemo(
+    () => getNextUpcomingReminder(reminders),
+    [reminders],
+  );
 
   const motivationStatus = useMemo(() => {
     if (totalCount === 0) return 'Set your first reminder alert';
     if (progressPercent === 100) return 'All reminder alerts acknowledged';
-    if (nextAlert?.time)
-      return `Next chime: ${nextAlert.time} (${nextAlert.title})`;
+    if (nextAlert) {
+      const fireDt = getReminderScheduledDateTime(nextAlert);
+      const rel = fireDt ? formatTimeUntil(fireDt) : nextAlert.time;
+      return `Next chime ${rel}: ${nextAlert.title}`;
+    }
     return `${pendingCount} of ${totalCount} alerts pending`;
   }, [totalCount, pendingCount, progressPercent, nextAlert]);
 
@@ -149,8 +162,20 @@ export const ReminderScheduleBento: React.FC<ReminderScheduleBentoProps> = ({
             <View style={styles.titleRow}>
               <Badge label="Reminders" variant="purple" size="sm" />
               <View style={styles.liveIndicator}>
-                <View style={styles.liveDot} />
-                <Text style={styles.liveText}>Scheduled</Text>
+                <View
+                  style={[
+                    styles.liveDot,
+                    overdueCount > 0 && { backgroundColor: Colors.AccentAmber },
+                  ]}
+                />
+                <Text
+                  style={[
+                    styles.liveText,
+                    overdueCount > 0 && { color: Colors.AccentAmber },
+                  ]}
+                >
+                  {overdueCount > 0 ? `${overdueCount} Overdue` : 'Scheduled'}
+                </Text>
               </View>
             </View>
 

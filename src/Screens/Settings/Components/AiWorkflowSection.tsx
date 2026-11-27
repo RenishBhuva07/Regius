@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, Switch } from 'react-native';
-import { Zap, Sparkles, Bell, Volume2 } from 'lucide-react-native';
+import { Zap, Sparkles, Bell, Volume2, Mic } from 'lucide-react-native';
 import { Typography } from '../../../Theme/Typographys';
 import {
   Colors as StaticColors,
@@ -16,6 +16,8 @@ interface AiWorkflowSectionProps {
   onToggleMorningBriefing: (val: boolean) => void;
   notificationsEnabled: boolean;
   onToggleNotifications: (val: boolean) => void;
+  voiceRemindersEnabled?: boolean;
+  onToggleVoiceReminders?: (val: boolean) => void;
 }
 
 export const AiWorkflowSection: React.FC<AiWorkflowSectionProps> = ({
@@ -25,6 +27,8 @@ export const AiWorkflowSection: React.FC<AiWorkflowSectionProps> = ({
   onToggleMorningBriefing,
   notificationsEnabled,
   onToggleNotifications,
+  voiceRemindersEnabled = true,
+  onToggleVoiceReminders,
 }) => {
   const {
     isDarkMode,
@@ -195,6 +199,46 @@ export const AiWorkflowSection: React.FC<AiWorkflowSectionProps> = ({
             trackColor={{
               false: StaticColors.FogGrey,
               true: StaticColors.AccentGreen,
+            }}
+            thumbColor={StaticColors.PureWhite}
+          />
+        </View>
+
+        <View style={[styles.itemDivider, { backgroundColor: borderLight }]} />
+
+        <View style={styles.settingItemRow}>
+          <View style={styles.settingItemLeft}>
+            <View
+              style={[
+                styles.iconSquare,
+                {
+                  backgroundColor: isDarkMode
+                    ? StaticColors.CarbonSlate
+                    : StaticColors.WorkLightBg,
+                },
+              ]}
+            >
+              <Mic
+                size={ResponsivePixels.size18}
+                color={StaticColors.AccentYellow}
+                strokeWidth={2.2}
+              />
+            </View>
+            <View style={styles.settingItemMeta}>
+              <Text style={[styles.settingItemTitle, { color: textPrimary }]}>
+                Voice Reminders
+              </Text>
+              <Text style={[styles.settingItemDesc, { color: textSecondary }]}>
+                Regius speaks reminder alerts aloud with personalized tone
+              </Text>
+            </View>
+          </View>
+          <Switch
+            value={voiceRemindersEnabled}
+            onValueChange={onToggleVoiceReminders}
+            trackColor={{
+              false: StaticColors.FogGrey,
+              true: StaticColors.AccentYellow,
             }}
             thumbColor={StaticColors.PureWhite}
           />
