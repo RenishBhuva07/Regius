@@ -1,3 +1,24 @@
+jest.mock('@notifee/react-native', () => ({
+  __esModule: true,
+  default: {
+    createChannel: jest.fn().mockResolvedValue(undefined),
+    setNotificationCategories: jest.fn().mockResolvedValue(undefined),
+    getNotificationSettings: jest.fn().mockResolvedValue({ authorizationStatus: 1 }),
+    requestPermission: jest.fn().mockResolvedValue({ authorizationStatus: 1 }),
+    createTriggerNotification: jest.fn().mockResolvedValue('mock-notif-id'),
+    cancelNotification: jest.fn().mockResolvedValue(undefined),
+    getTriggerNotificationIds: jest.fn().mockResolvedValue([]),
+    onForegroundEvent: jest.fn().mockReturnValue(jest.fn()),
+    onBackgroundEvent: jest.fn(),
+  },
+  AndroidImportance: { HIGH: 4 },
+  AndroidCategory: { ALARM: 'alarm', REMINDER: 'reminder' },
+  AuthorizationStatus: { AUTHORIZED: 1, PROVISIONAL: 2 },
+  EventType: { DELIVERED: 3, PRESS: 1, ACTION_PRESS: 2 },
+  RepeatFrequency: { DAILY: 1, WEEKLY: 2 },
+  TriggerType: { TIMESTAMP: 0 },
+}));
+
 jest.mock('react-native-track-player', () => ({
   setupPlayer: jest.fn().mockResolvedValue(undefined),
   updateOptions: jest.fn().mockResolvedValue(undefined),

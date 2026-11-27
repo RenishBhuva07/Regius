@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,8 @@ import {
   StyleSheet,
   Platform,
   ScrollView,
+  Animated,
+  Easing,
 } from 'react-native';
 import DateTimePicker, {
   DateTimePickerEvent,
@@ -18,6 +20,7 @@ import {
   ChevronDown,
   Sparkles,
   Sun,
+  CloudSun,
   Moon,
   Clock,
 } from 'lucide-react-native';
@@ -31,6 +34,8 @@ import {
   addDaysToISO,
   parseLocalISODate,
   formatTimeFromDate,
+  DiurnalPhase,
+  getDiurnalPhase,
 } from '../Utils/taskDateUtils';
 
 const MONTH_NAMES = [
@@ -138,9 +143,29 @@ export const UnifiedSchedulePickerModal: React.FC<UnifiedSchedulePickerModalProp
         }
       }, [visible, value]);
 
-      const isNightTime = !isDate && draftDate.getHours() >= 12;
+      const diurnalPhase: DiurnalPhase = isDate
+        ? 'day'
+        : getDiurnalPhase(draftDate);
+      const isNightTime = !isDate && diurnalPhase === 'night';
       const isDarkSurface = isNightTime || isDarkMode;
-      const timePeriod: 'day' | 'night' = isNightTime ? 'night' : 'day';
+      const timePeriod: DiurnalPhase = diurnalPhase;
+
+      const discAnim = useRef(new Animated.Value(isNightTime ? 1 : 0)).current;
+
+      useEffect(() => {
+        if (isDate) return;
+        Animated.timing(discAnim, {
+          toValue: isNightTime ? 1 : 0,
+          duration: 380,
+          easing: Easing.out(Easing.quad),
+          useNativeDriver: true,
+        }).start();
+      }, [isNightTime, isDate, discAnim]);
+
+      const iconScale = discAnim.interpolate({
+        inputRange: [0, 0.5, 1],
+        outputRange: [1, 0.8, 1],
+      });
 
       const todayISO = toLocalISODate();
       const minISO = useMemo(
@@ -323,10 +348,10 @@ export const UnifiedSchedulePickerModal: React.FC<UnifiedSchedulePickerModalProp
           : styles.capsuleSelectedDarkGold
         : styles.capsuleSelectedLight;
 
-      const capsuleActiveTextColor = isDarkSurface
-        ? isNightTime
-          ? Colors.PureWhite
-          : Colors.RegiusInk
+      const capsuleActiveTextColor = isNightTime
+        ? Colors.PureWhite
+        : isDarkSurface
+        ? Colors.RegiusInk
         : Colors.PureWhite;
 
       return (
@@ -377,7 +402,7 @@ export const UnifiedSchedulePickerModal: React.FC<UnifiedSchedulePickerModalProp
                   <View style={styles.pickerModalHeader}>
                     <View style={styles.pickerHeaderTitleRow}>
                       {!isDate && (
-                        <View
+                        <Animated.View
                           style={[
                             styles.periodIconDisc,
                             isNightTime
@@ -385,6 +410,7 @@ export const UnifiedSchedulePickerModal: React.FC<UnifiedSchedulePickerModalProp
                               : isDarkMode
                               ? styles.periodIconDiscDayDark
                               : styles.periodIconDiscDayLight,
+                            { transform: [{ scale: iconScale }] },
                           ]}
                         >
                           {isNightTime ? (
@@ -394,17 +420,17 @@ export const UnifiedSchedulePickerModal: React.FC<UnifiedSchedulePickerModalProp
                               strokeWidth={2.4}
                             />
                           ) : (
-                            <Sun
-                              size={ResponsivePixels.size15}
+                            <CloudSun
+                              size={ResponsivePixels.size16}
                               color={
                                 isDarkMode
                                   ? Colors.AccentYellow
                                   : Colors.WorkTextAccent
                               }
-                              strokeWidth={2.4}
+                              strokeWidth={2.2}
                             />
                           )}
-                        </View>
+                        </Animated.View>
                       )}
                       <Text
                         style={[

@@ -8,6 +8,7 @@ import AppNavigator from './src/Navigators/AppNavigator';
 import { ThemeProvider, useTheme } from './src/Theme/ThemeContext';
 import { PremiumProvider } from './src/Context/PremiumContext';
 import { AuthProvider } from './src/Context/AuthContext';
+import { ReminderProvider } from './src/Context/ReminderContext';
 import { TaskReminderProvider } from './src/Context/TaskReminderContext';
 import { MilestoneProvider } from './src/Context/MilestoneContext';
 import { MilestoneFullScreenSheet } from './src/Screens/Milestones';
@@ -56,16 +57,18 @@ function App() {
     <ThemeProvider>
       <PremiumProvider>
         <AuthProvider>
-          <TaskReminderProvider>
-            <MilestoneProvider>
-              <SafeAreaProvider>
-                <ThemedStatusBar />
-                <AppNavigator />
-                <MilestoneFullScreenSheet />
-                <ThemedToast />
-              </SafeAreaProvider>
-            </MilestoneProvider>
-          </TaskReminderProvider>
+          <ReminderProvider>
+            <TaskReminderProvider>
+              <MilestoneProvider>
+                <SafeAreaProvider>
+                  <ThemedStatusBar />
+                  <AppNavigator />
+                  <MilestoneFullScreenSheet />
+                  <ThemedToast />
+                </SafeAreaProvider>
+              </MilestoneProvider>
+            </TaskReminderProvider>
+          </ReminderProvider>
         </AuthProvider>
       </PremiumProvider>
     </ThemeProvider>
