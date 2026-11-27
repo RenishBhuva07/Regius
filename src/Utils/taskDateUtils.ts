@@ -1,5 +1,21 @@
 export type TaskHorizon = 'overdue' | 'today' | 'upcoming' | 'anytime';
 
+export type DiurnalPhase = 'day' | 'night';
+
+/**
+ * Maps a given Date (or hour number) to a natural diurnal phase:
+ * - 'day': 06:00 - 19:59 (Sun & Soft Clouds)
+ * - 'night': 20:00 - 05:59 (Crescent Moon & Stars)
+ */
+export function getDiurnalPhase(dateOrHour: Date | number): DiurnalPhase {
+  const hour =
+    typeof dateOrHour === 'number' ? dateOrHour : dateOrHour.getHours();
+  if (hour >= 6 && hour < 20) {
+    return 'day';
+  }
+  return 'night';
+}
+
 export type TaskRecurrence =
   | 'none'
   | 'daily'

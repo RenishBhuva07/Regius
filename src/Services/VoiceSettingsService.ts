@@ -1,5 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { DEFAULT_WAKE_WORD_PHRASE } from './WakeWord/WakeWordPresets';
+import {
+  DEFAULT_WAKE_WORD_PHRASE,
+  SUPPORTED_WAKE_WORD_PRESETS,
+} from './WakeWord/WakeWordPresets';
 
 export interface VoiceSettings {
   selectedVoiceId: string;
@@ -7,6 +10,7 @@ export interface VoiceSettings {
   autoSpeakReplies: boolean;
   wakeWordEnabled: boolean;
   wakeWordPhrase: string;
+  voiceRemindersEnabled: boolean;
 }
 
 export const DEFAULT_VOICE_SETTINGS: VoiceSettings = {
@@ -15,6 +19,7 @@ export const DEFAULT_VOICE_SETTINGS: VoiceSettings = {
   autoSpeakReplies: true,
   wakeWordEnabled: true,
   wakeWordPhrase: DEFAULT_WAKE_WORD_PHRASE,
+  voiceRemindersEnabled: true,
 };
 
 const STORAGE_KEYS = {
@@ -68,6 +73,14 @@ export const VoiceSettingsService = {
   async getWakeWordPhrase(): Promise<string> {
     const settings = await this.getSettings();
     return settings.wakeWordPhrase || DEFAULT_VOICE_SETTINGS.wakeWordPhrase;
+  },
+
+  async getAssistantName(): Promise<string> {
+    const phrase = await this.getWakeWordPhrase();
+    const preset = SUPPORTED_WAKE_WORD_PRESETS.find(
+      p => p.phrase.toLowerCase() === phrase.toLowerCase(),
+    );
+    return preset?.name || 'Sia';
   },
 
   // Revert voice settings to defaults in AsyncStorage
