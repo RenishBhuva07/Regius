@@ -27,6 +27,7 @@ import FocusedTabPatternSvg from './FocusedTabPatternSvg';
 import BottomTabPatternSvg from './BottomTabPatternSvg';
 import PlusButtonPatternSvg from './PlusButtonPatternSvg';
 import { useTaskReminder } from '../Context/TaskReminderContext';
+import { useReminders } from '../Context/ReminderContext';
 import { useVoiceWakeWord } from '../Context/VoiceWakeWordContext';
 import AddTaskModal from '../Components/AddTaskModal';
 import AddReminderModal from '../Components/AddReminderModal';
@@ -439,13 +440,16 @@ export default function BottomTabNavigator() {
     taskModalPrefill,
     closeTaskModal,
     addTask,
-    isReminderModalOpen,
-    closeReminderModal,
-    addReminder,
     isHabitModalOpen,
     closeHabitModal,
     addHabit,
   } = useTaskReminder();
+  const {
+    isReminderModalOpen,
+    reminderModalPrefill,
+    closeReminderModal,
+    addReminder,
+  } = useReminders();
 
   React.useEffect(() => {
     startWakeWordListening();
@@ -477,6 +481,7 @@ export default function BottomTabNavigator() {
       <AddReminderModal
         visible={isReminderModalOpen}
         onClose={closeReminderModal}
+        prefill={reminderModalPrefill}
         onCreateReminder={reminderData => {
           addReminder(reminderData);
           closeReminderModal();

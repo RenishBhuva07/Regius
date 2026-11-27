@@ -19,6 +19,15 @@ import {
   FlameEmblemIcon,
 } from '../Common/EmblemIcons';
 import {
+  useReminders,
+  INITIAL_REMINDERS,
+  Reminder,
+  AddReminderInput,
+} from './ReminderContext';
+
+export { INITIAL_REMINDERS };
+export type { Reminder, AddReminderInput };
+import {
   TaskRecurrence,
   toLocalISODate,
   formatDisplayDate,
@@ -140,21 +149,6 @@ export interface Task {
   voiceNudge?: boolean;
   createdAt?: string;
   completedAt?: string | null;
-}
-
-export interface Reminder {
-  id: string;
-  title: string;
-  notes?: string;
-  time: string;
-  date: string;
-  category: string;
-  repeat: string;
-  done: boolean;
-  color?: string;
-  remindBefore?: string;
-  sound?: string;
-  urgentAlarm?: boolean;
 }
 
 export interface HabitItem {
@@ -288,64 +282,6 @@ export const INITIAL_TASKS: Task[] = [
   },
 ];
 
-export const INITIAL_REMINDERS: Reminder[] = [
-  {
-    id: '1',
-    title: 'Morning Meditation & Breathing',
-    notes: '15 mins mindfulness',
-    time: '07:30 AM',
-    date: 'Today',
-    category: 'health',
-    repeat: 'Daily',
-    done: false,
-    color: Colors.AccentGreen,
-  },
-  {
-    id: '2',
-    title: 'Product Strategy Sync Call',
-    notes: 'Google Meet with product team',
-    time: '11:00 AM',
-    date: 'Today',
-    category: 'work',
-    repeat: 'Once',
-    done: true,
-    color: Colors.LavenderPurple,
-  },
-  {
-    id: '3',
-    title: 'Hydration & 2L Water Refill',
-    notes: 'Keep bottle full',
-    time: '02:00 PM',
-    date: 'Today',
-    category: 'daily',
-    repeat: 'Every 2 hrs',
-    done: false,
-    color: Colors.AccentYellow,
-  },
-  {
-    id: '4',
-    title: 'Evening Workout & Cardio',
-    notes: 'Gym session',
-    time: '06:30 PM',
-    date: 'Today',
-    category: 'health',
-    repeat: 'Daily',
-    done: false,
-    color: Colors.AccentGreen,
-  },
-  {
-    id: '5',
-    title: 'Quarterly Team Dinner',
-    notes: 'Downtown bistro',
-    time: '08:00 PM',
-    date: 'Tomorrow',
-    category: 'events',
-    repeat: 'Once',
-    done: false,
-    color: Colors.AccentAmber,
-  },
-];
-
 export interface AddTaskInput {
   title: string;
   note?: string;
@@ -428,17 +364,7 @@ interface TaskReminderContextType {
   ) => TaskCategoryItem;
 
   reminders: Reminder[];
-  addReminder: (data: {
-    title: string;
-    notes?: string;
-    time?: string;
-    date?: string;
-    category?: string;
-    repeat?: string;
-    remindBefore?: string;
-    sound?: string;
-    urgentAlarm?: boolean;
-  }) => Reminder | null;
+  addReminder: (data: AddReminderInput) => Reminder | null;
   toggleReminder: (id: string) => Reminder | null;
   updateReminder: (
     id: string,
@@ -537,7 +463,17 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
     new Set(['1']),
   );
 
-  const [reminders, setReminders] = useState<Reminder[]>(INITIAL_REMINDERS);
+  const {
+    reminders,
+    addReminder,
+    toggleReminder,
+    updateReminder,
+    deleteReminder,
+    isReminderModalOpen,
+    openReminderModal,
+    closeReminderModal,
+    completeAllReminders,
+  } = useReminders();
   const [selectedReminders, setSelectedReminders] = useState<Set<string>>(
     new Set(['2']),
   );
@@ -545,7 +481,6 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
   const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
   const [taskModalPrefill, setTaskModalPrefill] =
     useState<TaskModalPrefill | null>(null);
-  const [isReminderModalOpen, setIsReminderModalOpen] = useState(false);
 
   const hasHydratedRef = useRef(false);
 
@@ -897,99 +832,9 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
     [],
   );
 
-  const addReminder = (data: {
-    title: string;
-    notes?: string;
-    time?: string;
-    date?: string;
-    category?: string;
-    repeat?: string;
-    remindBefore?: string;
-    sound?: string;
-    urgentAlarm?: boolean;
-  }): Reminder | null => {
-    if (!data.title.trim()) return null;
-    const newRem: Reminder = {
-      id: Date.now().toString(),
-      title: data.title.trim(),
-      notes: data.notes,
-      time: data.time || '04:30 PM',
-      date: data.date || 'Today, Oct 14',
-      category: data.category || 'works',
-      repeat: data.repeat || 'Daily',
-      done: false,
-      color:
-        data.category === 'health' || data.category === 'sport'
-          ? Colors.AccentGreen
-          : data.category === 'work' || data.category === 'works'
-          ? Colors.AccentYellow
-          : data.category === 'events'
-          ? Colors.AccentAmber
-          : Colors.LavenderPurple,
-      remindBefore: data.remindBefore || '5 mins before',
-      sound: data.sound || 'Gentle Bell',
-      urgentAlarm: data.urgentAlarm ?? false,
-    };
-    setReminders(prev => [newRem, ...prev]);
-    return newRem;
-  };
-
-  const toggleReminder = (id: string): Reminder | null => {
-    let updatedRem: Reminder | null = null;
-    setReminders(prev =>
-      prev.map(r => {
-        if (r.id === id) {
-          updatedRem = { ...r, done: !r.done };
-          return updatedRem;
-        }
-        return r;
-      }),
-    );
-    setSelectedReminders(prev => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-      return next;
-    });
-    return updatedRem;
-  };
-
-  const updateReminder = (
-    id: string,
-    updates: Partial<Omit<Reminder, 'id'>>,
-  ): Reminder | null => {
-    let updated: Reminder | null = null;
-    setReminders(prev =>
-      prev.map(r => {
-        if (r.id === id) {
-          updated = { ...r, ...updates };
-          return updated;
-        }
-        return r;
-      }),
-    );
-    return updated;
-  };
-
-  const deleteReminder = (id: string) => {
-    setReminders(prev => prev.filter(r => r.id !== id));
-    setSelectedReminders(prev => {
-      const next = new Set(prev);
-      next.delete(id);
-      return next;
-    });
-  };
-
   const selectAllReminders = useCallback(() => {
-    if (selectedReminders.size === reminders.length) {
-      setSelectedReminders(new Set());
-    } else {
-      setSelectedReminders(new Set(reminders.map(r => r.id)));
-    }
-  }, [selectedReminders.size, reminders]);
+    completeAllReminders();
+  }, [completeAllReminders]);
 
   const openTaskModal = useCallback((prefill?: TaskModalPrefill) => {
     const validPrefill =
@@ -1005,9 +850,6 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
     setIsTaskModalOpen(false);
     setTaskModalPrefill(null);
   }, []);
-
-  const openReminderModal = () => setIsReminderModalOpen(true);
-  const closeReminderModal = () => setIsReminderModalOpen(false);
 
   // Habits state and handlers
   const [habits, setHabits] = useState<HabitItem[]>(INITIAL_HABITS);
@@ -1136,6 +978,10 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
       taskCategories,
       addTaskCategory,
       reminders,
+      addReminder,
+      toggleReminder,
+      updateReminder,
+      deleteReminder,
       selectedReminders,
       selectAllReminders,
       isTaskModalOpen,
@@ -1143,6 +989,8 @@ export const TaskReminderProvider: React.FC<{ children: ReactNode }> = ({
       openTaskModal,
       closeTaskModal,
       isReminderModalOpen,
+      openReminderModal,
+      closeReminderModal,
       habits,
       isHabitModalOpen,
     ],

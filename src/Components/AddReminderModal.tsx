@@ -17,7 +17,27 @@ import {
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FileText, Trash2 } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
-import { Reminder } from '../Context/TaskReminderContext';
+import {
+  Reminder,
+  AddReminderInput,
+  ReminderModalPrefill,
+} from '../Context/ReminderContext';
+import {
+  toLocalISODate,
+  addDaysToISO,
+  formatDisplayDate,
+  parseLocalISODate,
+  parseTimeStringToDate,
+} from '../Utils/taskDateUtils';
+import {
+  format24hTo12h,
+  formatRecurrenceLabel,
+  formatRemindBeforeLabel,
+  getDefaultReminderTime24h,
+  normalizeReminderRecurrence,
+  normalizeRemindBeforeMinutes,
+  to24HourTime,
+} from '../Utils/reminderDateUtils';
 
 import { Fonts } from '../Theme/fonts';
 import { Colors, withAlpha } from '../Assets/StyleUtilities/Colors';
@@ -113,33 +133,14 @@ const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 export interface AddReminderModalProps {
   visible: boolean;
   onClose: () => void;
-  onCreateReminder: (data: {
-    title: string;
-    notes?: string;
-    category: string;
-    time: string;
-    date: string;
-    repeat: string;
-    remindBefore?: string;
-    sound?: string;
-    urgentAlarm?: boolean;
-  }) => void;
+  onCreateReminder: (data: AddReminderInput) => void;
   onUpdateReminder?: (
     id: string,
-    data: {
-      title: string;
-      notes?: string;
-      category: string;
-      time: string;
-      date: string;
-      repeat: string;
-      remindBefore?: string;
-      sound?: string;
-      urgentAlarm?: boolean;
-    },
+    data: Partial<Omit<Reminder, 'id'>>,
   ) => void;
   onDeleteReminder?: (id: string) => void;
   reminderToEdit?: Reminder | null;
+  prefill?: ReminderModalPrefill | null;
 }
 
 export const AddReminderModal: React.FC<AddReminderModalProps> = ({
@@ -149,6 +150,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
   onUpdateReminder,
   onDeleteReminder,
   reminderToEdit,
+  prefill,
 }) => {
   const insets = useSafeAreaInsets();
   const { isDarkMode, bgMain, cardBg } = useAppTheme();
@@ -160,27 +162,29 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
   const [reminderTitle, setReminderTitle] = useState('');
   const [reminderNotes, setReminderNotes] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('daily');
-  const [selectedDate, setSelectedDate] = useState<string>(() => {
-    const today = new Date();
-    return `Today, ${MONTH_SHORT[today.getMonth()]} ${today.getDate()}`;
-  });
-  const [selectedTime, setSelectedTime] = useState<string>('04:30 PM');
+  const [scheduledDateISO, setScheduledDateISO] = useState<string>(() =>
+    toLocalISODate(),
+  );
+  const [scheduledTime24, setScheduledTime24] = useState<string>(() =>
+    getDefaultReminderTime24h(),
+  );
   const [remindBefore, setRemindBefore] = useState<string>('5 mins before');
-  const [repeatCycle, setRepeatCycle] = useState<string>('Daily');
+  const [repeatCycle, setRepeatCycle] = useState<string>('Never');
   const [voiceNudgeEnabled, setVoiceNudgeEnabled] = useState<boolean>(true);
   const [urgentAlarm, setUrgentAlarm] = useState<boolean>(false);
   const [isPlayingPreview, setIsPlayingPreview] = useState<boolean>(false);
   const [titleInputHeight, setTitleInputHeight] = useState<number>(48);
 
+  const selectedDate = formatDisplayDate(scheduledDateISO, toLocalISODate());
+  const selectedTime = format24hTo12h(scheduledTime24);
+
   // Native Date & Time Picker State
   const [showDatePicker, setShowDatePicker] = useState<boolean>(false);
   const [showTimePicker, setShowTimePicker] = useState<boolean>(false);
   const [dateValue, setDateValue] = useState<Date>(new Date());
-  const [timeValue, setTimeValue] = useState<Date>(() => {
-    const d = new Date();
-    d.setHours(16, 30, 0, 0);
-    return d;
-  });
+  const [timeValue, setTimeValue] = useState<Date>(() =>
+    parseTimeStringToDate(format24hTo12h(getDefaultReminderTime24h())),
+  );
 
   // Dynamic Category State
   const [categoryList, setCategoryList] = useState<CategoryItem[]>(
@@ -199,27 +203,30 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
 
   const resetForm = useCallback(() => {
     const today = new Date();
-    const formattedDefaultDate = `Today, ${
-      MONTH_SHORT[today.getMonth()]
-    } ${today.getDate()}`;
-    setReminderTitle('');
+    const todayISO = toLocalISODate(today);
+    const defaultTime24 = getDefaultReminderTime24h(today);
+    setReminderTitle(prefill?.title || '');
     setReminderNotes('');
-    setSelectedCategory('daily');
-    setSelectedDate(formattedDefaultDate);
-    setSelectedTime('04:30 PM');
-    setDateValue(today);
-    const defaultTime = new Date();
-    defaultTime.setHours(16, 30, 0, 0);
-    setTimeValue(defaultTime);
+    setSelectedCategory(prefill?.category || 'daily');
+    setScheduledDateISO(prefill?.scheduledDate || todayISO);
+    setScheduledTime24(prefill?.scheduledTime || defaultTime24);
+    setDateValue(
+      parseLocalISODate(prefill?.scheduledDate || todayISO) || today,
+    );
+    setTimeValue(
+      parseTimeStringToDate(
+        format24hTo12h(prefill?.scheduledTime || defaultTime24),
+      ),
+    );
     setRemindBefore('5 mins before');
-    setRepeatCycle('Daily');
+    setRepeatCycle('Never');
     setVoiceNudgeEnabled(true);
     setUrgentAlarm(false);
     setIsPlayingPreview(false);
     setTitleInputHeight(48);
     scrollY.setValue(0);
     setIsScrolled(false);
-  }, [scrollY]);
+  }, [scrollY, prefill]);
 
   const handleTitleContentSizeChange = (e: {
     nativeEvent: { contentSize: { height: number; width: number } };
@@ -232,46 +239,52 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
 
   const handleSelectQuickDate = (type: QuickDateType) => {
     const today = new Date();
-    let target = new Date();
+    const todayISO = toLocalISODate(today);
+    let targetISO = todayISO;
 
     if (type === 'today') {
-      target = today;
-      setSelectedDate(
-        `Today, ${MONTH_SHORT[today.getMonth()]} ${today.getDate()}`,
-      );
+      targetISO = todayISO;
     } else if (type === 'tomorrow') {
-      target.setDate(today.getDate() + 1);
-      setSelectedDate(
-        `Tomorrow, ${MONTH_SHORT[target.getMonth()]} ${target.getDate()}`,
-      );
+      targetISO = addDaysToISO(todayISO, 1);
     } else if (type === 'weekend') {
       const dayOfWeek = today.getDay();
       const daysUntilSaturday = dayOfWeek === 6 ? 7 : 6 - dayOfWeek;
-      target.setDate(today.getDate() + daysUntilSaturday);
-      setSelectedDate(
-        `Sat, ${MONTH_SHORT[target.getMonth()]} ${target.getDate()}`,
-      );
+      targetISO = addDaysToISO(todayISO, daysUntilSaturday);
+    } else if (type === 'next_week') {
+      const dayOfWeek = today.getDay();
+      const daysUntilMonday = dayOfWeek === 0 ? 1 : 8 - dayOfWeek;
+      targetISO = addDaysToISO(todayISO, daysUntilMonday);
     }
-    setDateValue(target);
+    setScheduledDateISO(targetISO);
+    setDateValue(parseLocalISODate(targetISO) || today);
   };
 
   useEffect(() => {
     if (visible) {
       if (reminderToEdit) {
+        const editDateISO = reminderToEdit.scheduledDate || toLocalISODate();
+        const editTime24 =
+          reminderToEdit.scheduledTime || to24HourTime(reminderToEdit.time);
         setReminderTitle(reminderToEdit.title);
         setReminderNotes(reminderToEdit.notes || '');
         setSelectedCategory(reminderToEdit.category || 'daily');
-        setSelectedDate(
-          reminderToEdit.date ||
-            `Today, ${
-              MONTH_SHORT[new Date().getMonth()]
-            } ${new Date().getDate()}`,
+        setScheduledDateISO(editDateISO);
+        setScheduledTime24(editTime24);
+        setDateValue(parseLocalISODate(editDateISO) || new Date());
+        setTimeValue(parseTimeStringToDate(format24hTo12h(editTime24)));
+        setRemindBefore(
+          reminderToEdit.remindBefore ||
+            formatRemindBeforeLabel(reminderToEdit.remindBeforeMinutes),
         );
-        setSelectedTime(reminderToEdit.time || '04:30 PM');
-        setRemindBefore(reminderToEdit.remindBefore || '5 mins before');
-        setRepeatCycle(reminderToEdit.repeat || 'Daily');
+        setRepeatCycle(
+          reminderToEdit.recurrence
+            ? reminderToEdit.recurrence === 'none'
+              ? 'Never'
+              : formatRecurrenceLabel(reminderToEdit.recurrence)
+            : reminderToEdit.repeat || 'Never',
+        );
         setUrgentAlarm(reminderToEdit.urgentAlarm ?? false);
-        setVoiceNudgeEnabled(true);
+        setVoiceNudgeEnabled(reminderToEdit.voiceNudge ?? true);
         setIsPlayingPreview(false);
         scrollY.setValue(0);
         setIsScrolled(false);
@@ -288,30 +301,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
     }
     if (selected) {
       setDateValue(selected);
-      const today = new Date();
-      const isToday =
-        today.getFullYear() === selected.getFullYear() &&
-        today.getMonth() === selected.getMonth() &&
-        today.getDate() === selected.getDate();
-
-      const tomorrow = new Date();
-      tomorrow.setDate(today.getDate() + 1);
-      const isTomorrow =
-        tomorrow.getFullYear() === selected.getFullYear() &&
-        tomorrow.getMonth() === selected.getMonth() &&
-        tomorrow.getDate() === selected.getDate();
-
-      const monthShort = MONTH_SHORT[selected.getMonth()];
-      const dayNum = selected.getDate();
-      const dayOfWeek = DAY_NAMES[selected.getDay()];
-
-      if (isToday) {
-        setSelectedDate(`Today, ${monthShort} ${dayNum}`);
-      } else if (isTomorrow) {
-        setSelectedDate(`Tomorrow, ${monthShort} ${dayNum}`);
-      } else {
-        setSelectedDate(`${dayOfWeek}, ${monthShort} ${dayNum}`);
-      }
+      setScheduledDateISO(toLocalISODate(selected));
     }
   };
 
@@ -321,13 +311,9 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
     }
     if (selected) {
       setTimeValue(selected);
-      let hours = selected.getHours();
-      const minutes = selected.getMinutes();
-      const meridiem = hours >= 12 ? 'PM' : 'AM';
-      hours = hours % 12 || 12;
-      const hourStr = hours.toString().padStart(2, '0');
-      const minStr = minutes.toString().padStart(2, '0');
-      setSelectedTime(`${hourStr}:${minStr} ${meridiem}`);
+      const hh = String(selected.getHours()).padStart(2, '0');
+      const mm = String(selected.getMinutes()).padStart(2, '0');
+      setScheduledTime24(`${hh}:${mm}`);
     }
   };
 
@@ -348,6 +334,20 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
       return;
     }
 
+    const scheduledDt = parseLocalISODate(scheduledDateISO);
+    if (scheduledDt) {
+      const [hh, mm] = scheduledTime24.split(':').map(n => parseInt(n, 10));
+      scheduledDt.setHours(hh || 0, mm || 0, 0, 0);
+      if (!isEditing && scheduledDt.getTime() < Date.now()) {
+        Toast.show({
+          type: 'error',
+          text1: 'Past Time Selected',
+          text2: 'Please choose a future date and time for your reminder.',
+        });
+        return;
+      }
+    }
+
     Animated.sequence([
       Animated.timing(createAnim, {
         toValue: 0.94,
@@ -362,16 +362,24 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
       }),
     ]).start();
 
-    const reminderPayload = {
+    const recurrence = normalizeReminderRecurrence(repeatCycle);
+    const remindBeforeMinutes = normalizeRemindBeforeMinutes(remindBefore);
+
+    const reminderPayload: AddReminderInput = {
       title: reminderTitle.replace(/[\r\n]+/g, ' ').trim(),
       notes: reminderNotes.trim() || undefined,
       category: selectedCategory,
+      scheduledDate: scheduledDateISO,
+      scheduledTime: scheduledTime24,
       time: selectedTime,
       date: selectedDate,
-      repeat: repeatCycle,
+      recurrence,
+      repeat: formatRecurrenceLabel(recurrence),
+      remindBeforeMinutes,
       remindBefore,
       sound: 'Gentle Bell',
       urgentAlarm,
+      voiceNudge: voiceNudgeEnabled,
     };
 
     if (isEditing && onUpdateReminder && reminderToEdit) {
@@ -594,6 +602,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
             <ScheduleTriggerRow
               selectedDate={selectedDate}
               selectedTime={selectedTime}
+              selectedDueDate={scheduledDateISO}
               onSelectQuickDate={handleSelectQuickDate}
               onPressDate={() => setShowDatePicker(true)}
               onPressTime={() => setShowTimePicker(true)}
@@ -657,6 +666,7 @@ export const AddReminderModal: React.FC<AddReminderModalProps> = ({
           visible={showDatePicker}
           mode="date"
           value={dateValue}
+          minimumDate={new Date()}
           onChange={onDateChange}
           onClose={() => setShowDatePicker(false)}
         />

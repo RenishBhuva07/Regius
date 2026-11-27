@@ -18,6 +18,7 @@ import {
 
 export type { MilestoneTier };
 import { useTaskReminder } from './TaskReminderContext';
+import { useReminders } from './ReminderContext';
 import { usePremium } from './PremiumContext';
 
 interface MilestoneContextType {
@@ -69,7 +70,8 @@ const MilestoneContext = createContext<MilestoneContextType>({
 export const MilestoneProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const { tasks, reminders, habits } = useTaskReminder();
+  const { tasks, habits } = useTaskReminder();
+  const { reminders } = useReminders();
   const { isPremium } = usePremium();
 
   const [persistentData, setPersistentData] = useState<MilestoneProgressData>(

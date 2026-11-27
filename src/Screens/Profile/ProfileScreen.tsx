@@ -23,6 +23,7 @@ import { StickyBottomButton } from '../../Common/StickyBottomButton';
 import { useTheme } from '../../Theme/ThemeContext';
 import { useTaskReminder } from '../../Context/TaskReminderContext';
 import { SettingsBackgroundSvg } from '../Settings/Components/SettingsBackgroundSvg';
+import { ReminderVoiceScriptService } from '../../Services/Reminders/ReminderVoiceScriptService';
 import {
   ProfileAvatarHero,
   ProfileStatsMatrix,
@@ -93,6 +94,7 @@ export const ProfileScreen: React.FC = () => {
         PROFILE_STORAGE_KEY,
         JSON.stringify(profilePayload),
       );
+      ReminderVoiceScriptService.invalidateNameCache();
       Toast.show({
         type: 'success',
         text1: 'Profile Updated',

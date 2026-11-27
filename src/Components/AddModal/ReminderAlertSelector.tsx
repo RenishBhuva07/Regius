@@ -28,7 +28,14 @@ export const REMIND_BEFORE_OPTIONS = [
   '1 hour before',
 ];
 
-export const REPEAT_OPTIONS = ['Never', 'Daily', 'Weekdays', 'Weekly'];
+export const REPEAT_OPTIONS = [
+  'Never',
+  'Daily',
+  'Weekdays',
+  'Weekly',
+  'Monthly',
+  'Yearly',
+];
 
 export interface ReminderAlertSelectorProps {
   repeatCycle: string;
@@ -332,8 +339,10 @@ export const ReminderAlertSelector: React.FC<ReminderAlertSelectorProps> = ({
               </Text>
               <Badge variant="red" size="sm" label="CRITICAL" />
             </View>
-            <Text style={styles.urgentSubtitle} numberOfLines={1}>
-              Override Silent Mode & Ring aloud
+            <Text style={styles.urgentSubtitle} numberOfLines={2}>
+              {urgentAlarm
+                ? 'Time-sensitive alert (iOS Silent override requires Critical Alert entitlement)'
+                : 'Override Silent Mode & Ring aloud'}
             </Text>
           </View>
         </View>
@@ -381,9 +390,11 @@ const styles = StyleSheet.create({
   },
   segmentedContainer: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: ResponsivePixels.size6,
     backgroundColor: Colors.DarkSegmentedShell,
-    borderRadius: ResponsivePixels.size50,
-    padding: ResponsivePixels.size4_5,
+    borderRadius: ResponsivePixels.size22,
+    padding: ResponsivePixels.size6,
     borderWidth: 1.2,
     borderColor: Colors.DarkSegmentedShellBorder,
     ...Platform.select({
@@ -399,11 +410,11 @@ const styles = StyleSheet.create({
     }),
   },
   segmentedTab: {
-    flex: 1,
+    width: '31.8%',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: ResponsivePixels.size6,
+    paddingVertical: ResponsivePixels.size7,
     borderRadius: ResponsivePixels.size50,
   },
   segmentedTabActive: {

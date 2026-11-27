@@ -30,6 +30,7 @@ import Toast from 'react-native-toast-message';
 import { Fonts } from '../../Theme/fonts';
 import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import { useTaskReminder } from '../../Context/TaskReminderContext';
+import { useReminders } from '../../Context/ReminderContext';
 import { useVoiceWakeWord } from '../../Context/VoiceWakeWordContext';
 import DailyBriefingCard from './Components/DailyBriefingCard';
 import DailyBalanceGrid from './Components/DailyBalanceGrid';
@@ -60,8 +61,8 @@ export const DashboardScreen: React.FC = () => {
     canvasTextSecondary,
     accentDeep,
   } = useAppTheme();
-  const { tasks, toggleTask, reminders, toggleReminder, habits, toggleHabit } =
-    useTaskReminder();
+  const { tasks, toggleTask, habits, toggleHabit } = useTaskReminder();
+  const { reminders, toggleReminder } = useReminders();
 
   const {
     assistantName,

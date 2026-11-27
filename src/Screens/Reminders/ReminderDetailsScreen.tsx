@@ -49,7 +49,14 @@ import { Fonts } from '../../Theme/fonts';
 import { Colors, withAlpha } from '../../Assets/StyleUtilities/Colors';
 import ResponsivePixels from '../../Assets/StyleUtilities/ResponsivePixels';
 import { useTheme } from '../../Theme/ThemeContext';
-import { useTaskReminder } from '../../Context/TaskReminderContext';
+import { useReminders } from '../../Context/ReminderContext';
+import {
+  format24hTo12h,
+  getNextReminderDateISO,
+  isReminderOverdue,
+} from '../../Utils/reminderDateUtils';
+import { formatDisplayDate } from '../../Utils/taskDateUtils';
+import SnoozeBottomSheet from './Components/SnoozeBottomSheet';
 import {
   SubScreenHeader,
   SUB_SCREEN_HEADER_HEIGHT,
@@ -149,8 +156,14 @@ export const ReminderDetailsScreen: React.FC = () => {
   const { isDarkMode } = useTheme();
 
   const reminderId = route.params?.reminderId;
-  const { reminders, toggleReminder, updateReminder, deleteReminder } =
-    useTaskReminder();
+  const {
+    reminders,
+    hasNotificationPermission,
+    toggleReminder,
+    updateReminder,
+    deleteReminder,
+    snoozeReminder,
+  } = useReminders();
 
   const reminder = useMemo(
     () => reminders.find(r => r.id === reminderId),
@@ -158,6 +171,7 @@ export const ReminderDetailsScreen: React.FC = () => {
   );
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isSnoozeOpen, setIsSnoozeOpen] = useState(false);
   const [isPlayingAlert, setIsPlayingAlert] = useState(false);
 
   const { scrollY, isScrolled, handleScroll } = useScrollReactiveHeader({
@@ -333,6 +347,26 @@ export const ReminderDetailsScreen: React.FC = () => {
     );
   }, [reminder, deleteReminder, navigation]);
 
+  const overdue = reminder ? isReminderOverdue(reminder) : false;
+  const displayTime = reminder?.scheduledTime
+    ? format24hTo12h(reminder.scheduledTime)
+    : reminder?.time || '';
+  const displayDate = reminder?.scheduledDate
+    ? formatDisplayDate(reminder.scheduledDate)
+    : reminder?.date || '';
+  const nextOccurrenceLabel = useMemo(() => {
+    if (!reminder || !reminder.recurrence || reminder.recurrence === 'none') {
+      return null;
+    }
+    const nextISO = getNextReminderDateISO(
+      reminder.scheduledDate,
+      reminder.recurrence,
+    );
+    return `${formatDisplayDate(nextISO)}, ${format24hTo12h(
+      reminder.scheduledTime,
+    )}`;
+  }, [reminder]);
+
   if (!reminder) {
     return (
       <View style={[styles.container, isDarkMode && styles.containerDark]}>
@@ -429,8 +463,16 @@ export const ReminderDetailsScreen: React.FC = () => {
                 </View>
 
                 <Badge
-                  label={reminder.done ? 'ACKNOWLEDGED' : 'UPCOMING'}
-                  variant={reminder.done ? 'green' : 'yellow'}
+                  label={
+                    reminder.done
+                      ? 'ACKNOWLEDGED'
+                      : overdue
+                      ? 'OVERDUE'
+                      : 'UPCOMING'
+                  }
+                  variant={
+                    reminder.done ? 'green' : overdue ? 'orange' : 'yellow'
+                  }
                   size="sm"
                 />
               </View>
@@ -446,7 +488,7 @@ export const ReminderDetailsScreen: React.FC = () => {
                     color={Colors.AccentYellow}
                     strokeWidth={2.2}
                   />
-                  <Text style={styles.metaChipText}>{reminder.time}</Text>
+                  <Text style={styles.metaChipText}>{displayTime}</Text>
                 </View>
 
                 <View style={styles.metaChip}>
@@ -455,7 +497,7 @@ export const ReminderDetailsScreen: React.FC = () => {
                     color={Colors.Gray300}
                     strokeWidth={2.2}
                   />
-                  <Text style={styles.metaChipText}>{reminder.date}</Text>
+                  <Text style={styles.metaChipText}>{displayDate}</Text>
                 </View>
 
                 {reminder.repeat && (
@@ -481,6 +523,41 @@ export const ReminderDetailsScreen: React.FC = () => {
                 )}
               </View>
             </View>
+          </View>
+
+          {nextOccurrenceLabel && (
+            <View style={styles.nextOccRow}>
+              <RotateCw
+                size={ResponsivePixels.size12}
+                color={Colors.LavenderPurple}
+                strokeWidth={2.2}
+              />
+              <Text
+                style={[styles.nextOccText, isDarkMode && styles.textMuted]}
+              >
+                Next occurrence: {nextOccurrenceLabel}
+              </Text>
+            </View>
+          )}
+
+          <View style={styles.notifStatusRow}>
+            <Badge
+              label={
+                reminder.done
+                  ? 'Completed'
+                  : hasNotificationPermission
+                  ? 'Notification scheduled'
+                  : 'Notification permission needed'
+              }
+              variant={
+                reminder.done
+                  ? 'green'
+                  : hasNotificationPermission
+                  ? 'purple'
+                  : 'orange'
+              }
+              size="sm"
+            />
           </View>
         </View>
 
@@ -634,7 +711,7 @@ export const ReminderDetailsScreen: React.FC = () => {
                     isDarkMode && styles.textWhite,
                   ]}
                 >
-                  {reminder.time}
+                  {displayTime}
                 </Text>
               </View>
             </View>
@@ -660,7 +737,7 @@ export const ReminderDetailsScreen: React.FC = () => {
                     isDarkMode && styles.textWhite,
                   ]}
                 >
-                  {reminder.date}
+                  {displayDate}
                 </Text>
               </View>
             </View>
@@ -774,6 +851,41 @@ export const ReminderDetailsScreen: React.FC = () => {
               </View>
             </View>
           </View>
+
+          {nextOccurrenceLabel && (
+            <View style={styles.nextOccRow}>
+              <RotateCw
+                size={ResponsivePixels.size12}
+                color={Colors.LavenderPurple}
+                strokeWidth={2.2}
+              />
+              <Text
+                style={[styles.nextOccText, isDarkMode && styles.textMuted]}
+              >
+                Next occurrence: {nextOccurrenceLabel}
+              </Text>
+            </View>
+          )}
+
+          <View style={styles.notifStatusRow}>
+            <Badge
+              label={
+                reminder.done
+                  ? 'Completed'
+                  : hasNotificationPermission
+                  ? 'Notification scheduled'
+                  : 'Notification permission needed'
+              }
+              variant={
+                reminder.done
+                  ? 'green'
+                  : hasNotificationPermission
+                  ? 'purple'
+                  : 'orange'
+              }
+              size="sm"
+            />
+          </View>
         </View>
 
         {/* Destructive Delete Button */}
@@ -797,34 +909,83 @@ export const ReminderDetailsScreen: React.FC = () => {
 
       {/* Sticky Bottom Action Dock */}
       <StickyActionDock>
-        <StickyBottomButton
-          title={
-            reminder.done ? 'Restore to Upcoming Alerts' : 'Acknowledge Alert'
-          }
-          onPress={handleToggle}
-          variant={reminder.done ? 'dark' : 'primary'}
-          icon={
-            reminder.done ? (
-              <RotateCw
-                size={ResponsivePixels.size18}
-                color={Colors.PureWhite}
+        <View style={styles.dockRow}>
+          {!reminder.done && (
+            <TouchableOpacity
+              activeOpacity={0.85}
+              onPress={() => setIsSnoozeOpen(true)}
+              style={[
+                styles.snoozeDockBtn,
+                isDarkMode && {
+                  backgroundColor: Colors.DarkCardBackground,
+                  borderColor: Colors.CarbonSlate,
+                },
+              ]}
+              accessibilityRole="button"
+              accessibilityLabel="Snooze reminder"
+            >
+              <Clock
+                size={ResponsivePixels.size16}
+                color={Colors.LavenderPurple}
                 strokeWidth={2.4}
               />
-            ) : (
-              <Check
-                size={ResponsivePixels.size18}
-                color={Colors.PureWhite}
-                strokeWidth={2.4}
-              />
-            )
-          }
-          accessibilityLabel={
-            reminder.done
-              ? 'Restore reminder to active queue'
-              : 'Acknowledge and mark reminder complete'
-          }
-        />
+              <Text
+                style={[
+                  styles.snoozeDockText,
+                  isDarkMode && { color: Colors.PureWhite },
+                ]}
+              >
+                Snooze
+              </Text>
+            </TouchableOpacity>
+          )}
+          <View style={styles.dockPrimaryWrap}>
+            <StickyBottomButton
+              title={
+                reminder.done
+                  ? 'Restore to Upcoming Alerts'
+                  : 'Acknowledge Alert'
+              }
+              onPress={handleToggle}
+              variant={reminder.done ? 'dark' : 'primary'}
+              icon={
+                reminder.done ? (
+                  <RotateCw
+                    size={ResponsivePixels.size18}
+                    color={Colors.PureWhite}
+                    strokeWidth={2.4}
+                  />
+                ) : (
+                  <Check
+                    size={ResponsivePixels.size18}
+                    color={Colors.PureWhite}
+                    strokeWidth={2.4}
+                  />
+                )
+              }
+              accessibilityLabel={
+                reminder.done
+                  ? 'Restore reminder to active queue'
+                  : 'Acknowledge and mark reminder complete'
+              }
+            />
+          </View>
+        </View>
       </StickyActionDock>
+
+      <SnoozeBottomSheet
+        visible={isSnoozeOpen}
+        reminder={reminder}
+        onClose={() => setIsSnoozeOpen(false)}
+        onSelectSnooze={async (id, minutes) => {
+          await snoozeReminder(id, minutes);
+          Toast.show({
+            type: 'info',
+            text1: 'Reminder Snoozed',
+            text2: `Alert rescheduled in ${minutes} minutes.`,
+          });
+        }}
+      />
 
       {/* Edit Reminder Modal */}
       <AddReminderModal
@@ -858,6 +1019,49 @@ const styles = StyleSheet.create({
   },
   containerDark: {
     backgroundColor: Colors.DarkBackground,
+  },
+  nextOccRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: ResponsivePixels.size6,
+    marginTop: ResponsivePixels.size12,
+    paddingTop: ResponsivePixels.size10,
+    borderTopWidth: 1,
+    borderTopColor: withAlpha(Colors.PureBlack, 0.06),
+  },
+  nextOccText: {
+    fontFamily: Fonts.poppins.medium,
+    fontSize: ResponsivePixels.size12,
+    color: Colors.MutedSlateSubtext,
+  },
+  notifStatusRow: {
+    marginTop: ResponsivePixels.size10,
+    flexDirection: 'row',
+  },
+  dockRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: ResponsivePixels.size10,
+  },
+  snoozeDockBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: ResponsivePixels.size6,
+    backgroundColor: Colors.PureWhite,
+    borderWidth: 1.5,
+    borderColor: Colors.RingBorder,
+    borderRadius: ResponsivePixels.size50,
+    paddingHorizontal: ResponsivePixels.size16,
+    paddingVertical: ResponsivePixels.size14,
+  },
+  snoozeDockText: {
+    fontFamily: Fonts.poppins.bold,
+    fontSize: ResponsivePixels.size13_5,
+    color: Colors.MidnightCharcoal,
+  },
+  dockPrimaryWrap: {
+    flex: 1,
   },
   scroll: {
     flex: 1,
